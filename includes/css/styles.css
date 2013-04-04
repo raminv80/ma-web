@@ -1,0 +1,109 @@
+.left { float:left; }
+.right { float:right; }
+
+.error { 
+	border: 1px solid #FF0000;
+}
+
+.clear { clear:both; }
+
+.container_994 { width:994px; margin: 0 auto; }
+
+
+#search { float:right;}
+#search input { width: 154px; font-family: 'Raleway', sans-serif; font-style:italic; border:1px solid #d1d1d1; padding:7px; margin-top:20px; background:url(/images/template/search-icon.png) center right no-repeat; }
+
+#top-nav ul { float:right; margin-top:13px; margin-right:20px; }
+#top-nav ul li { list-style:none; float:left; margin-left:20px; margin-top:12px; }
+
+#main-nav { float:right; }
+#main-nav ul { float:left; margin-top:32px; }
+
+#banner-wrapper { background:url(/images/template/banner-bg.png) top left repeat-x; height:223px; margin-top:15px; border-top:1px solid #ededed; }
+.banner-slides { float:left; width:940px; }
+.banner-shadow-left { background:url(/images/template/banner-shadow-left.png) top left no-repeat; width:27px; height:233px; float:left; }
+.banner-shadow-right { background:url(/images/template/banner-shadow-right.png) top left no-repeat; width:27px; height:233px; float:left; }
+
+#news-bar-wrapper { background:url(/images/template/news-bar-bg.jpg) top left repeat-x; height:54px; margin-bottom:20px; }
+.news-next img { margin-top:8px; }
+.news-next a img { float:right; }
+
+.index-video { margin-bottom:20px; }
+
+.index-questions ul { margin-bottom:15px; }
+
+.news-item-wrapper { margin-bottom:20px;}
+.news-item-img { float:left; margin-right:10px;  }
+.news-item-img img { width:220px; }
+.news-item-date {}
+.news-item-wrapper h2 { margin: 10px 0 5px; }
+.news-item-wrapper p { float: left; width:290px; }
+
+#footer-wrapper { height:180px; background:url(/images/template/footer-bg.png) top left repeat-x; margin-top:20px; padding-bottom:20px; color:#383838; }
+
+#footer-wrapper .grid_4, #footer-wrapper .grid_3 { padding-top: 20px; }
+#footer-wrapper .grid_9 small { text-align:right; float:right; }
+
+.social-icons { background:url(/images/template/social-media-icons-glow.png) top right no-repeat; width:189px; height:93px; }
+.social-icons img { margin-top:20px; float:right; margin-left:10px; }
+
+.fresh-news .news-item-wrapper p { float: left; width:470px; }
+
+.archive, .ask-question, .contact-us, .login { padding: 20px 0; background-color:#f6f6f6; }
+
+.ask-question, .contact-us, .login { padding-bottom:10px; margin-bottom:10px; }
+
+table.ask-qn-table tr td { padding: 0 20px 10px;  }
+table.ask-qn-table input { width:165px; border:1px solid #ccc; padding:7px; font-size:12px; font-family:Arial, Helvetica, sans-serif; }
+table.ask-qn-table textarea { width: 165px; border:1px solid #ccc; padding:7px; font-family:Arial, Helvetica, sans-serif; font-size:13px; }
+
+.video-wrapper { margin-bottom:20px; }
+.video-wrapper h2 { margin-bottom:5px; }
+.video-wrapper p { margin-bottom: 10px; }
+
+.contact-us { margin-top:20px; }
+table.contact-us-table tr td { padding: 0 20px 10px; vertical-align:middle;  }
+table.contact-us-table input { width:318px; border:1px solid #ccc; padding:7px; font-size:12px; font-family:Arial, Helvetica, sans-serif;  }
+table.contact-us-table textarea { width: 404px; border:1px solid #ccc; padding:7px; font-family:Arial, Helvetica, sans-serif; font-size:13px; }
+
+.news-item-tags {margin-top:10px; color: #999; }
+.news-item-tags a { color:#999; text-decoration:none; }
+.news-item-tags a:hover { color:#000; }
+
+.login { margin-top:10px;}
+table.login-table tr td { padding: 0 10px 10px; vertical-align:middle;  }
+table.login-table input { width:184px; border:1px solid #ccc; padding:7px; font-size:12px; font-family:Arial, Helvetica, sans-serif; }
+
+
+table.reg-table tr td { padding: 0 10px 10px; vertical-align:middle;  }
+table.reg-table input { width:238px; border:1px solid #ccc; padding:7px; font-size:12px; font-family:Arial, Helvetica, sans-serif; }
+
+.bulletin-item-wrapper { margin-bottom:10px; }
+.bulletin-item-wrapper strong p { margin-bottom:0px; }
+.bulletin-item-date { margin-bottom:5px; }
+
+.bltn_title {
+	font-weight: bold;
+	margin-bottom: 0;
+	font-size: 14px;
+    line-height: 21px;
+}
+
+.bulletin-item-date {
+	font-size: 11px;
+}
+
+.items-div {
+    padding-top: 15px;
+}
+
+.search-item {
+    padding: 10px;
+}
+
+.search-item .title {
+	font-size: 18px;
+	font-family: 'Raleway',sans-serif;
+    font-weight: normal;
+    padding: 0;
+}
