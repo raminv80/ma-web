@@ -1,0 +1,25 @@
+ErrorDocument 404 /404.php
+RewriteEngine  on
+
+# stuff to let through (ignore)
+  RewriteCond %{REQUEST_URI} "/admin/" [OR]
+  RewriteCond %{REQUEST_URI} "/new_admin/" [OR]
+  RewriteCond %{REQUEST_URI} "/includes/"
+  RewriteRule (.*) $1 [L]
+
+RewriteCond %{HTTP_HOST} !^www\.
+RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+
+##### ATTEMPT TO SEE IF I CAN MAP page=XX TO THE CORRENT FRIENDLY URL
+RewriteRule ^([^.]+)?$ index.php?arg1=$1 [QSA]
+
+#Block out any script trying to base64_encode crap to send via URL
+RewriteCond %{QUERY_STRING} base64_encode.*\(.*\) [OR]
+# Block out any script that includes a <script> tag in URL
+RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+# Block out any script trying to set a PHP GLOBALS variable via URL
+RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+# Block out any script trying to modify a _REQUEST variable via URL
+RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+# Send all blocked request to homepage with 403 Forbidden error!
+RewriteRule ^(.*) index.php [PT,F,L]
