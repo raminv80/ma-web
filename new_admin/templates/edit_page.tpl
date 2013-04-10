@@ -6,23 +6,23 @@
 		<input type="hidden" value="listing_id" name="field[ntbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
 		<input type="hidden" value="{$fields.listing_id}" name="field[ntbl_listing][{$cnt}][listing_id]" id="id_article_name">
 		<input type="hidden" value="1" name="field[ntbl_listing][{$cnt}][listing_type_id]" id="id_article_name">
-				<div class="grid_4 alpha omega left">listing_category_id</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_category_id}" name="field[ntbl_listing][{$cnt}][listing_category_id]" id="id_listing_category_id"></div>
-				<div class="grid_4 alpha omega left">listing_name</div>
+				<!-- <div class="grid_4 alpha omega left">category_id</div>
+		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_category_id}" name="field[ntbl_listing][{$cnt}][listing_category_id]" id="id_listing_category_id"></div> -->
+				<div class="grid_4 alpha omega left">name</div>
 		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_name}" name="field[ntbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req"></div>
-				<div class="grid_4 alpha omega left">listing_title</div>
+				<div class="grid_4 alpha omega left">title</div>
 		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_title}" name="field[ntbl_listing][{$cnt}][listing_title]" id="id_listing_title"var pass = validateForm();></div>
-				<div class="grid_4 alpha omega left">listing_url</div>
+				<div class="grid_4 alpha omega left">url</div>
 		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_url}" name="field[ntbl_listing][{$cnt}][listing_url]" id="id_listing_url"var pass = validateForm();></div>
-				<div class="grid_4 alpha omega left">listing_seo_title</div>
+				<div class="grid_4 alpha omega left">seo_title</div>
 		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_seo_title}" name="field[ntbl_listing][{$cnt}][listing_seo_title]" id="id_listing_seo_title"></div>
-				<div class="grid_4 alpha omega left">listing_meta_description</div>
+				<div class="grid_4 alpha omega left">meta_description</div>
 		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_meta_description}" name="field[ntbl_listing][{$cnt}][listing_meta_description]" id="id_listing_meta_description"></div>
-				<div class="grid_4 alpha omega left">listing_meta_words</div>
+				<div class="grid_4 alpha omega left">meta_words</div>
 		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_meta_words}" name="field[ntbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
-				<div class="grid_4 alpha omega left">listing_short_description</div>
+				<div class="grid_4 alpha omega left">short_description</div>
 		<div class="grid_8 alpha omega right"><textarea name="field[ntbl_listing][{$cnt}][listing_short_description]" id="id_listing_short_description" class="tinymce">{$fields.listing_short_description}</textarea></div>
-				<div class="grid_4 alpha omega left">listing_long_description</div>
+				<div class="grid_4 alpha omega left">long_description</div>
 		<div class="grid_8 alpha omega right"><textarea name="field[ntbl_listing][{$cnt}][listing_long_description]" id="id_listing_long_description" class="tinymce">{$fields.listing_long_description}</textarea></div>
 				<div class="grid_4 alpha omega left">listing_order</div>
 		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_order}" name="field[ntbl_listing][{$cnt}][listing_order]" id="id_listing_order"></div>
@@ -33,11 +33,11 @@
 			$(document).ready(function(){
 				$('textarea.tinymce').tinymce({
 					// Location of TinyMCE script
-					script_url : '/new_admin/includes/js/tinymce/tiny_mce.js',
+					script_url : '/new_admin/includes/js/tiny_mce/tiny_mce.js',
 		
 					// General options
 					theme : "advanced",
-					plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,class_extension",
+					plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking",
 		
 					// Theme options
 					theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
