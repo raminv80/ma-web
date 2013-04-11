@@ -1,10 +1,12 @@
 <?php
-ini_set('display_errors',1);
-
 function AdminLogIn($email,$password){
 	$temp_str = getPass($email,$password);
 	$DBobject = new DBmanager();
-	$row = $DBobject->GetRow('tbl_admin',"admin_email = '".$email."' AND admin_password = '".$temp_str."'");
+	
+	$sql = "SELECT * FROM tbl_admin WHERE admin_email = :email AND admin_password = :password";
+	$params = array( "email"=>$email , "password"=>$temp_str );
+	$row = $DBobject->wrappedSqlGetSingle($sql, $params);
+	//$row = $DBobject->GetRow('tbl_admin',"admin_email = '".$email."' AND admin_password = '".$temp_str."'");
 	
 	if($row){
 		$_SESSION["admin"]["id"]=$row["admin_id"];
@@ -22,7 +24,9 @@ function SaveAdminLogIn($admin_id){
 	$fields = array('login_admin_id','login_ip');
 	$values = array($admin_id,$_SERVER['REMOTE_ADDR']);
 	$DBobject = new DBmanager();
-	$DBobject->SqlInsert('tbl_login', $fields, $values);
+	$params = array('login_admin_id' => $admin_id,'login_ip' => $_SERVER['REMOTE_ADDR']);
+	$sql = "INSERT INTO tbl_login ( login_admin_id , login_ip ) VALUES ( :login_admin_id , :login_ip) ";
+	$result = $DBobject->executeSQL($sql , $params );
 	return true;
 	
 }

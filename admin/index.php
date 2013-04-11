@@ -1,99 +1,133 @@
 <?php
-session_start();
-session_destroy();
-set_include_path($_SERVER['DOCUMENT_ROOT']);
-include 'admin/includes/functions/admin-functions.php';
-?>
-<html>
-<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />		
-		<meta name="Distribution" content="Global" />
-		<meta name="Robots" content="index,follow" />	
-		<script type="text/javascript" src="/admin/includes/js/jq.js"></script>	
-		<script type="text/javascript" src="/admin/includes/js/jqui.js"></script>	
-		<link  type="text/css" href="/admin/includes/css/jqui.css" rel="stylesheet"></link>
-		<link  type="text/css" href="/admin/includes/css/admin.css" rel="stylesheet"></link>
-		<title>Website administration</title>		
-		<script type="text/javascript">
-		$.ajaxSetup ({  
-		    cache: false  
-		});  
-		function checkEmail(email) {
-			var filter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
-			if (!filter.test(email)) {
-			alert('Please provide a valid email address');
-			return false;
-			}else{
-				return true;
+header("Pragma: no-cache");
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+
+ini_set('session.cache_limiter', 'private');
+include_once 'includes/functions/admin-functions.php';
+global $CONFIG,$SMARTY,$DBobject;	
+
+
+//ASSIGN ALL STORED SMARTY VALUES
+foreach($_SESSION['smarty'] as $key => $val){
+	$SMARTY->assign($key,$val);
+}
+
+//ASSIGN ERROR MESSAGES FOR TEMPLATES
+$SMARTY->assign('error',$_SESSION['error']);
+$SMARTY->assign('notice',$_SESSION['notice']);
+$_SESSION['error'] = "";
+unset($_SESSION['error']);
+$_SESSION['notice'] = "";
+unset($_SESSION['notice']);
+$_SESSION['smarty'] = "";
+unset($_SESSION['smarty']);
+$_request = clean($_REQUEST);
+
+
+$token = getToken();
+$SMARTY->assign('token',$token);
+
+//HANDLE USER PERMISSSIONS TO VIEW SITE. REDIRECT ALL NON-LOGGED IN USERS TO LOGIN
+if($_request['arg1']  == 'logout' ){
+	$_SESSION = null;
+	session_destroy();
+	session_start();
+}
+
+if((!isset($_SESSION['admin']) || empty($_SESSION['admin']) ) && $_request['arg1']  != 'register' && $_request['arg1']  != 'login' && $_request['arg1']  != 'recover-password'){
+	header("Location:/new_admin/login");
+}
+
+if(!isset($_SESSION['admin']) || empty($_SESSION['admin']) ){
+	$nav = "non-authd-nav.tpl|non-authd-footer.tpl";
+}else{
+	$nav = "nav.tpl|footer.tpl";
+}
+
+while(true){
+	/******* Goes to login  *******/
+	if($_request['arg1'] == 'login'){
+		$template = "login.tpl";
+		break 1;
+	}
+	
+	/******* Goes to login  *******/
+	if($_request['arg1'] == ''){
+		$template = "home.tpl";
+		break 1;
+	}
+	
+	/******* Listing pages here *******/
+	$arr = explode("/", $_request["arg1"]);
+	/******* Goes to login  *******/
+	if($arr[0] == 'list' && $arr[1] != ""){
+		/****** Goes to individual script pages *******/
+		foreach($CONFIG->admin->section as $sp){
+			if($sp->url == $arr[1] ){
+				if($sp->type == "LISTING"){
+					$record = new Listing($sp);
+					$list = $record->getListingList();
+					$SMARTY->assign("list",$list);
+					$template = $sp->list_template;
+					break 2;
+				}
+				if($sp->type == "TABLE"){
+					$record = new Record($sp);
+					$list = $record->getRecordList();
+					$SMARTY->assign("list",$list);
+					$template = $sp->list_template;
+					break 2;
 				}
 			}
-		function checkuser(email,pass){
-		$('#log').dialog({ modal: true ,resizable: false, draggable: false,title: 'login...'} );	 
-		$('#log').html('<div id="result"><h3>Please Wait..</h3><img src="images/loading.gif" alt="loading..."></div>');	
-		$('#result').load('/admin/includes/processes/processes-ajax.php', { email:email, password:pass ,Action:'AdminLogIn',token:$('#formToken').val()});
-		}	
-		function Login(){
-			if( $('#email').val()  != '' && $('#password').val() != '' ){
-				if(checkEmail($('#email').val()) == true){
-					checkuser($('#email').val(),$('#password').val());
-					}	
-			}else{
-			alert('Please complete all fields');
-			}	
-			
 		}
-		 
-				
-		</script>
-</head>
-<body>		
-<div id='container'>
-		<div id="header">
-			<div id="log"></div>
-		</div>
-		<div class="grid_5 left" id="logo">
-	        <h1><span class="dark-green">All</span> <span class="light-green">Fresh</span></h1>
-	        <h2>fruit &amp; veg</h2>
-	    </div><!-- end of logo -->
-		<!-- header -->
-		<div id="wrapper">
-			<div id="admin-nav">&nbsp;</div>
-			<!-- admin-nave -->
-			<div id='maincontent'>
-				<form>
-				<table   class="login-table">
-					<tr>
-						<td colspan='2'>
-						<h3>Login Details</h3>
-						</td>
-					</tr>
-					<tr>
-						<td class="td-user">Username:</td>
-						<td><input type="text" name="username" id="email"   class="text-box-login"></td>
-					</tr>
-					<tr>
-						<td>Password:</td>
-						<td><input type="password" name="password" id="password" class="text-box-login-password"	 ></td>
-					</tr>
-					<tr>
-						<td>&nbsp;<? echo insertToken(); ?></td>
-						<td align="right">
-						<img src='/admin/images/login_button.png' id="logme" onclick="Login();"
-							alt="Login" title="login" class="login_button"></td>
-					</tr>
-				</table>
-				</form>
-		<script>
-				$("#password").keyup(function(event){
-			if(event.keyCode == 13){
-		    	Login();
-		    }
-		});
-				
-		</script>
-			</div><!-- main content -->
-		</div><!-- wrapper -->
-	</div><!-- container -->
-</body>
-</html>
+		break 1;
+	}
+	
+	/******* Goes to login  *******/
+	if($arr[0] == 'edit' && $arr[1] != ""){
+		/****** Goes to individual script pages *******/
+		foreach($CONFIG->admin->section as $sp){
+			if($sp->url == $arr[1] ){
+				if($sp->type == "LISTING"){
+					$record = new Listing($sp);
+					$tm = $record->getListing(intval($arr[2]));
+					//$tm = $record->getListingBuilder(intval($arr[2]));
+					$SMARTY->assign("fields",$tm);
+					$template = $sp->edit_template;
+					//$template = "edit_record_builder.tpl";
+					break 2;
+				}
+				if($sp->type == "TABLE"){
+					$record = new Record($sp);
+					$tm = $record->getRecord(intval($arr[2]));
+					$SMARTY->assign("fields",$tm);
+					$template = $sp->edit_template;
+					break 2;
+				}
+			}
+		}
+		break 1;
+	}
+	
+	$template = '404.tpl';
+	break 1;
+}
 
+$menu = array();
+
+foreach($CONFIG->admin->section as $sp){
+	if($sp->type == "LISTING"){
+		$record = new Listing($sp);
+		$list = $record->getListingList();
+	}
+	
+	if($sp->type == "TABLE"){
+		$record = new Record($sp);
+		$list = $record->getRecordList();
+	}
+	$menu[] = array("title"=>$sp->title,"url"=>"/new_admin/list/{$sp->url}","list"=>$list);
+}
+$SMARTY->assign("menu",$menu);
+$SMARTY->display("extends:page.tpl|$nav|$template");
+die();
