@@ -18,11 +18,11 @@
 			<td>&nbsp;
 			<input type="hidden" name="formToken" id="formToken" value="{$token}" /></td>
 			<td align="right">
-			<img src='/new_admin/images/login_button.png' id="logme" onclick="Login();"
+			<img src='/admin/images/login_button.png' id="logme" onclick="Login();"
 				alt="Login" title="login" class="login_button"></td>
 		</tr>
 	</table>
 	</form>
-	<script type="text/javascript" src="/new_admin/includes/js/login.js"></script>
+	<script type="text/javascript" src="/admin/includes/js/login.js"></script>
 	<div id="log"></div>
 {/block}

@@ -1,6 +1,6 @@
 {block name=body}
 <div class="grid_12 right">
-	<div class="grid_4 left"><a href="/new_admin/edit/news">ADD NEW</a></div>
+	<div class="grid_4 left"><a href="/admin/edit/news">ADD NEW</a></div>
 	<div class="grid_12 alpha omega">
 	<ul id='nav-list'>
 		{foreach item=li from=$list}

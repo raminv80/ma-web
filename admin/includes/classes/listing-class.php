@@ -70,7 +70,7 @@ Class Listing{
 		$sql = "SELECT ntbl_listing.listing_name, ntbl_listing.listing_id FROM {$this->DBTABLE} WHERE ntbl_listing.listing_type_id = '{$this->TYPE_ID}' AND ntbl_listing.listing_deleted IS NULL AND ntbl_listing.listing_id IS NOT NULL";
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $key => $val) {
-				$records[$key] = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],"url"=>"/new_admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}");
+				$records[$key] = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],"url"=>"/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}");
 			}
 		}
 		return  $records;

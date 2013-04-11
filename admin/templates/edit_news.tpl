@@ -1,5 +1,5 @@
 {block name=body}
-<form id="Edit_Record" accept-charset="UTF-8" action="/new_admin/includes/processes/processes-record.php" method="post">
+<form id="Edit_Record" accept-charset="UTF-8" action="/admin/includes/processes/processes-record.php" method="post">
 <div class="grid_12 right">
 	<p>{if $fields.listing_id neq ""}Edit{else}New{/if} News</p>
 	{if $cnt eq ""}{assign var=cnt value=0}{/if}
@@ -56,7 +56,7 @@
 			$(document).ready(function(){
 				$('textarea.tinymce').tinymce({
 					// Location of TinyMCE script
-					script_url : '/new_admin/includes/js/tiny_mce/tiny_mce.js',
+					script_url : '/admin/includes/js/tiny_mce/tiny_mce.js',
 		
 					// General options
 					theme : "advanced",

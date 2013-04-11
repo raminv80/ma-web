@@ -25,7 +25,7 @@ function checkEmail(email) {
 function checkuser(email,pass){
 	$('#log').dialog({modal: true ,resizable: false, draggable: false,title: 'login...'} );	 
 	$('#log').html('<div id="result"><h3>Please Wait..</h3><img src="images/loading.gif" alt="loading..."></div>');	
-	$('#result').load('/new_admin/includes/processes/processes-login.php', {email:email, password:pass ,token:$('#formToken').val()});
+	$('#result').load('/admin/includes/processes/processes-login.php', {email:email, password:pass ,token:$('#formToken').val()});
 }	
 
 function Login(){

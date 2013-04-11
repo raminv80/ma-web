@@ -69,7 +69,7 @@ Class Record{
 		$sql = "SELECT * FROM {$this->TABLE} WHERE {$this->DELETED} IS NULL";
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $key => $val) {
-				$records[$key] = array("title"=>$val["{$this->FIELD}"],"id"=>$val["{$this->ID}"],"url"=>"/new_admin/edit/{$this->URL}/{$val["{$this->ID}"]}");
+				$records[$key] = array("title"=>$val["{$this->FIELD}"],"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}");
 			}
 		}
 		return  $records;

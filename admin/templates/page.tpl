@@ -23,7 +23,7 @@
 	<link rel="stylesheet" type="text/css" href="/includes/css/jqui.css" />
 	
 	<script type="text/javascript" src="/includes/js/json_parse.js"></script>
-	<script type="text/javascript" src="/new_admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
+	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
 	
 	<script type="text/javascript" src="/includes/js/timepicker/jquery.ui.timepicker.js"></script>	
 	<link rel="stylesheet" type="text/css" href="/includes/js/timepicker/jquery.ui.timepicker.css" />

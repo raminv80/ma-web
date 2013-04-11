@@ -1,5 +1,5 @@
 {block name=body}
-	<form id="Edit_Record" accept-charset="UTF-8" action="/new_admin/includes/processes/processes-record.php" method="post">
+	<form id="Edit_Record" accept-charset="UTF-8" action="/admin/includes/processes/processes-record.php" method="post">
 	<div class="grid_12 right">
 	<p>Edit Record</p>
 	{foreach key=table item=rec from=$fields}

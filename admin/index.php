@@ -36,7 +36,7 @@ if($_request['arg1']  == 'logout' ){
 }
 
 if((!isset($_SESSION['admin']) || empty($_SESSION['admin']) ) && $_request['arg1']  != 'register' && $_request['arg1']  != 'login' && $_request['arg1']  != 'recover-password'){
-	header("Location:/new_admin/login");
+	header("Location:/admin/login");
 }
 
 if(!isset($_SESSION['admin']) || empty($_SESSION['admin']) ){
@@ -126,7 +126,7 @@ foreach($CONFIG->admin->section as $sp){
 		$record = new Record($sp);
 		$list = $record->getRecordList();
 	}
-	$menu[] = array("title"=>$sp->title,"url"=>"/new_admin/list/{$sp->url}","list"=>$list);
+	$menu[] = array("title"=>$sp->title,"url"=>"/admin/list/{$sp->url}","list"=>$list);
 }
 $SMARTY->assign("menu",$menu);
 $SMARTY->display("extends:page.tpl|$nav|$template");

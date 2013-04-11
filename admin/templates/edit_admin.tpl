@@ -1,5 +1,5 @@
 {block name=body}
-<form id="Edit_Record" accept-charset="UTF-8" action="/new_admin/includes/processes/processes-record.php" method="post">
+<form id="Edit_Record" accept-charset="UTF-8" action="/admin/includes/processes/processes-record.php" method="post">
 <div class="grid_12 right">
 	<p>{if $fields.admin_id neq ""}Edit{else}New{/if} Admin</p>
 	{if $cnt eq ""}{assign var=cnt value=0}{/if}
@@ -44,7 +44,7 @@
 						$('#re_password').removeClass('error');
 						if($('#password').val()){
 							$.ajax({ 
-							    type: "POST", url: "/new_admin/createPass.php", cache: false, data: "username="+$('#admin_email').val()+"&password="+$('#password').val(), dataType: "html",
+							    type: "POST", url: "/admin/createPass.php", cache: false, data: "username="+$('#admin_email').val()+"&password="+$('#password').val(), dataType: "html",
 							    success: function(res, textStatus) {
 							    	try{
 							    		data = json_parse(res);
