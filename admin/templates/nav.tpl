@@ -7,6 +7,7 @@
 *}
 {block name=nav}
 <div id='bar-menu' class="grid_4 left">
+	<h3><a href='/admin/file-manager'>FILE MANAGER</a></h3><div></div>
 {foreach item=item from=$menu}
 	<h3>{$item.title}</h3>
 	<div>

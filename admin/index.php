@@ -58,12 +58,20 @@ while(true){
 		break 1;
 	}
 	
+	foreach($CONFIG->resource as $sp){
+		
+		if($sp->url == $_request["arg1"] ){
+			$template = $sp->template;
+			break 2;
+		}
+	}
+	
 	/******* Listing pages here *******/
 	$arr = explode("/", $_request["arg1"]);
 	/******* Goes to login  *******/
 	if($arr[0] == 'list' && $arr[1] != ""){
 		/****** Goes to individual script pages *******/
-		foreach($CONFIG->admin->section as $sp){
+		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
@@ -87,7 +95,7 @@ while(true){
 	/******* Goes to login  *******/
 	if($arr[0] == 'edit' && $arr[1] != ""){
 		/****** Goes to individual script pages *******/
-		foreach($CONFIG->admin->section as $sp){
+		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
@@ -116,7 +124,7 @@ while(true){
 
 $menu = array();
 
-foreach($CONFIG->admin->section as $sp){
+foreach($CONFIG->section as $sp){
 	if($sp->type == "LISTING"){
 		$record = new Listing($sp);
 		$list = $record->getListingList();

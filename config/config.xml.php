@@ -14,41 +14,6 @@
 		<password>freshdb99!</password>
 		<dbname>farmhousefresh</dbname>
 	</database>-->
-	<admin>
-		<section>
-			<url>admin</url>
-			<title>Admin</title>
-			<type>TABLE</type>
-			<table>
-				<name>tbl_admin</name>
-				<id>admin_id</id>
-				<field>admin_name</field>
-				<deleted>admin_deleted</deleted>
-			</table>
-			<list_template>list_admin.tpl</list_template>
-			<edit_template>edit_admin.tpl</edit_template>
-		</section>
-		<section>
-			<url>page</url>
-			<title>Pages</title>
-			<type>LISTING</type>
-			<type_id>1</type_id>
-			<list_template>list_page.tpl</list_template>
-			<edit_template>edit_page.tpl</edit_template>
-		</section>
-		<section>
-			<url>news</url>
-			<title>News</title>
-			<type>LISTING</type>
-			<type_id>2</type_id>
-			<extends>
-				<table>ntbl_news</table>
-				<field>news_listing_id</field>
-			</extends>
-			<list_template>list_news.tpl</list_template>
-			<edit_template>edit_news.tpl</edit_template>
-		</section>
-	</admin>
 	<index_page>
 		<template>home.tpl</template>
 		<pageID>1</pageID>

@@ -5,7 +5,6 @@
 
 Class DBmanager{
 
-
 	/**
 	 * Enter description here ...
 	 */
@@ -21,17 +20,6 @@ Class DBmanager{
 		if(!empty($error[0])) {
 			die(var_dump($error));
 		}
-		
-		/*old connection  
-		$link = @mysql_connect($server_db, $username_db, $password_db);
-		if(!$link) {
-			echo mysql_error();
-			die('Could not connect to server');
-		}
-		if(!@mysql_select_db($name_db))	{
-			die("Could not select database");
-		}
-		*/
 	}
 
 	/**

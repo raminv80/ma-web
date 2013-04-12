@@ -17,10 +17,12 @@
 	<title>{$page_seo_title}</title>
 	<link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon">
 	
-	<script type="text/javascript" src="/includes/js/jq.js"></script>	
-	<script type="text/javascript" src="/includes/js/jqui.js"></script>
-	<script type="text/javascript" src="/includes/js/validation.js"></script>		
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/includes/css/jqui.css" />
+	
+	<script type="text/javascript" src="/includes/js/validation.js"></script>		
 	
 	<script type="text/javascript" src="/includes/js/json_parse.js"></script>
 	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
@@ -61,10 +63,14 @@
     </div><!-- end of logo -->
 </div><!-- end ofcontainer_16 -->
 <div id='maincontent' class="container_16">
+	<div class="grid_4 left">
 	{block name=nav}{/block}
+	</div>
+	<div class="grid_12 right">
 	<!--  block body start -->
 	{block name=body}{/block}
 	<!--  block body end -->
+	</div>
 </div>
 {block name=footer}{/block}
 </body>
