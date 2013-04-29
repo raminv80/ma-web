@@ -1,0 +1,55 @@
+<!-- <?php die(); ?> -->
+<!-- THEM CMS configuration file -->
+<config debug="true">
+	<company></company>
+	<database>
+		<host>m4-mysql1-1.ilisys.com.au</host>
+		<user>themso</user>
+		<password>c@^^3L5tRu7s*n9ub11c</password>
+		<dbname>themso3_db</dbname>
+	</database>
+	<resource>
+		<url>file-manager</url>
+		<template>filemanager.tpl</template>
+	</resource>
+	<section>
+		<url>admin</url>
+		<title>Admin</title>
+		<type>TABLE</type>
+		<table>
+			<name>tbl_admin</name>
+			<id>admin_id</id>
+			<field>admin_name</field>
+			<deleted>admin_deleted</deleted>
+		</table>
+		<list_template>list_admin.tpl</list_template>
+		<edit_template>edit_admin.tpl</edit_template>
+	</section>
+	<section>
+		<url>page</url>
+		<title>Pages</title>
+		<type>LISTING</type>
+		<type_id>1</type_id>
+		<list_template>list_page.tpl</list_template>
+		<edit_template>edit_page.tpl</edit_template>
+	</section>
+	<section>
+		<url>news</url>
+		<title>News</title>
+		<type>LISTING</type>
+		<type_id>2</type_id>
+		<extends>
+			<table>ntbl_news</table>
+			<field>news_listing_id</field>
+		</extends>
+		<list_template>list_news.tpl</list_template>
+		<edit_template>edit_news.tpl</edit_template>
+	</section>
+	<smartytemplate_config><!-- This element contains the smarty template values -->
+		<templates>/templates</templates>
+		<templates_c>/templates_c</templates_c>
+		<cache>/cache</cache>
+		<configs>/configs</configs>
+		<plugins>/plugins</plugins>
+	</smartytemplate_config>
+</config>

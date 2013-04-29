@@ -6,18 +6,21 @@
 		Company Name = {$company_name}
 *}
 {block name=nav}
-<div id='bar-menu' class="grid_4 left">
-	<h3><a href='/admin/file-manager'>FILE MANAGER</a></h3><div></div>
-{foreach item=item from=$menu}
-	<h3>{$item.title}</h3>
-	<div>
-		<ul id='nav-list'>
-			<li><a href='{$item.url}' class='list-header'><b>ALL</b></a></li>
-			{foreach item=li from=$item.list}
-				<li><a href='{$li.url}' class='list-header'><b>{$li.title}</b></a></li>
-			{/foreach}
-		</ul>
+<div class="row-fluid">
+	<div class="span12">
+	<div class="row-fluid"><div class="span12"><h3><a href='/admin/file-manager'>FILE MANAGER</a></h3></div></div>
+	{foreach item=item from=$menu}
+		<div class="row-fluid"><div class="span12"><h3>{$item.title}</h3>
+		<div>
+			<ul id='nav-list'>
+				<li><a href='{$item.url}' class='list-header'><b>ALL</b></a></li>
+				{foreach item=li from=$item.list}
+					<li><a href='{$li.url}' class='list-header'><b>{$li.title}</b></a></li>
+				{/foreach}
+			</ul>
+		</div>
+		</div></div>
+	{/foreach}
 	</div>
-{/foreach}
 </div>
 {/block}

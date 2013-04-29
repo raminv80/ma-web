@@ -8,5 +8,4 @@ if(checkToken($_POST["token"])){
 	}else{
 		echo "wrong email or password<br><br><br><button onclick='$(\"#log\").dialog(\"close\")'>try again</button>";	
 	}
-	break;
 }

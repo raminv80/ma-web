@@ -22,9 +22,14 @@
 	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/includes/css/jqui.css" />
 	
+	<!-- Responsive -->
+	<link rel="stylesheet" type="text/css" href="/includes/css/bootstrap-responsive.min.css" />
+	<link rel="stylesheet" type="text/css" href="/includes/css/bootstrap.min.css" />
+	<script src="/includes/js/bootstrap.min.js"></script>
+	<!-- End Responsive -->
+	
 	<script type="text/javascript" src="/includes/js/validation.js"></script>		
 	
-	<script type="text/javascript" src="/includes/js/json_parse.js"></script>
 	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
 	
 	<script type="text/javascript" src="/includes/js/timepicker/jquery.ui.timepicker.js"></script>	
@@ -34,10 +39,7 @@
 	<link rel="stylesheet" type="text/css" href="/includes/js/ddlevelsfiles/ddlevelsmenu-base.css" />
 	<link rel="stylesheet" type="text/css" href="/includes/js/ddlevelsfiles/ddlevelsmenu-topbar.css" />
 	
-	<link type="text/css" href="/includes/css/reset.css" rel="stylesheet">
-	<link type="text/css" href="/includes/css/text.css" rel="stylesheet">
 	<link type="text/css" href="/includes/css/styles.css" rel="stylesheet">
-	<link type="text/css" href="/includes/css/960_16_col.css" rel="stylesheet">	
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600' rel='stylesheet' type='text/css'>
 	
 	<script type="text/javascript">
@@ -50,28 +52,28 @@
 				icons:false,
 				animated: 'bounceslide'});
 		}); 
-		 
 	</script>
-	
 	<title>Website administration</title>		
-		
 </head>
 <body>
-<div class="container_16">
-    <div id="logo" class="grid_5 left">
-        <h1>CMS Administration Area</h1>
-    </div><!-- end of logo -->
-</div><!-- end ofcontainer_16 -->
-<div id='maincontent' class="container_16">
-	<div class="grid_4 left">
-	{block name=nav}{/block}
+<div class='container'>
+	<div class="row-fluid">
+	    <div id="logo" class="span12">
+	        <h1>CMS Administration Area</h1>
+	    </div><!-- end of logo -->
+	</div><!-- end ofcontainer_16 -->
+	<div class="row-fluid">
+		<div class="span3">
+		{block name=nav}{/block}
+		</div>
+		<div class="span9">
+		<!--  block body start -->
+		{block name=body}{/block}
+		<!--  block body end -->
+		</div>
 	</div>
-	<div class="grid_12 right">
-	<!--  block body start -->
-	{block name=body}{/block}
-	<!--  block body end -->
-	</div>
+	{block name=footer}{/block}
 </div>
-{block name=footer}{/block}
+
 </body>
 </html>
