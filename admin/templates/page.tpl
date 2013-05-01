@@ -15,6 +15,7 @@
 	<meta name="Distribution" content="Global" />
 	<meta name="Robots" content="index,follow" />	
 	<title>{$page_seo_title}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon">
 	
 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
@@ -22,9 +23,11 @@
 	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/includes/css/jqui.css" />
 	
+	<link rel="stylesheet" type="text/css" href="/includes/css/styles.css" />
+	
 	<!-- Responsive -->
-	<link rel="stylesheet" type="text/css" href="/includes/css/bootstrap-responsive.min.css" />
 	<link rel="stylesheet" type="text/css" href="/includes/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/includes/css/bootstrap-responsive.min.css" />
 	<script src="/includes/js/bootstrap.min.js"></script>
 	<!-- End Responsive -->
 	
@@ -57,8 +60,8 @@
 </head>
 <body>
 <div class='container'>
-	<div class="row-fluid">
-	    <div id="logo" class="span12">
+	<div class="masthead">
+	    <div id="logo">
 	        <h1>CMS Administration Area</h1>
 	    </div><!-- end of logo -->
 	</div><!-- end ofcontainer_16 -->

@@ -1,37 +1,82 @@
 {block name=body}
-<form id="Edit_Record" accept-charset="UTF-8" action="/admin/includes/processes/processes-record.php" method="post">
-<div class="grid_12 right">
-	<p>{if $fields.listing_id neq ""}Edit{else}New{/if} News</p>
-	{if $cnt eq ""}{assign var=cnt value=0}{/if}
-		<input type="hidden" value="listing_id" name="field[ntbl_listing][{$cnt}][id]" id="id" />
-		<input type="hidden" value="{$fields.listing_id}" name="field[ntbl_listing][{$cnt}][listing_id]" id="id_article_name">
-		<input type="hidden" value="2" name="field[ntbl_listing][{$cnt}][listing_type_id]" id="id_article_name">
-		<input type="hidden" value="{$fields.listing_category_id}" name="field[ntbl_listing][{$cnt}][listing_category_id]" id="id_listing_category_id">
-				<div class="grid_4 alpha omega left">category_id</div>
-		<div class="grid_8 alpha omega right"></div>
-				<div class="grid_4 alpha omega left">name</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_name}" name="field[ntbl_listing][{$cnt}][listing_name]" id="id_listing_name"></div>
-				<div class="grid_4 alpha omega left">title</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_title}" name="field[ntbl_listing][{$cnt}][listing_title]" id="id_listing_title"></div>
-				<div class="grid_4 alpha omega left">url</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_url}" name="field[ntbl_listing][{$cnt}][listing_url]" id="id_listing_url"></div>
-				<div class="grid_4 alpha omega left">seo_title</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_seo_title}" name="field[ntbl_listing][{$cnt}][listing_seo_title]" id="id_listing_seo_title"></div>
-				<div class="grid_4 alpha omega left">meta description</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_meta_description}" name="field[ntbl_listing][{$cnt}][listing_meta_description]" id="id_listing_meta_description"></div>
-				<div class="grid_4 alpha omega left">meta_words</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_meta_words}" name="field[ntbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
-				<div class="grid_4 alpha omega left">short_description</div>
-		<div class="grid_8 alpha omega right"><textarea name="field[ntbl_listing][{$cnt}][listing_short_description]" id="id_listing_short_description" class="tinymce">{$fields.listing_short_description}</textarea></div>
-				<div class="grid_4 alpha omega left">long_description</div>
-		<div class="grid_8 alpha omega right"><textarea name="field[ntbl_listing][{$cnt}][listing_long_description]" id="id_listing_long_description" class="tinymce">{$fields.listing_long_description}</textarea></div>
-				<div class="grid_4 alpha omega left">order</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.listing_order}" name="field[ntbl_listing][{$cnt}][listing_order]" id="id_listing_order"></div>
+<div class="row-fluid">
+	<div class="span12">
+	<form id="Edit_Record" accept-charset="UTF-8" action="/admin/includes/processes/processes-record.php" method="post">
+		<div class="row-fluid">
+			<div class="span12">
+			{if $fields.listing_id neq ""}Edit{else}New{/if} News
+			{if $cnt eq ""}{assign var=cnt value=0}{/if}
+			<input type="hidden" value="listing_id" name="field[ntbl_listing][{$cnt}][id]" id="id" />
+			<input type="hidden" value="{$fields.listing_id}" name="field[ntbl_listing][{$cnt}][listing_id]" id="id_article_name">
+			<input type="hidden" value="2" name="field[ntbl_listing][{$cnt}][listing_type_id]" id="id_article_name">
+			<input type="hidden" value="{$fields.listing_category_id}" name="field[ntbl_listing][{$cnt}][listing_category_id]" id="id_listing_category_id">
+			{if $fields.listing_id neq ""}
+			<input type="hidden" value="news_id" name="field[ntbl_news][{$cnt}][id]" id="id"/>
+			<input type="hidden" value="{$fields.news_id}" name="field[ntbl_news][{$cnt}][news_id]">
+			<input type="hidden" value="{$fields.listing_id}" name="field[ntbl_news][{$cnt}][news_listing_id]">
+			{/if}
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Name</div>
+			<div class="span8"><input type="text" value="{$fields.listing_name}" name="field[ntbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req"></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Title</div>
+			<div class="span8"><input type="text" value="{$fields.listing_title}" name="field[ntbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req"></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">URL</div>
+			<div class="span8"><input type="text" value="{$fields.listing_url}" name="field[ntbl_listing][{$cnt}][listing_url]" id="id_listing_url" class="req"></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">SEO Title</div>
+			<div class="span8"><input type="text" value="{$fields.listing_seo_title}" name="field[ntbl_listing][{$cnt}][listing_seo_title]" id="id_listing_seo_title" class="req"></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Meta Description</div>
+			<div class="span8"><input type="text" value="{$fields.listing_meta_description}" name="field[ntbl_listing][{$cnt}][listing_meta_description]" id="id_listing_meta_description"></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Meta Words</div>
+			<div class="span8"><input type="text" value="{$fields.listing_meta_words}" name="field[ntbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Short Description</div>
+			<div class="span8"><textarea name="field[ntbl_listing][{$cnt}][listing_short_description]" id="id_listing_short_description" class="tinymce">{$fields.listing_short_description}</textarea></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Long Description</div>
+			<div class="span8"><textarea name="field[ntbl_listing][{$cnt}][listing_long_description]" id="id_listing_long_description" class="tinymce">{$fields.listing_long_description}</textarea></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Listing Order</div>
+			<div class="span8"><input type="text" value="{$fields.listing_order}" name="field[ntbl_listing][{$cnt}][listing_order]" id="id_listing_order"></div>
+		</div>
 		
 		{if $fields.listing_id neq ""}
-		<input type="hidden" value="news_id" name="field[ntbl_news][{$cnt}][id]" id="id"/>
-		<input type="hidden" value="{$fields.news_id}" name="field[ntbl_news][{$cnt}][news_id]">
-		<input type="hidden" value="{$fields.listing_id}" name="field[ntbl_news][{$cnt}][news_listing_id]">
+		<div class="row-fluid">
+			<div class="span4">Start Date</div>
+			<div class="span8"><input type="text" value="{$fields.news_start_date}" name="field[ntbl_news][{$cnt}][news_start_date]" id="id_new_start_date" ></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Start Time</div>
+			<div class="span8"><input type="text" value="{$fields.news_start_time}" name="field[ntbl_news][{$cnt}][news_start_time]" id="id_new_start_time" ></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">End Date</div>
+			<div class="span8"><input type="text" value="{$fields.listing_title}" name="field[ntbl_news][{$cnt}][news_end_date]" id="id_new_start_date" ></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Title</div>
+			<div class="span8"><input type="text" value="{$fields.listing_title}" name="field[ntbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req"></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Title</div>
+			<div class="span8"><input type="text" value="{$fields.listing_title}" name="field[ntbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req"></div>
+		</div>
+		
+		
 		<div class="grid_4 alpha omega left">start date</div>
 		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.news_start_date}" name="field[ntbl_news][{$cnt}][news_start_date]" ></div>
 		<div class="grid_4 alpha omega left">start time</div>
