@@ -39,7 +39,7 @@
 		<type>LISTING</type>
 		<type_id>2</type_id>
 		<extends>
-			<table>ntbl_news</table>
+			<table>tbl_news</table>
 			<field>news_listing_id</field>
 		</extends>
 		<list_template>list_news.tpl</list_template>

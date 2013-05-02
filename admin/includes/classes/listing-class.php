@@ -21,11 +21,11 @@ Class Listing{
 		$this->CONFIG_OBJ = $_sp;	
 		$this->TYPE_ID = $_sp->type_id;
 		
-		$this->DBTABLE = " ntbl_listing
-							LEFT JOIN ntbl_type ON ntbl_listing.listing_type_id = ntbl_type.type_id
-							LEFT JOIN ntbl_category ON ntbl_listing.listing_category_id = ntbl_category.category_id ";
+		$this->DBTABLE = " tbl_listing
+							LEFT JOIN tbl_type ON tbl_listing.listing_type_id = tbl_type.type_id
+							LEFT JOIN tbl_category ON tbl_listing.listing_category_id = tbl_category.category_id ";
 		foreach($_sp->extends as $extend){
-			$this->DBTABLE .= " LEFT JOIN {$extend->table} ON {$extend->table}.{$extend->field} = ntbl_listing.listing_id ";
+			$this->DBTABLE .= " LEFT JOIN {$extend->table} ON {$extend->table}.{$extend->field} = tbl_listing.listing_id ";
 		}
 	}
 	
@@ -67,7 +67,7 @@ Class Listing{
 	function getListingList(){
 		global $SMARTY,$DBobject;	
 		$records = array();
-		$sql = "SELECT ntbl_listing.listing_name, ntbl_listing.listing_id FROM {$this->DBTABLE} WHERE ntbl_listing.listing_type_id = '{$this->TYPE_ID}' AND ntbl_listing.listing_deleted IS NULL AND ntbl_listing.listing_id IS NOT NULL";
+		$sql = "SELECT tbl_listing.listing_name, tbl_listing.listing_id FROM {$this->DBTABLE} WHERE tbl_listing.listing_type_id = '{$this->TYPE_ID}' AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL";
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $key => $val) {
 				$records[$key] = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],"url"=>"/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}");
