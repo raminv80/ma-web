@@ -57,71 +57,70 @@
 		{if $fields.listing_id neq ""}
 		<div class="row-fluid">
 			<div class="span4">Start Date</div>
-			<div class="span8"><input type="text" value="{$fields.news_start_date}" name="field[ntbl_news][{$cnt}][news_start_date]" id="id_new_start_date" ></div>
+			<div class="span8"><input type="text" value="{$fields.news_start_date}" name="field[ntbl_news][{$cnt}][news_start_date]" id="id_news_start_date" ></div>
 		</div>
 		<div class="row-fluid">
 			<div class="span4">Start Time</div>
-			<div class="span8"><input type="text" value="{$fields.news_start_time}" name="field[ntbl_news][{$cnt}][news_start_time]" id="id_new_start_time" ></div>
+			<div class="span8"><input type="text" value="{$fields.news_start_time}" name="field[ntbl_news][{$cnt}][news_start_time]" id="id_news_start_time" ></div>
 		</div>
 		<div class="row-fluid">
 			<div class="span4">End Date</div>
-			<div class="span8"><input type="text" value="{$fields.listing_title}" name="field[ntbl_news][{$cnt}][news_end_date]" id="id_new_start_date" ></div>
+			<div class="span8"><input type="text" value="{$fields.news_end_date}" name="field[ntbl_news][{$cnt}][news_end_date]" id="id_news_end_date" ></div>
 		</div>
 		<div class="row-fluid">
-			<div class="span4">Title</div>
-			<div class="span8"><input type="text" value="{$fields.listing_title}" name="field[ntbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req"></div>
+			<div class="span4">End Time</div>
+			<div class="span8"><input type="text" value="{$fields.news_end_time}" name="field[ntbl_news][{$cnt}][news_end_time]" id="id_news_end_time" ></div>
 		</div>
 		<div class="row-fluid">
-			<div class="span4">Title</div>
-			<div class="span8"><input type="text" value="{$fields.listing_title}" name="field[ntbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req"></div>
+			<div class="span4">Location Address</div>
+			<div class="span8"><input type="text" value="{$fields.news_loc_address}" name="field[ntbl_news][{$cnt}][news_loc_address]" id="id_news_loc_address" ></div>
 		</div>
-		
-		
-		<div class="grid_4 alpha omega left">start date</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.news_start_date}" name="field[ntbl_news][{$cnt}][news_start_date]" ></div>
-		<div class="grid_4 alpha omega left">start time</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.news_start_time}" name="field[ntbl_news][{$cnt}][news_start_time]" ></div>
-		<div class="grid_4 alpha omega left">end date</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.news_end_date}" name="field[ntbl_news][{$cnt}][news_end_date]" ></div>
-		<div class="grid_4 alpha omega left">end time</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.news_end_time}" name="field[ntbl_news][{$cnt}][news_end_time]" ></div>
-		<div class="grid_4 alpha omega left">location address</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.news_loc_address}" name="field[ntbl_news][{$cnt}][news_loc_address]" ></div>
-		<div class="grid_4 alpha omega left">location suburb</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.news_loc_suburb}" name="field[ntbl_news][{$cnt}][news_loc_suburb]" ></div>
-		<div class="grid_4 alpha omega left">location postcode</div>
-		<div class="grid_8 alpha omega right"><input type="text" value="{$fields.news_loc_postcode}" name="field[ntbl_news][{$cnt}][news_loc_postcode]" ></div>
-		<div class="grid_4 alpha omega left">location other</div>
-		<div class="grid_8 alpha omega right"><textarea name="field[ntbl_news][{$cnt}][news_loc_other]" class="tinymce">{$fields.news_loc_other}</textarea></div>
+		<div class="row-fluid">
+			<div class="span4">Location Suburb</div>
+			<div class="span8"><input type="text" value="{$fields.news_loc_suburb}" name="field[ntbl_news][{$cnt}][news_loc_suburb]" id="id_news_loc_suburb" ></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Location Postcode</div>
+			<div class="span8"><input type="text" value="{$fields.news_loc_postcode}" name="field[ntbl_news][{$cnt}][news_loc_postcode]" id="id_news_loc_postcode" ></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4">Location Other</div>
+			<div class="span8"><textarea name="field[ntbl_news][{$cnt}][news_loc_other]" class="tinymce" id="id_news_loc_other">{$fields.news_loc_other}</textarea></div>
+		</div>
 		{/if}
-		<input type="submit" value="submit"   />
+		<div class="row-fluid">
+			<div class="span4">Location Other</div>
+			<div class="span8">
+				<input type="submit" value="submit"/>
+				<script type="text/javascript">
+					$(document).ready(function(){
+						$('textarea.tinymce').tinymce({
+							// Location of TinyMCE script
+							script_url : '/admin/includes/js/tiny_mce/tiny_mce.js',
+				
+							// General options
+							theme : "advanced",
+							plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking",
+				
+							// Theme options
+							theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+							theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,code",
+							theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media",
+							theme_advanced_buttons4 : "",
+							theme_advanced_toolbar_location : "top",
+							theme_advanced_toolbar_align : "left",
+							theme_advanced_statusbar_location : "bottom",
+							theme_advanced_resizing : true,
+							convert_urls : false,
+							external_image_list_url : "/uploads/image_list.php",
+							content_css : '/includes/css/reset.css,/includes/css/text.css,/includes/css/styles.css,/includes/css/960_16_col.css'
+						});
+					});
+				</script>
+				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
+			</div>
 		</div>
-		
-		<script type="text/javascript">
-			$(document).ready(function(){
-				$('textarea.tinymce').tinymce({
-					// Location of TinyMCE script
-					script_url : '/admin/includes/js/tiny_mce/tiny_mce.js',
-		
-					// General options
-					theme : "advanced",
-					plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking",
-		
-					// Theme options
-					theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-					theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,code",
-					theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media",
-					theme_advanced_buttons4 : "",
-					theme_advanced_toolbar_location : "top",
-					theme_advanced_toolbar_align : "left",
-					theme_advanced_statusbar_location : "bottom",
-					theme_advanced_resizing : true,
-					convert_urls : false,
-					external_image_list_url : "/uploads/image_list.php",
-					content_css : '/includes/css/reset.css,/includes/css/text.css,/includes/css/styles.css,/includes/css/960_16_col.css'
-				});
-			});
-		</script>
-		<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-		</form>
+	</form>
+	</div>
+</div>
 {/block}

@@ -1,11 +1,20 @@
 {block name=body}
-<div class="container_16">
-	<div class="grid_16"><small><a href="/">Home</a> / {$page_name}</small><br><br></div>
-		<div class="grid_12 alpha omega">{$content}</div>
-		<div class="grid_4 alpha omega right">
-		{include file='find-my-product.tpl'}
-		{include file='news-promotions.tpl'}
+<div class="row-fluid">
+		<div class="span16">
+			<div class="content-left">
+			    {image field=$top_image}
+			</div>
 		</div>
-	<div class="clear"></div>
-</div>
+	</div>
+	  <div class="row-fluid">
+	 <div class="span16">	
+          <div class="content-left">
+	     <p class="breadcrumbs"><a href="/">Home</a> / {$page_name}</p>
+	     <h1>{$page_name}</h1>
+	     {$content}
+	     </div>
+	     </div>
+	     </div>
+
+	
 {/block}

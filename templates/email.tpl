@@ -2,13 +2,13 @@
 	<head>
 	</head>
 	<body>
-	<div class="head"><img src="{$logo_img}" alt="ALL Fresh"></div>
+	<div class="head"><img src="{$logo_img}" alt="cli~mate"></div>
 	<div>
 	{block name=body}{/block}
 	</div>
 	<div class="footer">
 		Thanks,<br/>
-		All Fresh team
+		team @ cli~mate
 	</div>
 	</body>
 </html>	

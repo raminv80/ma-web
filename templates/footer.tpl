@@ -1,39 +1,90 @@
 {block name=footer}
-	<div id="footer-wrapper">
-	<div class="container_16">
-    	<div class="grid_3">
-        	<ul>
-        		{foreach $menuitems as $value}
-				   <li>
-				   		<a title="{$value.title}" href='/{$value.url}' {$value.rel}  >{$value.title}</a>
-				   </li>
-				{/foreach}
-            </ul>
-        </div><!-- end of grid_3 -->
-    	<div class="grid_4">
-        	<ul>
-            	<li><a href="/bulletin">Pruducts</a></li>
-            </ul>
-        </div><!-- end of grid_4 -->
-    	<div class="grid_4">
-        	<p>Trading Hours<br>
-            blah<br>
-            P 08 8888 8888<br>
-            E <a href="mailto:info@allfresh.com.au">info@allfresh.com.au</a></p>
-        </div><!-- end of grid_4 -->
-    	<div class="grid_5 testimonial">
-        	<a href="/#" title="Watch All Fresh videos on YouTube"><img src="/images/template/yt.png" border="0" /></a>
-        	<a href="/#" title="Follow All Fresh on Twitter"><img src="/images/template/tt.png" border="0" /></a> 
-        	<a href="/#" title="Like All Fresh on Facebook"><img src="/images/template/fb.png" border="0" /></a> 
-        </div><!-- end of grid_5 -->
-        
-		<div class="clear"></div><br>
-        
-        <div class="grid_7"><small>&copy; Copyright {'Y'|date} Hall Towbars</small></div>
-        <div class="grid_9"><small>Made by <a href="http://www.them.com.au" target="_blank" title="Adelaide, South Australia Website Design and Development by THEM Advertising & Digital">THEM Advertising &amp; Digital</a></small></div>
-    
-	</div><!-- end of container_16 -->
-    
 
+<div id="footer">
+	<div class="container">
+			<div class="row-fluid">
+			<div class="span4">
+				<ul>
+					<li><a href="#">Home</a></li>
+					<li><a href="#">About us</a></li>
+					<li><a href="#">Retailers</a></li>
+					<li><a href="#">Contact us</a></li>
+				</ul>
+			</div>
+			<div class="span4">
+				<ul>
+					<li><a href="#">Products</a></li>
+					<li><a href="#">Support</a></li>
+					<li><a href="#">Warranty and registration</a></li>
+					<li><a href="#">Interactive</a></li>
+				</ul>
+			</div>
+			<div class="span4">
+				<p>Stay connected with us</p>
+				<a href="#"><img src="/images/facebook.png" alt="facebook" /></a>
+				<a href="#"><img src="/images/twitter.png" alt="twitter" /></a>
+				<a href="#"><img src="/images/youtube.png" alt="youtube" /></a>
+			</div>
+			<div class="span4">
+			address details - # street <br />
+			go here - suburb state pc<br />
+			P 08 #### ####<br />
+			F 08 #### ####		
+			</div>
+			</div>
+	</div>
+</div>    
+
+<div id="footer2">
+	<div class="container">
+		<div class="span16">
+			<div class="row-fluid">
+
+			<div class="span4">
+				<p>&copy; COPYRIGHT 2013 CLI~MATE</p>
+			</div>
+			<div class="span4 offset8">
+				<p>MADE BY <a href="http://them.com.au">THEM ADVERTISING & DIGITAL</a></p>
+			</div>
+
+			</div>
+		</div>
+	</div>
 </div>
+    
+    
+<!-- Placed at the end of the document so the pages load faster -->
+   
+    <script src="/includes/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery(".featured-container .span5").hover(function(){
+			jQuery(this).find(".btn").css('visibility','visible');
+		},function(){
+			jQuery(this).find(".btn").css('visibility','hidden');
+		});
+
+		jQuery(".nav li.dropdown").hover(function(){
+			jQuery(this).find('ul.dropdown-menu').css('display','block');
+		},function(){
+			jQuery(this).find('ul.dropdown-menu').css('display','none');
+		});
+
+	});
+    </script>
+
+<script type="text/javascript">
+jQuery(document).ready(function($){
+
+	$('#top-menu').prepend('<div id="menu-icon">Menu</div>');
+
+
+	/* toggle nav */
+	$("#menu-icon").on("click", function(){
+		$(".nav1").slideToggle();
+		$(this).toggleClass("active");
+	});
+
+});
+</script>
 {/block}

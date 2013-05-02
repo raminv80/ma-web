@@ -25,23 +25,6 @@ $_SESSION['smarty'] = "";
 unset($_SESSION['smarty']);
 $_request = clean($_REQUEST);
 //ProcessUpdateNewsStatus();
-//HANDLE USER PERMISSSIONS TO VIEW SITE. REDIRECT ALL NON-LOGGED IN USERS TO LOGIN
-if($_request['arg1']  == 'logout' ){
-	$_SESSION = null;
-	session_destroy();
-	session_start();
-}
-
-if((!isset($_SESSION['user']) || empty($_SESSION['user']) ) && $_request['arg1']  != 'register' && $_request['arg1']  != 'login' && $_request['arg1']  != 'recover-password'){
-	header("Location:/login");
-}
-
-if(!isset($_SESSION['user']) || empty($_SESSION['user']) ){
-	$nav = "non-authd-nav.tpl|non-authd-footer.tpl";
-}else{
-	$nav = "nav.tpl|bulletins-slider.tpl|footer.tpl";
-}
-
 
 while(true){
 	/******* Goes to home *******/
@@ -50,13 +33,6 @@ while(true){
 		$page_obj->LoadPage($CONFIG->index_page->pageID);
 		$template = $CONFIG->index_page->template;
 		
-		$lp = $CONFIG->xpath('/config/listing_page[@name="videos"]');
-		$lp = $lp[0];
-		$class = (string)$lp->file;
-		$obj = new $class("",$lp);
-		$data = $obj->GetRawData("","","video_created DESC LIMIT 1");
-		$SMARTY->assign('videos', $data[0]);
-		
 		/** news **/
 		$lp = $CONFIG->xpath('/config/listing_page[@name="news"]');
 		$lp = $lp[0];
@@ -64,13 +40,7 @@ while(true){
 		$obj = new $class("",$lp);
 		$data = $obj->GetRawData("","","news_created DESC LIMIT 3");
 		$SMARTY->assign('news', $data);
-		/** faq **/
-		$lp = $CONFIG->xpath('/config/listing_page[@name="faq"]');
-		$lp = $lp[0];
-		$class = (string)$lp->file;
-		$obj = new $class("",$lp);
-		$data = $obj->GetRawData("","","faq_created DESC LIMIT 3");
-		$SMARTY->assign('faqs', $data);
+		
 		break 1;
 	}
 	
@@ -127,5 +97,5 @@ while(true){
 
 
 
-$SMARTY->display("extends:page.tpl|head.tpl|$nav|$template");
+$SMARTY->display("extends:page.tpl|head.tpl|$template");
 die();

@@ -8,12 +8,6 @@
 		<password>c@^^3L5tRu7s*n9ub11c</password>
 		<dbname>themso3_db</dbname>
 	</database>
-	<!--<database>
-		<host>localhost</host>
-		<user>farmhousefreshdb</user>
-		<password>freshdb99!</password>
-		<dbname>farmhousefresh</dbname>
-	</database>-->
 	<index_page>
 		<template>home.tpl</template>
 		<pageID>1</pageID>
