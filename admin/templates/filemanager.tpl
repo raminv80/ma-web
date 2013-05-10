@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/theme.css">
 
 <!-- elFinder JS (REQUIRED) -->
-<script type="text/javascript" src="/admin/includes/fileManager/js/elfinder.min.js"></script>
+<script type="text/javascript" src="/admin/includes/fileManager/js/elfinder.full.js"></script>
 
 <!-- elFinder translation (OPTIONAL) -->
 <script type="text/javascript" src="/admin/includes/fileManager/js/i18n/elfinder.ru.js"></script>
