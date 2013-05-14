@@ -14,9 +14,7 @@ foreach($_SESSION['smarty'] as $key => $val){
 //ASSIGN ERROR MESSAGES FOR TEMPLATES
 $SMARTY->assign('error',$_SESSION['error']);
 $SMARTY->assign('notice',$_SESSION['notice']);
-$SMARTY->assign('rep_name',$_SESSION["user"]["rep"]["name"]);
-$SMARTY->assign('rep_phone',$_SESSION["user"]["rep"]["phone"]);
-$SMARTY->assign('rep_email',$_SESSION["user"]["rep"]["email"]);
+
 $_SESSION['error'] = "";
 unset($_SESSION['error']);
 $_SESSION['notice'] = "";
@@ -30,16 +28,8 @@ while(true){
 	/******* Goes to home *******/
 	if($_request['arg1'] == ''){
 		$page_obj = new Page();
-		$page_obj->LoadPage($CONFIG->index_page->pageID);
+		$page_obj->LoadPage($CONFIG->index_page);
 		$template = $CONFIG->index_page->template;
-		
-		/** news **/
-		$lp = $CONFIG->xpath('/config/listing_page[@name="news"]');
-		$lp = $lp[0];
-		$class = (string)$lp->file;
-		$obj = new $class("",$lp);
-		$data = $obj->GetRawData("","","news_created DESC LIMIT 3");
-		$SMARTY->assign('news', $data);
 		
 		break 1;
 	}
@@ -47,7 +37,7 @@ while(true){
 	/******* Goes to search *******/
 	if($_request['arg1'] == 'search'){
 		$page_obj = new Page();
-		$page_obj->LoadPage($CONFIG->search->pageID);
+		$page_obj->LoadPage($CONFIG->search);
 		$template = $CONFIG->search->template;
 		searchcms($_REQUEST['search']);
 		break 1;
@@ -57,7 +47,7 @@ while(true){
 	foreach($CONFIG->static_page as $sp){
 		if($sp->url == $_request['arg1'] ){
 			$page_obj = new Page();
-			$page_obj->LoadPage($sp->pageID);
+			$page_obj->LoadPage($sp);
 			$template = $sp->template;
 			break 2;
 		}

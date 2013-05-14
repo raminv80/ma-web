@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false">
+<config debug="true">
 	<company></company>
 	<database>
 		<host>m4-mysql1-1.ilisys.com.au</host>
@@ -20,6 +20,10 @@
 		<url>contact-us</url>
 		<template>contactus.tpl</template>
 		<pageID>2</pageID>
+		<!-- <table>
+			<name>tbl_extra</name>
+			<relID>news_listing_id</relID>
+		</table> -->
 	</static_page>
 	<listing_page name="news">
 		<url>news</url><!-- This element name is the base URL which will be used as part of the matching. Tables can have any number of sub tables which will be linked using a linking table (name convention) -->
@@ -28,72 +32,24 @@
 		<file>ListClass</file>
 		<template>news-listing.tpl</template>
 		<limit>5</limit>
-		<orderby>news_date DESC</orderby>
+		<orderby>news_start_date DESC</orderby>
 		<table><!-- This table will be the details table -->
-			<name>tbl_article</name>
-			<field>article_title</field><!-- The field used to match the URL -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
 			<template>news-item.tpl</template><!-- The template used if the field is matched -->
+			<table><!-- This table will be the details table -->
+				<name>tbl_news</name>
+			</table>
 		</table>
 		<menu>
-			<field>COUNT(article_date) AS num, DATE_FORMAT(article_date,'%M') AS month, DATE_FORMAT(article_date,'%Y') AS year</field>
-			<groupby>DATE_FORMAT(article_date,'%Y'),DATE_FORMAT(article_date,'%M')</groupby>
-			<orderby>DATE_FORMAT(article_date,'%Y') DESC</orderby>
+			<field>COUNT(news_start_date) AS num, DATE_FORMAT(news_start_date,'%M') AS month, DATE_FORMAT(news_start_date,'%Y') AS year</field>
+			<groupby>DATE_FORMAT(news_start_date,'%Y'),DATE_FORMAT(news_start_date,'%M')</groupby>
+			<orderby>DATE_FORMAT(news_start_date,'%Y') DESC</orderby>
 			<template>news_month_archive.tpl</template>
 		</menu>
 		<filter>
-			<field>CONCAT(DATE_FORMAT(article_date,'%Y'),"-",DATE_FORMAT(article_date,'%M'))</field>
-			<title>CONCAT(" - ",DATE_FORMAT(article_date,'%M'),"(",COUNT(article_date),")")</title>
-		</filter>
-	</listing_page>
-	<listing_page name="faqs">
-		<url>faqs</url><!-- This element name is the base URL which will be used as part of the matching. Tables can have any number of sub tables which will be linked using a linking table (name convention) -->
-		<pageID>4</pageID>
-		<ID>70</ID>
-		<file>ListClass</file>
-		<template>faq.tpl</template>
-		<admin_template></admin_template>
-		<table><!-- This table will be the details table -->
-			<name>tbl_faqs</name>
-			<field></field><!-- The field used to match the URL -->
-			<template></template><!-- The template used if the field is matched -->
-		</table>
-	</listing_page>
-	<listing_page name="videos">
-		<url>videos</url><!-- This element name is the base URL which will be used as part of the matching. Tables can have any number of sub tables which will be linked using a linking table (name convention) -->
-		<pageID>6</pageID>
-		<ID>71</ID>
-		<file>ListClass</file>
-		<template>videos.tpl</template>
-		<admin_template></admin_template>
-		<orderby>video_date DESC</orderby>
-		<table><!-- This table will be the details table -->
-			<name>tbl_video</name>
-			<field>video_title</field><!-- The field used to match the URL -->
-			<template></template><!-- The template used if the field is matched -->
-		</table>
-	</listing_page>
-	<listing_page name="bulletin">
-		<url>bulletin</url><!-- This element name is the base URL which will be used as part of the matching. Tables can have any number of sub tables which will be linked using a linking table (name convention) -->
-		<pageID>4</pageID>
-		<ID>69</ID>
-		<file>ListClass</file>
-		<template>bulletins.tpl</template>
-		<admin_template></admin_template>
-		<orderby>bulletin_date DESC</orderby>
-		<table><!-- This table will be the details table -->
-			<name>tbl_bulletin</name>
-			<field></field><!-- The field used to match the URL -->
-			<template>bulletins.tpl</template><!-- The template used if the field is matched -->
-		</table>
-		<menu>
-			<field>COUNT(bulletin_date) AS num, DATE_FORMAT(bulletin_date,'%M') AS month, DATE_FORMAT(bulletin_date,'%Y') AS year</field>
-			<groupby>DATE_FORMAT(bulletin_date,'%Y'),DATE_FORMAT(bulletin_date,'%M')</groupby>
-			<orderby>DATE_FORMAT(bulletin_date,'%Y') DESC</orderby>
-			<template>bulletin_month_archive.tpl</template>
-		</menu>
-		<filter>
-			<field>CONCAT(DATE_FORMAT(bulletin_date,'%Y'),"-",DATE_FORMAT(bulletin_date,'%M'))</field>
-			<title>CONCAT(" - ",DATE_FORMAT(bulletin_date,'%M'),"(",COUNT(bulletin_date),")")</title>
+			<field>CONCAT(DATE_FORMAT(news_start_date,'%Y'),"-",DATE_FORMAT(news_start_date,'%M'))</field>
+			<title>CONCAT(" - ",DATE_FORMAT(news_start_date,'%M'),"(",COUNT(news_start_date),")")</title>
 		</filter>
 	</listing_page>
 	<smartytemplate_config><!-- This element contains the smarty template values -->

@@ -2,54 +2,38 @@
 
 Class Page{
 
-	public $css=array();
-	public $js=array();
-	public $inside_header=array();
-	public $short_js=array();
-	public $after_heads=array();
-
+	
 	function __construct(){
 		$this->DBobject = new DBmanager();
 
 	}
 	/*********************** front end ****************************************/
-	function LoadPage($id='0'){
-		if($id == 0 ){
-
+	function LoadPage($_CONFIG_OBJ){
+		global  $SMARTY;
+		if(empty($_CONFIG_OBJ)){
+			throw(new Exception("An error occured because there was no configuration information for the page you are trying to load"));
 		}else{
-			$this->page_fields = $this->GetPageInfo($id);
-			$this->LoadTemplate($id);
+			$this->page_fields = $this->GetPageInfo($_CONFIG_OBJ);
+
+			if($this->page_fields){
+				foreach ($this->page_fields as $fieldname => $fieldvalue) {
+					$SMARTY->assign($fieldname,unclean($fieldvalue));
+				}
+			}
+			$this->LoadMenu($id);
 		}
 	}
 
-	function GetPageInfo($id){
-		$tbl_fields = $this->DBobject->GetRow('tbl_page', 'page_id = "'.$id.'" ');
-		if($tbl_fields){
-			$page_fields=array();
-			foreach ($tbl_fields as $key => $field) {
-				if($key != 'page_modified' && $key != 'page_deleted' && $key != 'page_fields'	&& !is_numeric($key)){
-					$page_fields[$key] = $field;
-					$this->$key = $field;
-				}
-			}
+	function GetPageInfo($_CONFIG_OBJ){
+		
+		$_tables = "";		
+		foreach($_CONFIG_OBJ->table as $t){
+			$table = $t->name;
+			$relID = $t->relID;
+			$_tables .= " LEFT JOIN {$table} ON tbl_listing.listing_id = {$relID} ";
 		}
 		
-		$sql = "
-		SELECT
-		tbl_field.field_name,
-		tbl_link_field_type.link_type_id AS field_type_id,
-		tbl_link_page_field.link_id,
-		tbl_link_page_field.link_content,
-		tbl_link_page_field.link_field_id	
- 		FROM tbl_link_page_field
-  		LEFT JOIN tbl_field
-   		  ON tbl_link_page_field.link_field_id = tbl_field.field_id
-   		LEFT JOIN tbl_link_field_type
-   			ON tbl_field.field_id = tbl_link_field_type.link_field_id
-		WHERE tbl_link_page_field.link_page_id  = '".$id."'
-		AND tbl_link_page_field.link_deleted IS NULL
-		AND tbl_link_field_type.link_deleted IS NULL
-		";
+		$sql = "SELECT * FROM tbl_listing {$_tables} WHERE tbl_listing.listing_id = {$_CONFIG_OBJ->pageID} AND tbl_listing.listing_deleted IS NULL";
 		$arr = $this->DBobject->wrappedSql($sql);
 		if(!empty($arr[0])){
 			foreach ($arr as $key =>  $row) {
@@ -59,33 +43,15 @@ Class Page{
 		return  $page_fields;
 	}
 
-	private function LoadTemplate($id){
-		global  $SMARTY;
-
-		if($this->page_fields){
-			foreach ($this->page_fields as $fieldname => $fieldvalue) {
-				$this->$fieldname = $fieldvalue;
-				$SMARTY->assign($fieldname,unclean($fieldvalue));
-			}
-		}
-		if(!empty($this->short_js)){
-			$SMARTY->assign('short_js', $this->short_js);
-		}
-		if(!empty($this->js)){
-			$SMARTY->assign('js', $this->short_js);
-		}
-		if(!empty($this->css)){
-			$SMARTY->assign('css', $this->css);
-		}
-
-		$this->LoadMenu($id);
-	}
-	
 	function LoadMenu($id){
 		
 		global  $CONFIG,$SMARTY,$DBobject;
 		
-		$page = $DBobject->GetRow("tbl_page", "page_id = '$id'");
+		$sql = "SELECT * FROM tbl_listing WHERE tbl_listing.listing_id = {$_CONFIG_OBJ->pageID} AND tbl_listing.listing_deleted IS NULL";
+		$page = $this->DBobject->wrappedSql($sql);
+		$page = $page['0'];
+		
+		$sql = "SELECT * FROM tbl_menu WHERE tbl_menu.listing_deleted IS NULL";
 		
 		$res = $DBobject->GetTable('tbl_menu','','','menu_order ASC');
 		if($res){
