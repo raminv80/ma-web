@@ -29,12 +29,22 @@ class ListClass{
 	protected function init(){
 		foreach($this->CONFIG_OBJ->table as $t){
 			$_tables = $t->name;
-			$this->TABLES = $_tables;
-			$count = 1;
-			$tbl_comp = str_replace("tbl_","",$_tables,$count);
+			$tbl_comp = str_replace("tbl_","",$t->name,$count);
 			$deleted_name = $tbl_comp."_deleted";
 			$publish_name = $tbl_comp."_published";
-			$this->WHERE = " {$deleted_name} IS NULL AND {$publish_name} = 1";
+			$type = $tbl_comp."_type_id";
+			$this->WHERE = " {$deleted_name} IS NULL AND {$publish_name} = 1 AND {$type} = '{$this->CONFIG_OBJ->type}'";
+			foreach($t->extra as $et){
+				$f_id = str_replace("tbl_", "", $t->name);
+				$s_id = str_replace("tbl_", "", $et);
+				$_tables .= " LEFT JOIN {$et} ON {$t->name}.{$f_id}_id = {$et}.{$s_id}_{$f_id}_id";
+				
+				$deleted_name = $s_id."_deleted";
+				$this->WHERE .= " AND {$deleted_name} IS NULL ";
+			}
+			$this->TABLES = $_tables;
+			$count = 1;
+			
 			if(count($t->xpath('table')) > 0){
 				$this->joinTable($t);
 			}
@@ -67,13 +77,14 @@ class ListClass{
 		}		
 	}
 	
+	
 	function Load(){
 		global $SMARTY;	
 		$template = "";
 		$data = "";
 		//Split the URL
 		$_url= ltrim(rtrim($this->URL,'/'),'/');
-		$array = split('/', $_url);
+		$array = explode('/', $_url);
 		foreach($array as $val){
 			if($val != ''){
 			$args[] = urldecode($val);
@@ -280,7 +291,7 @@ class ListClass{
 	 * This function retrieves all the Field values linked to this PAGEID 
 	 */
 	function LoadPageData(){
-		global  $DBobject,$SMARTY;		
+		/*global  $DBobject,$SMARTY;		
 		$sql = "SELECT tbl_link_page_field.link_page_field_content, tbl_field.field_name
 				FROM tbl_link_page_field LEFT JOIN tbl_field ON tbl_link_page_field.link_field_id = tbl_field.field_id
 				WHERE tbl_link_page_field.link_page_id = '{$this->CONFIG_OBJ->pageID}'
@@ -291,14 +302,14 @@ class ListClass{
 			foreach($data as $key=>$value){
 				$SMARTY->assign($value['field_name'],$value['link_page_field_content']);
 			}
-		}
+		}*/
 	}
 	
 	/**
 	 * This function retrieves the SEO values from the page table for this PAGEID 
 	 */
 	function GenerateSEO(){
-		global  $DBobject,$SMARTY;	
+		/*global  $DBobject,$SMARTY;	
 		
 		$sql = "SELECT * FROM tbl_page WHERE page_id = '{$this->CONFIG_OBJ->pageID}'";
 		if($data = $DBobject->wrappedSqlGet($sql)){
@@ -307,7 +318,7 @@ class ListClass{
 					$SMARTY->assign($key,$value);
 				}
 			}
-		}
+		}*/
 	}
 	
 	/**
@@ -400,7 +411,6 @@ class ListClass{
 				".(!empty($_ORDERBY)?" ORDER BY {$_ORDERBY}":"")."
 				".(!empty($this->LIMIT)?" LIMIT {$this->LIMIT}":"");
 		
-		//echo $sql."<br>";
 		$data = $DBobject->wrappedSql($sql);
 		return $data;
 	}

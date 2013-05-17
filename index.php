@@ -63,7 +63,7 @@ while(true){
 			$template = $obj->Load();
 			
 			$page_obj = new Page();
-			$page_obj->LoadPage($lp->pageID);
+			$page_obj->LoadPage($lp);
 			
 			break 2;
 		}
@@ -71,10 +71,12 @@ while(true){
 	
 	/******* Dynamic Page Check Here *******/
 	//$urls = $DBobject->GetColumn('page_url', 'tbl_page', '');
-	$sql = "SELECT page_url from tbl_page";
+	$sql = "SELECT listing_url FROM tbl_listing";
 	$urls = $DBobject->wrappedSqlGet($sql);
 	if(in_array($_request['arg1'],$urls)){
-		$p_id =  $DBobject->GetAnyCell('page_id', 'tbl_page', 'page_url = "'.$_request['arg1'].'"');
+		$sql = "SELECT listing_id FROM tbl_listing WHERE listing_url = ?";
+		$res = $DBobject->wrappedSqlGet($sql,array($_request['arg1']));
+		$p_id =  $res[0]['listing_id'];
 		$page_obj = new Page();
 		$page_obj->LoadPage($p_id);
 		$template = "body.tpl";

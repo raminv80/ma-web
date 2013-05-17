@@ -8,6 +8,16 @@
 		<password>c@^^3L5tRu7s*n9ub11c</password>
 		<dbname>themso3_db</dbname>
 	</database>
+	<page_strut>
+		<type>1</type>
+		<file>ListClass</file>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
+			<extra>tbl_news</extra>
+			<template>body.tpl</template><!-- The template used if the field is matched -->
+		</table>
+	</page_strut>
 	<index_page>
 		<template>home.tpl</template>
 		<pageID>1</pageID>
@@ -27,7 +37,8 @@
 	</static_page>
 	<listing_page name="news">
 		<url>news</url><!-- This element name is the base URL which will be used as part of the matching. Tables can have any number of sub tables which will be linked using a linking table (name convention) -->
-		<pageID>9</pageID>
+		<type>2</type>
+		<pageID>1</pageID>
 		<ID>69</ID>
 		<file>ListClass</file>
 		<template>news-listing.tpl</template>
@@ -36,10 +47,8 @@
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>
 			<field>listing_url</field><!-- The field used to match the URL -->
+			<extra>tbl_news</extra>
 			<template>news-item.tpl</template><!-- The template used if the field is matched -->
-			<table><!-- This table will be the details table -->
-				<name>tbl_news</name>
-			</table>
 		</table>
 		<menu>
 			<field>COUNT(news_start_date) AS num, DATE_FORMAT(news_start_date,'%M') AS month, DATE_FORMAT(news_start_date,'%Y') AS year</field>
