@@ -7,8 +7,8 @@
 				{if $fields.listing_id neq ""}Edit{else}New{/if} Page
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
 				<input type="hidden" value="listing_id" name="field[tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
-				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="id_article_name">
-				<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_type_id]" id="id_article_name">
+				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
+				<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 			</div>
 		</div>
 		<div class="row-fluid">

@@ -14,7 +14,6 @@
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>
 			<field>listing_url</field><!-- The field used to match the URL -->
-			<extra>tbl_news</extra>
 			<template>body.tpl</template><!-- The template used if the field is matched -->
 		</table>
 	</page_strut>

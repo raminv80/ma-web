@@ -10,6 +10,7 @@ Class Record{
 	private $ID;
 	private $FIELD;
 	private $DELETED;
+	private $CONFIG;
 	//SQL ELEMENTS
 	protected $SELECT = "*";
 	protected $TABLES = "";
@@ -27,6 +28,7 @@ Class Record{
 		$this->ID = $_config->table->id;
 		$this->FIELD = $_config->table->field;
 		$this->DELETED = $_config->table->deleted;
+		$this->CONFIG = $_config;
 	}
 	
 	function updateRecord($arr){
@@ -41,6 +43,16 @@ Class Record{
 			foreach ($res[0] as $key => $field) {
 				if(!is_numeric($key)){
 					$article_f[$key] = $field;
+				}
+			}
+		}
+		
+		foreach($this->CONFIG->table->options->field as $f){
+			$pre = str_replace("tbl_","",$f->table);
+			$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL ";// AND article_deleted IS NULL";
+			if($res = $DBobject->wrappedSqlGet($sql)){
+				foreach ($res as $key => $row) {
+					$article_f['options']["{$f->name}"][] = array('id'=>$row["{$pre}_id"],'value'=>$row["{$f->reference}"]);
 				}
 			}
 		}

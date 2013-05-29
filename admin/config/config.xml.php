@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false">
+<config debug="true">
 	<company></company>
 	<database>
 		<host>m4-mysql1-1.ilisys.com.au</host>
@@ -24,6 +24,36 @@
 		</table>
 		<list_template>list_admin.tpl</list_template>
 		<edit_template>edit_admin.tpl</edit_template>
+	</section>
+	<section>
+		<url>category</url>
+		<title>Category</title>
+		<type>TABLE</type>
+		<table>
+			<name>tbl_category</name>
+			<id>category_id</id>
+			<field>category_name</field>
+			<deleted>category_deleted</deleted>
+			<options>
+				<field>
+					<name>category_listing_id</name>
+					<table>tbl_listing</table>
+					<reference>listing_name</reference>
+				</field>
+				<field>
+					<name>category_type_id</name>
+					<table>tbl_type</table>
+					<reference>type_name</reference>
+				</field>
+				<field>
+					<name>category_parent_id</name>
+					<table>tbl_category</table>
+					<reference>category_name</reference>
+				</field>
+			</options>
+		</table>
+		<list_template>list_category.tpl</list_template>
+		<edit_template>edit_category.tpl</edit_template>
 	</section>
 	<section>
 		<url>page</url>
