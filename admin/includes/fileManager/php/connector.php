@@ -44,14 +44,14 @@ $opts = array(
 			'URL'           => '/uploads/', // URL to files (REQUIRED)
 			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
 		),
-		array(
+		/*array(
             'driver' => 'MySQL',
             'host'   => $CONFIG->database->host,
             'user'   => $CONFIG->database->user,
             'pass'   => $CONFIG->database->password,
             'db'     => $CONFIG->database->dbname,
             'path'   => 1,
-        )/*,
+        ),
         array(
             'driver' => 'FTP',
             'host'   => 'uploads.ilisys.com.au',

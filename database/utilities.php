@@ -3,10 +3,20 @@
 function getPass($username,$pass){
 	return sha1(md5(bin2hex(strrev(stripslashes($username)))) . md5(stripslashes(strtoupper($pass))));
 }
+function checkEmail($usr){
+	global $DBobject;
+	$sql = "SELECT * from tbl_admin WHERE admin_username = :user";
+	$res = $DBobject->wrappedSqlGet($sql,array("user" => $usr));
+
+	if(!empty($res)){
+		return 'true';
+	}
+	return 'false';
+}
 
 function urlSafeString($str){
 	$str = str_replace(' ','-',$str);
-	$str = preg_replace("/[\s\W]+/", "-", $str);
+	$str = preg_replace("/[\s\W]+/", "", $str);
 	return $str;
 }
 
@@ -136,7 +146,8 @@ function logError($trace, $err, $sql = false) {
 }
 
 function sendMail($to,$from,$fromEmail,$subject,$body){
-	global $DBobject;
+
+
 	/* To send HTML mail, you can set the Content-type header. */
 	$headers  = "MIME-Version: 1.0\r\n";
 	$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
@@ -167,7 +178,7 @@ function sendMailV2($to,$from,$fromEmail,$subject,$body){
 	  	$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content) VALUES ('".clean($to)."','".clean($final_msg['headers'])."','".clean($subject)."','".clean($final_msg['multipart'])."')";
 	  	$DBobject->executeSQL($sql);
 	}catch(Exception $e){}
-    $mailSent = mail($to,$subject,$final_msg['headers'],$final_msg['multipart']); 
+    $mailSent = mail($to,$subject,$final_msg['headers'],$final_msg['multipart']);
     ini_restore('sendmail_from');
 
     return $mailSent;
@@ -243,7 +254,7 @@ function preparehtmlmail($html) {
 
   }
   $multipart .= "--$boundary--\n";
-  return array('multipart' => $multipart, 'headers' => $headers);  
+  return array('multipart' => $multipart, 'headers' => $headers);
 }
 
 function clean( $str ){

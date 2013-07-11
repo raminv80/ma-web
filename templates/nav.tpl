@@ -20,8 +20,8 @@
 		 <div id="ddtopmenubar" class="mattblackmenu">
 		 		<ul>
 		       	{foreach $menuitems as $value}
-				   <li {if !$first}class="first"{assign var=first value='1'}{/if}  >
-				   <a {if $value.selected}class="selected" {/if}title="{$value.title}" href='/{$value.url}' {$value.rel}  >{$value.title}</a></li>
+				   <li {if !$first}class="first"{assign var=first value='1'}{/if} {if $value.selected}class="active" {/if}>
+				   <a title="{$value.title}" href='/{$value.url}' {$value.rel}  >{$value.title}</a></li>
 				{/foreach}
 				</ul> 
 		</div>	

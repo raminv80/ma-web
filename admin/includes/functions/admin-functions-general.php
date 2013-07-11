@@ -1,13 +1,11 @@
 <?php
 function AdminLogIn($email,$password){
 	$temp_str = getPass($email,$password);
+	//die('@'.$temp_str.'@');
 	$DBobject = new DBmanager();
-	
 	$sql = "SELECT * FROM tbl_admin WHERE admin_email = :email AND admin_password = :password";
-	$params = array( "email"=>$email , "password"=>$temp_str );
-	$row = $DBobject->wrappedSqlGetSingle($sql, $params);
-	//$row = $DBobject->GetRow('tbl_admin',"admin_email = '".$email."' AND admin_password = '".$temp_str."'");
-	
+	$params = array( "email" => $email , "password" => $temp_str );
+	$row = $DBobject->executeSQL($sql , $params );
 	if($row){
 		$_SESSION["admin"]["id"]=$row["admin_id"];
 		$_SESSION["admin"]["name"]=$row["admin_name"];
@@ -28,7 +26,7 @@ function SaveAdminLogIn($admin_id){
 	$sql = "INSERT INTO tbl_login ( login_admin_id , login_ip ) VALUES ( :login_admin_id , :login_ip) ";
 	$result = $DBobject->executeSQL($sql , $params );
 	return true;
-	
+
 }
 
 function showVars(){
@@ -45,7 +43,7 @@ function printr($arr,$return = 0){
 		$buf = print_r($arr,1);
 		return $buf;
 	}
-	
+
 }
 
 function load_text_editor(){

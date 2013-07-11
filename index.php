@@ -5,7 +5,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 ini_set('session.cache_limiter', 'private');
 include "includes/functions/functions.php";
-global $CONFIG,$SMARTY,$DBobject;	
+global $CONFIG,$SMARTY,$DBobject;
 
 //ASSIGN ALL STORED SMARTY VALUES
 foreach($_SESSION['smarty'] as $key => $val){
@@ -25,15 +25,20 @@ $_request = clean($_REQUEST);
 //ProcessUpdateNewsStatus();
 
 while(true){
+	/** Load slider items **/
+	$sql = "SELECT * FROM tbl_slide WHERE slide_deleted is null ORDER BY slide_order ";
+	$res = $DBobject->wrappedSqlGet($sql,array());
+	$SMARTY->assign('slider',$res);
+	/** **/
+
 	/******* Goes to home *******/
 	if($_request['arg1'] == ''){
 		$page_obj = new Page();
 		$page_obj->LoadPage($CONFIG->index_page);
 		$template = $CONFIG->index_page->template;
-		
 		break 1;
 	}
-	
+
 	/******* Goes to search *******/
 	if($_request['arg1'] == 'search'){
 		$page_obj = new Page();
@@ -42,7 +47,7 @@ while(true){
 		searchcms($_REQUEST['search']);
 		break 1;
 	}
-	
+
 	/****** Goes to individual script pages *******/
 	foreach($CONFIG->static_page as $sp){
 		if($sp->url == $_request['arg1'] ){
@@ -52,7 +57,7 @@ while(true){
 			break 2;
 		}
 	}
-	
+
 	/******* Listing pages here *******/
 	$arr = explode("/", $_request["arg1"]);
 	foreach($CONFIG->listing_page as $lp){
@@ -61,28 +66,33 @@ while(true){
 			$class = (string)$lp->file;
 			$obj = new $class($_nurl,$lp);
 			$template = $obj->Load();
-			
 			$page_obj = new Page();
+
 			$page_obj->LoadPage($lp);
-			
+
 			break 2;
 		}
 	}
-	
+
 	/******* Dynamic Page Check Here *******/
 	//$urls = $DBobject->GetColumn('page_url', 'tbl_page', '');
 	$sql = "SELECT listing_url FROM tbl_listing";
 	$urls = $DBobject->wrappedSqlGet($sql);
-	if(in_array($_request['arg1'],$urls)){
-		$sql = "SELECT listing_id FROM tbl_listing WHERE listing_url = ?";
-		$res = $DBobject->wrappedSqlGet($sql,array($_request['arg1']));
-		$p_id =  $res[0]['listing_id'];
-		$page_obj = new Page();
-		$page_obj->LoadPage($p_id);
-		$template = "body.tpl";
-		break 1;
+	foreach ($urls as $url){
+		if(in_array($_request['arg1'],$url)){
+			$sql = "SELECT listing_id FROM tbl_listing WHERE listing_url = ?";
+			$res = $DBobject->wrappedSqlGet($sql,array($_request['arg1']));
+			//$p_id =  $res[0]['listing_id'];
+			$page_obj = new Page();
+			//$p_id->page_strut->table = 'tbl_listing';
+			$p_id->page_strut->table->name='tbl_listing';
+			$p_id->page_strut->table->orderby='listing_order';
+			$p_id->pageID = $res[0]['listing_id'];
+			$page_obj->LoadPage($p_id);
+			$template = "body.tpl";
+			break 2;
+		}
 	}
-	
 	$template = '404.tpl';
 	break 1;
 }

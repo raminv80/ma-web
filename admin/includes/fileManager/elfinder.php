@@ -9,7 +9,7 @@
 		<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="/includes/css/jqui.css" />
-		
+
 		<!-- TinyMCE (REQUIRED) -->
 		<script src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
 		<script src="/admin/includes/js/tiny_mce/tiny_mce_popup.js"></script>
@@ -28,11 +28,11 @@
                     // Here goes your code for setting your custom things onLoad.
                 },
                 mySubmit : function (URL) {
-                    
+
                     var win = tinyMCEPopup.getWindowArg("window");
 
                     // insert information now
-                    win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = URL;
+                    win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = "/"+URL.path;
 
                     // are we an image browser
                     if (typeof(win.ImageDialog) != "undefined") {
@@ -64,8 +64,9 @@
                     getFileCallback : function(url) {
                         path = url;
                         FileBrowserDialogue.mySubmit(path);
-                    }                     
-                }).elfinder('instance');            
+
+                    }
+                }).elfinder('instance');
             });
         </script>
 	</head>

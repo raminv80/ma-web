@@ -1,9 +1,6 @@
 .left { float:left; }
 .right { float:right; }
 
-.error { 
-	border: 1px solid #FF0000;
-}
 
 .clear { clear:both; }
 

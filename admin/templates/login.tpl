@@ -4,7 +4,7 @@
 		<div class="span12"><h3>Login Details</h3></div>
 	</div>
 	<div class="row-fluid">
-		<div class="span4">Username:</div>
+		<div class="span4">Email:</div>
 		<div class="span8"><input type="text" name="username" id="email"   class="text-box-login"></div>
 	</div>
 	<div class="row-fluid">

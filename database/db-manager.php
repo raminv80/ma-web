@@ -29,30 +29,32 @@ Class DBmanager{
 	 */
 	function executeSQL($MySQL , $params = array()){
 		if(empty($MySQL)){
-			return;
+			return false;
 		}
 		$this->queryresult = true;
 		$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		if($STH = $this->PDO->prepare($MySQL)){  
+		if($STH = $this->PDO->prepare($MySQL)){
 			foreach ($params as $key => &$val) {
 	   			$STH->bindParam(":{$key}", $val);
 			}
+			//echo $MySQL;
 			$execute_res = $STH->execute($params);
 			if($execute_res === false) {
 				$err = print_r($this->PDO->errorInfo(),1);
-				$trace = debug_backtrace();			
+				$trace = debug_backtrace();
 				$backtrace = parse_backtrace($trace);
 				$errMsg = logError($backtrace, $err, $MySQL);
 				$this->queryresult = false;
-				header('Location: /404');
+				die($MySQL);
+				//header('Location: /404');
 				die();
 			}
-			
+
 			$this->lastquery = $MySQL;
-			
-			try{	
+
+			try{
 				$result = $STH->fetchAll(PDO::FETCH_ASSOC);
-				$this->id = $this->PDO->lastInsertId(); 
+				$this->id = $this->PDO->lastInsertId();
 				$this->lastresult = $result;
 				return $result;
 			}catch(Exception $e){
@@ -91,7 +93,7 @@ Class DBmanager{
 	 * @return string|boolean
 	 */
 	function wrappedSqlGetSingle( $sql , $params = array() ) {
-		$result = $this->executeSQL($sql , $params );		
+		$result = $this->executeSQL($sql , $params );
 		if(mysql_error()) {
 			$err = mysql_error();
 			$trace = debug_backtrace();
@@ -129,7 +131,7 @@ Class DBmanager{
 		}
 
 	}
-	
+
 	/**
 	 * Enter description here ...
 	 * @param unknown_type $sql
@@ -162,13 +164,13 @@ Class DBmanager{
 		$sql =  "SHOW COLUMNS FROM ".$table;
 		if($sql_res = $this->executeSQL($sql)){
 			if(!empty($sql_res)) {
-				
+
 				return $result;
 			}else {
 				return false;
 			}
 		}
-	}	
+	}
 	function ShowTables(){
 		$sql = "SHOW TABLES";
 		$arr = $this->wrappedSqlGet($sql);
@@ -233,7 +235,7 @@ Class DBmanager{
 				$backtrace = parse_backtrace($trace);
 				$errMsg = logError($backtrace, $err, $MySQL);
 				die($errMsg);
-					
+
 			}
 		}
 		return true;

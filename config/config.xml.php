@@ -3,10 +3,10 @@
 <config debug="true">
 	<company></company>
 	<database>
-		<host>m4-mysql1-1.ilisys.com.au</host>
+		<host>n7-mysql5-3.ilisys.com.au</host>
 		<user>themso</user>
 		<password>c@^^3L5tRu7s*n9ub11c</password>
-		<dbname>themso3_db</dbname>
+		<dbname>themso17_db</dbname>
 	</database>
 	<page_strut>
 		<type>1</type>
@@ -19,26 +19,30 @@
 	</page_strut>
 	<index_page>
 		<template>home.tpl</template>
-		<pageID>1</pageID>
+		<pageID>4</pageID>
 	</index_page>
 	<search>
 		<template>search.tpl</template>
 		<pageID>1</pageID>
 	</search>
-	<static_page>
+
+	<listing_page name="contact-us">
 		<url>contact-us</url>
+		<type>1</type>
+		<pageID>5</pageID>
+		<ID>72</ID>
+		<file>ListClass</file>
 		<template>contactus.tpl</template>
-		<pageID>2</pageID>
-		<!-- <table>
-			<name>tbl_extra</name>
-			<relID>news_listing_id</relID>
-		</table> -->
-	</static_page>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<where>(listing_id = '7' OR listing_id = '8' )</where>
+		</table>
+ 	</listing_page>
 	<listing_page name="news">
 		<url>news</url><!-- This element name is the base URL which will be used as part of the matching. Tables can have any number of sub tables which will be linked using a linking table (name convention) -->
 		<type>2</type>
 		<pageID>1</pageID>
-		<ID>69</ID>
+		<ID>72</ID>
 		<file>ListClass</file>
 		<template>news-listing.tpl</template>
 		<limit>5</limit>
@@ -60,6 +64,45 @@
 			<title>CONCAT(" - ",DATE_FORMAT(news_start_date,'%M'),"(",COUNT(news_start_date),")")</title>
 		</filter>
 	</listing_page>
+	<listing_page name="product-care">
+		<url>product-care</url>
+		<type>6</type>
+		<pageID>23</pageID>
+		<ID>72</ID>
+		<file>ListClass</file>
+		<template>product-care.tpl</template>
+		<limit>50</limit>
+		<orderby>listing_order DESC</orderby>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
+			<template>product-care-item.tpl</template><!-- The template used if the field is matched -->
+		</table>
+ 	</listing_page>
+ 	<listing_page name="specials">
+		<url>specials</url>
+		<type>5</type>
+		<pageID>22</pageID>
+		<ID>72</ID>
+		<file>ListClass</file>
+		<template>specials.tpl</template>
+		<limit>50</limit>
+		<orderby>listing_order </orderby>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
+			<template>specials.tpl</template><!-- The template used if the field is matched -->
+			<orderby>listing_order </orderby>
+		</table>
+ 	</listing_page>
+	<listing_page name="products">
+		<file>ProductListing</file>
+		<type>4</type>
+		<url>products</url>
+		<pageID>30</pageID>
+		<item_template>product-category-template.tpl</item_template>
+		<category_template>product-category-template.tpl</category_template>
+	</listing_page>
 	<smartytemplate_config><!-- This element contains the smarty template values -->
 		<templates>/templates</templates>
 		<templates_c>/templates_c</templates_c>
@@ -67,13 +110,4 @@
 		<configs>/configs</configs>
 		<plugins>/plugins</plugins>
 	</smartytemplate_config>
-	<payment_gateway><!-- This element contains BANK details -->
-		<bank name="NAB" live="false">
-			<file></file>
-			<test_url></test_url>
-			<live_url></live_url>
-			<merchant_id></merchant_id>
-			<merchant_password></merchant_password>
-		</bank>
-	</payment_gateway>
 </config>

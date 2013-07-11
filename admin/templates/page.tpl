@@ -11,40 +11,42 @@
 <head>
 	<meta name="Description" content="{$page_metadescription}" />
 	<meta name="Keywords" content="{$page_metawords}" />
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />		
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 	<meta name="Distribution" content="Global" />
-	<meta name="Robots" content="index,follow" />	
+	<meta name="Robots" content="index,follow" />
 	<title>{$page_seo_title}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon">
-	
+
 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="/includes/css/jqui.css" />
-	
+
 	<link rel="stylesheet" type="text/css" href="/includes/css/styles.css" />
-	
+	<link rel="stylesheet" type="text/css" href="/admin/includes/css/styles.css" />
+
 	<!-- Responsive -->
-	<link rel="stylesheet" type="text/css" href="/includes/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/admin/includes/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="/includes/css/bootstrap-responsive.min.css" />
 	<script src="/includes/js/bootstrap.min.js"></script>
 	<!-- End Responsive -->
-	
-	<script type="text/javascript" src="/includes/js/validation.js"></script>		
-	
+	<script type="text/javascript" src="/includes/js/validation.js"></script>
 	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
-	
-	<script type="text/javascript" src="/includes/js/timepicker/jquery.ui.timepicker.js"></script>	
+	<script type="text/javascript" src="/includes/js/timepicker/jquery.ui.timepicker.js"></script>
+
+	<link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/elfinder.min.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/theme.css">
+	<script type="text/javascript" src="/admin/includes/fileManager/js/elfinder.full.js"></script>
+
 	<link rel="stylesheet" type="text/css" href="/includes/js/timepicker/jquery.ui.timepicker.css" />
-	
 	<script type="text/javascript" charset="utf-8" src="/includes/js/ddlevelsfiles/ddlevelsmenu.js" ></script>
 	<link rel="stylesheet" type="text/css" href="/includes/js/ddlevelsfiles/ddlevelsmenu-base.css" />
 	<link rel="stylesheet" type="text/css" href="/includes/js/ddlevelsfiles/ddlevelsmenu-topbar.css" />
-	
+
 	<link type="text/css" href="/includes/css/styles.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600' rel='stylesheet' type='text/css'>
-	
+
 	<script type="text/javascript">
 		$(function() {
 			 $( "input[type=submit]" ).button();
@@ -54,9 +56,9 @@
 				navigation: true,
 				icons:false,
 				animated: 'bounceslide'});
-		}); 
+		});
 	</script>
-	<title>Website administration</title>		
+	<title>Website administration</title>
 </head>
 <body>
 <div class='container'>
@@ -70,6 +72,22 @@
 		{block name=nav}{/block}
 		</div>
 		<div class="span9">
+		<div id="elfinder"></div>
+		<div class="row-fluid alert alert-block hidden" id="edited"><div class="span12"><img alt="success" src="/admin/images/success.png" width="28" height="28"/><b>The item was successfully edited.</b></div></div>
+		<div class="row-fluid alert alert-block hidden" id="deleted"><div class="span12"><img alt="success" src="/admin/images/success.png" width="28" height="28"/><b>The item was successfully deleted.</b></div></div>
+		<div class="row-fluid alert alert-block hidden" id="warning"><div class="span12"><img alt="error" src="/admin/images/warning.png" width="28" height="28"/><b>There is something wrong. Please check that you have filled out the fields correctly.</b></div></div>
+		<div class="row-fluid alert alert-block hidden" id="error"><div class="span12"><img alt="error" src="/admin/images/warning.png" width="28" height="28"/><b>An unknown error occured.</b></div></div>
+		{if $notice neq ''}
+			<script>
+			$('#{$notice}').removeClass('hidden');
+			setTimeout(function(){
+				//$('.alert').fadeOut('slow');
+				$('#{$notice}').fadeOut('slow', function() {
+					$('#{$notice}').addClass('hidden');
+				});
+	    	},6000);
+			</script>
+		{/if}
 		<!--  block body start -->
 		{block name=body}{/block}
 		<!--  block body end -->
@@ -81,13 +99,13 @@
 			$('textarea.tinymce').tinymce({
 				// Location of TinyMCE script
 				script_url : '/admin/includes/js/tiny_mce/tiny_mce.js',
-	
+
 				// General options
 				theme : "advanced",
 				plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking",
-	
+
 				// Theme options
-				theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+				theme_advanced_buttons1 : "forecolor,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
 				theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,file,cleanup,code",
 				theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media",
 				theme_advanced_buttons4 : "",
@@ -100,7 +118,7 @@
 				file_browser_callback : 'elFinderBrowser'
 			});
 		});
-		
+
 		function elFinderBrowser (field_name, url, type, win) {
             var cmsURL = '/admin/includes/fileManager/elfinder.php';    // script URL - use an absolute path!
             if (cmsURL.indexOf("?") < 0) {
@@ -116,7 +134,7 @@
             tinyMCE.activeEditor.windowManager.open({
                 file : cmsURL,
                 title : 'elFinder 2.0',
-                width : 900,  
+                width : 900,
                 height : 450,
                 resizable : "yes",
                 inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
@@ -129,7 +147,8 @@
             return false;
         }
 	</script>
-</div>
 
+</div>
+	<script type="text/javascript" src="/admin/includes/js/admin-general.js"></script>
 </body>
 </html>

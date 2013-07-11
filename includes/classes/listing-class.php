@@ -1,6 +1,6 @@
 <?php
 class ListClass{
-	
+
 	protected $CONFIG_OBJ;
 	protected $DBTABLE;
 	//URL value passed into constructor
@@ -14,15 +14,15 @@ class ListClass{
 	protected $LIMIT = "";
 	//SET OF DATA LOADED
 	protected $DATA;
-	
+
 	function __construct($_URL,$_CONFIG_OBJ){
-		global $SMARTY,$DBobject;	
+		global $SMARTY,$DBobject;
 		$this->URL = $_URL;
 		$this->CONFIG_OBJ = $_CONFIG_OBJ;
 		$this->DBTABLE = new Table($this->CONFIG_OBJ->ID);
 		$this->init();
 	}
-	
+
 	/**
 	 * Initialise values based on the CONFIG. This function will initialise the TABLE joins
 	 */
@@ -33,26 +33,28 @@ class ListClass{
 			$deleted_name = $tbl_comp."_deleted";
 			$publish_name = $tbl_comp."_published";
 			$type = $tbl_comp."_type_id";
-			$this->WHERE = " {$deleted_name} IS NULL AND {$publish_name} = 1 AND {$type} = '{$this->CONFIG_OBJ->type}'";
+
+			$this->WHERE = " {$deleted_name} IS NULL AND {$publish_name} = 1 AND {$type} = '{$this->CONFIG_OBJ->type}'  ";
 			foreach($t->extra as $et){
 				$f_id = str_replace("tbl_", "", $t->name);
 				$s_id = str_replace("tbl_", "", $et);
 				$_tables .= " LEFT JOIN {$et} ON {$t->name}.{$f_id}_id = {$et}.{$s_id}_{$f_id}_id";
-				
+
 				$deleted_name = $s_id."_deleted";
 				$this->WHERE .= " AND {$deleted_name} IS NULL ";
 			}
+			$this->WHERE .= $t->where!=''?' AND '.$t->where:'';
 			$this->TABLES = $_tables;
 			$count = 1;
-			
+
 			if(count($t->xpath('table')) > 0){
 				$this->joinTable($t);
 			}
 		}
 	}
 	/**
-	 * This function takes the CONFIG structure for a table which has 
-	 * joins. It can be called recursively. Linked tables must have a 
+	 * This function takes the CONFIG structure for a table which has
+	 * joins. It can be called recursively. Linked tables must have a
 	 * linking table named tbl_link_(parent)_(child).
 	 * @param Object $table
 	 */
@@ -68,18 +70,18 @@ class ListClass{
 			$deleted_name = $tbl_comp."_deleted";
 			$publish_name = $tbl_comp."_published";
 			$id2_name = $tbl2_comp."_id";
-			$this->TABLES = " LEFT JOIN tbl_link_{$tbl_comp}_{$tbl2_comp} ON $tbl_name.{$id_name} = tbl_link_{$tbl_comp}_{$tbl2_comp}.link_1_id 
+			$this->TABLES = " LEFT JOIN tbl_link_{$tbl_comp}_{$tbl2_comp} ON $tbl_name.{$id_name} = tbl_link_{$tbl_comp}_{$tbl2_comp}.link_1_id
 				LEFT JOIN $tbl2_name ON $tbl2_name.{$id2_name} = tbl_link_{$tbl_comp}_{$tbl2_comp}.link_2_id ";
 			$this->WHERE = " AND {$deleted_name} IS NULL AND {$publish_name} = 1";
 			if(count($t->xpath('table')) > 0){
 				$this->joinTable($t);
 			}
-		}		
+		}
 	}
-	
-	
+
+
 	function Load(){
-		global $SMARTY;	
+		global $SMARTY;
 		$template = "";
 		$data = "";
 		//Split the URL
@@ -90,7 +92,7 @@ class ListClass{
 			$args[] = urldecode($val);
 			}
 		}
-		
+
 		while(true){
 			if(empty($_url)){
 				if(count($this->CONFIG_OBJ->xpath('limit')) > 0){
@@ -111,7 +113,7 @@ class ListClass{
 						$menus[] = $this->LoadMenu($m);
 					}
 				}
-				
+
 				$SMARTY->assign('menus',$menus);
 				if(!empty($data)){
 					break 1;
@@ -136,7 +138,7 @@ class ListClass{
 					}
 				}
 			}
-			
+
 			if(count($this->CONFIG_OBJ->table->xpath('table')) > 0){
 				$template = $this->LoadTemplate($this->CONFIG_OBJ->table, args);
 				if(!empty($template)){
@@ -161,7 +163,7 @@ class ListClass{
 					}
 				}
 				$SMARTY->assign('menus',$menus);
-				
+
 				if(count($this->CONFIG_OBJ->filter->xpath('title')) > 0){
 					$d2 = $this->GetData($this->CONFIG_OBJ->filter->title." AS title"," {$field} = '{$val}'","","");
 					foreach($d2 as $row){
@@ -169,35 +171,35 @@ class ListClass{
 						break;
 					}
 				}
-				
+
 				if(!empty($data)){
 					break 1;
 				}
 			}
-			header("Location: /404");
+			//header("Location: /404");
 			die('here');
 		}
-		
+
 		$this->GenerateSEO();
 		//$this->LoadPageData();
-		
+
 		return $template;
 	}
-	
+
 	private function ChkCache($tbl_name, $chk_field, $arg){
 		global $SMARTY,$DBobject;
 		try{
 			$element_id = $DBobject->GetAnyCell('cache_record_id', "cache_".$tbl_name, 'cache_url = "'.$arg.'"','1');
 			if(empty($this->element_id)){
 				if($res = $DBobject->GetAnyCell("*", $tbl_name, $chk_field.' LIKE "%'.str_replace('-','%',$arg).'%"') ){
-					$this->DBTABLE->BuildCache($chk_field);	
-					
+					$this->DBTABLE->BuildCache($chk_field);
+
 				}
 				$element_id = $DBobject->GetAnyCell('cache_record_id', "cache_".$tbl_name, 'cache_url = "'.$arg.'"','1');
 			}
 		}catch(Exception $e){
 			if($res = $DBobject->GetAnyCell("*", $tbl_name, $chk_field.' LIKE "%'.str_replace('-','%',$arg).'%"')){
-				$this->DBTABLE->BuildCache($chk_field);	
+				$this->DBTABLE->BuildCache($chk_field);
 			}
 			$element_id = $DBobject->GetAnyCell('cache_record_id', "cache_".$tbl_name, 'cache_url = "'.$arg.'"','1');
 		}
@@ -206,9 +208,9 @@ class ListClass{
 		}
 		return false;
 	}
-	
+
 	private function LoadTemplate($table, $url_args){
-		global $SMARTY;	
+		global $SMARTY;
 		foreach($table->table as $t)
 		{
 			//Check if matches first table
@@ -229,14 +231,14 @@ class ListClass{
 					}
 				}
 			}
-			
+
 			if(count($t->table->xpath('table')) > 0){
 				$template = $this->LoadTemplate($t->table, args);
 				if(!empty($template)){
 					break;
 				}
 			}
-			
+
 			if(count($table->table->xpath('filter')) > 0){
 				$field = $table->table->filter->field;
 				$val = clean($args[0]);
@@ -267,10 +269,10 @@ class ListClass{
 			return "";
 		}
 	}
-	
+
 	private function LoadMenu($menu){
-		global $SMARTY;	
-		
+		global $SMARTY;
+
 		$field = $menu->field;
 		if(count($menu->xpath('groupby')) > 0){
 			$groupby = $menu->groupby;
@@ -278,24 +280,24 @@ class ListClass{
 		if(count($menu->xpath('orderby')) > 0){
 			$orderby = $menu->orderby;
 		}
-		
+
 		$data = $this->GetData($field,"",$groupby,$orderby);
 		$SMARTY->assign('menuitem', unclean($data));
-		
+
 		$template = $menu->template;
 		$res =  $SMARTY->fetch($template);
 		return $res;
 	}
-	
+
 	/**
-	 * This function retrieves all the Field values linked to this PAGEID 
+	 * This function retrieves all the Field values linked to this PAGEID
 	 */
 	function LoadPageData(){
-		/*global  $DBobject,$SMARTY;		
+		/*global  $DBobject,$SMARTY;
 		$sql = "SELECT tbl_link_page_field.link_page_field_content, tbl_field.field_name
 				FROM tbl_link_page_field LEFT JOIN tbl_field ON tbl_link_page_field.link_field_id = tbl_field.field_id
 				WHERE tbl_link_page_field.link_page_id = '{$this->CONFIG_OBJ->pageID}'
-				AND tbl_link_page_field.link_deleted IS NULL 
+				AND tbl_link_page_field.link_deleted IS NULL
 				AND tbl_field.field_deleted IS NULL";
 		$data = array();
 		if($data = $DBobject->wrappedSqlGet($sql)){
@@ -304,13 +306,13 @@ class ListClass{
 			}
 		}*/
 	}
-	
+
 	/**
-	 * This function retrieves the SEO values from the page table for this PAGEID 
+	 * This function retrieves the SEO values from the page table for this PAGEID
 	 */
 	function GenerateSEO(){
-		/*global  $DBobject,$SMARTY;	
-		
+		/*global  $DBobject,$SMARTY;
+
 		$sql = "SELECT * FROM tbl_page WHERE page_id = '{$this->CONFIG_OBJ->pageID}'";
 		if($data = $DBobject->wrappedSqlGet($sql)){
 			foreach($data as $row){
@@ -320,22 +322,22 @@ class ListClass{
 			}
 		}*/
 	}
-	
+
 	/**
 	 * This function retieves a set of raw data for use in templates other than the
-	 * listing templates. 
-	 * 
+	 * listing templates.
+	 *
 	 * $_WHERE should be formatted as " field = value AND field2 = value2 ".
 	 * $_GROUPBY should be formatted as " field, field2 ".
 	 * $_ORDERBY should be formatted as " field ASC, field2 DESC ".
-	 * @param string $_WHERE 
+	 * @param string $_WHERE
 	 * @param unknown_type $_GROUPBY
 	 * @param unknown_type $_ORDERBY
 	 */
 	function GetRawData($_WHERE="",$_GROUPBY="",$_ORDERBY=""){
 		return $this->GetData("*",$_WHERE,$_GROUPBY,$_ORDERBY);
 	}
-	
+
 	/**
 	 * This function retrieves all the distinct values from $_FIELD in the database.
 	 * @param string $_FIELD
@@ -343,26 +345,26 @@ class ListClass{
 	protected function GetDataField($_FIELD){
 		return $this->GetData($_FIELD,"",$_FIELD,"");
 	}
-	
+
 	/**
 	 * This function retieves a SubSet of all values in the database where the $_WHERE
-	 * conditions are satisfied. 
-	 * 
+	 * conditions are satisfied.
+	 *
 	 * $_WHERE should be formatted as " field = value AND field2 = value2 ".
-	 * @param string $_WHERE 
+	 * @param string $_WHERE
 	 */
 	protected function GetDataSubSet($_WHERE){
 		return $this->GetData("*",$_WHERE,"","");
 	}
-	
+
 	/**
 	 * This function retrieves all values in the database. The result set will be returned
 	 * as ARRAY[][row1]
 	 * 			 [row2]
 	 * 			 etc.
-	 * 
-	 * $GB_FIELDS can be used to define the field used to group the data at the top level 
-	 * in the result set. 
+	 *
+	 * $GB_FIELDS can be used to define the field used to group the data at the top level
+	 * in the result set.
 	 * eg.	GetDataSet("month_field");
 	 * ARRAY[April][row5]
 	 * 			   [row6]
@@ -382,7 +384,7 @@ class ListClass{
 		}
 		return $res;
 	}
-	
+
 	/**
 	 * This function retrieves a single value from the database based on the ID matching against
 	 * the primary table.
@@ -392,10 +394,10 @@ class ListClass{
 		$count = 1;
 		$id_name = str_replace("tbl_","",$this->CONFIG_OBJ->table->name,$count)."_id";
 		return $this->GetData("*"," {$id_name} = {$ID} ","","");
-	} 
-	
+	}
+
 	/**
-	 * This is the top level class for retrieving data from the database. Classes such 
+	 * This is the top level class for retrieving data from the database. Classes such
 	 * as GetDataSubSet() or GetDataSet() should be used instead.
 	 * @param unknown_type $_SELECT
 	 * @param unknown_type $_WHERE
@@ -403,18 +405,18 @@ class ListClass{
 	 * @param unknown_type $_ORDERBY
 	 */
 	protected function GetData($_SELECT="*",$_WHERE="",$_GROUPBY="",$_ORDERBY=""){
-		global  $DBobject,$SMARTY;	
+		global  $DBobject,$SMARTY;
 		$sql = "SELECT {$_SELECT}
 				FROM {$this->TABLES}
 				".(!empty($_WHERE)?" WHERE {$this->WHERE} AND {$_WHERE} ":" WHERE {$this->WHERE} ")."
 				".(!empty($_GROUPBY)?" GROUP BY {$_GROUPBY}":"")."
 				".(!empty($_ORDERBY)?" ORDER BY {$_ORDERBY}":"")."
 				".(!empty($this->LIMIT)?" LIMIT {$this->LIMIT}":"");
-		
+		//echo $sql;
 		$data = $DBobject->wrappedSql($sql);
 		return $data;
 	}
-	
+
 }
 
 

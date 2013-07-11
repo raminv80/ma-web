@@ -1,8 +1,11 @@
 ErrorDocument 404 /404.php
 RewriteEngine  on
 
+  RewriteCond %{REQUEST_URI} "/admin/includes/"
+  RewriteRule (.*) $1 [L]
+
 RewriteCond %{HTTP_HOST} !^www\.
-RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L] 
 
 ##### ATTEMPT TO SEE IF I CAN MAP page=XX TO THE CORRENT FRIENDLY URL
 RewriteRule ^([^.]+)?$ index.php?arg1=$1 [QSA]

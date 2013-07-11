@@ -5,7 +5,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 ini_set('session.cache_limiter', 'private');
 include_once 'includes/functions/admin-functions.php';
-global $CONFIG,$SMARTY,$DBobject;	
+global $CONFIG,$SMARTY,$DBobject;
 
 
 //ASSIGN ALL STORED SMARTY VALUES
@@ -51,21 +51,21 @@ while(true){
 		$template = "login.tpl";
 		break 1;
 	}
-	
+
 	/******* Goes to login  *******/
 	if($_request['arg1'] == ''){
 		$template = "home.tpl";
 		break 1;
 	}
-	
+
 	foreach($CONFIG->resource as $sp){
-		
+
 		if($sp->url == $_request["arg1"] ){
 			$template = $sp->template;
 			break 2;
 		}
 	}
-	
+
 	/******* Listing pages here *******/
 	$arr = explode("/", $_request["arg1"]);
 	/******* Goes to login  *******/
@@ -84,6 +84,7 @@ while(true){
 					$record = new Record($sp);
 					$list = $record->getRecordList();
 					$SMARTY->assign("list",$list);
+					$SMARTY->assign("path",(string)$sp->url);
 					$template = $sp->list_template;
 					break 2;
 				}
@@ -91,7 +92,7 @@ while(true){
 		}
 		break 1;
 	}
-	
+
 	/******* Goes to login  *******/
 	if($arr[0] == 'edit' && $arr[1] != ""){
 		/****** Goes to individual script pages *******/
@@ -100,16 +101,15 @@ while(true){
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
 					$tm = $record->getListing(intval($arr[2]));
-					//$tm = $record->getListingBuilder(intval($arr[2]));
 					$SMARTY->assign("fields",$tm);
 					$template = $sp->edit_template;
-					//$template = "edit_record_builder.tpl";
 					break 2;
 				}
 				if($sp->type == "TABLE"){
 					$record = new Record($sp);
 					$tm = $record->getRecord(intval($arr[2]));
 					$SMARTY->assign("fields",$tm);
+					$SMARTY->assign("type",(string)$sp->slide);
 					$template = $sp->edit_template;
 					break 2;
 				}
@@ -117,7 +117,25 @@ while(true){
 		}
 		break 1;
 	}
-	
+
+	if($arr[0] == 'delete' && $arr[1] != ""){
+		foreach($CONFIG->section as $sp){
+			if($sp->url == $arr[1] ){
+				if($sp->type == "LISTING"){
+					$record = new Listing($sp);
+					$res = $record->deleteListing($arr[2]);
+				}
+				if($sp->type == "TABLE"){
+					$record = new Record($sp);
+					$res = $record->deleteRecord($arr[2]);
+				}
+				header("Location: {$_SERVER['HTTP_REFERER']}");
+				die();
+			}
+		}
+		break 1;
+	}
+
 	$template = '404.tpl';
 	break 1;
 }
@@ -125,12 +143,13 @@ while(true){
 $menu = array();
 
 foreach($CONFIG->section as $sp){
-	if($sp->type == "LISTING"){
+	$list = array();
+	if($sp->type == "LISTING" && $sp->showlist != 'FALSE'){
 		$record = new Listing($sp);
 		$list = $record->getListingList();
 	}
-	
-	if($sp->type == "TABLE"){
+
+	if($sp->type == "TABLE" && $sp->showlist != 'FALSE'){
 		$record = new Record($sp);
 		$list = $record->getRecordList();
 	}

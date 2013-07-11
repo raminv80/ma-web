@@ -23,6 +23,10 @@ include_once 'database/table-class.php';
 include_once 'database/utilities.php';
 include_once 'smarty/Smarty.class.php';
 
+$GLOBALS['EDITED'] = 'edited';
+$GLOBALS['DELETED'] = 'deleted';
+$GLOBALS['WARNING'] = 'warning';
+$GLOBALS['ERROR'] = 'error';
 
 session_start();
 $_REQUEST	=	clean($_REQUEST);
