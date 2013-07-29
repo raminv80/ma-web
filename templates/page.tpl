@@ -9,12 +9,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="Description" content="{$listing_meta_description}" />
-	<meta name="Keywords" content="{$listing_meta_words}" />
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-	<meta name="Distribution" content="Global" />
-	<meta name="Robots" content="index,follow" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="{$listing_meta_description}" />
+	<meta name="keywords" content="{$listing_meta_words}" />
+	<meta http-equiv="kontent-type" content="text/html;charset=UTF-8" />
+	<meta name="distribution" content="Global" />
+	<meta name="author" content="Them Advertising" />
+	{if $staging}
+	<meta name="robots" content="noindex,nofollow" />
+	{else}
+	<meta name="robots" content="index,follow" />
+	{/if}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3, minimum-scale=1, user-scalable=yes">
 	<title>{$category_name|replace:'and':'&'|ucfirst}  {$product_name|ucfirst} {$listing_seo_title}</title>
 	<!-- <link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon"> -->
 
@@ -27,9 +32,6 @@
 	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 	<script src="/includes/js/bootstrap.min.js"></script>
 	<script src="/includes/js/youtube.js"></script>
-
-
-	{block name=head}{/block} {* Block containing any specific information required for this page and not main site *}
 
 <script type="text/javascript">var switchTo5x=true;</script>
 <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
