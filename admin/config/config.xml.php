@@ -48,11 +48,11 @@
 		<type_id>1</type_id>
 		<options>
 			<field>
-				<name>listing_cateogry_id</name>
-				<table>tbl_listing</table>
+				<name>listing_category_id</name>
+				<table>tbl_category</table>
 				<type_id>1</type_id>
-				<reference>listing_name</reference>
-				<where>listing_type_id = '1'</where>
+				<reference>category_name</reference>
+				<where>category_type_id = '1'</where>
 			</field>
 		</options>
 		<list_template>list_page.tpl</list_template>
@@ -76,8 +76,6 @@
 					<reference>listing_name</reference>
 					<where>listing_type_id = '1'</where>
 				</field>
-			</options>
-			<options>
 				<field>
 					<name>category_parent_id</name>
 					<table>tbl_category</table>

@@ -26,7 +26,7 @@
 				<select name="field[tbl_category][{$cnt}][category_listing_id]" id="category_listing_id">
 				<option value="0">Select one</option>
 						{foreach $fields.options.category_listing_id as $opt}
-									<option value="{$opt.id}" {if $fields.listing_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
+									<option value="{$opt.id}" {if $fields.category_listing_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
 						{/foreach}
 				</select>
 			</div>
@@ -37,7 +37,7 @@
 				<select name="field[tbl_category][{$cnt}][category_parent_id]" id="category_parent_id">
 				<option value="0">Select one</option>
 						{foreach $fields.options.category_parent_id as $opt}
-									<option value="{$opt.id}" {if $fields.category_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
+									<option value="{$opt.id}" {if $fields.category_parent_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
 						{/foreach}
 				</select>
 			</div>

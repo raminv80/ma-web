@@ -33,7 +33,7 @@
 			<div class="span9 controls">
 				<select name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent">
 				<option value="0">Select one</option>
-						{foreach $fields.options.listing_cateogry_id as $opt}
+						{foreach $fields.options.listing_category_id as $opt}
 									<option value="{$opt.id}" {if $fields.category_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
 						{/foreach}
 				</select>
