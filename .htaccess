@@ -7,8 +7,8 @@ RewriteEngine  on
   RewriteCond %{REQUEST_URI} "/includes/"
   RewriteRule (.*) $1 [L]
 
-RewriteCond %{HTTP_HOST} !^www\.
-RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+#RewriteCond %{HTTP_HOST} !^www\.
+#RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
 
 ##### ATTEMPT TO SEE IF I CAN MAP page=XX TO THE CORRENT FRIENDLY URL
 RewriteRule ^([^.]+)?$ index.php?arg1=$1 [QSA]

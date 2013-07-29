@@ -15,8 +15,6 @@
 				<input type="hidden" value="slide_id" name="field[tbl_slide][{$cnt}][id]" id="id" />
 			</div>
 		</div>
-			<input type="hidden" value="slide_id" name="field[tbl_slide][{$cnt}][slide_type_id]" id="1" />
-        <legend></legend>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="slide_text">{if $type neq "1"}Title {/if}Text</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.slide_text}" name="field[tbl_slide][{$cnt}][slide_text]" id="slide_text" class="tool-tip" data-toggle="tooltip" data-original-title="{if $type eq "1"}recommended image width 320px. height to depend on amount of text used, approx 22 characters per line of text{/if}" ></div>

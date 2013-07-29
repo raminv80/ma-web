@@ -16,7 +16,6 @@
 				<input type="hidden" value="1"  name="field[tbl_listing][{$cnt}][listing_published]" >
 			</div>
 		</div>
-        <legend></legend>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_name">Name</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_name}" name="field[tbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req" onchange="seturl(this.value);"></div>

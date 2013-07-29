@@ -1,12 +1,12 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true">
+<config debug="true" staging="true">
 	<company></company>
 	<database>
 		<host>n7-mysql5-3.ilisys.com.au</host>
 		<user>themso</user>
 		<password>c@^^3L5tRu7s*n9ub11c</password>
-		<dbname>themso17_db</dbname>
+		<dbname>themso5_db</dbname>
 	</database>
 	<resource>
 		<url>file-manager</url>
@@ -26,6 +26,21 @@
 		<edit_template>edit_admin.tpl</edit_template>
 	</section>
 	<section>
+		<staging>TRUE</staging>
+		<showlist>TRUE</showlist>
+		<url>type</url>
+		<title>Types</title>
+		<type>TABLE</type>
+		<table>
+			<name>tbl_type</name>
+			<id>type_id</id>
+			<field>type_name</field>
+			<deleted>type_deleted</deleted>
+		</table>
+		<list_template>list_type.tpl</list_template>
+		<edit_template>edit_type.tpl</edit_template>
+	</section>
+	<section>
 		<showlist>FALSE</showlist>
 		<url>page</url>
 		<title>Pages</title>
@@ -43,22 +58,37 @@
 		<list_template>list_page.tpl</list_template>
 		<edit_template>edit_page.tpl</edit_template>
 	</section>
-
 	<section>
-		<showlist>FALSE</showlist>
-		<url>page-slides</url>
-		<type>TABLE</type><type>TABLE</type>
+		<showlist>TRUE</showlist>
+		<url>page_category</url>
+		<title>Page Categories</title>
+		<type>TABLE</type>
 		<table>
-			<name>tbl_slide</name>
-			<id>slide_id</id>
-			<field>slide_text</field>
-			<deleted>slide_deleted</deleted>
-			<where>slide_type_id = '1'</where>
+			<name>tbl_category</name>
+			<id>category_id</id>
+			<field>category_name</field>
+			<deleted>category_deleted</deleted>
+			<options>
+				<field>
+					<name>category_listing_id</name>
+					<table>tbl_listing</table>
+					<type_id>1</type_id>
+					<reference>listing_name</reference>
+					<where>listing_type_id = '1'</where>
+				</field>
+			</options>
+			<options>
+				<field>
+					<name>category_parent_id</name>
+					<table>tbl_category</table>
+					<type_id>1</type_id>
+					<reference>category_name</reference>
+					<where>category_type_id = '1'</where>
+				</field>
+			</options>
 		</table>
-		<slide>1</slide>
-		<title>Home Slides</title>
-		<list_template>list_slide.tpl</list_template>
-		<edit_template>edit_slide.tpl</edit_template>
+		<list_template>list_pcategory.tpl</list_template>
+		<edit_template>edit_pcategory.tpl</edit_template>
 	</section>
 	<section>
 		<showlist>FALSE</showlist>
