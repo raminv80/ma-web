@@ -12,9 +12,11 @@
 		<url>file-manager</url>
 		<template>filemanager.tpl</template>
 	</resource>
+	
+<!-- THIS SECTION IS USED TO MANAGE THE ADMINISTRATOR TABLE. ADMINISTRATORS AND USERS FOR THE CMS ARE MANAGED HERE. -->
 	<section>
 		<url>users</url>
-		<title>Admin</title>
+		<title>Administrators</title>
 		<type>TABLE</type>
 		<table>
 			<name>tbl_admin</name>
@@ -25,6 +27,8 @@
 		<list_template>list_admin.tpl</list_template>
 		<edit_template>edit_admin.tpl</edit_template>
 	</section>
+
+<!-- THIS SECTION IS USED TO MANAGE THE LISTING TYPES TABLE. IT SHOULD NOT BE VISIBLE ON THE LIVE VERSION. -->
 	<section>
 		<staging>TRUE</staging>
 		<showlist>TRUE</showlist>
@@ -40,6 +44,8 @@
 		<list_template>list_type.tpl</list_template>
 		<edit_template>edit_type.tpl</edit_template>
 	</section>
+	
+<!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE PAGE. THIS IS A LISTING AT IT'S BASIC FORM. -->
 	<section>
 		<showlist>FALSE</showlist>
 		<url>page</url>
@@ -50,14 +56,17 @@
 			<field>
 				<name>listing_category_id</name>
 				<table>tbl_category</table>
-				<type_id>1</type_id>
 				<reference>category_name</reference>
-				<where>category_type_id = '1'</where>
 			</field>
 		</options>
 		<list_template>list_page.tpl</list_template>
 		<edit_template>edit_page.tpl</edit_template>
 	</section>
+<!-- THIS SECTION IS USED TO MANAGE THE LISTING CATEGORY TABLE WHICH IS LINKED TO LISTINGS. 
+	 THE FORM OF THIS LISTING CATEGORY SHOULD NOT CHANGE. THE ONLY THINGS WHICH SHOULD NEED 
+	 TO CHANGE ARE THE 'URL', 'TITLE' AND 'WHERE'. THE 'LISTING_TYPE_ID' FOR 'CATEGORY_LISTING_ID' 
+	 SHOULD NOT CHANGE AS ALL CONTENT SHOULD BE COME FROM A PAGE. 'LISTING_TYPE_ID' FOR 
+	 'CATEGORY_PARENT_ID' SHOULD REFLECT THE LISTING TYPE THAT THIS CATEGORY IS FOR. -->
 	<section>
 		<showlist>TRUE</showlist>
 		<url>page_category</url>
@@ -68,168 +77,42 @@
 			<id>category_id</id>
 			<field>category_name</field>
 			<deleted>category_deleted</deleted>
+			<where>category_type_id = '1'</where>
 			<options>
 				<field>
 					<name>category_listing_id</name>
 					<table>tbl_listing</table>
-					<type_id>1</type_id>
 					<reference>listing_name</reference>
 					<where>listing_type_id = '1'</where>
 				</field>
 				<field>
 					<name>category_parent_id</name>
 					<table>tbl_category</table>
-					<type_id>1</type_id>
 					<reference>category_name</reference>
-					<where>category_type_id = '1'</where>
 				</field>
 			</options>
 		</table>
 		<list_template>list_pcategory.tpl</list_template>
 		<edit_template>edit_pcategory.tpl</edit_template>
 	</section>
-	<section>
-		<showlist>FALSE</showlist>
-		<url>carpet-page-slides</url>
-		<type>TABLE</type><type>TABLE</type>
-		<table>
-			<name>tbl_slide</name>
-			<id>slide_id</id>
-			<field>slide_text</field>
-			<deleted>slide_deleted</deleted>
-			<where>slide_type_id = '2'</where>
-		</table>
-		<slide>2</slide>
-		<title>Carpet and Flooring Slides</title>
-		<list_template>list_slide.tpl</list_template>
-		<edit_template>edit_slide.tpl</edit_template>
-	</section>
-	<section>
-		<showlist>FALSE</showlist>
-		<url>curtains-page-slides</url>
-		<type>TABLE</type><type>TABLE</type>
-		<table>
-			<name>tbl_slide</name>
-			<id>slide_id</id>
-			<field>slide_text</field>
-			<deleted>slide_deleted</deleted>
-			<where>slide_type_id = '3'</where>
-		</table>
-		<slide>3</slide>
-		<title>Curtains and Blinds Slides</title>
-		<list_template>list_slide.tpl</list_template>
-		<edit_template>edit_slide.tpl</edit_template>
-	</section>
 
+<!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE PRODUCTS. THIS IS A LISTING
+	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
+	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
+	 ADDITIONAL FIELDS NEEDED FOR PRODUCTS.-->
 	<section>
 		<showlist>FALSE</showlist>
-		<url>specials-page-slides</url>
-		<type>TABLE</type><type>TABLE</type>
-		<table>
-			<name>tbl_slide</name>
-			<id>slide_id</id>
-			<field>slide_text</field>
-			<deleted>slide_deleted</deleted>
-			<where>slide_type_id = '4'</where>
-		</table>
-		<slide>4</slide>
-		<title>Special Slides</title>
-		<list_template>list_slide.tpl</list_template>
-		<edit_template>edit_slide.tpl</edit_template>
-	</section>
-	<section>
-		<showlist>FALSE</showlist>
-		<url>product-page-slides</url>
-		<type>TABLE</type><type>TABLE</type>
-		<table>
-			<name>tbl_slide</name>
-			<id>slide_id</id>
-			<field>slide_text</field>
-			<deleted>slide_deleted</deleted>
-			<where>slide_type_id = '5'</where>
-		</table>
-		<slide>5</slide>
-		<title>Product care Slides</title>
-		<list_template>list_slide.tpl</list_template>
-		<edit_template>edit_slide.tpl</edit_template>
-	</section>
-	<section>
-		<showlist>FALSE</showlist>
-		<url>contact-page-slides</url>
-		<type>TABLE</type><type>TABLE</type>
-		<table>
-			<name>tbl_slide</name>
-			<id>slide_id</id>
-			<field>slide_text</field>
-			<deleted>slide_deleted</deleted>
-			<where>slide_type_id = '6'</where>
-		</table>
-		<slide>6</slide>
-		<title>Contact us Slides</title>
-		<list_template>list_slide.tpl</list_template>
-		<edit_template>edit_slide.tpl</edit_template>
-	</section>
-		<section>
-		<showlist>FALSE</showlist>
-		<url>about-page-slides</url>
-		<type>TABLE</type><type>TABLE</type>
-		<table>
-			<name>tbl_slide</name>
-			<id>slide_id</id>
-			<field>slide_text</field>
-			<deleted>slide_deleted</deleted>
-			<where>slide_type_id = '7'</where>
-		</table>
-		<slide>7</slide>
-		<title>About Slides</title>
-		<list_template>list_slide.tpl</list_template>
-		<edit_template>edit_slide.tpl</edit_template>
-	</section>
-	<section>
-		<url>category</url>
-		<showlist>FALSE</showlist>
-		<title>Categories</title>
-		<type>TABLE</type>
-		<table>
-			<name>tbl_category</name>
-			<id>category_id</id>
-			<field>category_name</field>
-			<deleted>category_deleted</deleted>
-			<where>category_type_id = '4'</where>
-			<options>
-				<field>
-					<name>category_listing_id</name>
-					<table>tbl_listing</table>
-					<reference>listing_name</reference>
-				</field>
-				<field>
-					<name>category_type_id</name>
-					<table>tbl_type</table>
-					<reference>type_name</reference>
-				</field>
-				<field>
-					<name>category_parent_id</name>
-					<table>tbl_category</table>
-					<reference>category_name</reference>
-					<where>category_type_id = '4'</where>
-				</field>
-			</options>
-		</table>
-		<list_template>list_category.tpl</list_template>
-		<edit_template>edit_category.tpl</edit_template>
-	</section>
-	<section>
 		<url>products</url>
-		<showlist>FALSE</showlist>
 		<title>Products</title>
 		<type>LISTING</type>
-		<type_id>4</type_id>
+		<type_id>2</type_id>
 		<options>
-				<field>
-					<name>category_parent_id</name>
-					<table>tbl_category</table>
-					<reference>category_name</reference>
-				</field>
+			<field>
+				<name>listing_category_id</name>
+				<table>tbl_category</table>
+				<reference>category_name</reference>
+				<where>category_type_id = '2'</where>
+			</field>
 		</options>
 		<associated>
 			<name>gallery</name>
@@ -240,32 +123,46 @@
 			<table>tbl_product</table>
 			<field>product_listing_id</field>
 		</extends>
-		<extends>
-			<table>tbl_link</table>
-			<field>link_list_id</field>
-			<where>link_deleted is NULL</where>
-		</extends>
 		<list_template>list_product.tpl</list_template>
 		<edit_template>edit_product.tpl</edit_template>
 	</section>
+	
+<!-- THIS SECTION IS USED TO MANAGE THE LISTING CATEGORY TABLE WHICH IS LINKED TO LISTINGS. 
+	 THE FORM OF THIS LISTING CATEGORY SHOULD NOT CHANGE. THE ONLY THINGS WHICH SHOULD NEED 
+	 TO CHANGE ARE THE 'URL', 'TITLE' AND 'WHERE'. THE 'LISTING_TYPE_ID' FOR 'CATEGORY_LISTING_ID' 
+	 SHOULD NOT CHANGE AS ALL CONTENT SHOULD BE COME FROM A PAGE. 'LISTING_TYPE_ID' FOR 
+	 'CATEGORY_PARENT_ID' SHOULD REFLECT THE LISTING TYPE THAT THIS CATEGORY IS FOR. -->
 	<section>
-		<url>specials</url>
-		<showlist>FALSE</showlist>
-		<title>Specials</title>
-		<type>LISTING</type>
-		<type_id>5</type_id>
-		<list_template>list_special.tpl</list_template>
-		<edit_template>edit_special.tpl</edit_template>
+		<showlist>TRUE</showlist>
+		<url>product_category</url>
+		<title>Product Categories</title>
+		<type>TABLE</type>
+		<table>
+			<name>tbl_category</name>
+			<id>category_id</id>
+			<field>category_name</field>
+			<deleted>category_deleted</deleted>
+			<where>category_type_id = '2'</where>
+			<hierarchy field="category_parent_id" default="1"></hierarchy>
+			<options>
+				<field>
+					<name>category_listing_id</name>
+					<table>tbl_listing</table>
+					<reference>listing_name</reference>
+					<where>listing_type_id = '1'</where>
+				</field>
+				<field>
+					<name>category_parent_id</name>
+					<table>tbl_category</table>
+					<reference>category_name</reference>
+				</field>
+			</options>
+		</table>
+		<list_template>list_prodcategory.tpl</list_template>
+		<edit_template>edit_prodcategory.tpl</edit_template>
 	</section>
-	<section>
-		<url>product-care</url>
-		<showlist>FALSE</showlist>
-		<title>Product care</title>
-		<type>LISTING</type>
-		<type_id>6</type_id>
-		<list_template>list_product_care.tpl</list_template>
-		<edit_template>edit_product_care.tpl</edit_template>
-	</section>
+
+	
 	<smartytemplate_config><!-- This element contains the smarty template values -->
 		<templates>/templates</templates>
 		<templates_c>/templates_c</templates_c>

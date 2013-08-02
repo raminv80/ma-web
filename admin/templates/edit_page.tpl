@@ -20,7 +20,7 @@
 			<div class="span3"><label class="control-label" for="id_listing_name">Name</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_name}" name="field[tbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req" onchange="seturl(this.value);"></div>
 		</div>
-		 <div class="row-fluid control-group">
+		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_title">Title</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_title}" name="field[tbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req" ></div>
 		</div>
@@ -34,7 +34,7 @@
 				<select name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent">
 				<option value="0">Select one</option>
 						{foreach $fields.options.listing_category_id as $opt}
-									<option value="{$opt.id}" {if $fields.category_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
+									<option value="{$opt.id}" {if $fields.listing_category_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
 						{/foreach}
 				</select>
 
@@ -60,6 +60,7 @@
 			<div class="span3"><label class="control-label" for="id_listing_long_description">Long Description</label></div>
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_long_description]" id="id_listing_long_description" class="tinymce">{$fields.listing_long_description}</textarea></div>
 		</div>
+		
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_order">Listing Order</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_order}" name="field[tbl_listing][{$cnt}][listing_order]" id="id_listing_order"></div>
@@ -79,7 +80,7 @@ function seturl(str){
 		type: "POST",
 	    url: "/admin/includes/processes/urlencode.php",
 		cache: false,
-		data: "value="+str,
+		data: "value="+encodeURIComponent(str),
 		dataType: "json",
 	    success: function(res, textStatus) {
 	    	try{

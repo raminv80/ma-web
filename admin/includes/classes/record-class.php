@@ -95,15 +95,35 @@ Class Record{
 		return  $record;
 	}
 
-	function getRecordList(){
+	function getRecordList($hierarchy_id=null){
 		global $SMARTY,$DBobject;
 		$records = array();
-		$sql = "SELECT * FROM {$this->TABLE} WHERE {$this->DELETED}  IS NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ";
-		if($res = $DBobject->wrappedSqlGet($sql)){
-			foreach ($res as $key => $val) {
-				$records[$key] = array("title"=>$val["{$this->FIELD}"],"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}");
+		
+		$hierarchy = $this->CONFIG->table->hierarchy;
+		if(!empty($hierarchy) && !empty($hierarchy->attributes()->field) && ((integer)$hierarchy->attributes()->default) >= 0){
+			$local_field = $hierarchy->attributes()->field;
+			if(empty($hierarchy_id)){
+				$hierarchy_id = ((integer)$hierarchy->attributes()->default);
+			}
+			
+			$sql = "SELECT * FROM {$this->TABLE} WHERE {$this->DELETED} IS NULL AND {$local_field} = {$hierarchy_id} ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ";
+			$params = array(":def" =>$hierarchy_id);
+			if($res = $DBobject->wrappedSqlGet($sql,$params)){
+				foreach ($res as $key => $val) {
+					$subs = $this->getRecordList($val["{$this->ID}"]);
+					$records[$val["{$this->ID}"]] = array("title"=>$val["{$this->FIELD}"],"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}","subs"=>$subs);
+				}
+			}
+		}else{
+			$sql = "SELECT * FROM {$this->TABLE} WHERE {$this->DELETED}  IS NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ";
+			if($res = $DBobject->wrappedSqlGet($sql)){
+				foreach ($res as $key => $val) {
+					$records[$val["{$this->ID}"]] = array("title"=>$val["{$this->FIELD}"],"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}");
+				}
 			}
 		}
+		
+		
 		return  $records;
 	}
 	function deleteRecord($id){

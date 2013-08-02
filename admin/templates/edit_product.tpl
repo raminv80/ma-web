@@ -14,16 +14,39 @@
 			<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="id_article_name">
 			<input type="hidden" value="4" name="field[tbl_listing][{$cnt}][listing_type_id]" id="id_article_name">
 			<input type="hidden" value="{$fields.listing_category_id}" name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_category_id">
-			<!-- 	<input type="hidden" value="{$fields.listing_id}" name="field[tbl_product][{$cnt}][product_listing_id]"> -->
-			{if $fields.listing_id neq ""}
-			<!-- <input type="hidden" value="product_id" name="field[tbl_product][{$cnt}][id]" id="id"/> -->
-			<!-- <input type="hidden" value="{$fields.product_id}" name="field[tbl_product][{$cnt}][product_id]"> -->
-			{/if}
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_name">Product Name</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_name}" name="field[tbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req"></div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_title">Product Title</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_title}" name="field[tbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req" ></div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_parent">Parent</label></div>
+			<div class="span9 controls">
+				<select name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent">
+				<option value="0">Select one</option>
+						{foreach $fields.options.listing_category_id as $opt}
+									<option value="{$opt.id}" {if $fields.listing_category_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
+						{/foreach}
+				</select>
+
+			</div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_seo_title">SEO Title</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_seo_title}" name="field[tbl_listing][{$cnt}][listing_seo_title]" id="id_listing_seo_title" class="req"></div>
+		</div>
+		 <div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_meta_description">Meta Description</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_description}" name="field[tbl_listing][{$cnt}][listing_meta_description]" id="id_listing_meta_description"></div>
+		</div>
+		 <div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_meta_words">Meta Words</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_words}" name="field[tbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_short_description">Short Description</label></div>
