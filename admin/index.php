@@ -77,6 +77,7 @@ while(true){
 					$record = new Listing($sp);
 					$list = $record->getListingList();
 					$SMARTY->assign("list",$list);
+					$SMARTY->assign("path",(string)$sp->url);
 					$template = $sp->list_template;
 					break 2;
 				}

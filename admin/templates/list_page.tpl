@@ -24,7 +24,7 @@
 			<thead>
 			      <tr>
 			        <th>Page</th>
-			        <th colspan="3" ><a href="/admin/edit/page" class='btn btn-small btn-success right'><i class="icon-plus icon-white"></i> ADD NEW</a></th>
+			        <th colspan="3" ><a href="/admin/edit/{$path}" class='btn btn-small btn-success right'><i class="icon-plus icon-white"></i> ADD NEW</a></th>
 			      </tr>
 			</thead>
 			<tbody>

@@ -162,6 +162,67 @@
 		<edit_template>edit_prodcategory.tpl</edit_template>
 	</section>
 
+<!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE LOCATION. THIS IS A LISTING
+	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
+	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
+	 ADDITIONAL FIELDS NEEDED FOR PRODUCTS.-->
+	<section>
+		<showlist>FALSE</showlist>
+		<url>locations</url>
+		<title>Locations</title>
+		<type>LISTING</type>
+		<type_id>3</type_id>
+		<options>
+			<field>
+				<name>listing_category_id</name>
+				<table>tbl_category</table>
+				<reference>category_name</reference>
+				<where>category_type_id = '3'</where>
+			</field>
+		</options>
+		<associated>
+			<name>gallery</name>
+			<table>tbl_gallery</table>
+			<field>gallery_listing_id</field>
+		</associated>
+		<extends>
+			<table>tbl_location</table>
+			<field>location_listing_id</field>
+		</extends>
+		<list_template>list_location.tpl</list_template>
+		<edit_template>edit_location.tpl</edit_template>
+	</section>
+	
+<!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE LOCATION. THIS IS A LISTING
+	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
+	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
+	 ADDITIONAL FIELDS NEEDED FOR PRODUCTS.-->
+	<section>
+		<showlist>FALSE</showlist>
+		<url>news</url>
+		<title>News</title>
+		<type>LISTING</type>
+		<type_id>3</type_id>
+		<options>
+			<field>
+				<name>listing_category_id</name>
+				<table>tbl_category</table>
+				<reference>category_name</reference>
+				<where>category_type_id = '3'</where>
+			</field>
+		</options>
+		<associated>
+			<name>gallery</name>
+			<table>tbl_gallery</table>
+			<field>gallery_listing_id</field>
+		</associated>
+		<extends>
+			<table>tbl_news</table>
+			<field>news_listing_id</field>
+		</extends>
+		<list_template>list_news.tpl</list_template>
+		<edit_template>edit_news.tpl</edit_template>
+	</section>
 	
 	<smartytemplate_config><!-- This element contains the smarty template values -->
 		<templates>/templates</templates>
