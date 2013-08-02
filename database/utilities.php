@@ -14,9 +14,11 @@ function checkEmail($usr){
 	return 'false';
 }
 
+
 function urlSafeString($str){
+	$str = str_replace('&','and',$str);
+	$str = preg_replace("/[^\s^\d^\w]+/", "", $str);
 	$str = str_replace(' ','-',$str);
-	$str = preg_replace("/[\s\W]+/", "", $str);
 	return $str;
 }
 

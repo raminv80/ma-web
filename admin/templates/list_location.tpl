@@ -23,7 +23,7 @@
 		<table class="table table-bordered table-striped table-hover">
 			<thead>
 			      <tr>
-			        <th>News</th>
+			        <th>Locations</th>
 			        <th colspan="3" ><a href="/admin/edit/{$path}" class='btn btn-small btn-success right'><i class="icon-plus icon-white"></i> ADD NEW</a></th>
 			      </tr>
 			</thead>

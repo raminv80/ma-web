@@ -6,7 +6,7 @@
 			<div class="span12">
             	<fieldset>
                 <legend>
-				{if $fields.listing_id neq ""}Edit{else}New{/if} Page
+				{if $fields.listing_id neq ""}Edit{else}New{/if} Location
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
                 </legend>
                 </fieldset>

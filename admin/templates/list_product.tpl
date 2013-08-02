@@ -4,7 +4,7 @@
 			    <thead>
 			      <tr>
 			        <th colspan="3" >PRODUCTS
-					<a href="/admin/edit/products" class='btn btn-small btn-success right'><i class="icon-plus icon-white"></i> ADD NEW</a></th>
+					<a href="/admin/edit/{$path}" class='btn btn-small btn-success right'><i class="icon-plus icon-white"></i> ADD NEW</a></th>
 			      </tr>
 			    </thead>
 			    <tbody>

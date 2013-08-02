@@ -5,7 +5,7 @@
 			    <thead>
 			      <tr>
 			        <th colspan="3" >ADMINISTRATOR USERS
-					<a href="/admin/edit/users" class='btn btn-small btn-success right'><i class="icon-plus icon-white"></i> ADD NEW</a></th>
+					<a href="/admin/edit/{$path}" class='btn btn-small btn-success right'><i class="icon-plus icon-white"></i> ADD NEW</a></th>
 			      </tr>
 			    </thead>
 			    <tbody>

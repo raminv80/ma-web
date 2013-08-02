@@ -25,11 +25,6 @@ $_request = clean($_REQUEST);
 //ProcessUpdateNewsStatus();
 
 while(true){
-	/** Load slider items **/
-	$sql = "SELECT * FROM tbl_slide WHERE slide_deleted is null ORDER BY slide_order ";
-	$res = $DBobject->wrappedSqlGet($sql,array());
-	$SMARTY->assign('slider',$res);
-	/** **/
 
 	/******* Goes to home *******/
 	if($_request['arg1'] == ''){

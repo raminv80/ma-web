@@ -49,3 +49,10 @@ if(	$debug == 'true'){
 	$SMARTY->force_compile = true;
 	$SMARTY->caching = false;
 }
+
+$staging = (string)$CONFIG->attributes()->staging;
+if($staging === "true"){
+	$SMARTY->assign("staging",true);
+}else{
+	$SMARTY->assign("staging",false);
+}

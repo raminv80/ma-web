@@ -9,15 +9,14 @@
 				{if $fields.admin_id neq ""}Edit{else}New{/if} Admin
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
                 </legend>
+                </fieldset>
 				<input type="hidden" value="{$fields.admin_id}" name="field[tbl_admin][{$cnt}][admin_id]" id="admin_id" />
 				<input type="hidden" value="admin_id" name="field[tbl_admin][{$cnt}][id]" id="id" />
 				<input type="hidden" value="{$fields.admin_username}" name="field[tbl_admin][{$cnt}][admin_username]" id="admin_username">
 				<input type="hidden" value="{$fields.admin_password}" name="field[tbl_admin][{$cnt}][admin_password]" id="admin_password">
 			</div>
 		</div>
-        <legend></legend>
 		<div class="row-fluid control-group">
-
             <div class="span3"><label class="control-label" for="admin_name">Name</label></div>
             <div class="span9 controls"><input type="text" value="{$fields.admin_name}" name="field[tbl_admin][{$cnt}][admin_name]" id="admin_name" class="req"></div>
 		</div>
@@ -75,7 +74,7 @@
 								$('#admin_username').val($('#admin_email').val());
 								$('#password').closest('.row-fluid').removeClass('error');
 								$('#re_password').closest('.row-fluid').removeClass('error');
-								{if $fields.admin_id eq ""}
+							{if $fields.admin_id eq ""}
 								$.ajax({
 									type: "POST",
 								    url: "/admin/includes/processes/checkEmail.php",
@@ -93,7 +92,7 @@
 									    }
 								});
 							{/if}
-								if($('#password').val() != "" && $('#error').val() == "0"){
+								if($('#password').val() != "" && ($('#error').val() == "0" || $('#error').val() == "")){
 
 									$.ajax({
 										type: "POST",
