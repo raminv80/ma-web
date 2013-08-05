@@ -21,30 +21,22 @@
 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/includes/css/jqui.css" />
-
-	<link rel="stylesheet" type="text/css" href="/includes/css/styles.css" />
+	<link rel="stylesheet" type="text/css" href="/admin/includes/css/jqui.css" />
 	<link rel="stylesheet" type="text/css" href="/admin/includes/css/styles.css" />
 
 	<!-- Responsive -->
 	<link rel="stylesheet" type="text/css" href="/admin/includes/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="/includes/css/bootstrap-responsive.min.css" />
 	<script src="/includes/js/bootstrap.min.js"></script>
 	<!-- End Responsive -->
-	<script type="text/javascript" src="/includes/js/validation.js"></script>
+	<script type="text/javascript" src="/admin/includes/js/validation.js"></script>
 	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
-	<script type="text/javascript" src="/includes/js/timepicker/jquery.ui.timepicker.js"></script>
+	<script type="text/javascript" src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>
 
 	<link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/elfinder.min.css">
 	<link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/theme.css">
 	<script type="text/javascript" src="/admin/includes/fileManager/js/elfinder.full.js"></script>
+	<link rel="stylesheet" type="text/css" href="/admin/includes/js/timepicker/jquery.ui.timepicker.css" />
 
-	<link rel="stylesheet" type="text/css" href="/includes/js/timepicker/jquery.ui.timepicker.css" />
-	<script type="text/javascript" charset="utf-8" src="/includes/js/ddlevelsfiles/ddlevelsmenu.js" ></script>
-	<link rel="stylesheet" type="text/css" href="/includes/js/ddlevelsfiles/ddlevelsmenu-base.css" />
-	<link rel="stylesheet" type="text/css" href="/includes/js/ddlevelsfiles/ddlevelsmenu-topbar.css" />
-
-	<link type="text/css" href="/includes/css/styles.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600' rel='stylesheet' type='text/css'>
 
 	<script type="text/javascript">

@@ -24,10 +24,10 @@
 			<div class="span3"><label class="control-label" for="id_listing_title">Title</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_title}" name="field[tbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req" ></div>
 		</div>
-		 <div class="row-fluid control-group">
+		 <!-- <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_url">URL</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_url}" name="field[tbl_listing][{$cnt}][listing_url]" id="id_listing_url" class="req"></div>
-		</div>
+		</div> -->
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_parent">Parent</label></div>
 			<div class="span9 controls">

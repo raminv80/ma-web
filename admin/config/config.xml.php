@@ -193,6 +193,42 @@
 		<edit_template>edit_location.tpl</edit_template>
 	</section>
 	
+<!-- THIS SECTION IS USED TO MANAGE THE LISTING CATEGORY TABLE WHICH IS LINKED TO LISTINGS. 
+	 THE FORM OF THIS LISTING CATEGORY SHOULD NOT CHANGE. THE ONLY THINGS WHICH SHOULD NEED 
+	 TO CHANGE ARE THE 'URL', 'TITLE' AND 'WHERE'. THE 'LISTING_TYPE_ID' FOR 'CATEGORY_LISTING_ID' 
+	 SHOULD NOT CHANGE AS ALL CONTENT SHOULD BE COME FROM A PAGE. 'LISTING_TYPE_ID' FOR 
+	 'CATEGORY_PARENT_ID' SHOULD REFLECT THE LISTING TYPE THAT THIS CATEGORY IS FOR. -->
+	<section>
+		<staging>TRUE</staging>
+		<showlist>TRUE</showlist>
+		<url>location_category</url>
+		<title>Location Categories</title>
+		<type>TABLE</type>
+		<table>
+			<name>tbl_category</name>
+			<id>category_id</id>
+			<field>category_name</field>
+			<deleted>category_deleted</deleted>
+			<where>category_type_id = '3'</where>
+			<hierarchy field="category_parent_id" default="0"></hierarchy>
+			<options>
+				<field>
+					<name>category_listing_id</name>
+					<table>tbl_listing</table>
+					<reference>listing_name</reference>
+					<where>listing_type_id = '1'</where>
+				</field>
+				<field>
+					<name>category_parent_id</name>
+					<table>tbl_category</table>
+					<reference>category_name</reference>
+				</field>
+			</options>
+		</table>
+		<list_template>list_category.tpl</list_template>
+		<edit_template>edit_loccategory.tpl</edit_template>
+	</section>
+	
 <!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE LOCATION. THIS IS A LISTING
 	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
 	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
