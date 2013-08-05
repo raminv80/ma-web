@@ -94,5 +94,5 @@ while(true){
 
 
 
-$SMARTY->display("extends:page.tpl|head.tpl|$template");
+$SMARTY->display("extends:page.tpl|$template");
 die();

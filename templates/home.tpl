@@ -1,61 +1,126 @@
 {block name=body}
-<div class="sliderout">
-<div id="myCarousel" class="container carousel slide home">
-  <!-- Carousel items -->
-  <div class="carousel-inner">
-  {assign var=val value=0}
-    {foreach $slider as $slide name=foo}
-    {if $slide.slide_type_id eq "1"}
-     {assign var=val value=$val+1}
-    <div class=" {if $val eq "1" }active{/if} {$val}  item">
-	    <img class="slidebg" src="/images/homeslide.png" alt="slide {$smarty.foreach.foo.iteration}" />
-		{if $slide.slide_special neq "0"}
-		<img class="slideimg" src="/images/specialscircle2.png" alt="slideimg" />
-		{/if}
-	    {if $slide.slide_image neq ""}
-		<img class="slideimg center" src="{$slide.slide_image}" alt="slideimg" />
-		{/if}
-
-
-		<div class="slidecont">
-			{if $slide.slide_image neq ""  }
-				{trimchars data=$slide.slide_text maxchars="70" }
-			{else}
-				{if $slide.slide_special neq "0"}
-				 {trimchars data=$slide.slide_text maxchars="130" }
-				{else}
-				{trimchars data=$slide.slide_text maxchars="190" }
-				{/if}
-			{/if}
-		</div>
-		<div class="hpmore" style="position: absolute; bottom: 6px;">
-		  {if $slide.slide_link neq ""}
-				<a href="{$slide.slide_link}" style="color:white"><img src="/images/magg.png" alt="Mc leay" title="Mc leay" />view more</a>
-		 {/if}
-		</div>
-    </div>
-    {/if}
-    {/foreach}
-
-  </div>
-
-	<ol class="carousel-indicators">
-	<!--  {counter start=-1} -->
-	    {foreach $slider as $slide name=foo2}
-	     {if $slide.slide_type_id eq "1"}
-	     <li data-target="#myCarousel" data-slide-to="{counter}"  {if $smarty.foreach.foo2.iteration eq 1}class="active"{/if} ></li>
-	     {/if}
-	     {/foreach}
-	 </ol>
-</div>
-</div>
-
-        <div class="container">
-				<div class="row">
-					<div class="span12">
-						{$listing_long_description}
+	<header>
+		{include file='mobilemenu.tpl'}
+		<div id="headout">
+			{include file='desktopmenu.tpl'}
+			<div id="videobox">
+				<div class="container">
+					<div class="row-fluid">
+						<div class="span5">
+							Creating great memories....<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...One moment at a time!
+						</div>
+						<div class="span6 offset1"></div>
 					</div>
 				</div>
-				{include file='bottom-boxes.tpl'}
+			</div>
+			<div id="slider">
+				<div class="container">
+					<div id="carousel-example-generic" class="carousel slide">
+						<!-- Indicators -->
+						<ol class="carousel-indicators">
+							<li data-target="#carousel-example-generic" data-slide-to="0"
+								class="active"></li>
+							<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+						</ol>
+						<!-- Wrapper for slides -->
+						<div class="carousel-inner">
+							<div class="item active">
+								<img src="/images/slideshow1.png" alt="">
+							</div>
+							<div class="item">
+								<img src="/images/slideshow1.png" alt="">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
+	</header>
+	<div id="orangebox">
+		<div class="container">
+			<div class="span4">
+				<img src="/images/menu.png" alt="" />
+				<div class="quicktitle">View Our Menu</div>
+				<div class="quicktext">Waffles waffles waffles Lorem ipsum
+					dolor sit amet, consectetur adipiscing elit. Pellentesque interdum
+					mauris neque, at hendrerit eros. Nam consequat hendrerit cursus.
+					Donec dignissim enim id massa gravida id egestas nunc euismod.
+					Integer pellentesque porta adipiscing. Nullam</div>
+				<a href="#"><div class="button">View Menu</div></a>
+			</div>
+			<div class="span4">
+				<img src="/images/locations.png" alt="" />
+				<div class="quicktitle">Locations</div>
+				<div class="quicktext">Waffles waffles waffles Lorem ipsum
+					dolor sit amet, consectetur adipiscing elit. Pellentesque interdum
+					mauris neque, at hendrerit eros. Nam consequat hendrerit cursus.
+					Donec dignissim enim id massa gravida id egestas nunc euismod.
+					Integer pellentesque porta adipiscing. Nullam</div>
+				<a href="#"><div class="button">View Details</div></a>
+			</div>
+			<div class="span4">
+				<img src="/images/gift.png" alt="" />
+				<div class="quicktitle">Gift Ideas</div>
+				<div class="quicktext">Waffles waffles waffles Lorem ipsum
+					dolor sit amet, consectetur adipiscing elit. Pellentesque interdum
+					mauris neque, at hendrerit eros. Nam consequat hendrerit cursus.
+					Donec dignissim enim id massa gravida id egestas nunc euismod.
+					Integer pellentesque porta adipiscing. Nullam</div>
+				<a href="#"><div class="button">View Details</div></a>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="whitebox">
+		<div class="container instahome">
+			<div class="row-fluid">
+				<h3 class="title">What our customers are enjoying</h3>
+			</div>
+			<div class="row-fluid instafeed">
+				<img src="/images/instaplaceholder.png" alt="" />
+			</div>
+			<div class="row-fluid instatext">
+				<div class="span2">
+					<img src="/images/biginstagram.png" alt="" />
+				</div>
+				<div class="span10">
+					<h3>Be a part of our website.</h3>
+					<p>
+						Tag <span>#cocolat</span> on your instagram snaps and your photo
+						could appear on our site!
+					</p>
+					<p>
+						View our Instagram web profile page <a href="#">here</a> or <a
+							href="#">see</a> what our valued customers have to say about
+						Cocolat.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="brownbox">
+		<div class="container">
+			<div class="row-fluid">
+				<div class="span7">
+					<p>Specialising in the art of chocolate indulgences and wicked
+						desserts, all of our products are hand-made from the finest
+						ingredients in our Balhannah kitchen based in the beautiful
+						Adelaide Hills.</p>
+
+					<p>At Cocolat, we strive to create great memories for our
+						customers, with a exceptional service and finest quality products.</p>
+				</div>
+				<div class="span5">
+					<img src="/images/blurb.png" alt="" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{include file='signup.tpl'} {include file='footer.tpl'}
 {/block}

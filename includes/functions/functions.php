@@ -25,10 +25,6 @@ include 'includes/classes/product-listing-class.php';
 include 'includes/functions/functions-general.php';
 include 'includes/functions/functions-search.php';
 
-include 'includes/classes/cart-class.php';
-
-include 'includes/classes/payment-class.php';
-include 'includes/classes/payment-nab.php';
 include 'includes/processes/processes.php';
 
 session_start();
