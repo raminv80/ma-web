@@ -24,7 +24,7 @@ require 'includes/classes/twitter.class.php';
 require 'includes/classes/socialwall.class.php';
 
 $SW = new SocialWall(TAG);
-$res = $SW->GetSearchResults();
+$res = $SW->UpdateResultDatabase();
 echo $res;
 
 

@@ -83,7 +83,7 @@
 					<name>category_listing_id</name>
 					<table>tbl_listing</table>
 					<reference>listing_name</reference>
-					<where>listing_type_id = '1'</where>
+					<where>category_type_id = '1'</where>
 				</field>
 				<field>
 					<name>category_parent_id</name>

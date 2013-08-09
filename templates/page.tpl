@@ -15,14 +15,19 @@
 	<title>{$category_name|replace:'and':'&'|ucfirst}  {$product_name|ucfirst} {$listing_seo_title}</title>
 	<!-- <link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon"> -->
 
+	<!--[if lt IE 9]>
+	     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	 <![endif]-->
+
 	<!-- Bootstrap -->
     <link href="/includes/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="/includes/css/custom.css" rel="stylesheet" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
     
-    <script src="/includes/js/jquery-1.9.1.min.js"></script>
-    <script src="/includes/js/bootstrap.min.js"></script>
-    <script src="/includes/js/custom.js"></script>
+    <script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/includes/js/custom.js"></script>
+    <script type="text/javascript" src="/includes/js/jquery.videoBG.js"></script>
 
 	<script type="text/javascript">var switchTo5x=true;</script>
 	<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>

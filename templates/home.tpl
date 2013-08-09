@@ -2,41 +2,50 @@
 	<header>
 		{include file='mobilemenu.tpl'}
 		<div id="headout">
-			{include file='desktopmenu.tpl'}
-			<div id="videobox">
-				<div class="container">
-					<div class="row-fluid">
-						<div class="span5">
-							Creating great memories....<br />
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...One moment at a time!
-						</div>
-						<div class="span6 offset1"></div>
-					</div>
-				</div>
-			</div>
-			<div id="slider">
-				<div class="container">
-					<div id="carousel-example-generic" class="carousel slide">
-						<!-- Indicators -->
-						<ol class="carousel-indicators">
-							<li data-target="#carousel-example-generic" data-slide-to="0"
-								class="active"></li>
-							<li data-target="#carousel-example-generic" data-slide-to="1"></li>
-						</ol>
-						<!-- Wrapper for slides -->
-						<div class="carousel-inner">
-							<div class="item active">
-								<img src="/images/slideshow1.png" alt="">
-							</div>
-							<div class="item">
-								<img src="/images/slideshow1.png" alt="">
+				<div id="bgvideo">
+					{include file='desktopmenu.tpl'}
+					<div id="videobox">
+						<div class="container">
+							<div class="row-fluid">
+								<div class="span5">
+									Creating great memories....<br />
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...One moment at a time!
+								</div>
+								<div class="span7">
+									<div class="videowrapper">			
+										<!-- <video height="100%" width="100%" id="background-video" >
+											<source src="videos/cocolate_fountain.mp4" type="video/mp4">
+							 				<source src="videos/cocolate_fountain.ogg" type="video/ogg">
+							 				<source src="videos/cocolate_fountain.webm" type="video/webm">
+										</video> -->
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
+					<div id="slider">
+						<div class="container">
+							<div id="carousel-example-generic" class="carousel slide">
+								<!-- Indicators -->
+								<ol class="carousel-indicators">
+									<li data-target="#carousel-example-generic" data-slide-to="0"
+										class="active"></li>
+									<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+								</ol>
+								<!-- Wrapper for slides -->
+								<div class="carousel-inner">
+									<div class="item active">
+										<img src="/images/slideshow1.png" alt="">
+									</div>
+									<div class="item">
+										<img src="/images/slideshow1.png" alt="">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-
-		</div>
 	</header>
 	<div id="orangebox">
 		<div class="container">
@@ -123,4 +132,24 @@
 	</div>
 
 	{include file='signup.tpl'} {include file='footer.tpl'}
+	
+	<script type="text/javascript">
+	$(document).ready(function() {
+		 $('#bgvideo').videoBG({
+			mp4:'videos/cocolate_fountain.mp4',
+			ogv:'videos/cocolate_fountain.ogv',
+			webm:'videos/cocolate_fountain.webm',
+			poster:'videos/cocolate_fountain.png',
+			scale:true,
+			width: '100%',
+			height: '100%',
+			zIndex:0
+		}); 
+		/*var bgVideo=document.getElementById("background-video"); 
+		$(bgVideo).bind('ended', function(){
+			this.play();
+		});
+		bgVideo.play();*/
+	});
+	</script>
 {/block}

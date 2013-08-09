@@ -1,7 +1,7 @@
 <?php
 set_include_path($_SERVER['DOCUMENT_ROOT']);
-ini_set('display_errors',0);
-error_reporting(0);
+ini_set('display_errors',1);
+error_reporting(1);
 if($GLOBALS['CONFIG']=simplexml_load_file($_SERVER['DOCUMENT_ROOT']."/config/config.xml.php")){
 	$debug = (string)$CONFIG->attributes()->debug;
 	if($debug	==	'true'){
@@ -25,6 +25,12 @@ include 'includes/classes/product-listing-class.php';
 include 'includes/functions/functions-general.php';
 include 'includes/functions/functions-search.php';
 
+require 'includes/social/youtube.class.php';
+require 'includes/social/instagram.class.php';
+require 'includes/social/twitter.class.php';
+require 'includes/social/facebook.php';
+require 'includes/social/socialwall.class.php';
+
 include 'includes/processes/processes.php';
 
 session_start();
@@ -33,6 +39,17 @@ $_REQUEST	=	clean($_REQUEST);
 $_POST		=	clean($_POST);
 $_GET		=	clean($_GET);
 $DBobject = new DBmanager();
+
+if(!empty($CONFIG->socialwall)){
+	$tag = $CONFIG->socialwall->tag;
+	$table = $CONFIG->socialwall->table;
+	$ads = $CONFIG->socialwall->ads ? TRUE:FALSE;
+	$instagram = $CONFIG->socialwall->attributes()->instagram ? TRUE:FALSE;
+    $facebook = $CONFIG->socialwall->attributes()->facebook ? TRUE:FALSE;
+    $youtube = $CONFIG->socialwall->attributes()->youtube ? TRUE:FALSE;
+    $twitter = $CONFIG->socialwall->attributes()->twitter ? TRUE:FALSE;
+	$SW = new SocialWall($tag,$table,$ads,$instagram,$facebook,$youtube,$twitter);
+}
 
 //Create Smarty object and set
 //paths within object

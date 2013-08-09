@@ -19,7 +19,8 @@ Class Page{
 					$SMARTY->assign($fieldname,unclean($fieldvalue));
 				}
 			}
-			$this->LoadMenu($_CONFIG_OBJ->pageID);
+			$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
+			$SMARTY->assign('menuitems',$menu);
 		}
 	}
 
@@ -32,16 +33,7 @@ Class Page{
 			$deleted_name = $tbl_comp."_deleted";
 			$publish_name = $tbl_comp."_published";
 			$type = $tbl_comp."_type_id";
-			/***hack remove for other sites**/
-			if($_CONFIG_OBJ->pageID){
-				if($obj->category == 'carpets and flooring'){
-					$_CONFIG_OBJ->pageID = 30 ;
-				}elseif($obj->category == 'curtains and blinds'){
-					$_CONFIG_OBJ->pageID = 50 ;
-				}
-
-			}
-			/**/
+			
 			$_where = " {$t->name}.{$tbl_comp}_id = '{$_CONFIG_OBJ->pageID}' AND {$deleted_name} IS NULL AND {$publish_name} = 1 AND {$type} = '{$CONFIG->page_strut->type}'";
 			foreach($t->extra as $et){
 				$f_id = str_replace("tbl_", "", $t->name);
@@ -53,107 +45,52 @@ Class Page{
 
 		}
 		$sql = "SELECT * FROM {$_tables} WHERE {$_where}";
-		//ECHO $sql.'@<BR>';
 		$arr = $this->DBobject->wrappedSqlGet($sql);
 		if(!empty($arr[0])){
 			$this->CONFIG_OBJ = $_CONFIG_OBJ;
 			foreach ($arr[0] as $key =>  $row) {
-				//$page_fields[$key]=$row['link_content'];
 				$page_fields[$key]=$row;
 			}
 		}
 		return  $page_fields;
 	}
 
-	function LoadMenu($_id){
+	function LoadMenu($_pid, $_cid="0",$_parentURL=""){
 		global  $CONFIG,$SMARTY,$DBobject;
-		$submenu = array();
-
-		$cat_id = "";
+		$data = array();
+		
 		//GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
-		$sql = "SELECT tbl_category.*,tbl_listing.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_category_id = tbl_category.category_id WHERE tbl_listing.listing_id = '{$_id}' AND tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL";
-		if($cat = $this->DBobject->wrappedSql($sql)){
-
-			if(!empty($cat['0']) && !empty($cat['0']['category_id'])){
-				$cats = $this->get_top_category($cat['0']['category_id']);
-				//$cat_id = $categories['id'];  WHERE DOES $categories comes from ?
-			}
-			$cat_id = $cat['0']['listing_id'];
-		}
-
-		//This section of code gets all the items which are considered menu items.
-		//The top level menu items are determined by tbl_menu. This is because top level menu items are part of site design and not part of category structure.
-		//Because listing objects can be categories themselves, menus may have sub menus
-
-		$sql = "SELECT tbl_menu.* FROM tbl_menu WHERE tbl_menu.menu_deleted IS NULL ORDER BY menu_order";
-		$check = 0;
-
-		if($res = $this->DBobject->wrappedSql($sql)){
-			if(!empty($res['0']) && !empty($res['0']['menu_id'])){
-				foreach ($res as $row) {
-
-					$menu[$row['menu_id']]['title']=ucfirst(unclean($row['menu_title']));
-					$menu[$row['menu_id']]['url']=unclean($row['menu_url']);
-
-					$menu[$row['menu_id']]['selected'] = 0;
-
-					if($row['menu_category_id'] == $cat_id    ){
-						$menu[$row['menu_id']]['selected'] = 1;
-						$check = 1;
-
-					}
-
-					$sql = "SELECT tbl_listing.* FROM tbl_listing WHERE tbl_listing.listing_category_id = '{$row['menu_category_id']}' AND tbl_listing.listing_type_id = '1'  AND tbl_listing.listing_deleted IS NULL ORDER BY listing_order ASC";
-					if($subpages = $this->DBobject->wrappedSql($sql)){
-						if(!empty($subpages['0']) && !empty($subpages['0']['listing_id'])){
-							$menu[$row['menu_id']]['rel']=(count($subpages)>0?'rel="ddsubmenu'.$row['menu_id'].'"':'');
-							foreach($subpages as $row2){
-								$submenu[$row['menu_id']][$row2['listing_id']] = $this->sub_menu($row2, 1);
-							}
+		$sql = "SELECT tbl_category.*,tbl_listing.listing_title, tbl_listing.listing_url FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_deleted IS NULL";
+		die($sql);
+		$params = array(":cid"=>$_cid);
+		if($res = $DBobject->wrappedSql($sql,$params)){
+			foreach ($res as $row) {
+				$subs = LoadMenu($_pid,$row['category_id']);
+				$data["{$row['category_id']}"]["title"]=ucfirst(unclean($row['listing_title']));
+				$data["{$row['category_id']}"]["url"]=ucfirst(unclean($row['listing_url']));
+				$data["{$row['category_id']}"]["subs"]=$subs;
+				$data["{$row['category_id']}"]["selected"] = 0;
+				
+				if($subs['selected']){
+					$data["selected"] = 1;
+				}else{
+					$sql = "SELECT * FROM tbl_listing WHERE listing_id = :pid";
+					$params = array(":pid"=>$_pid);
+					if($res = $DBobject->wrappedSql($sql,$params)){
+						if($res[0]!=null){
+							$data["{$row['category_id']}"]["selected"] = 1;
+							$data["selected"] = 1;
 						}
 					}
 				}
 			}
 		}
-		//die('#'.$cat_id);
-		$SMARTY->assign('menuitems',$menu);
-		$SMARTY->assign('submenuitems',$submenu);
-	}
+		
+		return $data;
 
-	function sub_menu($row, $_lvl){
-		$return = array();
-		//die(print_r($row));
-		$return['title'] = ucfirst($row['listing_title']);
-		$return['url']  = $row['listing_url'];
-		/*
-		$sql = "SELECT tbl_listing.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_id = tbl_listing.listing_category_id WHERE tbl_category.category_listing_id = '{$row['listing_id']}' AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_deleted IS NULL";
-		if($res = $this->DBobject->wrappedSql($sql)){
-			if(!empty($res['0']) && !empty($res['0']['listing_id'])){
-				$return['rel']=(count($subpages)>0?'rel="ddsubmenu'.$row['menu_id'].'"':'');
-			}
-			foreach($res as $row2){
-				$return['submenu'][] = $this->sub_menu($row2, (intval($_lvl)+1));
-			}
-		}*/
-		return $return;
+// 		$SMARTY->assign('menuitems',$menu);
+// 		$SMARTY->assign('submenuitems',$submenu);
 	}
-
-	function get_top_category($_id,$_child=null){
-		$C = $_child;
-		//GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
-		$sql = "SELECT tbl_category.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_category_id = tbl_category.category_id WHERE tbl_listing.listing_id = {$_id} AND tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL  AND tbl_listing.listing_type_id = '1' ";
-		//die($sql);
-		/*
-		if($obj = $this->DBobject->wrappedSql($sql)){
-			if(!empty($obj['0'])){
-				$C = array();
-				$C['id'] = $obj['0']['category_id'];
-				$C['name'] = $obj['0']['category_name'];
-				$C['child'] = $_child;
-				return $this->get_top_category($C['id'],$C);
-			}
-		}*/
-		return $C;
-	}
+	
 
 }

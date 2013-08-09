@@ -25,7 +25,7 @@ $_request = clean($_REQUEST);
 //ProcessUpdateNewsStatus();
 
 while(true){
-
+	
 	/******* Goes to home *******/
 	if($_request['arg1'] == ''){
 		$page_obj = new Page();
@@ -57,14 +57,15 @@ while(true){
 	$arr = explode("/", $_request["arg1"]);
 	foreach($CONFIG->listing_page as $lp){
 		if($lp->url == $arr[0] ){
+			//Load PAGE information. Parts of this data may be updated by the Listing class
+			$page_obj = new Page();
+			$page_obj->LoadPage($lp);
+			
 			$_nurl = ltrim($_request["arg1"],$arr[0]);
 			$class = (string)$lp->file;
 			$obj = new $class($_nurl,$lp);
 			$template = $obj->Load();
-			$page_obj = new Page();
-
-			$page_obj->LoadPage($lp);
-
+			
 			break 2;
 		}
 	}
@@ -74,20 +75,20 @@ while(true){
 	$sql = "SELECT listing_url FROM tbl_listing";
 	$urls = $DBobject->wrappedSqlGet($sql);
 	foreach ($urls as $url){
-		if(in_array($_request['arg1'],$url)){
-			$sql = "SELECT listing_id FROM tbl_listing WHERE listing_url = ?";
-			$res = $DBobject->wrappedSqlGet($sql,array($_request['arg1']));
-			//$p_id =  $res[0]['listing_id'];
+		if(strtolower($_request['arg1']) === strtolower($url['listing_url'])){
+			$sql = "SELECT listing_id FROM tbl_listing WHERE listing_url = :url";
+			$res = $DBobject->wrappedSqlGet($sql,array(":url"=>$_request['arg1']));
 			$page_obj = new Page();
-			//$p_id->page_strut->table = 'tbl_listing';
 			$p_id->page_strut->table->name='tbl_listing';
 			$p_id->page_strut->table->orderby='listing_order';
 			$p_id->pageID = $res[0]['listing_id'];
 			$page_obj->LoadPage($p_id);
-			$template = "body.tpl";
+			$template = "standardpage.tpl";
 			break 2;
 		}
 	}
+	
+	header("HTTP/1.0 404 Not Found");
 	$template = '404.tpl';
 	break 1;
 }

@@ -73,12 +73,20 @@
 			<div class="span9 controls"><input type="checkbox" value="{$fields.listing_flag3}" name="field[tbl_listing][{$cnt}][listing_flag1]" id="id_listing_flag3"></div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_short_description">Short Description</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_short_description]" id="id_listing_short_description" class="tinymce">{$fields.listing_short_description}</textarea></div>
+			<div class="span3"><label class="control-label" for="id_listing_content1">Content 1</label></div>
+			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea></div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_long_description">Long Description</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_long_description]" id="id_listing_long_description" class="tinymce">{$fields.listing_long_description}</textarea></div>
+			<div class="span3"><label class="control-label" for="id_listing_content2">Content 3</label></div>
+			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_content3">Content 3</label></div>
+			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="tinymce">{$fields.listing_content3}</textarea></div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_content4">Content 4</label></div>
+			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content4]" id="id_listing_content4" class="tinymce">{$fields.listing_content4}</textarea></div>
 		</div>
 		{if $fields.listing_id neq ""}
 		 <div class="row-fluid control-group">

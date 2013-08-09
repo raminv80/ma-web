@@ -5,7 +5,7 @@
 	  			<div class="row-fluid">
 	  			<div class="span5">
 	  				<div class="row-fluid">
-	  					<div class="span4">
+	  					<div class="span4 sitemap">
 	  						<ul>
 	  							<li><a title="Home" href="/">Home</a></li>
 	  							<li><a title="Our Menu" href="/our-menu">Our Menu</a></li>
@@ -13,7 +13,7 @@
 	  							<li><a title="Community" href="/community">Community</a></li>
 	  						</ul>
 	  					</div>
-	  					<div class="span4">
+	  					<div class="span4 sitemap">
 	  						<ul>
 	  							<li><a title="Franchise Opportunities" href="/franchise-opportunities">Franchise Opportunities</a></li>
 	  							<li><a title="Our Story" href="/our-story">Our Story</a></li>
@@ -21,7 +21,7 @@
 	  							<li><a title="Community" href="/community">Social Media</a></li>
 	  						</ul>
 	  					</div>
-	  					<div class="span4">
+	  					<div class="span4 sitemap">
 	  						<ul>
 	  							<li><a title="Privacy Policy" href="/privacy-policy">Privacy Policy</a></li>
 	  							<li><a title="Terms and Conditions" href="/terms-and-conditions">Terms and Conditions</a></li>

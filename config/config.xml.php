@@ -14,8 +14,8 @@
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>
 			<field>listing_url</field><!-- The field used to match the URL -->
-			<template>body.tpl</template><!-- The template used if the field is matched -->
 		</table>
+		<template>standardpage.tpl</template><!-- The template used if the field is matched -->
 	</page_strut>
 	<index_page>
 		<template>home.tpl</template>
@@ -25,18 +25,13 @@
 		<template>search.tpl</template>
 		<pageID>2</pageID>
 	</search>
-	
-	<static_page name="community">
+	<socialwall name="community" ads="false" instagram="true" facebook="false" twitter="false" youtube="false">
 		<url>community</url>
-		<type>1</type>
 		<pageID>5</pageID>
-		<file>ListClass</file>
-		<template>contactus.tpl</template>
-		<table>
-			<name>tbl_listing</name>
-			<where>(listing_id = '7' OR listing_id = '8' )</where>
-		</table>
- 	</static_page>
+		<template>community.tpl</template>
+		<tag>cocolat</tag>
+		<table>ntbl_social</table>
+ 	</socialwall>
 
 	<!-- <listing_page name="contact-us">
 		<url>contact-us</url>
