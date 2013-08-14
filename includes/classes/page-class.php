@@ -61,11 +61,10 @@ Class Page{
 		
 		//GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
 		$sql = "SELECT tbl_category.*,tbl_listing.listing_title, tbl_listing.listing_url FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_deleted IS NULL";
-		die($sql);
 		$params = array(":cid"=>$_cid);
 		if($res = $DBobject->wrappedSql($sql,$params)){
 			foreach ($res as $row) {
-				$subs = LoadMenu($_pid,$row['category_id']);
+				$subs = $this->LoadMenu($_pid,$row['category_id']);
 				$data["{$row['category_id']}"]["title"]=ucfirst(unclean($row['listing_title']));
 				$data["{$row['category_id']}"]["url"]=ucfirst(unclean($row['listing_url']));
 				$data["{$row['category_id']}"]["subs"]=$subs;
