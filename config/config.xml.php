@@ -14,6 +14,11 @@
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>
 			<field>listing_url</field><!-- The field used to match the URL -->
+			<associated>
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_listing_id</field>
+			</associated>
 		</table>
 		<template>standardpage.tpl</template><!-- The template used if the field is matched -->
 	</page_strut>

@@ -106,7 +106,7 @@
 				theme_advanced_statusbar_location : "bottom",
 				theme_advanced_resizing : true,
 				convert_urls : false,
-				content_css : '/includes/css/reset.css,/includes/css/text.css,/includes/css/styles.css,/includes/css/960_16_col.css',
+				content_css : '/includes/css/bootstrap.min.css,/includes/css/colorbox.css,/includes/css/custom.css,/includes/css/tipTip.css',
 				file_browser_callback : 'elFinderBrowser'
 			});
 		});

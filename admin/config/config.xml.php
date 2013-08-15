@@ -59,6 +59,11 @@
 				<reference>category_name</reference>
 			</field>
 		</options>
+		<associated>
+			<name>gallery</name>
+			<table>tbl_gallery</table>
+			<field>gallery_listing_id</field>
+		</associated>
 		<list_template>list_page.tpl</list_template>
 		<edit_template>edit_page.tpl</edit_template>
 	</section>
