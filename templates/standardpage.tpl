@@ -1,7 +1,7 @@
 {block name=body}
 	<header>
 		{include file='mobilemenu.tpl'}
-		<div id="headout">
+		<div id="headout" class="headerbg">
 				{include file='desktopmenu.tpl'}
 				<div id="videobox">
 					<div class="container">

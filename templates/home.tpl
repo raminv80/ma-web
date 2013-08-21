@@ -49,19 +49,19 @@
 				<img src="/images/menu.png" alt="" />
 				<div class="quicktitle">View Our Menu</div>
 				<div class="quicktext">{$listing_content1}</div>
-				<a href="#"><div class="button">View Menu</div></a>
+				<a href="/our-menu"><div class="button">View Menu</div></a>
 			</div>
 			<div class="span4">
 				<img src="/images/locations.png" alt="" />
 				<div class="quicktitle">Locations</div>
 				<div class="quicktext">{$listing_content2}</div>
-				<a href="#"><div class="button">View Details</div></a>
+				<a href="/our-locations"><div class="button">View Details</div></a>
 			</div>
 			<div class="span4">
 				<img src="/images/gift.png" alt="" />
 				<div class="quicktitle">Gift Ideas</div>
 				<div class="quicktext">{$listing_content3}</div>
-				<a href="#"><div class="button">View Details</div></a>
+				<a href="/our-menu/gifts"><div class="button">View Details</div></a>
 			</div>
 		</div>
 	</div>

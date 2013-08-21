@@ -1,7 +1,7 @@
 {block name=body}
 	<header>
 		{include file='mobilemenu.tpl'}
-		<div id="headout">
+		<div id="headout" class="headerbg">
 				{include file='desktopmenu.tpl'}
 				<div id="videobox">
 					<div class="container">
@@ -44,41 +44,41 @@
 	  				<form id="franchise_form" accept-charset="UTF-8" action="/includes/processes/processes-contactus.php" method="post">
 		  				<div class="row-fluid">
 		  					<div class="span6">
-		  						<div class="row-fluid">
-		  							<div class="span3">Name*:</div>
-		  							<div class="span9"><input type="text" name="franchisename" class="req" /></div>
+		  						<div class="row-fluid control-group">
+		  							<div class="span3"><label class="control-label" for="franchisename">Name*:</label></div>
+		  							<div class="span9 controls"><input type="text" name="franchisename" id="franchisename" class="req" /></div>
 		  						</div>
-		  						<div class="row-fluid">
-		  							<div class="span3">Phone*:</div>
-		  							<div class="span9"><input type="text" name="franchisephone" class="req" /></div>
+		  						<div class="row-fluid control-group">
+		  							<div class="span3"><label class="control-label" for="franchisephone">Phone*:</label></div>
+		  							<div class="span9 controls"><input type="text" name="franchisephone" id="franchisephone" class="req" /></div>
 		  						</div>
-		  						<div class="row-fluid">
-		  							<div class="span3">Email*:</div>
-		  							<div class="span9"><input type="text" name="franchiseemail" class="req" /></div>
+		  						<div class="row-fluid control-group">
+		  							<div class="span3"><label class="control-label" for="franchiseemail">Email*:</label></div>
+		  							<div class="span9 controls"><input type="text" name="franchiseemail" id="franchiseemail" class="req" /></div>
 		  						</div>
-		  						<div class="row-fluid">
-		  							<div class="span3">Postcode*:</div>
-		  							<div class="span9"><input type="text" name="franchisepostcode" class="req" /></div>
+		  						<div class="row-fluid control-group">
+		  							<div class="span3"><label class="control-label" for="franchisepostcode">Postcode*:</label></div>
+		  							<div class="span9 controls"><input type="text" name="franchisepostcode" id="franchisepostcode" class="req" /></div>
 		  						</div>	  						
 		  						
 		  						
 		  					</div>
 		  					<div class="span6">
-		  						<div class="row-fluid">
-		  							<div class="span3">Enquiry:</div>
-		  							<div class="span9"><textarea name="franchiseenquiry"></textarea></div>
+		  						<div class="row-fluid control-group">
+		  							<div class="span3"><label class="control-label" for="franchiseenquiry">Enquiry:</div>
+		  							<div class="span9 controls"><textarea name="franchiseenquiry" id="franchiseenquiry"></textarea></div>
 		  						</div>
-		  						<div class="row-fluid">
+		  						<div class="row-fluid control-group">
 		  							<div class="span3"></div>
-		  							<div class="span9"><a href="javascript:void(0)" class="btn button1" onClick="validate()" >Submit</a></div>
+		  							<div class="span9"><a href="javascript:void(0)" class="btn button1" onClick="validate_franchise_form()" >Submit</a></div>
 		  						</div>
 		  					</div>
 		  				</div>
 	  				</form>
 	  				<script type="text/javascript">
-						function validate(){
+						function validate_franchise_form(){
 							$('body').css('cursor','wait');
-							var pass = validateForm();
+							var pass = validateForm($('#franchise_form'));
 							if(!pass){
 								$('body').css('cursor','pointer');
 								return false;
