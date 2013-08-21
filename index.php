@@ -25,11 +25,13 @@ $_request = clean($_REQUEST);
 //ProcessUpdateNewsStatus();
 
 while(true){
+	$struct = $CONFIG->page_strut;
+	$class = (string)$struct->file;
 	
 	/******* Goes to home *******/
 	if($_request['arg1'] == ''){
-		$page_obj = new Page();
-		$page_obj->LoadPage($CONFIG->index_page);
+		$obj = new $class('',$struct);
+		$template = $obj->Load($CONFIG->index_page->pageID);
 		$template = $CONFIG->index_page->template;
 		break 1;
 	}
@@ -60,12 +62,10 @@ while(true){
 			//Load PAGE information. Parts of this data may be updated by the Listing class
 			$page_obj = new Page();
 			$page_obj->LoadPage($lp);
-			
 			$_nurl = ltrim($_request["arg1"],$arr[0]);
 			$class = (string)$lp->file;
 			$obj = new $class($_nurl,$lp);
 			$template = $obj->Load();
-			
 			break 2;
 		}
 	}
@@ -89,7 +89,10 @@ while(true){
 	}
 	
 	header("HTTP/1.0 404 Not Found");
-	$template = '404.tpl';
+	/******* Goes to home *******/
+	$obj = new $class('',$struct);
+	$template = $obj->Load($CONFIG->error404->pageID);
+	$template = $CONFIG->error404->template;
 	break 1;
 }
 

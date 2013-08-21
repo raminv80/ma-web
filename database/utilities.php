@@ -19,6 +19,7 @@ function urlSafeString($str){
 	$str = str_replace('&','and',$str);
 	$str = preg_replace("/[^\s^\d^\w]+/", "", $str);
 	$str = str_replace(' ','-',$str);
+	$str = strtolower($str);
 	return $str;
 }
 

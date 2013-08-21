@@ -26,6 +26,10 @@
 		<template>home.tpl</template>
 		<pageID>1</pageID>
 	</index_page>
+	<error404>
+		<template>404.tpl</template>
+		<pageID>26</pageID>
+	</error404>
 	<search>
 		<template>search.tpl</template>
 		<pageID>2</pageID>

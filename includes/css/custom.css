@@ -15,8 +15,11 @@ a:hover{
 #top-menu{display: none;}
 
 #headout{
-	/*background: #3a180d no-repeat top center;*/
-	background: #3a180d url(../../images/headerbg.png) no-repeat top center;
+	background: #3a180d no-repeat top center;
+	/*background: #3a180d url(../../images/headerbg.png) no-repeat top center;*/
+}
+.headerbg {
+	background: #3a180d url(../../images/headerbg.png) no-repeat top center !important;
 }
 
 #headout2{
@@ -28,7 +31,7 @@ a:hover{
 }
 
 #slider {
-	height:210px;
+	/*height:210px;*/
 }
 
 #logo, #social, #find, #search, #franchise{
@@ -142,7 +145,7 @@ z-index: 500;
 }
 
 #bgvideo {
-    height: 779px;
+    height: 380px;
 }
 
 #videobox .span5{

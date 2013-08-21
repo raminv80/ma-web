@@ -43,6 +43,10 @@
 			</div>
 		</div>
 		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="category_order">Order</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.category_order}" name="field[tbl_category][{$cnt}][category_order]" id="category_order"></div>
+		</div>
+		<div class="row-fluid control-group">
 			<div class="span9 offset3">
 			</div>
 

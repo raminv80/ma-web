@@ -1,8 +1,7 @@
 {block name=body}
 	<header>
-		{include file='mobilemenu.tpl'}
-		<div id="headout">
-				<div id="bgvideo">
+		<div id="headout" class="headerbg">
+				
 					{include file='desktopmenu.tpl'}
 					<div id="videobox">
 						<div class="container">
@@ -12,12 +11,7 @@
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...One moment at a time!
 								</div>
 								<div class="span7">
-									<div class="videowrapper">			
-										<!-- <video height="100%" width="100%" id="background-video" >
-											<source src="videos/cocolate_fountain.mp4" type="video/mp4">
-							 				<source src="videos/cocolate_fountain.ogg" type="video/ogg">
-							 				<source src="videos/cocolate_fountain.webm" type="video/webm">
-										</video> -->
+									<div id="bgvideo">
 									</div>
 								</div>
 							</div>
@@ -28,55 +22,45 @@
 							<div id="carousel-example-generic" class="carousel slide">
 								<!-- Indicators -->
 								<ol class="carousel-indicators">
-									<li data-target="#carousel-example-generic" data-slide-to="0"
-										class="active"></li>
-									<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+									{assign var=x value=0}
+									{foreach $gallery as $item}
+										<li data-target="#carousel-example-generic" data-slide-to="{$x}" {if $x lt 1}class="active"{/if}></li>
+										{assign var=x value=$x+1} 
+									{/foreach}
 								</ol>
 								<!-- Wrapper for slides -->
 								<div class="carousel-inner">
-									<div class="item active">
-										<img src="/images/slideshow1.png" alt="">
+									{assign var=x value=0}
+									{foreach $gallery as $item}
+									<div class="item{if $x lt 1} active{/if}">
+										<img src="{$item.gallery_link}" alt="{$item.gallery_file}">
 									</div>
-									<div class="item">
-										<img src="/images/slideshow1.png" alt="">
-									</div>
+									{assign var=x value=$x+1} 
+									{/foreach}
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 	</header>
 	<div id="orangebox">
 		<div class="container">
 			<div class="span4">
 				<img src="/images/menu.png" alt="" />
 				<div class="quicktitle">View Our Menu</div>
-				<div class="quicktext">Waffles waffles waffles Lorem ipsum
-					dolor sit amet, consectetur adipiscing elit. Pellentesque interdum
-					mauris neque, at hendrerit eros. Nam consequat hendrerit cursus.
-					Donec dignissim enim id massa gravida id egestas nunc euismod.
-					Integer pellentesque porta adipiscing. Nullam</div>
+				<div class="quicktext">{$listing_content1}</div>
 				<a href="#"><div class="button">View Menu</div></a>
 			</div>
 			<div class="span4">
 				<img src="/images/locations.png" alt="" />
 				<div class="quicktitle">Locations</div>
-				<div class="quicktext">Waffles waffles waffles Lorem ipsum
-					dolor sit amet, consectetur adipiscing elit. Pellentesque interdum
-					mauris neque, at hendrerit eros. Nam consequat hendrerit cursus.
-					Donec dignissim enim id massa gravida id egestas nunc euismod.
-					Integer pellentesque porta adipiscing. Nullam</div>
+				<div class="quicktext">{$listing_content2}</div>
 				<a href="#"><div class="button">View Details</div></a>
 			</div>
 			<div class="span4">
 				<img src="/images/gift.png" alt="" />
 				<div class="quicktitle">Gift Ideas</div>
-				<div class="quicktext">Waffles waffles waffles Lorem ipsum
-					dolor sit amet, consectetur adipiscing elit. Pellentesque interdum
-					mauris neque, at hendrerit eros. Nam consequat hendrerit cursus.
-					Donec dignissim enim id massa gravida id egestas nunc euismod.
-					Integer pellentesque porta adipiscing. Nullam</div>
+				<div class="quicktext">{$listing_content3}</div>
 				<a href="#"><div class="button">View Details</div></a>
 			</div>
 		</div>
@@ -116,16 +100,10 @@
 		<div class="container">
 			<div class="row-fluid">
 				<div class="span7">
-					<p>Specialising in the art of chocolate indulgences and wicked
-						desserts, all of our products are hand-made from the finest
-						ingredients in our Balhannah kitchen based in the beautiful
-						Adelaide Hills.</p>
-
-					<p>At Cocolat, we strive to create great memories for our
-						customers, with a exceptional service and finest quality products.</p>
+					{$listing_content4}
 				</div>
 				<div class="span5">
-					<img src="/images/blurb.png" alt="" />
+					<img src="/images/blurb.png" alt="Strawberry dipped in chocolate" />
 				</div>
 			</div>
 		</div>
@@ -135,7 +113,8 @@
 	
 	<script type="text/javascript">
 	$(document).ready(function() {
-		 $('#bgvideo').videoBG({
+		
+		$('#bgvideo').videoBG({
 			mp4:'videos/cocolate_fountain.mp4',
 			ogv:'videos/cocolate_fountain.ogv',
 			webm:'videos/cocolate_fountain.webm',
@@ -145,6 +124,25 @@
 			height: '100%',
 			zIndex:0
 		}); 
+		
+		if ($(window).width() < 940) {
+		   $('#bgvideo').hide();
+		   $('#headout').addClass('headerbg');
+		}else{
+			$('#bgvideo').show();
+			$('#headout').removeClass('headerbg');
+		}
+		
+		window.onresize = function(event) {
+			if ($(window).width() < 940) {
+			   $('#bgvideo').hide();
+			   $('#headout').addClass('headerbg');
+			}else{
+				$('#bgvideo').show();
+				$('#headout').removeClass('headerbg');
+			}
+		}
+		
 		/*var bgVideo=document.getElementById("background-video"); 
 		$(bgVideo).bind('ended', function(){
 			this.play();

@@ -88,7 +88,7 @@
 					<name>category_listing_id</name>
 					<table>tbl_listing</table>
 					<reference>listing_name</reference>
-					<where>category_type_id = '1'</where>
+					<where>listing_type_id = '1'</where>
 				</field>
 				<field>
 					<name>category_parent_id</name>
@@ -215,7 +215,7 @@
 			<field>category_name</field>
 			<deleted>category_deleted</deleted>
 			<where>category_type_id = '3'</where>
-			<hierarchy field="category_parent_id" default="0"></hierarchy>
+			<hierarchy field="category_parent_id" default="2"></hierarchy>
 			<options>
 				<field>
 					<name>category_listing_id</name>
