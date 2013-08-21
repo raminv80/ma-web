@@ -72,18 +72,27 @@ while(true){
 	}
 
 	/******* Dynamic Page Check Here *******/
-	//$urls = $DBobject->GetColumn('page_url', 'tbl_page', '');
-	$sql = "SELECT listing_url FROM tbl_listing";
-	$urls = $DBobject->wrappedSqlGet($sql);
-	foreach ($urls as $url){
-		if(strtolower($_request['arg1']) === strtolower($url['listing_url'])){
-			$sql = "SELECT listing_id FROM tbl_listing WHERE listing_url = :url";
-			$res = $DBobject->wrappedSqlGet($sql,array(":url"=>$_request['arg1']));
-			
-			$obj = new $class('',$struct);
-			$template = $obj->Load($res[0]['listing_id']);
-			$template = $struct->template;
-			break 2;
+
+	$arr = explode("/", $_request["arg1"]);
+	foreach($arr as $a){
+		if($a !== end($arr)){
+			$sql = "SELECT * FROM tbl_category WHERE tbl_category.category_deleted IS NULL AND EXISTS (SELECT listing_id FROM tbl_listing WHERE tbl_listing.listing_id = tbl_category.category_listing_id AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_url = :url )";
+			$params = array(":url"=>$a);
+			if($DBobject->wrappedSqlGet($sql,$params)){
+				continue;
+			}else{
+				break 1;
+			}
+		}else{
+			$sql = "SELECT listing_id FROM tbl_listing WHERE tbl_listing.listing_url = :url AND tbl_listing.listing_deleted IS NULL ";
+			if($res = $DBobject->wrappedSqlGet($sql,array(":url"=>$a))){
+				$obj = new $class('',$struct);
+				$template = $obj->Load($res[0]['listing_id']);
+				$template = $struct->template;
+				break 2;
+			}else{
+				break 1;
+			}
 		}
 	}
 	

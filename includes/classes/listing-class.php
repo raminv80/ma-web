@@ -119,6 +119,9 @@ class ListClass{
 				}
 			}else if(!empty($_ID)){
 				
+				$bdata= $this->LoadBreadcrumb($_ID);
+				$SMARTY->assign("breadcrumbs",$bdata);
+				
 				$data = $this->GetDataSingleSet($_ID);
 				foreach($data[0] as $key => $val){
 					$SMARTY->assign($key, unclean($val));
@@ -164,6 +167,9 @@ class ListClass{
 			$chk_field = $t->field;
 			foreach($args as $arg){
 				if($e_id = $this->ChkCache($tbl_name,$chk_field,$arg)){
+					$bdata = $this->LoadBreadcrumb($e_id);
+					$SMARTY->assign("breadcrumbs",$bdata);
+					
 					$prefix = str_replace("tbl_", "", $tbl_name);
 					$data = $this->GetDataSubSet("{$prefix}_id = '{$e_id}'");
 					$SMARTY->assign('data', unclean($data));
@@ -299,6 +305,28 @@ class ListClass{
 					$DBobject->wrappedSql($sql[2],$params);
 	}
 
+	
+	function LoadBreadcrumb($_id,$_subs=null){
+		global  $CONFIG,$SMARTY,$DBobject;
+		$data = array();
+		$sql = "SELECT * FROM tbl_listing WHERE tbl_listing.listing_id = :id AND tbl_listing.listing_deleted IS NULL";
+		$params = array(":id"=>$_id);
+		if($res = $DBobject->wrappedSql($sql,$params)){
+			$data[$res[0]['listing_id']]["title"]=ucfirst(unclean($res[0]['listing_title']));
+			$data[$res[0]['listing_id']]["url"]=$res[0]['listing_url'];
+			$data[$res[0]['listing_id']]["subs"]=$_subs;
+			if(!empty($res[0]['listing_category_id']) && $res[0]['listing_category_id'] != 0){
+				$sql2 = "SELECT * FROM tbl_category WHERE tbl_category.category_id = :cid AND tbl_category.category_deleted IS NULL";
+				$params2 = array(":cid"=>$res[0]['listing_category_id']);
+				if($res2 = $DBobject->wrappedSql($sql2,$params2)){
+					$data = $this->LoadBreadcrumb($res2[0]['category_listing_id'],$data);
+				}
+			}
+		}
+		return $data;
+	}
+	
+	
 	function LoadMenu($_pid, $_cid="0",$_parentURL=""){
 		global  $CONFIG,$SMARTY,$DBobject;
 		$data = array();

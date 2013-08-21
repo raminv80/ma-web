@@ -6,6 +6,6 @@
 	{/foreach}
 {/function}
 	<div class="crumbs">
-		<a href="/">Home</a> / <a href="/{$listing_url}">{$listing_title}</a>{call name=breadcrumbs items=$breadcrumbs parenturl="/"|cat:$listing_url}
+		<a href="/">Home</a>{call name=breadcrumbs items=$breadcrumbs parenturl="/"|cat:$listing_url}
 	</div>
 {/block}
