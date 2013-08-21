@@ -28,6 +28,7 @@
     <script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/includes/js/custom.js"></script>
     <script type="text/javascript" src="/includes/js/jquery.videoBG.js"></script>
+    <script type="text/javascript" src="/includes/js/validation.js"></script>
 
 	<script type="text/javascript">var switchTo5x=true;</script>
 	<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>

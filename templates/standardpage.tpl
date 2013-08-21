@@ -22,7 +22,14 @@
 	<div id="orangebox">
 		<div class="container">
 			<div class="row-fluid orangecontent">
-		  		{$listing_content2}
+		  		<div class="span3">
+		  			{foreach $gallery as $item}
+		  				<img src="{$item.gallery_link}" alt="{$item.gallery_file}">
+					{/foreach}
+		  		</div>
+		  		<div class="span8">
+		  			{$listing_content2}
+		  		</div>
 	  		</div>
 		</div>
 	</div>

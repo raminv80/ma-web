@@ -38,8 +38,8 @@ while(true){
 
 	/******* Goes to search *******/
 	if($_request['arg1'] == 'search'){
-		$page_obj = new Page();
-		$page_obj->LoadPage($CONFIG->search);
+		$obj = new $class('',$struct);
+		$template = $obj->Load($CONFIG->search->pageID);
 		$template = $CONFIG->search->template;
 		searchcms($_REQUEST['search']);
 		break 1;
@@ -48,8 +48,8 @@ while(true){
 	/****** Goes to individual script pages *******/
 	foreach($CONFIG->static_page as $sp){
 		if($sp->url == $_request['arg1'] ){
-			$page_obj = new Page();
-			$page_obj->LoadPage($sp);
+			$obj = new $class('',$struct);
+			$template = $obj->Load($sp->pageID);
 			$template = $sp->template;
 			break 2;
 		}
@@ -60,8 +60,9 @@ while(true){
 	foreach($CONFIG->listing_page as $lp){
 		if($lp->url == $arr[0] ){
 			//Load PAGE information. Parts of this data may be updated by the Listing class
-			$page_obj = new Page();
-			$page_obj->LoadPage($lp);
+			$obj = new $class('',$struct);
+			$template = $obj->Load($lp->pageID);
+			
 			$_nurl = ltrim($_request["arg1"],$arr[0]);
 			$class = (string)$lp->file;
 			$obj = new $class($_nurl,$lp);
@@ -78,12 +79,10 @@ while(true){
 		if(strtolower($_request['arg1']) === strtolower($url['listing_url'])){
 			$sql = "SELECT listing_id FROM tbl_listing WHERE listing_url = :url";
 			$res = $DBobject->wrappedSqlGet($sql,array(":url"=>$_request['arg1']));
-			$page_obj = new Page();
-			$p_id->page_strut->table->name='tbl_listing';
-			$p_id->page_strut->table->orderby='listing_order';
-			$p_id->pageID = $res[0]['listing_id'];
-			$page_obj->LoadPage($p_id);
-			$template = "standardpage.tpl";
+			
+			$obj = new $class('',$struct);
+			$template = $obj->Load($res[0]['listing_id']);
+			$template = $struct->template;
 			break 2;
 		}
 	}

@@ -126,7 +126,6 @@
 
 			<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 		</div>
-        </fieldset>
 	</form>
 	</div>
 </div>

@@ -41,6 +41,12 @@
 		<tag>cocolat</tag>
 		<table>ntbl_social</table>
  	</socialwall>
+ 	<static_page>
+		<url>franchise-opportunities</url>
+		<template>franchise-opportunities.tpl</template>
+		<pageID>6</pageID>
+	</static_page>
+ 	
 
 	<!-- <listing_page name="contact-us">
 		<url>contact-us</url>

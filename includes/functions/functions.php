@@ -19,7 +19,7 @@ include 'database/table-class.php';
 include 'database/utilities.php';
 include 'smarty/Smarty.class.php';
 
-include 'includes/classes/page-class.php';
+//include 'includes/classes/page-class.php';
 include 'includes/classes/listing-class.php';
 include 'includes/classes/product-listing-class.php';
 include 'includes/functions/functions-general.php';

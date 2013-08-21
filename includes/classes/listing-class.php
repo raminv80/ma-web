@@ -318,7 +318,7 @@ class ListClass{
 					}
 				}
 				$data[$row['listing_id']]["title"]=ucfirst(unclean($row['listing_title']));
-				$data[$row['listing_id']]["url"]=ucfirst(unclean($row['listing_url']));
+				$data[$row['listing_id']]["url"]=$row['listing_url'];
 				$data[$row['listing_id']]["subs"]=$subs;
 				$data[$row['listing_id']]["selected"] = 0;
 	
@@ -359,7 +359,7 @@ class ListClass{
 				}
 
 				$data[$row['listing_id']]["title"]=ucfirst(unclean($row['listing_title']));
-				$data[$row['listing_id']]["url"]=ucfirst(unclean($row['listing_url']));
+				$data[$row['listing_id']]["url"]=$row['listing_url'];
 				$data[$row['listing_id']]["subs"]=$subs;
 				$data[$row['listing_id']]["selected"] = 0;
 	
