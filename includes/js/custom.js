@@ -73,13 +73,6 @@ jQuery(document).ready(function($){
     });
     
     	
-	$("#menu2 ul li").hover(function(){
-		$(this).find('a:first').css("color","#fff");
-	},function(){
-		$(this).find('a:first').css("color","#f26522");
-	});
-    
-    
     $("#menu2 ul li").hover(function(){
 	    $(this).find('ul').show();
     },function(){

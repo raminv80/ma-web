@@ -72,7 +72,6 @@ while(true){
 	}
 
 	/******* Dynamic Page Check Here *******/
-
 	$arr = explode("/", $_request["arg1"]);
 	foreach($arr as $a){
 		if($a !== end($arr)){

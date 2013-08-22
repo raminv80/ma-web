@@ -128,7 +128,7 @@ class ListClass{
 				}
 				$template = $t->template;
 					
-				$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
+				$menu = $this->LoadMenu($_ID);
 				$SMARTY->assign('menuitems',$menu);
 				
 				foreach($this->CONFIG_OBJ->table->associated as $a){
@@ -337,30 +337,27 @@ class ListClass{
 		$params = array(":cid"=>$_cid);
 		if($res = $DBobject->wrappedSql($sql,$params)){
 			foreach ($res as $row) {
+				
+				$data["{$row['listing_id']}"]["title"]=ucfirst(unclean($row['listing_title']));
+				$data["{$row['listing_id']}"]["url"]=$row['listing_url'];
+				$data["{$row['listing_id']}"]["selected"] = 0;
+				
 				//SELECT CATEGORY IF ONE EXISTS FOR ATTACHED TO THIS LISTING
 				$sql = "SELECT tbl_category.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_listing_id = :id AND tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
 				$params = array(":cid"=>$_cid,":id"=>$row['listing_id']);
 				if($res2 = $DBobject->wrappedSql($sql,$params)){
 					foreach ($res2 as $row2) {
 						$subs = $this->LoadSubMenu($_pid,$row2['category_id']);
+						if($subs['selected'] == 1){
+							$data["{$row['listing_id']}"]["selected"] = 1;
+							unset($subs['selected']);
+						}
+						$data["{$row['listing_id']}"]["subs"]=$subs;
 					}
 				}
-				$data[$row['listing_id']]["title"]=ucfirst(unclean($row['listing_title']));
-				$data[$row['listing_id']]["url"]=$row['listing_url'];
-				$data[$row['listing_id']]["subs"]=$subs;
-				$data[$row['listing_id']]["selected"] = 0;
-	
-				if($subs['selected']){
-					$data["selected"] = 1;
-				}else{
-					$sql = "SELECT * FROM tbl_listing WHERE listing_id = :pid";
-					$params = array(":pid"=>$_pid);
-					if($res = $DBobject->wrappedSql($sql,$params)){
-						if($res[0]!=null){
-							$data["{$row['category_id']}"]["selected"] = 1;
-							$data["selected"] = 1;
-						}
-					}
+				
+				if($row['listing_id'] == $_pid){
+					$data["{$row['listing_id']}"]["selected"] = 1;
 				}
 			}
 		}
@@ -377,31 +374,28 @@ class ListClass{
 		if($res = $DBobject->wrappedSql($sql,$params)){
 			foreach ($res as $row) {
 				
+				$data["{$row['listing_id']}"]["title"]=ucfirst(unclean($row['listing_title']));
+				$data["{$row['listing_id']}"]["url"]=$row['listing_url'];
+				$data["{$row['listing_id']}"]["selected"] = 0;
+				
 				//SELECT CATEGORY IF ONE EXISTS FOR ATTACHED TO THIS LISTING
 				$sql = "SELECT tbl_category.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_listing_id = :id AND tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
 				$params = array(":cid"=>$_cid,":id"=>$row['listing_id']);
 				if($res2 = $DBobject->wrappedSql($sql,$params)){
 					foreach ($res2 as $row2) {
 						$subs = $this->LoadSubMenu($_pid,$row2['category_id']);
+						if($subs['selected'] == 1){
+							$data["{$row['listing_id']}"]["selected"] = 1;
+							$data['selected'] = 1;
+							unset($subs['selected']);
+						}
+						$data["{$row['listing_id']}"]["subs"]=$subs;
 					}
 				}
-
-				$data[$row['listing_id']]["title"]=ucfirst(unclean($row['listing_title']));
-				$data[$row['listing_id']]["url"]=$row['listing_url'];
-				$data[$row['listing_id']]["subs"]=$subs;
-				$data[$row['listing_id']]["selected"] = 0;
 	
-				if($subs['selected']){
-					$data["selected"] = 1;
-				}else{
-					$sql = "SELECT * FROM tbl_listing WHERE listing_id = :pid";
-					$params = array(":pid"=>$_pid);
-					if($res = $DBobject->wrappedSql($sql,$params)){
-						if($res[0]!=null){
-							$data["{$row['category_id']}"]["selected"] = 1;
-							$data["selected"] = 1;
-						}
-					}
+				if($row['listing_id'] == $_pid){
+					$data["{$row['listing_id']}"]["selected"] = 1;
+					$data['selected'] = 1;
 				}
 			}
 		}

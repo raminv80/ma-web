@@ -101,6 +101,7 @@ a:hover{
 }
 
 #menu2 ul li a:hover{
+	color: #ffffff;
 	text-decoration: none;
 }
 

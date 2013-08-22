@@ -3,7 +3,7 @@
 {function name=render_list level=0 parenturl=""}
 	{foreach $items as $item}
 		{if $level lt 1}
-			<li><a title="Our Menu" href="{$parenturl}/{$item.url}">{$item.title}</a>
+			<li {if $item.selected eq 1}class="current"{/if}><a title="{$item.title}" href="{$parenturl}/{$item.url}">{$item.title}</a>
 			{if count($item.subs) > 0}
 				<ul>
 				{call name=render_list items=$item.subs level=$level+1 parenturl=$parenturl|cat:"/"|cat:$item.url}
@@ -11,7 +11,7 @@
 			{/if}
 			</li>
 		{else}
-			<li><a title="{$item.title}" href="{$parenturl}/{$item.url}">{$item.title}</a>
+			<li {if $item.selected eq 1}class="current"{/if}><a title="{$item.title}" href="{$parenturl}/{$item.url}">{$item.title}</a>
 			{call name=render_list items=$item.subs level=$level+1 parenturl=$parenturl|cat:"/"|cat:$item.url}
 		{/if}
 	{/foreach}	
@@ -26,10 +26,10 @@
 	  				<div id="find"><a title="Our Locations" href="/locations">Find your Nearest Location</a></div>
 	  				<div id="search"><input id="searchbox" type="text" value="Search..." /></div>
 	  				<div id="social">
-	  					<a title="Facebook" href="#"><img src="images/facebook.png" alt="Facebook" /></a>
-	  					<a title="Twitter" href="#"><img src="images/twitter.png" alt="Twitter" /></a>
-	  					<a title="Instagram" href="#"><img src="images/instagram.png" alt="Instagram" /></a>
-	  					<a title="4Square" href="#"><img src="images/4square.png" alt="4Square" /></a>
+	  					<a title="Facebook" href="#"><img src="/images/facebook.png" alt="Facebook" /></a>
+	  					<a title="Twitter" href="#"><img src="/images/twitter.png" alt="Twitter" /></a>
+	  					<a title="Instagram" href="#"><img src="/images/instagram.png" alt="Instagram" /></a>
+	  					<a title="4Square" href="#"><img src="/images/4square.png" alt="4Square" /></a>
 	  				</div>
 	  				<!-- <div id="franchise">
 	  					<a title="Franchise Login Section" href="/login"><img src="images/franchise.png" alt="Franchise" /></a>
