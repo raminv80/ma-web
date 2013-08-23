@@ -12,7 +12,7 @@
                 </fieldset>
 				<input type="hidden" value="listing_id" name="field[tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
 				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
-				<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
+				<input type="hidden" value="2" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 				<input type="hidden" value="1"  name="field[tbl_listing][{$cnt}][listing_published]" >
 			</div>
 		</div>
@@ -64,21 +64,21 @@
 			</div>
 		</div>
 		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_flag1">Flag1</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_flag1">New</label></div>
 			<div class="span9 controls">
 			<input type="hidden" value="{$fields.listing_flag1}" name="field[tbl_listing][{$cnt}][listing_flag1]" class="value">
 			<input type="checkbox"  {if $fields.listing_flag1 eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag1">
 			</div>
 		</div>
 		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_flag2">Flag2</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_flag2">Award Winning</label></div>
 			<div class="span9 controls">
 			<input type="hidden" value="{$fields.listing_flag2}" name="field[tbl_listing][{$cnt}][listing_flag2]" class="value">
 			<input type="checkbox" {if $fields.listing_flag2 eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag2">
 			</div>
 		</div>
 		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_flag3">Flag3</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_flag3">Customer Favourite</label></div>
 			<div class="span9 controls">
 			<input type="hidden" value="{$fields.listing_flag3}" name="field[tbl_listing][{$cnt}][listing_flag3]" class="value">
 			<input type="checkbox" {if $fields.listing_flag3 eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag3">

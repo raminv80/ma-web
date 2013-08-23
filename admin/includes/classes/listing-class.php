@@ -38,15 +38,7 @@ Class Listing{
 		global $SMARTY,$DBobject;
 		$listing_f = array();
 		$sql = "SELECT * FROM {$this->DBTABLE} WHERE listing_id = '{$id}' AND listing_deleted IS NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ";
-	//	die($sql);
 		if($res = $DBobject->wrappedSqlGet($sql)){
-			/*
-			foreach ($res[0] as $key => $field) {
-				if(!is_numeric($key)){
-					$listing_f[$key] = $field;
-				}
-			}
-			*/
 			foreach ($res as  $row) {
 				foreach ($row as $key => $field) {
 					if(!is_numeric($key)){
@@ -109,20 +101,19 @@ Class Listing{
 		return  $record;
 	}
 
-	/*function getListingList(){
+	function getListingList($category_id=null){
 		global $SMARTY,$DBobject;
 		$records = array();
-		$sql = "SELECT tbl_listing.listing_name, tbl_listing.listing_id, tbl_listing.listing_category_id FROM {$this->DBTABLE} WHERE tbl_listing.listing_type_id = '{$this->TYPE_ID}' AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
-		if($res = $DBobject->wrappedSqlGet($sql)){
-			foreach ($res as $key => $val) {
-				$records[$key] = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],"url"=>"/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}","url_delete"=>"/admin/delete/{$this->CONFIG_OBJ->url}/{$val['listing_id']}","category_id"=>"{$val['listing_category_id']}");
+		if(empty($category_id)){
+			$sql = "SELECT MIN(tbl_listing.listing_category_id) AS listing_category_id FROM tbl_listing WHERE tbl_listing.listing_type_id = :type AND tbl_listing.listing_deleted IS NULL";
+			$params = array(":type"=>$this->TYPE_ID);
+			if($res = $DBobject->wrappedSqlGet($sql,$params)){
+				$category_id = $res[0]['listing_category_id'];
+			}else{
+				$category_id=0;
 			}
 		}
-		return  $records;
-	}*/
-	function getListingList($category_id = "0"){
-		global $SMARTY,$DBobject;
-		$records = array();
+		
 		$sql = "SELECT tbl_listing.listing_name, tbl_listing.listing_id, tbl_listing.listing_category_id, tbl_category.category_id FROM {$this->DBTABLE} 
 		WHERE tbl_listing.listing_category_id = :cat_id AND tbl_listing.listing_type_id = :type AND 
 		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";

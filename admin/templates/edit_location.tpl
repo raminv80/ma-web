@@ -12,7 +12,7 @@
                 </fieldset>
 				<input type="hidden" value="listing_id" name="field[tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
 				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
-				<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
+				<input type="hidden" value="3" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 				<input type="hidden" value="1"  name="field[tbl_listing][{$cnt}][listing_published]" >
 			</div>
 		</div>

@@ -3,6 +3,12 @@ body,input, button, select, textarea {
 	font-weight: 400;
 }
 
+#portfolio-wrapper{
+	height: 291px;
+    overflow: hidden;
+    position: relative;
+}
+
 a{
 	color:#fff;
 	text-decoration: none !important;
@@ -351,8 +357,8 @@ form{
 	border-radius: 20px;
 	font-size: 17px;
 	line-height: 34px;
-	margin: 0px!important;
-	padding: 0px!important;
+	margin: 0px;
+	padding: 0px;
 	text-align: center;
 	cursor: pointer;
 }

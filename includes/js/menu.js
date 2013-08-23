@@ -47,8 +47,8 @@ $(window).load(function(){
 
 	// filter items when filter link is clicked
 	$('#menulist a').click(function(){
-		$("#menulist a div").removeClass('selected');
-		$(this).find('div').addClass('selected');
+		$("#menulist a").removeClass('selected');
+		$(this).addClass('selected');
 		var selector = $(this).attr('data-option-value');
 		selector=selector.substring(1);
 		$.bbq.pushState( '#'+selector );
@@ -66,7 +66,7 @@ $(window).load(function(){
 		}
 		var hash1 = "."+hashOptions;
 		
-		$("#menulist a div").removeClass('selected');
+		$("#menulist a").removeClass('selected');
 		$("#"+hashOptions+"1").addClass('selected');
         // apply options from hash
         $container.isotope( {filter : hash1},

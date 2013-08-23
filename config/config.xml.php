@@ -46,6 +46,22 @@
 		<template>franchise-opportunities.tpl</template>
 		<pageID>6</pageID>
 	</static_page>
+	<listing_page name="our-menu">
+		<url>our-menu</url>
+		<pageID>3</pageID>
+		<type>2</type>
+		<file>ListClass</file>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
+			<associated>
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_listing_id</field>
+			</associated>
+		</table>
+		<template>our-menu.tpl</template><!-- The template used if the field is matched -->
+ 	</listing_page>
  	
 
 	<!-- <listing_page name="contact-us">

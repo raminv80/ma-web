@@ -106,17 +106,17 @@ class ListClass{
 				if(count($this->CONFIG_OBJ->xpath('orderby')) > 0){
 					$orderby = $this->CONFIG_OBJ->orderby;
 				}
-				$data = $this->GetData("*","",$groupby,$orderby);
+				if($data = $this->GetData("*","",$groupby,$orderby)){
+					$SMARTY->assign('data', unclean($data));
+				}else{
+					$SMARTY->assign('data', array());
+				}
 				$this->LIMIT = "";
-				$SMARTY->assign('data', unclean($data));
 				$template = $this->CONFIG_OBJ->template;
-				
 				$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
 				$SMARTY->assign('menuitems',$menu);
+				break 1;
 				
-				if(!empty($data)){
-					break 1;
-				}
 			}else if(!empty($_ID)){
 				
 				$bdata= $this->LoadBreadcrumb($_ID);
@@ -495,7 +495,7 @@ class ListClass{
 		$data = $DBobject->wrappedSql($sql);
 		return $data;
 	}
-
+	
 }
 
 
