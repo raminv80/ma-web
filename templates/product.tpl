@@ -10,7 +10,7 @@
 		{else}
 			{if $menu eq 1}
 				{if $item.category eq 1}
-				<a href="/our-menu#{$item.url}" id="{$item.url}" class="button1">{$item.title}</a>
+				<a href="/our-menu#{$item.url}" id="{$item.url}" class="button1{if $item.url eq $listing_parent.listing_url} selected{/if}">{$item.title}</a>
 				{call name=render_menu items=$item.subs level=$level+1 parenturl=$parenturl menu=$menu}
 				{/if}
 			{/if}
@@ -66,7 +66,7 @@
 	<div id="orangebox">
 	  	<div class="container" id="menumainbox">
 		  	<div class="row-fluid" id="menulist">
-		  		<a href="our-menu#favourites" id="favourites" class="button1 selected">Customer Favourites</a>
+		  		<a href="/our-menu#favourites" id="favourites" class="button1">Customer Favourites</a>
 		  		{call name=render_menu items=$menuitems}
 		  		<a href="/our-menu#whats-new"id="whats-new" class="button1">What's New</a>
 	  		</div>
@@ -82,7 +82,7 @@
 					</div>
 					<div class="row-fluid small-images">
 						<div class="span3">
-  							<a href="{$l.listing_image}"><img src="{$l.listing_image}" alt="{$l.listing_title}"/></a>
+  							<a href="{$listing_image}"><img src="{$listing_image}" alt="{$listing_title}"/></a>
   						</div>
 					{foreach $gallery as $item}
 						<div class="span3">
@@ -111,11 +111,25 @@
 	  		</div>
   		</div>
  	</div>
+ 	
+ 	 <div id="whitebox1">
+	  	<div class="container producttry">
+		  	<div class="row-fluid">
+			  	<div class="span12">
+			  		<h3 class="title">Are you ready to try this product?</h3>
+			  		<p><a href="#">Find your Nearest Location</a></p>
+			  		
+			  		<h3 class="title love">Tell us why you love this product</h3>
+
+			  	</div>
+		  	</div>
+	  	</div>
+	  </div>
 	  	
 	<script src="/includes/js/jquery.isotope.min.js"></script>
     <script src="/includes/js/jquery.ba-bbq.min.js"></script>    
     <script src="/includes/js/jquery.tipTip.minified.js"></script>  
-    <script src="/includes/js/menu.js"></script>  
+    <!-- <script src="/includes/js/menu.js"></script> -->  
 
 	{include file='signup.tpl'} {include file='footer.tpl'}
 {/block}

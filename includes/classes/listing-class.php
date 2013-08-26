@@ -166,7 +166,7 @@ class ListClass{
 	private function LoadParents($_id){
 		global $SMARTY,$DBobject;
 		$data = array();
-		$sql = "SELECT l.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_category_id = tbl_category.category_id LEFT JOIN tbl_listing AS l ON tbl_category.category_listing_id = l.listing_id WHERE tbl_listing.listing_id = '28' AND tbl_category.category_deleted IS NULL AND l.listing_published = '1' AND l.listing_deleted IS NULL ";
+		$sql = "SELECT l.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_category_id = tbl_category.category_id LEFT JOIN tbl_listing AS l ON tbl_category.category_listing_id = l.listing_id WHERE tbl_listing.listing_id = :id AND tbl_category.category_deleted IS NULL AND l.listing_published = '1' AND l.listing_deleted IS NULL ";
 		$params = array(":id"=>$_id);
 		if($res = $DBobject->wrappedSqlGet($sql,$params)){
 			$data = $res[0];
@@ -181,6 +181,7 @@ class ListClass{
 				}
 				$data["{$a->name}"] = $t_data;
 			}
+			
 // 			$data['listing_parent'] = $this->LoadParents($res[0]['listing_id']); 
 		}
 		return $data;

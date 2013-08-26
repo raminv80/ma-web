@@ -127,24 +127,31 @@ Class Listing{
 					if($val['category_id'] != null || $val['category_id'] != ""){
 						$subs = $this->getListingList($val['category_id']);
 					}
+					
 					$records["{$val['listing_id']}"]  = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],"subs"=>$subs);
 				}
 			}
 		}else{
 			$sql = "SELECT tbl_listing.*, tbl_category.category_id FROM {$this->DBTABLE}
-			WHERE tbl_listing.listing_category_id = :cat_id AND tbl_listing.listing_type_id = :type AND
+			WHERE tbl_listing.listing_category_id = :cat_id AND (tbl_listing.listing_type_id = :type OR tbl_category.category_type_id = :type) AND
 			tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
 			$params = array(":cat_id"=>$category_id,":type"=>$this->TYPE_ID);
+				
 			if($res = $DBobject->wrappedSqlGet($sql,$params)){
 				foreach ($res as $key => $val) {
 					$subs = array();
 					if($val['category_id'] != null || $val['category_id'] != ""){
 						$subs = $this->getListingList($val['category_id']);
+						
 					}
-					$records["{$val['listing_id']}"] = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],
-						"url"=>"/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
-							"url_delete"=>"/admin/delete/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
-									"subs"=>$subs);
+					if($val['listing_type_id'] == $this->TYPE_ID){
+						$records["{$val['listing_id']}"] = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],
+								"url"=>"/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
+								"url_delete"=>"/admin/delete/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
+								"subs"=>$subs);
+					}else{
+						$records["{$val['listing_id']}"]  = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],"subs"=>$subs);
+					}
 				}
 			}
 		}
