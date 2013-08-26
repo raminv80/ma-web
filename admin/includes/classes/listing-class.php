@@ -104,50 +104,56 @@ Class Listing{
 	function getListingList($category_id=null){
 		global $SMARTY,$DBobject;
 		$records = array();
-		if(empty($category_id)){
-			$sql = "SELECT MIN(tbl_listing.listing_category_id) AS listing_category_id FROM tbl_listing WHERE tbl_listing.listing_type_id = :type AND tbl_listing.listing_deleted IS NULL";
-			$params = array(":type"=>$this->TYPE_ID);
-			if($res = $DBobject->wrappedSqlGet($sql,$params)){
-				$category_id = $res[0]['listing_category_id'];
-			}else{
-				$category_id=0;
-			}
-		}
-		
-		$sql = "SELECT tbl_listing.listing_name, tbl_listing.listing_id, tbl_listing.listing_category_id, tbl_category.category_id FROM {$this->DBTABLE} 
-		WHERE tbl_listing.listing_category_id = :cat_id AND tbl_listing.listing_type_id = :type AND 
-		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
-		$params = array(":cat_id"=>$category_id,":type"=>$this->TYPE_ID);
-		if($res = $DBobject->wrappedSqlGet($sql,$params)){
-			foreach ($res as $key => $val) {
-				$subs = array();
-				if($val['category_id'] != null || $val['category_id'] != ""){
-					$subs = $this->getListingList($val['category_id']);
-				}
-				$records["{$val['listing_id']}"] = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],
-									"url"=>"/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
-									"url_delete"=>"/admin/delete/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
-									"subpages"=>$subs);
-			}
-		}
-		
+	
 		//ONLY DO THIS FOR THE TOP LEVEL
-		if($category_id == "0"){
-			$sql = "SELECT tbl_listing.listing_name, tbl_listing.listing_id, tbl_listing.listing_category_id, tbl_category.category_id FROM {$this->DBTABLE} 
-			WHERE NOT EXISTS (SELECT * FROM tbl_category WHERE tbl_category.category_id = tbl_listing.listing_category_id AND tbl_category.category_deleted IS NULL ) AND tbl_listing.listing_type_id = :type AND tbl_listing.listing_category_id != '0' AND
-			tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
-			$params = array(":type"=>$this->TYPE_ID);
+		if(empty($category_id)){
+			$category_id = 0;
+			$hierarchy = $this->CONFIG_OBJ->hierarchy;
+			if(!empty($hierarchy) && !empty($hierarchy->attributes()->field) && ((integer)$hierarchy->attributes()->default) >= 0){
+				$local_field = $hierarchy->attributes()->field;
+				$category_id = ((integer)$hierarchy->attributes()->default);
+				$sql = "SELECT tbl_listing.*, tbl_category.category_id FROM {$this->DBTABLE}
+				WHERE tbl_category.category_parent_id = :cat_id AND
+				tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
+			}else{
+				$sql = "SELECT tbl_listing.*, tbl_category.category_id FROM {$this->DBTABLE}
+				WHERE tbl_listing.listing_category_id = :cat_id AND
+				tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
+			}
+			
+			$params = array(":cat_id"=>$category_id);
 			if($res = $DBobject->wrappedSqlGet($sql,$params)){
 				foreach ($res as $key => $val) {
-					$records["{$val['listing_id']}"] = array("title"=>"**{$val['listing_name']}","id"=>$val['listing_id'],
-								"url"=>"/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
-										"url_delete"=>"/admin/delete/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
-												"subpages"=>$subs);
+					if($val['category_id'] != null || $val['category_id'] != ""){
+						$subs = $this->getListingList($val['category_id']);
+					}
+					$records["{$val['listing_id']}"]  = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],"subs"=>$subs);
+				}
+			}
+		}else{
+			$sql = "SELECT tbl_listing.*, tbl_category.category_id FROM {$this->DBTABLE}
+			WHERE tbl_listing.listing_category_id = :cat_id AND tbl_listing.listing_type_id = :type AND
+			tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
+			$params = array(":cat_id"=>$category_id,":type"=>$this->TYPE_ID);
+			if($res = $DBobject->wrappedSqlGet($sql,$params)){
+				foreach ($res as $key => $val) {
+					$subs = array();
+					if($val['category_id'] != null || $val['category_id'] != ""){
+						$subs = $this->getListingList($val['category_id']);
+					}
+					$records["{$val['listing_id']}"] = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],
+						"url"=>"/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
+							"url_delete"=>"/admin/delete/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
+									"subs"=>$subs);
 				}
 			}
 		}
-		
+	
 		return  $records;
+	}
+	
+	function getParentList(){
+		
 	}
 
 	function deleteListing($id){

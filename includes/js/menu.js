@@ -67,7 +67,7 @@ $(window).load(function(){
 		var hash1 = "."+hashOptions;
 		
 		$("#menulist a").removeClass('selected');
-		$("#"+hashOptions+"1").addClass('selected');
+		$("#"+hashOptions+"").addClass('selected');
         // apply options from hash
         $container.isotope( {filter : hash1},
             function($changedItems, instance){

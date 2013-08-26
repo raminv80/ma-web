@@ -8,6 +8,32 @@ body,input, button, select, textarea {
     overflow: hidden;
     position: relative;
 }
+.portfolio-item a {
+	display:block;
+}
+.portfolio-item img{
+	height: 290px;
+	width: 290px;
+}
+.portfolio-item.tall .image{
+	height: 580px;
+	width: 290px;
+	overvlow: hidden;
+}
+.portfolio-item.wide .image{
+	height: 290px;
+	width: 580px;
+	overflow: hidden;
+}
+.portfolio-item.big .image{
+	height: 580px;
+	width: 580px;
+	overflow: hidden;
+}
+.portfolio-item.tall img, .portfolio-item.wide img, portfolio-item.big img{
+	height: 580px;
+	width: 580px;
+}
 
 a{
 	color:#fff;

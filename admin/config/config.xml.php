@@ -111,6 +111,7 @@
 		<title>Products</title>
 		<type>LISTING</type>
 		<type_id>2</type_id>
+		<hierarchy field="category_parent_id" default="1"></hierarchy>
 		<options>
 			<field>
 				<name>listing_category_id</name>

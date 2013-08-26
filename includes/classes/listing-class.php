@@ -88,16 +88,10 @@ class ListClass{
 		$data = "";
 		//Split the URL
 		$_url= ltrim(rtrim($this->URL,'/'),'/');
-		$array = explode('/', $_url);
-		foreach($array as $val){
-			if($val != ''){
-			$args[] = urldecode($val);
-			}
-		}
 
 		while(true){
 			if(empty($_url) && empty($_ID)){
-				if(count($this->CONFIG_OBJ->xpath('limit')) > 0){
+				/* if(count($this->CONFIG_OBJ->xpath('limit')) > 0){
 					$this->LIMIT = intval($this->CONFIG_OBJ->limit);
 				}
 				if(count($this->CONFIG_OBJ->xpath('groupby')) > 0){
@@ -111,7 +105,10 @@ class ListClass{
 				}else{
 					$SMARTY->assign('data', array());
 				}
-				$this->LIMIT = "";
+				$this->LIMIT = ""; */
+				$data = $this->LoadTree();
+				$SMARTY->assign('data', unclean($data));
+				
 				$template = $this->CONFIG_OBJ->template;
 				$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
 				$SMARTY->assign('menuitems',$menu);
@@ -147,7 +144,7 @@ class ListClass{
 					break 1;
 				}
 			}else{
-				$template = $this->LoadTemplate($this->CONFIG_OBJ, $args);
+				$template = $this->LoadTemplate($_url);
 				if(!empty($template)){
 					break 1;
 				}
@@ -158,7 +155,132 @@ class ListClass{
 		return $template;
 	}
 
-	private function LoadTemplate($table, $args){
+	private function LoadTemplate($_url){
+		global $SMARTY,$DBobject;
+		if($id = $this->ChkCache($_url)){
+			$this->Load($id);
+			$p_data = $this->LoadParents($id);
+			$SMARTY->assign("listing_parent",$p_data);
+			$template = $this->CONFIG_OBJ->table->template;
+		}
+		return $template;
+	}
+	
+	private function LoadParents($_id){
+		global $SMARTY,$DBobject;
+		$data = array();
+		$sql = "SELECT l.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_category_id = tbl_category.category_id LEFT JOIN tbl_listing AS l ON tbl_category.category_listing_id = l.listing_id WHERE tbl_listing.listing_id = '28' AND tbl_category.category_deleted IS NULL AND l.listing_published = '1' AND l.listing_deleted IS NULL ";
+		$params = array(":id"=>$_id);
+		if($res = $DBobject->wrappedSqlGet($sql,$params)){
+			$data = $res[0];
+			foreach($this->CONFIG_OBJ->table->associated as $a){
+				$t_data = array();
+				$pre = str_replace("tbl_","",$a->table);
+				$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$_id}' AND {$pre}_deleted IS NULL ";// AND article_deleted IS NULL";
+				if($res = $DBobject->wrappedSqlGet($sql)){
+					foreach ($res as $row) {
+						$t_data[] = $row;
+					}
+				}
+				$data["{$a->name}"] = $t_data;
+			}
+// 			$data['listing_parent'] = $this->LoadParents($res[0]['listing_id']); 
+		}
+		return $data;
+	}
+	
+	private function ChkCache($_url){
+		global $SMARTY,$DBobject;
+		$args = explode('/', $_url);
+		$a = end($args);
+		$sql = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url";
+		$params = array(":url"=>$_url);
+		try{
+			$row = $DBobject->wrappedSqlGetSingle($sql,$params);
+			if(empty($row)){
+				$sql2 = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url";
+				$params2 = array(":url"=>$a);
+				if($res = $DBobject->wrappedSqlGet($sql2,$params2) ){
+					$this->BuildCache();
+				}
+				$row = $DBobject->wrappedSqlGetSingle($sql,$params);
+				var_dump($params);
+				die(var_dump($sql));
+			}
+		}catch(Exception $e){
+			$sql2 = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url";
+			$params2 = array(":url"=>$a);
+			if($res = $DBobject->wrappedSqlGet($sql2,$params2) ){
+				$this->BuildCache();
+			}
+			$row = $DBobject->wrappedSqlGetSingle($sql,$params);
+		}
+		if(!empty($row)){
+			return $row['cache_record_id'];
+		}
+		return false;
+	}
+	
+	function BuildCache(){
+		global $SMARTY,$DBobject;
+		$sql[0] = "CREATE TABLE IF NOT EXISTS `cache_tbl_listing` (
+		`cache_id` INT(11) NOT NULL AUTO_INCREMENT,
+		`cache_record_id` INT(11) DEFAULT NULL,
+		`cache_url` VARCHAR(255) DEFAULT NULL,
+		`cache_created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+		`cache_modified` DATETIME DEFAULT NULL,
+		`cache_deleted` DATETIME DEFAULT NULL,
+		PRIMARY KEY (`cache_id`)
+		) ENGINE=MYISAM DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;";
+		$DBobject->wrappedSql($sql[0]);
+		
+		$sql[3] = "TRUNCATE cache_tbl_listing;";
+		$sql[2] = "INSERT INTO cache_tbl_listing (cache_record_id,cache_url,cache_modified) VALUES  ";
+		$params = array();
+		$sql[1] = "SELECT listing_id AS id FROM tbl_listing WHERE listing_published = '1' AND listing_deleted IS NULL";
+		$res = $DBobject->wrappedSql($sql[1]);
+		$n = 1;
+		
+		foreach($res as $row){
+			$id = $row['id'];
+			$url = "";
+			if(!$this->BuildUrl($id,$url)){
+				continue;
+			}
+	
+			$sql[2].= " ( :id{$n}, :title{$n}, now() ) ,";
+			$params = array_merge($params , array(":id{$n}"=>$id,":title{$n}"=>$url) );
+			$n++;
+		}
+		$sql[2] = trim(trim($sql[2]), ',');
+		$sql[2].= ";";
+
+		$DBobject->wrappedSql($sql[3]);
+		$DBobject->wrappedSql($sql[2],$params);
+	}
+	
+	function BuildUrl($_id, &$url){
+		global $DBobject;
+		$sql = "SELECT tbl_listing.*,tbl_category.category_listing_id FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_category_id = tbl_category.category_id WHERE listing_id = :id";
+		$params = array(":id"=>$_id);
+		if($res = $DBobject->wrappedSql($sql,$params)){
+			if(!empty($res[0]['listing_deleted']) || $res[0]['listing_published']!= '1'){
+				return false;
+			}
+			if(!empty($res[0]['category_listing_id'])){
+				$url = $res[0]['listing_url'].'/'.$url;
+				return $this->BuildUrl($res[0]['category_listing_id'],$url);
+			}else{
+				$url = $res[0]['listing_url'].'/'.$url;
+				$url = ltrim(rtrim($url,'/'),'/');
+				return true;
+			}
+		}else{
+			return false;
+		}
+	}
+	
+	/* private function LoadTemplate($table, $args){
 		global $SMARTY,$DBobject;
 		foreach($table->table as $t)
 		{
@@ -237,10 +359,10 @@ class ListClass{
 		}else{
 			return "";
 		}
-	}
+	} */
 	
 
-	private function ChkCache($tbl_name, $chk_field, $arg){
+	/* private function ChkCache($tbl_name, $chk_field, $arg){
 		global $SMARTY,$DBobject;
 		$sql = "SELECT cache_record_id FROM cache_{$tbl_name} WHERE cache_url = :url";
 		try{
@@ -303,7 +425,7 @@ class ListClass{
 	
 					$DBobject->wrappedSql($sql[3]);
 					$DBobject->wrappedSql($sql[2],$params);
-	}
+	} */
 
 	
 	function LoadBreadcrumb($_id,$_subs=null){
@@ -327,7 +449,7 @@ class ListClass{
 	}
 	
 	
-	function LoadMenu($_pid, $_cid="0",$_parentURL=""){
+	function LoadMenu($_pid, $_cid="0"){
 		global  $CONFIG,$SMARTY,$DBobject;
 		$data = array();
 	
@@ -364,7 +486,7 @@ class ListClass{
 		return $data;
 	}
 	
-	function LoadSubMenu($_pid, $_cid,$_parentURL=""){
+	function LoadSubMenu($_pid, $_cid){
 		global  $CONFIG,$SMARTY,$DBobject;
 		$data = array();
 	
@@ -396,6 +518,48 @@ class ListClass{
 				if($row['listing_id'] == $_pid){
 					$data["{$row['listing_id']}"]["selected"] = 1;
 					$data['selected'] = 1;
+				}
+			}
+		}
+		return $data;
+	}
+	
+	function LoadTree($_cid=null){
+		global  $CONFIG,$SMARTY,$DBobject;
+		$data = array();
+	
+		if(empty($_cid)){
+			$sql = "SELECT tbl_category.category_id FROM tbl_category WHERE tbl_category.category_type_id = :type AND tbl_category.category_deleted IS NULL AND NOT EXISTS (SELECT c.category_id FROM tbl_category AS c WHERE c.category_type_id = :type AND c.category_id = tbl_category.category_parent_id)";
+			$params = array(":type"=>$this->CONFIG_OBJ->type);
+			if($res = $DBobject->wrappedSql($sql,$params)){
+				foreach ($res as $row) {
+					$data['categories']["{$row['category_id']}"] = $this->LoadTree($row['category_id']);
+				}
+			}
+			
+		}else{
+			$sql = "SELECT tbl_listing.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_id = :cid ";
+			$params = array(":cid"=>$_cid);
+			if($res = $DBobject->wrappedSql($sql,$params)){
+				$data = unclean($res[0]);
+			}
+				
+			//GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
+			$sql = "SELECT tbl_listing.* FROM tbl_listing WHERE tbl_listing.listing_category_id = :cid AND tbl_listing.listing_type_id = :type AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
+			$params = array(":cid"=>$_cid,":type"=>$this->CONFIG_OBJ->type);
+			if($res = $DBobject->wrappedSql($sql,$params)){
+				foreach ($res as $row) {
+					$data['listings']["{$row['listing_id']}"]=unclean($row);
+				}
+			}
+			
+			//SELECT CATEGORY IF ONE EXISTS FOR ATTACHED TO THIS LISTING
+			$sql = "SELECT tbl_category.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
+			$params = array(":cid"=>$_cid);
+			if($res2 = $DBobject->wrappedSql($sql,$params)){
+				foreach ($res2 as $row2) {
+					$subs = $this->LoadTree($row2['category_id']);
+					$data["categories"]["{$row2['category_id']}"]=$subs;
 				}
 			}
 		}

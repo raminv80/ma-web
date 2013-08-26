@@ -12,8 +12,8 @@
 		<a href='{$item.url_delete}' class='btn btn-small btn-danger right'  onclick="return ConfirmDelete();"><b><i class="icon-trash icon-white"></i> Delete</b></a>
 	 </td>
 	</tr>
-	{if count($item.subpages) > 0}
-		{call name=render_list items=$item.subpages level=$level+1}
+	{if count($item.subs) > 0}
+		{call name=render_list items=$item.subs level=$level+1}
 	{/if}
 	{/foreach}
 {/function}
