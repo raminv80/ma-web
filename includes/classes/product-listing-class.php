@@ -108,6 +108,7 @@ class ProductListing {
 		$this->raw_data['galleries'] = unclean($gal_ret);
 			if(empty($this->raw_data)){
 					header("Location: /404");
+					die();
 				}
 
 	}

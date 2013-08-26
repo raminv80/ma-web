@@ -90,22 +90,7 @@ class ListClass{
 		$_url= ltrim(rtrim($this->URL,'/'),'/');
 
 		while(true){
-			if(empty($_url) && empty($_ID)){
-				/* if(count($this->CONFIG_OBJ->xpath('limit')) > 0){
-					$this->LIMIT = intval($this->CONFIG_OBJ->limit);
-				}
-				if(count($this->CONFIG_OBJ->xpath('groupby')) > 0){
-					$groupby = $this->CONFIG_OBJ->groupby;
-				}
-				if(count($this->CONFIG_OBJ->xpath('orderby')) > 0){
-					$orderby = $this->CONFIG_OBJ->orderby;
-				}
-				if($data = $this->GetData("*","",$groupby,$orderby)){
-					$SMARTY->assign('data', unclean($data));
-				}else{
-					$SMARTY->assign('data', array());
-				}
-				$this->LIMIT = ""; */
+			if($_url == $this->CONFIG_OBJ->url && empty($_ID)){
 				$data = $this->LoadTree();
 				$SMARTY->assign('data', unclean($data));
 				
@@ -113,7 +98,6 @@ class ListClass{
 				$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
 				$SMARTY->assign('menuitems',$menu);
 				break 1;
-				
 			}else if(!empty($_ID)){
 				
 				$bdata= $this->LoadBreadcrumb($_ID);
@@ -139,17 +123,29 @@ class ListClass{
 					}
 					$SMARTY->assign("{$a->name}",$t_data);
 				}
+				foreach($this->CONFIG_OBJ->table->extends as $a){
+					$t_data = array();
+					$pre = str_replace("tbl_","",$a->table);
+					$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$_ID}' AND {$pre}_deleted IS NULL ";// AND article_deleted IS NULL";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						foreach ($res as $row) {
+							foreach($row as $key => $val){
+								$SMARTY->assign($key, unclean($val));
+							}
+						}
+					}
+				}
 				
 				if(!empty($data)){
 					break 1;
 				}
 			}else{
-				$template = $this->LoadTemplate($_url);
-				if(!empty($template)){
+				if($template = $this->LoadTemplate($_url)){
 					break 1;
 				}
 			}
 			header("Location: /404");
+			die();
 		}
 
 		return $template;
@@ -162,8 +158,9 @@ class ListClass{
 			$p_data = $this->LoadParents($id);
 			$SMARTY->assign("listing_parent",$p_data);
 			$template = $this->CONFIG_OBJ->table->template;
+			return $template;
 		}
-		return $template;
+		return false;
 	}
 	
 	private function LoadParents($_id){
@@ -202,18 +199,16 @@ class ListClass{
 				$params2 = array(":url"=>$a);
 				if($res = $DBobject->wrappedSqlGet($sql2,$params2) ){
 					$this->BuildCache();
+					$row = $DBobject->wrappedSqlGetSingle($sql,$params);
 				}
-				$row = $DBobject->wrappedSqlGetSingle($sql,$params);
-				var_dump($params);
-				die(var_dump($sql));
 			}
 		}catch(Exception $e){
 			$sql2 = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url";
 			$params2 = array(":url"=>$a);
 			if($res = $DBobject->wrappedSqlGet($sql2,$params2) ){
 				$this->BuildCache();
+				$row = $DBobject->wrappedSqlGetSingle($sql,$params);
 			}
-			$row = $DBobject->wrappedSqlGetSingle($sql,$params);
 		}
 		if(!empty($row)){
 			return $row['cache_record_id'];
@@ -468,6 +463,7 @@ class ListClass{
 				$sql = "SELECT tbl_category.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_listing_id = :id AND tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
 				$params = array(":cid"=>$_cid,":id"=>$row['listing_id']);
 				if($res2 = $DBobject->wrappedSql($sql,$params)){
+					$data["{$row['listing_id']}"]["category"] = 1;
 					foreach ($res2 as $row2) {
 						$subs = $this->LoadSubMenu($_pid,$row2['category_id']);
 						if($subs['selected'] == 1){
@@ -504,6 +500,7 @@ class ListClass{
 				$sql = "SELECT tbl_category.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_listing_id = :id AND tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
 				$params = array(":cid"=>$_cid,":id"=>$row['listing_id']);
 				if($res2 = $DBobject->wrappedSql($sql,$params)){
+					$data["{$row['listing_id']}"]["category"] = 1;
 					foreach ($res2 as $row2) {
 						$subs = $this->LoadSubMenu($_pid,$row2['category_id']);
 						if($subs['selected'] == 1){

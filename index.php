@@ -63,11 +63,11 @@ while(true){
 			$obj = new $class('',$struct);
 			$template = $obj->Load($lp->pageID);
 			
-			//$_nurl = ltrim($_request["arg1"],$arr[0]);
 			$_nurl = $_request["arg1"];
 			$class = (string)$lp->file;
 			$obj = new $class($_nurl,$lp);
 			$template = $obj->Load();
+			
 			break 2;
 		}
 	}
