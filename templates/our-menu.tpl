@@ -1,22 +1,38 @@
 {block name=body}
 
 {* Define the function *}
-{function name=render_menu}
+{function name=render_menu level=0 menu=0}
 	{foreach $items as $item}
-		<a data-option-value=".{$item.listing_url}" id="{$item.listing_url}" class="button1">{$item.listing_title}</a>
-		{if count($item.categories) > 0}
-			{call name=render_menu items=$item.categories}
+		{if $level lt 1}
+			{if $item.url eq 'our-menu'}
+				{call name=render_menu items=$item.subs level=$level+1 parenturl=$parenturl|cat:"/"|cat:$item.url menu=1}
+			{/if}
+		{else}
+			{if $menu eq 1}
+				{if $item.category eq 1}
+				<a href="/our-menu#{$item.url}" id="{$item.url}" class="button1">{$item.title}</a>
+				{call name=render_menu items=$item.subs level=$level+1 parenturl=$parenturl menu=$menu}
+				{/if}
+			{/if}
 		{/if}
-	{/foreach}
+	{/foreach}	
 {/function}
 {* Define the function *}
-{function name=render_mobile_menu }
+{function name=render_mobile_menu level=0 menu=0}
 	{foreach $items as $item}
-		<option value="{$item.listing_url}">{$item.listing_title}</option>
-	{if count($item.categories) > 0}
-		{call name=render_mobile_menu items=$item.categories}
-	{/if}
-	{/foreach}
+		{if $level lt 1}
+			{if $item.url eq 'our-menu'}
+				{call name=render_mobile_menu items=$item.subs level=$level+1 parenturl=$parenturl|cat:"/"|cat:$item.url menu=1}
+			{/if}
+		{else}
+			{if $menu eq 1}
+				{if $item.category eq 1}
+				<option value="{$item.url}">{$item.title}</option>
+				{call name=render_mobile_menu items=$item.subs level=$level+1 parenturl=$parenturl menu=$menu}
+				{/if}
+			{/if}
+		{/if}
+	{/foreach}	
 {/function}
 
 {* Define the function *}
@@ -61,6 +77,7 @@
 				</div>
 			</div>
 	</header>
+	{if $listing_parent.listing_content2 neq ""}
 	<div id="potm">
 	  	<div class="container">
 		  <div class="row-fluid">
@@ -83,6 +100,7 @@
 	  		</div>
 	  	</div>
 	</div>
+	{/if}
 	<!-- Product List Section -->
 	<div id="orangebox">
 	  	<div class="container" id="menumainbox">

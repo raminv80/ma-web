@@ -59,7 +59,7 @@
 				<table>tbl_gallery</table>
 				<field>gallery_listing_id</field>
 			</associated>
-			<template>standardpage.tpl</template>
+			<template>product.tpl</template>
 		</table>
 		<template>our-menu.tpl</template><!-- The template used if the field is matched -->
  	</listing_page>
