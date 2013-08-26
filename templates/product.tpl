@@ -37,18 +37,16 @@
 				</div>
 			</div>
 	</header>
-	{if $listing_parent.listing_content2 neq ""}
+	{if $potm[0].listing_content1 neq ""}
 	<div id="potm">
 	  	<div class="container">
 		  <div class="row-fluid">
 		  	<div class="span8">
 		  		<h3 class="potm">Product Of The Month</h3>
-		  		{$listing_parent.listing_content2}
+		  		{$potm[0].listing_content1}
 		  	</div>
 		  	<div class="span4">
-				{foreach $listing_parent.gallery as $item}
-					<img src="{$item.gallery_link}" alt="{$item.gallery_file}">
-				{/foreach}
+				<img src="{$potm[0].listing_image}" alt="{$potm[0].listing_title}">
 		  	</div>
 		  </div>
 	  	</div>

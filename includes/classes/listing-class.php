@@ -187,6 +187,36 @@ class ListClass{
 		return $data;
 	}
 	
+	function LoadData($_ID){
+		global $SMARTY,$DBobject;
+		$data = $this->GetDataSingleSet($_ID);
+		
+		foreach($this->CONFIG_OBJ->table->associated as $a){
+			$t_data = array();
+			$pre = str_replace("tbl_","",$a->table);
+			$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$_ID}' AND {$pre}_deleted IS NULL ";// AND article_deleted IS NULL";
+			if($res = $DBobject->wrappedSqlGet($sql)){
+				foreach ($res as $row) {
+					$t_data[] = $row;
+				}
+			}
+			$data["{$a->name}"] = $t_data;
+		}
+		foreach($this->CONFIG_OBJ->table->extends as $a){
+			$t_data = array();
+			$pre = str_replace("tbl_","",$a->table);
+			$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$_ID}' AND {$pre}_deleted IS NULL ";// AND article_deleted IS NULL";
+			if($res = $DBobject->wrappedSqlGet($sql)){
+				foreach ($res as $row) {
+					foreach($row as $key => $val){
+						$data["{$key}"] = unclean($val);
+					}
+				}
+			}
+		}
+		return $data;
+	}
+	
 	private function ChkCache($_url){
 		global $SMARTY,$DBobject;
 		$args = explode('/', $_url);

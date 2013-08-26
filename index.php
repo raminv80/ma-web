@@ -28,6 +28,11 @@ while(true){
 	$struct = $CONFIG->page_strut;
 	$class = (string)$struct->file;
 	
+	//Load Product of the month listing_id = 31
+	$obj = new $class('',$struct);
+	$data = $obj->LoadData('31');
+	$SMARTY->assign('potm',$data);
+	
 	/******* Goes to home *******/
 	if($_request['arg1'] == ''){
 		$obj = new $class('',$struct);
