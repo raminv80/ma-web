@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true" staging="true">
+<config debug="false" staging="true">
 	<company></company>
 	<database>
 		<host>n7-mysql5-3.ilisys.com.au</host>
@@ -29,7 +29,7 @@
 	</section>
 
 <!-- THIS SECTION IS USED TO MANAGE THE LISTING TYPES TABLE. IT SHOULD NOT BE VISIBLE ON THE LIVE VERSION. -->
-	<section>
+	<!-- <section>
 		<staging>TRUE</staging>
 		<showlist>TRUE</showlist>
 		<url>type</url>
@@ -43,7 +43,7 @@
 		</table>
 		<list_template>list_type.tpl</list_template>
 		<edit_template>edit_type.tpl</edit_template>
-	</section>
+	</section> -->
 	
 <!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE PAGE. THIS IS A LISTING AT IT'S BASIC FORM. -->
 	<section>
@@ -66,6 +66,9 @@
 		</associated>
 		<list_template>list_page.tpl</list_template>
 		<edit_template>edit_page.tpl</edit_template>
+		<custom_template field="listing_id" value="1">custom_home_edit_page.tpl</custom_template>
+		<custom_template field="listing_id" value="3">custom_menu_edit_page.tpl</custom_template>
+		<custom_template field="listing_id" value="4">custom_location_edit_page.tpl</custom_template>
 	</section>
 <!-- THIS SECTION IS USED TO MANAGE THE LISTING CATEGORY TABLE WHICH IS LINKED TO LISTINGS. 
 	 THE FORM OF THIS LISTING CATEGORY SHOULD NOT CHANGE. THE ONLY THINGS WHICH SHOULD NEED 
@@ -172,12 +175,13 @@
 	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
 	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
 	 ADDITIONAL FIELDS NEEDED FOR PRODUCTS.-->
-	<section>
+	 <section>
 		<showlist>FALSE</showlist>
 		<url>locations</url>
 		<title>Locations</title>
 		<type>LISTING</type>
 		<type_id>3</type_id>
+		<hierarchy field="category_parent_id" default="2"></hierarchy>
 		<options>
 			<field>
 				<name>listing_category_id</name>
@@ -239,18 +243,19 @@
 	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
 	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
 	 ADDITIONAL FIELDS NEEDED FOR PRODUCTS.-->
-	<section>
+	 <section>
 		<showlist>FALSE</showlist>
-		<url>news</url>
-		<title>News</title>
+		<url>news-and-media</url>
+		<title>News and Media</title>
 		<type>LISTING</type>
-		<type_id>3</type_id>
+		<type_id>4</type_id>
+		<hierarchy field="category_parent_id" default="3"></hierarchy>
 		<options>
 			<field>
 				<name>listing_category_id</name>
 				<table>tbl_category</table>
 				<reference>category_name</reference>
-				<where>category_type_id = '3'</where>
+				<where>category_type_id = '4'</where>
 			</field>
 		</options>
 		<associated>
@@ -258,11 +263,7 @@
 			<table>tbl_gallery</table>
 			<field>gallery_listing_id</field>
 		</associated>
-		<extends>
-			<table>tbl_news</table>
-			<field>news_listing_id</field>
-		</extends>
-		<list_template>list_news.tpl</list_template>
+		<list_template>list.tpl</list_template>
 		<edit_template>edit_news.tpl</edit_template>
 	</section>
 	

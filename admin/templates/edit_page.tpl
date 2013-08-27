@@ -13,7 +13,6 @@
 				<input type="hidden" value="listing_id" name="field[tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
 				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
 				<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
-				<input type="hidden" value="1"  name="field[tbl_listing][{$cnt}][listing_published]" >
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
@@ -59,46 +58,41 @@
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_published">Published</label></div>
 			<div class="span9 controls">
-			<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_published]" class="value">
+			<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_published]" class="value">
 			<input type="checkbox" {if $fields.listing_published eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
 			</div>
 		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_flag1">Flag1</label></div>
-			<div class="span9 controls">
-			<input type="hidden" value="{$fields.listing_flag1}" name="field[tbl_listing][{$cnt}][listing_flag1]" class="value">
-			<input type="checkbox"  {if $fields.listing_flag1 eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag1">
-			</div>
-		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_flag2">Flag2</label></div>
-			<div class="span9 controls">
-			<input type="hidden" value="{$fields.listing_flag2}" name="field[tbl_listing][{$cnt}][listing_flag2]" class="value">
-			<input type="checkbox" {if $fields.listing_flag2 eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag2">
-			</div>
-		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_flag3">Flag3</label></div>
-			<div class="span9 controls">
-			<input type="hidden" value="{$fields.listing_flag3}" name="field[tbl_listing][{$cnt}][listing_flag3]" class="value">
-			<input type="checkbox" {if $fields.listing_flag3 eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag3">
-			</div>
-		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content1">Content 1</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_content1">Top Content</label></div>
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea></div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content2">Content 2</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_content2">Middle Content</label></div>
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
 		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content3">Content 3</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="tinymce">{$fields.listing_content3}</textarea></div>
-		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content4">Content 4</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content4]" id="id_listing_content4" class="tinymce">{$fields.listing_content4}</textarea></div>
+		 <div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label></div>
+			<div class="span9 controls">
+			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image" class="fileinput">
+			<span class="file-view" id="listing_image_view"
+			{if $fields.listing_image eq ""}style="display:none"{/if} >
+			<a href="{$fields.listing_image}" target="_blank" id="listing_image_path">{$fields.listing_image}</a>
+			</span>
+			<span class="file-view" id="listing_image_none" {if $fields.listing_image neq ""}style="display:none"{/if}>None</span>
+			<a href="javascript:void(0);" class="btn btn-info marg-5r"
+				onclick="
+					getFileType('listing_image','','');
+					$('#listing_image_view').css('display','block');
+					$('#listing_image_none').css('display','none');
+					">Select File</a>
+			<a href="javascript:void(0);" class="btn btn-info"
+				onclick="
+				$('#listing_image').val('');
+				$('#listing_image_view').css('display','none');
+				$('#listing_image_none').css('display','block');
+				">Remove File</a>
+				<br><small>Please use an image of 100px wide by 100px high.</small>
+			</div>
 		</div>
 		{if $fields.listing_id neq ""}
 		 <div class="row-fluid control-group">
@@ -134,30 +128,7 @@
 			</div>
 		</div>
 		{/if}
-		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label></div>
-			<div class="span9 controls">
-			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image" class="fileinput">
-			<span class="file-view" id="listing_image_view"
-			{if $fields.listing_image eq ""}style="display:none"{/if} >
-			<a href="{$fields.listing_image}" target="_blank" id="listing_image_path">{$fields.listing_image}</a>
-			</span>
-			<span class="file-view" id="listing_image_none" {if $fields.listing_image neq ""}style="display:none"{/if}>None</span>
-			<a href="javascript:void(0);" class="btn btn-info marg-5r"
-				onclick="
-					getFileType('listing_image','','');
-					$('#listing_image_view').css('display','block');
-					$('#listing_image_none').css('display','none');
-					">Select File</a>
-			<a href="javascript:void(0);" class="btn btn-info"
-				onclick="
-				$('#listing_image').val('');
-				$('#listing_image_view').css('display','none');
-				$('#listing_image_none').css('display','block');
-				">Remove File</a>
-				<br><small>Please use an image of 100px wide by 100px high.</small>
-			</div>
-		</div>
+		
 		 <div class="row-fluid control-group">
             <div class="form-actions">
                 <button class="btn btn-primary" onClick="$('#Edit_Record').submit();" type="submit">Submit</button>
