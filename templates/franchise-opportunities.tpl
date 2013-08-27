@@ -41,7 +41,7 @@
 	  		</div>
 	  		<div class="row-fluid">
 	  			<div class="span8"  id="franform">
-	  				<form id="franchise_form" accept-charset="UTF-8" action="/includes/processes/processes-contactus.php" method="post">
+	  				<form id="franchise_form" accept-charset="UTF-8" action="/includes/processes/processes-franchise.php" method="post">
 		  				<div class="row-fluid">
 		  					<div class="span6">
 		  						<div class="row-fluid control-group">

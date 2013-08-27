@@ -149,7 +149,7 @@ function logError($trace, $err, $sql = false) {
 }
 
 function sendMail($to,$from,$fromEmail,$subject,$body){
-
+	global $DBobject;
 
 	/* To send HTML mail, you can set the Content-type header. */
 	$headers  = "MIME-Version: 1.0\r\n";

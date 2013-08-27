@@ -3,6 +3,10 @@ body,input, button, select, textarea {
 	font-weight: 400;
 }
 
+.first{
+	margin-left:0px !important;
+}
+
 #portfolio-wrapper{
 	height: 291px;
     overflow: hidden;
@@ -249,6 +253,7 @@ z-index: 500;
 	font-size: 17px;
 	line-height: 34px;
 	margin: 25px auto 0;
+	display: block;
 }
 
 .button:hover{
@@ -477,6 +482,11 @@ h3.toptitle{
 	position: relative;
 }
 
+.newsitem img, .loc img{
+	width:100%;
+}
+
+
 .newstop, .loctop{
 	position: absolute;
 	top:0;
@@ -510,6 +520,7 @@ font-size: 17px;
 line-height: 34px;
 margin: 25px auto 50px;
 text-align: center;
+display:block;
 }
 
 .button3:hover{
@@ -674,10 +685,9 @@ h4.resulttitle, h4.locationtitle{
 	right:10px;
 }
 
-#locationboxin .span5:first-child {
-margin-left: 2.564102564102564% !important;
+#vip_form .error{
+	color: black!important;
 }
-
 
 .locationinfo{
 	color: #fff;
@@ -819,6 +829,9 @@ margin-left: 2.564102564102564% !important;
 #big-image{
 	position: relative;
 }
+#big-image img {
+	width:100%;
+}
 
 .prodtopbox{
 	position: absolute;
@@ -941,6 +954,13 @@ h3.potm{
 #menulistmobile{
 	display: none;
 }
+
+.map{
+	height:0;
+	width:100%;
+	padding-bottom:100%;
+}
+
 
 @media (max-width: 979px) and (min-width: 768px){
 	#logo{

@@ -55,7 +55,6 @@ $(window).load(function(){
 		$('#portfolio-wrapper').animate({ "marginTop":  "0px" }, "fast");
         return false;
 	});
-	
 
       $(window).bind( 'hashchange', function( event ){
         // get options object from hash

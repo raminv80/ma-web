@@ -10,7 +10,7 @@
 		{else}
 			{if $menu eq 1}
 				{if $item.category eq 1}
-				<a href="/our-menu#{$item.url}" id="{$item.url}" class="button1">{$item.title}</a>
+				<a data-option-value=".{$item.url}" id="{$item.url}" class="button1">{$item.title}</a>
 				{call name=render_menu items=$item.subs level=$level+1 parenturl=$parenturl menu=$menu}
 				{/if}
 			{/if}
@@ -48,7 +48,7 @@
 			</div>
 			<div class="mitemtop">
 				<div class="mitemtitle"><a href="{$parenturl}/{$item.listing_url}/{$l.listing_url}">{$l.listing_title}</a></div>
-				<div class="mitemcat">{$item.listing_url}</div>
+				<div class="mitemcat">{$item.listing_title}</div>
 			</div>
 		</div>	
 		{/foreach}

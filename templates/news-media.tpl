@@ -1,4 +1,28 @@
 {block name=body}
+
+{* Define the function *}
+{function name=render_news parenturl="" count="0"}
+	{foreach $items as $item}
+		{foreach $item.listings as $l}
+			{if $count eq 4}{assign var=count value=0}{/if}
+			{assign var=count value=$count+1}
+			<div class="span3 newsitem{if $count eq 1} first{/if}">
+	  			<img src="{$l.listing_image}" alt="{$l.listing_title}" />
+	  			<div class="newstop">
+	  				<div class="newstitle">{$l.listing_title}</div>
+	  				<div class="newstext">
+		  				{$l.listing_content1}
+	  				</div>
+	  			</div>
+	  			<a href="{$parenturl}/{$item.listing_url}/{$l.listing_url}" class="button3">Read More</a>
+	  		</div>
+		{/foreach}
+		{if count($item.categories) > 0}
+			{call name=render_news items=$item.categories parenturl=$parenturl|cat:"/"|cat:$item.listing_url}
+		{/if}
+	{/foreach}
+{/function}
+
 	<header>
 		{include file='mobilemenu.tpl'}
 		<div id="headout" class="headerbg">
@@ -18,22 +42,34 @@
 				</div>
 			</div>
 	</header>
-	{if $listing_content2 neq ""}
 	<div id="orangebox">
-		<div class="container">
-			<div class="row-fluid orangecontent">
-		  		<div class="span3">
-		  			{foreach $gallery as $item}
-		  				<img src="{$item.gallery_link}" alt="{$item.gallery_file}">
-					{/foreach}
+	  	<div class="container" id="menumainbox">
+	  		<div class="row-fluid" id="menubox">
+		  		<div class="row-fluid">
+		  			<div class="span12">
+		  				<div id="up1"><img src="/images/up.png" alt="up" /></div>
+		  			</div>
 		  		</div>
-		  		<div class="span8">
-		  			{$listing_content2}
+		  		<div class="row-fluid">
+		  			<div class="span12" id="count">
+		  			</div>
+		  		</div>
+	  			  		
+		  		<div id="newsbox">
+			  		<div id="newscontainer">
+				  		<div class="row-fluid">
+					  		{call name=render_news items=$data.categories parenturl="/community"}
+				  		</div>
+				  	</div><!--newscontainer-->
+		  		</div><!--newsbox-->
+		  		<div class="row-fluid">
+		  			<div class="span12">
+		  			<div id="down1"><img src="/images/down.png" alt="down" /></div>
+		  			</div>
 		  		</div>
 	  		</div>
-		</div>
-	</div>
-	{/if}
+  		</div>
+ 	</div>
 
 	{include file='signup.tpl'} {include file='footer.tpl'}
 {/block}

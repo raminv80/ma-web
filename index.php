@@ -63,7 +63,10 @@ while(true){
 	/******* Listing pages here *******/
 	$arr = explode("/", $_request["arg1"]);
 	foreach($CONFIG->listing_page as $lp){
-		if($lp->url == $arr[0] ){
+		//if($lp->url == $arr[0] ){
+		$needle = str_replace("/", "\/", $lp->url);
+		$haystack = $_request["arg1"];
+		if( preg_match("/^{$needle}/", $haystack) ){
 			//Load PAGE information. Parts of this data may be updated by the Listing class
 			$obj = new $class('',$struct);
 			$template = $obj->Load($lp->pageID);

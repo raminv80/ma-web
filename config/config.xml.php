@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true" staging="true">
+<config debug="false" staging="true">
 	<company></company>
 	<database>
 		<host>n7-mysql5-3.ilisys.com.au</host>
@@ -59,11 +59,52 @@
 				<table>tbl_gallery</table>
 				<field>gallery_listing_id</field>
 			</associated>
+			<extends>
+				<table>tbl_product</table>
+				<field>product_listing_id</field>
+			</extends>
 			<template>product.tpl</template>
 		</table>
 		<template>our-menu.tpl</template><!-- The template used if the field is matched -->
  	</listing_page>
- 	
+ 	<listing_page name="our-locations">
+		<url>our-locations</url>
+		<pageID>4</pageID>
+		<type>3</type>
+		<file>ListClass</file>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
+			<associated>
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_listing_id</field>
+			</associated>
+			<extends>
+				<table>tbl_location</table>
+				<field>location_listing_id</field>
+			</extends>
+			<template>location.tpl</template>
+		</table>
+		<template>our-locations.tpl</template><!-- The template used if the field is matched -->
+ 	</listing_page>
+ 	<listing_page name="news-and-media">
+		<url>community/news-and-media</url>
+		<pageID>19</pageID>
+		<type>4</type>
+		<file>ListClass</file>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
+			<associated>
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_listing_id</field>
+			</associated>
+			<template>news.tpl</template>
+		</table>
+		<template>news-media.tpl</template><!-- The template used if the field is matched -->
+ 	</listing_page>
 
 	<!-- <listing_page name="contact-us">
 		<url>contact-us</url>
