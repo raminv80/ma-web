@@ -9,7 +9,7 @@
 			{/if}
 		{else}
 			{if $menu eq 2}
-				{if $item.category eq 1}
+				{if $item.category eq 1 and $item.listings eq 1}
 				<a data-option-value=".{$item.category_name|strtolower}" id="{$item.category_name|strtolower}" class="button1">{$item.category_name}</a>
 				{call name=render_menu items=$item.subs level=$level+1 parenturl=$parenturl menu=$menu}
 				{/if}
