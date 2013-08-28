@@ -10,7 +10,7 @@
 		{else}
 			{if $menu eq 2}
 				{if $item.category eq 1 and $item.listings eq 1}
-				<a href="{$parenturl}#{$item.category_name|strtolower}" id="{$item.category_name|strtolower}" class="button1">{$item.category_name}</a>
+				<a href="{$parenturl}#{$item.category_name|strtolower}" id="{$item.category_name|strtolower}" class="button1{if $listing_category_id eq $item.category_id} selected{/if}">{$item.category_name}</a>
 				{call name=render_menu items=$item.subs level=$level+1 parenturl=$parenturl menu=$menu}
 				{/if}
 			{/if}
@@ -40,8 +40,8 @@
 	<div id="orangebox">
 	  	<div class="container" id="locationbox">
 	  		
-	  		<div class="row-fluid" id="statelist">
-		  		<a data-option-value=".all" class="button1 selected">All</a>
+	  		<div class="row-fluid" id="statelist2">
+		  		<a href="/our-locations#all" class="button1">All</a>
 		  		{call name=render_menu items=$menuitems}
 	  		</div>
 	  		
@@ -103,12 +103,10 @@
 	  	<div class="container">
 		  	<div class="row-fluid">
 			  	<div class="span7">
-			  		<h3>Introduce Cocolat to your neighbourhood</h3>
-			  		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ut lorem vitae turpis commodo porttitor in in massa. Nulla vehicula ultricies ornare. Aenean accumsan et risus ac mattis.</p>
-			  		 <p>Morbi id lacus tempor, dignissim sapien vel, varius elit. Etiam nec neque quis urna fermentum condimentum. Vestibulum ornare odio luctus <a href="#">turpis dapibus</a></p>
+			  		{$listing_parent.listing_content5}
 			  	</div>
 			  	<div class="span5">
-			  		<img src="/images/cocoa.png" alt="" />
+			  		<img src="/images/cocoa.png" alt="Cocoa spilling out of a shaker onto white bench" />
 			  	</div>
 		  	</div>
 	  	</div>

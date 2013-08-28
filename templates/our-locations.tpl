@@ -83,12 +83,10 @@
 	  	<div class="container">
 		  	<div class="row-fluid">
 			  	<div class="span7">
-			  		<h3>Introduce Cocolat to your neighbourhood</h3>
-			  		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ut lorem vitae turpis commodo porttitor in in massa. Nulla vehicula ultricies ornare. Aenean accumsan et risus ac mattis.</p>
-			  		 <p>Morbi id lacus tempor, dignissim sapien vel, varius elit. Etiam nec neque quis urna fermentum condimentum. Vestibulum ornare odio luctus <a href="#">turpis dapibus</a></p>
+			  		{$listing_content5}
 			  	</div>
 			  	<div class="span5">
-			  		<img src="/images/cocoa.png" alt="" />
+			  		<img src="/images/cocoa.png" alt="Cocoa spilling out of a shaker onto white bench" />
 			  	</div>
 		  	</div>
 	  	</div>
