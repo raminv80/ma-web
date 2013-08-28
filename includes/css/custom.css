@@ -22,21 +22,34 @@ body,input, button, select, textarea {
 .portfolio-item.tall .image{
 	height: 580px;
 	width: 290px;
-	overvlow: hidden;
+	overflow: hidden;
+	position: relative;
+}
+.portfolio-item.tall .image img{
+	position: absolute;
+	left: -145px;
 }
 .portfolio-item.wide .image{
 	height: 290px;
 	width: 580px;
 	overflow: hidden;
+	position: relative;
+}
+.portfolio-item.wide .image img{
+	position: absolute;
+	top: -145px;
 }
 .portfolio-item.big .image{
 	height: 580px;
 	width: 580px;
 	overflow: hidden;
 }
-.portfolio-item.tall img, .portfolio-item.wide img, portfolio-item.big img{
+
+.portfolio-item.tall img, .portfolio-item.wide img, .portfolio-item.big img{
 	height: 580px;
 	width: 580px;
+	max-width:580px;
+	max-height:580px;
 }
 
 a{
