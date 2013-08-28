@@ -49,6 +49,16 @@ while(true){
 		
 		break 1;
 	}
+	
+	/****** Social Wall *******/
+	foreach($CONFIG->socialwall as $sp){
+		if($sp->url == $_request['arg1'] ){
+			$obj = new $class('',$struct);
+			$template = $obj->Load($sp->pageID);
+			$template = $sp->template;
+			break 2;
+		}
+	}
 
 	/******* Goes to search *******/
 	if($_request['arg1'] == 'search'){

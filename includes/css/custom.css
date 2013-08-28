@@ -3,6 +3,42 @@ body,input, button, select, textarea {
 	font-weight: 400;
 }
 
+.clear{clear:both;}
+
+.instafeed-wrapper{
+	background-color: #eeeeee;
+	padding:20px;
+	width:calc(100% - 40px);
+}
+.instafeed-col, .instafeed-small, .instafeed-medium, .instafeed-large{
+	float: left;
+	padding-left: 1px;
+	padding-top: 1px;
+}
+
+.instafeed-col.small{
+	width:14%;
+}
+.instafeed-col.medium{
+	width:28%;
+}
+.instafeed-col.large{
+	width:42%;
+}
+
+.instafeed-small img, .instafeed-medium img, .instafeed-large img {
+	width:100%;
+	height:auto;
+}
+.instafeed-small, .instafeed-medium, .instafeed-large{
+	width:calc(100% - 1px);
+	height:auto;
+}
+.instafeed-col.medium .instafeed-small{
+	width:calc(50% - 1px);
+	height:auto;
+}
+
 .first{
 	margin-left:0px !important;
 }

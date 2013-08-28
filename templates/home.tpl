@@ -74,11 +74,36 @@
 				<h3 class="title">What our customers are enjoying</h3>
 			</div>
 			<div class="row-fluid instafeed">
-				<img src="/images/instaplaceholder.png" alt="" />
+				<!-- This is where the instagram feed at the bottom of the page is displayed -->
+				{if count($instagram) eq 10}
+				<div class="row-fluid">
+					<div class="instafeed-col small">
+						<div class="instafeed-small"><a href="/community" title="Community"><img src="{$instagram[0].social_image}" alt="Instagram image by {$instagram[0].social_profile}" /></a></div>
+						<div class="instafeed-small"><a href="/community" title="Community"><img src="{$instagram[1].social_image}" alt="Instagram image by {$instagram[1].social_profile}" /></a></div>
+						<div class="instafeed-small"><a href="/community" title="Community"><img src="{$instagram[2].social_image}" alt="Instagram image by {$instagram[2].social_profile}" /></a></div>
+					</div>
+					<div class="instafeed-col medium">
+						<div class="instafeed-medium"><a href="/community" title="Community"><img src="{$instagram[3].social_image}" alt="Instagram image by {$instagram[3].social_profile}" /></a></div>
+						<div class="instafeed-small"><a href="/community" title="Community"><img src="{$instagram[4].social_image}" alt="Instagram image by {$instagram[4].social_profile}" /></a></div>
+						<div class="instafeed-small"><a href="/community" title="Community"><img src="{$instagram[5].social_image}" alt="Instagram image by {$instagram[5].social_profile}" /></a></div>
+					</div>
+					<div class="instafeed-col large">
+						<div class="instafeed-large"><a href="/community" title="Community"><img src="{$instagram[6].social_image}" alt="Instagram image by {$instagram[6].social_profile}" /></a></div>
+					</div>
+					<div class="instafeed-col  small">
+						<div class="instafeed-small"><a href="/community" title="Community"><img src="{$instagram[7].social_image}" alt="Instagram image by {$instagram[7].social_profile}" /></a></div>
+						<div class="instafeed-small"><a href="/community" title="Community"><img src="{$instagram[8].social_image}" alt="Instagram image by {$instagram[8].social_profile}" /></a></div>
+						<div class="instafeed-small"><a href="/community" title="Community"><img src="{$instagram[9].social_image}" alt="Instagram image by {$instagram[9].social_profile}" /></a></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				{else}
+				<img src="/images/instaplaceholder.png" alt="Instagram Placeholser" />
+				{/if}
 			</div>
 			<div class="row-fluid instatext">
 				<div class="span2">
-					<img src="/images/biginstagram.png" alt="" />
+					<img src="/images/biginstagram.png" alt="Large version of the Instagram Icon" />
 				</div>
 				<div class="span10">
 					<h3>Be a part of our website.</h3>

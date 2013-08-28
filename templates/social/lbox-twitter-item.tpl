@@ -1,13 +1,7 @@
-<div class="facebook item" id="{$item.social_id}">
-			<div class="trash">{if $admin neq ''}<img src="/images/socialwall/trash.png" alt="trash" onclick="QRemove('{$item.social_id}')" />{/if}</div>
-			<div class="source"><img src="/images/socialwall/facebook-logo.png" alt="facebook" class="facebook-logo"/></div>
-			<div class="image">
-			 <a rel="prettyPhoto[ajax]" href="/includes/social/processes-general.php?action=getitem&itemid={$item.social_id}&ajax=true&width=520&height=550">
-			{if $item.social_image neq ''}<img src="{$item.social_image}"  style=" margin-left: 8%;" />{/if}
-			</a>
-			</div>
+		<div class="item twitter bigitem">
+			<div class="source"><img src="/images/socialwall/twitter1.png" alt="twitter" /></div>
 			<div class="text">
-				 <a href="{$item.social_link}" target="_blank">{trimsocialcontent data=$item.social_content}</a>
+				{$item.social_content}
 			</div>
 			{if $item.social_link neq ""}
 			<div class="share">
@@ -19,6 +13,10 @@
 			</div>
 			{/if}
 			<div class="person">
-
+				<img src="{$item.social_profile_img}" alt="photo"  class="twitter-prof" />
+				<div class="persondet">
+					<div class="handle"><a href="http://www.twitter.com/{$item.social_profile}" target="_blank">@{$item.social_profile}</a></div>
+				</div>
 			</div>
-</div>
+		</div>
+		<script type="text/javascript" src="/includes/js/share.js"></script>

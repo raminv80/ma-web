@@ -25,7 +25,7 @@ class SocialWall{
 	}
 	function UpdateResultDatabase(){
 		GLOBAL $DBobject;
-		$sql = 'SELECT MAX(social_created) AS timed   FROM '.$this->table.' ';
+		$sql = "SELECT MAX(social_created) AS timed FROM {$this->table}";
 		$time = $DBobject->wrappedSqlGet($sql);
 		$lastrequest = strtotime($time[0]['timed']);
 		$minutes_after = $lastrequest + (5  *  60) ;
@@ -45,7 +45,16 @@ class SocialWall{
 	
 	function GetData($_type="",$_limit=""){
 		GLOBAL $DBobject;
-		$sql = "SELECT * FROM  {$this->table} WHERE social_typeid = :type AND social_deleted IS NULL AND social_tag = :tag ORDER BY social_gmt_timestamp DESC LIMIT {$_limit}";
+		$params = array(":tag"=>$this->tag);
+		if(!empty($_type)){
+			$params[':tag'] = $_type;
+			$t = " social_typeid = :type AND";
+		}
+		if(!empty($_limit)){
+			$l = " LIMIT {$_limit}";
+		}
+		
+		$sql = "SELECT * FROM  {$this->table} WHERE {$t} social_deleted IS NULL AND social_tag = :tag ORDER BY social_gmt_timestamp DESC {$l}";
 		$params = array(":tag"=>$this->tag,":type"=>$_type);
 		return $DBobject->wrappedSqlGet($sql,$params);
 	}
@@ -138,14 +147,11 @@ class SocialWall{
 		$adds  = $DBobject->wrappedSqlGet($sql,$data);
 		if(empty($data))$data =array();
 		if(!empty($data)){
-			//add ads
-			//header('debug-ads:'.count($data));
 			if($this->ads == true){
 				$this->results = array_merge_recursive($data,$adds,$adds);
 			}else{
 				$this->results = array_merge_recursive($data);
 			}
-
 			return $this->FormatResults($this->shuffle_assoc($this->results));
 		}else{
 			return '';
@@ -162,20 +168,20 @@ class SocialWall{
 				}
 				switch ($item['social_typeid']) {
 						case '1':
-						$buf .= $SMARTY->fetch('instagram-item.tpl');
+						$buf .= $SMARTY->fetch('social/instagram-item.tpl');
 						break;
 						case '2':
-						$buf .= $SMARTY->fetch('twitter-item.tpl');
+						$buf .= $SMARTY->fetch('social/twitter-item.tpl');
 						break;
 						case '3':
-						$buf .= $SMARTY->fetch('youtube-item.tpl');
+						$buf .= $SMARTY->fetch('social/youtube-item.tpl');
 						break;
 						case '4':
-						$buf .= $SMARTY->fetch('facebook-item.tpl');
+						$buf .= $SMARTY->fetch('social/facebook-item.tpl');
 						break;
 						case '5':
 						if($buf!=''){
-							$buf .= $SMARTY->fetch('ad-item.tpl');
+							$buf .= $SMARTY->fetch('social/ad-item.tpl');
 						}
 
 						break;
@@ -193,13 +199,13 @@ class SocialWall{
 		$SMARTY->assign('item',$item);
 			switch ($item['social_typeid']) {
 				case '1':
-					$buf = $SMARTY->fetch('lbox-instagram-item.tpl');
+					$buf = $SMARTY->fetch('social/lbox-instagram-item.tpl');
 					break;
 				case '2':
-					$buf = $SMARTY->fetch('lbox-twitter-item.tpl');
+					$buf = $SMARTY->fetch('social/lbox-twitter-item.tpl');
 					break;
 				case '3':
-					$buf = $SMARTY->fetch('lbox-youtube-item.tpl');
+					$buf = $SMARTY->fetch('social/lbox-youtube-item.tpl');
 					break;
 		}
 
