@@ -48,7 +48,7 @@ if(!empty($CONFIG->socialwall)){
     $facebook = $CONFIG->socialwall->attributes()->facebook ? TRUE:FALSE;
     $youtube = $CONFIG->socialwall->attributes()->youtube ? TRUE:FALSE;
     $twitter = $CONFIG->socialwall->attributes()->twitter ? TRUE:FALSE;
-	$SW = new SocialWall($tag,$table,$ads,$instagram,$facebook,$youtube,$twitter);
+	$SOCIAL = new SocialWall($tag,$table,$ads,$instagram,$facebook,$youtube,$twitter);
 }
 
 //Create Smarty object and set

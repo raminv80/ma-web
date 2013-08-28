@@ -38,6 +38,15 @@ while(true){
 		$obj = new $class('',$struct);
 		$template = $obj->Load($CONFIG->index_page->pageID);
 		$template = $CONFIG->index_page->template;
+		
+		/**************************************
+		 * Load Instagram images for homepage *
+		 *************************************/
+		global $SOCIAL;
+		if($res = $SOCIAL->GetData('1','10')){
+			$SMARTY->assign('instagram',$res);
+		}
+		
 		break 1;
 	}
 

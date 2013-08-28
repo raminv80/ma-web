@@ -1,47 +1,47 @@
 {block name=body}
 	<header>
+		{include file='mobilemenu.tpl'}
 		<div id="headout" class="headerbg">
-				
-					{include file='desktopmenu.tpl'}
-					<div id="videobox">
-						<div class="container">
-							<div class="row-fluid">
-								<div class="span5">
-									Creating great memories....<br />
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...One moment at a time!
-								</div>
-								<div class="span7">
-									<div id="bgvideo">
-									</div>
-								</div>
-							</div>
+			{include file='desktopmenu.tpl'}
+			<div id="videobox">
+				<div class="container">
+					<div class="row-fluid">
+						<div class="span5">
+							Creating great memories....<br />
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...One moment at a time!
 						</div>
-					</div>
-					<div id="slider">
-						<div class="container">
-							<div id="carousel-example-generic" class="carousel slide">
-								<!-- Indicators -->
-								<ol class="carousel-indicators">
-									{assign var=x value=0}
-									{foreach $gallery as $item}
-										<li data-target="#carousel-example-generic" data-slide-to="{$x}" {if $x lt 1}class="active"{/if}></li>
-										{assign var=x value=$x+1} 
-									{/foreach}
-								</ol>
-								<!-- Wrapper for slides -->
-								<div class="carousel-inner">
-									{assign var=x value=0}
-									{foreach $gallery as $item}
-									<div class="item{if $x lt 1} active{/if}">
-										<img src="{$item.gallery_link}" alt="{$item.gallery_file}">
-									</div>
-									{assign var=x value=$x+1} 
-									{/foreach}
-								</div>
+						<div class="span7">
+							<div id="bgvideo">
 							</div>
 						</div>
 					</div>
 				</div>
+			</div>
+			<div id="slider">
+				<div class="container">
+					<div id="carousel-example-generic" class="carousel slide">
+						<!-- Indicators -->
+						<ol class="carousel-indicators">
+							{assign var=x value=0}
+							{foreach $gallery as $item}
+								<li data-target="#carousel-example-generic" data-slide-to="{$x}" {if $x lt 1}class="active"{/if}></li>
+								{assign var=x value=$x+1} 
+							{/foreach}
+						</ol>
+						<!-- Wrapper for slides -->
+						<div class="carousel-inner">
+							{assign var=x value=0}
+							{foreach $gallery as $item}
+							<div class="item{if $x lt 1} active{/if}">
+								<img src="{$item.gallery_link}" alt="{$item.gallery_file}">
+							</div>
+							{assign var=x value=$x+1} 
+							{/foreach}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</header>
 	<div id="orangebox">
 		<div class="container">

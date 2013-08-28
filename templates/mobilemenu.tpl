@@ -38,6 +38,7 @@
 <div id="top-menu" class="row-fluid">
  		<div id="menu-icon"><span></span><span></span><span></span></div>
 			<ul id="menu-top">
+				<li><a title="Home" href="/">Home</a>
 				{call name=render_mobile_list items=$menuitems}
 			</ul>
 	</div>

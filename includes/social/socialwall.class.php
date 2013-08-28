@@ -21,7 +21,6 @@ class SocialWall{
 		$this->facebook = $_facebook;
 		$this->youtube = $_youtube;
 		$this->twitter = $_twitter;
-		
 		$this->UpdateResultDatabase();
 	}
 	function UpdateResultDatabase(){
@@ -43,17 +42,21 @@ class SocialWall{
 		}
 		return;
 	}
+	
+	function GetData($_type="",$_limit=""){
+		GLOBAL $DBobject;
+		$sql = "SELECT * FROM  {$this->table} WHERE social_typeid = :type AND social_deleted IS NULL AND social_tag = :tag ORDER BY social_gmt_timestamp DESC LIMIT {$_limit}";
+		$params = array(":tag"=>$this->tag,":type"=>$_type);
+		return $DBobject->wrappedSqlGet($sql,$params);
+	}
+	
 	function GetResults( $from = '' ,  $to = '' , $limit = 60 ,$group = 1 , $type = 0){
-		GLOBAL $DB,$SMARTY;
 		header('Data-g:'.$group);
-		//$buf = $this->ResultsByRandom($from = '' ,  $to = '' , $limit  ,$group ,$type);
 		$buf = $this->ResultsByDate($from = '' ,  $to = '' , $limit  , $group ,$type);
 		header('Data-g2:'.$group);
-
 		$return = array('html' =>  str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $buf) , 'datetime' => $this->time , 'groupNumber' => $group);
 		$return = json_encode($return, JSON_FORCE_OBJECT);
 		return  $return;
-
 	}
 
 	function ResultsByRandom($from = '' ,  $to = '' , $limit = 60 ,$group , $type){
