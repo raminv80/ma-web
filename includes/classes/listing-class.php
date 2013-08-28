@@ -480,16 +480,18 @@ class ListClass{
 		//GET LISTINGS AND CATEGORIES FOR THIS SECTION
 		//$sql = "SELECT tbl_category.*,tbl_listing.listing_title, tbl_listing.listing_url FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
 		//$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url FROM tbl_listing WHERE tbl_listing.listing_category_id = :cid AND tbl_listing.listing_deleted IS NULL AND EXISTS(SELECT * FROM tbl_category WHERE tbl_category.category_listing_id = tbl_listing.listing_id) ORDER BY tbl_listing.listing_order ASC";
-		$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_category.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_id = tbl_category.category_listing_id WHERE tbl_listing.listing_category_id = :cid AND tbl_category.category_parent_id = :cid AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
+		$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_category.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_id = tbl_category.category_listing_id WHERE tbl_listing.listing_category_id = :cid AND tbl_category.category_parent_id = :cid AND tbl_listing.listing_published = 1 AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
 		$params = array(":cid"=>$_cid);
 		if($res = $DBobject->wrappedSql($sql,$params)){
 			foreach ($res as $row) {
 				
 				$t_array = array(
 						"category_name"=>ucfirst(unclean($row['category_name'])),
+						"category_id"=>$row['category_id'],
 						"title"=>ucfirst(unclean($row['listing_title'])),
 						"url"=>$row['listing_url'],
-						"selected"=>0
+						"selected"=>0,
+						"listings"=>0
 				);
 				
 				//SELECT CATEGORY IF ONE EXISTS FOR ATTACHED TO THIS LISTING
@@ -502,6 +504,10 @@ class ListClass{
 						if($subs['selected'] == 1){
 							$t_array["selected"] = 1;
 							unset($subs['selected']);
+						}
+						if($subs['listings'] == 1){
+							$t_array["listings"] = 1;
+							unset($subs['listings']);
 						}
 						$t_array["subs"]=$subs;
 					}
@@ -522,42 +528,48 @@ class ListClass{
 	
 		//GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
 		//$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url FROM tbl_listing WHERE tbl_listing.listing_category_id = :cid AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
-		$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_category.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_id = tbl_category.category_listing_id WHERE (tbl_listing.listing_category_id = :cid OR tbl_category.category_parent_id = :cid) AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
+		$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_category.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_id = tbl_category.category_listing_id WHERE (tbl_listing.listing_category_id = :cid OR tbl_category.category_parent_id = :cid) AND tbl_listing.listing_published = 1 AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
 		$params = array(":cid"=>$_cid);
 		if($res = $DBobject->wrappedSql($sql,$params)){
 			foreach ($res as $row) {
-				
 				$t_array = array(
 						"category_name"=>ucfirst(unclean($row['category_name'])),
+						"category_id"=>$row['category_id'],
 						"title"=>ucfirst(unclean($row['listing_title'])),
 						"url"=>$row['listing_url'],
-						"selected"=>0
+						"selected"=>0,
+						"listings"=>0
 				);
 				
 				//SELECT CATEGORY IF ONE EXISTS FOR ATTACHED TO THIS LISTING
-				$sql = "SELECT tbl_category.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_listing_id = :id AND tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
-				$params = array(":cid"=>$_cid,":id"=>$row['listing_id']);
-				if($res2 = $DBobject->wrappedSql($sql,$params)){
+				if(!empty($row['category_id'])){
 					$t_array["category"] = 1;
-					foreach ($res2 as $row2) {
-						$subs = $this->LoadSubMenu($_pid,$row2['category_id']);
-						if($subs['selected'] == 1){
-							$t_array["selected"] = 1;
-							$data['selected'] = 1;
-							unset($subs['selected']);
-						}
-						$t_array["subs"]=$subs;
+					$subs = $this->LoadSubMenu($_pid,$row['category_id']);
+					$t_array["subs"]=$subs;
+					if($subs['selected'] == 1){
+						$t_array["selected"] = 1;
+						$data['selected'] = 1;
+						unset($t_array["subs"]['selected']);
 					}
+					if($subs['listings'] == 1){
+						$t_array["listings"] = 1;
+						$data['listings'] = 1;
+						unset($t_array["subs"]['listings']);
+					}
+				}else{
+					$t_array['listings'] = 1;
+					$data['listings'] = 1;
 				}
 	
 				if($row['listing_id'] == $_pid){
 					$t_array["selected"] = 1;
 					$data['selected'] = 1;
 				}
-				
+
 				$data[] = $t_array;
 			}
 		}
+		
 		return $data;
 	}
 	
