@@ -9,7 +9,7 @@
 			{/if}
 		{else}
 			{if $menu eq 1}
-				{if $item.category eq 1}
+				{if $item.category eq 1 and $item.listings eq 1}
 				<a href="/our-menu#{$item.url}" id="{$item.url}" class="button1{if $item.url eq $listing_parent.listing_url} selected{/if}">{$item.title}</a>
 				{call name=render_menu items=$item.subs level=$level+1 parenturl=$parenturl menu=$menu}
 				{/if}
@@ -26,7 +26,7 @@
 					<div class="container">
 						<div class="row-fluid">
 							<div class="span7">
-					  			{include file='breadcrumbs.tpl'}
+					  			{include file='breadcrumbs_products.tpl'}
 					  			<h3 class="toptitle">{$listing_parent.listing_title}</h3>
 					  			<div class="toptext">
 					  				{$listing_parent.listing_content1}
@@ -115,7 +115,7 @@
 		  	<div class="row-fluid">
 			  	<div class="span12">
 			  		<h3 class="title">Are you ready to try this product?</h3>
-			  		<p><a href="#">Find your Nearest Location</a></p>
+			  		<p><a href="/our-locations">Find your Nearest Location</a></p>
 			  		
 			  		<h3 class="title love">Tell us why you love this product</h3>
 

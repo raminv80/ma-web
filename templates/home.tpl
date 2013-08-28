@@ -61,7 +61,7 @@
 				<img src="/images/gift.png" alt="" />
 				<div class="quicktitle">Gift Ideas</div>
 				<div class="quicktext">{$listing_content3}</div>
-				<a href="/our-menu/gifts" class="button">View Details</a>
+				<a href="/our-menu#gifts" class="button">View Details</a>
 			</div>
 		</div>
 	</div>
