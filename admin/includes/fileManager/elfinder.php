@@ -8,7 +8,7 @@
 		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 		<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="/includes/css/jqui.css" />
+		<link rel="stylesheet" type="text/css" href="/admin/includes/css/jqui.css" />
 
 		<!-- TinyMCE (REQUIRED) -->
 		<script src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
