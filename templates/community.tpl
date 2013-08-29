@@ -36,7 +36,7 @@
 		                            <li ><a id="all" href="#" data-filter=".item" data-type="0" class="list-image-all btn_element" >All</a></li>
 									<li><a href="#" data-filter=".twitter" data-type="2" class="list-image-tw btn_element" ></a></li>
 		                            <li><a href="#" data-filter=".instragram" data-type="1" class="list-image-insta btn_element"></a></li>
-		                            <li><a href="#" data-filter=".youtube" data-type="3"class="list-image-youtube btn_element"></a></li>
+		                            <!-- <li><a href="#" data-filter=".youtube" data-type="3"class="list-image-youtube btn_element"></a></li> -->
 		                            <li><a href="#" data-filter=".facebook" data-type="4" class="list-image-facebook btn_element"></a></li>
 								</ul>
 		                    </div><!--/.nav-collapse -->

@@ -22,7 +22,7 @@ function smarty_function_random($params, &$smarty)
 	
 	srand((double) microtime() * 1000000);
 	
-	$random_number = rand($in, $out);
+	$random_number = mt_rand ($in, $out);
 	if (isset($assign)) {
 		$smarty->assign($assign, $random_number);
 	}

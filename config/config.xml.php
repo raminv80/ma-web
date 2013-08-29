@@ -34,12 +34,16 @@
 		<template>search.tpl</template>
 		<pageID>2</pageID>
 	</search>
-	<socialwall name="community" ads="false" instagram="true" facebook="true" twitter="true" youtube="true">
+	<socialwall name="community" ads="false" instagram="true" facebook="true" twitter="true" youtube="false">
 		<url>community</url>
 		<pageID>5</pageID>
 		<template>community.tpl</template>
 		<tag>cocolat</tag>
 		<table>ntbl_social</table>
+		<facebook></facebook>
+		<twitter>@cocolat</twitter>
+		<youtube></youtube>
+		<instagram></instagram>
  	</socialwall>
  	<static_page>
 		<url>franchise-opportunities</url>

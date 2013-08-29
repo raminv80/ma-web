@@ -21,6 +21,7 @@
 
 	<!-- Bootstrap -->
     <link href="/includes/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/includes/css/tipTip.css" rel="stylesheet" media="screen">
     <link href="/includes/css/custom.css" rel="stylesheet" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
     

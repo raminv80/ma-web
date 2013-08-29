@@ -40,7 +40,11 @@ $(window).load(function(){
 					}
 			},
             sortBy: 'name',
-            layoutMode: 'masonry'
+            layoutMode: 'masonry',
+            masonry:{
+                columnWidth: 290,
+                rowHeight: 290
+            }
           });
 
       

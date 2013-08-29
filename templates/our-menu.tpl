@@ -39,19 +39,25 @@
 {function name=render_products parentclass="" parenturl=""}
 	{foreach $items as $item}
 		{foreach $item.listings as $l}
-		{* Size randomiser *}
-		{assign var='class' value=''}
-		{random in=1 out=10 assign="rand"}
-		{if $rand gt 7 and $rand lte 9}
-			{random in=1 out=10 assign="rand"}
-			{if $rand lte 5}
-				{assign var='class' value='tall'}
+			{* Size randomiser *}
+			{assign var='class' value=''}
+			{random in=1 out=20 assign="rand"}
+			{random in=1 out=20 assign="rand2"}
+			{if $rand eq $rand2}
+				{assign var='class' value='big'}
 			{else}
-				{assign var='class' value='wide'}
+				{random in=1 out=5 assign="rand"}
+				{random in=1 out=5 assign="rand2"}
+				{if $rand eq $rand2}
+					{if $last neq 'tall'}
+						{assign var='last' value='tall'}
+						{assign var='class' value='tall'}
+					{else}
+						{assign var='last' value='wide'}
+						{assign var='class' value='wide'}
+					{/if}
+				{/if}
 			{/if}
-		{elseif $rand gt 9}
-			{assign var='class' value='big'}
-		{/if}
 		<div class="portfolio-item{if $class neq ''} {$class}{/if} {$item.listing_url} {$parentclass}{if $l.listing_flag1 eq 1} whats-new{/if}{if $l.listing_flag3 eq 1} favourites{/if}">
 			<a href="{$parenturl}/{$item.listing_url}/{$l.listing_url}" class="image"><img src="{$l.listing_image}" alt="{$l.listing_title}" /></a>
 			<div class="tags">
