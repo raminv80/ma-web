@@ -7,7 +7,6 @@ ini_set('session.cache_limiter', 'private');
 include_once 'includes/functions/admin-functions.php';
 global $CONFIG,$SMARTY,$DBobject;
 
-
 //ASSIGN ALL STORED SMARTY VALUES
 foreach($_SESSION['smarty'] as $key => $val){
 	$SMARTY->assign($key,$val);
@@ -73,6 +72,8 @@ while(true){
 		/****** Goes to individual script pages *******/
 		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
+				$SMARTY->assign("zone",$sp->title);
+				$template = "list.tpl";
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
 					$list = $record->getListingList();
@@ -99,11 +100,20 @@ while(true){
 		/****** Goes to individual script pages *******/
 		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
+				$SMARTY->assign("zone",$sp->title);
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
 					$tm = $record->getListing(intval($arr[2]));
 					$SMARTY->assign("fields",$tm);
 					$template = $sp->edit_template;
+					foreach($sp->custom_template as $ct){
+						$f = $ct->attributes()->field;
+						$v = $ct->attributes()->value;
+						if($tm["{$f}"] == $v){
+							$template = $ct;
+							break;
+						}
+					}
 					break 2;
 				}
 				if($sp->type == "TABLE"){
@@ -112,6 +122,14 @@ while(true){
 					$SMARTY->assign("fields",$tm);
 					$SMARTY->assign("type",(string)$sp->slide);
 					$template = $sp->edit_template;
+					foreach($sp->custom_template as $ct){
+						$f = $ct->attributes()->field;
+						$v = $ct->attributes()->value;
+						if($tm["{$f}"] ===$v){
+							$template = $ct;
+							break;
+						}
+					}
 					break 2;
 				}
 			}

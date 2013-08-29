@@ -14,32 +14,126 @@
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>
 			<field>listing_url</field><!-- The field used to match the URL -->
-			<template>body.tpl</template><!-- The template used if the field is matched -->
+			<associated>
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_listing_id</field>
+			</associated>
 		</table>
+		<template>standardpage.tpl</template><!-- The template used if the field is matched -->
 	</page_strut>
 	<index_page>
 		<template>home.tpl</template>
-		<pageID>4</pageID>
+		<pageID>1</pageID>
 	</index_page>
+	<error404>
+		<template>404.tpl</template>
+		<pageID>26</pageID>
+	</error404>
 	<search>
 		<template>search.tpl</template>
-		<pageID>1</pageID>
+		<pageID>2</pageID>
 	</search>
+	<socialwall name="community" ads="false" instagram="true" facebook="true" twitter="true" youtube="false">
+		<url>community</url>
+		<pageID>5</pageID>
+		<template>community.tpl</template>
+		<tag>cocolat</tag>
+		<table>ntbl_social</table>
+		<facebook></facebook>
+		<twitter>@cocolat</twitter>
+		<youtube></youtube>
+		<instagram></instagram>
+ 	</socialwall>
+ 	<static_page>
+		<url>franchise-opportunities</url>
+		<template>franchise-opportunities.tpl</template>
+		<pageID>6</pageID>
+	</static_page>
+	<static_page>
+		<url>franchise-opportunities/becoming-a-franchisee</url>
+		<template>franchise-opportunities.tpl</template>
+		<pageID>21</pageID>
+	</static_page>
+	<static_page>
+		<url>franchise-opportunities/master-franchise-opportunies</url>
+		<template>franchise-opportunities.tpl</template>
+		<pageID>23</pageID>
+	</static_page>
+	<listing_page name="our-menu">
+		<url>our-menu</url>
+		<pageID>3</pageID>
+		<type>2</type>
+		<file>ListClass</file>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
+			<associated>
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_listing_id</field>
+			</associated>
+			<extends>
+				<table>tbl_product</table>
+				<field>product_listing_id</field>
+			</extends>
+			<template>product.tpl</template>
+		</table>
+		<template>our-menu.tpl</template><!-- The template used if the field is matched -->
+ 	</listing_page>
+ 	<listing_page name="our-locations">
+		<url>our-locations</url>
+		<pageID>4</pageID>
+		<type>3</type>
+		<file>ListClass</file>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
+			<associated>
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_listing_id</field>
+			</associated>
+			<extends>
+				<table>tbl_location</table>
+				<field>location_listing_id</field>
+			</extends>
+			<template>location.tpl</template>
+		</table>
+		<template>our-locations.tpl</template><!-- The template used if the field is matched -->
+ 	</listing_page>
+ 	<listing_page name="news-and-media">
+		<url>community/news-and-media</url>
+		<pageID>19</pageID>
+		<type>4</type>
+		<file>ListClass</file>
+		<table><!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field><!-- The field used to match the URL -->
+			<associated>
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_listing_id</field>
+			</associated>
+			<template>news.tpl</template>
+		</table>
+		<template>news-media.tpl</template><!-- The template used if the field is matched -->
+ 	</listing_page>
 
-	<listing_page name="contact-us">
+	<!-- <listing_page name="contact-us">
 		<url>contact-us</url>
 		<type>1</type>
 		<pageID>5</pageID>
 		<ID>72</ID>
 		<file>ListClass</file>
 		<template>contactus.tpl</template>
-		<table><!-- This table will be the details table -->
+		<table>
 			<name>tbl_listing</name>
 			<where>(listing_id = '7' OR listing_id = '8' )</where>
 		</table>
  	</listing_page>
 	<listing_page name="news">
-		<url>news</url><!-- This element name is the base URL which will be used as part of the matching. Tables can have any number of sub tables which will be linked using a linking table (name convention) -->
+		<url>news</url>
 		<type>2</type>
 		<pageID>1</pageID>
 		<ID>72</ID>
@@ -47,11 +141,11 @@
 		<template>news-listing.tpl</template>
 		<limit>5</limit>
 		<orderby>news_start_date DESC</orderby>
-		<table><!-- This table will be the details table -->
+		<table>
 			<name>tbl_listing</name>
-			<field>listing_url</field><!-- The field used to match the URL -->
+			<field>listing_url</field>
 			<extra>tbl_news</extra>
-			<template>news-item.tpl</template><!-- The template used if the field is matched -->
+			<template>news-item.tpl</template>
 		</table>
 		<menu>
 			<field>COUNT(news_start_date) AS num, DATE_FORMAT(news_start_date,'%M') AS month, DATE_FORMAT(news_start_date,'%Y') AS year</field>
@@ -73,10 +167,10 @@
 		<template>product-care.tpl</template>
 		<limit>50</limit>
 		<orderby>listing_order DESC</orderby>
-		<table><!-- This table will be the details table -->
+		<table>
 			<name>tbl_listing</name>
-			<field>listing_url</field><!-- The field used to match the URL -->
-			<template>product-care-item.tpl</template><!-- The template used if the field is matched -->
+			<field>listing_url</field>
+			<template>product-care-item.tpl</template>
 		</table>
  	</listing_page>
  	<listing_page name="specials">
@@ -88,10 +182,10 @@
 		<template>specials.tpl</template>
 		<limit>50</limit>
 		<orderby>listing_order </orderby>
-		<table><!-- This table will be the details table -->
+		<table>
 			<name>tbl_listing</name>
-			<field>listing_url</field><!-- The field used to match the URL -->
-			<template>specials.tpl</template><!-- The template used if the field is matched -->
+			<field>listing_url</field>
+			<template>specials.tpl</template>
 			<orderby>listing_order </orderby>
 		</table>
  	</listing_page>
@@ -102,8 +196,8 @@
 		<pageID>30</pageID>
 		<item_template>product-category-template.tpl</item_template>
 		<category_template>product-category-template.tpl</category_template>
-	</listing_page>
-	<smartytemplate_config><!-- This element contains the smarty template values -->
+	</listing_page>-->
+	<smartytemplate_config>
 		<templates>/templates</templates>
 		<templates_c>/templates_c</templates_c>
 		<cache>/cache</cache>

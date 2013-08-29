@@ -1,7 +1,7 @@
 <?php
-require 'twitterAPI/EpiCurl.php';
-require 'twitterAPI/EpiOAuth.php';
-require 'twitterAPI/EpiTwitter.php';
+require 'twitter/EpiCurl.php';
+require 'twitter/EpiOAuth.php';
+require 'twitter/EpiTwitter.php';
 
 Class Twitter{
 	PUBLIC $consumer_key = 'v4woeb7zMwtgHxhM1cVAA';
@@ -11,19 +11,19 @@ Class Twitter{
 	function __construct(){
 		$this->twitterObj = new EpiTwitter($this->consumer_key, $this->consumer_secret, $this->token, $this->secret);
 		$this->twitterObjUnAuth = new EpiTwitter($this->consumer_key, $this->consumer_secret);
-		$this->twitterObjUnAuth->getAuthenticateUrl(); 
+		$this->twitterObjUnAuth->getAuthenticateUrl();
 		//Verify credentials
 		$this->creds = $this->twitterObj->get('/account/verify_credentials.json');
 	}
 	function Search($tag,$count = 50){
-		 $this->status = $this->twitterObj->get('/search/tweets.json', array('q' => '#'.$tag , 'count' => $count));
-		 return $this->status->response['statuses'];
+		$data = array();
+		$s = "%23{$tag}";
+		$this->status = $this->twitterObj->get('/search/tweets.json', array('q' => $s , 'count' => $count));
+		$data = $this->status->response['statuses'];
+		$s = "%40{$tag}";
+		$this->status = $this->twitterObj->get('/search/tweets.json', array('q' => $s , 'count' => $count));
+		$data = array_merge($data,$this->status->response['statuses']);
+		return $data;
 	}
-	
-}
-/*
-$t = new Twitter();
-$res = $t->Search('Australia');
-print_r($res);
-?>
 
+}

@@ -1,44 +1,233 @@
 <?php
 class SocialWall{
-	PUBLIC $tag='';
-	PUBLIC $limit_youtube = 3;
-	PUBLIC $limit_instagram = 3;
-	PUBLIC $limit_twitter = 3;
-	function __construct($tag){
-		$this->tag=$tag;
+	private $tag='';
+	private $table='';
+	private $ads=false;
+	private $instagram=false;
+	private $facebook=false;
+	private $youtube=false;
+	private $twitter=false;
+	private $limit_youtube = 60;
+	private $limit_instagram = 60;
+	private $limit_twitter = 60;
+	private $limit_facebook = 60;
+	private $limit_adds = 20;
+	
+	function __construct($_tag, $_table, $_ads=false,$_instagram=false,$_facebook=false,$_youtube=false,$_twitter=false){
+		$this->tag=$_tag;
+		$this->table=$_table;
+		$this->ads = $_ads;
+		$this->instagram = $_instagram;
+		$this->facebook = $_facebook;
+		$this->youtube = $_youtube;
+		$this->twitter = $_twitter;
+		$this->UpdateResultDatabase();
 	}
-	function GetSearchResults(){
-		$data= array();
-		$this->InstagramSearch(&$data,1,$this->limit_instagram);
-		$this->TwitterSearch(&$data,$this->limit_twitter);
-		$this->YouTubeSearch(&$data, 1 , $this->limit_youtube);
-		krsort($data);
-		$this->results = $data;//$this->shuffle_assoc($this->results);
-		$return = $this->FormatResults($this->results);
-		return $return;
+	function UpdateResultDatabase(){
+		GLOBAL $DBobject;
+		$sql = "SELECT MAX(social_created) AS timed FROM {$this->table}";
+		$time = $DBobject->wrappedSqlGet($sql);
+		$lastrequest = strtotime($time[0]['timed']);
+		$minutes_after = $lastrequest + (5  *  60) ;
+		$seg =  time() -$minutes_after;
+		
+		//CHECKS IF TIME GREATER THAN X TO PREVENT HAMMERING THE SOCIAL MEDIA SERVERS (RESULTING IN BANS)
+		if( time() > $minutes_after  ){
+			$data= array();
+			if($this->instagram){ $this->InstagramSearch($data,1,$this->limit_instagram); }
+			if($this->twitter){ $this->TwitterSearch($data,$this->limit_twitter); }
+			if($this->youtube){ $this->YouTubeSearch($data, 1 , $this->limit_youtube); }
+			if($this->facebook){ $this->FacebookSearch($data, $this->limit_facebook); } 
+			krsort($data);
+			$this->storeItemData($data);
+		}
+		return;
 	}
+	
+	function GetData($_type="",$_limit=""){
+		GLOBAL $DBobject;
+		$params = array(":tag"=>$this->tag);
+		if(!empty($_type)){
+			$params[':tag'] = $_type;
+			$t = " social_typeid = :type AND";
+		}
+		if(!empty($_limit)){
+			$l = " LIMIT {$_limit}";
+		}
+		
+		$sql = "SELECT * FROM  {$this->table} WHERE {$t} social_deleted IS NULL AND social_tag = :tag ORDER BY social_gmt_timestamp DESC {$l}";
+		$params = array(":tag"=>$this->tag,":type"=>$_type);
+		return $DBobject->wrappedSqlGet($sql,$params);
+	}
+	
+	function GetResults( $from = '' ,  $to = '' , $limit = 60 ,$group = 1 , $type = 0){
+		header('Data-g:'.$group);
+		$buf = $this->ResultsByDate($from = '' ,  $to = '' , $limit  , $group ,$type);
+		header('Data-g2:'.$group);
+		$return = array('html' =>  str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $buf) , 'datetime' => $this->time , 'groupNumber' => $group);
+		$return = json_encode($return, JSON_FORCE_OBJECT);
+		return  $return;
+	}
+	
+	function DeleteId($id){
+		GLOBAL $DBobject;
+		if(is_numeric($id)){
+			$sql="UPDATE {$this->table} SET social_deleted = NOW() WHERE social_id = :id ";
+			if($DBobject->wrappedSqlInsert($sql,array(':id' => $id))){
+				return 1;
+			}else{
+				return 'failed';
+			}
+		}
+		return 'No id';
+	}
+
+	function ResultsByRandom($from = '' ,  $to = '' , $limit = 60 ,$group , $type){
+		GLOBAL $DBobject,$SMARTY;
+
+		$data = array();
+		$group != 1 ? $group = (60 * $group) - 60  : $group = 0;
+		if(empty($from)){
+			$this->time = time();
+			$data['social_gmt_timestamp']=$this->time;
+		}else{
+			$data['social_gmt_timestamp']=$from;
+		}
+		if(!empty($to)){
+			$to = ' AND social_gmt_timestamp >= :to';
+			$data['to'] = $to;
+		}
+
+		if($type != 0 && $type == 1 ){
+			$sql = 'SELECT * FROM '.$this->table.' where social_typeid = "1" AND  social_deleted IS NULL  and social_tag = \''.$this->tag.'\'    ORDER BY  social_gmt_timestamp DESC LIMIT  '.$group.' , '.$limit;
+			header('debug:'.$sql);
+			$instragram  = $DBobject->wrappedSqlGet($sql,$data);
+		}
+		if($type != 0 && $type == 2 ){
+			$sql = 'SELECT * FROM '.$this->table.' where social_typeid = "2" AND  social_deleted IS NULL  and social_tag = \''.$this->tag.'\'    ORDER BY  social_gmt_timestamp DESC LIMIT  '.$group.' , '.$limit;
+			$twitter   = $DBobject->wrappedSqlGet($sql,$data);
+		}
+		if($type != 0 && $type == 3 ){
+			$sql = 'SELECT * FROM '.$this->table.' where social_typeid = "3" AND  social_deleted IS NULL  and social_tag = \''.$this->tag.'\'    ORDER BY  social_gmt_timestamp DESC LIMIT  '.$group.' , '.$limit;
+			$youtube  = $DBobject->wrappedSqlGet($sql,$data);
+		}
+		if($type != 0 && $type == 4 ){
+			$sql = 'SELECT * FROM '.$this->table.' where social_typeid = "4" AND  social_deleted IS NULL  and social_tag = \''.$this->tag.'\'    ORDER BY  social_gmt_timestamp DESC LIMIT  '.$group.' , '.$limit;
+			$facebook  = $DBobject->wrappedSqlGet($sql,$data);
+		}
+
+		if($type != 0 && $type == 5 ){
+			$sql = 'SELECT * FROM '.$this->table.' where social_typeid = "5" AND  social_deleted IS NULL    ';
+			$adds  = $DBobject->wrappedSqlGet($sql,$data);
+		}
+
+		if(empty($instragram))$instragram =array();
+		if(empty($twitter))$twitter=array();
+		if(empty($youtube))$youtube=array();
+		if(empty($facebook))$facebook=array();
+		$data = array_merge_recursive($instragram,$twitter,$youtube,$facebook);
+		if(!empty($data)){
+			//add ads
+			if($this->ads == true){
+				$this->results = array_merge_recursive($instragram,$twitter,$youtube,$facebook,$adds,$adds,$adds);
+			}else{
+				$this->results = array_merge_recursive($instragram,$twitter,$youtube,$facebook);
+			}
+			return $this->FormatResults($this->shuffle_assoc($this->results));
+		}else{
+			return '';
+		}
+	}
+
+	function ResultsByDate($from='', $to='', $limit=60, $group, $type){
+		GLOBAL $DBobject,$SMARTY;
+		$data = array();
+		$params = array(":tag"=>$this->tag);
+		$group != 1 ? $group = (60 * $group) - 60 : $group = 0;
+		
+		if($type != 0){
+			$ty = " AND social_typeid = :type ";
+			$params[":type"] = $type;
+		}
+		if(!empty($from)){
+			$f = ' AND social_gmt_timestamp >= :from';
+			$params[':from'] = $from;
+		}
+		if(!empty($to)){
+			$t = ' AND social_gmt_timestamp >= :to';
+			$params[':to'] = $to;
+		}
+		$sql = "SELECT * FROM {$this->table} WHERE social_typeid <> '5' {$ty} AND social_deleted IS NULL AND social_tag = :tag  ORDER BY  social_gmt_timestamp DESC LIMIT {$group}, {$limit}";
+		$data  = $DBobject->wrappedSqlGet($sql,$params);
+		if(!empty($data)){
+			if($this->ads == true){
+				$sql = "SELECT * FROM '.$this->table.' WHERE social_typeid = '5' AND social_deleted IS NULL";
+				$adds  = $DBobject->wrappedSqlGet($sql);
+				$this->results = array_merge_recursive($data,$adds);
+			}else{
+				$this->results = array_merge_recursive($data);
+			}
+			return $this->FormatResults($this->shuffle_assoc($this->results));
+		}else{
+			return '';
+		}
+	}
+
 	function FormatResults($data){
-		$buf='';
-		$id=0;
+		GLOBAL $SMARTY;
 		foreach ($data as $type => $item) {
-			
-			++$id;
-				switch ($item['type']) {
-					case 'instagram':
-					$buf.=$this->renderinstagramItem($item,$id);
-					break;
-					case 'twitter':
-					$buf.=$this->renderTwitterItem($item,$id);
-					break;
-					case 'youtube':
-					$buf.=$this->renderYouTubeItem($item,$id);
-					break;
-			
+			$SMARTY->assign('item',$item);
+			if(!in_array($item['social_objId'], $_SESSION['control'])){
+				if($item['social_typeid'] != 5){
+					$_SESSION['control'][]=$item['social_objId'];
+				}
+				switch ($item['social_typeid']) {
+						case '1':
+						$buf .= $SMARTY->fetch('social/instagram-item.tpl');
+						break;
+						case '2':
+						$buf .= $SMARTY->fetch('social/twitter-item.tpl');
+						break;
+						case '3':
+						$buf .= $SMARTY->fetch('social/youtube-item.tpl');
+						break;
+						case '4':
+						$buf .= $SMARTY->fetch('social/facebook-item.tpl');
+						break;
+						case '5':
+						if($buf!=''){
+							$buf .= $SMARTY->fetch('social/ad-item.tpl');
+						}
+
+						break;
+
+				}
 			}
 		}
 		return $buf;
 	}
-	function InstagramSearch($data, $min,$max){
+	function FormatSingleResult($resultID){
+		GLOBAL $SMARTY,$DBobject;
+		$sql = 'SELECT * from '.$this->table.' WHERE social_id = :social_id   limit 1 ';
+		$item = $DBobject->wrappedSqlGet($sql,array('social_id' => $resultID ));
+		$item = $item[0];
+		$SMARTY->assign('item',$item);
+			switch ($item['social_typeid']) {
+				case '1':
+					$buf = $SMARTY->fetch('social/lbox-instagram-item.tpl');
+					break;
+				case '2':
+					$buf = $SMARTY->fetch('social/lbox-twitter-item.tpl');
+					break;
+				case '3':
+					$buf = $SMARTY->fetch('social/lbox-youtube-item.tpl');
+					break;
+		}
+
+		return $buf;
+
+	}
+	function InstagramSearch(&$data, $min,$max){
 		$instagram = new Instagram();
 		$instagram_array = $instagram->getTagMedia($this->tag);
 		$c = 0;
@@ -54,9 +243,8 @@ class SocialWall{
 				$data[$created]=$value;
 			}
 		}
-		//return $return;
 	}
-	function TwitterSearch($data,$count){
+	function TwitterSearch(&$data,$count){
 		$t = new Twitter();
 		$twitter_array = $t->Search($this->tag,$count);
 		foreach ($twitter_array as $value) {
@@ -68,9 +256,8 @@ class SocialWall{
 			}
 			$data[$created]=$value;
 		}
-		//return  $return;
 	}
-	function YouTubeSearch($data,$start = 1 , $limit){
+	function YouTubeSearch(&$data,$start = 1 , $limit){
 		$y = new youTube;
 		$res = $y->search($this->tag,$start , $limit);
 		$youtube_array = $y->getResults();
@@ -83,33 +270,117 @@ class SocialWall{
 			}
 			$data[$created]=$value;
 		}
-		//return $return;
 	}
-	
-	function renderinstagramItem($item,$id){
-		$buf.='<div class="instagram" id="item-'.$id.'">
-				<a href="'.$item[link].'" target="_blank"><img src="'.$item['images']->low_resolution->url.'" ></a>
-				<p>'.$item->caption->text.'<br/><small><img src="'.$item['caption']->from->profile_picture.'" width="60px" >'.$item['caption']->from->username.'</small></p>
-			   </div>';
-		return  $buf;
+	function FacebookSearch(&$data,$limit){
+		$f = new FacebookSearch($this->tag);
+
+		$facebook_array = $f->Search($limit);
+
+		foreach ($facebook_array as $value) {
+			$value = (array)$value;
+			$value['type']='facebook';
+			$created = strtotime($value['created_time']);
+			if(!empty($data[$created])){
+				$created = $created+1;
+			}
+			$data[$created]=$value;
+		}
 	}
-	function renderTwitterItem($item,$id){
-		$buf.='<div class="twitter" id="item-'.$id.'">
-		<h2>'.$item['text'].'</h2>
-		<a href="https://twitter.com/'.$item['user']['screen_name'].'/statuses/'.$item['id'].'" target="_blank"><img src="'.$item['user']['profile_image_url'].'" width="60px" ></a>
-		</div>';
-		return  $buf;	
+	function storeItemData($data){
+		GLOBAL $DBobject;
+		foreach ($data as $type => $item) {
+			switch ($item['type']) {
+				case 'instagram':
+					$social_typeid=1;
+					$social_objId=$item["id"];
+					$social_gmt_timestamp = $item["caption"]->created_time;
+					$social_profile = $item["user"]->username;
+					$social_profile_img =  $item["user"]->profile_picture;
+					$social_content = $item["caption"]->text;
+					$social_image =$item["images"]->low_resolution->url;
+					$social_link = $item["link"];
+					break;
+				case 'twitter':
+					$social_typeid=2;
+					$social_objId=$item['id'];
+					$social_gmt_timestamp = strtotime($item["created_at"]);
+					$social_profile = $item['user']['screen_name'];
+					$social_profile_img = $item['user']['profile_image_url'];
+					$social_content = $item['text'];
+					$social_image ='';
+					$social_link ='https://twitter.com/'.$item['user']['screen_name'].'/statuses/'.$item['id'];
+					break;
+				case 'youtube':
+					$social_typeid=3;
+					$social_objId=$item["id"];
+					$social_gmt_timestamp = strtotime($item["updated"]);
+					$social_profile = $item["uploader"];
+					$social_profile_img =  '';
+					$social_content = $item["title"];
+					$social_image =$item["thumbnail"]->hqDefault;
+					$social_link = $item["player"]->default;
+				break;
+				case 'facebook':
+					$social_typeid=4;
+					$social_objId=$item["id"];
+					$social_gmt_timestamp = strtotime($item["created_time"]);
+					$social_content = $item["message"];
+					$social_image =$item["picture"];
+					$social_link = $item["link"];
+					$social_profile_img =  '';
+				break;
+
+			}
+
+			$sql = 'SELECT social_objId from '.$this->table.' WHERE social_objId = :social_objId AND social_typeid = :social_typeid limit 1 ';
+			$res = $DBobject->wrappedSqlGet($sql,array('social_objId' => $social_objId , 'social_typeid' => $social_typeid ));
+			if($res == false){
+				$data = array(
+						'social_typeid' => $social_typeid,
+						'social_objId' => $social_objId,
+						'social_gmt_timestamp' => $social_gmt_timestamp,
+						'social_profile' => $social_profile ,
+						'social_profile_img' => $social_profile_img ,
+						'social_content' => $social_content ,
+						'social_image' => $social_image ,
+						'social_link'  => $social_link
+				);
+				$sql = 'INSERT INTO '.$this->table.'
+						(
+						social_typeid,
+						social_objId,
+						social_gmt_timestamp,
+						social_profile,
+						social_profile_img,
+						social_content,
+						social_image,
+						social_link,
+						social_tag
+						)
+						VALUES
+						(
+						:social_typeid,
+						:social_objId,
+						:social_gmt_timestamp,
+						:social_profile,
+						:social_profile_img,
+						:social_content,
+						:social_image,
+						:social_link,
+						"'.$this->tag.'"
+						)
+						';
+				if(!empty($social_objId)){
+				$res = $DBobject->wrappedSqlInsert($sql,$data);
+				}
+			}else{
+				$d++;
+			}
+		}
 	}
-	function renderYouTubeItem($item,$id){
-		$buf.='<div class="youtube" id="item-'.$id.'">
-				<h2>'.$item['title'].'</h2>
-				<a href="'.$item['player']->default.'" target="_blank"><img src="'.$item['thumbnail']->sqDefault.'" ></a>
-				<p>'.$item['description'].'</p>
-			   </div>';
-		return  $buf;	
-	}
-	
-	//OLD FUNCTION >> RANDOMISES RESULTS
+
+
+	// RANDOMISES RESULTS
 	function shuffle_assoc($list) {
 	  if (!is_array($list)) return $list;
 	  $keys = array_keys($list);
@@ -117,9 +388,9 @@ class SocialWall{
 	  $random = array();
 	  foreach ($keys as $key)
 	    $random[$key] = $list[$key];
-	
-	  return $random;
-	} 
 
-	
+	  return $random;
+	}
+
+
 }

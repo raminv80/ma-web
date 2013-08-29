@@ -45,8 +45,8 @@ Class DBmanager{
 				$backtrace = parse_backtrace($trace);
 				$errMsg = logError($backtrace, $err, $MySQL);
 				$this->queryresult = false;
-				die($MySQL);
-				//header('Location: /404');
+				//die($MySQL);
+				header('Location: /404');
 				die();
 			}
 
@@ -76,7 +76,7 @@ Class DBmanager{
 	 * @return Ambigous <void, resource>
 	 */
 	function wrappedSqlInsert( $sql , $params = array() ) {
-		$result = $this->executeSQL($sql);
+		$result = $this->executeSQL($sql, $params );
 		if(mysql_error()) {
 			$err = mysql_error();
 			$trace = debug_backtrace();
@@ -137,8 +137,8 @@ Class DBmanager{
 	 * @param unknown_type $sql
 	 * @return multitype:|boolean
 	 */
-	function wrappedSql( $sql ){
-		$result = $this->executeSQL($sql);
+	function wrappedSql( $sql, $params = array()  ){
+		$result = $this->executeSQL($sql,$params);
 		if(mysql_error()) {
 			$err = mysql_error();
 			$trace = debug_backtrace();

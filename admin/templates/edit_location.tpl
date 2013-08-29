@@ -6,14 +6,13 @@
 			<div class="span12">
             	<fieldset>
                 <legend>
-				{if $fields.listing_id neq ""}Edit{else}New{/if} Location
+				{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone}
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
                 </legend>
                 </fieldset>
 				<input type="hidden" value="listing_id" name="field[tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
 				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
-				<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
-				<input type="hidden" value="1"  name="field[tbl_listing][{$cnt}][listing_published]" >
+				<input type="hidden" value="3" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
@@ -34,7 +33,7 @@
 				<select name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent">
 				<option value="0">Select one</option>
 						{foreach $fields.options.listing_category_id as $opt}
-									<option value="{$opt.id}" {if $fields.listing_category_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
+								<option value="{$opt.id}" {if $fields.listing_category_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
 						{/foreach}
 				</select>
 
@@ -48,7 +47,7 @@
 			<div class="span3"><label class="control-label" for="id_listing_meta_description">Meta Description</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_description}" name="field[tbl_listing][{$cnt}][listing_meta_description]" id="id_listing_meta_description"></div>
 		</div>
-		 <div class="row-fluid control-group">
+		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_meta_words">Meta Words</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_words}" name="field[tbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
 		</div>
@@ -58,31 +57,47 @@
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_published">Published</label></div>
-			<div class="span9 controls"><input type="checkbox" value="{$fields.listing_published}" name="field[tbl_listing][{$cnt}][listing_published]" id="id_listing_published"></div>
+			<div class="span9 controls">
+			<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_published]" class="value">
+			<input type="checkbox" {if $fields.listing_published eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
+			</div>
 		</div>
 		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_flag1">Flag1</label></div>
-			<div class="span9 controls"><input type="checkbox" value="{$fields.listing_flag1}" name="field[tbl_listing][{$cnt}][listing_flag1]" id="id_listing_flag1"></div>
-		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_flag2">Flag2</label></div>
-			<div class="span9 controls"><input type="checkbox" value="{$fields.listing_flag2}" name="field[tbl_listing][{$cnt}][listing_flag2]" id="id_listing_flag2"></div>
-		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_flag3">Flag3</label></div>
-			<div class="span9 controls"><input type="checkbox" value="{$fields.listing_flag3}" name="field[tbl_listing][{$cnt}][listing_flag1]" id="id_listing_flag3"></div>
+			<div class="span3"><label class="control-label" for="id_listing_flag1">New</label></div>
+			<div class="span9 controls">
+			<input type="hidden" value="{$fields.listing_flag1}" name="field[tbl_listing][{$cnt}][listing_flag1]" class="value">
+			<input type="checkbox"  {if $fields.listing_flag1 eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag1">
+			</div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_short_description">Short Description</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_short_description]" id="id_listing_short_description" class="tinymce">{$fields.listing_short_description}</textarea></div>
+			<div class="span3"><label class="control-label" for="id_listing_content1">Address</label></div>
+			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea></div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_content2">Opening times</label></div>
+			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_long_description">Long Description</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_long_description]" id="id_listing_long_description" class="tinymce">{$fields.listing_long_description}</textarea></div>
+			<div class="span3"><label class="control-label" for="id_listing_content3">Description</label></div>
+			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="tinymce">{$fields.listing_content3}</textarea></div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label></div>
+			<div class="span9 controls">
+			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image" class="fileinput">
+			<a href="{$fields.listing_image}" target="_blank"  class="btn btn-info marg-5r" id="listing_image__path">{if $fields.listing_image neq ""}View{else}None{/if}</a>
+			<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick=" getFileType('listing_image','',''); ">Select File</a>
+			<a href="javascript:void(0);" class="btn btn-info"
+				onclick="
+				$('#listing_image').val('');
+				$('#listing_image__path').attr('href','');
+				$('#listing_image__path').html('None');
+				">Remove File</a>
+			</div>
 		</div>
 		{if $fields.listing_id neq ""}
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="gallery_image_{$count}">Gallery Images</div>
+			<div class="span3"><label class="control-label" for="gallery_image_{$count}">Gallery Images</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label><br/><label class="control-label small-txt" >Max 3 images</label></div>
 			<div class="span9 controls" id="gallery">
 				{counter start=1 skip=1 assign="count"}
 				{foreach $fields.gallery as $item}
@@ -96,7 +111,7 @@
 						<span id="gallery_image_{$count}_file">{$item.gallery_file}</span>
 					</div>
 					<div class="span8">
-						<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('gallery_image_{$count}','','')">Update</a><a href="{$item.gallery_link}" target="_blank"  class="btn btn-info marg-5r" id="gallery_image_{$count}_path">View</a><a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="deleteFileType('gallery_{$count}')">Delete</a>
+						<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('gallery_image_{$count}','','')">Update</a><a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="deleteFileType('gallery_{$count}')">Delete</a>
 					</div>
 				</div>
 				{counter}
@@ -114,30 +129,28 @@
 			</div>
 		</div>
 		{/if}
-		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label></div>
-			<div class="span9 controls">
-			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image" class="fileinput">
-			<span class="file-view" id="listing_image_view"
-			{if $fields.listing_image eq ""}style="display:none"{/if} >
-			<a href="{$fields.listing_image}" target="_blank" id="listing_image_path">{$fields.listing_image}</a>
-			</span>
-			<span class="file-view" id="listing_image_none" {if $fields.listing_image neq ""}style="display:none"{/if}>None</span>
-			<a href="javascript:void(0);" class="btn btn-info marg-5r"
-				onclick="
-					getFileType('listing_image','','');
-					$('#listing_image_view').css('display','block');
-					$('#listing_image_none').css('display','none');
-					">Select File</a>
-			<a href="javascript:void(0);" class="btn btn-info"
-				onclick="
-				$('#listing_image').val('');
-				$('#listing_image_view').css('display','none');
-				$('#listing_image_none').css('display','block');
-				">Remove File</a>
-				<br><small>Please use an image of 100px wide by 100px high.</small>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="search">Location</label></div>
+			<div class="span9">
+				<input type="text" id="search">&nbsp;<a href="javascript:void(0);" class="btn btn-info" onclick="searchAddress($('#search').val());$('#search').val('')">Search</a>
+				<div id="search-warning"></div>
+				<input type="hidden" value="location_id" name="field[tbl_location][{$cnt}][id]" id="id" />
+				<input type="hidden" value="{$fields.location_id}" name="field[tbl_location][{$cnt}][location_id]" >
+				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_location][{$cnt}][location_listing_id]" id="location_listing_id" />
+				<input type="hidden" value="{$fields.location_latitude}" name="field[tbl_location][{$cnt}][location_latitude]" id="location_latitude">
+				<input type="hidden" value="{$fields.location_longitude}" name="field[tbl_location][{$cnt}][location_longitude]" id="location_longitude">
+				<div id="GmlMap" class="GmlMap">Loading Map....</div>
+				<script type="text/javascript">
+					jQuery(document).ready(function() {
+						centerOn({$fields.location_latitude},{$fields.location_longitude});
+					});
+				</script>
+				<script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+				<script type="text/javascript" src="/admin/includes/google-api/gml-v3.js"></script>
+				<link href='/admin/includes/google-api/gml-v3.css' rel='stylesheet' type='text/css'>
 			</div>
 		</div>
+		 
 		 <div class="row-fluid control-group">
             <div class="form-actions">
                 <button class="btn btn-primary" onClick="$('#Edit_Record').submit();" type="submit">Submit</button>

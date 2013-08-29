@@ -13,23 +13,17 @@ include "includes/functions/functions.php";
 	}
 	$body = $buf;
 	$subject = 'Website contact - Contact Us form';
-	$fromEmail = 'noreply@allfresh.com.au';
-	$from = 'AllFresh - Website';
-	$to = 'fredy@them.com.au';
+	$fromEmail = 'noreply@cocolat.com.au';
+	$from = 'Cocolat - Website';
+	$to = 'nick@them.com.au';
 	$sql="INSERT INTO tbl_form (form_date,form_data,form_email,form_action,form_post,form_sender_ip) VALUES (NOW(),'".clean($body)."','".clean($to)."','ContactUs','".clean($content)."','".clean($_SERVER['REMOTE_ADDR'])."')";
 	$DBobject->executeSQL($sql);
-	//die(print_r($DBobject).'AAA');
 	if(sendMail($to, $from, $fromEmail, $subject, $body)){
 		header("Location: /thank-you");
 		exit;
 	}else{
 		$_SESSION['error']='There is an error with your request. please try again later.';
-		$redirect='/contact-us';
-		header("Location: /contact-us");
+		$redirect=$_SERVER['HTTP_REFERER'];
+		header("Location: {$redirect}");
 		exit;
 	}
-/*}else{
-	$_SESSION['message']='There is an error with your request. ';
-	header("Location: /contact-us"); /* Redirect browser */
-	/*exit;
-}*/

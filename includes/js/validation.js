@@ -70,3 +70,25 @@ function validateForm(){
 	});
 	return error;
 }
+
+function validateForm(id){
+	var error = true;
+	$(id).find(" .req").each(function(){
+		if($(this).val()===""){
+			$(this).closest('.row-fluid').addClass("error");
+			error = false;
+		}else{
+			$(this).closest('.row-fluid').removeClass("error");
+		}
+	});
+	$(id).find(" .email").each(function(){
+		var filter =   /^[a-zA-Z0-9_\+-]+(\.[a-zA-Z0-9_\+-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.([a-zA-Z]{2,4})$/;
+		if (!filter.test($(this).val())) {
+			$(this).closest('.row-fluid').addClass("error");
+			error = false;
+		}else{
+			$(this).closest('.row-fluid').removeClass("error");
+		}
+	});
+	return error;
+}

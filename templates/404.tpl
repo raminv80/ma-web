@@ -1,55 +1,48 @@
 {block name=body}
-<div class="sliderout1">
-<div id="myCarousel" class="container carousel slide productslide">
-  <!-- Carousel items -->
-  <div class="carousel-inner">
-    <div class="active item">
-	<div>
-	<img src="/images/showroomslide.png" alt="slideimg" />
-	</div>
-    </div>
-    <div class="item">
-	<div>
-	<img src="/images/showroomslide.png" alt="slideimg" />
-	</div>
-    </div>
-    <div class="item">
-	<div>
-	<img src="/images/showroomslide.png" alt="slideimg" />
-	</div>
-    </div>
-    <div class="item">
-	<div>
-	<img src="/images/showroomslide.png" alt="slideimg" />
-	</div>
-    </div>
-  </div>
-
-	<div class="slidecont1">
-		We undertake both residential and commercial work , contract to various builders for display homes and provide special packages for the first home buyer.
-	</div>
-
-	<ol class="carousel-indicators insidep">
-	    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-	    <li data-target="#myCarousel" data-slide-to="1"></li>
-	    <li data-target="#myCarousel" data-slide-to="2"></li>
-	    <li data-target="#myCarousel" data-slide-to="3"></li>
-	 </ol>
-</div>
-</div>
-<div class="container">
-		<div class="row">
-			<div class="span12">
-				<div class="breadcrumbs">
-					<a href="/">Home</a> > 404
+	<header>
+		{include file='mobilemenu.tpl'}
+		<div id="headout" class="headerbg">
+				{include file='desktopmenu.tpl'}
+				<div id="videobox">
+					<div class="container">
+						<div class="row-fluid">
+							<div class="span7">
+					  			{include file='breadcrumbs.tpl'}
+					  			<h3 class="toptitle">{$listing_title}</h3>
+					  			<div class="toptext">
+					  				{$listing_content1}
+					  			</div>
+					  			<div class="row-fluid">
+				  					<div class="span4 sitemap white">
+				  						<ul>
+				  							<li><a title="Home" href="/">Home</a></li>
+				  							<li><a title="Our Menu" href="/our-menu">Our Menu</a></li>
+				  							<li><a title="Our Locations" href="/locations">Our Locations</a></li>
+				  							<li><a title="Community" href="/community">Community</a></li>
+				  						</ul>
+				  					</div>
+				  					<div class="span4 sitemap white">
+				  						<ul>
+				  							<li><a title="Franchise Opportunities" href="/franchise-opportunities">Franchise Opportunities</a></li>
+				  							<li><a title="Our Story" href="/our-story">Our Story</a></li>
+				  							<li><a title="Our Locations" href="/locations">Contact Us</a></li>
+				  							<li><a title="Community" href="/community">Social Media</a></li>
+				  						</ul>
+				  					</div>
+				  					<div class="span4 sitemap white">
+				  						<ul>
+				  							<li><a title="Privacy Policy" href="/privacy-policy">Privacy Policy</a></li>
+				  							<li><a title="Terms and Conditions" href="/terms-and-conditions">Terms and Conditions</a></li>
+				  							<li><a title="Back to top^" href="#top">Back to top^</a></li>
+				  						</ul>
+				  					</div>
+				  				</div>
+				  			</div>
+						</div>
+					</div>
 				</div>
-				<div class="pagetitle">404</div>
-				<h3>404 error.</h3>
-       		 <h3>Sorry, but the page you were looking for either doesn't exist or has been moved.</h3>
 			</div>
-		</div>
-	{include file='bottom-boxes.tpl'}
-</div>
+	</header>
 
-
+	{include file='signup.tpl'} {include file='footer.tpl'}
 {/block}
