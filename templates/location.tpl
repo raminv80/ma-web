@@ -64,11 +64,11 @@
 	  						</div>
 	  					</div>
 	  					<div class="span7 locationinfo">
-	  					<h4 class="locationtitle">{$listing_title}</h4>
+	  						<h4 class="locationtitle">{$listing_title}</h4>
 	  						{if $listing_flag1 eq 1}<div class="new"></div>{/if}
-	  						{$listing_content1}
-							{$listing_content2}
-							{$listing_content3}
+	  						<div class="address">{$listing_content1}</div>
+	  						<div class="times">{$listing_content2}</div>
+	  						<div class="content">{$listing_content3}</div>
 	  					</div>
 	  				</div>					  					  				
 	  			</div>

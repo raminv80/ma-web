@@ -3,6 +3,9 @@ body,input, button, select, textarea {
 	font-weight: 400;
 }
 
+.locationinfo .address,.locationinfo .times  {
+	width: 90%;
+}
 
 .orangecontent a{
 	color: #333;
