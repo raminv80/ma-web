@@ -11,8 +11,6 @@
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...One moment at a time!
 						</div>
 						<div class="span7">
-							<div id="bgvideo">
-							</div>
 						</div>
 					</div>
 				</div>
@@ -41,6 +39,7 @@
 					</div>
 				</div>
 			</div>
+			<div class="clear"></div>
 		</div>
 	</header>
 	<div id="orangebox">
@@ -136,10 +135,12 @@
 
 	{include file='signup.tpl'} {include file='footer.tpl'}
 	
+	{if $mobile neq true}
 	<script type="text/javascript">
 	$(document).ready(function() {
 		
-		$('#bgvideo').videoBG({
+		//$('#bgvideo').videoBG({
+		$('.headerbg').videoBG({
 			mp4:'videos/cocolate_fountain.mp4',
 			ogv:'videos/cocolate_fountain.ogv',
 			webm:'videos/cocolate_fountain.webm',
@@ -151,20 +152,16 @@
 		}); 
 		
 		if ($(window).width() < 940) {
-		   $('#bgvideo').hide();
-		   $('#headout').addClass('headerbg');
+		   $('.videoBG').hide();
 		}else{
-			$('#bgvideo').show();
-			$('#headout').removeClass('headerbg');
+			$('.videoBG').show();
 		}
 		
 		window.onresize = function(event) {
 			if ($(window).width() < 940) {
-			   $('#bgvideo').hide();
-			   $('#headout').addClass('headerbg');
+			   $('.videoBG').hide();
 			}else{
-				$('#bgvideo').show();
-				$('#headout').removeClass('headerbg');
+				$('.videoBG').show();
 			}
 		}
 		
@@ -175,4 +172,5 @@
 		bgVideo.play();*/
 	});
 	</script>
+	{/if}
 {/block}

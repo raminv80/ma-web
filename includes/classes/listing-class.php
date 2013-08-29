@@ -609,8 +609,6 @@ class ListClass{
 				}
 			}
 			
-			
-			
 			//SELECT CATEGORY IF ONE EXISTS FOR ATTACHED TO THIS LISTING
 			$sql = "SELECT tbl_category.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
 			$params = array(":cid"=>$_cid);

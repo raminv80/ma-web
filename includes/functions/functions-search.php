@@ -15,7 +15,7 @@ function searchcms($str){
 	$_str = str_replace(" ", "%", $_str);
 	$str = clean($_str);
 	
-	$tags['pages']  = SearchPagesTags($str);
+	/*$tags['pages']  = SearchPagesTags($str);
 	$tags['news']  = SearchNewsTags($str);
 	$tags['faq']  = SearchFAQTags($str);
 	$tags['video']  = SearchVideoTags($str);
@@ -23,14 +23,50 @@ function searchcms($str){
 	$results['pages']  = array_merge($tags['pages'],SearchPages($str));
 	$results['news']  = array_merge($tags['news'],SearchNews($str));
 	$results['faq']  = array_merge($tags['faq'],SearchFAQ($str));
-	$results['video']  = array_merge($tags['video'],SearchVideo($str));
+	$results['video']  = array_merge($tags['video'],SearchVideo($str));*/
+	$results = SearchListing($str);
 	
-	$count = count($results['pages']) + count($results['news']) + count($results['faq']) + count($results['video']);
+	$count = count($results);
 	
 	$SMARTY->assign('count',$count);
 	$SMARTY->assign('results',$results);
 }
 
+function SearchListing($search){
+	global  $CONFIG,$SMARTY,$DBobject;
+	$data = array();
+	$sql= "SELECT tbl_listing.listing_title,tbl_listing.listing_content1,cache_tbl_listing.cache_url,
+		MATCH(tbl_listing.listing_name,
+		tbl_listing.listing_title,
+		tbl_listing.listing_content1,
+		tbl_listing.listing_content2,
+		tbl_listing.listing_content3,
+		tbl_listing.listing_content4,
+		tbl_listing.listing_content5,
+		tbl_listing.listing_seo_title,
+		tbl_listing.listing_meta_description,
+		tbl_listing.listing_meta_words) AGAINST (:search) AS Relevance
+		FROM tbl_listing LEFT JOIN cache_tbl_listing ON tbl_listing.listing_id = cache_tbl_listing.cache_record_id 
+		WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND 
+		MATCH(tbl_listing.listing_name,
+		tbl_listing.listing_title,
+		tbl_listing.listing_content1,
+		tbl_listing.listing_content2,
+		tbl_listing.listing_content3,
+		tbl_listing.listing_content4,
+		tbl_listing.listing_content5,
+		tbl_listing.listing_seo_title,
+		tbl_listing.listing_meta_description,
+		tbl_listing.listing_meta_words) AGAINST(:search IN
+		BOOLEAN MODE) HAVING Relevance > 0.2 ORDER
+		BY Relevance DESC";
+	$params = array(":search"=>$search);
+	if($res = $DBobject->wrappedSql($sql,$params)){
+		$data = $res;
+	}
+	return $data;
+}
+/* 
 //SEARCH TAGS
 function SearchPagesTags($str){
 	global $DBobject;	
@@ -113,4 +149,4 @@ function SearchVideo($str){
 	}else{
 		return array();
 	}
-}
+} */

@@ -43,7 +43,7 @@
 
 	  			<div id="menu1">
 	  				<div id="find"><a title="Our Locations" href="/our-locations">Find your Nearest Location</a></div>
-	  				<div id="search"><input id="searchbox" type="text" value="Search..." /></div>
+	  				<div id="search"><input id="searchbox" type="text" value="" placeholder="Search..."/></div>
 	  				<div id="social">
 	  					<a title="Facebook" href="#"><img src="/images/facebook.png" alt="Facebook" /></a>
 	  					<a title="Twitter" href="#"><img src="/images/twitter.png" alt="Twitter" /></a>
@@ -53,6 +53,20 @@
 	  				<!-- <div id="franchise">
 	  					<a title="Franchise Login Section" href="/login"><img src="images/franchise.png" alt="Franchise" /></a>
 	  				</div> -->
+	  				<script type="text/javascript">
+	  				$(document).ready(function(){
+	  				$('#searchbox').bind('keyup', function(event) {
+	  				    if(event.keyCode==13){
+	  				    	$('body').append($('<form/>')
+	  				    		  .attr({ 'action': '/search', 'method': 'post', 'id': 'replacer' })
+	  				    		  .append($('<input/>')
+	  				    		    .attr({ 'type': 'hidden', 'name': 'search', 'value': $('#searchbox').val() })
+	  				    		  )
+	  				    		).find('#replacer').submit();  
+	  				    }
+	  				});
+	  				});
+	  				</script>
 	  			</div>
 
 	  			<div id="menu2">

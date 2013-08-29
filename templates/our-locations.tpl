@@ -31,7 +31,7 @@
   				</div>
   			</div>
   			{if $l.listing_flag1 eq 1}<div title="New" class="new"></div>{/if}
-  			<a href="{$parenturl}/{$l.listing_url}"><div class="button3">Read More</div></a>
+  			<a href="{$parenturl}/{$l.listing_url}" class="button3">Read More</a>
  		</div>
 		{/foreach}
 		{if count($item.categories) > 0}

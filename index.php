@@ -65,7 +65,7 @@ while(true){
 		$obj = new $class('',$struct);
 		$template = $obj->Load($CONFIG->search->pageID);
 		$template = $CONFIG->search->template;
-		searchcms($_REQUEST['search']);
+		searchcms($_POST['search']);
 		break 1;
 	}
 

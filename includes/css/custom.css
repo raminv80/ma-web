@@ -3,6 +3,31 @@ body,input, button, select, textarea {
 	font-weight: 400;
 }
 
+.videoBG_wrapper{
+	position: relative!important;
+}
+.videoBG_wrapper #headout{
+	background: none!important;
+}
+.videoBG{
+	background: #3a180d no-repeat top center;
+}
+.videoBG video{
+	width:100%;
+}
+
+a, a:active, a:selected, a:focus { 
+    border: none;
+    outline: none;
+}
+
+.page{
+	display:none;
+}
+.page.current{
+	display:block;
+}
+
 .locationinfo .address,.locationinfo .times  {
 	width: 90%;
 }
@@ -114,12 +139,13 @@ a:hover{
 
 #top-menu{display: none;}
 
-#headout{
-	background: #3a180d no-repeat top center;
-	/*background: #3a180d url(../../images/headerbg.png) no-repeat top center;*/
-}
+
 .headerbg {
-	background: #3a180d url(../../images/headerbg.png) no-repeat top center !important;
+	background: #3a180d no-repeat top center;
+}
+#headout{
+	background: #3a180d url(../../images/headerbg.png) no-repeat top center;
+	/*background: #3a180d url(../../images/headerbg.png) no-repeat top center;*/
 }
 
 #headout2{
@@ -242,7 +268,7 @@ z-index: 500;
 
 
 #videobox{
-	min-height: 390px;
+	/*min-height: 390px;*/
 }
 
 #bgvideo {
@@ -253,7 +279,7 @@ z-index: 500;
 	font-size: 31px;
 	line-height: 45px;
 	color: #6b5450;
-	padding: 110px 0;
+	padding: 110px 0 ;
 }
 
 .carousel{

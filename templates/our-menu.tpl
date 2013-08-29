@@ -124,7 +124,7 @@
 		  	<div class="row-fluid" id="menulist">
 		  		<a data-option-value=".favourites" id="favourites" class="button1 selected">Customer Favourites</a>
 		  		{call name=render_menu items=$menuitems}
-		  		<a data-option-value=".whats-new"id="whats-new" class="button1">What's New</a>
+		  		<a data-option-value=".whats-new" id="whats-new" class="button1">What's New</a>
 	  		</div>
 	  		<div class="row-fluid" id="menulistmobile">
 	  			<select id="moblist">
