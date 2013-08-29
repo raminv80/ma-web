@@ -88,7 +88,7 @@ function text_editor(){
 			theme_advanced_resizing : true,
 			convert_urls : false,
 			external_image_list_url : \"/uploads/image_list.php\",
-			content_css : '/admin/includes/css/bootstrap.min.css,/admin/includes/css/jqui.css,/admin/includes/css/styles.css'
+			content_css : '/includes/css/bootstrap.min.css,/includes/css/custom.css,/admin/includes/css/tinymce.css'
 		});";
 }
 
