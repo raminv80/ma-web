@@ -41,6 +41,9 @@ function getFileType(ID,parent,listing_id){
 	        resizable: true
 	}).elfinder('instance');
 	$('#elfinder').elfinder('open');
+	$('html, body').animate({
+        scrollTop: $('#elfinder').offset().top
+    }, 2000);
 }
 
 function deleteFileType(ID){
