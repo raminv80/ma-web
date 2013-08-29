@@ -6,7 +6,7 @@
 			<div class="span12">
             	<fieldset>
                 <legend>
-				{if $fields.listing_id neq ""}Edit{else}New{/if} Product
+				{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone}
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
                 </legend>
                 </fieldset>
@@ -28,7 +28,7 @@
 			<div class="span9 controls"><input type="text" value="{$fields.listing_url}" name="field[tbl_listing][{$cnt}][listing_url]" id="id_listing_url" class="req"></div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_parent">Parent</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_parent">Product Category</label></div>
 			<div class="span9 controls">
 				<select name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent">
 				<option value="0">Select one</option>
@@ -50,10 +50,6 @@
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_meta_words">Meta Words</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_words}" name="field[tbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
-		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_order">Order</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.listing_order}" name="field[tbl_listing][{$cnt}][listing_order]" id="id_listing_order"></div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_published">Published</label></div>
@@ -84,15 +80,11 @@
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content1">Short Description</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_content1">Content</label></div>
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea></div>
 		</div>
-		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content2">Long Description</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
-		</div>
 		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label></div>
+			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label></div>
 			<div class="span9 controls">
 			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image" class="fileinput">
 			<span class="file-view" id="listing_image_view"
@@ -112,12 +104,11 @@
 				$('#listing_image_view').css('display','none');
 				$('#listing_image_none').css('display','block');
 				">Remove File</a>
-				<br><small>Please use an image of 100px wide by 100px high.</small>
 			</div>
 		</div>
 		{if $fields.listing_id neq ""}
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="gallery_image_{$count}">Gallery Images</div>
+			<div class="span3"><label class="control-label" for="gallery_image_{$count}">Gallery Images</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label><br/><label class="control-label small-txt" >Max 3 images</label></div>
 			<div class="span9 controls" id="gallery">
 				{counter start=1 skip=1 assign="count"}
 				{foreach $fields.gallery as $item}

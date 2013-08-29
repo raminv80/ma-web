@@ -6,7 +6,7 @@
 			<div class="span12">
             	<fieldset>
                 <legend>
-				{if $fields.listing_id neq ""}Edit{else}New{/if} Page
+				{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone}
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
                 </legend>
                 </fieldset>
@@ -63,7 +63,7 @@
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content1">Top Content</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_content1">Top Content</label><br/><label class="control-label small-txt" >Recommended<br/>max-character: 280</label></div>
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea></div>
 		</div>
 		 <div class="row-fluid control-group">
@@ -71,7 +71,7 @@
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label></div>
+			<div class="span3"><label class="control-label" for="listing_image">Image</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label></div>
 			<div class="span9 controls">
 			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image" class="fileinput">
 			<span class="file-view" id="listing_image_view"
@@ -91,43 +91,8 @@
 				$('#listing_image_view').css('display','none');
 				$('#listing_image_none').css('display','block');
 				">Remove File</a>
-				<br><small>Please use an image of 100px wide by 100px high.</small>
 			</div>
 		</div>
-		{if $fields.listing_id neq ""}
-		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="gallery_image_{$count}">Gallery Images</div>
-			<div class="span9 controls" id="gallery">
-				{counter start=1 skip=1 assign="count"}
-				{foreach $fields.gallery as $item}
-				<div class="row-fluid gallery_item" rel="{$count}">
-					<div class="span4" id="gallery_{$count}">
-						<input type="hidden" value="gallery_id" name="field[tbl_gallery][{$count}][id]" id="id" />
-						<input type="hidden" value="{$item.gallery_id}" name="field[tbl_gallery][{$count}][gallery_id]" >
-						<input type="hidden" value="{$item.gallery_file}" name="field[tbl_gallery][{$count}][gallery_file]" >
-						<input type="hidden" value="{$item.gallery_listing_id}" name="field[tbl_gallery][{$count}][gallery_listing_id]" id="gallery_image_{$count}" class="fileinput">
-						<input type="text" value="{$item.gallery_link}" name="field[tbl_gallery][{$count}][gallery_link]" class="fileinput">
-						<span id="gallery_image_{$count}_file">{$item.gallery_file}</span>
-					</div>
-					<div class="span8">
-						<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('gallery_image_{$count}','','')">Update</a><a href="{$item.gallery_link}" target="_blank"  class="btn btn-info marg-5r" id="gallery_image_{$count}_path">View</a><a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="deleteFileType('gallery_{$count}')">Delete</a>
-					</div>
-				</div>
-				{counter}
-				{/foreach}
-			</div>
-		</div>
-		 <div class="row-fluid control-group">
-			<div class="span3"></div>
-			<div class="span9 controls">
-				<div class="row-fluid">
-					<div class="span12">
-						<a href="javascript:void(0);" class="btn btn-info" onclick="getFileType('','gallery','{$fields.listing_id}')">Add New File</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		{/if}
 		
 		 <div class="row-fluid control-group">
             <div class="form-actions">

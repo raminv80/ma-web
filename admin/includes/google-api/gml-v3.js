@@ -77,7 +77,7 @@ function showAddress(location) {
           $('#location_longitude').val(latlng.lng());
         }
       } else {
-        alert("Geocoder failed due to: " + status);
+        //alert("Geocoder failed due to: " + status);
       }
     });
 
@@ -99,5 +99,41 @@ function deleteOverlays() {
 function placeAddress(location) {
 	map.setCenter(location);
 	showAddress(location);
+}
+
+function searchAddress(address){
+	geocoder.geocode({'address':address}, function(results, status)     {
+		  if (status == google.maps.GeocoderStatus.OK) {
+			  deleteOverlays();
+		      map.setCenter(results[0].geometry.location);
+		      marker = new google.maps.Marker({
+		          map: map,
+		          position: results[0].geometry.location
+		      });
+		      markersArray.push(marker);
+		      
+		      var address = "";
+	          for (i=0;i<results[0].address_components.length;i++){
+	        	  address += results[0].address_components[i].long_name + ', ';
+	        	  if(results[0].address_components[i].types[0] == 'locality'){
+	        		  address = address.substring(0, address.length-2) + '<br />';
+	        	  }
+	          }
+	          if(address != ""){
+	    		  address = address.substring(0, address.length-2) + '<br />';
+	    	  }
+
+	          var contentString = '<b>LatLng:</b>' + results[0].geometry.location + '<br>' +
+	          '<b>LatLng:</b>' + address;
+	          
+	          infowindow.setContent(contentString);//results[1].formatted_address);
+	          infowindow.open(map, marker);
+	          $('#location_latitude').val(results[0].geometry.location.lat());
+	          $('#location_longitude').val(results[0].geometry.location.lng());
+		  } else {
+			  $("#search-warning").html("This address could not be located.");
+			  $("#search-warning").hide('slow');
+		  }
+		});
 }
 //Nick - Them Digital

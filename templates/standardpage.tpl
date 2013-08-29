@@ -22,11 +22,11 @@
 	<div id="orangebox">
 		<div class="container">
 			<div class="row-fluid orangecontent">
+				{if $listing_image neq ""}
 		  		<div class="span3">
-		  			{foreach $gallery as $item}
-		  				<img src="{$item.gallery_link}" alt="{$item.gallery_file}">
-					{/foreach}
+		  			<img src="{$listing_image}" alt="{$listing_title}">
 		  		</div>
+		  		{/if}
 		  		<div class="span8">
 		  			{$listing_content2}
 		  		</div>

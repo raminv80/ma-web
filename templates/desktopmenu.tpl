@@ -9,7 +9,9 @@
 			<li {if $item.selected eq 1}class="current"{/if}><a title="{$item.title}" href="{$parenturl}/{$item.url}">{$item.title}</a>
 			{if count($item.subs) > 0}
 				<ul>
+				{if $item.url eq 'our-menu'}<li><a title="Customer Favourites" href="/our-menu#favourites">Customer Favourites</a>{/if}
 				{call name=render_list items=$item.subs level=$level+1 parenturl=$parenturl|cat:"/"|cat:$item.url menu=$menu}
+				{if $item.url eq 'our-menu'}<li><a title="What\'s New" href="/our-menu#whats-new">What's New</a>{/if}
 				</ul>
 			{/if}
 			</li>
@@ -40,7 +42,7 @@
 	  			<div id="logo"><a title="Cocolat" href="/"><img src="/images/logo.png" alt="Cocolat Logo" /></a></div>
 
 	  			<div id="menu1">
-	  				<div id="find"><a title="Our Locations" href="/locations">Find your Nearest Location</a></div>
+	  				<div id="find"><a title="Our Locations" href="/our-locations">Find your Nearest Location</a></div>
 	  				<div id="search"><input id="searchbox" type="text" value="Search..." /></div>
 	  				<div id="social">
 	  					<a title="Facebook" href="#"><img src="/images/facebook.png" alt="Facebook" /></a>

@@ -41,7 +41,7 @@
 
 			<div class="span9 controls"><input type="password" value="" id="re_password"></div>
 		</div>
-		<div class="row-fluid control-group">
+		<div class="row-fluid control-group" style="display:none">
 			<div class="span3"><label class="control-label" for="admin_level">Admin Level</label></div>
             <div class="span9 controls"><select name="field[tbl_admin][{$cnt}][admin_level]" id="admin_level">
 									<option value="1" {if $fields.admin_level eq 1}selected="selected"{/if}>Admin</option>

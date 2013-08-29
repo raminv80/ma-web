@@ -91,7 +91,7 @@
   				</div>
   				<div class="span8 locationinfo">
 	  				<h4 class="locationtitle">{$listing_title}</h4>
-	  					{$listing_content2}
+	  					{$listing_content1}
 					<div class="row-fluid tags1">
 						{if $listing_flag1 eq 1}<img title="New" src="/images/new.png" alt="" />{/if}
 						{if $listing_flag2 eq 1}<img title="Award winning" src="/images/award.png" alt="Award winning product" />{/if}

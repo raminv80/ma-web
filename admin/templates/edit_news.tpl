@@ -6,7 +6,7 @@
 			<div class="span12">
             	<fieldset>
                 <legend>
-				{if $fields.listing_id neq ""}Edit{else}New{/if} Location
+				{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone}
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
                 </legend>
                 </fieldset>
@@ -52,7 +52,7 @@
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content1">Snippet</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_content1">Snippet</label><br/><label class="control-label small-txt" >Recommended<br/>max-character: 180</label></div>
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea></div>
 		</div>
 		<div class="row-fluid control-group">
@@ -60,7 +60,7 @@
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
 		</div>
 		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label></div>
+			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label></div>
 			<div class="span9 controls">
 			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image" class="fileinput">
 			<a href="{$fields.listing_image}" target="_blank"  class="btn btn-info marg-5r" id="listing_image__path">{if $fields.listing_image neq ""}View{else}None{/if}</a>
@@ -71,12 +71,11 @@
 				$('#listing_image__path').attr('href','');
 				$('#listing_image__path').html('None');
 				">Remove File</a>
-				<br><small>Please use an image of 100px wide by 100px high.</small>
 			</div>
 		</div>
 		{if $fields.listing_id neq ""}
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="gallery_image_{$count}">Gallery Images</div>
+			<div class="span3"><label class="control-label" for="gallery_image_{$count}">Gallery Images</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label><br/><label class="control-label small-txt" >Max 3 images</label></div>
 			<div class="span9 controls" id="gallery">
 				{counter start=1 skip=1 assign="count"}
 				{foreach $fields.gallery as $item}

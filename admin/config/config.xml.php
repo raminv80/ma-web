@@ -69,6 +69,8 @@
 		<custom_template field="listing_id" value="1">custom_home_edit_page.tpl</custom_template>
 		<custom_template field="listing_id" value="3">custom_menu_edit_page.tpl</custom_template>
 		<custom_template field="listing_id" value="4">custom_location_edit_page.tpl</custom_template>
+		<custom_template field="listing_id" value="31">custom_potm_edit_page.tpl</custom_template>
+		<custom_template field="listing_id" value="5">custom_community_edit_page.tpl</custom_template>
 	</section>
 <!-- THIS SECTION IS USED TO MANAGE THE LISTING CATEGORY TABLE WHICH IS LINKED TO LISTINGS. 
 	 THE FORM OF THIS LISTING CATEGORY SHOULD NOT CHANGE. THE ONLY THINGS WHICH SHOULD NEED 

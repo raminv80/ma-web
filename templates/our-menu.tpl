@@ -157,6 +157,20 @@
 	  		</div>
   		</div>
  	</div>
+ 	{if $listing_content2 neq ""}
+ 	 <div id="whitebox1">
+	  	<div class="container">
+		  	<div class="row-fluid">
+			  	<div class="span7">
+			  		{$listing_content2}
+			  	</div>
+			  	<div class="span5">
+			  		<img src="/images/cocoa.png" alt="" />
+			  	</div>
+		  	</div>
+	  	</div>
+	  </div>
+	  {/if}
 	  	
 	<script src="/includes/js/jquery.isotope.min.js"></script>
     <script src="/includes/js/jquery.ba-bbq.min.js"></script>    

@@ -28,9 +28,7 @@
     width: 100%;
     z-index: 1000;
 }
-#container1{
-	top: 175px;
-}
+
 
 
 /**** Isotope Filtering ****/
@@ -106,7 +104,6 @@ box-shadow: 1px 1px 4px #e6e6e6;
 border: 1px solid #e6e6e6;
 padding: 15px;
 position:relative;
-font-family: 'titillium_weblight_italic';
 font-size:16px;
 line-height:26px;
 color:#333;
@@ -212,8 +209,9 @@ background-position:0 top;
 }
 
 .loading{
-	margin: 500px auto;
-    width: 300px;
+	margin: auto;
+	padding-bottom: 50px;
+    width: 200px;
 	 z-index: 1000;
 }
 .name{

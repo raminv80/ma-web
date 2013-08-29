@@ -40,12 +40,13 @@ Class FacebookSearch{
 	function TagSearch($limit){
 		if ($this->tag == '')$this->tag = $this->user;
 		header('Data-tag:'.$this->tag);
-		$this->request = '/search?q=%23';
-		$results = $this->fb->api($this->request.$this->tag.'?type=post');
+		$this->request = "/search?q=%23{$this->tag}&type=post";
+		$results = $this->fb->api($this->request);
 		return $results['data'];
 	}
 	function WallSearch($limit){
-		$results = $this->fb->api($this->request.'?limit='.$limit);
+		$this->request = "/search?q={$this->tag}&type=post&limit={$limit}";
+		$results = $this->fb->api($this->request);
 		return $results['data'];
 	}
 }

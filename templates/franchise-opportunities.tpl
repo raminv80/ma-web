@@ -18,20 +18,22 @@
 				</div>
 			</div>
 	</header>
+	{if $listing_content2 neq ""}
 	<div id="orangebox">
 		<div class="container">
 			<div class="row-fluid orangecontent">
-				<div class="span3">
-		  			{foreach $gallery as $item}
-		  				<img src="{$item.gallery_link}" alt="{$item.gallery_file}">
-					{/foreach}
+				{if $listing_image neq ""}
+		  		<div class="span3">
+		  			<img src="{$listing_image}" alt="{$listing_title}">
 		  		</div>
+		  		{/if}
 		  		<div class="span8">
 		  			{$listing_content2}
 		  		</div>
 	  		</div>
 		</div>
 	</div>
+	{/if}
 	
 	<div id="whitebox">
 	  	<div class="container">

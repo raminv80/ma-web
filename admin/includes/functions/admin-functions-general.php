@@ -5,13 +5,13 @@ function AdminLogIn($email,$password){
 	$DBobject = new DBmanager();
 	$sql = "SELECT * FROM tbl_admin WHERE admin_email = :email AND admin_password = :password";
 	$params = array( "email" => $email , "password" => $temp_str );
-	$row = $DBobject->executeSQL($sql , $params );
-	if($row){
-		$_SESSION["admin"]["id"]=$row["admin_id"];
-		$_SESSION["admin"]["name"]=$row["admin_name"];
-		$_SESSION["admin"]["surname"]=$row["admin_surname"];
-		$_SESSION["admin"]["email"]=$row["admin_email"];
-		$_SESSION["admin"]["level"]=$row["admin_level"];
+	$res = $DBobject->executeSQL($sql , $params );
+	if($res){
+		$_SESSION["admin"]["id"]=$res[0]["admin_id"];
+		$_SESSION["admin"]["name"]=$res[0]["admin_name"];
+		$_SESSION["admin"]["surname"]=$res[0]["admin_surname"];
+		$_SESSION["admin"]["email"]=$res[0]["admin_email"];
+		$_SESSION["admin"]["level"]=$res[0]["admin_level"];
 		SaveAdminLogIn($row['admin_id']);
 		return true;
 	}else{

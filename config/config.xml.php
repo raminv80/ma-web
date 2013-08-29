@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true">
+<config debug="true" staging="true">
 	<company></company>
 	<database>
 		<host>n7-mysql5-3.ilisys.com.au</host>
@@ -34,7 +34,7 @@
 		<template>search.tpl</template>
 		<pageID>2</pageID>
 	</search>
-	<socialwall name="community" ads="false" instagram="true" facebook="false" twitter="false" youtube="false">
+	<socialwall name="community" ads="false" instagram="true" facebook="true" twitter="true" youtube="true">
 		<url>community</url>
 		<pageID>5</pageID>
 		<template>community.tpl</template>
@@ -45,6 +45,16 @@
 		<url>franchise-opportunities</url>
 		<template>franchise-opportunities.tpl</template>
 		<pageID>6</pageID>
+	</static_page>
+	<static_page>
+		<url>franchise-opportunities/becoming-a-franchisee</url>
+		<template>franchise-opportunities.tpl</template>
+		<pageID>21</pageID>
+	</static_page>
+	<static_page>
+		<url>franchise-opportunities/master-franchise-opportunies</url>
+		<template>franchise-opportunities.tpl</template>
+		<pageID>23</pageID>
 	</static_page>
 	<listing_page name="our-menu">
 		<url>our-menu</url>

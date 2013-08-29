@@ -93,7 +93,7 @@
 		  			<img src="/images/careers.png" alt="" />
 		  			<div class="quicktitle">Careers</div>
 		  			<div class="quicktext">{$listing_parent.listing_content4}</div>
-		  			<a href="/community/careers" class="button">View Details</a>
+		  			<a href="/community/careers" class="button">View Opportunities</a>
 		  		</div>
 	  		</div>
 	  	</div>

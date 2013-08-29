@@ -7,7 +7,6 @@ ini_set('session.cache_limiter', 'private');
 include_once 'includes/functions/admin-functions.php';
 global $CONFIG,$SMARTY,$DBobject;
 
-
 //ASSIGN ALL STORED SMARTY VALUES
 foreach($_SESSION['smarty'] as $key => $val){
 	$SMARTY->assign($key,$val);

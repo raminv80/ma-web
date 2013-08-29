@@ -55,13 +55,13 @@
 				<img src="/images/locations.png" alt="" />
 				<div class="quicktitle">Locations</div>
 				<div class="quicktext">{$listing_content2}</div>
-				<a href="/our-locations" class="button">View Details</a>
+				<a href="/our-locations" class="button">View Locations</a>
 			</div>
 			<div class="span4">
 				<img src="/images/gift.png" alt="" />
 				<div class="quicktitle">Gift Ideas</div>
 				<div class="quicktext">{$listing_content3}</div>
-				<a href="/our-menu#gifts" class="button">View Details</a>
+				<a href="/our-menu#gifts" class="button">View Gift Ideas</a>
 			</div>
 		</div>
 	</div>
@@ -113,7 +113,7 @@
 					</p>
 					<p>
 						View our Instagram web profile page <a href="#">here</a> or <a
-							href="#">see</a> what our valued customers have to say about
+							href="/community">see</a> what our valued customers have to say about
 						Cocolat.
 					</p>
 				</div>

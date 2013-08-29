@@ -30,13 +30,14 @@ class SocialWall{
 		$lastrequest = strtotime($time[0]['timed']);
 		$minutes_after = $lastrequest + (5  *  60) ;
 		$seg =  time() -$minutes_after;
+		
 		//CHECKS IF TIME GREATER THAN X TO PREVENT HAMMERING THE SOCIAL MEDIA SERVERS (RESULTING IN BANS)
 		if( time() > $minutes_after  ){
 			$data= array();
 			if($this->instagram){ $this->InstagramSearch($data,1,$this->limit_instagram); }
-			if($this->facebook){ $this->TwitterSearch($data,$this->limit_twitter); }
+			if($this->twitter){ $this->TwitterSearch($data,$this->limit_twitter); }
 			if($this->youtube){ $this->YouTubeSearch($data, 1 , $this->limit_youtube); }
-			if($this->twitter){ $this->FacebookSearch($data, $this->limit_facebook); }
+			if($this->facebook){ $this->FacebookSearch($data, $this->limit_facebook); } 
 			krsort($data);
 			$this->storeItemData($data);
 		}
@@ -66,6 +67,19 @@ class SocialWall{
 		$return = array('html' =>  str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $buf) , 'datetime' => $this->time , 'groupNumber' => $group);
 		$return = json_encode($return, JSON_FORCE_OBJECT);
 		return  $return;
+	}
+	
+	function DeleteId($id){
+		GLOBAL $DBobject;
+		if(is_numeric($id)){
+			$sql="UPDATE {$this->table} SET social_deleted = NOW() WHERE social_id = :id ";
+			if($DBobject->wrappedSqlInsert($sql,array(':id' => $id))){
+				return 1;
+			}else{
+				return 'failed';
+			}
+		}
+		return 'No id';
 	}
 
 	function ResultsByRandom($from = '' ,  $to = '' , $limit = 60 ,$group , $type){
@@ -125,30 +139,31 @@ class SocialWall{
 		}
 	}
 
-	function ResultsByDate($from = '' ,  $to = '' , $limit = 60 ,$group , $type){
+	function ResultsByDate($from='', $to='', $limit=60, $group, $type){
 		GLOBAL $DBobject,$SMARTY;
 		$data = array();
+		$params = array(":tag"=>$this->tag);
 		$group != 1 ? $group = (60 * $group) - 60 : $group = 0;
-		$type != 0 ? $w_type = ' AND social_typeid = "'.intval($type).'" ' : $w_type = '';
-		if(empty($from)){
-			$this->time = time();
-			$data['social_gmt_timestamp']=$this->time;
-		}else{
-			$data['social_gmt_timestamp']=$from;
+		
+		if($type != 0){
+			$ty = " AND social_typeid = :type ";
+			$params[":type"] = $type;
+		}
+		if(!empty($from)){
+			$f = ' AND social_gmt_timestamp >= :from';
+			$params[':from'] = $from;
 		}
 		if(!empty($to)){
-			$to = ' AND social_gmt_timestamp >= :to';
-			$data['to'] = $to;
+			$t = ' AND social_gmt_timestamp >= :to';
+			$params[':to'] = $to;
 		}
-		$sql = 'SELECT * FROM '.$this->table.' where social_typeid <> "5"  '.$w_type .'  AND social_deleted IS NULL  and social_tag = \''.$this->tag.'\'  ORDER BY  social_gmt_timestamp DESC LIMIT  '.$group.' , '.$limit;
-		header('debug:'.$sql);
-		$data  = $DBobject->wrappedSqlGet($sql,$data);
-		$sql = 'SELECT * FROM '.$this->table.' where social_typeid = "5" AND  social_deleted IS NULL    ';
-		$adds  = $DBobject->wrappedSqlGet($sql,$data);
-		if(empty($data))$data =array();
+		$sql = "SELECT * FROM {$this->table} WHERE social_typeid <> '5' {$ty} AND social_deleted IS NULL AND social_tag = :tag  ORDER BY  social_gmt_timestamp DESC LIMIT {$group}, {$limit}";
+		$data  = $DBobject->wrappedSqlGet($sql,$params);
 		if(!empty($data)){
 			if($this->ads == true){
-				$this->results = array_merge_recursive($data,$adds,$adds);
+				$sql = "SELECT * FROM '.$this->table.' WHERE social_typeid = '5' AND social_deleted IS NULL";
+				$adds  = $DBobject->wrappedSqlGet($sql);
+				$this->results = array_merge_recursive($data,$adds);
 			}else{
 				$this->results = array_merge_recursive($data);
 			}

@@ -69,7 +69,6 @@ function loadMap() {
 	    center: startLatlng,
 	    mapTypeId: google.maps.MapTypeId.ROADMAP,
 	    panControl: true,
-	    zoomControl: true,
 	    maxZoom: 19,
 	    minZoom: 0
 	  };

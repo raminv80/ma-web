@@ -74,10 +74,6 @@
 	    }
 
 		function loadItems(){
-/*			 $container.html('');
-		     $container.isotope('destroy');
-		     $("#load-element").show();
-*/
 			 $.post("/includes/social/processes-general.php",{ action:"load" },function(result){
 				 var obj = $.parseJSON(result);
 				  $container.html(obj.html);

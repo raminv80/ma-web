@@ -1,7 +1,7 @@
 <?php
 set_include_path($_SERVER['DOCUMENT_ROOT']);
 require 'includes/functions/functions.php';
-global $SOCIAL;
+global $SOCIAL,$DBobject;
 $SMARTY->assign('admin',$_SESSION['admin']['email']) ;
 switch ($_REQUEST['action']) {
 	case 'update':
@@ -26,6 +26,7 @@ switch ($_REQUEST['action']) {
 		echo SocialWall::FormatSingleResult($_REQUEST['itemid']);
 	break;
 	case 'delete':
-		echo DeleteItem($_POST['item']);
+		$res = $SOCIAL->DeleteId($_POST['item']);
+		echo $res;
 	break;
 }

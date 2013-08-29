@@ -23,7 +23,7 @@
 		{foreach $item.listings as $l}
 		{if $count eq 2}{assign var=count value=0}{/if}
 		{assign var=count value=$count+1}
-		<div class="span5 loc all {$item.category_name|strtolower} {$parentclass|strtolower}{if $count eq 1} first{/if}" latitude="{$l.location_latitude}" longitude="{$l.location_longitude}" title="{$l.listing_title}" pin="{$l.location_pin}">
+		<div class="span5 loc all {$item.category_name|strtolower} {$parentclass|strtolower}" latitude="{$l.location_latitude}" longitude="{$l.location_longitude}" title="{$l.listing_title}" pin="{$l.location_pin}">
   			<img src="{$l.listing_image}" alt="{$l.listing_title}" />
   			<div class="loctop">
   				<div class="loctitle">{$l.listing_title}</div>
@@ -69,6 +69,7 @@
 	  		
 	  		<div class="row-fluid" id="locationboxin">
 	  			<div class="span7">
+	  				<div class="span12"></div>
 	  				{call name=render_locations items=$data.categories parenturl="/"|cat:$listing_url}
 	  			</div>
 	  			<div class="span5" >

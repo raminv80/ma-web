@@ -45,15 +45,17 @@
 	<div id="orangebox">
 	  	<div class="container" id="menumainbox">
 	  		<div class="row-fluid" id="menubox">
+	  			{assign var=cnt value=0}
+	  			{foreach $data.categories as $item}
+	  				{assign var=cnt value=count($item.listings)}
+	  			{/foreach}
+	  			{if $cnt gt 8}
 		  		<div class="row-fluid">
 		  			<div class="span12">
-		  				<div id="up1"><img src="/images/up.png" alt="up" /></div>
+		  				<div id="up"><img src="/images/up.png" alt="up" /></div>
 		  			</div>
 		  		</div>
-		  		<div class="row-fluid">
-		  			<div class="span12" id="count">
-		  			</div>
-		  		</div>
+		  		{/if}
 	  			  		
 		  		<div id="newsbox">
 			  		<div id="newscontainer">
@@ -62,11 +64,13 @@
 				  		</div>
 				  	</div><!--newscontainer-->
 		  		</div><!--newsbox-->
+		  		{if $cnt gt 8}
 		  		<div class="row-fluid">
 		  			<div class="span12">
-		  			<div id="down1"><img src="/images/down.png" alt="down" /></div>
+		  			<div id="down"><img src="/images/down.png" alt="down" /></div>
 		  			</div>
 		  		</div>
+		  		{/if}
 	  		</div>
   		</div>
  	</div>

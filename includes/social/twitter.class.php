@@ -16,15 +16,14 @@ Class Twitter{
 		$this->creds = $this->twitterObj->get('/account/verify_credentials.json');
 	}
 	function Search($tag,$count = 50){
-		 $this->status = $this->twitterObj->get('/search/tweets.json', array('q' => $tag , 'count' => $count));
-		// $this->status = $this->twitterObj->get('/search.json?', array('q' => '#'.$tag , 'count' => $count));
-		 return $this->status->response['statuses'];
+		$data = array();
+		$s = "%23{$tag}";
+		$this->status = $this->twitterObj->get('/search/tweets.json', array('q' => $s , 'count' => $count));
+		$data = $this->status->response['statuses'];
+		$s = "%40{$tag}";
+		$this->status = $this->twitterObj->get('/search/tweets.json', array('q' => $s , 'count' => $count));
+		$data = array_merge($data,$this->status->response['statuses']);
+		return $data;
 	}
 
 }
-/*
-$t = new Twitter();
-$res = $t->Search('Australia');
-print_r($res);
-?>
-*/

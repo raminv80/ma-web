@@ -43,11 +43,11 @@ $DBobject = new DBmanager();
 if(!empty($CONFIG->socialwall)){
 	$tag = $CONFIG->socialwall->tag;
 	$table = $CONFIG->socialwall->table;
-	$ads = $CONFIG->socialwall->ads ? TRUE:FALSE;
-	$instagram = $CONFIG->socialwall->attributes()->instagram ? TRUE:FALSE;
-    $facebook = $CONFIG->socialwall->attributes()->facebook ? TRUE:FALSE;
-    $youtube = $CONFIG->socialwall->attributes()->youtube ? TRUE:FALSE;
-    $twitter = $CONFIG->socialwall->attributes()->twitter ? TRUE:FALSE;
+	$ads = $CONFIG->socialwall->ads == true ? TRUE:FALSE;
+	$instagram = $CONFIG->socialwall->attributes()->instagram == "true" ? TRUE:FALSE;
+    $facebook = $CONFIG->socialwall->attributes()->facebook == "true" ? TRUE:FALSE;
+    $youtube = $CONFIG->socialwall->attributes()->youtube == "true" ? TRUE:FALSE;
+    $twitter = $CONFIG->socialwall->attributes()->twitter == "true" ? TRUE:FALSE;
 	$SOCIAL = new SocialWall($tag,$table,$ads,$instagram,$facebook,$youtube,$twitter);
 }
 

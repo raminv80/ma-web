@@ -45,9 +45,9 @@
 		        </div>
 		    </div>
 			<div class="containerA">
-		        	<div class="row" id="container1"></div>
-		        	<div class="loading" id="load-element"><img src="/images/103.gif" /></div>
-		
+		        	<div class="row" id="container1"><div class="clear"></div></div>
+		        	<div class="loading" id="load-element"><img src="/images/103.gif" /><div class="clear"></div></div>
+					<div class="clear"></div>
 			</div> <!-- /container -->
 	  	</div>
 	  </div>

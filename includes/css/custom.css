@@ -3,6 +3,18 @@ body,input, button, select, textarea {
 	font-weight: 400;
 }
 
+
+.orangecontent a{
+	color: #333;
+}
+.orangecontent a:visted{
+	color: #333;
+}
+.orangecontent a:hover{
+	color: #333;
+	text-decoration: underline;
+}
+
 .clear{clear:both;}
 
 .instafeed-wrapper{
@@ -124,7 +136,7 @@ a:hover{
 	margin-right: 15px;
 }
 
-#find a:hover{
+#find a:hover,#find a:visited{
 	color: #f26522;
 	text-decoration: none;
 }
