@@ -3,6 +3,10 @@ body,input, button, select, textarea {
 	font-weight: 400;
 }
 
+.carousel-indicators li {
+	cursor: pointer;
+}
+
 .videoBG_wrapper{
 	position: relative!important;
 }
@@ -279,7 +283,7 @@ z-index: 500;
 	font-size: 31px;
 	line-height: 45px;
 	color: #6b5450;
-	padding: 110px 0 ;
+	padding: 110px 0;
 }
 
 .carousel{
@@ -1275,6 +1279,9 @@ h3.potm{
 	
 	.portfolio-item{
 		display: none;
+	}
+	#videobox .span5{
+		padding: 110px 0 0;
 	}
 }
 
