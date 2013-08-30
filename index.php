@@ -53,6 +53,8 @@ while(true){
 	/****** Social Wall *******/
 	foreach($CONFIG->socialwall as $sp){
 		if($sp->url == $_request['arg1'] ){
+			$res = $SOCIAL->ResultsArray();
+			$SMARTY->assign('socialwall',$res);
 			$obj = new $class('',$struct);
 			$template = $obj->Load($sp->pageID);
 			$template = $sp->template;

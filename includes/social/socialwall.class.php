@@ -172,6 +172,40 @@ class SocialWall{
 			return '';
 		}
 	}
+	
+	function ResultsArray($from='', $to='', $limit=60, $group = 1 , $type = 0){
+		GLOBAL $DBobject,$SMARTY;
+		$data = array();
+		$params = array(":tag"=>$this->tag);
+		$group != 1 ? $group = (60 * $group) - 60 : $group = 0;
+	
+		if($type != 0){
+			$ty = " AND social_typeid = :type ";
+			$params[":type"] = $type;
+		}
+		if(!empty($from)){
+			$f = ' AND social_gmt_timestamp >= :from';
+			$params[':from'] = $from;
+		}
+		if(!empty($to)){
+			$t = ' AND social_gmt_timestamp >= :to';
+			$params[':to'] = $to;
+		}
+		$sql = "SELECT * FROM {$this->table} WHERE social_typeid <> '5' {$ty} AND social_deleted IS NULL AND social_tag = :tag  ORDER BY  social_gmt_timestamp DESC LIMIT {$group}, {$limit}";
+		$data  = $DBobject->wrappedSqlGet($sql,$params);
+		if(!empty($data)){
+			if($this->ads == true){
+				$sql = "SELECT * FROM '.$this->table.' WHERE social_typeid = '5' AND social_deleted IS NULL";
+				$adds  = $DBobject->wrappedSqlGet($sql);
+				$this->results = array_merge_recursive($data,$adds);
+			}else{
+				$this->results = array_merge_recursive($data);
+			}
+			return $this->shuffle_assoc($this->results);
+		}else{
+			return array();
+		}
+	}
 
 	function FormatResults($data){
 		GLOBAL $SMARTY;

@@ -7,59 +7,68 @@
 
 
 	    $(document).ready(function(){
-		    loadItems();
-		    //StartWithType("1");
-
-		    setTimeout(function(){
-		    	if( typeof(item_obj) == "object"){ $container.isotope( 'reLayout');}
-	    	},6000);
-	    	setTimeout(function(){
-	    		if( typeof(item_obj) == "object"){ $container.isotope( 'reLayout');}
-
-	    	},9000);
-	    	setTimeout(function(){
-	    		if( typeof(item_obj) == "object"){ $container.isotope( 'reLayout');}
-
-	    	},12000);
-
-	    	window.setInterval(function(){
-	    		console.log('interval every 3000000 sec');
-	    		resetIsotope();
-
-	    	},300000);
-
-
-
+	    	 $container.isotope();
 		    $('#filters a').click(function(){
-			  $('.btn_element').removeClass('selected');
-			  $(this).children('div').addClass('selected');
-
-			  if( $(this).attr('data-type')  == 0 || $(this).attr('data-type')  == undefined){
-				  loadItems();
-			  }else{
-				  $container.html('');
-			      $container.isotope('destroy');
-			      $("#load-element").show();
-
-				  type = $(this).attr('data-type') ;
-				   groupNumber = 1 ;
-				   $.post("/includes/social/processes-general.php",{ action:"rollback",datetime:latestRequest,limit:groupNumber,type:type },function(result){
-				 	 var obj = $.parseJSON(result);
-				 	 var html = $(obj.html);
-				 	 			$container.html(html);
-						     item_obj =  $('#container1').isotope({
-								  itemSelector : '.item',
-								  layoutMode : 'masonry'
-							  });
-				   	}).always(function() { $("#load-element").hide();  $container.isotope(); });
-			  }
-			  return false;
+				  $('.btn_element').removeClass('selected');
+				  $(this).children('div').addClass('selected');
+	
+				  if( $(this).attr('data-type')  == 0 || $(this).attr('data-type')  == undefined){
+					  $('.socialwall').find('item').show();
+					  $container.isotope( {filter : '*'} );
+				  }else{
+					  type = $(this).attr('data-type') ;
+					  var c = $(this).attr('data-filter');
+					  $('.socialwall').find('item').hide();
+					  $('.socialwall').find(c).show();
+					  $container.isotope( {filter : c} );
+				  }
+				  return false;
 			});
 
-
-
-
+		    $(window).scroll(function() {
+				if($(window).scrollTop() + $(window).height() + 100 >= $(document).height()) {
+			 		  if(scrolling == false){
+			 			 $("#load-element").show();
+			 			  scrolling = true;
+			 			  groupNumber = groupNumber + 1;
+				 		  $.post("/includes/social/processes-general.php",{ action:"rollback",datetime:latestRequest,limit:groupNumber,type:type },function(result){
+				 			 var obj = $.parseJSON(result);
+				 			 var html = $(obj.html);
+				 			 latestRequest = obj.datetime;
+							 $container.isotope( 'insert', html );
+							 setTimeout(function(){ scrolling = false;},500);
+					      }).done(function(data) {
+					    	  $("#load-element").hide();
+					    	   $container.isotope( 'reLayout');
+					    }).always(function(){
+					    	 $("#load-element").hide();
+					    });
+					}
+				}
+			});
+			$(document).bind('DOMSubtreeModified', function() {
+				if($(window).scrollTop() + $(window).height() + 100 >= $(document).height()) {
+			 		  if(scrolling == false){
+			 			 $("#load-element").show();
+			 			  scrolling = true;
+			 			  groupNumber = groupNumber + 1;
+				 		  $.post("/includes/social/processes-general.php",{ action:"rollback",datetime:latestRequest,limit:groupNumber,type:type },function(result){
+				 			 var obj = $.parseJSON(result);
+				 			 var html = $(obj.html);
+				 			 latestRequest = obj.datetime;
+							 $container.isotope( 'insert', html );
+							 setTimeout(function(){ scrolling = false;},500);
+					      }).done(function(data) {
+					    	  $("#load-element").hide();
+					    	   $container.isotope( 'reLayout');
+					    }).always(function(){
+					    	 $("#load-element").hide();
+					    });
+					}
+				}
+			  });
 		});
+	    
 	    function StartWithType(type){
 	    	  groupNumber = 1 ;
 			   $.post("/includes/social/processes-general.php",{ action:"rollback",datetime:latestRequest,limit:groupNumber,type:type },function(result){
@@ -70,9 +79,10 @@
 							  itemSelector : '.item',
 							  layoutMode : 'masonry'
 						  });
-			   	}).always(function() { $("#load-element").hide();  $container.isotope(); });
+			   	}).done(function() { $("#load-element").hide();  $container.isotope(); });
 	    }
 
+	    
 		function loadItems(){
 			 $.post("/includes/social/processes-general.php",{ action:"load" },function(result){
 				 var obj = $.parseJSON(result);
@@ -87,34 +97,20 @@
 						  layoutMode : 'masonry'
 					  });
 					  latestRequest = obj.datetime;
-					  $container.isotope( 'reLayout');
 			   }).done(function(data) {
 				      $("#load-element").hide();
-			   }).always(function() {  $container.isotope( 'reLayout'); });
+				      if( $(this).attr('data-type')  == 0 || $(this).attr('data-type')  == undefined){
+						  $('.socialwall').find('item').show();
+						  $container.isotope( {filter : '*'} );
+					  }else{
+						  type = $(this).attr('data-type') ;
+						  var c = $(this).attr('data-filter');
+						  $('.socialwall').find('item').hide();
+						  $('.socialwall').find(c).show();
+						  $container.isotope( {filter : c} );
+					  }
+			   });
 		}
-
-		$(window).scroll(function() {
-			if($(window).scrollTop() + $(window).height() + 100 >= $(document).height()) {
-				  $("#load-element").show();
-		 		   $container.isotope( 'reLayout');
-		 		  if(scrolling == false){
-		 			  scrolling = true;
-		 			  groupNumber = groupNumber + 1;
-			 		  $.post("/includes/social/processes-general.php",{ action:"rollback",datetime:latestRequest,limit:groupNumber,type:type },function(result){
-			 			 var obj = $.parseJSON(result);
-			 			 var html = $(obj.html);
-			 			 latestRequest = obj.datetime;
-						 $container.isotope( 'insert', html );
-						 setTimeout(function(){ scrolling = false;},500);
-				      }).done(function(data) {
-				    	  $("#load-element").hide();
-				    	   $container.isotope( 'reLayout');
-
-				    }).always(function() {  $container.isotope( 'reLayout');  });
-				}
-			}
-			 $container.isotope( 'reLayout');
-		  });
 
 		function resetIsotope(){
 			   	   $("#load-element").show();
