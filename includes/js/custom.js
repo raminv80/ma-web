@@ -34,9 +34,6 @@ function animateContent1(direction) {
 }
 
 jQuery(document).ready(function($){
-	$('.carousel').carousel();
-	
-
 	
         $("#down").click(function () {
             animateContent("down");

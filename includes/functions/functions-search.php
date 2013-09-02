@@ -62,7 +62,16 @@ function SearchListing($search){
 		BY Relevance DESC";
 	$params = array(":search"=>$search);
 	if($res = $DBobject->wrappedSql($sql,$params)){
-		$data = $res;
+		foreach($res as $row){
+			if(strpos($row['cache_url'],'our-menu') !== false){
+				$a = explode('/',$row['cache_url']);
+				$url = array_pop($a);
+				$row['cache_url'] = "/our-menu#{$url}";
+				$data[] = $row;
+			}else{
+				$data[] = $row;
+			}
+		}
 	}
 	return $data;
 }

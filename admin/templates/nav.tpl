@@ -18,7 +18,6 @@
 				{foreach item=li from=$item.list}
 					<li><a href='{$li.url}' class='list-header'>{$li.title}</a></li>
 				{/foreach}
-
 			</ul>
 		</div>
 		</div>

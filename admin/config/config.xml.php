@@ -15,6 +15,7 @@
 	
 <!-- THIS SECTION IS USED TO MANAGE THE ADMINISTRATOR TABLE. ADMINISTRATORS AND USERS FOR THE CMS ARE MANAGED HERE. -->
 	<section>
+		<showlist>FALSE</showlist>
 		<url>users</url>
 		<title>Administrators</title>
 		<type>TABLE</type>
@@ -78,7 +79,7 @@
 	 SHOULD NOT CHANGE AS ALL CONTENT SHOULD BE COME FROM A PAGE. 'LISTING_TYPE_ID' FOR 
 	 'CATEGORY_PARENT_ID' SHOULD REFLECT THE LISTING TYPE THAT THIS CATEGORY IS FOR. -->
 	<section>
-		<showlist>TRUE</showlist>
+		<showlist>FALSE</showlist>
 		<url>page_category</url>
 		<title>Page Categories</title>
 		<type>TABLE</type>
@@ -144,7 +145,7 @@
 	 SHOULD NOT CHANGE AS ALL CONTENT SHOULD BE COME FROM A PAGE. 'LISTING_TYPE_ID' FOR 
 	 'CATEGORY_PARENT_ID' SHOULD REFLECT THE LISTING TYPE THAT THIS CATEGORY IS FOR. -->
 	<section>
-		<showlist>TRUE</showlist>
+		<showlist>FALSE</showlist>
 		<url>product_category</url>
 		<title>Product Categories</title>
 		<type>TABLE</type>
@@ -212,7 +213,7 @@
 	 'CATEGORY_PARENT_ID' SHOULD REFLECT THE LISTING TYPE THAT THIS CATEGORY IS FOR. -->
 	<section>
 		<staging>TRUE</staging>
-		<showlist>TRUE</showlist>
+		<showlist>FALSE</showlist>
 		<url>location_category</url>
 		<title>Location Categories</title>
 		<type>TABLE</type>

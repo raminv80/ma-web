@@ -26,7 +26,7 @@
 				<div class="navbar">
 		            <div class="navbar-inner">
 		                <div class="container">
-		                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+		                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse" onclick="if($('.nav-collapse').css('height') == '0px'){ $('.nav-collapse').css('height','auto'); } else { $('.nav-collapse').css('height','0'); }">
 		                        <span class="icon-bar"></span>
 		                        <span class="icon-bar"></span>
 		                        <span class="icon-bar"></span>
@@ -45,8 +45,16 @@
 		        </div>
 		    </div>
 			<div class="containerA">
-		        	<div class="row" id="container1"><div class="clear"></div></div>
-		        	<div class="loading" id="load-element"><img src="/images/103.gif" /><div class="clear"></div></div>
+		        	<div class="row socialwall" id="container1">
+		        	{foreach $socialwall as $item}
+		        		{if $item.social_typeid eq 1} {include file='social/instagram-item.tpl'} {/if}
+		        		{if $item.social_typeid eq 2} {include file='social/twitter-item.tpl'} {/if}
+		        		{if $item.social_typeid eq 3} {include file='social/youtube-item.tpl'} {/if}
+		        		{if $item.social_typeid eq 4} {include file='social/facebook-item.tpl'} {/if}
+		        		{if $item.social_typeid eq 5} {include file='social/ad-item.tpl'} {/if}
+		        	{/foreach}
+		        	<div class="clear"></div></div>
+		        	<div class="loading" id="load-element" styel="display:none"><img src="/images/103.gif" /><div class="clear"></div></div>
 					<div class="clear"></div>
 			</div> <!-- /container -->
 	  	</div>

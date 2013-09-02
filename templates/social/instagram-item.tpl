@@ -1,6 +1,6 @@
 <div class="instragram item" id="{$item.social_id}">
 			<div class="trash">{if $admin neq ''}<img src="/images/socialwall/trash.png" alt="trash"  onclick="QRemove('{$item.social_id}')"  />{/if}</div>
-			<div class="source"><img src="/images/socialwall/instagram.jpg" alt="instagram" /></div>
+			<div class="source"><img src="/images/socialwall/instagram.jpg" alt="Instagram" /></div>
 			<div class="image">
 			 <a rel="prettyPhoto[ajax]" href="/includes/social/processes-general.php?action=getitem&itemid={$item.social_id}&ajax=true&width=520&height=550">
 			<img src="{$item.social_image}" alt="pic" />

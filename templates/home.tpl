@@ -107,7 +107,7 @@
 				<div class="span10">
 					<h3>Be a part of our website.</h3>
 					<p>
-						Tag <span>#cocolat</span> on your instagram snaps and your photo
+						Tag <span>#cocolat</span> on your Instagram snaps and your photo
 						could appear on our site!
 					</p>
 					<p>
@@ -165,6 +165,9 @@
 			}
 		}
 		
+		$('.carousel').carousel();
+		
+
 		/*var bgVideo=document.getElementById("background-video"); 
 		$(bgVideo).bind('ended', function(){
 			this.play();

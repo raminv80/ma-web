@@ -91,11 +91,48 @@ class ListClass{
 
 		while(true){
 			if($_url == $this->CONFIG_OBJ->url && empty($_ID)){
-				$data = $this->LoadTree();
+					$mod = "";
+					$sql = "SELECT MAX(tbl_listing.listing_modified) AS modified FROM tbl_listing";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						$mod = $res[0]['modified'];
+					}
+					$sql = "SELECT MAX(tbl_category.category_modified) AS modified FROM tbl_category";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						if(strtotime($mod) < strtotime($res[0]['modified'])){
+							$mod = $res[0]['modified'];
+						}
+					}
+					$sql = "SELECT MAX(tbl_type.type_modified) AS modified FROM tbl_type";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						if(strtotime($mod) < strtotime($res[0]['modified'])){
+							$mod = $res[0]['modified'];
+						}
+					}
+					$data = $this->cached($this->CONFIG_OBJ->type,$mod,"LoadTree");
+				//$data = $this->LoadTree();
 				$SMARTY->assign('data', unclean($data));
-				
 				$template = $this->CONFIG_OBJ->template;
-				$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
+				//if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
+					$mod = "";
+					$sql = "SELECT MAX(tbl_listing.listing_modified) AS modified FROM tbl_listing";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						$mod = $res[0]['modified'];
+					}
+					$sql = "SELECT MAX(tbl_category.category_modified) AS modified FROM tbl_category";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						if(strtotime($mod) < strtotime($res[0]['modified'])){
+							$mod = $res[0]['modified'];
+						}
+					}
+					$sql = "SELECT MAX(tbl_type.type_modified) AS modified FROM tbl_type";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						if(strtotime($mod) < strtotime($res[0]['modified'])){
+							$mod = $res[0]['modified'];
+						}
+					}
+					$menu = $this->cached("menu",$mod,"LoadMenu",$_CONFIG_OBJ->pageID);
+				//}
+				//$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
 				$SMARTY->assign('menuitems',$menu);
 				break 1;
 			}else if(!empty($_ID)){
@@ -109,7 +146,25 @@ class ListClass{
 				}
 				$template = $t->template;
 					
-				$menu = $this->LoadMenu($_ID);
+					$mod = "";
+					$sql = "SELECT MAX(tbl_listing.listing_modified) AS modified FROM tbl_listing";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						$mod = $res[0]['modified'];
+					}
+					$sql = "SELECT MAX(tbl_category.category_modified) AS modified FROM tbl_category";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						if(strtotime($mod) < strtotime($res[0]['modified'])){
+							$mod = $res[0]['modified'];
+						}
+					}
+					$sql = "SELECT MAX(tbl_type.type_modified) AS modified FROM tbl_type";
+					if($res = $DBobject->wrappedSqlGet($sql)){
+						if(strtotime($mod) < strtotime($res[0]['modified'])){
+							$mod = $res[0]['modified'];
+						}
+					}
+					$menu = $this->cached("menu",$mod,"LoadMenu",$_CONFIG_OBJ->pageID);
+				//$menu = $this->LoadMenu($_ID);
 				$SMARTY->assign('menuitems',$menu);
 				
 				foreach($this->CONFIG_OBJ->table->associated as $a){
@@ -147,6 +202,29 @@ class ListClass{
 		}
 
 		return $template;
+	}
+	
+	private function cached($type, $timestamp, $func, $p=null){
+		global $DBobject;
+		$data = array();
+		$sql = "SELECT * FROM cache_data WHERE cache_type = :type";
+		$params = array(":type"=>$type);
+		if($res = $DBobject->wrappedSqlGet($sql,$params)){
+			if(strtotime($res[0]['cache_modified']) == strtotime($timestamp)){
+				$data = unserialize($res[0]['cache_val']);
+			}else{
+				$data = $this->$func($p);
+				$sql = "UPDATE cache_data SET cache_val = :data, cache_modified = :mod WHERE cache_id = :id";
+				$params = array(":id"=>$res[0]['cache_id'],":data"=> serialize($data),":mod"=>$timestamp);
+				$DBobject->wrappedSql($sql,$params);
+			}
+		}else{
+			$data = $this->$func($p);
+			$sql = "INSERT INTO cache_data (cache_type, cache_val, cache_modified) VALUES (:type,:data,:mod)";
+			$params = array(":type"=>$type,":data"=> serialize($data),":mod"=>$timestamp);
+			$DBobject->wrappedSql($sql,$params);
+		}
+		return $data;
 	}
 
 	private function LoadTemplate($_url){
