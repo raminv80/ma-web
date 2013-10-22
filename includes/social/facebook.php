@@ -25,12 +25,12 @@ Class FacebookSearch{
 
 	function Search( $limit = 25 ){
 
-		$tag_results = $this->TagSearch($limit);
+		//$tag_results = $this->TagSearch($limit);
 		$wall_results = $this->WallSearch($limit);
         $this->search_results = array();
-		if(!empty($tag_results)){
-			$this->search_results=$tag_results;
-		}
+// 		if(!empty($tag_results)){
+// 			$this->search_results=$tag_results;
+// 		}
 		if(!empty($wall_results)){
 			$this->search_results =	array_merge($this->search_results,$wall_results);
 		}
@@ -45,7 +45,8 @@ Class FacebookSearch{
 		return $results['data'];
 	}
 	function WallSearch($limit){
-		$this->request = "/search?q={$this->tag}&type=post&limit={$limit}";
+		if ($this->tag == '')$this->tag = $this->user;
+		$this->request = "/{$this->tag}/posts";
 		$results = $this->fb->api($this->request);
 		return $results['data'];
 	}

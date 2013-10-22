@@ -91,7 +91,7 @@ class ListClass{
 
 		while(true){
 			if($_url == $this->CONFIG_OBJ->url && empty($_ID)){
-					$mod = "";
+					/* $mod = "";
 					$sql = "SELECT MAX(tbl_listing.listing_modified) AS modified FROM tbl_listing";
 					if($res = $DBobject->wrappedSqlGet($sql)){
 						$mod = $res[0]['modified'];
@@ -108,11 +108,11 @@ class ListClass{
 							$mod = $res[0]['modified'];
 						}
 					}
-					$data = $this->cached($this->CONFIG_OBJ->type,$mod,"LoadTree");
-				//$data = $this->LoadTree();
+					$data = $this->cached($this->CONFIG_OBJ->type,$mod,"LoadTree"); */
+				$data = $this->LoadTree();
 				$SMARTY->assign('data', unclean($data));
 				$template = $this->CONFIG_OBJ->template;
-				//if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
+				/* //if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
 					$mod = "";
 					$sql = "SELECT MAX(tbl_listing.listing_modified) AS modified FROM tbl_listing";
 					if($res = $DBobject->wrappedSqlGet($sql)){
@@ -131,8 +131,8 @@ class ListClass{
 						}
 					}
 					$menu = $this->cached("menu",$mod,"LoadMenu",$_CONFIG_OBJ->pageID);
-				//}
-				//$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
+				//} */
+				$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
 				$SMARTY->assign('menuitems',$menu);
 				break 1;
 			}else if(!empty($_ID)){
@@ -146,7 +146,7 @@ class ListClass{
 				}
 				$template = $t->template;
 					
-					$mod = "";
+					/* $mod = "";
 					$sql = "SELECT MAX(tbl_listing.listing_modified) AS modified FROM tbl_listing";
 					if($res = $DBobject->wrappedSqlGet($sql)){
 						$mod = $res[0]['modified'];
@@ -163,8 +163,8 @@ class ListClass{
 							$mod = $res[0]['modified'];
 						}
 					}
-					$menu = $this->cached("menu",$mod,"LoadMenu",$_CONFIG_OBJ->pageID);
-				//$menu = $this->LoadMenu($_ID);
+					$menu = $this->cached("menu",$mod,"LoadMenu",$_CONFIG_OBJ->pageID); */
+				$menu = $this->LoadMenu($_ID);
 				$SMARTY->assign('menuitems',$menu);
 				
 				foreach($this->CONFIG_OBJ->table->associated as $a){
@@ -558,7 +558,7 @@ class ListClass{
 		//GET LISTINGS AND CATEGORIES FOR THIS SECTION
 		//$sql = "SELECT tbl_category.*,tbl_listing.listing_title, tbl_listing.listing_url FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_parent_id = :cid AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
 		//$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url FROM tbl_listing WHERE tbl_listing.listing_category_id = :cid AND tbl_listing.listing_deleted IS NULL AND EXISTS(SELECT * FROM tbl_category WHERE tbl_category.category_listing_id = tbl_listing.listing_id) ORDER BY tbl_listing.listing_order ASC";
-		$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_category.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_id = tbl_category.category_listing_id WHERE tbl_listing.listing_category_id = :cid AND tbl_category.category_parent_id = :cid AND tbl_listing.listing_published = 1 AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
+		$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_category.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_id = tbl_category.category_listing_id WHERE tbl_listing.listing_category_id = :cid AND tbl_category.category_parent_id = :cid AND tbl_listing.listing_published = 1 AND tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
 		$params = array(":cid"=>$_cid);
 		if($res = $DBobject->wrappedSql($sql,$params)){
 			foreach ($res as $row) {
@@ -606,7 +606,7 @@ class ListClass{
 	
 		//GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
 		//$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url FROM tbl_listing WHERE tbl_listing.listing_category_id = :cid AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
-		$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_category.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_id = tbl_category.category_listing_id WHERE (tbl_listing.listing_category_id = :cid OR tbl_category.category_parent_id = :cid) AND tbl_listing.listing_published = 1 AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
+		$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_category.* FROM tbl_listing LEFT JOIN tbl_category ON tbl_listing.listing_id = tbl_category.category_listing_id WHERE (tbl_listing.listing_category_id = :cid OR tbl_category.category_parent_id = :cid) AND tbl_listing.listing_published = 1 AND tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
 		$params = array(":cid"=>$_cid);
 		if($res = $DBobject->wrappedSql($sql,$params)){
 			foreach ($res as $row) {
@@ -672,7 +672,7 @@ class ListClass{
 			}
 				
 			//GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
-			$sql = "SELECT tbl_listing.* FROM tbl_listing WHERE tbl_listing.listing_category_id = :cid AND tbl_listing.listing_type_id = :type AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
+			$sql = "SELECT tbl_listing.* FROM tbl_listing WHERE tbl_listing.listing_category_id = :cid AND tbl_listing.listing_type_id = :type AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 ORDER BY tbl_listing.listing_order ASC";
 			$params = array(":cid"=>$_cid,":type"=>$this->CONFIG_OBJ->type);
 			if($res = $DBobject->wrappedSql($sql,$params)){
 				foreach ($res as $row) {

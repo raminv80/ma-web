@@ -3,7 +3,7 @@
 <head>
 	<meta name="description" content="{$listing_meta_description}" />
 	<meta name="keywords" content="{$listing_meta_words}" />
-	<meta http-equiv="kontent-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<meta name="distribution" content="Global" />
 	<meta name="author" content="Them Advertising" />
 	{if $staging}

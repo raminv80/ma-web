@@ -28,10 +28,15 @@ while(true){
 	$struct = $CONFIG->page_strut;
 	$class = (string)$struct->file;
 	
-	//Load Product of the month listing_id = 31
-	$obj = new $class('',$struct);
-	$data = $obj->LoadData('31');
-	$SMARTY->assign('potm',$data);
+	/******* Goes to 404 *******/
+	if($_request['arg1'] == '404'){
+		header("HTTP/1.0 404 Not Found");
+		/******* Goes to home *******/
+		$obj = new $class('',$struct);
+		$template = $obj->Load($CONFIG->error404->pageID);
+		$template = $CONFIG->error404->template;
+		break 1;
+	}
 	
 	/******* Goes to home *******/
 	if($_request['arg1'] == ''){

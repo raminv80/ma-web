@@ -368,7 +368,8 @@ class SocialWall{
 
 			$sql = 'SELECT social_objId from '.$this->table.' WHERE social_objId = :social_objId AND social_typeid = :social_typeid limit 1 ';
 			$res = $DBobject->wrappedSqlGet($sql,array('social_objId' => $social_objId , 'social_typeid' => $social_typeid ));
-			if($res == false){
+			if($res == false && (!empty($social_link))){
+				$social_content = htmlentities($social_content, ENT_QUOTES | ENT_IGNORE, "UTF-8");
 				$data = array(
 						'social_typeid' => $social_typeid,
 						'social_objId' => $social_objId,
