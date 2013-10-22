@@ -133,7 +133,7 @@ class SocialWall{
 			}else{
 				$this->results = array_merge_recursive($instragram,$twitter,$youtube,$facebook);
 			}
-			return $this->FormatResults($this->shuffle_assoc($this->results));
+			return $this->FormatResults($this->results);
 		}else{
 			return '';
 		}
@@ -165,9 +165,9 @@ class SocialWall{
 				$adds  = $DBobject->wrappedSqlGet($sql);
 				$this->results = array_merge_recursive($data,$adds);
 			}else{
-				$this->results = array_merge_recursive($data);
+				$this->results = $data;
 			}
-			return $this->FormatResults($this->shuffle_assoc($this->results));
+			return $this->FormatResults($this->results);
 		}else{
 			return '';
 		}
@@ -199,9 +199,9 @@ class SocialWall{
 				$adds  = $DBobject->wrappedSqlGet($sql);
 				$this->results = array_merge_recursive($data,$adds);
 			}else{
-				$this->results = array_merge_recursive($data);
+				$this->results = $data;
 			}
-			return $this->shuffle_assoc($this->results);
+			return $this->results;
 		}else{
 			return array();
 		}
@@ -413,19 +413,5 @@ class SocialWall{
 			}
 		}
 	}
-
-
-	// RANDOMISES RESULTS
-	function shuffle_assoc($list) {
-	  if (!is_array($list)) return $list;
-	  $keys = array_keys($list);
-	  shuffle($keys);
-	  $random = array();
-	  foreach ($keys as $key)
-	    $random[$key] = $list[$key];
-
-	  return $random;
-	}
-
 
 }
