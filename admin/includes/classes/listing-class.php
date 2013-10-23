@@ -134,6 +134,7 @@ Class Listing{
 			
 			if($res = $DBobject->wrappedSqlGet($sql,$params)){
 				foreach ($res as $key => $val) {
+					$subs = array();
 					if($val['category_id'] != null || $val['category_id'] != ""){
 						$subs = $this->getListingList($val['category_id']);
 					}
