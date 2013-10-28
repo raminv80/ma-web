@@ -124,11 +124,11 @@ Class Listing{
 				$category_id = ((integer)$hierarchy->attributes()->default);
 				$sql = "SELECT tbl_listing.*, tbl_category.category_id, tbl_category.category_name FROM {$this->DBTABLE}
 				WHERE tbl_category.category_parent_id = :cat_id AND
-				tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
+				tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
 			}else{
 				$sql = "SELECT tbl_listing.*, tbl_category.category_id, tbl_category.category_name FROM {$this->DBTABLE}
 				WHERE tbl_listing.listing_category_id = :cat_id AND
-				tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
+				tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
 			}
 			$params = array(":cat_id"=>$category_id);
 			
@@ -151,7 +151,7 @@ Class Listing{
 		}else{
 			$sql = "SELECT tbl_listing.*, tbl_category.category_id, tbl_category.category_name FROM {$this->DBTABLE}
 			WHERE tbl_listing.listing_category_id = :cat_id AND (tbl_listing.listing_type_id = :type OR tbl_category.category_type_id = :type) AND
-			tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_listing.listing_order ASC";
+			tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
 			$params = array(":cat_id"=>$category_id,":type"=>$this->TYPE_ID);
 			
 			if($res = $DBobject->wrappedSqlGet($sql,$params)){

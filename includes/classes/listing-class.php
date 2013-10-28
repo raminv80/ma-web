@@ -656,7 +656,7 @@ class ListClass{
 		$data = array();
 	
 		if(empty($_cid)){
-			$sql = "SELECT tbl_category.category_id FROM tbl_category WHERE tbl_category.category_type_id = :type AND tbl_category.category_deleted IS NULL AND NOT EXISTS (SELECT c.category_id FROM tbl_category AS c WHERE c.category_type_id = :type AND c.category_id = tbl_category.category_parent_id)";
+			$sql = "SELECT tbl_category.category_id FROM tbl_category WHERE tbl_category.category_type_id = :type AND tbl_category.category_deleted IS NULL AND NOT EXISTS (SELECT c.category_id FROM tbl_category AS c WHERE c.category_type_id = :type AND c.category_id = tbl_category.category_parent_id) ORDER BY tbl_category.category_order ASC";
 			$params = array(":type"=>$this->CONFIG_OBJ->type);
 			if($res = $DBobject->wrappedSql($sql,$params)){
 				foreach ($res as $row) {
@@ -665,7 +665,7 @@ class ListClass{
 			}
 			
 		}else{
-			$sql = "SELECT tbl_listing.*,tbl_category.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_id = :cid ";
+			$sql = "SELECT tbl_listing.*,tbl_category.* FROM tbl_category LEFT JOIN tbl_listing ON tbl_category.category_listing_id = tbl_listing.listing_id WHERE tbl_category.category_id = :cid ORDER BY tbl_category.category_order ASC";
 			$params = array(":cid"=>$_cid);
 			if($res = $DBobject->wrappedSql($sql,$params)){
 				$data = unclean($res[0]);
