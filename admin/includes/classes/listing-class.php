@@ -123,7 +123,7 @@ Class Listing{
 				$local_field = $hierarchy->attributes()->field;
 				$category_id = ((integer)$hierarchy->attributes()->default);
 				$sql = "SELECT tbl_listing.*, tbl_category.category_id, tbl_category.category_name FROM {$this->DBTABLE}
-				WHERE tbl_category.category_parent_id = :cat_id AND
+				WHERE (tbl_category.category_parent_id = :cat_id OR tbl_listing.listing_category_id = :cat_id) AND
 				tbl_listing.listing_deleted IS NULL AND tbl_category.category_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ORDER BY tbl_category.category_order ASC, tbl_listing.listing_order ASC";
 			}else{
 				$sql = "SELECT tbl_listing.*, tbl_category.category_id, tbl_category.category_name FROM {$this->DBTABLE}

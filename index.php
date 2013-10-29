@@ -35,6 +35,8 @@ while(true){
 		$obj = new $class('',$struct);
 		$template = $obj->Load($CONFIG->error404->pageID);
 		$template = $CONFIG->error404->template;
+		$menu = $this->LoadMenu($CONFIG->error404->pageID);
+		$SMARTY->assign('menuitems',$menu);
 		break 1;
 	}
 	
@@ -43,6 +45,8 @@ while(true){
 		$obj = new $class('',$struct);
 		$template = $obj->Load($CONFIG->index_page->pageID);
 		$template = $CONFIG->index_page->template;
+		$menu = $this->LoadMenu($CONFIG->index_page->pageID);
+		$SMARTY->assign('menuitems',$menu);
 		
 		/**************************************
 		 * Load Instagram images for homepage *
@@ -63,6 +67,8 @@ while(true){
 			$obj = new $class('',$struct);
 			$template = $obj->Load($sp->pageID);
 			$template = $sp->template;
+			$menu = $this->LoadMenu($sp->pageID);
+			$SMARTY->assign('menuitems',$menu);
 			break 2;
 		}
 	}
@@ -72,6 +78,8 @@ while(true){
 		$obj = new $class('',$struct);
 		$template = $obj->Load($CONFIG->search->pageID);
 		$template = $CONFIG->search->template;
+		$menu = $this->LoadMenu($CONFIG->search->pageID);
+		$SMARTY->assign('menuitems',$menu);
 		searchcms($_POST['search']);
 		break 1;
 	}
@@ -82,6 +90,8 @@ while(true){
 			$obj = new $class('',$struct);
 			$template = $obj->Load($sp->pageID);
 			$template = $sp->template;
+			$menu = $this->LoadMenu($sp->pageID);
+			$SMARTY->assign('menuitems',$menu);
 			break 2;
 		}
 	}
@@ -101,6 +111,9 @@ while(true){
 			$class = (string)$lp->file;
 			$obj = new $class($_nurl,$lp);
 			$template = $obj->Load();
+			
+			$menu = $this->LoadMenu($lp->pageID);
+			$SMARTY->assign('menuitems',$menu);
 			
 			break 2;
 		}
@@ -123,6 +136,8 @@ while(true){
 				$obj = new $class('',$struct);
 				$template = $obj->Load($res[0]['listing_id']);
 				$template = $struct->template;
+				$menu = $this->LoadMenu($res[0]['listing_id']);
+				$SMARTY->assign('menuitems',$menu);
 				break 2;
 			}else{
 				break 1;

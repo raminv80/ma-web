@@ -132,8 +132,8 @@ class ListClass{
 					}
 					$menu = $this->cached("menu",$mod,"LoadMenu",$_CONFIG_OBJ->pageID);
 				//} */
-				$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
-				$SMARTY->assign('menuitems',$menu);
+// 				$menu = $this->LoadMenu($_CONFIG_OBJ->pageID);
+// 				$SMARTY->assign('menuitems',$menu);
 				break 1;
 			}else if(!empty($_ID)){
 				
@@ -164,8 +164,8 @@ class ListClass{
 						}
 					}
 					$menu = $this->cached("menu",$mod,"LoadMenu",$_CONFIG_OBJ->pageID); */
-				$menu = $this->LoadMenu($_ID);
-				$SMARTY->assign('menuitems',$menu);
+// 				$menu = $this->LoadMenu($_ID);
+// 				$SMARTY->assign('menuitems',$menu);
 				
 				foreach($this->CONFIG_OBJ->table->associated as $a){
 					$t_data = array();
