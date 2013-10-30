@@ -120,19 +120,21 @@ while(true){
 	}
 
 	/******* Dynamic Page Check Here *******/
+	$url_parent_id = '0';
 	$arr = explode("/", $_request["arg1"]);
 	foreach($arr as $a){
 		if($a !== end($arr)){
 			$sql = "SELECT * FROM tbl_category WHERE tbl_category.category_deleted IS NULL AND EXISTS (SELECT listing_id FROM tbl_listing WHERE tbl_listing.listing_id = tbl_category.category_listing_id AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_url = :url )";
 			$params = array(":url"=>$a);
-			if($DBobject->wrappedSqlGet($sql,$params)){
+			if($res = $DBobject->wrappedSqlGet($sql,$params)){
+				$url_parent_id = $res['0']['category_id'];
 				continue;
 			}else{
 				break 1;
 			}
 		}else{
-			$sql = "SELECT listing_id FROM tbl_listing WHERE tbl_listing.listing_url = :url AND tbl_listing.listing_deleted IS NULL ";
-			if($res = $DBobject->wrappedSqlGet($sql,array(":url"=>$a))){
+			$sql = "SELECT listing_id FROM tbl_listing WHERE tbl_listing.listing_url = :url AND tbl_listing.listing_category_id = :pcat AND tbl_listing.listing_deleted IS NULL ";
+			if($res = $DBobject->wrappedSqlGet($sql,array(":url"=>$a,":pcat"=>$url_parent_id))){
 				$obj = new $class('',$struct);
 				$template = $obj->Load($res[0]['listing_id']);
 				$template = $struct->template;
