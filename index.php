@@ -152,6 +152,8 @@ while(true){
 	$obj = new $class('',$struct);
 	$template = $obj->Load($CONFIG->error404->pageID);
 	$template = $CONFIG->error404->template;
+	$menu = $this->LoadMenu($CONFIG->error404->pageID);
+	$SMARTY->assign('menuitems',$menu);
 	break 1;
 }
 
