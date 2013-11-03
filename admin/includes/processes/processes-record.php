@@ -4,8 +4,9 @@ include 'admin/includes/functions/admin-functions.php';
 if(checkToken($_POST["formToken"])){
 	$tables = $DBobject->ShowTables();
 	if($tables){
-		// $_POST['field'] This is an array of all fields. The structure of the array is field['table name']['field name'] == value
-		// field['table name']['id'] == id field
+		
+		$stored = array();
+		
 		$fields = $_POST['field'];
 		foreach($fields as $tbl => $group){
 			if(in_array($tbl, $tables)){
@@ -38,6 +39,9 @@ if(checkToken($_POST["formToken"])){
 							if($key == $id){
 								$id_check = "{$key} = :{$key}";
 							}else{
+								if(empty($val) && array_key_exists($key, $_POST['default'])){
+									$val = $stored["{$_POST['default']["{$key}"]}"];
+								}
 								$_update_vals[] = "{$key} = :{$key} ";
 								$_insert_vals[] = ":{$key} ";
 								$_insert_fields[] = "{$key}";
@@ -55,16 +59,27 @@ if(checkToken($_POST["formToken"])){
 					}
 
 					$result = $DBobject->executeSQL($sql , $_params );
-					//die(print_r($DBobject));
+					if(empty($stored)){ 
+						$stored = $_params; 
+					}else{
+						if(!empty($_params)){
+							$stored = array_merge($stored,$_params);
+						}
+					}
+					if($insert_table != ''){
+						$o = $DBobject->PDO->lastInsertId();
+						$stored["{$id}"] = $o;
+						if(empty($back_to_id)){
+							$back_to_id = '/'.$o;
+						}
+					}
+					
 				}
-
 			}
 		}
 	}
 }
-if($insert_table != '' && $update_table == ''){
-	$back_to_id = '/'.$DBobject->PDO->lastInsertId();
-}
+
 
 global $EDITED;
 $_SESSION['notice']= $EDITED;
