@@ -11,7 +11,6 @@
 function smarty_function_carousel($params, &$smarty)
 {
 	if(empty($params['field'])){
-		trigger_error("assign: missing 'field' parameter");
 		return '';
 	}
 	
@@ -40,7 +39,6 @@ function smarty_function_carousel($params, &$smarty)
 						<a data-slide="next" href="#myCarousel" class="carousel-control right"></a>
 						</div>';
 	}catch(Exception $e) {
-	    trigger_error("error on banner plugin");
 		return '';
 	}
     

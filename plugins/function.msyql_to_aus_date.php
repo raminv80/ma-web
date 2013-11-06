@@ -11,7 +11,6 @@
 function smarty_function_msyql_to_aus_date($params, &$smarty)
 {
 	if(empty($params['datetime'])){
-		trigger_error("assign: missing 'datetime' parameter");
 		return '';
 	}
 	$format = "d/m/Y";
@@ -31,7 +30,6 @@ function smarty_function_msyql_to_aus_date($params, &$smarty)
 	try {
 	    $output = date($format, strtotime(str_replace("-","/",$params['datetime'])));
 	}catch(Exception $e) {
-	    trigger_error("assign: 'datetime' not in a recognised date format");
 		return '';
 	}
     

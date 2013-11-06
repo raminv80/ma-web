@@ -11,12 +11,10 @@
 function smarty_function_trimchars($params, &$smarty)
 {
 	if(empty($params['data'])){
-		trigger_error("assign: missing 'data' parameter");
 		return '';
 	}
 	if(empty($params['maxchars'])){
-		trigger_error("assign: missing 'maxwords' parameter");
-		return '';
+		return $params['data'];
 	}
 	try {
 		$count= 0 ;
@@ -32,8 +30,7 @@ function smarty_function_trimchars($params, &$smarty)
 		}
 	}
 	catch(Exception $e) {
-	    trigger_error("assign: 'data' not in a recognised");
-		return '';
+		return $params['data'];
 	}
     
     return $output;

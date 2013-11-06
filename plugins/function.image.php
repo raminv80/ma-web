@@ -11,7 +11,6 @@
 function smarty_function_image($params, &$smarty)
 {
 	if(empty($params['field'])){
-		trigger_error("assign: missing 'field' parameter");
 		return '';
 	}
 	
@@ -31,7 +30,6 @@ function smarty_function_image($params, &$smarty)
 				}
 			}
 	}catch(Exception $e) {
-	    trigger_error("error on banner plugin");
 		return '';
 	}
     

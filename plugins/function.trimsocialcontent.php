@@ -21,7 +21,6 @@ function smarty_function_trimsocialcontent($params, &$smarty)
 
 	}
 	catch(Exception $e) {
-	    trigger_error("assign: 'data' not in a recognised");
 		return '';
 	}
 

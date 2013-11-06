@@ -15,8 +15,7 @@ function smarty_function_trimwords($params, &$smarty)
 		return '';
 	}
 	if(empty($params['maxwords'])){
-		trigger_error("assign: missing 'maxwords' parameter");
-		return '';
+		return $params['data'];
 	}
 	try {
 		$output='';
@@ -32,8 +31,7 @@ function smarty_function_trimwords($params, &$smarty)
 		}
 	}
 	catch(Exception $e) {
-	    trigger_error("assign: 'data' not in a recognised");
-		return '';
+		return $params['data'];
 	}
     
     return $output;
