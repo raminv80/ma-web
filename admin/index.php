@@ -1,7 +1,7 @@
 <?php
-header("Pragma: no-cache");
-header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+header('Pragma: no-cache'); // HTTP 1.0.
+header('Expires: 0'); // Proxies.
 
 ini_set('session.cache_limiter', 'private');
 include_once 'includes/functions/admin-functions.php';
@@ -36,6 +36,13 @@ if($_request['arg1']  == 'logout' ){
 
 if((!isset($_SESSION['admin']) || empty($_SESSION['admin']) ) && $_request['arg1']  != 'register' && $_request['arg1']  != 'login' && $_request['arg1']  != 'recover-password'){
 	header("Location:/admin/login");
+	die();
+}
+
+if(!empty($_SESSION['admin']) && $_request['arg1']  == 'login'){
+	die('here');
+	header("Location:/admin");
+	die();
 }
 
 if(!isset($_SESSION['admin']) || empty($_SESSION['admin']) ){
@@ -52,7 +59,7 @@ while(true){
 	}
 
 	/******* Goes to login  *******/
-	if($_request['arg1'] == ''){
+	if($_request['arg1'] == 'home' || $_request['arg1'] == ''){
 		$template = "home.tpl";
 		break 1;
 	}
