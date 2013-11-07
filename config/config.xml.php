@@ -1,12 +1,12 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true">
+<config debug="true" staging="true">
 	<company></company>
 	<database>
 		<host>n7-mysql5-3.ilisys.com.au</host>
 		<user>themso</user>
 		<password>c@^^3L5tRu7s*n9ub11c</password>
-		<dbname>themso5_db</dbname>
+		<dbname>themso17_db</dbname>
 	</database>
 	<page_strut>
 		<type>1</type>
@@ -21,90 +21,145 @@
 			</associated>
 		</table>
 		<template>standardpage.tpl</template><!-- The template used if the field is matched -->
+		<renting>rentingstandardpage.tpl</renting>
 	</page_strut>
 	<index_page>
 		<template>home.tpl</template>
-		<pageID>1</pageID>
+		<pageID>26</pageID>
 	</index_page>
 	<error404>
 		<template>404.tpl</template>
-		<pageID>26</pageID>
+		<pageID>46</pageID>
 	</error404>
-	<search>
-		<template>search.tpl</template>
-		<pageID>2</pageID>
-	</search>
-	<socialwall name="community" ads="false" instagram="true" facebook="true" twitter="true" youtube="false">
-		<url>community</url>
-		<pageID>5</pageID>
-		<template>community.tpl</template>
-		<tag>cocolat</tag>
-		<table>ntbl_social</table>
-		<facebook></facebook>
-		<twitter>@cocolat</twitter>
-		<youtube></youtube>
-		<instagram></instagram>
- 	</socialwall>
+	<inspections>
+		<template>inspections.tpl</template>
+		<pageID>35</pageID>
+	</inspections>
  	<static_page>
-		<url>franchise-opportunities</url>
-		<template>franchise-opportunities.tpl</template>
-		<pageID>6</pageID>
+		<url>property-management/appraisal-request</url>
+		<template>appraisal-request.tpl</template>
+		<pageID>31</pageID>
 	</static_page>
 	<static_page>
-		<url>franchise-opportunities/becoming-a-franchisee</url>
-		<template>franchise-opportunities.tpl</template>
-		<pageID>21</pageID>
+		<url>renting/tenancy-application</url>
+		<template>tenancy-application.tpl</template>
+		<pageID>36</pageID>
 	</static_page>
 	<static_page>
-		<url>franchise-opportunities/master-franchise-opportunies</url>
-		<template>franchise-opportunities.tpl</template>
-		<pageID>23</pageID>
+		<url>about-us/testimonials</url>
+		<template>testimonials.tpl</template>
+		<pageID>43</pageID>
 	</static_page>
-	<listing_page name="our-menu">
-		<url>our-menu</url>
-		<pageID>3</pageID>
+	<static_page>
+		<url>contact-us</url>
+		<template>contact-us.tpl</template>
+		<pageID>44</pageID>
+	</static_page>
+
+	
+ 	<listing_page name="properties-for-rent">
+		<url>renting/properties-for-rent</url>
+		<pageID>34</pageID>
 		<type>2</type>
 		<file>ListClass</file>
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>
 			<field>listing_url</field><!-- The field used to match the URL -->
+			<options>
+				<field>
+					<name>property_type_id</name>
+					<table>tbl_property_type</table>
+					<reference>property_type_title</reference>
+				</field>
+				<field>
+					<name>listing_id</name>
+					<table>tbl_listing</table>
+					<reference>listing_content1</reference>
+					<where>listing_type_id = '4'</where>
+				</field>
+			</options>
 			<associated>
 				<name>gallery</name>
 				<table>tbl_gallery</table>
 				<field>gallery_listing_id</field>
 			</associated>
+			<associated listing="true">
+				<name>inspection</name>
+				<table>tbl_inspection</table>
+				<field>inspection_listing_id</field>
+			</associated>
 			<extends>
-				<table>tbl_product</table>
-				<field>product_listing_id</field>
+				<table>tbl_property</table>
+				<field>property_listing_id</field>
 			</extends>
-			<template>product.tpl</template>
+			<template>property.tpl</template>
 		</table>
-		<template>our-menu.tpl</template><!-- The template used if the field is matched -->
+		<template>properties-for-rent.tpl</template><!-- The template used if the field is matched -->
  	</listing_page>
- 	<listing_page name="our-locations">
-		<url>our-locations</url>
-		<pageID>4</pageID>
+ <!--	<listing_page name="inspections">
+		<url>renting/inspections</url>
+		<pageID>35</pageID>
+		<type>2</type>
+		<file>ListClass</file>
+		<table>
+			<name>tbl_listing</name>
+			<field>listing_url</field>
+			<options>
+				<field>
+					<name>property_type_id</name>
+					<table>tbl_property_type</table>
+					<reference>property_type_title</reference>
+				</field>
+				<field>
+					<name>listing_id</name>
+					<table>tbl_listing</table>
+					<reference>listing_content1</reference>
+					<where>listing_type_id = '4'</where>
+				</field>
+			</options>
+			<associated>
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_listing_id</field>
+			</associated>
+			<associated>
+				<name>inspection</name>
+				<table>tbl_inspection</table>
+				<field>inspection_listing_id</field>
+			</associated>
+			<extends>
+				<table>tbl_property</table>
+				<field>property_listing_id</field>
+			</extends>
+			<template>property.tpl</template>
+		</table>
+		<template>inspections.tpl</template>
+ 	</listing_page>-->
+ 	<listing_page name="news">
+		<url>news</url>
+		<pageID>40</pageID>
 		<type>3</type>
 		<file>ListClass</file>
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>
 			<field>listing_url</field><!-- The field used to match the URL -->
+			<orderby>news_start_date DESC</orderby>
 			<associated>
 				<name>gallery</name>
 				<table>tbl_gallery</table>
 				<field>gallery_listing_id</field>
 			</associated>
 			<extends>
-				<table>tbl_location</table>
-				<field>location_listing_id</field>
+				<table>tbl_news</table>
+				<field>news_listing_id</field>
 			</extends>
-			<template>location.tpl</template>
+			<template>news-article.tpl</template>
 		</table>
-		<template>our-locations.tpl</template><!-- The template used if the field is matched -->
+		<template>news.tpl</template><!-- The template used if the field is matched -->
  	</listing_page>
- 	<listing_page name="news-and-media">
-		<url>community/news-and-media</url>
-		<pageID>19</pageID>
+ 	<listing_page name="our-team">
+		<url>about-us/our-team</url>
+		<pageID>42</pageID>
 		<type>4</type>
 		<file>ListClass</file>
 		<table><!-- This table will be the details table -->
@@ -115,88 +170,11 @@
 				<table>tbl_gallery</table>
 				<field>gallery_listing_id</field>
 			</associated>
-			<template>news.tpl</template>
+			<template>team-member.tpl</template>
 		</table>
-		<template>news-media.tpl</template><!-- The template used if the field is matched -->
+		<template>our-team.tpl</template><!-- The template used if the field is matched -->
  	</listing_page>
 
-	<!-- <listing_page name="contact-us">
-		<url>contact-us</url>
-		<type>1</type>
-		<pageID>5</pageID>
-		<ID>72</ID>
-		<file>ListClass</file>
-		<template>contactus.tpl</template>
-		<table>
-			<name>tbl_listing</name>
-			<where>(listing_id = '7' OR listing_id = '8' )</where>
-		</table>
- 	</listing_page>
-	<listing_page name="news">
-		<url>news</url>
-		<type>2</type>
-		<pageID>1</pageID>
-		<ID>72</ID>
-		<file>ListClass</file>
-		<template>news-listing.tpl</template>
-		<limit>5</limit>
-		<orderby>news_start_date DESC</orderby>
-		<table>
-			<name>tbl_listing</name>
-			<field>listing_url</field>
-			<extra>tbl_news</extra>
-			<template>news-item.tpl</template>
-		</table>
-		<menu>
-			<field>COUNT(news_start_date) AS num, DATE_FORMAT(news_start_date,'%M') AS month, DATE_FORMAT(news_start_date,'%Y') AS year</field>
-			<groupby>DATE_FORMAT(news_start_date,'%Y'),DATE_FORMAT(news_start_date,'%M')</groupby>
-			<orderby>DATE_FORMAT(news_start_date,'%Y') DESC</orderby>
-			<template>news_month_archive.tpl</template>
-		</menu>
-		<filter>
-			<field>CONCAT(DATE_FORMAT(news_start_date,'%Y'),"-",DATE_FORMAT(news_start_date,'%M'))</field>
-			<title>CONCAT(" - ",DATE_FORMAT(news_start_date,'%M'),"(",COUNT(news_start_date),")")</title>
-		</filter>
-	</listing_page>
-	<listing_page name="product-care">
-		<url>product-care</url>
-		<type>6</type>
-		<pageID>23</pageID>
-		<ID>72</ID>
-		<file>ListClass</file>
-		<template>product-care.tpl</template>
-		<limit>50</limit>
-		<orderby>listing_order DESC</orderby>
-		<table>
-			<name>tbl_listing</name>
-			<field>listing_url</field>
-			<template>product-care-item.tpl</template>
-		</table>
- 	</listing_page>
- 	<listing_page name="specials">
-		<url>specials</url>
-		<type>5</type>
-		<pageID>22</pageID>
-		<ID>72</ID>
-		<file>ListClass</file>
-		<template>specials.tpl</template>
-		<limit>50</limit>
-		<orderby>listing_order </orderby>
-		<table>
-			<name>tbl_listing</name>
-			<field>listing_url</field>
-			<template>specials.tpl</template>
-			<orderby>listing_order </orderby>
-		</table>
- 	</listing_page>
-	<listing_page name="products">
-		<file>ProductListing</file>
-		<type>4</type>
-		<url>products</url>
-		<pageID>30</pageID>
-		<item_template>product-category-template.tpl</item_template>
-		<category_template>product-category-template.tpl</category_template>
-	</listing_page>-->
 	<smartytemplate_config>
 		<templates>/templates</templates>
 		<templates_c>/templates_c</templates_c>
