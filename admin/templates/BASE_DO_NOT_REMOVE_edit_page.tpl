@@ -133,8 +133,8 @@
 					<div class="span4" id="gallery_{$count}">
 						<input type="hidden" value="gallery_id" name="field[tbl_gallery][{$count}][id]" id="id" />
 						<input type="hidden" value="{$item.gallery_id}" name="field[tbl_gallery][{$count}][gallery_id]" >
-						<input type="hidden" value="{$item.gallery_file}" name="field[tbl_gallery][{$count}][gallery_file]" >
-						<input type="hidden" value="{$item.gallery_listing_id}" name="field[tbl_gallery][{$count}][gallery_listing_id]" id="gallery_image_{$count}" class="fileinput">
+						<input type="hidden" value="{$item.gallery_file}" name="field[tbl_gallery][{$count}][gallery_file]" id="gallery_image_{$count}" >
+						<input type="hidden" value="{$item.gallery_listing_id}" name="field[tbl_gallery][{$count}][gallery_listing_id]" class="fileinput">
 						<input type="text" value="{$item.gallery_link}" name="field[tbl_gallery][{$count}][gallery_link]" class="fileinput">
 						<span id="gallery_image_{$count}_file">{$item.gallery_file}</span>
 					</div>

@@ -16,8 +16,8 @@ function getFileType(ID,parent,listing_id){
 					html += '<div class="span4" id="gallery_'+count+'" >';
 						html += '<input type="hidden" value="gallery_id" name="field[tbl_gallery]['+count+'][id]" id="id" />';
 						html += '<input type="hidden" value="" name="field[tbl_gallery]['+count+'][gallery_id]" >';
-						html += '<input type="hidden" value="'+file.name+'" name="field[tbl_gallery]['+count+'][gallery_file]" >';
-						html += '<input type="hidden" value="'+listing_id+'" name="field[tbl_gallery]['+count+'][gallery_listing_id]" id="gallery_image_'+count+'" class="fileinput">';
+						html += '<input type="hidden" value="'+file.name+'" name="field[tbl_gallery]['+count+'][gallery_file]" id="gallery_image_{$count}" >';
+						html += '<input type="hidden" value="'+listing_id+'" name="field[tbl_gallery]['+count+'][gallery_listing_id]" class="fileinput">';
 						html += '<input type="text" value="/'+file.path+'" name="field[tbl_gallery]['+count+'][gallery_link]" class="fileinput">';
 						html += '<span id="gallery_image_'+count+'_file">'+file.name+'</span>';
 					html += '</div>';
@@ -29,7 +29,7 @@ function getFileType(ID,parent,listing_id){
 					html += '</div>';
 					$('#'+parent).append(html);
 				}else{
-					$('#'+ID).val('/'+file.path);
+					$('#'+ID).val(file.name);
 					$('#'+ID+'_file').html(file.name);
 			        $('#'+ID+'_path').attr('href','/'+file.path);
 			        $('#'+ID+'_path').html('View');
