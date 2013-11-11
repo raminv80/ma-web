@@ -3,10 +3,10 @@
 <config debug="true" staging="true">
 	<company></company>
 	<database>
-		<host>n7-mysql5-3.ilisys.com.au</host>
+		<host>m4-mysql1-1.ilisys.com.au</host>
 		<user>themso</user>
 		<password>c@^^3L5tRu7s*n9ub11c</password>
-		<dbname>themso17_db</dbname>
+		<dbname>themso3_db</dbname>
 	</database>
 	<resource>
 		<url>file-manager</url>
@@ -55,9 +55,10 @@
 		<type_id>1</type_id>
 		<options>
 			<field>
-				<name>listing_category_id</name>
-				<table>tbl_category</table>
-				<reference>category_name</reference>
+				<name>listing_parent_id</name>
+				<table>tbl_listing</table>
+				<reference>listing_name</reference>
+				<where>listing_parent_flag = '1'</where>
 			</field>
 		</options>
 		<associated>
@@ -83,7 +84,7 @@
 	 TO CHANGE ARE THE 'URL', 'TITLE' AND 'WHERE'. THE 'LISTING_TYPE_ID' FOR 'CATEGORY_LISTING_ID' 
 	 SHOULD NOT CHANGE AS ALL CONTENT SHOULD BE COME FROM A PAGE. 'LISTING_TYPE_ID' FOR 
 	 'CATEGORY_PARENT_ID' SHOULD REFLECT THE LISTING TYPE THAT THIS CATEGORY IS FOR. -->
-	<section>
+<!-- 	<section>
 		<showlist>FALSE</showlist>
 		<url>page_category</url>
 		<title>Page Categories</title>
@@ -110,19 +111,19 @@
 		</table>
 		<list_template>list_pcategory.tpl</list_template>
 		<edit_template>edit_pcategory.tpl</edit_template>
-	</section>
+	</section> -->
 
 <!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE "PROPERTY FOR RENT"- . THIS IS A LISTING
 	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
 	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
 	 ADDITIONAL FIELDS NEEDED FOR THIS CATEGORY.-->
-	<section>
+	<!-- <section>
 		<showlist>FALSE</showlist>
 		<url>properties-for-rent</url>
 		<title>Properties for Rent</title>
 		<type>LISTING</type>
 		<type_id>2</type_id>
-		<hierarchy field="category_parent_id" default="22"></hierarchy>
+		<hierarchy field="listing_parent_id" default="22"></hierarchy>
 		<options>
 			<field>
 				<name>listing_category_id</name>
@@ -165,13 +166,13 @@
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_property.tpl</edit_template>
 	</section>
-	
+	 -->
 	
 <!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE "NEWS". THIS IS A LISTING
 	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
 	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
 	 ADDITIONAL FIELDS NEEDED FOR THIS CATEGORY.-->
-	<section>
+<!-- 	<section>
 		<showlist>FALSE</showlist>
 		<url>news</url>
 		<title>News</title>
@@ -197,14 +198,14 @@
 		</extends>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_news.tpl</edit_template>
-	</section>
+	</section> -->
 	
 	
 <!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE "OUR TEAM". THIS IS A LISTING
 	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
 	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
 	 ADDITIONAL FIELDS NEEDED FOR THIS CATEGORY.-->
-	 <section>
+<!-- 	 <section>
 		<showlist>FALSE</showlist>
 		<url>our-team</url>
 		<title>Our Team</title>
@@ -226,7 +227,7 @@
 		</associated>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_ourteam.tpl</edit_template>
-	</section>
+	</section> -->
 	
 	<smartytemplate_config><!-- This element contains the smarty template values -->
 		<templates>/templates</templates>
