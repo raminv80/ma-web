@@ -20,6 +20,20 @@
 				<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 			</div>
 		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_parent_flag">Is Parent?</label></div>
+			<div class="span9 controls">
+			<input type="hidden" value="{if $fields.listing_parent_flag eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_parent_flag]" class="value">
+			<input type="checkbox" {if $fields.listing_parent_flag eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_parent_flag">
+			</div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_display_menu">Display in Menu?</label></div>
+			<div class="span9 controls">
+			<input type="hidden" value="{if $fields.listing_display_menu eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_display_menu]" class="value">
+			<input type="checkbox" {if $fields.listing_display_menu eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_display_menu">
+			</div>
+		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_name">Name</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_name}" name="field[tbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req" onchange="seturl(this.value);"></div>
@@ -31,20 +45,6 @@
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_url">URL</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_url}" name="field[tbl_listing][{$cnt}][listing_url]" id="id_listing_url" class="req"></div>
-		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_parent_flag">Is Parent?</label></div>
-			<div class="span9 controls">
-			<input type="hidden" value="{if $fields.listing_parent_flag eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_parent_flag]" class="value">
-			<input type="checkbox" {if $fields.listing_published eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_parent_flag">
-			</div>
-		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_display_menu">Display in Menu?</label></div>
-			<div class="span9 controls">
-			<input type="hidden" value="{if $fields.listing_display_menu eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_display_menu]" class="value">
-			<input type="checkbox" {if $fields.listing_display_menu eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_display_menu">
-			</div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_parent">Parent</label></div>

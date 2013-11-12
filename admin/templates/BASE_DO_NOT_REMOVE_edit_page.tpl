@@ -8,11 +8,29 @@
                 <legend>
 				{if $fields.listing_id neq ""}Edit{else}New{/if} Page
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
+				{if $fields.listing_id neq ""}
+				<a class="btn btn-small btn-success right pull-right" href="./">
+					<i class="icon-plus icon-white"></i>ADD NEW
+				</a>
                 </legend>
                 </fieldset>
 				<input type="hidden" value="listing_id" name="field[tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
 				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
 				<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
+			</div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_parent_flag">Is Parent?</label></div>
+			<div class="span9 controls">
+			<input type="hidden" value="{if $fields.listing_parent_flag eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_parent_flag]" class="value">
+			<input type="checkbox" {if $fields.listing_parent_flag eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_parent_flag">
+			</div>
+		</div>
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_display_menu">Display in Menu?</label></div>
+			<div class="span9 controls">
+			<input type="hidden" value="{if $fields.listing_display_menu eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_display_menu]" class="value">
+			<input type="checkbox" {if $fields.listing_display_menu eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_display_menu">
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
