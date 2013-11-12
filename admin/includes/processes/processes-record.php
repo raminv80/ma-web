@@ -23,14 +23,14 @@ if(checkToken($_POST["formToken"])){
 								$slq_link = 'UPDATE tbl_link SET link_deleted = NOW() WHERE link_type_id = :link_type_id AND link_list_id = :link_list_id';
 								$result = $DBobject->executeSQL($slq_link ,array('link_type_id' => $vals['link_type_id'], 'link_list_id'=>$vals['link_list_id'] ));
 							}
-							if(is_array($vals['link_category_id'])){
-								foreach ($vals['link_category_id'] as $cat){
-									$slq_link = "INSERT INTO tbl_link ( link_type_id,link_list_id,link_category_id ) VALUES ( :link_type_id,:link_list_id,:link_category_id)";
-									$result = $DBobject->executeSQL($slq_link ,array('link_type_id'=>$vals['link_type_id'],'link_list_id'=>$vals['link_list_id'],'link_category_id'=>$cat));
+							if(is_array($vals['link_parent_id'])){
+								foreach ($vals['link_parent_id'] as $cat){
+									$slq_link = "INSERT INTO tbl_link ( link_type_id,link_list_id,link_parent_id ) VALUES ( :link_type_id,:link_list_id,:link_parent_id)";
+									$result = $DBobject->executeSQL($slq_link ,array('link_type_id'=>$vals['link_type_id'],'link_list_id'=>$vals['link_list_id'],'link_parent_id'=>$cat));
 								}
 							}else{
-								$slq_link = "INSERT INTO tbl_link ( link_type_id,link_list_id,link_category_id ) VALUES ( :link_type_id,:link_list_id,:link_category_id)";
-								$result = $DBobject->executeSQL($slq_link ,array('link_type_id'=>$vals['link_type_id'],'link_list_id'=>$vals['link_list_id'],'link_category_id'=>$vals['link_category_id']));
+								$slq_link = "INSERT INTO tbl_link ( link_type_id,link_list_id,link_parent_id ) VALUES ( :link_type_id,:link_list_id,:link_parent_id)";
+								$result = $DBobject->executeSQL($slq_link ,array('link_type_id'=>$vals['link_type_id'],'link_list_id'=>$vals['link_list_id'],'link_parent_id'=>$vals['link_parent_id']));
 							}
 							continue;
 						}
