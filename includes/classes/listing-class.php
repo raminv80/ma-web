@@ -96,8 +96,8 @@ class ListClass{
 				$template = $this->CONFIG_OBJ->template;
 				break 1;
 			}else if(!empty($_ID)){
-				//AKL $bdata= $this->LoadBreadcrumb($_ID);
-				//AKL $SMARTY->assign("breadcrumbs",$bdata);
+				$bdata= $this->LoadBreadcrumb($_ID);
+				$SMARTY->assign("breadcrumbs",$bdata);
 				$data = $this->GetDataSingleSet($_ID);
 				foreach($data[0] as $key => $val){
 					$SMARTY->assign($key, unclean($val));
