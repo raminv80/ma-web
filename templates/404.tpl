@@ -7,7 +7,7 @@
 					<div class="container">
 						<div class="row-fluid">
 							<div class="span7">
-					  			{include file='breadcrumbs.tpl'}
+					  		<!-- 	{include file='breadcrumbs.tpl'} -->
 					  			<h3 class="toptitle">{$listing_title}</h3>
 					  			<div class="toptext">
 					  				{$listing_content1}

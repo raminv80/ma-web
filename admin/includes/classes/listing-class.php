@@ -113,7 +113,6 @@ Class Listing{
 	function getListingList($parent_id=0){
 		global $SMARTY,$DBobject;
 		$records = array();
-			
 	
 		$sql = "SELECT tbl_listing.* FROM {$this->DBTABLE}
 		WHERE tbl_listing.listing_parent_id = $parent_id AND tbl_listing.listing_type_id = :type AND
@@ -124,9 +123,7 @@ Class Listing{
 		if($res = $DBobject->wrappedSqlGet($sql,$params)){ 
 			foreach ($res as $key => $val) {
 				$subs = array();
-				  if( $val['listing_parent_id'] == 0){
-					$subs = $this->getListingList($val['listing_id']);
-				}  
+				$subs = $this->getListingList($val['listing_id']);
 				if($val['listing_type_id'] == $this->TYPE_ID){
 					$records["l{$val['listing_id']}"] = array("title"=>$val['listing_name'],"id"=>$val['listing_id'],
 							"url"=>"/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
