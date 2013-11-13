@@ -9,6 +9,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Cache-control" content="no-cache" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="-1" />
 	<meta name="Description" content="{$page_metadescription}" />
 	<meta name="Keywords" content="{$page_metawords}" />
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
@@ -94,7 +97,7 @@
 
 				// General options
 				theme : "advanced",
-				plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking",
+				plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,wordcount",
 
 				// Theme options
 				theme_advanced_buttons1 : "forecolor,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
@@ -106,7 +109,7 @@
 				theme_advanced_statusbar_location : "bottom",
 				theme_advanced_resizing : true,
 				convert_urls : false,
-				content_css : '/includes/css/bootstrap.min.css,/includes/css/custom.css,/admin/includes/css/tinymce.css',
+				content_css : '/includes/css/bootstrap.min.css,/includes/css/colorbox.css,/includes/css/custom.css,/includes/css/tipTip.css,/admin/includes/css/tinymce.css',
 				file_browser_callback : 'elFinderBrowser'
 			});
 		});

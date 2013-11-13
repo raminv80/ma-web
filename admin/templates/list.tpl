@@ -6,12 +6,12 @@
         <td>{for $var=1 to $level}- {/for}<b>{$item.title}</b></td>
        	<td>
        	 	{if $item.url}
-        	<a href='{$item.url}' class='btn btn-small btn-warning pull-right'><b><i class="icon-pencil icon-white"></i> Edit</b></a>
+        	<a href='{$item.url}' class='btn btn-small btn-warning right'><b><i class="icon-pencil icon-white"></i> Edit</b></a>
         	{/if}
         </td>
         <td>
         	{if $item.url_delete}
-        	<a href='{$item.url_delete}'  onclick="return ConfirmDelete();" class='btn btn-small btn-danger pull-right'><b><i class="icon-trash icon-white"></i> Delete</b></a>
+        	<a href='{$item.url_delete}'  onclick="return ConfirmDelete();" class='btn btn-small btn-danger right'><b><i class="icon-trash icon-white"></i> Delete</b></a>
         	{/if}
         </td>
        </tr>

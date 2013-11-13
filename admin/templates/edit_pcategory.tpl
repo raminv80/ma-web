@@ -21,7 +21,7 @@
 			<div class="span9 controls"><input type="text" value="{$fields.category_name}" name="field[tbl_category][{$cnt}][category_name]" id="category_name" ></div>
 		</div>
 		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="category_listing_id">Primary Page</label></div>
+			<div class="span3"><label class="control-label" for="category_listing_id">Content Page</label></div>
 			<div class="span9 controls">
 				<select name="field[tbl_category][{$cnt}][category_listing_id]" id="category_listing_id">
 				<option value="0">Select one</option>

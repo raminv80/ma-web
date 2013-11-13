@@ -16,9 +16,9 @@ function getFileType(ID,parent,listing_id){
 					html += '<div class="span4" id="gallery_'+count+'" >';
 						html += '<input type="hidden" value="gallery_id" name="field[tbl_gallery]['+count+'][id]" id="id" />';
 						html += '<input type="hidden" value="" name="field[tbl_gallery]['+count+'][gallery_id]" >';
-						html += '<input type="hidden" value="'+file.name+'" name="field[tbl_gallery]['+count+'][gallery_file]" id="gallery_image_{$count}" >';
-						html += '<input type="hidden" value="'+listing_id+'" name="field[tbl_gallery]['+count+'][gallery_listing_id]" class="fileinput">';
-						html += '<input type="text" value="/'+file.path+'" name="field[tbl_gallery]['+count+'][gallery_link]" class="fileinput">';
+						html += '<input type="hidden" value="'+file.name+'" name="field[tbl_gallery]['+count+'][gallery_file]" id="gallery_image_'+count+'">';
+						html += '<input type="hidden" value="'+listing_id+'" name="field[tbl_gallery]['+count+'][gallery_listing_id]"  class="fileinput">';
+						html += '<input type="text" value="/'+file.path+'" name="field[tbl_gallery]['+count+'][gallery_link]" class="fileinput" id="gallery_image_'+count+'_link">';
 						html += '<span id="gallery_image_'+count+'_file">'+file.name+'</span>';
 					html += '</div>';
 					html += '<div class="span8">';
@@ -30,6 +30,7 @@ function getFileType(ID,parent,listing_id){
 					$('#'+parent).append(html);
 				}else{
 					$('#'+ID).val(file.name);
+					$('#'+ID+'_link').val('/'+file.path);
 					$('#'+ID+'_file').html(file.name);
 			        $('#'+ID+'_path').attr('href','/'+file.path);
 			        $('#'+ID+'_path').html('View');
@@ -59,6 +60,27 @@ function deleteFileType(ID){
 	html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[tbl_gallery]['+count+'][gallery_deleted]" />';
 	$('#'+ID).append(html);
 	$('#'+ID).parent().css('display','none');
+}
+
+
+function deleteInspection(ID){
+	if (ConfirmDelete()) {
+		var count = $('#'+ID).attr('rel');
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth()+1;//January is 0!
+		var yyyy = today.getFullYear(); 
+		var hh = today.getHours();
+		var MM = today.getMinutes();
+		var ss = today.getSeconds();
+		
+		html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[tbl_inspection]['+count+'][inspection_deleted]" />';
+		$('#'+ID).append(html);
+		$('#'+ID).css('display','none');
+	}else{ 
+		return false;
+	}
+
 }
 
 /**tool tips ***/

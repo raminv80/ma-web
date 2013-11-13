@@ -18,7 +18,7 @@
 				<input type="hidden" value="listing_id" name="field[tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
 				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
 				<input type="hidden" value="{$type_id}" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
-				<!-- <input type="hidden" value="28" name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent"> -->
+				<input type="hidden" value="28" name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent">
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
@@ -57,7 +57,10 @@
 			<div class="span3"><label class="control-label" for="id_listing_meta_words">Meta Words</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_words}" name="field[tbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
 		</div>
-
+		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_order">Order</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_order}" name="field[tbl_listing][{$cnt}][listing_order]" id="id_listing_order"></div>
+		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_published">Published</label></div>
 			<div class="span9 controls">
@@ -66,32 +69,27 @@
 			</div>
 		</div>
  		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content1">News Title</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_content1">Full Name</label></div>
 			<div class="span9 controls"><input type="text" value="{$fields.listing_content1}" name="field[tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="req"></div>
 		</div>
  		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="news_end_date">Date</label></div>
-			<div class="span9 controls">
-				<input type="hidden" value="news_id" name="field[tbl_news][{$cnt}][id]" />
-				<input type="hidden" value="listing_id" name="default[news_listing_id]" />
-				<input type="hidden" value="{$fields.news_id}" name="field[tbl_news][{$cnt}][news_id]" >
-				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_news][{$cnt}][news_listing_id]" />
-				<input type="text" value="{$fields.news_start_date}" name="field[tbl_news][{$cnt}][news_start_date]" id="news_start_date" class="req" >
-				<script type="text/javascript">
-				$(function(){
-					$('#news_start_date').datepicker({
-						dateFormat: "yy-mm-dd"
-					});
-				});
-				</script>
-			</div>
+			<div class="span3"><label class="control-label" for="id_listing_content2">Job Title</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_content2}" name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="req"></div>
+		</div>
+ 		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_content3">Phone Number</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_content3}" name="field[tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="req"></div>
+		</div>
+ 		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_content4">Email</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_content4}" name="field[tbl_listing][{$cnt}][listing_content4]" id="id_listing_content4" class="req email"></div>
 		</div>
 		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content2">Content</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
+			<div class="span3"><label class="control-label" for="id_listing_content5">Content</label></div>
+			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content5]" id="id_listing_content5" class="tinymce">{$fields.listing_content5}</textarea></div>
 		</div>
 		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="listing_image">Image</label><br/><label class="control-label small-txt" >Size: 640px Wide x 480px Tall</label></div>
+			<div class="span3"><label class="control-label" for="listing_image">Image</label><br/><label class="control-label small-txt" >Size: 300px Wide x 300px Tall</label></div>
 			<div class="span9 controls">
 			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image_link" class="fileinput">
 			<span class="file-view" id="listing_image_view"

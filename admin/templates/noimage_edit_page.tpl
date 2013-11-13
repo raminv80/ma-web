@@ -8,16 +8,19 @@
                 <legend>
 				{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone}
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
+				<a class="btn btn-small btn-success right pull-right" href="/admin/edit/page">
+					<i class="icon-plus icon-white"></i>ADD NEW
+				</a>
                 </legend>
                 </fieldset>
 				<input type="hidden" value="listing_id" name="field[tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
 				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
-				<input type="hidden" value="2" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
+				<input type="hidden" value="1" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_name">Name</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.listing_name}" name="field[tbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req" onchange="seturl(this.value);"></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_name}" name="field[tbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req" onchange="seturlaAndTitle(this.value);"></div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_title">Title</label></div>
@@ -28,7 +31,7 @@
 			<div class="span9 controls"><input type="text" value="{$fields.listing_url}" name="field[tbl_listing][{$cnt}][listing_url]" id="id_listing_url" class="req"></div>
 		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_parent">Product Category</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_parent">Parent</label></div>
 			<div class="span9 controls">
 				<select name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent">
 				<option value="0">Select one</option>
@@ -52,26 +55,26 @@
 			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_words}" name="field[tbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
 		</div>
 		<div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_order">Order</label></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_order}" name="field[tbl_listing][{$cnt}][listing_order]" id="id_listing_order"></div>
+		</div>
+		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_published">Published</label></div>
 			<div class="span9 controls">
 			<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_published]" class="value">
 			<input type="checkbox" {if $fields.listing_published eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
 			</div>
 		</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_order">Order</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.listing_order}" name="field[tbl_listing][{$cnt}][listing_order]" id="id_listing_order"></div>
-		</div>
 		 <div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content1">Content</label></div>
+			<div class="span3"><label class="control-label" for="id_listing_content1">Content</label><br/><label class="control-label small-txt" ></label></div>
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea></div>
 		</div>
-			<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="id_listing_content1">Downloads Area</label></div>
+		<!--  <div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="id_listing_content2">Middle Content</label></div>
 			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
-			</div>
-		<div class="row-fluid control-group">
-			<div class="span3"><label class="control-label" for="listing_image">Thumbnail Image</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label></div>
+		</div>
+		 <div class="row-fluid control-group">
+			<div class="span3"><label class="control-label" for="listing_image">Image</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label></div>
 			<div class="span9 controls">
 			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image" class="fileinput">
 			<span class="file-view" id="listing_image_view"
@@ -92,8 +95,10 @@
 				$('#listing_image_none').css('display','block');
 				">Remove File</a>
 			</div>
-		</div>
+		</div>-->
+		
 		<!--  gallery -->
+		<!-- 
 		{if $fields.listing_id neq ""}
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="gallery_image_{$count}">Gallery Images</label><br/><label class="control-label small-txt" >Size: 600px Wide x 600px Tall</label><br/><label class="control-label small-txt" >Max 3 images</label></div>
@@ -128,62 +133,9 @@
 			</div>
 		</div>
 		{/if}
+		--> 
 		<!--  gallery -->
-		<!--  parts -->
-		{if $fields.listing_id neq ""}
-		 <div class="row-fluid control-group">
-			<div class="span3">
-				<label class="control-label" for="gallery_image_{$count}">Product Parts</label>
-			</div>
-			<div class="span9 controls" id="parts-content">
-				{counter start=1 skip=1 assign="count"}
-				{foreach $fields.part as $item}
-				<div class="row-fluid part_item" rel="{$count}" id="parts_container{$count}">
-					<input type="hidden" value="part_id" name="field[tbl_part][{$count}][id]" id="id" />
-					<input type="hidden" value="{$item.part_id}" name="field[tbl_part][{$count}][part_id]" id="part_id{$count}">
-					<input type="hidden" value="{$fields.listing_id}" name="field[tbl_part][{$count}][part_listing_id]" id="part_listing_{$count}" >
-					<div class="row-fluid">
-						<div class="span3"><label for="id_part_stock{$count}">Out of stock</label></div>
-						<div class="span9">
-							<input type="hidden" value="{$item.part_stock}" name="field[tbl_part][{$count}][part_stock]" class="value" id="part_stock">
-							<input type="checkbox" {if $item.part_stock eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_part_stock{$count}">
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span3"><label for="part_name{$count}">Name</label></div>
-						<div class="span9">
-							<input type="text" value="{$item.part_name}" name="field[tbl_part][{$count}][part_name]" id="part_name{$count}"/>
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span3"><label for="id_part_price{$count}">Price</label></div>
-						<div class="span9">
-							<input type="text" value="{$item.part_price}" name="field[tbl_part][{$count}][part_price]" id="id_part_price{$count}"/>
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span12">
-						<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="deletePart('parts_container{$count}')">Delete</a>
-						</div>
-					</div>
-				</div>
-				{counter}
-				{/foreach}
-				<input type="hidden" value="{$count}" name="part" id="part_no" />
-			</div>
-		</div>
-		 <div class="row-fluid control-group">
-			<div class="span3"></div>
-			<div class="span9 controls">
-				<div class="row-fluid">
-					<div class="span12">
-						<a href="javascript:void(0);" class="btn btn-info" onclick="AddPart();">Add New Part</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		{/if}
-		<!-- parts -->
+		 
 		 <div class="row-fluid control-group">
             <div class="form-actions">
                 <button class="btn btn-primary" onClick="$('#Edit_Record').submit();" type="submit">Submit</button>
@@ -194,44 +146,8 @@
 	</div>
 </div>
 <script>
-function AddPart(){
-	var no = $('#part_no').val();
-	
-	var buf = '<div class="row-fluid part_item" rel="'+no+'" id="parts_container'+no+'">';
-	buf += '<input type="hidden" value="part_id" name="field[tbl_part]['+no+'][id]" id="id" />';
-	buf += '<input type="hidden" value="" name="field[tbl_part]['+no+'][part_id]" id="part_id'+no+'">';
-	buf += '<input type="hidden" value="{$fields.listing_id}" name="field[tbl_part]['+no+'][part_listing_id]" id="part_listing_'+no+'" >';
-	buf += '<div class="row-fluid">';
-	buf += '	<div class="span3"><label for="id_part_stock'+no+'">Out of stock</label></div>';
-	buf += '	<div class="span9">';
-	buf += '		<input type="hidden" value="{$item.part_stock}" name="field[tbl_part]['+no+'][part_stock]" class="value" id="part_stock">';
-	buf += '		<input type="checkbox" {if $item.part_stock eq 1}checked="checked"{/if} onclick="if($(this).is(\':checked\')){ $(this).parent().children(\'.value\').val(\'1\') }else{ $(this).parent().children(\'.value\').val(\'0\') }" id="id_part_stock'+no+'">';
-	buf += '	</div>';
-	buf += '</div>';
-	buf += '<div class="row-fluid">';
-	buf += '	<div class="span3"><label for="part_name'+no+'">Name</label></div>';
-	buf += '	<div class="span9">';
-	buf += '		<input type="text" value="{$item.part_name}" name="field[tbl_part]['+no+'][part_name]" id="part_name'+no+'"/>';
-	buf += '	</div>';
-	buf += '</div>';
-	buf += '<div class="row-fluid">';
-	buf += '	<div class="span3"><label for="id_part_price'+no+'">Price</label></div>';
-	buf += '		<div class="span9">';
-	buf += '		<input type="text" value="{$item.part_price}" name="field[tbl_part]['+no+'][part_price]" id="id_part_price'+no+'"/>';
-	buf += '	</div>';
-	buf += '</div>';
-	buf += '<div class="row-fluid">';
-	buf += '	<div class="span12">';
-	buf += '	<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="deletePart(\'parts_container'+no+'\')">Delete</a>';
-	buf += '	</div>';
-	buf += '</div>';
-	buf += '</div>';
-	
-	$('#parts-content').append(buf);
-	no++;
-	$('#part_no').val(no);
-}
-function seturl(str){
+function seturlaAndTitle(str){
+	$('#id_listing_title').val(str);
 	$.ajax({
 		type: "POST",
 	    url: "/admin/includes/processes/urlencode.php",
@@ -244,6 +160,7 @@ function seturl(str){
 	    	}catch(err){ }
 	    }
 	});
+	
 }
 </script>
 {/block}
