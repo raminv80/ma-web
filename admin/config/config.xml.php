@@ -53,6 +53,7 @@
 		<title>Pages</title>
 		<type>LISTING</type>
 		<type_id>1</type_id>
+		<parent_id>0</parent_id>
 		<options>
 			<field>
 				<name>listing_parent_id</name>
