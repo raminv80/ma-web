@@ -14,11 +14,12 @@ function getFileType(ID,parent,listing_id){
 					var html = '';
 					html += '<div class="row-fluid gallery_item" rel="'+count+'">';
 					html += '<div class="span4" id="gallery_'+count+'" >';
-						html += '<input type="hidden" value="gallery_id" name="field[tbl_gallery]['+count+'][id]" id="id" />';
-						html += '<input type="hidden" value="" name="field[tbl_gallery]['+count+'][gallery_id]" >';
-						html += '<input type="hidden" value="'+file.name+'" name="field[tbl_gallery]['+count+'][gallery_file]" id="gallery_image_'+count+'">';
-						html += '<input type="hidden" value="'+listing_id+'" name="field[tbl_gallery]['+count+'][gallery_listing_id]"  class="fileinput">';
-						html += '<input type="text" value="/'+file.path+'" name="field[tbl_gallery]['+count+'][gallery_link]" class="fileinput" id="gallery_image_'+count+'_link">';
+						html += '<input type="hidden" value="gallery_id" name="field[1][tbl_gallery]['+count+'][id]" id="id" />';
+						html += '<input type="hidden" value="listing_id" name="default[gallery_listing_id]" />';
+						html += '<input type="hidden" value="" name="field[1][tbl_gallery]['+count+'][gallery_id]" >';
+						html += '<input type="hidden" value="'+file.name+'" name="field[1][tbl_gallery]['+count+'][gallery_file]" id="gallery_image_'+count+'">';
+						html += '<input type="hidden" value="'+listing_id+'" name="field[1][tbl_gallery]['+count+'][gallery_listing_id]"  class="fileinput">';
+						html += '<input type="text" value="/'+file.path+'" name="field[1][tbl_gallery]['+count+'][gallery_link]" class="fileinput" id="gallery_image_'+count+'_link">';
 						html += '<span id="gallery_image_'+count+'_file">'+file.name+'</span>';
 					html += '</div>';
 					html += '<div class="span8">';
@@ -57,7 +58,7 @@ function deleteFileType(ID){
 	var MM = today.getMinutes();
 	var ss = today.getSeconds();
 	
-	html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[tbl_gallery]['+count+'][gallery_deleted]" />';
+	html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[1][tbl_gallery]['+count+'][gallery_deleted]" />';
 	$('#'+ID).append(html);
 	$('#'+ID).parent().css('display','none');
 }
@@ -74,7 +75,7 @@ function deleteInspection(ID){
 		var MM = today.getMinutes();
 		var ss = today.getSeconds();
 		
-		html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[tbl_inspection]['+count+'][inspection_deleted]" />';
+		html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[1][tbl_inspection]['+count+'][inspection_deleted]" />';
 		$('#'+ID).append(html);
 		$('#'+ID).css('display','none');
 	}else{ 
