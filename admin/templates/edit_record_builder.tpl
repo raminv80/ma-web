@@ -5,7 +5,7 @@
 	{foreach key=table item=rec from=$fields}
 		{foreach key=id item=item from=$rec}
 			<div class="grid_4 alpha omega left">{$item.title}</div>
-			<div class="grid_8 alpha omega right"><input type="text" id="id_{$id}" name="field[{$table}][{$id}]" value="{$item.value}" /></div>
+			<div class="grid_8 alpha omega right"><input type="text" id="id_{$id}" name="field[1][{$table}][{$id}]" value="{$item.value}" /></div>
 		{/foreach}
 	{/foreach}
 	<input type="hidden" name="formToken" id="formToken" value="{$token}" />

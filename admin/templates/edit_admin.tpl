@@ -10,23 +10,23 @@
 				{if $cnt eq ""}{assign var=cnt value=0}{/if}
                 </legend>
                 </fieldset>
-				<input type="hidden" value="{$fields.admin_id}" name="field[tbl_admin][{$cnt}][admin_id]" id="admin_id" />
-				<input type="hidden" value="admin_id" name="field[tbl_admin][{$cnt}][id]" id="id" />
-				<input type="hidden" value="{$fields.admin_username}" name="field[tbl_admin][{$cnt}][admin_username]" id="admin_username">
-				<input type="hidden" value="{$fields.admin_password}" name="field[tbl_admin][{$cnt}][admin_password]" id="admin_password">
+				<input type="hidden" value="{$fields.admin_id}" name="field[1][tbl_admin][{$cnt}][admin_id]" id="admin_id" />
+				<input type="hidden" value="admin_id" name="field[1][tbl_admin][{$cnt}][id]" id="id" />
+				<input type="hidden" value="{$fields.admin_username}" name="field[1][tbl_admin][{$cnt}][admin_username]" id="admin_username">
+				<input type="hidden" value="{$fields.admin_password}" name="field[1][tbl_admin][{$cnt}][admin_password]" id="admin_password">
 			</div>
 		</div>
 		<div class="row-fluid control-group">
             <div class="span3"><label class="control-label" for="admin_name">Name</label></div>
-            <div class="span9 controls"><input type="text" value="{$fields.admin_name}" name="field[tbl_admin][{$cnt}][admin_name]" id="admin_name" class="req"></div>
+            <div class="span9 controls"><input type="text" value="{$fields.admin_name}" name="field[1][tbl_admin][{$cnt}][admin_name]" id="admin_name" class="req"></div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="admin_surname">Surname</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.admin_surname}" name="field[tbl_admin][{$cnt}][admin_surname]" id="admin_surname"></div>
+			<div class="span9 controls"><input type="text" value="{$fields.admin_surname}" name="field[1][tbl_admin][{$cnt}][admin_surname]" id="admin_surname"></div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="admin_email">Email</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.admin_email}" name="field[tbl_admin][{$cnt}][admin_email]" id="admin_email" class="req email"></div>
+			<div class="span9 controls"><input type="text" value="{$fields.admin_email}" name="field[1][tbl_admin][{$cnt}][admin_email]" id="admin_email" class="req email"></div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="admin_reemail">Retype Email</label></div>
@@ -43,7 +43,7 @@
 		</div>
 		<div class="row-fluid control-group" style="display:none">
 			<div class="span3"><label class="control-label" for="admin_level">Admin Level</label></div>
-            <div class="span9 controls"><select name="field[tbl_admin][{$cnt}][admin_level]" id="admin_level">
+            <div class="span9 controls"><select name="field[1][tbl_admin][{$cnt}][admin_level]" id="admin_level">
 									<option value="1" {if $fields.admin_level eq 1}selected="selected"{/if}>Admin</option>
 									<option value="2" {if $fields.admin_level eq 2}selected="selected"{/if}>Sudo-admin</option>
 									<option value="3" {if $fields.admin_level eq 3}selected="selected"{/if}>Member</option>

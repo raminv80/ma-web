@@ -15,27 +15,27 @@
 				{/if}
                 </legend>
                 </fieldset>
-				<input type="hidden" value="listing_id" name="field[tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
-				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
-				<input type="hidden" value="2" name="field[tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
+				<input type="hidden" value="listing_id" name="field[1][tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;"/>
+				<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_type_id">
+				<input type="hidden" value="2" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_name">Name</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.listing_name}" name="field[tbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req" onchange="seturlaAndTitle(this.value);"></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_name}" name="field[1][tbl_listing][{$cnt}][listing_name]" id="id_listing_name" class="req" onchange="seturlaAndTitle(this.value);"></div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_title">Title</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.listing_title}" name="field[tbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req" ></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" class="req" ></div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_url">URL</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.listing_url}" name="field[tbl_listing][{$cnt}][listing_url]" id="id_listing_url" class="req"></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" class="req"></div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_parent">Product Category</label></div>
 			<div class="span9 controls">
-				<select name="field[tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent">
+				<select name="field[1][tbl_listing][{$cnt}][listing_category_id]" id="id_listing_parent">
 				<!-- <option value="0">Select one</option> -->
 						{foreach $fields.options.listing_category_id as $opt}
 									<option value="{$opt.id}" {if $fields.listing_category_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
@@ -46,35 +46,35 @@
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_seo_title">SEO Title</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.listing_seo_title}" name="field[tbl_listing][{$cnt}][listing_seo_title]" id="id_listing_seo_title" class="req"></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_seo_title}" name="field[1][tbl_listing][{$cnt}][listing_seo_title]" id="id_listing_seo_title" class="req"></div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_meta_description">Meta Description</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_description}" name="field[tbl_listing][{$cnt}][listing_meta_description]" id="id_listing_meta_description"></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_description}" name="field[1][tbl_listing][{$cnt}][listing_meta_description]" id="id_listing_meta_description"></div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_meta_words">Meta Words</label></div>
-			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_words}" name="field[tbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
+			<div class="span9 controls"><input type="text" value="{$fields.listing_meta_words}" name="field[1][tbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words"></div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_published">Published</label></div>
 			<div class="span9 controls">
-			<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[tbl_listing][{$cnt}][listing_published]" class="value">
+			<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value">
 			<input type="checkbox" {if $fields.listing_published eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
 			</div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_content1">Short Description</label><br><label class="control-label small-txt" > Max: 500 characters</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea></div>
+			<div class="span9 controls"><textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea></div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="id_listing_content2">Full Description</label></div>
-			<div class="span9 controls"><textarea name="field[tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
+			<div class="span9 controls"><textarea name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea></div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="listing_image">Main Image</label><br/><label class="control-label small-txt" >Size: 640px Wide x 480px Tall</label></div>
 			<div class="span9 controls">
-			<input type="hidden" value="{$fields.listing_image}" name="field[tbl_listing][{$cnt}][listing_image]" id="listing_image_link" class="fileinput">
+			<input type="hidden" value="{$fields.listing_image}" name="field[1][tbl_listing][{$cnt}][listing_image]" id="listing_image_link" class="fileinput">
 			<span class="file-view" id="listing_image_view"
 			{if $fields.listing_image eq ""}style="display:none"{/if} >
 			<a href="{$fields.listing_image}" target="_blank" id="listing_image_path">{$fields.listing_image}</a>
@@ -105,11 +105,11 @@
 				{foreach $fields.gallery as $item}
 				<div class="row-fluid gallery_item" rel="{$count}">
 					<div class="span4" id="gallery_{$count}">
-						<input type="hidden" value="gallery_id" name="field[tbl_gallery][{$count}][id]" id="id" />
-						<input type="hidden" value="{$item.gallery_id}" name="field[tbl_gallery][{$count}][gallery_id]" >
-						<input type="hidden" value="{$item.gallery_file}" name="field[tbl_gallery][{$count}][gallery_file]" id="gallery_image_{$count}"  >
-						<input type="hidden" value="{$item.gallery_listing_id}" name="field[tbl_gallery][{$count}][gallery_listing_id]" id="gallery_image_{$count}" class="fileinput">
-						<input type="text" value="{$item.gallery_link}" name="field[tbl_gallery][{$count}][gallery_link]" class="fileinput"  id="gallery_image_{$count}_link" >
+						<input type="hidden" value="gallery_id" name="field[1][tbl_gallery][{$count}][id]" id="id" />
+						<input type="hidden" value="{$item.gallery_id}" name="field[1][tbl_gallery][{$count}][gallery_id]" >
+						<input type="hidden" value="{$item.gallery_file}" name="field[1][tbl_gallery][{$count}][gallery_file]" id="gallery_image_{$count}"  >
+						<input type="hidden" value="{$item.gallery_listing_id}" name="field[1][tbl_gallery][{$count}][gallery_listing_id]" id="gallery_image_{$count}" class="fileinput">
+						<input type="text" value="{$item.gallery_link}" name="field[1][tbl_gallery][{$count}][gallery_link]" class="fileinput"  id="gallery_image_{$count}_link" >
 						<span id="gallery_image_{$count}_file">{$item.gallery_file}</span>
 					</div>
 					<div class="span8">
@@ -139,18 +139,18 @@
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="property_street_address">Street Address</label></div>
 			<div class="span9 controls">
-				<input type="text" value="{$fields.property_street_address}" name="field[tbl_property][{$cnt}][property_street_address]" id="property_street_address" class="req" >
+				<input type="text" value="{$fields.property_street_address}" name="field[1][tbl_property][{$cnt}][property_street_address]" id="property_street_address" class="req" >
 			</div>
 		</div>
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="property_suburb">Suburb</label></div>
 			<div class="span9 controls">
-				<input type="hidden" value="property_id" name="field[tbl_property][{$cnt}][id]" />
+				<input type="hidden" value="property_id" name="field[1][tbl_property][{$cnt}][id]" />
 				<input type="hidden" value="listing_id" name="default[property_listing_id]" />
-				<input type="hidden" value="{$fields.property_id}" name="field[tbl_property][{$cnt}][property_id]" >
-				<input type="hidden" value="{$fields.listing_id}" name="field[tbl_property][{$cnt}][property_listing_id]" />
-				<!-- <input type="text" value="{$fields.property_suburb}" name="field[tbl_property][{$cnt}][property_suburb]" id="property_suburb" class="req" > -->
-				<select name="field[tbl_property][{$cnt}][property_suburb]" id="property_suburb">
+				<input type="hidden" value="{$fields.property_id}" name="field[1][tbl_property][{$cnt}][property_id]" >
+				<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_property][{$cnt}][property_listing_id]" />
+				<!-- <input type="text" value="{$fields.property_suburb}" name="field[1][tbl_property][{$cnt}][property_suburb]" id="property_suburb" class="req" > -->
+				<select name="field[1][tbl_property][{$cnt}][property_suburb]" id="property_suburb">
 					{foreach $fields.options.property_suburb as $opt}
 						<option value="{$opt.value}" {if $fields.property_suburb eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
 					{/foreach}
@@ -162,8 +162,8 @@
 			<div class="span9">
 				<a href="javascript:void(0);" class="btn btn-info" onclick="searchAddress($('#property_street_address').val() + ', ' + $('#property_suburb').val());">Search current address</a>
 				<div id="search-warning"></div>
-				<input type="hidden" value="{$fields.property_latitude}" name="field[tbl_property][{$cnt}][property_latitude]" id="location_latitude">
-				<input type="hidden" value="{$fields.property_longitude}" name="field[tbl_property][{$cnt}][property_longitude]" id="location_longitude">
+				<input type="hidden" value="{$fields.property_latitude}" name="field[1][tbl_property][{$cnt}][property_latitude]" id="location_latitude">
+				<input type="hidden" value="{$fields.property_longitude}" name="field[1][tbl_property][{$cnt}][property_longitude]" id="location_longitude">
 				<div id="GmlMap" class="GmlMap">Loading Map....</div>
 				<script type="text/javascript">
 					jQuery(document).ready(function() {
@@ -178,13 +178,13 @@
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="property_rent">Rent (per week)</label></div>
 			<div class="span9 controls">
-				<input type="text" value="{$fields.property_rent}" name="field[tbl_property][{$cnt}][property_rent]" id="property_rent" class="req" >
+				<input type="text" value="{$fields.property_rent}" name="field[1][tbl_property][{$cnt}][property_rent]" id="property_rent" class="req" >
 			</div>
 		</div>
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="property_type_id">Property Type</label></div>
 			<div class="span9 controls">
-				<select name="field[tbl_property][{$cnt}][property_type_id]" id="property_type_id">
+				<select name="field[1][tbl_property][{$cnt}][property_type_id]" id="property_type_id">
 					{foreach $fields.options.property_type_id as $opt}
 						<option value="{$opt.value}" {if $fields.property_type_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
 					{/foreach}
@@ -194,7 +194,7 @@
 		 <div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="property_bedrooms">No. Bedrooms</label></div>
 			<div class="span9 controls">
-				<select name="field[tbl_property][{$cnt}][property_bedrooms]" id="property_bedrooms">
+				<select name="field[1][tbl_property][{$cnt}][property_bedrooms]" id="property_bedrooms">
 					{for $val=0 to 6}
 						<option value="{$val}" {if $fields.property_bedrooms eq $val}selected="selected" {/if}>{$val}</option>
 					{/for}
@@ -204,7 +204,7 @@
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="property_bathrooms">No. Bathrooms</label></div>
 			<div class="span9 controls">
-				<select name="field[tbl_property][{$cnt}][property_bathrooms]" id="property_bathrooms">
+				<select name="field[1][tbl_property][{$cnt}][property_bathrooms]" id="property_bathrooms">
 					{for $val=0 to 6}
 						<option value="{$val}" {if $fields.property_bathrooms eq $val}selected="selected" {/if}>{$val}</option>
 					{/for}
@@ -214,7 +214,7 @@
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="property_carparks">No. Car Parks</label></div>
 			<div class="span9 controls">
-				<select name="field[tbl_property][{$cnt}][property_carparks]" id="property_carparks">
+				<select name="field[1][tbl_property][{$cnt}][property_carparks]" id="property_carparks">
 					{for $val=0 to 6}
 						<option value="{$val}" {if $fields.property_carparks eq $val}selected="selected" {/if}>{$val}</option>
 					{/for}
@@ -224,7 +224,7 @@
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="property_pet">Pet Friendly</label></div>
 			<div class="span9 controls">
-				<select name="field[tbl_property][{$cnt}][property_pet]" id="property_pet">
+				<select name="field[1][tbl_property][{$cnt}][property_pet]" id="property_pet">
 					<option value="0" {if $fields.property_pet eq 0}selected="selected" {/if}>No</option>
 					<option value="1" {if $fields.property_pet eq 1}selected="selected" {/if}>Yes</option>
 					<option value="2" {if $fields.property_pet eq 2}selected="selected" {/if}>N/A</option>
@@ -239,7 +239,7 @@
 		<div class="row-fluid control-group">
 			<div class="span3"><label class="control-label" for="property_manager_id">Property Manager</label></div>
 			<div class="span9 controls">
-				<select name="field[tbl_property][{$cnt}][property_manager_id]" id="property_manager_id">
+				<select name="field[1][tbl_property][{$cnt}][property_manager_id]" id="property_manager_id">
 					{foreach $fields.options.listing_id as $opt}
 						<option value="{$opt.id}" {if $fields.property_manager_id eq $opt.id}selected="selected"{/if}>{$opt.value}  </option>
 					{/foreach}
@@ -258,13 +258,13 @@
 				{counter start=1 skip=1 assign="count"}
 				{foreach $fields.inspection as $item}
 				<div class="row-fluid inspection_item" rel="{$count}" id="inspection_container{$count}">
-					<input type="hidden" value="inspection_id" name="field[tbl_inspection][{$count}][id]" id="id" />
-					<input type="hidden" value="{$item.inspection_id}" name="field[tbl_inspection][{$count}][inspection_id]" id="inspection_id{$count}">
-					<input type="hidden" value="{$fields.listing_id}" name="field[tbl_inspection][{$count}][inspection_listing_id]" id="inspection_listing_{$count}" >
+					<input type="hidden" value="inspection_id" name="field[1][tbl_inspection][{$count}][id]" id="id" />
+					<input type="hidden" value="{$item.inspection_id}" name="field[1][tbl_inspection][{$count}][inspection_id]" id="inspection_id{$count}">
+					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_inspection][{$count}][inspection_listing_id]" id="inspection_listing_{$count}" >
 					<div class="row-fluid">
 						<div class="span3"><label for="inspection_start_date{$count}">Date</label></div>
 						<div class="span9">
-							<input type="text" value="{$item.inspection_start_date}" name="field[tbl_inspection][{$count}][inspection_start_date]" class="value" id="inspection_start_date{$count}">
+							<input type="text" value="{$item.inspection_start_date}" name="field[1][tbl_inspection][{$count}][inspection_start_date]" class="value" id="inspection_start_date{$count}">
 							<script type="text/javascript">
 								$(function(){
 									$('#inspection_start_date{$count}').datepicker({
@@ -277,7 +277,7 @@
 					<div class="row-fluid">
 						<div class="span3"><label for="inspection_start_time{$count}">Start Time</label></div>
 						<div class="span9">
-							<input type="text" value="{$item.inspection_start_time}" name="field[tbl_inspection][{$count}][inspection_start_time]" class="value" id="inspection_start_time{$count}">
+							<input type="text" value="{$item.inspection_start_time}" name="field[1][tbl_inspection][{$count}][inspection_start_time]" class="value" id="inspection_start_time{$count}">
 							<script type="text/javascript">
 								$(function(){
 									$('#inspection_start_time{$count}').timepicker();
@@ -288,7 +288,7 @@
 					<div class="row-fluid">
 						<div class="span3"><label for="inspection_end_time{$count}">End Time</label></div>
 						<div class="span9">
-							<input type="text" value="{$item.inspection_end_time}" name="field[tbl_inspection][{$count}][inspection_end_time]" class="value" id="inspection_end_time{$count}">
+							<input type="text" value="{$item.inspection_end_time}" name="field[1][tbl_inspection][{$count}][inspection_end_time]" class="value" id="inspection_end_time{$count}">
 							<script type="text/javascript">
 								$(function(){
 									$('#inspection_end_time{$count}').timepicker();
@@ -338,25 +338,25 @@ function AddInspection(){
 	var no = $('#inspection_no').val();
 	
 	var buf = '<div class="row-fluid inspection_item" rel="'+no+'" id="inspections_container'+no+'">';
-	buf += '<input type="hidden" value="inspection_id" name="field[tbl_inspection]['+no+'][id]" id="id" />';
-	buf += '<input type="hidden" value="" name="field[tbl_inspection]['+no+'][inspection_id]" id="inspection_id'+no+'">';
-	buf += '<input type="hidden" value="{$fields.listing_id}" name="field[tbl_inspection]['+no+'][inspection_listing_id]" id="inspection_listing_'+no+'" >';
+	buf += '<input type="hidden" value="inspection_id" name="field[1][tbl_inspection]['+no+'][id]" id="id" />';
+	buf += '<input type="hidden" value="" name="field[1][tbl_inspection]['+no+'][inspection_id]" id="inspection_id'+no+'">';
+	buf += '<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_inspection]['+no+'][inspection_listing_id]" id="inspection_listing_'+no+'" >';
 	buf += '<div class="row-fluid">';
 	buf += '	<div class="span3"><label for="inspection_start_date'+no+'">Date</label></div>';
 	buf += '	<div class="span9">';
-	buf += '		<input type="text" value="'+today+'" name="field[tbl_inspection]['+no+'][inspection_start_date]" id="inspection_start_date'+no+'">';
+	buf += '		<input type="text" value="'+today+'" name="field[1][tbl_inspection]['+no+'][inspection_start_date]" id="inspection_start_date'+no+'">';
 	buf += '	</div>';
 	buf += '</div>';
 	buf += '<div class="row-fluid">';
 	buf += '	<div class="span3"><label for="inspection_start_time'+no+'">Start Time</label></div>';
 	buf += '	<div class="span9">';
-	buf += '		<input type="text" value="9:00" name="field[tbl_inspection]['+no+'][inspection_start_time]" id="inspection_start_time'+no+'"/>';
+	buf += '		<input type="text" value="9:00" name="field[1][tbl_inspection]['+no+'][inspection_start_time]" id="inspection_start_time'+no+'"/>';
 	buf += '	</div>';
 	buf += '</div>';
 	buf += '<div class="row-fluid">';
 	buf += '	<div class="span3"><label for="inspection_end_time'+no+'">End Time</label></div>';
 	buf += '	<div class="span9">';
-	buf += '		<input type="text" value="9:00" name="field[tbl_inspection]['+no+'][inspection_end_time]" id="inspection_end_time'+no+'"/>';
+	buf += '		<input type="text" value="9:00" name="field[1][tbl_inspection]['+no+'][inspection_end_time]" id="inspection_end_time'+no+'"/>';
 	buf += '	</div>';
 	buf += '</div>';
 	buf += '<div class="row-fluid btn-separator">';
