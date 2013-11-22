@@ -57,17 +57,20 @@ class Listing {
 			$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->recursive_check != '' ? "AND {$f->recursive_check} != {$id} " : "") . " "; // AND article_deleted IS NULL";
 			if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 				foreach ( $res as $key => $row ) {
-					$listing_f ['options'] ["{$f->name}"] [] = array (
+					$listing_f ['options'] ["{$f->name}"] ["{$row ["{$pre}_id"]}"] = array (
 							'id' => $row ["{$pre}_id"],
 							'value' => $row ["{$f->reference}"] 
 					);
 				}
 			}
 		}
-		
 		foreach ( $this->CONFIG_OBJ->associated as $a ) {
+			$order = "";
+			if (! empty ( $a->orderby )) {
+				$order = " ORDER BY " . $a->orderby;
+			}
 			$pre = str_replace ( "tbl_", "", $a->table );
-			$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL "; // AND article_deleted IS NULL";
+			$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL ".$order; // AND article_deleted IS NULL";
 			if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 				foreach ( $res as $row ) {
 					$r_array = array ();
@@ -111,18 +114,22 @@ class Listing {
 		);
 		return $record;
 	}
-	function getListingList($parent_id = 0) {
+	function getListingList($parent_id='0') {
 		global $SMARTY, $DBobject;
 		$records = array ();
-		if(empty($parent_id)) {
-			$parent_id = 0;
+		
+		$order = " ORDER BY tbl_listing.listing_order ASC";
+		if (! empty ( $this->CONFIG_OBJ->orderby )) {
+			$order = " ORDER BY " . $this->CONFIG_OBJ->orderby;
 		}
+		
 		$sql = "SELECT * FROM {$this->DBTABLE}
-		WHERE listing_parent_id = $parent_id AND tbl_listing.listing_type_id = :type AND
-		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL " . ($this->WHERE != '' ? "AND {$this->WHERE} " : " ") . " ORDER BY tbl_listing.listing_order ASC";
+		WHERE listing_parent_id = :pid AND tbl_listing.listing_type_id = :type AND
+		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL " . ($this->WHERE != '' ? "AND {$this->WHERE} " : " ") .$order;
 		
 		$params = array (
-				":type" => $this->TYPE_ID 
+				":type" => $this->TYPE_ID,
+				":pid" => $parent_id
 		);
                 
 		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) { 

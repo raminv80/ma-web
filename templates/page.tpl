@@ -12,6 +12,7 @@
 	<meta name="robots" content="index,follow" />
 	{/if}
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3, minimum-scale=1, user-scalable=yes">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>{$category_name|replace:'and':'&'|ucfirst}  {$product_name|ucfirst} {$listing_seo_title}</title>
 	<!-- <link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon"> -->
 
@@ -24,7 +25,11 @@
     <link href="/includes/css/tipTip.css" rel="stylesheet" media="screen">
     <link href="/includes/css/custom.css" rel="stylesheet" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
-    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	     <script src="/includes/js/html5shiv.js"></script>
+	     <script src="/includes/js/respond.min.js"></script>
+ 	<![endif]-->
     <script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/includes/js/custom.js"></script>

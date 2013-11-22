@@ -52,6 +52,10 @@ Class Record{
 			}
 		}
 
+		foreach($this->CONFIG->table->associated as $a){
+			$article_f["{$a->name}"] = $this->getAssociated($a, $id);
+		}
+
 		foreach($this->CONFIG->table->options->field as $f){
 
 			$pre = str_replace("tbl_","",$f->table);
@@ -62,23 +66,37 @@ Class Record{
 				}
 			}
 		}
-
-		foreach($this->CONFIG_OBJ->associated as $a){
-			$pre = str_replace("tbl_","",$a->table);
-			$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL ";
-			if($res = $DBobject->wrappedSqlGet($sql)){
-				foreach ($res as $row) {
-					$r_array = array();
-					foreach($row as $key =>$field){
-						$r_array["{$key}"] = $field;
-					}
-					$listing_f["{$a->name}"][] = $r_array;
-				}
-			}
-		}
-
+		
 		return  $article_f;
 	}
+	
+	function getAssociated($a,$id){
+		global $SMARTY,$DBobject;
+		$results = array();
+		
+		$order = "";
+		if (! empty ( $a->orderby )) {
+			$order = " ORDER BY " . $a->orderby;
+		}
+		
+		$pre = str_replace("tbl_","",$a->table);
+		$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL ".$order;
+		if($res = $DBobject->wrappedSqlGet($sql)){
+			foreach ($res as $row) {
+				$r_array = array();
+				foreach($row as $key =>$field){
+					$r_array["{$key}"] = $field;
+				}
+				
+				foreach($a->associated as $as){
+					$r_array["{$as->name}"] = $this->getAssociated($as, $row["{$as->id}"]);
+				}
+				$results[] = $r_array;
+			}
+		}
+		return $results;
+	}
+	
 	function getRecordBuilder($id){
 		global $SMARTY,$DBobject;
 		$article_f = array();
@@ -99,27 +117,21 @@ Class Record{
 		global $SMARTY,$DBobject;
 		$records = array();
 		
-		$hierarchy = $this->CONFIG->table->hierarchy;
-		if(!empty($hierarchy) && !empty($hierarchy->attributes()->field) && ((integer)$hierarchy->attributes()->default) >= 0){
-			$local_field = $hierarchy->attributes()->field;
-			if(empty($hierarchy_id)){
-				$hierarchy_id = ((integer)$hierarchy->attributes()->default);
-			}
-			
-			$sql = "SELECT * FROM {$this->TABLE} WHERE {$this->DELETED} IS NULL AND {$local_field} = {$hierarchy_id} ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ";
-			$params = array(":def" =>$hierarchy_id);
-			if($res = $DBobject->wrappedSqlGet($sql,$params)){
-				foreach ($res as $key => $val) {
-					$subs = $this->getRecordList($val["{$this->ID}"]);
-					$records[$val["{$this->ID}"]] = array("title"=>$val["{$this->FIELD}"],"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}","subs"=>$subs);
+		$tfields="";
+		foreach($this->FIELD as $f){
+			$tfields .= "{$f},";
+			$n++;
+		}
+		$sql = "SELECT {$tfields} {$this->TABLE}.* FROM {$this->TABLE} WHERE {$this->DELETED}  IS NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ".($this->ORDERBY!=''?" ORDER BY {$this->ORDERBY} ":" ");
+		if($res = $DBobject->wrappedSqlGet($sql)){
+			foreach ($res as $key => $val) {
+				$n = 0;
+				$title = "";
+				foreach($this->FIELD as $f){
+					$title .= ($n>0?", ":"").$val["{$f}"];
+					$n++;
 				}
-			}
-		}else{
-			$sql = "SELECT * FROM {$this->TABLE} WHERE {$this->DELETED}  IS NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ";
-			if($res = $DBobject->wrappedSqlGet($sql)){
-				foreach ($res as $key => $val) {
-					$records[$val["{$this->ID}"]] = array("title"=>$val["{$this->FIELD}"],"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}");
-				}
+				$records[$val["{$this->ID}"]] = array("title"=>$title,"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}");
 			}
 		}
 		

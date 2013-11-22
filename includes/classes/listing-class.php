@@ -87,8 +87,8 @@ class ListClass {
 		$data = "";
 		// Split the URL
 		$_url = ltrim ( rtrim ( $this->URL, '/' ), '/' );
-	
-		if ($id = $this->ChkCache ( $_url )) {
+
+		if ($id = $this->ChkCache ( $_url )) {	
 			$data = $this->LoadTree ($id);
 			$SMARTY->assign ( 'data', unclean ( $data ) );
 		}
@@ -126,15 +126,7 @@ class ListClass {
 		}
 			
 		foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
-			$t_data = array ();
-			$pre = str_replace ( "tbl_", "", $a->table );
-			$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = :id AND {$pre}_deleted IS NULL ";
-			$params = array(':id'=>$_ID);
-			if ($res = $DBobject->wrappedSqlGet( $sql, $params )) {
-				foreach ( $res as $row ) {
-					$t_data [] = $row;
-				}
-			}
+			$t_data = $this->LoadAssociated($a,$_ID);
 			$SMARTY->assign ( "{$a->name}", $t_data );
 		}
 			
@@ -190,15 +182,7 @@ class ListClass {
 		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
 			$data = $res [0];
 			foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
-				$t_data = array ();
-				$pre = str_replace ( "tbl_", "", $a->table );
-				$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$_id}' AND {$pre}_deleted IS NULL "; // AND article_deleted IS NULL";
-				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
-					foreach ( $res as $row ) {
-						$t_data [] = $row;
-					}
-				}
-				$data ["{$a->name}"] = $t_data;
+				$data ["{$a->name}"] = $this->LoadAssociated($a, $_id);
 			}
 			// $data['listing_parent'] = $this->LoadParents($res[0]['listing_parent_id']);
 		}
@@ -209,15 +193,7 @@ class ListClass {
 		$data = $this->GetDataSingleSet ( $_ID );
 		
 		foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
-			$t_data = array ();
-			$pre = str_replace ( "tbl_", "", $a->table );
-			$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$_ID}' AND {$pre}_deleted IS NULL "; // AND article_deleted IS NULL";
-			if ($res = $DBobject->wrappedSqlGet ( $sql )) {
-				foreach ( $res as $row ) {
-					$t_data [] = $row;
-				}
-			}
-			$data ["{$a->name}"] = $t_data;
+			$data ["{$a->name}"] = $this->LoadAssociated($a, $_ID);
 		}
 		foreach ( $this->CONFIG_OBJ->table->extends as $a ) {
 			$t_data = array ();
@@ -405,7 +381,7 @@ class ListClass {
 		}
 		return $data;
 	}
-	function LoadTree($_cid = 0, $level = 0) {
+	function LoadTree($_cid = 0, $level = 0, $count = 0) {
 		global $CONFIG, $SMARTY, $DBobject;
 		$data = array ();
 		
@@ -414,6 +390,23 @@ class ListClass {
 		}
 		
 		// GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
+		$filter = "";
+		$filter_params = array();
+		$f_count = 1;
+		if (!empty($this->CONFIG_OBJ->filter)) {
+			foreach($this->CONFIG_OBJ->filter as $f) {
+				if (!empty($f->field) && !empty($f->value)) {
+					$filter .= " AND ".$f->field." = :filter{$f_count}";
+					$filter_params[":filter{$f_count}"] = $f->value;
+					$f_count++;
+				}
+			}
+		}
+		if(!empty($filter)){
+			$this->CONFIG_OBJ->limit = 0;
+		}
+		
+		
 		$order = " ORDER BY tbl_listing.listing_order ASC";
 		if (! empty ( $this->CONFIG_OBJ->orderby )) {
 			$order = " ORDER BY " . $this->CONFIG_OBJ->orderby;
@@ -423,33 +416,65 @@ class ListClass {
 			$pre = str_replace ( "tbl_", "", $a->table );
 			$extends = " LEFT JOIN {$a->table} ON tbl_listing.listing_id = {$a->field}"; // AND article_deleted IS NULL";
 		}
-		$sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_type_id = :type AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 " . $order;
+		$sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_type_id = :type AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1" . $filter . $order;
 		$params = array (
 				":cid" => $_cid,
 				":type" => $this->CONFIG_OBJ->type 
 		);
+		$params = array_merge($params,$filter_params);
 		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
 			foreach ( $res as $row ) {
+				if($this->CONFIG_OBJ->limit && $count >= intval($this->CONFIG_OBJ->limit)){
+					return $data;
+				}
+				$count += 1;
+				
 				$data ["{$row['listing_id']}"] = unclean ( $row );
 				foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
 					if ($a->attributes ()->listing) {
-						$t_data = array ();
-						$pre = str_replace ( "tbl_", "", $a->table );
-						$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$row['listing_id']}' AND {$pre}_deleted IS NULL "; // AND article_deleted IS NULL";
-						if ($res2 = $DBobject->wrappedSqlGet ( $sql )) {
-							foreach ( $res2 as $row2 ) {
-								$t_data [] = $row2;
-							}
-						}
-						$data ["{$row['listing_id']}"] ["{$a->name}"] = $t_data;
+						$data ["{$row['listing_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row['listing_id'],true);
 					}
 				}
-				$subs = $this->LoadTree ( $row ['listing_id'], $level ++ );
+				$subs = $this->LoadTree ( $row ['listing_id'], $level ++ ,$count);
 				$data ["{$row['listing_id']}"] ['listings'] = $subs;
 			}
 		}
 		
 		return $data;
+	}
+	
+	
+	function LoadAssociated($a, $id){
+		global $CONFIG, $SMARTY, $DBobject;
+		$t_data = array();
+		$group = "";$order = "";$limit = "";$where = "";
+		if (! empty ( $a->groupby )) {
+			$group = " GROUP BY ".$a->groupby;
+		}
+		if (! empty ( $a->orderby )) {
+			$order = " ORDER BY ".$a->orderby;
+		}
+		if (! empty ( $a->limit )) {
+			$limit = " LIMIT ".$a->limit;
+		}
+		if (! empty ( $a->where )) {
+			$where = " AND ".$a->where;
+		}
+		$t_data = array ();
+		$pre = str_replace ( "tbl_", "", $a->table );
+		$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = :id AND {$pre}_deleted IS NULL ".$where." ".$group." ".$order." ".$limit;
+		$params = array(':id'=>$id);
+		if($res2 = $DBobject->wrappedSqlGet($sql,$params)) {
+			foreach( $res2 as $row2 ) {
+				foreach ( $a->associated as $asc ) {
+					if(!empty($a->id)){
+						$row2["{$asc->name}"] = $this->LoadAssociated($asc, $row2["{$a->id}"]);
+					}
+				}
+				$t_data[] = $row2;
+			}
+		}
+		return $t_data;
 	}
 	
 	/**
@@ -554,7 +579,3 @@ class ListClass {
 		return $data;
 	}
 }
-
-
-
-
