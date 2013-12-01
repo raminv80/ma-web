@@ -97,6 +97,7 @@
 
 				// General options
 				theme : "advanced",
+				forced_root_block : false,
 				plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,wordcount",
 
 				// Theme options
