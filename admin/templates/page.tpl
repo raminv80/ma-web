@@ -1,48 +1,38 @@
-{*	This template holds the basic surrounding structure of an html page.
-
-	Variables:
-		SEO Description = {$page_metadescription}
-		SEO Keywords = {$page_metawords}
-		SEO Page title = {$page_title}
-		Company Name = {$company_name}
-*}
+{* This template holds the basic surrounding structure of an html page. Variables: SEO Description = {$page_metadescription} SEO Keywords = {$page_metawords} SEO Page title = {$page_title} Company Name = {$company_name} *}
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Cache-control" content="no-cache" />
-	<meta http-equiv="Pragma" content="no-cache" />
-	<meta http-equiv="Expires" content="-1" />
-	<meta name="Description" content="{$page_metadescription}" />
-	<meta name="Keywords" content="{$page_metawords}" />
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-	<meta name="Distribution" content="Global" />
-	<meta name="Robots" content="index,follow" />
-	<title>{$page_seo_title}</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon">
+<meta name="Description" content="{$page_metadescription}" />
+<meta name="Keywords" content="{$page_metawords}" />
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<meta name="Distribution" content="Global" />
+<meta name="Robots" content="index,follow" />
+<title>{$page_seo_title}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon">
 
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/admin/includes/css/jqui.css" />
-	<link rel="stylesheet" type="text/css" href="/admin/includes/css/styles.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/admin/includes/css/jqui.css" />
+<link rel="stylesheet" type="text/css" href="/admin/includes/css/styles.css" />
+<link rel="stylesheet" type="text/css" href="/admin/includes/js/timepicker/jquery.ui.timepicker.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/elfinder.min.css">
+<link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/theme.css">
 
-	<!-- Responsive -->
-	<link rel="stylesheet" type="text/css" href="/admin/includes/css/bootstrap.min.css" />
-	<script src="/includes/js/bootstrap.min.js"></script>
-	<!-- End Responsive -->
-	<script type="text/javascript" src="/admin/includes/js/validation.js"></script>
-	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
-	<script type="text/javascript" src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>
+<!-- Responsive -->
+<link rel="stylesheet" type="text/css" href="/admin/includes/css/bootstrap.min.css" />
+<script src="/includes/js/bootstrap.min.js"></script>
+<!-- End Responsive -->
+<script type="text/javascript" src="/admin/includes/js/validation.js"></script>
+<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
+<script type="text/javascript" src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>
+<script type="text/javascript" src="/admin/includes/fileManager/js/elfinder.full.js"></script>
+<script type="text/javascript" src="/admin/includes/js/jquery-ui-1.10.3.custom.min.js"></script>
 
-	<link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/elfinder.min.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/theme.css">
-	<script type="text/javascript" src="/admin/includes/fileManager/js/elfinder.full.js"></script>
-	<link rel="stylesheet" type="text/css" href="/admin/includes/js/timepicker/jquery.ui.timepicker.css" />
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600' rel='stylesheet' type='text/css'>
 
-	<link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600' rel='stylesheet' type='text/css'>
-
-	<script type="text/javascript">
+<script type="text/javascript">
 		$(function() {
 			 $( "input[type=submit]" ).button();
 			$( '#bar-menu' ).accordion({ collapsible: true,
@@ -53,27 +43,43 @@
 				animated: 'bounceslide'});
 		});
 	</script>
-	<title>Website administration</title>
+<title>Website administration</title>
 </head>
 <body>
-<div class='container'>
-	<div class="masthead">
-	    <div id="logo">
-	        <h1>CMS Administration Area</h1>
-	    </div><!-- end of logo -->
-	</div><!-- end ofcontainer_16 -->
-	<div class="row-fluid">
-		<div class="span3">
-		{block name=nav}{/block}
+	<div class='container'>
+		<div class="masthead">
+			<div id="logo">
+				<h1>CMS Administration Area</h1>
+			</div>
+			<!-- end of logo -->
 		</div>
-		<div class="span9">
-		<div id="elfinder"></div>
-		<div class="row-fluid alert alert-block hidden" id="edited"><div class="span12"><img alt="success" src="/admin/images/success.png" width="28" height="28"/><b>The item was successfully edited.</b></div></div>
-		<div class="row-fluid alert alert-block hidden" id="deleted"><div class="span12"><img alt="success" src="/admin/images/success.png" width="28" height="28"/><b>The item was successfully deleted.</b></div></div>
-		<div class="row-fluid alert alert-block hidden" id="warning"><div class="span12"><img alt="error" src="/admin/images/warning.png" width="28" height="28"/><b>There is something wrong. Please check that you have filled out the fields correctly.</b></div></div>
-		<div class="row-fluid alert alert-block hidden" id="error"><div class="span12"><img alt="error" src="/admin/images/warning.png" width="28" height="28"/><b>An unknown error occured.</b></div></div>
-		{if $notice neq ''}
-			<script>
+		<!-- end ofcontainer_16 -->
+		<div class="row-fluid">
+			<div class="span3">{block name=nav}{/block}</div>
+			<div class="span9">
+				<div id="elfinder"></div>
+				<div class="row-fluid alert alert-block hidden" id="edited">
+					<div class="span12">
+						<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully edited.</b>
+					</div>
+				</div>
+				<div class="row-fluid alert alert-block hidden" id="deleted">
+					<div class="span12">
+						<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully deleted.</b>
+					</div>
+				</div>
+				<div class="row-fluid alert alert-block hidden" id="warning">
+					<div class="span12">
+						<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>There is something wrong. Please check that you have filled out the fields correctly.</b>
+					</div>
+				</div>
+				<div class="row-fluid alert alert-block hidden" id="error">
+					<div class="span12">
+						<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>An unknown error occured.</b>
+					</div>
+				</div>
+				{if $notice neq ''}
+				<script>
 			$('#{$notice}').removeClass('hidden');
 			setTimeout(function(){
 				//$('.alert').fadeOut('slow');
@@ -82,14 +88,14 @@
 				});
 	    	},6000);
 			</script>
-		{/if}
-		<!--  block body start -->
-		{block name=body}{/block}
-		<!--  block body end -->
+				{/if}
+				<!--  block body start -->
+				{block name=body}{/block}
+				<!--  block body end -->
+			</div>
 		</div>
-	</div>
-	{block name=footer}{/block}
-	<script type="text/javascript">
+		{block name=footer}{/block}
+		<script type="text/javascript">
 		$(document).ready(function(){
 			$('textarea.tinymce').tinymce({
 				// Location of TinyMCE script
@@ -97,8 +103,7 @@
 
 				// General options
 				theme : "advanced",
-				forced_root_block : false,
-				plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,wordcount",
+				plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking",
 
 				// Theme options
 				theme_advanced_buttons1 : "forecolor,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
@@ -110,7 +115,7 @@
 				theme_advanced_statusbar_location : "bottom",
 				theme_advanced_resizing : true,
 				convert_urls : false,
-				content_css : '/includes/css/bootstrap.min.css,/includes/css/colorbox.css,/includes/css/custom.css,/includes/css/tipTip.css,/admin/includes/css/tinymce.css',
+				content_css : '/includes/css/bootstrap.min.css,/includes/css/custom.css,/admin/includes/css/tinymce.css',
 				file_browser_callback : 'elFinderBrowser'
 			});
 		});
@@ -144,7 +149,7 @@
         }
 	</script>
 
-</div>
+	</div>
 	<script type="text/javascript" src="/admin/includes/js/admin-general.js"></script>
 </body>
 </html>

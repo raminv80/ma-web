@@ -40,7 +40,7 @@
 					<label class="control-label" for="id_listing_url">URL</label>
 				</div>
 				<div class="span9 controls">
-					<input type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" class="req">
+					<input type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" class="req" onchange="seturl(this.value);">
 				</div>
 			</div>
 			<div class="row-fluid control-group">
