@@ -12,7 +12,7 @@
 	<table class="table table-bordered table-striped table-hover">
 		<thead>
 			<tr>
-				<th colspan="3">{$zone} <a href="/admin/edit/{$path}" class='btn btn-small btn-success pull-right'><i class="icon-plus icon-white"></i> ADD NEW</a></th>
+				<th colspan="3">{$zone|upper} <a href="/admin/edit/{$path}" class='btn btn-small btn-success pull-right'><i class="icon-plus icon-white"></i> Add New</a></th>
 			</tr>
 		</thead>
 		<tbody>{call name=render_list items=$list}

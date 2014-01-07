@@ -1,12 +1,12 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true"> 
+<config debug="true" staging="true"> 
 	<company></company> 
 	<database> 
-		<host>n7-mysql5-3.ilisys.com.au</host> 
+		<host>m4-mysql1-1.ilisys.com.au</host> 
 		<user>themso</user> 
 		<password>c@^^3L5tRu7s*n9ub11c</password> 
-		<dbname>themso15_db</dbname> 
+		<dbname>themso3_db</dbname> 
 	</database> 
 	<resource> 
 		<url>file-manager</url> 
@@ -73,30 +73,72 @@
 		
 	</section>
 
-	 <!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE "NEWS". THIS IS A LISTING
+	 <!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE "PRODUCT CATEGORY". THIS IS A LISTING
 	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
 	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
 	 ADDITIONAL FIELDS NEEDED FOR THIS CATEGORY.--> 
 	 <section>
 		<showlist>FALSE</showlist>
-		<url>blog</url>
-		<title>Blog Post</title>
+		<url>prodcat</url>
+		<title>Product Categories</title>
 		<type>LISTING</type>
-		<type_id>4</type_id>
-		<parent_id>18</parent_id>
-		<extends>
-			<table>tbl_news</table>
-			<field>news_listing_id</field>
-		</extends>
+		<type_id>2</type_id>
+		<options> 
+			<field recursive="true"> 
+				<name>listing_parent_id</name>
+				<table>tbl_listing</table>
+				<reference>listing_name</reference> 
+				<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
+			</field> 
+		</options>
 		<list_template>list.tpl</list_template>
-		<edit_template>edit_news.tpl</edit_template>
+		<edit_template>edit_prodcategory.tpl</edit_template>
 	</section>  
 	
-	<!-- THIS SECTION IS USED TO MANAGE THE HORSE TABLE. -->
+	<!-- THIS SECTION IS USED TO MANAGE THE "PRODUCT" TABLE. -->
 	<section>
 		<showlist>FALSE</showlist>
+		<url>products</url>
+		<title>Products</title>
+		<type>PRODUCT</type>
+		<type_id>2</type_id>
+		<table>
+			<name>tbl_product</name>
+			<id>product_id</id>
+			<field>product_name</field>
+			<deleted>product_deleted</deleted>
+			<orderby>product_order ASC</orderby>
+			<associated> 
+				<id>attribute_id</id>
+				<name>attribute</name>
+				<table>tbl_attribute</table>
+				<field>attribute_product_id</field> 
+				<orderby>attribute_order ASC</orderby>
+				<associated> 
+					<id>attr_value_id</id>
+					<name>attr_value</name>
+					<table>tbl_attr_value</table>
+					<field>attr_value_attribute_id</field> 
+					<orderby>attr_value_order ASC</orderby>
+				</associated>
+			</associated>
+			<options> 
+				<field recursive="true"> 
+					<name>product_listing_id</name>
+					<table>tbl_listing</table>
+					<reference>listing_name</reference> 
+					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
+				</field> 
+			</options>
+		</table>
+		<list_template>list.tpl</list_template>
+		<edit_template>edit_product.tpl</edit_template>
+	</section> 
+	<!-- THIS SECTION IS USED TO MANAGE THE HORSE TABLE. -->
+<!-- 	<section>
+		<showlist>FALSE</showlist>
 		<url>horse</url>
-		<title>Horse</title>
+		<title>HORSE</title>
 		<type>TABLE</type>
 		<table>
 			<name>tbl_horse</name>
@@ -107,10 +149,10 @@
 		</table>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_horse.tpl</edit_template>
-	</section>
+	</section> -->
 	
 	<!-- THIS SECTION IS USED TO MANAGE THE HORSE TABLE. -->
-	<section>
+	<!-- <section>
 		<showlist>FALSE</showlist>
 		<url>meeting</url>
 		<title>Meeting</title>
@@ -145,7 +187,7 @@
 		</table>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_meeting.tpl</edit_template>
-	</section>
+	</section> -->
 
 	<smartytemplate_config><!-- This element contains the smarty template values -->
 		<templates>/templates</templates>

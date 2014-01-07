@@ -9,12 +9,12 @@
 							{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone} 
 							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
 							{if $fields.listing_id neq ""} 
-								<a class="btn btn-small btn-success right pull-right" href="./"> <i class="icon-plus icon-white"></i>ADD NEW</a> 
+								<a class="btn btn-small btn-success right pull-right" href="./"> <i class="icon-plus icon-white"></i>Add New</a> 
 							{/if}
 						</legend>
 					</fieldset>
 					<input type="hidden" value="listing_id" name="field[1][tbl_listing][{$cnt}][id]" id="id" onSubmit="var pass = validateForm(); return pass;" /> 
-					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_type_id"> 
+					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_id"> 
 					<input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 				</div>
 			</div>

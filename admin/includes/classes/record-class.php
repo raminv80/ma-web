@@ -56,20 +56,44 @@ Class Record{
 			$article_f["{$a->name}"] = $this->getAssociated($a, $id);
 		}
 
-		foreach($this->CONFIG->table->options->field as $f){
-
-			$pre = str_replace("tbl_","",$f->table);
-			$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL ".($f->where!=''?"AND {$f->where} ":"")." ";// AND article_deleted IS NULL";
-			if($res = $DBobject->wrappedSqlGet($sql)){
-				foreach ($res as $key => $row) {
-					$article_f['options']["{$f->name}"][] = array('id'=>$row["{$pre}_id"],'value'=>$row["{$f->reference}"]);
+		foreach ( $this->CONFIG->table->options->field as $f ) {
+			if ($f->attributes()->recursive) { 
+				$article_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, 0);
+			} else {
+				$pre = str_replace ( "tbl_", "", $f->table );
+				$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : ""); 
+				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
+					foreach ( $res as $key => $row ) {
+						$article_f ['options'] ["{$f->name}"] [] = array (
+								'id' => $row ["{$pre}_id"],
+								'value' => $row ["{$f->reference}"] 
+						);
+					}
 				}
 			}
 		}
 		
 		return  $article_f;
 	}
+	function getOptionsCatTree($f, $pid){
+		global $SMARTY,$DBobject;
+		$results = array();
 	
+		$pre = str_replace("tbl_","",$f->table);
+		$sql = "SELECT {$pre}_id, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+	
+		if($res = $DBobject->wrappedSqlGet($sql)){
+			foreach ($res as $row) {
+				$results[] = array (
+						'id' => $row ["{$pre}_id"],
+						'value' => $row ["{$f->reference}"],
+						'subs' => $this->getOptionsCatTree($f, $row["{$pre}_id"])
+				);
+			}
+	
+		}
+		return $results;
+	}
 	function getAssociated($a,$id){
 		global $SMARTY,$DBobject;
 		$results = array();
@@ -89,7 +113,7 @@ Class Record{
 				}
 				
 				foreach($a->associated as $as){
-					$r_array["{$as->name}"] = $this->getAssociated($as, $row["{$as->id}"]);
+					$r_array["{$as->name}"] = $this->getAssociated($as, $row["{$a->id}"]);
 				}
 				$results[] = $r_array;
 			}

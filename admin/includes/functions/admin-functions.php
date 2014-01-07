@@ -17,6 +17,7 @@ if($GLOBALS['CONFIG']=simplexml_load_file($_SERVER['DOCUMENT_ROOT']."/admin/conf
 include_once 'admin/includes/functions/admin-functions-general.php';
 include_once 'admin/includes/classes/listing-class.php';
 include_once 'admin/includes/classes/record-class.php';
+include_once 'admin/includes/classes/product-class.php';
 
 include_once 'database/db-manager.php';
 include_once 'database/table-class.php';

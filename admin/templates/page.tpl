@@ -22,7 +22,7 @@
 
 <!-- Responsive -->
 <link rel="stylesheet" type="text/css" href="/admin/includes/css/bootstrap.min.css" />
-<script src="/includes/js/bootstrap.min.js"></script>
+<script src="/admin/includes/js/bootstrap.min.js"></script>
 <!-- End Responsive -->
 <script type="text/javascript" src="/admin/includes/js/validation.js"></script>
 <script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>

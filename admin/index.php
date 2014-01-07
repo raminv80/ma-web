@@ -79,11 +79,20 @@ while(true){
 		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
 				$SMARTY->assign("zone",$sp->title);
+				$SMARTY->assign ( "typeID", $sp->type_id );
 				$template = "list.tpl";
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
 					$list = $record->getListingList();
 					$SMARTY->assign("list",$list);
+					$SMARTY->assign("path",(string)$sp->url);
+					$template = $sp->list_template;
+					break 2;
+				}
+				if($sp->type == "PRODUCT"){
+					$record = new Product($sp);
+					$product = $record->getListingProductList();
+					$SMARTY->assign("list",$product);
 					$SMARTY->assign("path",(string)$sp->url);
 					$template = $sp->list_template;
 					break 2;
@@ -107,6 +116,8 @@ while(true){
 		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
 				$SMARTY->assign("zone",$sp->title);
+				$SMARTY->assign ( "typeID", $sp->type_id );
+				$SMARTY->assign ( "parentID", $sp->parent_id );
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
 					$tm = $record->getListing(intval($arr[2]));
@@ -122,7 +133,7 @@ while(true){
 					}
 					break 2;
 				}
-				if($sp->type == "TABLE"){
+				if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
 					$record = new Record($sp);
 					$tm = $record->getRecord(intval($arr[2]));
 					$SMARTY->assign("fields",$tm);
@@ -150,7 +161,7 @@ while(true){
 					$record = new Listing($sp);
 					$res = $record->deleteListing($arr[2]);
 				}
-				if($sp->type == "TABLE"){
+				if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
 					$record = new Record($sp);
 					$res = $record->deleteRecord($arr[2]);
 				}
