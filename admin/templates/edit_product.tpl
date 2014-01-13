@@ -19,7 +19,7 @@
 							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
 							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
 							{if $fields.product_id neq ""} 
-								<a class="btn btn-success pull-right" href="./"> <i class="icon-plus icon-white"></i> Add New</a> 
+								<a class="btn btn-success pull-right" href="./"> <i class="icon-plus icon-white"></i> Add New {$zone}</a> 
 							{/if}
 						</legend>
 					</fieldset>
@@ -369,7 +369,10 @@
 			
 			<div class="row-fluid control-group">
 				<div class="form-actions">
-					<button class="btn btn-primary offset1" onClick="$('#Edit_Record').submit();" type="submit"><i class="icon-ok icon-white"></i> Save</button>
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
+					{if $fields.product_id neq ""} 
+						<a class="btn btn-success pull-right" href="./"> <i class="icon-plus icon-white"></i> Add New {$zone}</a> 
+					{/if}
 				</div>
 			</div>
 		</form>

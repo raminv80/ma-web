@@ -91,8 +91,8 @@ while(true){
 				}
 				if($sp->type == "PRODUCT"){
 					$record = new Product($sp);
-					$product = $record->getListingProductList();
-					$SMARTY->assign("list",$product);
+					$list = $record->getRecordList();
+					$SMARTY->assign("list",$list);
 					$SMARTY->assign("path",(string)$sp->url);
 					$template = $sp->list_template;
 					break 2;

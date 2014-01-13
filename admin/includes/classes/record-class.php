@@ -5,12 +5,12 @@ Class Record{
 	protected $CONFIG_OBJ;
 	protected $DBTABLE;
 	//URL value passed into constructor
-	private $URL;
-	private $TABLE;
-	private $ID;
-	private $FIELD;
-	private $DELETED;
-	private $CONFIG;
+	protected $URL;
+	protected $TABLE;
+	protected $ID;
+	protected $FIELD;
+	protected $DELETED;
+	protected $CONFIG;
 	//SQL ELEMENTS
 	protected $SELECT = "*";
 	protected $TABLES = "";

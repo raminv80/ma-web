@@ -25,7 +25,7 @@
 			<field>admin_name</field>
 			<deleted>admin_deleted</deleted>
 		</table>
-		<list_template>list_admin.tpl</list_template>
+		<list_template>list.tpl</list_template>
 		<edit_template>edit_admin.tpl</edit_template>
 	</section>
 	

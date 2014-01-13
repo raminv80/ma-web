@@ -1,9 +1,9 @@
 <?php
 class Listing {
 	protected $CONFIG_OBJ;
-	private $DBTABLE;
+	protected $DBTABLE;
 	// URL value passed into constructor
-	private $TYPE_ID;
+	protected $TYPE_ID;
 	// SQL ELEMENTS
 	protected $SELECT = "*";
 	protected $TABLES = "";
@@ -13,6 +13,7 @@ class Listing {
 	protected $LIMIT = "";
 	// SET OF DATA LOADED
 	protected $DATA;
+	
 	function __construct($_sp) {
 		global $SMARTY, $DBobject;
 		$this->CONFIG_OBJ = $_sp;
