@@ -1,36 +1,32 @@
-{block name=body}
-<div id="main">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				{include file='breadcrumbs.tpl'}
-			</div>
-		</div>
-		
-		<div class="row">
-			<div class="col-sm-8 col-sm-offset-2">
-				{if $listing_content3}
-					{if $listing_content5}
-						<a target="_blank" href="{$listing_content5}"><img src="{$listing_content3}" class="img-responsive ad-banner" alt="{$listing_title} ad-banner" /></a>
-					{else}
-						<img src="{$listing_content3}" class="img-responsive ad-banner" alt="{$listing_title} ad-banner" />
-					{/if}
-				{/if}
-			</div>
-		</div>
-		
-		<div class="row">
-			<div id="maintext" class="col-sm-12">
-				<h2 class="title">{$listing_title}</h2>
-				{$listing_content1}
-			</div>
-			
-			<div id="links" class="col-xs-12 col-sm-12">
-			</div>
-		</div>
-		
-		
-	</div>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta http-equiv="kontent-type" content="text/html;charset=UTF-8" />
+	<meta name="distribution" content="Global" />
+	<meta name="author" content="Them Advertising" />
+	{if $staging}
+	<meta name="robots" content="noindex,nofollow" />
+	{else}
+	<meta name="robots" content="index,follow" />
+	{/if}
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3, minimum-scale=1, user-scalable=yes">
+	<title>404 page not found</title>
+	<!-- <link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon"> -->
 
-{/block}
+	<!--[if lt IE 9]>
+	     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	 <![endif]-->
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="/includes/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/includes/css/custom.css">
+	<link rel="stylesheet" href="/includes/css/404.css">
+	<script src="/includes/js/bootstrap.min.js"></script>
+	<script src="/includes/js/jquery-1.9.1.min.js"></script>
+</head>
+<body class="mindtrick">
+	<div class="col-xs-12 error404">404 - This is not the page you are looking for.</div>
+</body>
+</html>

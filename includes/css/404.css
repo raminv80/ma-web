@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+.mindtrick {
+  background: url("../img/mindtrick.png") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.error404 {
+	color: #FFFFFF;
+	font-size: 32px;
+	position: absolute;
+	bottom: 0;
+	text-align:center;
+}

@@ -31,15 +31,21 @@ while ( true ) {
 	 */
 	if ($_request ['arg1'] == '404') {
 		header ( "HTTP/1.0 404 Not Found" );
-		/**
-		 * ***** Goes to home ******
-		 */
-		$obj = new $class ( '', $struct );
-		$template = $obj->Load ( $CONFIG->error404->pageID );
-		$template = $CONFIG->error404->template;
-		$menu = $obj->LoadMenu ( $CONFIG->error404->pageID );
-		$SMARTY->assign ( 'menuitems', $menu );
-		break 1;
+		
+		if(strtolower((string)$CONFIG->error404->attributes()->standalone) == 'true'){
+			$obj = new $class ( '', $struct );
+			$template = $obj->Load( $CONFIG->error404->pageID );
+			$template = $CONFIG->error404->template;
+			$SMARTY->display ( "extends:$template" );
+			die();
+		}else{
+			$obj = new $class ( '', $struct );
+			$template = $obj->Load ( $CONFIG->error404->pageID );
+			$template = $CONFIG->error404->template;
+			$menu = $obj->LoadMenu ( $CONFIG->error404->pageID );
+			$SMARTY->assign ( 'menuitems', $menu );
+			break 1;
+		}
 	}
 	
 	/**
@@ -166,15 +172,20 @@ while ( true ) {
 	}
 	
 	header ( "HTTP/1.0 404 Not Found" );
-	/**
-	 * ***** Goes to home ******
-	 */
-	$obj = new $class ( '', $struct );
-	$template = $obj->Load ( $CONFIG->error404->pageID );
-	$template = $CONFIG->error404->template;
-	$menu = $obj->LoadMenu ( $CONFIG->error404->pageID );
-	$SMARTY->assign ( 'menuitems', $menu );
-	break 1;
+	if(strtolower((string)$CONFIG->error404->attributes()->standalone) == 'true'){
+		$obj = new $class ( '', $struct );
+		$template = $obj->Load( $CONFIG->error404->pageID );
+		$template = $CONFIG->error404->template;
+		$SMARTY->display ( "extends:$template" );
+		die();
+	}else{
+		$obj = new $class ( '', $struct );
+		$template = $obj->Load ( $CONFIG->error404->pageID );
+		$template = $CONFIG->error404->template;
+		$menu = $obj->LoadMenu ( $CONFIG->error404->pageID );
+		$SMARTY->assign ( 'menuitems', $menu );
+		break 1;
+	}
 }
 
 $SMARTY->display ( "extends:page.tpl|$template" );

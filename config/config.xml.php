@@ -27,7 +27,7 @@
 		<template>home.tpl</template>
 		<pageID>26</pageID>
 	</index_page>
-	<error404>
+	<error404 standalone="true">
 		<template>404.tpl</template>
 		<pageID>2</pageID>
 	</error404>
