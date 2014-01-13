@@ -25,7 +25,7 @@
 	</page_strut>
 	<index_page>
 		<template>home.tpl</template>
-		<pageID>26</pageID>
+		<pageID>10</pageID>
 	</index_page>
 	<error404 standalone="true">
 		<template>404.tpl</template>
