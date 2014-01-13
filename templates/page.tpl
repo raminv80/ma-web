@@ -1,48 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="description" content="{$listing_meta_description}" />
-	<meta name="keywords" content="{$listing_meta_words}" />
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<meta name="distribution" content="Global" />
-	<meta name="author" content="Them Advertising" />
-	{if $staging}
-	<meta name="robots" content="noindex,nofollow" />
-	{else}
-	<meta name="robots" content="index,follow" />
-	{/if}
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3, minimum-scale=1, user-scalable=yes">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>{$category_name|replace:'and':'&'|ucfirst}  {$product_name|ucfirst} {$listing_seo_title}</title>
-	<!-- <link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon"> -->
+<meta name="description" content="{$listing_meta_description}" />
+<meta name="keywords" content="{$listing_meta_words}" />
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta name="distribution" content="Global" />
+<meta name="author" content="Them Advertising" />
+{if $staging}
+<meta name="robots" content="noindex,nofollow" />
+{else}
+<meta name="robots" content="index,follow" />
+{/if}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=yes">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>{$category_name|replace:'and':'&'|ucfirst} {$product_name|ucfirst} {$listing_seo_title}</title>
+<link href="/images/favicon.ico" type="image/x-icon" rel="shortcut icon">
 
-	<!--[if lt IE 9]>
+<!--[if lt IE 9]>
 	     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	 <![endif]-->
 
-	<!-- Bootstrap -->
-    <link href="/includes/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="/includes/css/tipTip.css" rel="stylesheet" media="screen">
-    <link href="/includes/css/custom.css" rel="stylesheet" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!--[if lt IE 9]>
-	     <script src="/includes/js/html5shiv.js"></script>
-	     <script src="/includes/js/respond.min.js"></script>
+<!-- Bootstrap -->
+<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+<link href="/includes/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/includes/css/tipTip.css" rel="stylesheet" media="screen">
+<link href="/includes/css/custom.css" rel="stylesheet" media="screen">
+<link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="/includes/js/html5shiv.js"></script>
+      <script src="/includes/js/respond.min.js"></script>
  	<![endif]-->
-    <script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/includes/js/custom.js"></script>
-    <script type="text/javascript" src="/includes/js/jquery.videoBG.js"></script>
-    <script type="text/javascript" src="/includes/js/validation.js"></script>
+<script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/includes/js/custom.js"></script>
+<script type="text/javascript" src="/includes/js/validation.js"></script>
 
-	<script type="text/javascript">var switchTo5x=true;</script>
-	<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-	<script type="text/javascript">stLight.options({ publisher: "ur-a4a1aae0-5741-1e4a-2a36-dd37824dcca", doNotHash: false, doNotCopy: false, hashAddressBar: false });</script>
+<script type="text/javascript">var switchTo5x=true;</script>
+<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript">stLight.options({ publisher: "ur-fe757e87-3393-e43b-6170-ceee5d67e29", doNotHash: false, doNotCopy: false, hashAddressBar: false });</script>
+
+{block name=head}{/block}
+
+{literal}
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46650302-1', 'trotsguide.com.au');
+  ga('send', 'pageview');
+</script>
+{/literal}
 
 </head>
 <body>
-	<div id="top"></div>
+	<header>
+		<div id="header1">
+			<div id="header1in" class="container">
+				{include file='mobilemenu.tpl'}
+				<div id="logo"><a href="/"><img src="/images/logo.png" alt="logo icon"/></a></div>
+				<div id="social">
+					<!-- <div id="newstop"><a class="btn btnblue" id="signup" href="javascript:void(0)" onclick="$('body, html').animate({ duration: 2000,scrollTop: $('#newsletter').position().top });" title="Sign up to our Newsletter">Sign up to our Newsletter</a></div> -->
+					<!-- <div id="socin">
+					Follow us on
+					<a target="_blank" href="https://www.twitter.com/" title="Follow us on Twitter" onclick="ga('send', 'event', 'socialmedia', 'click', 'follow us on twitter');"><img src="/images/twitter.png" alt="Twitter icon" /></a>
+					<a target="_blank" href="https://www.facebook.com/" title="Like us on Facebook" onclick="ga('send', 'event', 'socialmedia', 'click', 'like us on facebook');"><img src="/images/facebook.png" alt="Facebook icon" /></a>
+					<a target="_blank" href="https://www.youtube.com/" title="Our YouTube Channel" onclick="ga('send', 'event', 'socialmedia', 'click', 'our youtube channel');"><img src="/images/youtube.png" alt="YouTube icon" /></a>
+					</div> -->
+				</div>
+				{include file='desktopmenu.tpl'}
+			</div>
+		</div>
+		
+		<div id="headbanner">
+			<div id="headbannerin" class="container">
+				<div class="row">
+		
+				</div>
+			</div>
+		</div>	 
+	</header>		 
+
 	{block name=body}{/block}
+	{include file='footer.tpl'}
 </body>
 </html>

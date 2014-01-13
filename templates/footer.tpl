@@ -1,59 +1,80 @@
 {block name=footer}
+{* Define the function *}
+{function name=render_footer_list level=0 parenturl="" menu=0}
+	{assign var='count' value=0}
+	{foreach $items as $item}
+		<li ><a title="{$item.title}" href="{$parenturl}/{$item.url}" >{$item.title}</a></li>
+	{/foreach}	
+{/function}
 <footer>
-	  	<div id="foot">
-	  		<div class="container">
-	  			<div class="row-fluid">
-		  			<div class="span5">
-		  				<div class="row-fluid">
-		  					<div class="span4 sitemap">
-		  						<ul>
-		  							<li><a title="Home" href="/">Home</a></li>
-		  							<li><a title="Our Menu" href="/our-menu">Our Menu</a></li>
-		  							<li><a title="Our Locations" href="/our-locations">Our Locations</a></li>
-		  							<li><a title="Community" href="/community">Community</a></li>
-		  						</ul>
-		  					</div>
-		  					<div class="span4 sitemap">
-		  						<ul>
-		  							<li><a title="Franchise Opportunities" href="/franchise-opportunities">Franchise Opportunities</a></li>
-		  							<li><a title="Our Story" href="/our-story">Our Story</a></li>
-		  							<li><a title="Our Locations" href="/our-locations">Contact Us</a></li>
-		  							<li><a title="Community" href="/community">Social Media</a></li>
-		  						</ul>
-		  					</div>
-		  					<div class="span4 sitemap">
-		  						<ul>
-		  							<li><a title="Privacy Policy" href="/privacy-policy">Privacy Policy</a></li>
-		  							<li><a title="Terms and Conditions" href="/terms-and-conditions">Terms and Conditions</a></li>
-		  							<li><a title="Back to top^" href="javascript:void(0)" id="toTop">Back to top^</a></li>
-		  						</ul>
-		  					</div>
-		  				</div>
-		  			</div>
-		  			<div class="span3 offset4">
-		  				<div class="row-fluid">
-		  					<img src="/images/logo.png" alt="Cocolat" />
-		  				</div>
-		  				<div class="row-fluid">
-			  				<span class='st_sharethis_large' displayText='ShareThis'></span>
-		  				</div>
-		  				<div class="row-fluid">
-		  					<div class="made">
-		  					Made by <a title="THEM Advertising &amp; Digital" href="http://www.them.com.au">THEM Advertising &amp; Digital</a>
-		  					</div>
-		  				</div>
-		  			</div>
-		  			<script type="text/javascript">
-		  			$("#toTop").click(function () {
-		  			   //1 second of animation time
-		  			   //html works for FFX but not Chrome
-		  			   //body works for Chrome but not FFX
-		  			   //This strange selector seems to work universally
-		  			   $("html, body").animate({ scrollTop: 0 }, 1000);
-		  			});
-		  			</script>
-	  			</div>
-	  		</div>
-	  	</div>
-	  </footer>
+	<div id="footout">
+		<div id="footin" class="container">
+			<div class="row" id="newsletter" >
+				<div class="visible-xs col-xs-12">
+					<div class="row">
+					<div class="col-sm-12">
+						<h3>Sign up to our E-news</h3>
+					</div>
+					</div>
+	
+					<form id="enewsletter-m" action="http://themdigital.createsend.com/t/r/s/tyjiujk/" method="post" onsubmit="return validateForm('#enewsletter-m')">
+					<div class="row">
+						<div class="col-sm-4"><label for="fieldName">Name*</label></div>
+						<div class="col-sm-8"><input type="text" name="cm-name" id="fieldName" class="req"></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4"><label for="fieldEmail">Email*</label></div>
+						<div class="col-sm-8"><input type="email" name="cm-tyjiujk-tyjiujk" id="fieldEmail" class="req email"></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-8 col-sm-offset-4"><input type="submit" value="Submit" title="Submit Newsletter Signup" ></div>
+					</div>
+					</form>
+				</div>
+				<div class="col-sm-3">
+					<ul>
+						{call name=render_list items=$menuitems}
+						<li><a href="https://tatts.com/tattsbet" title="Bet Now" target="_blank">Bet Now</a></li>
+					</ul>
+				</div>
+				<!-- <div class="hidden-xs col-sm-4 col-sm-offset-2 newsl">
+					<div class="row">
+					<div class="col-sm-12">
+						<h3 class="hidden-sm">Sign up to our E-newsletter</h3>
+						<h3 class="visible-sm">Sign up to our E-news</h3>
+					</div>
+					</div>
+	
+					<form id="enewsletter" action="http://themdigital.createsend.com/t/r/s/tyjiujk/" method="post" onsubmit="return validateForm('#enewsletter')">
+					<div class="row">
+						<div class="col-sm-3"><label for="fieldName">Name*</label></div>
+						<div class="col-sm-9"><input type="text" name="cm-name" id="fieldName" class="req"></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3"><label for="fieldEmail">Email*</label></div>
+						<div class="col-sm-9"><input type="email" name="cm-tyjiujk-tyjiujk" id="fieldEmail" class="req email"></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-9 col-sm-offset-3"><input type="submit" value="Submit" title="Submit Newsletter Signup" ></div>
+					</div>
+					</form>
+				</div> -->
+				
+				<div class="col-sm-3 share">
+					<a target="_blank" href="http://www.saharnessracing.com/" title="SA Harness Racing's Website"><img src="/images/footlogo.png" alt="Harness Racing SA logo" /></a>
+					<div><a target="_blank" href="http://www.saharnessracing.com/" title="SA Harness Racing's Website">VISIT SA HARNESS RACING</a></div>
+					<div>SHARE THIS <span class='st_sharethis_large' displayText='ShareThis'></span></div>
+				</div>
+			</div>
+			<div id="foot2" class="row">
+				<div class="col-sm-6">
+				COPYRIGHT {'Y'|date} SA HARNESS | <a href="/privacy-policy" title="Privacy policy">Privacy policy</a> | <a href="/disclaimer" title="Disclaimer">Disclaimer</a>
+				</div>
+				<div id="them" class="col-sm-4 col-sm-offset-2">
+					made by <a target="_blank" href="http://www.them.com.au" title="THEM Advertising & Digital">them advertising & digital</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
 {/block}
