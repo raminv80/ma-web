@@ -80,10 +80,15 @@ while(true){
 			if($sp->url == $arr[1] ){
 				$SMARTY->assign("zone",$sp->title);
 				$SMARTY->assign ( "typeID", $sp->type_id );
+				$parentID = 0;
+				if ($sp->root_parent_id) {
+					$SMARTY->assign ( "rootParentID", $sp->root_parent_id );
+					$parentID = $sp->root_parent_id;
+				}
 				$template = "list.tpl";
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
-					$list = $record->getListingList();
+					$list = $record->getListingList($parentID);
 					$SMARTY->assign("list",$list);
 					$SMARTY->assign("path",(string)$sp->url);
 					$template = $sp->list_template;
@@ -91,7 +96,7 @@ while(true){
 				}
 				if($sp->type == "PRODUCT"){
 					$record = new Product($sp);
-					$list = $record->getRecordList();
+					$list = $record->getRecordList($parentID);
 					$SMARTY->assign("list",$list);
 					$SMARTY->assign("path",(string)$sp->url);
 					$template = $sp->list_template;
@@ -118,6 +123,7 @@ while(true){
 				$SMARTY->assign("zone",$sp->title);
 				$SMARTY->assign ( "typeID", $sp->type_id );
 				$SMARTY->assign ( "parentID", $sp->parent_id );
+				$SMARTY->assign ( "rootParentID", $sp->root_parent_id );
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
 					$tm = $record->getListing(intval($arr[2]));

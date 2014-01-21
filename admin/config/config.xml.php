@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true"> 
+<config debug="true" staging="true"> 
 	<company></company> 
 	<database> 
 		<host>m4-mysql1-1.ilisys.com.au</host> 
@@ -83,6 +83,7 @@
 		<title>Product Categories</title>
 		<type>LISTING</type>
 		<type_id>2</type_id>
+		<root_parent_id>10</root_parent_id>
 		<options> 
 			<field recursive="true"> 
 				<name>listing_parent_id</name>
@@ -102,6 +103,7 @@
 		<title>Products</title>
 		<type>PRODUCT</type>
 		<type_id>2</type_id>
+		<root_parent_id>10</root_parent_id>
 		<table>
 			<name>tbl_product</name>
 			<id>product_id</id>
@@ -121,6 +123,11 @@
 					<field>attr_value_attribute_id</field> 
 					<orderby>attr_value_order ASC</orderby>
 				</associated>
+			</associated>
+			<associated> 
+				<name>gallery</name>
+				<table>tbl_gallery</table>
+				<field>gallery_product_id</field> 
 			</associated>
 			<options> 
 				<field recursive="true"> 

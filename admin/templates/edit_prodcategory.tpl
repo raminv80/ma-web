@@ -59,7 +59,7 @@
 				</div>
 				<div class="span9 controls">
 					<select name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
-						<option value="0">None</option> 
+						<option value="{$rootParentID}">None</option> 
 						{call name=options_list opts=$fields.options.listing_parent_id}
 					</select>
 				</div>

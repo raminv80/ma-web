@@ -115,6 +115,29 @@ while ( true ) {
 	}
 	
 	/**
+	 * ***** Product pages here ******
+	 */
+	$arr = explode ( "/", $_request ["arg1"] );
+	foreach ( $CONFIG->product_page as $lp ) {
+		// if($lp->url == $arr[0] ){
+		$needle = str_replace ( "/", "\/", $lp->url );
+		$haystack = $_request ["arg1"];
+		if (preg_match ( "/^{$needle}/", $haystack )) {
+				
+			$_nurl = $_request ["arg1"];
+			$class = ( string ) $lp->file;
+			$obj = new $class ( $_nurl, $lp );
+			$template = $obj->Load ();
+			$productsList = $obj->getProductList($lp->root_parent_id );
+			$SMARTY->assign ( 'productsList', $productsList );
+			$menu = $obj->LoadMenu ( $lp->pageID );
+			$SMARTY->assign ( 'menuitems', $menu );
+				
+			break 2;
+		}
+	}
+	
+	/**
 	 * ***** Listing pages here ******
 	 */
 	$arr = explode ( "/", $_request ["arg1"] );

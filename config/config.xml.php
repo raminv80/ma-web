@@ -25,7 +25,7 @@
 	</page_strut>
 	<index_page>
 		<template>home.tpl</template>
-		<pageID>10</pageID>
+		<pageID>12</pageID>
 	</index_page>
 	<error404 standalone="true">
 		<template>404.tpl</template>
@@ -42,47 +42,111 @@
 	</static_page>
 
 	
- 	<listing_page name="properties-for-rent">
-		<url>renting/properties-for-rent</url>
-		<pageID>34</pageID>
+ 	<product_page name="store">
+		<url>store</url>
+		<pageID>10</pageID>
+		<root_parent_id>10</root_parent_id>
 		<type>2</type>
-		<file>ListClass</file>
+		<file>ProductClass</file>
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>
 			<field>listing_url</field><!-- The field used to match the URL -->
 			<options>
-				<field>
-					<name>property_type_id</name>
-					<table>tbl_property_type</table>
-					<reference>property_type_title</reference>
-				</field>
-				<field>
-					<name>listing_id</name>
+				<field recursive="true"> 
+					<name>categories</name>
 					<table>tbl_listing</table>
-					<reference>listing_content1</reference>
-					<where>listing_type_id = '4'</where>
-				</field>
+					<reference>listing_name</reference> 
+					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
+				</field> 
 			</options>
 			<associated>
-				<name>gallery</name>
-				<table>tbl_gallery</table>
-				<field>gallery_listing_id</field>
+				<name>products</name>
+				<table>tbl_product</table>
+				<field>product_listing_id</field>
+                                <associated> 
+                                        <id>attribute_id</id>
+                                        <name>attribute</name>
+                                        <table>tbl_attribute</table>
+                                        <field>attribute_product_id</field> 
+                                        <orderby>attribute_order ASC</orderby>
+                                        <associated> 
+                                                <id>attr_value_id</id>
+                                                <name>attr_value</name>
+                                                <table>tbl_attr_value</table>
+                                                <field>attr_value_attribute_id</field> 
+                                                <orderby>attr_value_order ASC</orderby>
+                                        </associated>
+                                </associated>
+                                <associated>
+                                        <name>gallery</name>
+                                        <table>tbl_gallery</table>
+                                        <field>gallery_listing_id</field> <!-- VERIFY THIS IN DATABASE !!! -->
+                                </associated>
 			</associated>
-			<associated listing="true">
-				<name>inspection</name>
-				<table>tbl_inspection</table>
-				<field>inspection_listing_id</field>
-			</associated>
-			<extends>
-				<table>tbl_property</table>
-				<field>property_listing_id</field>
-			</extends>
-			<template>property.tpl</template>
+			<template>products.tpl</template>
 		</table>
-		<template>properties-for-rent.tpl</template><!-- The template used if the field is matched -->
- 	</listing_page>
+		<template>category.tpl</template>
+ 	</product_page>
 
 
+ 	<static_page complex="true"> 
+		<url>punters-corner/meetings</url> 
+		<pageID>100</pageID> 
+		<type>1</type> 
+		<file>ListClass</file>
+		<table>
+			<!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field>
+			<!-- The field used to match the URL -->
+			<associated> 
+				<id>meeting_id</id>
+				<name>meeting</name>
+				<table>tbl_meeting</table>
+				<field>meeting_listing_id</field> 
+				<where>meeting_published = 1 AND DATE_FORMAT(meeting_date,'%Y%m%d') >= DATE_FORMAT(now(),'%Y%m%d')</where>
+				<orderby>meeting_date ASC</orderby>
+				<associated> 
+					<id>race_id</id>
+					<name>race</name>
+					<table>tbl_race</table>
+					<field>race_meeting_id</field> 
+					<orderby>race_start_time ASC</orderby>
+					<limit>1</limit>
+				</associated>
+			</associated>
+		</table>
+		<template>meetings.tpl</template> 
+		<!-- The template used if the field is matched --> 
+	</static_page>
+	
+	<race_meeting complex="true"> 
+		<url>punters-corner/meetings</url> 
+		<pageID>100</pageID> 
+		<type>1</type> 
+		<file>ListClass</file>
+		<table>
+			<!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field>
+		</table>
+		<template>formguide.tpl</template> 
+		<!-- The template used if the field is matched --> 
+	</race_meeting>
+	<print complex="true"> 
+		<url>print/meetings</url> 
+		<pageID>100</pageID> 
+		<type>1</type> 
+		<file>ListClass</file>
+		<table>
+			<!-- This table will be the details table -->
+			<name>tbl_listing</name>
+			<field>listing_url</field>
+		</table>
+		<template>formguide.tpl</template> 
+		<!-- The template used if the field is matched --> 
+	</print>
+	 	
 
 	<smartytemplate_config>
 		<templates>/templates</templates>

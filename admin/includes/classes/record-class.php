@@ -2,8 +2,9 @@
 
 Class Record{
 
-	protected $CONFIG_OBJ;
-	protected $DBTABLE;
+	// protected $CONFIG_OBJ;
+	protected $DBTABLE; 
+	
 	//URL value passed into constructor
 	protected $URL;
 	protected $TABLE;
@@ -58,7 +59,11 @@ Class Record{
 
 		foreach ( $this->CONFIG->table->options->field as $f ) {
 			if ($f->attributes()->recursive) { 
-				$article_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, 0);
+				$parentID = 0;
+				if ($this->CONFIG->root_parent_id) {
+					$parentID = $this->CONFIG->root_parent_id;
+				}
+				$article_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
 			} else {
 				$pre = str_replace ( "tbl_", "", $f->table );
 				$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : ""); 

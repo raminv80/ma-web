@@ -3,7 +3,7 @@ class ListClass {
 	protected $CONFIG_OBJ;
 	protected $DBTABLE;
 	// URL value passed into constructor
-	private $URL;
+	protected $URL;
 	// SQL ELEMENTS
 	protected $SELECT = "*";
 	protected $TABLES = "";
@@ -76,7 +76,7 @@ class ListClass {
 				LEFT JOIN $tbl2_name ON $tbl2_name.{$id2_name} = tbl_link_{$tbl_comp}_{$tbl2_comp}.link_2_id ";
 			$this->WHERE = " AND {$deleted_name} IS NULL AND {$publish_name} = 1";
 			if (count ( $t->xpath ( 'table' ) ) > 0) {
-				$this->joinTable ( $t );
+				self::joinTable ( $t );
 			}
 		}
 	}
@@ -172,7 +172,7 @@ class ListClass {
 		return $data;
 	}
 
-	private function LoadParents($_id) {
+	function LoadParents($_id) {
 		global $SMARTY, $DBobject;
 		$data = array ();
 		$sql = "SELECT tbl_listing.* FROM tbl_listing WHERE tbl_listing.listing_id = :id AND tbl_listing.listing_published = '1' AND tbl_listing.listing_deleted IS NULL ";
@@ -209,7 +209,7 @@ class ListClass {
 		}
 		return $data;
 	}
-	private function ChkCache($_url) {
+	function ChkCache($_url) {
 		global $SMARTY, $DBobject;
 		$args = explode ( '/', $_url );
 		$a = end ( $args );
@@ -297,7 +297,7 @@ class ListClass {
 			}
 			if (! empty ( $res [0] ['listing_parent_id'] )) { // category_listing_id
 				$url = $res [0] ['listing_url'] . '/' . $url;
-				return $this->BuildUrl ( $res [0] ['listing_parent_id'], $url ); // category_listing_id
+				return self::BuildUrl ( $res [0] ['listing_parent_id'], $url ); // category_listing_id
 			} else {
 				$url = $res [0] ['listing_url'] . '/' . $url;
 				$url = ltrim ( rtrim ( $url, '/' ), '/' );
@@ -324,7 +324,7 @@ class ListClass {
 						":cid" => $res [0] ['listing_parent_id'] 
 				);
 				if ($res2 = $DBobject->wrappedSql ( $sql2, $params2 )) {
-					$data = $this->LoadBreadcrumb ( $res2 [0] ['listing_id'], $data );
+					$data = self::LoadBreadcrumb ( $res2 [0] ['listing_id'], $data );
 				}
 			}
 		}
@@ -352,7 +352,7 @@ class ListClass {
 				
 				if (intval ( $row ['listing_parent_flag'] ) == 1) {
 					$t_array ["category"] = 1;
-					$subs = $this->LoadMenu ( $_pid, $row ['listing_id'], $level + 1 );
+					$subs = self::LoadMenu ( $_pid, $row ['listing_id'], $level + 1 );
 					if ($subs ['selected'] == 1) {
 						$t_array ["selected"] = 1;
 						$data ['selected'] = 1;
@@ -435,7 +435,7 @@ class ListClass {
 						$data ["{$row['listing_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row['listing_id'],true);
 					}
 				}
-				$subs = $this->LoadTree ( $row ['listing_id'], $level ++ ,$count);
+				$subs = self::LoadTree ( $row ['listing_id'], $level ++ ,$count);
 				$data ["{$row['listing_id']}"] ['listings'] = $subs;
 			}
 		}
@@ -468,7 +468,7 @@ class ListClass {
 			foreach( $res2 as $row2 ) {
 				foreach ( $a->associated as $asc ) {
 					if(!empty($a->id)){
-						$row2["{$asc->name}"] = $this->LoadAssociated($asc, $row2["{$a->id}"]);
+						$row2["{$asc->name}"] = self::LoadAssociated($asc, $row2["{$a->id}"]);
 					}
 				}
 				$t_data[] = $row2;

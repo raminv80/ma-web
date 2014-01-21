@@ -2,7 +2,7 @@
 {* Define the function *} {function name=options_list level=0} 
 	{foreach $opts as $opt}
 		{if $fields.listing_id neq $opt.id}
-			<option value="{$opt.id}" {if $fields.listing_parent_id eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
+			<option value="{$opt.id}" {if $fields.product_listing_id eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
 			{if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1} {/if} 
 		{/if}
 	{/foreach} 
@@ -48,13 +48,29 @@
 					</div>
 					<div class="row-fluid control-group">
 						<div class="span3">
+							<label class="control-label" for="id_product_url">Url</label>
+						</div>
+						<div class="span9 controls">
+							<input type="text" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" style="width: 70%;">
+						</div>
+					</div>		
+					<div class="row-fluid control-group">
+						<div class="span3">
 							<label class="control-label" for="id_product_listing">Category</label>
 						</div>
 						<div class="span9 controls">
 							<select name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing">
-								<option value="0">Select one</option> 
+								<option value="{$rootParentID}">Select one</option> 
 								{call name=options_list opts=$fields.options.product_listing_id}
 							</select>
+						</div>
+					</div>			
+					<div class="row-fluid control-group">
+						<div class="span3">
+							<label class="control-label" for="id_product_seo_title">SEO Title</label>
+						</div>
+						<div class="span9 controls">
+							<input type="text" value="{$fields.product_seo_title}" name="field[1][tbl_product][{$cnt}][product_seo_title]" id="id_product_seo_title" style="width: 70%;">
 						</div>
 					</div>
 					<div class="row-fluid control-group">
@@ -64,15 +80,23 @@
 						<div class="span9 controls">
 							<input type="text" value="{$fields.product_meta_description}" name="field[1][tbl_product][{$cnt}][product_meta_description]" id="id_product_meta_description" style="width: 70%;">
 						</div>
+					</div>					
+					<div class="row-fluid control-group">
+						<div class="span3">
+							<label class="control-label" for="id_product_meta_words">Meta Words</label>
+						</div>
+						<div class="span9 controls">
+							<input type="text" value="{$fields.product_meta_words}" name="field[1][tbl_product][{$cnt}][product_meta_words]" id="id_product_meta_words" style="width: 70%;">
+						</div>
 					</div>
-		<!-- 			<div class="row-fluid control-group">
+		 			<div class="row-fluid control-group">
 						<div class="span3">
 							<label class="control-label" for="id_product_meta_words">Microdata</label>
 						</div>
 						<div class="span9 controls">
 							<input type="text" value="{$fields.product_microdata}" name="field[1][tbl_product][{$cnt}][product_microdata]" id="id_product_microdata" style="width: 70%;">
 						</div>
-					</div> -->
+					</div> 
 					<div class="row-fluid control-group">
 						<div class="span3">
 							<label class="control-label" for="id_product_description">Description</label><br />
@@ -168,36 +192,115 @@
 				<!--===+++===+++===+++===+++===+++ IMAGES TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="images">
 					<!--  gallery -->
-					 <div class="row-fluid control-group">
-						<div class="span3"><label class="control-label" for="gallery_image_{$count}">Gallery Images</label><br/><label class="control-label small-txt" >Size: 250px Wide x 250px Tall</label></div>
-						<div class="span9 controls" id="gallery">
-							{counter start=1 skip=1 assign="count"}
-							{foreach $fields.gallery as $item}
-							<div class="row-fluid gallery_item" rel="{$count}">
-								<div class="span4" id="gallery_{$count}">
-									<input type="hidden" value="gallery_id" name="field[10][tbl_gallery][{$count}][id]" id="id" />
-									<input type="hidden" value="{$item.gallery_id}" name="field[10][tbl_gallery][{$count}][gallery_id]" >
-									<input type="hidden" value="{$item.gallery_file}" name="field[10][tbl_gallery][{$count}][gallery_file]" id="gallery_image_{$count}" >
-									<input type="hidden" value="{$item.gallery_product_id}" name="field[10][tbl_gallery][{$count}][gallery_product_id]" class="fileinput">
-									<input type="text" value="{$item.gallery_link}" name="field[10][tbl_gallery][{$count}][gallery_link]" class="fileinput" id="gallery_image_{$count}_link" >
-									<span id="gallery_image_{$count}_file">{$item.gallery_file}</span>
-								</div>
-								<div class="span8">
-									<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('gallery_image_{$count}','','')">Update</a><a href="{$item.gallery_link}" target="_blank"  class="btn btn-info marg-5r" id="gallery_image_{$count}_path">View</a><a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="deleteFileType('gallery_{$count}')">Delete</a>
-								</div>
-							</div>
-							{counter}
-							{/foreach}
+					
+					<div class="row-fluid control-group" id="select-hero-img">
+						<div class="span3">
+							<label class="control-label" for="id_product_hero_image">Hero Image</label>
 						</div>
-					</div>
-					 <div class="row-fluid control-group">
-						<div class="span3"></div>
 						<div class="span9 controls">
-							<div class="row-fluid">
-								<div class="span12">
-									<a href="javascript:void(0);" class="btn btn-info" onclick="getFileType('','gallery','{$fields.listing_id}')">Add New Image</a>
-								</div>
-							</div>
+							<select name="product_hero_image" id="id_product_hero_image">
+								{assign var='cntlst' value=0}
+								{foreach $fields.gallery as $opt}
+									{assign var='cntlst' value=$cntlst+1}
+									<option value="{$cntlst}" {if $opt.gallery_ishero eq '1'}selected="selected"{/if}>{$opt.gallery_file}</option> 
+								{/foreach}
+							</select>
+						</div>
+					</div>	
+					
+					<div class="offset9" style="margin-bottom: 22px;">
+						<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="$('.images').hide();newImage();"> Add New Image</a>
+					</div>
+					<div id="images-wrapper">
+					{assign var='imageno' value=0}
+					{foreach $fields.gallery as $images}
+						{assign var='imageno' value=$imageno+1}
+						{include file='gallery.tpl'}
+					{/foreach}
+					</div>
+					<div class="row-fluid">
+						<input type="hidden" value="{$imageno}" id="imageno">
+						<div class="span11">
+							<input type="hidden" id="error" name="error" value="0" />
+							<script type="text/javascript">
+		
+								$(document).ready(function(){
+									$('.images').hide();
+
+									if ($('#imageno').val() == 0 ) {
+										$('#select-hero-img').hide();
+									}
+									$('#id_product_hero_image').change(function() {
+										$('.ishero').val('0');
+										$('#gallery_ishero_'+ $(this).val()).val('1');
+									});
+								});
+							
+								function newImage(){
+									$('body').css('cursor','wait');
+									var no = $('#imageno').val();
+									no++;
+									$('#imageno').val(no);
+									$.ajax({
+										type: "POST",
+									    url: "/admin/includes/processes/load-template.php",
+										cache: false,
+										data: "template=gallery.tpl&imageno="+no,
+										dataType: "html",
+									    success: function(data, textStatus) {
+									    	try{
+									    		$('#images-wrapper').append(data);
+									    		$('body').css('cursor','default');
+									    		scrolltodiv('#image_wrapper'+no);
+									    		if (no == 1) { 
+									    			$('#gallery_ishero_1').val('1');
+									    		}
+								    			$('#select-hero-img').show();
+									    		$('#id_product_hero_image').append($('<option>', {
+									    		    value: no,
+									    		    text: 'Image #'+no
+									    		}));
+											}catch(err){ $('body').css('cursor','default'); }
+									    }
+									});
+								}
+		
+								function toggleImage(ID){
+									if ($('#image'+ID).is(':visible')){
+										$('.images').hide();
+									}else{
+										$('.images').hide();
+										$('#image'+ID).show();
+									}
+								}
+								
+								function deleteImage(ID){
+									if (ConfirmDelete()) {
+										var count = $('#'+ID).attr('rel');
+										var today = new Date();
+										var dd = today.getDate();
+										var mm = today.getMonth()+1;//January is 0!
+										var yyyy = today.getFullYear(); 
+										var hh = today.getHours();
+										var MM = today.getMinutes();
+										var ss = today.getSeconds();
+										
+										html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[10][tbl_gallery]['+count+'][gallery_deleted]" />';
+										$('#'+ID).append(html);
+										$('#'+ID).css('display','none');
+										$('#'+ID).removeClass('images');
+										$('#id_product_hero_image option[value='+ count +']').remove();
+										$('#id_product_hero_image').trigger('change');
+										if ($('#id_product_hero_image option').length == 0) {
+											$('#select-hero-img').hide();
+										}
+									}else{ 
+										return false;
+									}
+								}
+							
+								
+							</script>
 						</div>
 					</div>
 					<!--  gallery -->
@@ -400,7 +503,7 @@ $('.validDouble').keyup(function () {
     }
 });
 
-$('.modifier').keyup(function () {
+/* $('.modifier').keyup(function (obj) {
 	var modifierValue = this.value; 
 	var productValue = parseFloat($('#id_product_'+ this.getAttribute('modify')).val());
      if ($.isNumeric(modifierValue)) {
@@ -409,7 +512,7 @@ $('.modifier').keyup(function () {
     	
 	} else {
 		if (modifierValue != '-' && modifierValue != '+' && modifierValue != ''){
-			_this.value= modifierValue.replace(/[^0-9\.]/g, '');
+			this.value= modifierValue.replace(/[^0-9\.]/g, '');
 		} else if  (modifierValue == '') {
 			$('#' + this.getAttribute('resultId')).html( '= '+productValue.toFixed(2));
 		}
@@ -427,7 +530,7 @@ function displayResults(){
 			$('#' + this.getAttribute('resultId')).html( '= '+productValue.toFixed(2));
 		} 
 	});
-}
+} */
 
 $('#myTab a[href="#attributes"]').click(function () {
 	displayResults();

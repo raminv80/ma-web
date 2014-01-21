@@ -54,7 +54,11 @@ class Listing {
 		}
 		foreach ( $this->CONFIG_OBJ->options->field as $f ) {
 			if ($f->attributes()->recursive) { 
-				$listing_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, 0);
+				$parentID = 0;
+				if ($this->CONFIG_OBJ->root_parent_id) {
+					$parentID = $this->CONFIG_OBJ->root_parent_id;
+				}
+				$listing_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
 			} else {
 				$pre = str_replace ( "tbl_", "", $f->table );
 				$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : ""); 
