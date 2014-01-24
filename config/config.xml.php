@@ -53,41 +53,58 @@
 			<field>listing_url</field><!-- The field used to match the URL -->
 			<options>
 				<field recursive="true"> 
-					<name>categories</name>
+					<name>options_categories</name>
 					<table>tbl_listing</table>
 					<reference>listing_name</reference> 
 					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
 				</field> 
 			</options>
 			<associated>
-				<name>products</name>
+				<id>product_id</id>
+				<name>product_info</name>
 				<table>tbl_product</table>
 				<field>product_listing_id</field>
-                                <associated> 
-                                        <id>attribute_id</id>
-                                        <name>attribute</name>
-                                        <table>tbl_attribute</table>
-                                        <field>attribute_product_id</field> 
-                                        <orderby>attribute_order ASC</orderby>
-                                        <associated> 
-                                                <id>attr_value_id</id>
-                                                <name>attr_value</name>
-                                                <table>tbl_attr_value</table>
-                                                <field>attr_value_attribute_id</field> 
-                                                <orderby>attr_value_order ASC</orderby>
-                                        </associated>
-                                </associated>
-                                <associated>
-                                        <name>gallery</name>
-                                        <table>tbl_gallery</table>
-                                        <field>gallery_listing_id</field> <!-- VERIFY THIS IN DATABASE !!! -->
-                                </associated>
+				<orderby>product_order ASC</orderby>
+				<associated> 
+					<id>attribute_id</id>
+					<name>attribute</name>
+					<table>tbl_attribute</table>
+					<field>attribute_product_id</field> 
+					<orderby>attribute_order ASC</orderby>
+					<associated> 
+						<id>attr_value_id</id>
+						<name>attr_value</name>
+						<table>tbl_attr_value</table>
+						<field>attr_value_attribute_id</field> 
+						<orderby>attr_value_order ASC</orderby>
+					</associated>
+				</associated>
+				<associated>
+					<name>gallery</name>
+					<table>tbl_gallery</table>
+					<field>gallery_product_id</field>
+					<orderby>gallery_ishero DESC</orderby> 
+				</associated>
 			</associated>
-			<template>products.tpl</template>
+			<template>product.tpl</template>
 		</table>
 		<template>category.tpl</template>
  	</product_page>
 
+ 	<static_page> 
+		<url>store/shopping-cart</url> 
+		<pageID>13</pageID> 
+		<type>1</type> 
+		<file>ListClass</file>
+		<table>
+			<!-- This table will be the details table -->
+			<name>tbl_cart</name>
+			<field>listing_url</field>
+			<!-- The field used to match the URL -->
+		</table>
+		<template>shopping-cart.tpl</template> 
+		<!-- The template used if the field is matched --> 
+	</static_page>
 
  	<static_page complex="true"> 
 		<url>punters-corner/meetings</url> 

@@ -28,6 +28,6 @@
 
 <ul id="menu" class="nav navbar-nav">
  {call name=render_list items=$menuitems}
- <li class="betnow"><a title="Bet Now" href="https://tatts.com/tattsbet" target="_blank" >Bet Now</a>
+ <li><a title="Shopping Cart" href="/store/shopping-cart"><span class="glyphicon glyphicon-shopping-cart"></span><div style="display:inline;" id="shopping-cart">0</div></a>
 </ul>
 {/block}

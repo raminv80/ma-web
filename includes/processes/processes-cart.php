@@ -1,46 +1,24 @@
 <?php
 set_include_path($_SERVER['DOCUMENT_ROOT']);
 include "includes/functions/functions.php";
-$Action = strip_tags($_POST["Action"]);
-if($Action){
-	switch ($Action) {
+
+if($_POST["action"]){
+	switch ($_POST["action"]) {
 		case 'ADDTOCART':
 			$cart_obj = new cart();
-			/* Required values for cart-item {product_category, product_id, product_name, product_price, product_qty, product_special,additional}*/
-			if($_POST['trackcode']){
-				$trackcode = $_POST['trackcode'];
-			}
-			$product_id = $_POST['product_id'];
-			$attribute_id = $_POST['attribute_id'];
-			$quantity = $_POST['quantity'];
-			$category_id = $_POST['category_id'];
+			$message = 'Error: This item was not added to your cart.';
 			
-			$sql = "SELECT tbl_product.* FROM tbl_product 
-						WHERE tbl_product.product_id = '".$product_id."' 
-						AND tbl_product.product_deleted IS NULL";
-			$row = $DBobject->wrappedSqlGet($sql);
-
-			$pname = $row[0]['product_name'];
-			$price = $row[0]['product_price'];
-			
-			if(!empty($category_id)){
-				$category = $DBobject->GetAnyCell('product_category_name','tbl_product_category', 'product_category_id = "'.($category_id).'"');
-				$pname = $category.' - '.$pname;
-			}
-			
-			if(!empty($attribute_id)){
-				$attribute = $DBobject->GetRow("tbl_attribute", "attribute_id = '{$attribute_id}'");
-				//$pname = $pname." ({$attribute['attribute_name']})";
-				if(!empty($attribute['attribute_price'])){
-					$price = $attribute['attribute_price'];
-				}
-			}
-		    $res = $cart_obj->AddToCart($product_id,$attribute_id,$pname,$category_id,$price,$quantity,$trackcode);
+		    if ($cart_obj->AddToCart($_POST["product_id"], $_POST["quantity"], $_POST["price"], $_POST["attr"])) {
+		    	$message= 'This item was added to your cart.';
+		    }
+		   // $item = $this->GetProductCalculation($product_id, $attributesArray);
 		    
-			$cart_obj->LoadCart();
-			$template = $SMARTY->fetch('shopping-cart.tpl');
+		    $itemsCount = $cart_obj->NumberOfProductsOnCart();
 		    
-		    echo json_encode(array(".cart-wrapper"=>$template));
+		    echo json_encode(array(
+		    					"message"=>$message,
+		    					"itemsCount"=> $itemsCount
+		    				));
 		    exit;
 		case 'SetPromoCode':
 		    $cart_obj = new cart();
@@ -123,5 +101,5 @@ if($Action){
 			exit;
 	}
 }else{
-	header('Location: /catering');
+	header('Location: /store');
 }

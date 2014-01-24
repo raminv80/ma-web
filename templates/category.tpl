@@ -1,23 +1,30 @@
 {block name=body}
-{* Define the function *} {function name=render_categories level=0} 
-	{foreach $items as $item}
-		<tr>
-			<td>{for $var=1 to $level}- {/for}<a href='#{$item.id}'><b>{$item.value}</b></a></td>
-			</td>
-		</tr>
-		{if count($item.subs) > 0} {call name=render_categories items=$item.subs level=$level+1} {/if} 
-	{/foreach} 
-{/function}
 
-<div class="row">
-	<div class="col-md-6 col-md-offset-1">
-	<h2>Categories List</h2>
-		<table class="table table-bordered table-striped table-hover">
-			<thead>
-			</thead>
-			<tbody>{call name=render_categories items=$categories}
-			</tbody>
-		</table>
+	<header>
+		<div id="headout" class="headerbg">
+				<div id="videobox">
+					<div class="container">
+						<div class="row-fluid">
+							<div class="span7">
+					  			{include file='breadcrumbs.tpl'}
+					  			<h3 class="toptitle">{$listing_title}</h3>
+				  			</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<h3>Products in {$listing_title}</h3>
+			{if !$product_info} <div class="row">No products found.</div>{/if}
+			{foreach $product_info as $prod }
+				<div class="row"><a href="./{$listing_url}/{$prod.product_url}-{$prod.product_id}" >{$prod.product_name}</a></div>
+			{/foreach}
+		</div>
+		
+		{include file='full-product-cat.tpl'}
 	</div>
-</div>
+
+
 {/block}

@@ -128,7 +128,7 @@ while ( true ) {
 			$class = ( string ) $lp->file;
 			$obj = new $class ( $_nurl, $lp );
 			$template = $obj->Load ();
-			$productsList = $obj->getProductList($lp->root_parent_id );
+			$productsList = $obj->getProductList($lp->root_parent_id, true);
 			$SMARTY->assign ( 'productsList', $productsList );
 			$menu = $obj->LoadMenu ( $lp->pageID );
 			$SMARTY->assign ( 'menuitems', $menu );

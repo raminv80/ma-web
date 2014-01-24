@@ -530,11 +530,11 @@ function displayResults(){
 			$('#' + this.getAttribute('resultId')).html( '= '+productValue.toFixed(2));
 		} 
 	});
-} */
+}
 
 $('#myTab a[href="#attributes"]').click(function () {
 	displayResults();
 })
-    
+ */    
 </script>
 {/block}

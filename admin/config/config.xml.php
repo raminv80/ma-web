@@ -55,7 +55,7 @@
 				<name>listing_parent_id</name>
 				<table>tbl_listing</table>
 				<reference>listing_name</reference> 
-				<where>listing_parent_flag = '1'</where> 
+				<where>listing_parent_flag = '1' AND listing_type_id = '1'</where> 
 			</field> 
 		</options>
 		<associated> 
@@ -66,10 +66,9 @@
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_page.tpl</edit_template>
 		
-		<custom_template field="listing_id" value="8">custom_home_edit_page.tpl</custom_template>	<!-- Home -->
-		<custom_template field="listing_id" value="9">redirect_edit_page.tpl</custom_template> <!-- Punter's Corner  -->
-		<custom_template field="listing_id" value="13">redirect_edit_page.tpl</custom_template> <!-- New to Wagering  -->
-		<custom_template field="listing_id" value="11">custom_leading_driver_edit_page.tpl</custom_template> <!--  Leading Trainer / Driver Profile -->
+		<custom_template field="listing_id" value="12">custom_home_edit_page.tpl</custom_template>	<!-- Home -->
+		<custom_template field="listing_id" value="888">redirect_edit_page.tpl</custom_template> <!-- New to Wagering  -->
+		<custom_template field="listing_id" value="8888">custom_leading_driver_edit_page.tpl</custom_template> <!--  Leading Trainer / Driver Profile -->
 		
 	</section>
 

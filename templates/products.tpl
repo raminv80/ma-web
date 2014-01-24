@@ -1,5 +1,0 @@
-{block name=body}
-
-
-
-{/block}

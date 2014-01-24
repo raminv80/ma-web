@@ -146,7 +146,6 @@ Class DBmanager{
 			$errMsg = logError($backtrace, $err, $sql);
 			header('Location: /404');
 		}
-		$sql_arr = array();
 		if(!empty($result)) {
 			return $result;
 		}else{

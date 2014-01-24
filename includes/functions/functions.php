@@ -22,6 +22,7 @@ include 'smarty/Smarty.class.php';
 //include 'includes/classes/page-class.php';
 include 'includes/classes/listing-class.php';
 include 'includes/classes/product-class.php';
+include 'includes/classes/cart-class.php';
 include 'includes/functions/functions-general.php';
 include 'includes/functions/functions-search.php';
 

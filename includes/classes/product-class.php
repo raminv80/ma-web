@@ -16,32 +16,41 @@ class ProductClass extends ListClass {
 							LEFT JOIN tbl_attr_value ON attr_value_attribute_id = attribute_id";
 	}
 	
-	function getProductList($parent_id='0'){
+	function getProductList($parent_id='0', $firstTime = false){
 		global $SMARTY,$DBobject;
+		
 		$list = array();
+		$rootUrl = '';
+		$params = array (
+				":pid" => $parent_id
+		);
+		
+		if ($parent_id <> '0' && $firstTime) {
+			$sql = "SELECT listing_url FROM tbl_listing WHERE listing_id = :pid AND listing_deleted IS NULL ";
+			$res = $DBobject->wrappedSqlGetSingle ( $sql, $params );
+			$rootUrl = '/' . $res['listing_url'];
+		}
 		
 		// ------------- Products List ------------------
 		$order = " ORDER BY product_order ASC, product_name ASC";
 		
 		$sql = "SELECT * FROM {$this->DBPRODTABLE}
-		WHERE product_listing_id = :pid AND product_listing_id IS NOT NULL AND	product_deleted IS NULL " . $order;
+		WHERE product_listing_id = :pid AND product_listing_id IS NOT NULL AND product_deleted IS NULL AND product_published = 1 " . $order;
 		
-		$params = array (
-				":pid" => $parent_id
-		);
+		
 		
 		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
 			foreach ( $res as $key => $val ) {
-				$pUrl = $val['product_id'] - $val['product_name'];
 				$list ["p{$val['product_id']}"] = array (
 						"title" => $val ['product_name'],
 						"id" => $val ['product_id'],
-						"url" => "/{$val['product_id']}-{$val['product_url']}"
+						"url" => "{$rootUrl}/{$val['product_url']}-{$val['product_id']}"
 				);
 			}
 		}
 		
 		// ------------- Product Categories List ------------------
+		
 		$order = " ORDER BY tbl_listing.listing_order ASC";
 		
 		$sql = "SELECT * FROM {$this->DBTABLE}
@@ -61,7 +70,7 @@ class ProductClass extends ListClass {
 						$list ["l{$val['listing_id']}"] = array (
 												"title" => $val ['listing_name'],
 												"id" => $val ['listing_id'],
-												"url" => "/{$val ['listing_url']}",
+												"url" => "{$rootUrl}/{$val ['listing_url']}",
 												"subs" => $subs
 						);
 					}
@@ -80,8 +89,10 @@ class ProductClass extends ListClass {
 	
 		if ($arrChk = $this->ChkCache ( $_url )) {
 			$id = $arrChk['id'];
-			$data = $this->LoadTree ($id);
-			$SMARTY->assign ( 'data', unclean ( $data ) );
+			if (!$arrChk['isProduct']) {
+				$data = $this->LoadTree ($id);
+				$SMARTY->assign ( 'data', unclean ( $data ) );
+			} 
 		} 
 		if(empty($_ID)){
 			if(!empty($id) ){
@@ -92,15 +103,23 @@ class ProductClass extends ListClass {
 			}
 		}
 	
-       	$bdata = $this->LoadBreadcrumb ( $_ID, $arrChk['type']);
+       	$bdata = $this->LoadBreadcrumb ( $_ID, $arrChk['isProduct']);
         $SMARTY->assign ( "breadcrumbs", $bdata );
 	
+        //------------ LOAD PRODUCT/CATEGORY DATA, PARENT AND EXTENDS TABLE ----------
+        if ($arrChk['isProduct']) {
+        	$tableName = 'tbl_product';
+        	$parentField = 'product_listing_id';
+        } else {
+        	$tableName = 'tbl_listing';
+        	$parentField = 'listing_parent_id';
+        }
+        $pre = str_replace ( "tbl_", "", $tableName );
 		$extends = "";
 		foreach ( $this->CONFIG_OBJ->table->extends as $a ) {
-			$pre = str_replace ( "tbl_", "", $a->table );
-			$extends = " LEFT JOIN {$a->table} ON tbl_listing.listing_id = {$a->field}"; 
+			$extends .= " LEFT JOIN {$a->table} ON {$pre}_id = {$a->field}"; 
 		}
-		$sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_id = :id AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 ";
+		$sql = "SELECT * FROM {$tableName} {$extends} WHERE {$pre}_id = :id AND {$pre}_deleted IS NULL AND {$pre}_published = 1 ";
 		$params = array (
 				":id" => $_ID
 		);
@@ -108,23 +127,28 @@ class ProductClass extends ListClass {
 			foreach ( $res[0] as $key => $val ) {
 				$SMARTY->assign ( $key, unclean ( $val ) );
 			}
-			$p_data = $this->LoadParents ( $res[0]['listing_parent_id'] );
+			$p_data = $this->LoadParents ( $res[0][$parentField] );
 			$SMARTY->assign ( "listing_parent", $p_data );
 		}else{
 			header ( "Location: /404" );
 			die ();
 		}
-			
+		
+		//------------- LOAD ASSOCIATED TABLES --------------
 		foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
-                        if ($arrChk['type'] == 'product') {
-                            $t_data = $this->LoadAssociated($a->associated,$_ID);
-                        } else {
-                            $t_data = $this->LoadAssociated($a,$_ID);
-                        }
-                        $SMARTY->assign ( "{$a->name}", $t_data );
+			if ($arrChk['isProduct'] == 'product') {
+				$t_data = array();
+				foreach ( $a->associated as $a2 ) {
+					$t_data[ "{$a2->name}"] = $this->LoadAssociated($a2,$_ID);
+				}
+			} else {
+				$t_data = $this->LoadAssociated($a,$_ID);
+			}
+			$SMARTY->assign ( "{$a->name}", $t_data );
 			
 		}
 		
+		//------------- LOAD OPTIONS FOR SELECT INPUTS --------------
 		foreach ( $this->CONFIG_OBJ->table->options->field as $f ) {
 			if ($f->attributes()->recursive) {
 				$options = $this->getOptionsCatTree($f, $this->ROOT_PARENT_ID );
@@ -152,22 +176,22 @@ class ProductClass extends ListClass {
 	
 		return $template;
 	}
-	function LoadBreadcrumb($_id, $_type) {
+	function LoadBreadcrumb($_id, $_isProduct) {
 		global  $DBobject;
 		                
         $data = array();
                 
-        if ($_type == 'product') {
+        if ($_isProduct) {
                 
         	$sql = "SELECT * FROM tbl_listing LEFT JOIN tbl_product ON listing_id = product_listing_id 
-                                WHERE product_id = :id AND product_deleted IS NULL AND listing_deleted IS NULL";
+                    WHERE product_id = :id AND product_deleted IS NULL AND product_published = 1 AND listing_deleted IS NULL  AND listing_published = 1";
             $params = array (
             			":id" => $_id
             );
                         
             if ($res = $DBobject->wrappedSql ( $sql, $params )) {
             	$pData = array();
-                $pData [$res [0] ['product_id']] ["name"] = ucfirst ( unclean ( $res [0] ['product_name'] ) );
+                $pData [$res [0] ['product_id']] ["title"] = ucfirst ( unclean ( $res [0] ['product_name'] ) );
                 $pData [$res [0] ['product_id']] ["url"] = $res [0] ['product_url'] .'-'. $res [0] ['product_id'];
 
                 $data [$res [0] ['listing_id']] ["title"] = ucfirst ( unclean ( $res [0] ['listing_title'] ) );
@@ -210,70 +234,161 @@ class ProductClass extends ListClass {
 		return $results;
 	}
 	
-
+	function LoadTree($_cid = 0, $level = 0, $count = 0) {
+		global $CONFIG, $SMARTY, $DBobject;
+		$data = array ();
+	
+		if (! empty ( $this->CONFIG_OBJ->depth ) && intval ( $this->CONFIG_OBJ->depth ) > 0 && intval ( $this->CONFIG_OBJ->depth ) <= $level) {
+			return $data;
+		}
+	
+		// GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
+		$filter = "";
+		$filter_params = array();
+		$f_count = 1;
+		if (!empty($this->CONFIG_OBJ->filter)) {
+			foreach($this->CONFIG_OBJ->filter as $f) {
+				if (!empty($f->field) && !empty($f->value)) {
+					$filter .= " AND ".$f->field." = :filter{$f_count}";
+					$filter_params[":filter{$f_count}"] = $f->value;
+					$f_count++;
+				}
+			}
+		}
+		if(!empty($filter)){
+			$this->CONFIG_OBJ->limit = 0;
+		}
+	
+	
+		$order = " ORDER BY tbl_listing.listing_order ASC";
+		if (! empty ( $this->CONFIG_OBJ->orderby )) {
+			$order = " ORDER BY " . $this->CONFIG_OBJ->orderby;
+		}
+		$extends = "";
+		foreach ( $this->CONFIG_OBJ->table->extends as $a ) {
+			$pre = str_replace ( "tbl_", "", $a->table );
+			$extends = " LEFT JOIN {$a->table} ON tbl_listing.listing_id = {$a->field}"; 
+		}
+		
+		
+		//---------------------- GET PRODUCTS CHILDREN
+		$prod_extends = "";
+		foreach ( $this->CONFIG_OBJ->table->associated->extends as $a ) {	// extends product table
+			$pre = str_replace ( "tbl_", "", $a->table );
+			$prod_extends = " LEFT JOIN {$a->table} ON product_id = {$a->field}";
+		}
+		
+		$prod_order = "";
+		if (! empty ( $this->CONFIG_OBJ->table->associated->orderby )) { 
+			$prod_order = " ORDER BY " . $this->CONFIG_OBJ->table->associated->orderby;
+		}
+		
+		$sql = "SELECT * FROM tbl_product {$prod_extends} WHERE product_listing_id = :cid AND product_deleted IS NULL AND product_published = 1" . $prod_order;
+		$params = array (
+				":cid" => $_cid
+		);
+		
+		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
+			foreach ( $res as $row ) {
+				$data ['products']["{$row['product_id']}"] = unclean ( $row );
+				foreach ( $this->CONFIG_OBJ->table->associated->associated as $a ) {
+					$data ['products']["{$row['product_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row['product_id']);
+				}
+			}
+		}
+		//-------------------------------------------------
+		
+		$sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_type_id = :type AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1" . $filter . $order;
+		$params = array (
+				":cid" => $_cid,
+				":type" => $this->CONFIG_OBJ->type
+		);
+		$params = array_merge($params,$filter_params);
+		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
+			foreach ( $res as $row ) {
+				if($this->CONFIG_OBJ->limit && $count >= intval($this->CONFIG_OBJ->limit)){
+					return $data;
+				}
+				$count += 1;
+	
+				$data ["{$row['listing_id']}"] = unclean ( $row );
+				foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
+					if ($a->attributes ()->listing) {
+						$data ["{$row['listing_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row['listing_id']);
+					}
+				}
+				$subs = self::LoadTree ( $row ['listing_id'], $level ++ ,$count);
+				$data ["{$row['listing_id']}"] ['listings'] = $subs;
+			}
+		}
+	
+		return $data;
+	}
+	
 	function ChkCache($_url) {
 		global $SMARTY, $DBobject;
 		$args = explode ( '/', $_url );
 		$a = end ($args);
+		
 		$sql = "SELECT cache_record_id FROM cache_tbl_product WHERE cache_url = :url"; // Check for PRODUCTS
 		$params = array (
 				":url" => $_url
 		);
-                $type = 'product';
+        $isProduct = true;
 		try {
-			$row = $DBobject->wrappedSqlGetSingle ( $sql, $params );
-                        if (empty ( $row )) {
+			$row = $DBobject->wrappedSql ( $sql, $params );
+            if (empty ( $row )) {
 				$sqlCat = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url"; // Check for CATEGORIES
-				$row = $DBobject->wrappedSqlGetSingle ( $sqlCat, $params );
+				$row = $DBobject->wrappedSql ( $sqlCat, $params );
 				if (empty ( $row )) {
-					$sqlp = "SELECT CONCAT(product_url, '-', product_id) FROM tbl_product WHERE product_url = :url";
+					$sqlp = "SELECT product_id FROM tbl_product WHERE CONCAT(product_url, '-', product_id) = :url";
 					$params2 = array (
 							":url" => $a
 					);
-					if ($res = $DBobject->wrappedSqlGet ( $sqlp, $params2 )) { // Build Product cache
+					if ($res = $DBobject->wrappedSql ( $sqlp, $params2 )) {// Build Product cache 
 						$this->BuildCache();
-						$row = $DBobject->wrappedSqlGetSingle ( $sql, $params );
+						$row = $DBobject->wrappedSql ( $sql, $params );
                                                 
 						
 					} else {
-                                            $sqlc = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url";
-                                            if ($res = $DBobject->wrappedSqlGet ( $sqlc, $params2 )) { // Build Cat - Listing cache
-						parent::BuildCache();
-						$row = $DBobject->wrappedSqlGetSingle ( $sqlCat, $params );
-                                                $type = 'category';
-                                            }
+						$sqlc = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url";
+						if ($res = $DBobject->wrappedSql ( $sqlc, $params2 )) { // Build Cat - Listing cache
+							parent::BuildCache();
+							$row = $DBobject->wrappedSql ( $sqlCat, $params );
+							$isProduct = false;
+						}
 					}
 				} else {
-					$type = 'category';
+					$isProduct = false;
 				}
 			}
 		} catch ( Exception $e ) {
 			$sqlCat = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url"; // Check for CATEGORIES
-                        $row = $DBobject->wrappedSqlGetSingle ( $sqlCat, $params );
+                        $row = $DBobject->wrappedSql ( $sqlCat, $params );
                         if (empty ( $row )) {
-                                $sqlp = "SELECT CONCAT(product_url, '-', product_id) FROM tbl_product WHERE product_url = :url";
-                                $params2 = array (
+                                $sqlp = "SELECT product_id FROM tbl_product WHERE CONCAT(product_url, '-', product_id) = :url";
+								$params2 = array (
                                                 ":url" => $a
                                 );
-                                if ($res = $DBobject->wrappedSqlGet ( $sqlp, $params2 )) { // Build Product cache
+                                if ($res = $DBobject->wrappedSql ( $sqlp, $params2 )) { // Build Product cache
                                         $this->BuildCache();
-                                        $row = $DBobject->wrappedSqlGetSingle ( $sql, $params );
+                                        $row = $DBobject->wrappedSql ( $sql, $params );
 
 
                                 } else {
                                     $sqlc = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url";
-                                    if ($res = $DBobject->wrappedSqlGet ( $sqlc, $params2 )) { // Build Cat - Listing cache
+                                    if ($res = $DBobject->wrappedSql ( $sqlc, $params2 )) { // Build Cat - Listing cache
                                         parent::BuildCache();
-                                        $row = $DBobject->wrappedSqlGetSingle ( $sqlCat, $params );
-                                        $type = 'category';
+                                        $row = $DBobject->wrappedSql ( $sqlCat, $params );
+                                        $isProduct = false;
                                     }
                                 }
                         } else {
-                                $type = 'category';
+                                $isProduct = false;
                         }
 		}
 		if (! empty ( $row )) {
-			return array("id"=>$row ['cache_record_id'],"type"=>$type);
+			return array("id"=>$row[0]['cache_record_id'],"isProduct"=>$isProduct);
 		}
 		return false;
 	}

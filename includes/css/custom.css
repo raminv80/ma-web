@@ -24,7 +24,12 @@ a, a:active, a:selected, a:focus {
     border: none;
     outline: none;
 }
-
+.breadcrumbs {
+	color:#888888;
+}
+.breadcrumbs > a {
+	color:#cccccc;
+}
 .page{
 	display:none;
 }
