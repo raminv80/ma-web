@@ -1,25 +1,48 @@
 <?php
-set_include_path($_SERVER['DOCUMENT_ROOT']);
-include "includes/functions/functions.php";
 
 if($_POST["action"]){
 	switch ($_POST["action"]) {
 		case 'ADDTOCART':
 			$cart_obj = new cart();
-			$message = 'Error: This item was not added to your cart.';
+			$message = 'Error: This item was not added to your cart. ';
 			
-		    if ($cart_obj->AddToCart($_POST["product_id"], $_POST["quantity"], $_POST["price"], $_POST["attr"])) {
-		    	$message= 'This item was added to your cart.';
-		    }
-		   // $item = $this->GetProductCalculation($product_id, $attributesArray);
+			$item = $cart_obj->GetProductCalculation($_POST["product_id"], $_POST["attr"]);
+			$qty = intval($_POST["quantity"]);
+			$price = floatval($_POST["price"]);
+                        
+			if ($item['error']) {
+				$message = $message .$item['error_message']; 
+			} else {
+            	//COMPARE FRONT-END PRICE WITH DB PRICE
+				if ($cart_obj->AddToCart($item, $qty)) {
+					if ( $price == $item['product_price']) {
+						$message= 'This item was added to your cart.';
+					} else {
+						$message = 'This item was added to your cart and its price has been updated. ';
+					}
+				}
+			}
+			$itemsCount = $cart_obj->NumberOfProductsOnCart();
 		    
-		    $itemsCount = $cart_obj->NumberOfProductsOnCart();
-		    
-		    echo json_encode(array(
-		    					"message"=>$message,
-		    					"itemsCount"=> $itemsCount
-		    				));
+			echo json_encode(array(
+		    				"message"=>$message,
+		    				"itemsCount"=> $itemsCount
+	    				));
 		    exit;
+		    
+	    case 'DeleteItem':
+	    	$cart_obj = new cart();
+	    	$response = $cart_obj->RemoveFromCart($_POST["cartitem_id"]);
+	    	echo json_encode(array("response"=>$response));
+	    	exit;
+
+    	case 'updateCart':
+    		$cart_obj = new cart();
+    		$response = $cart_obj->UpdateQtyCart($_POST["qty"]);
+    		echo json_encode(array("response"=>$response));
+    		exit;
+	    	
+	    	// ==================== OLD STUFFS =====================
 		case 'SetPromoCode':
 		    $cart_obj = new cart();
 		    $promocode = clean($_POST['CheckoutPromoCode']);
@@ -39,15 +62,7 @@ if($_POST["action"]){
 		    echo json_encode(array(".cart-wrapper"=>$template));
 			//header("Location: /checkout");
 			exit;
-		case 'DeleteItem':
-			$cart_obj = new cart();
-			if($cart_obj->RemoveFromCart($_POST["cartitem_id"])){
-				$cart_obj->LoadCart();
-				$template = $SMARTY->fetch('shopping-cart.tpl');
-			    
-			    echo json_encode(array(".cart-wrapper"=>$template));
-			}
-			exit;
+
 		case 'MakeAPayment':
 			exit;
 		case 'EmailOrder':
@@ -101,5 +116,5 @@ if($_POST["action"]){
 			exit;
 	}
 }else{
-	header('Location: /store');
+	die('');
 }

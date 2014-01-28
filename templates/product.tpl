@@ -53,7 +53,7 @@
 				<div style="display:inline;"><input type="hidden" value="{$product_price}" name="price" id="price" /> </div>
 				
 				
-				<div style="display:inline;"><input type="text" value="1" name="quantity" id="quantity" ></div>
+				<div style="display:inline;"><input type="text" value="1" name="quantity" id="quantity" class="unsigned-int gt-zero" ></div>
 				<div style="display:inline;"><a class="btn-primary btn" onclick="addCart();">Add to Cart</a></div>
 				
 				
@@ -65,59 +65,6 @@
 		
 		{include file='full-product-cat.tpl'}
 	</div>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			
-			/* $('.modifier').trigger('change'); */
-			calculatePrice();
-			
-		});
 
-		$('.modifier').change(function() {
-			/* alert($(this).val()); */
-			calculatePrice();
-		});
-
-		function calculatePrice(){
-			var price = parseFloat($('#cal-price').attr('value'));
-			$('.modifier').each(function(){
-					price = price + parseFloat($('option:selected', this).attr('price'));
-					
-				});
-			$('#cal-price').html(price.toFixed(2)); 
-			$('#price').val(price.toFixed(2)); 
-		}
-		
-
-		
-		function addCart(){
-			$('body').css('cursor','wait');
-			var datastring = $("#product-form").serialize();
-			$.ajax({
-				type: "POST",
-			    url: "/includes/processes/processes-cart.php",
-				cache: false,
-				data: datastring,
-				dataType: "html",
-			    success: function(data) {
-			    	try{
-			    		var obj = $.parseJSON(data);
-					 	var msg = obj.message;
-					 	var items = obj.itemsCount;  
-					 	
-					 	$('body').css('cursor','default');
-					 	alert (msg + " => " + items);
-			    		
-					}catch(err){
-						$('body').css('cursor','default'); 
-						alert ('TRY-CATCH error');
-					}
-			    },
-				error: function(){
-	                alert('AJAX error');
-	          	}
-			});
-		}
-		
-	</script>
+	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>
 {/block}

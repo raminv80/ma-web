@@ -71,6 +71,21 @@ while ( true ) {
 		break 1;
 	}
 	
+	/**
+	 * ***** Processes ******
+	 */
+	$needle = str_replace ( "/", "\/", "process/" );
+	$haystack = $_request ["arg1"];
+	if (preg_match ( "/^{$needle}/", $haystack )) {
+		foreach ( $CONFIG->process as $sp ) {
+			if ($sp->url == $_request ['arg1']) {
+				$file = ( string ) $sp->file;
+				include($file);
+			}
+		}
+		die();
+	}
+	
 	/*
 	 * **** Social Wall ******
 	
@@ -101,6 +116,21 @@ while ( true ) {
 	}
 	
 	/**
+	 * ***** Goes to SHOPPING CART ******
+	 */
+	if ($_request ['arg1'] == 'store/shopping-cart') {
+		$obj = new $class ( '', $struct );
+		$template = $obj->Load ( $CONFIG->cart->pageID );
+		$template = $CONFIG->cart->template;
+		$menu = $obj->LoadMenu ( $CONFIG->cart->pageID );
+		$SMARTY->assign ( 'menuitems', $menu );
+		$cart_obj = new cart();
+		$products = $cart_obj->GetProductsOnCart(); 
+		$SMARTY->assign ( 'products', $products );
+		break 1;
+	}
+	
+	/**
 	 * **** Goes to individual script pages ******
 	 */
 	foreach ( $CONFIG->static_page as $sp ) {
@@ -113,6 +143,7 @@ while ( true ) {
 			break 2;
 		}
 	}
+	
 	
 	/**
 	 * ***** Product pages here ******
@@ -210,6 +241,15 @@ while ( true ) {
 		break 1;
 	}
 }
+
+/**
+ * ***************************************
+ * Load Number of Items on Shopping Cart *
+ * ***************************************
+ */
+$cart_obj = new cart();
+$itemNumber = $cart_obj->NumberOfProductsOnCart();
+$SMARTY->assign ( 'itemNumber', $itemNumber );
 
 $SMARTY->display ( "extends:page.tpl|$template" );
 die ();

@@ -1190,6 +1190,8 @@ class elFinder {
 				break;
 			}
 			
+			//THIS IS WHERE YOU WOULD GENERATE THUMBNAIL AND OTHER IMAGES IF THE FILE TYPE WAS AN IMAGE
+			
 			fclose($fp);
 			if (! is_uploaded_file($tmpname) && @ unlink($tmpname)) unset($non_uploads[$tmpfname]);
 			$result['added'][] = $file;

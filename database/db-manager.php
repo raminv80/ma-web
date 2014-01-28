@@ -54,7 +54,6 @@ Class DBmanager{
 
 			try{
 				$result = $STH->fetchAll(PDO::FETCH_ASSOC);
-				$this->id = $this->PDO->lastInsertId();
 				$this->lastresult = $result;
 				return $result;
 			}catch(Exception $e){
@@ -67,7 +66,7 @@ Class DBmanager{
 	 * Enter description here ...
 	 */
 	function wrappedSqlIdentity() {
-		return $this->id;
+		return $this->PDO->lastInsertId();
 	}
 
 	/**

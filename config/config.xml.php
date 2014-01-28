@@ -91,20 +91,18 @@
 		<template>category.tpl</template>
  	</product_page>
 
- 	<static_page> 
+ 	<cart> 
 		<url>store/shopping-cart</url> 
 		<pageID>13</pageID> 
 		<type>1</type> 
 		<file>ListClass</file>
-		<table>
-			<!-- This table will be the details table -->
+		<table>			<!-- This table will be the details table -->
 			<name>tbl_cart</name>
-			<field>listing_url</field>
-			<!-- The field used to match the URL -->
+			<field>listing_url</field>	<!-- The field used to match the URL -->
 		</table>
 		<template>shopping-cart.tpl</template> 
 		<!-- The template used if the field is matched --> 
-	</static_page>
+	</cart>
 
  	<static_page complex="true"> 
 		<url>punters-corner/meetings</url> 
@@ -163,6 +161,13 @@
 		<template>formguide.tpl</template> 
 		<!-- The template used if the field is matched --> 
 	</print>
+	
+	<process>
+		<url>process/cart</url>
+		<file>includes/processes/processes-cart.php</file>
+		<return_url></return_url>
+	</process>
+
 	 	
 
 	<smartytemplate_config>

@@ -153,8 +153,8 @@ a:hover{
 	background: #3a180d no-repeat top center;
 }
 #headout{
-	background: #3a180d url(../../images/headerbg.png) no-repeat top center;
-	/*background: #3a180d url(../../images/headerbg.png) no-repeat top center;*/
+	/*background: #3a180d url(../../images/headerbg.png) no-repeat top center;
+	background: #3a180d url(../../images/headerbg.png) no-repeat top center;*/
 }
 
 #headout2{

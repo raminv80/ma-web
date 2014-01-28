@@ -61,7 +61,7 @@
 				</div> -->
 				
 				<div class="col-sm-3 share">
-					<a target="_blank" href="http://www.saharnessracing.com/" title="SA Harness Racing's Website"><img src="/images/footlogo.png" alt="Harness Racing SA logo" /></a>
+					<a target="_blank" href="http://www.saharnessracing.com/" title="SA Harness Racing's Website"></a>
 					<div><a target="_blank" href="http://www.saharnessracing.com/" title="SA Harness Racing's Website">VISIT SA HARNESS RACING</a></div>
 					<div>SHARE THIS <span class='st_sharethis_large' displayText='ShareThis'></span></div>
 				</div>

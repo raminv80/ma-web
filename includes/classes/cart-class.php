@@ -81,12 +81,12 @@ class cart{
     function VerifySessionCart($ses_val){
         global $DBobject;
     	
-    	$this->ses_cart_id = $DBobject->wrappedSqlGetSingle("SELECT cart_id FROM tbl_cart
-											WHERE cart_closed_date is null
-											AND cart_deleted is null
-											AND cart_session = '".clean($ses_val)."'
-											ORDER BY cart_id DESC");
-        if($this->ses_cart_id	!= 0){
+        $sql = "SELECT cart_id FROM tbl_cart
+				WHERE cart_closed_date is null AND cart_deleted is null AND cart_session = :id
+				ORDER BY cart_id DESC";
+        
+        if( $res = $DBobject->wrappedSql($sql, array(":id" => $ses_val)) ){
+            $this->ses_cart_id = $res[0]['cart_id'];
             return true;
         }else{
             return false;
@@ -172,7 +172,7 @@ class cart{
     									'".($item['cartitem_quantity'])."',
     									'".($item['cartitem_user_ip'])."',
     									'".($item['cartitem_user_browser'])."',
-    									'".($item['cartitem_created'])."',
+    									'".($item['cartitem_created'])."'
     									)");
                     
                     $dest_cartitemId = $DBobject->wrappedSqlIdentity();
@@ -219,37 +219,86 @@ class cart{
     
     
 	/**
-	 * Find the cartitem_id whether there is a product on the cart, when there isn't returns 0  
+	 * Find the cartitem_id and quantity when the same product is on the cart, else returns 0  
 	 * @param integer $product_id
 	 * @param array $attributesArray
-	 * @return integer
+	 * @return array
 	 */
-    function ProductOnCart($product_id,$attributesArray){
+    function ProductOnCart($product_id, $attributesArray){
         global $DBobject;
     	
-    	$res = $DBobject->wrappedSql("SELECT cartitem_id FROM tbl_cartitem
-							WHERE cartitem_cart_id = '".clean($this->cart_id)."'
-							AND	cartitem_product_id = '".clean($product_id)."'
-							AND cartitem_deleted is null
-							AND cartitem_cart_id <> '0'"); 
+        $params = array (
+        		":cid" => $this->cart_id,
+        		":pid" => $product_id
+        );
+        
+    	$sql = "SELECT cartitem_id, cartitem_quantity FROM tbl_cartitem
+				WHERE cartitem_cart_id = :cid AND cartitem_product_id = :pid AND cartitem_deleted is null AND cartitem_cart_id <> '0'";
     	
-        if($res){
-        	
-        	$res2 = $DBobject->wrappedSql("SELECT cartitem_attr_attribute_id, cartitem_attr_attr_value_id FROM tbl_cartitem_attr
-							WHERE cartitem_attr_cartitem_id = '".clean($res[0]['cartitem_id'])."'
-							AND cartitem_attr_deleted is null");
-        	if ($res2) {
-        		$dbAttr = array();
-        		foreach ($res2 as $attr){
-        			$dbAttr[][$attr['cartitem_attr_attribute_id']] = $attr['cartitem_attr_attr_value_id'];
-        		}
-        		if (count(array_diff($attributesArray, $dbAttr)) === 0) {
-        			return $res[0]['cartitem_id']; // Item found 
-        		}
-        	} 
+        if( $res = $DBobject->wrappedSql($sql, $params) ){
+        	foreach ($res as $item) {
+        		$sql = "SELECT cartitem_attr_attribute_id, cartitem_attr_attr_value_id FROM tbl_cartitem_attr
+                		WHERE cartitem_attr_cartitem_id = :id AND cartitem_attr_deleted is null";
+        		
+                $dbAttr = array();
+				if ($res2 = $DBobject->wrappedSql($sql, array( ":id" => $item['cartitem_id'] ))) {
+					foreach ($res2 as $attr){
+						$dbAttr[$attr['cartitem_attr_attribute_id']] = $attr['cartitem_attr_attr_value_id'];
+					}
+				}
+                    
+				$feAttr = array();
+				foreach ($attributesArray as $v) {
+                	$feAttr[$v['attribute_id']] = $v['attr_value_id'];
+				}
+				if (count(array_diff_assoc($feAttr, $dbAttr)) === 0) {
+                	return $res[0]; // Item found
+                } 
+			}
         }
-        return 0;
+        return array('cartitem_id' => 0);
     }
+    
+    function NumberOfProductsOnCart(){
+    	global $DBobject;
+    	 
+    	if($this->VerifySessionCart(session_id()) == true && $this->cart_id != '0' ){
+    		$sql = "SELECT SUM(cartitem_quantity) AS SUM FROM tbl_cartitem
+					WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
+    		
+    		$cart_arr  = $DBobject->wrappedSql($sql, array( ":id" => $this->cart_id ));
+    		return $cart_arr[0]['SUM'];
+    	}else{
+    		return 0;
+    	}
+    }
+    
+    function GetProductsOnCart(){
+    	global $DBobject;
+    	 
+    	if($this->VerifySessionCart(session_id()) == true && $this->cart_id != '0' ){
+    		$sql = "SELECT 	cartitem_id, cartitem_cart_id, cartitem_product_id, cartitem_product_name, cartitem_product_price, cartitem_quantity, cartitem_subtotal, cartitem_product_gst 
+					FROM tbl_cartitem
+    				WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
+    		
+    		$res  = $DBobject->wrappedSql($sql, array( ":id" => $this->cart_id ));
+    		$cart_arr = array();
+    		foreach ($res as $p) {
+    			$cart_arr[$p['cartitem_id']]= $p;
+    			
+    			$sql = "SELECT 	cartitem_attr_id, cartitem_attr_cartitem_id, cartitem_attr_attribute_id, cartitem_attr_attr_value_id, cartitem_attr_attribute_name, cartitem_attr_attr_value_name
+						FROM tbl_cartitem_attr
+						WHERE cartitem_attr_cartitem_id	= :id AND cartitem_attr_deleted IS NULL AND cartitem_attr_cartitem_id <> '0'";
+    			
+    			$res2  = $DBobject->wrappedSql($sql, array( ":id" => $p['cartitem_id'] ));
+    			$cart_arr[$p['cartitem_id']]['attributes']= $res2;
+    		} 
+    		return $cart_arr;
+    	}else{
+    		return false;
+    	}
+    }
+    
     function StyleOnCart($product_style_id){
     	global $DBobject;
     	
@@ -312,15 +361,8 @@ class cart{
     /**
      *
      * This function takes a range of variables and inserts or updates a item in the cartitem table
-     * @param int $product_id
-     * @param string $product_name
-     * @param string $product_category
-     * @param int $product_price
-     * @param int $product_quantity
-     * @param boolean $product_special
-     * @param serialized_array $attributes
-     * @param boolean $help
-     * @param int $wristsize
+     * @param array $product
+     * @param int $quantity
      * @return boolean
      */
     function AddToCart($product, $quantity){
@@ -330,67 +372,98 @@ class cart{
             $this->__construct();
         }
 
-	    $cartitem_id = $this->ProductOnCart($product['product_id'],$product['attributes']);
-	        
-        if($cartitem_id == 0){
-            $res = $DBobject->wrappedSql("
-					INSERT INTO tbl_cartitem (
-						cartitem_cart_id,
-						cartitem_product_id,
-						cartitem_product_name,
-						cartitem_product_price,
-						cartitem_quantity,
-						cartitem_product_gst,
-						cartitem_user_ip,
-						cartitem_user_browser,
-						cartitem_created,
-					)
-					values(
-						'".$this->cart_id."',
-						'".clean($product['product_id'])."',
-						'".clean($product['product_name'])."',
-						'".clean($product['product_price'])."',
-						'".clean($quantity)."',
-						'".clean($$product['product_gst'])."',
-						'".clean($_SERVER['REMOTE_ADDR'])."',
-						'".clean($_SERVER['HTTP_USER_AGENT'])."',
-						now()
-						)");
-            if($res){
-            	$error = false; 
-            	$cartitem_id = $$DBobject->wrappedSqlIdentity();
+	    $cartItem = $this->ProductOnCart($product['product_id'],$product['attributes']);
+	
+        if($cartItem['cartitem_id'] == 0){
+           
+        	$params = array (
+        			":cid" => $this->cart_id,
+        			":product_id" => $product['product_id'],
+        			":product_name" => $product['product_name'],
+        			":product_price" => $product['product_price'],
+        			":qty" => $quantity,
+        			":product_gst" => $product['product_gst'],
+        			":ip" => $_SERVER['REMOTE_ADDR'],
+        			":browser" => $_SERVER['HTTP_USER_AGENT']
+        	);
+        	$sql = "INSERT INTO tbl_cartitem (
+									cartitem_cart_id,
+									cartitem_product_id,
+									cartitem_product_name,
+									cartitem_product_price,
+									cartitem_quantity,
+									cartitem_product_gst,
+									cartitem_user_ip,
+									cartitem_user_browser,
+									cartitem_created
+								)
+								values(
+									:cid,
+									:product_id,
+									:product_name,
+									:product_price,
+									:qty,
+									:product_gst,
+									:ip,
+									:browser',
+									now()
+									)";
+        	
+            
+            if( $res = $DBobject->wrappedSql($sql, $params) ){
+            	$errorCnt = 0; 
+            	$cartitem_id = $DBobject->wrappedSqlIdentity();
             	foreach ($product['attributes'] as $attr) {
-            		 $res2 = $DBobject->wrappedSql("INSERT INTO tbl_cartitem_attr (
+            		
+            		$params = array (
+            				":cid" => $cartitem_id,
+            				":attribute_id" => $attr['attribute_id'],
+            				":attr_value_id" => $attr['attr_value_id'],
+            				":attribute_name" => $attr['attribute_name'],
+            				":attr_value_name" => $attr['attr_value_name']
+            		);
+					$sql = "INSERT INTO tbl_cartitem_attr (
 							    						cartitem_attr_cartitem_id,
-	                    								cartitem_attr_attribute_id,
+                                                        cartitem_attr_attribute_id,
 	    												cartitem_attr_attr_value_id,
 							    						cartitem_attr_attribute_name,
 							    						cartitem_attr_attr_value_name,
 	    												cartitem_attr_created
 			    								)
 			    								values(
-			    									'".$cartitem_id."',
-			    									'".clean($attr['attribute_id'])."',
-			    									'".clean($attr['attr_value_attribute_id'])."',
-			    									'".clean($attr['attribute_name'])."',
-			    									'".clean($attr['attr_value_name'])."',
+			    									:cid,
+			    									:attribute_id,
+			    									:attr_value_id,
+			    									:attribute_name,
+			    									:attr_value_name,
 			    									now()
-			    									)");
+			    									)";
+					
+            		 $res2 = $DBobject->wrappedSql($sql, $params);
             		 if (!$res2) {
-            		 	$error = true;
+            		 	$errorCnt++;
             		 }
             	}
-            	if (!$error) {
+            	if ($errorCnt == 0) {
             		return true;
             	} 
             	
             }
         }
         else{
-			
-        	$DBobject->wrappedSql("UPDATE tbl_cartitem SET cartitem_quantity = '".$orig_cart[0]['cart_created']."',cart_discount_code = '".$orig_cart[0]['cart_discount_code']."' WHERE cart_id = '".$destination."'");
-        	
-	        
+          
+			$quantity = intval($cartItem['cartitem_quantity']) + $quantity;
+			$params = array (
+	        		":id" => $cartItem['cartitem_id'],
+	        		":qty" => $quantity,
+	        		":price" => $product['product_price']
+	        );
+	        $sql = "UPDATE tbl_cartitem SET cartitem_quantity = :qty, cartitem_product_price = :price, cartitem_modified = now()  
+	                WHERE cartitem_id = :id";
+	     	
+			if ($DBobject->wrappedSql($sql, $params)) {
+				return true; 
+            }
         }
         return false;
     }
@@ -410,14 +483,9 @@ class cart{
     	$params = array (
     			":id" => $product_id
     	);
-
-    	$res = $DBobject->wrappedSql("SELECT product_id, product_name, product_price, product_specialprice, product_gst, product_weight, product_width, product_height, product_length FROM tbl_product
-									    			WHERE product_id = :id
-									    			AND product_deleted is null
-    												AND product_instock = 1
-	    											AND product_published = 1",
-    												$params
-    	);
+		$sql = "SELECT product_id, product_name, product_price, product_specialprice, product_gst, product_weight, product_width, product_height, product_length FROM tbl_product
+				WHERE product_id = :id AND product_deleted is null AND product_instock = 1 AND product_published = 1";
+    	$res = $DBobject->wrappedSql($sql, $params);
     	if ($res) {
     		$prod = $res[0];
     		if ($prod['product_specialprice'] > 0) {
@@ -425,22 +493,17 @@ class cart{
     		} 
     		
 	    	$productAttr = array();
-	    	foreach ($attributesArray as $attr) {	// expected array to get "array(array('attribute_id' => 'attr_value_id'))" 
-	    		foreach ($attr as $attrId => $attrValId) {
+	    	foreach ($attributesArray as $attrId => $attrValId) {	// expected array to get "array(array('attribute_id' => 'attr_value_id'))" 
+	    		
 		    		// --------------- GET PRODUCT ATTRIBUTES INFO --------------------
-		    		
 		    		$params = array (
 			    			":vid" => $attrValId, 
 			    			":pid" => $product_id
 			    	);
-			    	$attr = $DBobject->wrappedSql("SELECT * FROM tbl_attr_value
-														LEFT JOIN tbl_attribute ON attr_value_attribute_id = attribute_id
-			    										WHERE attr_value_id = :vid
-													    AND attribute_product_id = :pid
-													    AND attribute_deleted is null
-													    AND attr_value_deleted is null",
-			    										$params
-			    	);
+		    		$sql = "SELECT * FROM tbl_attr_value
+							LEFT JOIN tbl_attribute ON attr_value_attribute_id = attribute_id
+    						WHERE attr_value_id = :vid AND attribute_product_id = :pid AND attribute_deleted is null AND attr_value_deleted is null";
+			    	$attr = $DBobject->wrappedSql($sql,	$params);
 			    	if ($attr[0]['attr_value_instock'] === 0) {
 			    		return array(
 			    				"error" => true,
@@ -457,16 +520,16 @@ class cart{
 		    		$prod['product_height'] = $prod['product_height'] + $attr[0]['attr_value_height'];
 		    		$prod['product_length'] = $prod['product_length'] + $attr[0]['attr_value_length'];
 		    		
-		    		$productAttr[]['attribute_id'] = $attr[0]['attribute_id'];
-		    		$productAttr[]['attr_value_attribute_id'] = $attr[0]['attr_value_attribute_id'];
-		    		$productAttr[]['attribute_name'] = $attr[0]['attribute_name'];
-		    		$productAttr[]['attr_value_name'] = $attr[0]['attr_value_name'];
-		    	}
+		    		$productAttr[$attrValId]['attribute_id'] = $attr[0]['attribute_id'];
+		    		$productAttr[$attrValId]['attr_value_id'] = $attr[0]['attr_value_id'];
+		    		$productAttr[$attrValId]['attribute_name'] = $attr[0]['attribute_name'];
+		    		$productAttr[$attrValId]['attr_value_name'] = $attr[0]['attr_value_name'];
 	    	}
 	    	
 	    	return ( $product = array(
 	    				"error" => false,
 	    				"product_id" => $prod['product_id'],
+	    				"product_name" => $prod['product_name'],
 	    				"product_price" => $prod['product_price'],
 	    				"product_gst" => $prod['product_gst'],
 	    				"product_weight" => $prod['product_weight'],
@@ -483,41 +546,64 @@ class cart{
     	);
     	 
     }
-
+	/**
+	 * Delete product item on cart
+	 * @param int $cartitem_id
+	 * @return boolean
+	 */
     function RemoveFromCart($cartitem_id){
         global $DBobject;
     	
-    	$res = UpdateField('tbl_cartitem','cartitem_deleted','now()',"
-															     cartitem_cart_id	= '".clean($this->cart_id)."'
-																 AND cartitem_id = '".clean($cartitem_id)."'
-																 AND cartitem_deleted is null
-																  ");
-        return $res;
+        $params = array (
+        		":id" => $cartitem_id
+        );
+        $sql = "UPDATE tbl_cartitem SET cartitem_deleted = now() WHERE cartitem_id = :id";
+     	$res= $DBobject->wrappedSql($sql, $params);
+		
+     	$sql = "UPDATE tbl_cartitem_attr SET cartitem_attr_deleted = now() WHERE cartitem_attr_cartitem_id = :id";
+     	$res2= $DBobject->wrappedSql($sql, $params);
+     	
+     	if ($res && $res2) {
+     		return true;
+     	} else {
+     		return false;
+     	}
     }
     
-	/*function RemoveFromCart($product_id){
-
-        $res = UpdateField('tbl_cartitem','cartitem_deleted','now()',"
-															     cartitem_cart_id	= '".clean($this->cart_id)."'
-																 AND cartitem_id = '".clean($product_id)."'
-																 AND cartitem_deleted is null
-																  ");
-        return $res;
-    }*/
-
-    function UpdateQuantity4Item($cartitem_id,$quantity){
+	/**
+	 * Update product items quantities on cart
+	 * @param array $qtys
+	 * @return boolean
+	 */
+    function UpdateQtyCart($qtys){
         global $DBobject;
-    	
-    	if($this->CartItemOnCart($cartitem_id) == true){
-            $res = UpdateField('tbl_cartitem','cartitem_product_quantity',clean($quantity),"
-																	     cartitem_cart_id	= '".clean($this->cart_id)."'
-																		 AND cartitem_id = '".clean($cartitem_id)."'
-																		 AND cartitem_deleted is null
-																		  ");
-            return $res;
-        }else{
-            return false;
+        
+        $result = array();
+        foreach ($qtys as $id => $qty) {
+        	$sql = "SELECT cartitem_quantity, cartitem_product_price FROM tbl_cartitem WHERE cartitem_id = :id AND cartitem_deleted IS NULL";
+        	
+        	if ( $res = $DBobject->wrappedSql($sql, array( ":id" => $id) )) {
+        		
+        		if ( $qty <> $res[0]['cartitem_quantity'] ) {
+        			$subtotal = $res[0]['cartitem_product_price'] * $qty;
+        			$params = array (
+        					":id" => $id,
+        					":qty" => $qty,
+        					":subtotal" => $subtotal
+        			);
+        			$sql = "UPDATE tbl_cartitem SET cartitem_quantity = :qty, cartitem_subtotal = :subtotal, cartitem_modified = now()
+	                		WHERE cartitem_id = :id";
+        			if ( $DBobject->wrappedSql($sql, $params) ) {
+        				$result[$id] = $subtotal;
+        			} 
+        		}
+        	}
+        	
+        		return $result;
         }
+        
+        return false;
+        
     }
 
     function AddPromoCode($promocode){
@@ -533,7 +619,7 @@ class cart{
 					return false;
 				}
 				$prod = GetRow('tbl_product', 'product_id ="470"');
-				$this->AddToCart($prod['product_id'],$prod['product_name'],'30',$$prod['product_price'],1,$prod['product_special'],serialize(array()),0,0,0,0,0);
+				$this->AddToCart($prod['product_id'],$prod['product_name'],'30',$prod['product_price'],1,$prod['product_special'],serialize(array()),0,0,0,0,0);
 			}
             $res = UpdateField('tbl_cart','cart_promotion_code',$promocode,'cart_id ="'.$this->cart_id.'"');
             return $res;
@@ -557,16 +643,7 @@ class cart{
             
             return $cart_arr;
         }else{
-            $arr = array();
-            return $arr;
-        }
-    }
-    function NumberOfProductsOnCart(){
-        if($this->VerifySessionCart(session_id()) == true && $this->cart_id != '0' ){
-            $cartitems = $this->ListCart();
-            return count($cartitems);
-        }else{
-            return 0;
+            return array();
         }
     }
 
