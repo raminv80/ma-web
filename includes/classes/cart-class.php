@@ -2,14 +2,18 @@
 class cart {
 	public $SHIPPING_FEE = 15; // <<<<<<<======== REMEMBER TO CHANGE THIS ====================
 	public $cart_id;
+	public $cart_user_id;
 	public $created_date;
 	public $closed_date;
 	public $cart_session;
-	public $postage;
 	private $ses_cart_id;
 	// private $user_cart_id;
 	function __construct() {
 		if ($this->VerifySessionCart ( session_id () )) {
+			if (!isset($_SESSION['user']) && $this->cart_user_id) {
+				session_regenerate_id();
+				$this->CreateCart ();
+			}
 			$this->cart_id = $this->ses_cart_id; // do nothing since session cart exists and user is not logged in
 		} else {
 			$this->CreateCart ();
@@ -28,7 +32,7 @@ class cart {
 	function VerifySessionCart($ses_val) {
 		global $DBobject;
 		
-		$sql = "SELECT cart_id FROM tbl_cart
+		$sql = "SELECT cart_id, cart_user_id FROM tbl_cart
 				WHERE cart_closed_date is null AND cart_deleted is null AND cart_session = :id
 				ORDER BY cart_id DESC";
 		
@@ -36,6 +40,7 @@ class cart {
 				":id" => $ses_val 
 		) )) {
 			$this->ses_cart_id = $res [0] ['cart_id'];
+			$this->cart_user_id = $res [0] ['cart_user_id'];
 			return true;
 		} else {
 			return false;
@@ -57,18 +62,16 @@ class cart {
 		$sql = "SELECT * FROM tbl_cart
     			WHERE cart_user_id = :id AND cart_closed_date IS NULL AND cart_deleted IS NULL AND cart_id <> '0'";
 		
-		if ($res = $DBobject->wrappedSql ( $sql, array (
-				":id" => $userId 
-		))) {
+		if ($res = $DBobject->wrappedSql ( $sql, array ( ":id" => $userId ))) {
 			if ($this->NumberOfProductsOnCart ( $res [0] ['cart_id'] )) {
 				$old_cart_id = $this->cart_id;
 				$this->ResetSession ( $res [0] ['cart_session'] );
 				$this->CreateCart ( $userId );
-				$this->MergeCarts ( array (
+				$message = $this->MergeCarts ( array (
 						$res [0] ['cart_id'],
 						$old_cart_id 
 				), $this->cart_id );
-				return true;
+				return $message;
 			} else {
 				$this->DeleteCart ( $res [0] ['cart_id'] );
 				$this->UpdateUserIdCart ( $userId );
@@ -96,6 +99,11 @@ class cart {
 		$_SESSION = $sessionBackup;
 		return true;
 	}
+	
+	/**
+	 * Create new cart, set user_id when given
+	 * @param string $userId
+	 */
 	function CreateCart($userId = null) {
 		global $DBobject;
 		
@@ -117,93 +125,29 @@ class cart {
 		$res = $DBobject->wrappedSqlInsert ( $sql, $params );
 		$this->cart_id = $DBobject->wrappedSqlIdentity ();
 	}
+	
+	
+	/**
+	 * Merge a set of carts with items into one cart 
+	 * @param array $originArr
+	 * @param int $destination
+	 * @return array
+	 */
 	function MergeCarts($originArr, $destination) {
 		global $DBobject;
 		
 		$firstCreated = date ( "Y-m-d H:i:s" );
 		$code = null;
 		
+		$message = array();
 		foreach ( $originArr as $origin ) {
-			$orig_items = $DBobject->wrappedSql ( "SELECT * FROM tbl_cartitem
-							WHERE cartitem_deleted is null	AND cartitem_cart_id = " . $origin );
+			$sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted is null AND cartitem_cart_id = :id";
+			$orig_items = $DBobject->wrappedSql ( $sql, array( ":id" => $origin ) );
 			
 			if ($orig_items) {
 				foreach ( $orig_items as $item ) {
-					$params = array (
-							":cid" => $destination,
-							":product_id" => $item ['cartitem_product_id'],
-							":product_name" => $item ['cartitem_product_name'],
-							":product_price" => $item ['cartitem_product_price'],
-							":qty" => $item ['cartitem_quantity'],
-							":product_gst" => $item ['cartitem_product_gst'],
-							":ip" => $item ['cartitem_user_ip'],
-							":browser" => $item ['cartitem_user_browser'],
-							":created" => $item ['cartitem_created'] 
-					);
-					$sql = "INSERT INTO tbl_cartitem (
-    									cartitem_cart_id,
-    									cartitem_product_id,
-    									cartitem_product_name,
-    									cartitem_product_price,
-						    			cartitem_product_gst,
-    									cartitem_quantity,
-										cartitem_user_ip,
-										cartitem_user_browser,
-    									cartitem_created
-    								)
-    								values(
-    									:cid,
-    									:product_id,
-    									:product_name,
-    									:product_price,
-    									:product_gst,
-    									:qty,
-    									:ip,
-    									:browser,
-    									:created
-    									)";
-					
-					$res = $DBobject->wrappedSql ( $sql, $params );
-					
-					$dest_cartitemId = $DBobject->wrappedSqlIdentity ();
-					
-					$sql = "SELECT * FROM tbl_cartitem_attr
-							WHERE cartitem_attr_deleted is null	AND cartitem_attr_cartitem_id = :cid";
-					
-					$orig_itemsAttr = $DBobject->wrappedSql ( $sql, array (
-							":cid" => $item ['cartitem_id'] 
-					) );
-					
-					if ($orig_itemsAttr) {
-						foreach ( $orig_itemsAttr as $itemAttr ) {
-							$params = array (
-									":cid" => $orig_itemsAttr,
-									":attribute_id" => $itemAttr ['cartitem_attr_attribute_id'],
-									":attr_value_id" => $itemAttr ['cartitem_attr_attr_value_id'],
-									":attribute_name" => $itemAttr ['cartitem_attr_attribute_name'],
-									":attr_value_name" => $itemAttr ['cartitem_attr_attr_value_name'],
-									":created" => $itemAttr ['cartitem_attr_created'] 
-							);
-							$sql = "INSERT INTO tbl_cartitem_attr (
-							    						cartitem_attr_cartitem_id,
-                                                        cartitem_attr_attribute_id,
-	    												cartitem_attr_attr_value_id,
-							    						cartitem_attr_attribute_name,
-							    						cartitem_attr_attr_value_name,
-	    												cartitem_attr_created
-			    								)
-			    								values(
-			    									:cid,
-			    									:attribute_id,
-			    									:attr_value_id,
-			    									:attribute_name,
-			    									:attr_value_name,
-			    									:created
-			    									)";
-							
-							$res = $DBobject->wrappedSql ( $sql, $params );
-						}
-					}
+					$attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
+					$message[] = $this->AddToCart($item['cartitem_product_id'], $attrs, $item['cartitem_quantity'], $item['cartitem_product_price'], $destination);
 				}
 			}
 			
@@ -227,7 +171,38 @@ class cart {
 				":id" => $destination 
 		);
 		$res = $DBobject->wrappedSql ( $sql, $params );
+		
+		return $message;
 	}
+	
+	
+	/**
+	 * Returns an array with cartitem_attr_attribute_id as key and cartitem_attr_attr_value_id a values
+	 * given the cartitem_attr_cartitem_id from tbl_cartitem_attr.
+	 * @param int $cartItemId
+	 * @return array
+	 */
+	function GetAttributesIdsOnCartitem($cartItemId) {
+		global $DBobject;
+	
+		$attrArr = array();
+		$sql = "SELECT * FROM tbl_cartitem_attr
+				WHERE cartitem_attr_cartitem_id = :id AND cartitem_attr_deleted IS NULL";
+			
+		if ( $cart_arr = $DBobject->wrappedSql ( $sql, array ( ":id" => $cartItemId	))) {
+			foreach ($cart_arr as $a) {
+				$attrArr[$a['cartitem_attr_attribute_id']] = $a['cartitem_attr_attr_value_id'];
+			}
+		}
+		return $attrArr;
+	}
+	
+	
+	/**
+	 * Set the cart_user_id field in tbl_cart with given userid
+	 * @param int $userId
+	 * @return boolean
+	 */
 	function UpdateUserIdCart($userId) {
 		global $DBobject;
 		
@@ -238,6 +213,13 @@ class cart {
 		$sql = "UPDATE tbl_cart SET cart_user_id = :uid WHERE cart_id = :cid";
 		return $DBobject->wrappedSql ( $sql, $params );
 	}
+	
+	
+	/**
+	 * Close cart by setting current datetime in cart_closed_date field
+	 * @param int $cart_id
+	 * @return boolean
+	 */
 	function CloseCart($cart_id) {
 		global $DBobject;
 		
@@ -246,6 +228,13 @@ class cart {
 				":id" => $cart_id 
 		) );
 	}
+	
+	
+	/**
+	 * Delete cart by seeting current datetime in cart_deleted field
+	 * @param unknown $cart_id
+	 * @return Ambigous <multitype:, boolean, void, resource, unknown, multitype:>
+	 */
 	function DeleteCart($cart_id) {
 		global $DBobject;
 		
@@ -257,36 +246,36 @@ class cart {
 	
 	/**
 	 * Find the cartitem_id and quantity when the same product is on the cart, else returns 0
-	 * 
-	 * @param integer $product_id        	
-	 * @param array $attributesArray        	
+	 *
+	 * @param integer $product_id
+	 * @param array $attributesArray
 	 * @return array
 	 */
 	function ProductOnCart($product_id, $attributesArray) {
 		global $DBobject;
-		
+	
 		$params = array (
 				":cid" => $this->cart_id,
-				":pid" => $product_id 
+				":pid" => $product_id
 		);
-		
+	
 		$sql = "SELECT cartitem_id, cartitem_quantity FROM tbl_cartitem
 				WHERE cartitem_cart_id = :cid AND cartitem_product_id = :pid AND cartitem_deleted is null AND cartitem_cart_id <> '0'";
-		
+	
 		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
 			foreach ( $res as $item ) {
 				$sql = "SELECT cartitem_attr_attribute_id, cartitem_attr_attr_value_id FROM tbl_cartitem_attr
                 		WHERE cartitem_attr_cartitem_id = :id AND cartitem_attr_deleted is null";
-				
+	
 				$dbAttr = array ();
 				if ($res2 = $DBobject->wrappedSql ( $sql, array (
-						":id" => $item ['cartitem_id'] 
+						":id" => $item ['cartitem_id']
 				) )) {
 					foreach ( $res2 as $attr ) {
 						$dbAttr [$attr ['cartitem_attr_attribute_id']] = $attr ['cartitem_attr_attr_value_id'];
 					}
 				}
-				
+	
 				$feAttr = array ();
 				foreach ( $attributesArray as $v ) {
 					$feAttr [$v ['attribute_id']] = $v ['attr_value_id'];
@@ -297,7 +286,7 @@ class cart {
 			}
 		}
 		return array (
-				'cartitem_id' => 0 
+				'cartitem_id' => 0
 		);
 	}
 	
@@ -370,6 +359,11 @@ class cart {
 		}
 		return $cart_arr;
 	}
+	
+	/**
+	 * Return the recordset of the current cart
+	 * @return array
+	 */
 	function GetDataCart() {
 		global $DBobject;
 		
@@ -382,6 +376,11 @@ class cart {
 		
 		return $res [0];
 	}
+	
+	/**
+	 * Calculate total and return all amounts of the current cart 
+	 * @return array
+	 */
 	function CalculateTotal() {
 		global $DBobject;
 		
@@ -434,85 +433,41 @@ class cart {
 		
 		return $sum;
 	}
-	function StyleOnCart($product_style_id) {
-		global $DBobject;
-		
-		$res = $DBobject->wrappedSqlGetSingle ( "
-							SELECT tbl_cartitem.cartitem_id
-								FROM tbl_cartitem
-								  LEFT JOIN tbl_product
-								    ON tbl_cartitem.cartitem_product_id = tbl_product.product_id
-								WHERE cartitem_cart_id = '" . clean ( $this->cart_id ) . "' 
-								AND tbl_product.product_style_id LIKE '%" . $product_style_id . "%' 
-								AND cartitem_deleted IS NULL 
-								AND cartitem_cart_id <> '0'" ); // This can allow multiple seperate donations
-		if ($res != '' || $res != null) {
-			return $res;
-		} else {
-			return false;
-		}
-	}
-	function CartItemOnCart($cartitem_id) {
-		global $DBobject;
-		
-		$res = $DBobject->wrappedSqlGetSingle ( "
-							SELECT cartitem_id
-							FROM tbl_cartitem
-							WHERE
-							cartitem_cart_id	=	'" . clean ( $this->cart_id ) . "'
-							AND	cartitem_id = '" . clean ( $cartitem_id ) . "'
-							AND cartitem_deleted is null
-							AND cartitem_cart_id <> '0'" );
-		
-		if ($res != '' || $res != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	function CartContainsProducts() {
-		global $DBobject;
-		
-		$res = $DBobject->wrappedSqlGetSingle ( "
-        							SELECT cartitem_id
-        							FROM tbl_cartitem
-        							WHERE
-        							cartitem_cart_id	=	'" . clean ( $this->cart_id ) . "'
-        							AND cartitem_product_name != 'Donation'
-        							AND cartitem_product_category_id != '26'
-        							AND cartitem_deleted is null
-        							AND cartitem_cart_id <> '0'" );
-		if ($res) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
 	/**
-	 *
-	 *
-	 * This function takes a range of variables and inserts or updates a item in the cartitem table
+	 * Add a single product with attributes to cart, checking whether it already exists, price difference and availability 
 	 * 
-	 * @param array $product        	
-	 * @param int $quantity 
-	 * @param in $cartId       	
-	 * @return boolean
+	 * @param int $productId        	
+	 * @param array $AttributesArr       	
+	 * @param int $quantity      	
+	 * @param float $price 
+	 * @param int $cartId       	
+	 * @return string
 	 */
-	function AddToCart($product, $quantity, $cartId = null) {
+	function AddToCart($productId, $AttributesArr, $quantity, $price, $cartId = null) {
 		global $DBobject;
 		
 		if ($this->cart_id == '' || $this->cart_id == '0') {
 			$this->__construct ();
 		}
 		
-		if ( !is_null($cartId) ) {
+		if ( is_null($cartId) ) {
 			$cartId = $this->cart_id;
 		}
 		
-		//$item = $cart_obj->GetProductCalculation($_POST["product_id"], $_POST["attr"]);
-		//$qty = intval($_POST["quantity"]);
-		//$price = floatval($_POST["price"]);
+		$quantity = intval($quantity);
+		$price = floatval($price);
+		$message = '';
+		
+		$product = $this->GetProductCalculation($productId, $AttributesArr);
+		
+		if ($product['error']) {
+			return $product['error_message'];
+		}
+
+		if ($product['product_price'] <> $price ) {
+			$message = "The price of '{$product['product_name']}' has been updated. ";
+		}
 		
 		$cartItem = $this->ProductOnCart ( $product ['product_id'], $product ['attributes'] );
 		
@@ -590,7 +545,7 @@ class cart {
 				}
 				if ($errorCnt == 0) {
 					$this->CalculateTotal ();
-					return true;
+					return "'{$product ['product_name']}' was added. {$message}";
 				}
 			}
 		} else {
@@ -607,14 +562,14 @@ class cart {
 			
 			if ($DBobject->wrappedSql ( $sql, $params )) {
 				$this->CalculateTotal ();
-				return true;
+				return "'{$product ['product_name']}' was added. {$message}";
 			}
 		}
-		return false;
+		return 'Connection Error.';
 	}
+	
 	/**
 	 * Return array with product details from DB, calculate final price/weight/width,height,length based on attribute values.
-	 *
 	 * If the product is out of stock, deleted, unpublished or not found then returns array with error flag and message.
 	 * 
 	 * @param int $product_id        	
@@ -629,6 +584,10 @@ class cart {
 		$params = array (
 				":id" => $product_id 
 		);
+		$sql = "SELECT product_name FROM tbl_product WHERE product_id = :id ";
+		$res = $DBobject->wrappedSql ( $sql, $params );
+		$productName = $res[0]['product_name'];
+		
 		$sql = "SELECT product_id, product_name, product_price, product_specialprice, product_gst, product_weight, product_width, product_height, product_length FROM tbl_product
 				WHERE product_id = :id AND product_deleted is null AND product_instock = 1 AND product_published = 1";
 		$res = $DBobject->wrappedSql ( $sql, $params );
@@ -653,7 +612,7 @@ class cart {
 				if ($attr [0] ['attr_value_instock'] === 0) {
 					return array (
 							"error" => true,
-							"error_message" => "Product Out of Stock" 
+							"error_message" => "'Sorry, {$prod ['product_name']}' is out of Stock" 
 					);
 				}
 				if ($prod ['product_specialprice'] > 0) {
@@ -687,7 +646,7 @@ class cart {
 		}
 		return array (
 				"error" => true,
-				"error_message" => "Product Not Available" 
+				"error_message" => "Sorry, '{$productName}' is no longer available." 
 		);
 	}
 	/**
@@ -714,42 +673,8 @@ class cart {
 			return false;
 		}
 	}
-	function ApplyDiscountCode($code = null) {
-		global $DBobject;
-		
-		$result = array ();
-		if (is_null ( $code )) {
-			$sql = "SELECT cart_discount_code FROM tbl_cart
-	    	WHERE cart_id = :id AND cart_discount_code IS NOT NULL AND cart_deleted IS NULL AND cart_id <> 0";
-			
-			if ($res = $DBobject->wrappedSql ( $sql, array (
-					":id" => $this->cart_id 
-			) )) {
-				$code = $res [0] ['cart_discount_code'];
-			} else {
-				return $result;
-			}
-		}
-		
-		$sql = "SELECT * AS SUM FROM tbl_discount
-	    			WHERE discount_code = :id AND discount_published = 1 AND discount_deleted IS NULL";
-		
-		if ($res = $DBobject->wrappedSql ( $sql, array (
-				":id" => $code 
-		) )) {
-			$today = strtotime ( date ( "Y-m-d H:i:s" ) );
-			if (strtotime ( $res ['discount_start_date'] ) <= $today && $today <= strtotime ( $res ['discount_end_date'] )) {
-				
-				// UPDATE tbl_cart with: amount in cart_discount / code in cart_discount_code
-			} else {
-				$result ['error'] = 'This code has expired';
-			}
-		} else {
-			$result ['error'] = 'Invalid Code';
-		}
-		// UPDATE tbl_cart with: 0 in cart_discount / empty field in cart_discount_code
-		return $result;
-	}
+	
+
 	
 	/**
 	 * Update product items quantities on cart
@@ -785,37 +710,86 @@ class cart {
 		}
 		return $result;
 	}
-	function ListCart() {
+
+	/**
+	 * Validate all items on current cart and return messages in array.  
+	 * @return array
+	 */
+	function ValidateCartItems() {
 		global $DBobject;
+	
+		$message = array();
 		
-		if ($this->VerifySessionCart ( session_id () ) == true && $this->cart_id != '0') {
-			$cart_arr = $DBobject->wrappedSql ( "
-        							SELECT cartitem_id
-        							FROM tbl_cartitem
-        							WHERE
-        							cartitem_cart_id	=	'" . clean ( $this->cart_id ) . "'
-        							AND cartitem_deleted IS NULL
-        							AND cartitem_cart_id <> '0'" );
-			
-			return $cart_arr;
-		} else {
-			return array ();
-		}
-	}
-	function CartValue() {
-		if ($this->VerifySessionCart ( session_id () ) == true && $this->cart_id != '0') {
-			$cartitems = $this->ListCart ();
-			if ($cartitems) {
-				foreach ( $cartitems as $item ) {
-					$price = $price + ($item [cartitem_product_price] * $item [cartitem_product_quantity]);
+		$sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted is null AND cartitem_cart_id = :id";
+		if ($res = $DBobject->wrappedSql ( $sql, array( ":id" => $this->cart_id ) )) {
+			foreach ( $res as $item ) {
+				$attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
+				$DBproduct = $this->GetProductCalculation($item['cartitem_product_id'], $attrs);
+				
+				if ($DBproduct['error']) {
+					$message[] = $DBproduct['error_message'];
+					$this->RemoveFromCart($item['cartitem_id']);
+				} else {
+					if ($DBproduct['product_price'] <> $item['cartitem_product_price'] ) {
+						$sql = "UPDATE tbl_cartitem SET cartitem_product_price = :price WHERE cartitem_id = :id";
+						$DBobject->wrappedSql ( $sql, array ( 
+													":id" => $item['cartitem_id'],
+													":price" => $DBproduct['product_price']
+						));
+						$message[] = "The price of '{$DBproduct['product_name']}' has been updated. ";
+					}
 				}
 			}
 		}
-		return $price;
+		//<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>	
+		//<<<<<<<<<<< REMEMBER TO VALIDATE DISCOUNT CODE
+		//<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		
+		$this->CalculateTotal();
+		
+		return $message;
 	}
-	function CartDiscountedValue() {
-		return $this->CartValue () - $this->DiscountedAmount ();
-	}
+	
+
+
+	function ApplyDiscountCode($code = null) { //****************** NOT FINISHED YET ***********************
+		global $DBobject;
+	
+		$result = array ();
+		if (is_null ( $code )) {
+			$sql = "SELECT cart_discount_code FROM tbl_cart
+	    	WHERE cart_id = :id AND cart_discount_code IS NOT NULL AND cart_deleted IS NULL AND cart_id <> 0";
+				
+			if ($res = $DBobject->wrappedSql ( $sql, array (
+					":id" => $this->cart_id
+			) )) {
+				$code = $res [0] ['cart_discount_code'];
+			} else {
+				return $result;
+			}
+		}
+	
+		$sql = "SELECT * AS SUM FROM tbl_discount
+	    			WHERE discount_code = :id AND discount_published = 1 AND discount_deleted IS NULL";
+	
+		if ($res = $DBobject->wrappedSql ( $sql, array (
+				":id" => $code
+		) )) {
+			$today = strtotime ( date ( "Y-m-d H:i:s" ) );
+			if (strtotime ( $res ['discount_start_date'] ) <= $today && $today <= strtotime ( $res ['discount_end_date'] )) {
+	
+				// UPDATE tbl_cart with: amount in cart_discount / code in cart_discount_code
+			} else {
+				$result ['error'] = 'This code has expired';
+			}
+		} else {
+			$result ['error'] = 'Invalid Code';
+		}
+		// UPDATE tbl_cart with: 0 in cart_discount / empty field in cart_discount_code
+		return $result;
+	}						//****************** NOT FINISHED YET ***********************
+	
+/* 
 	function DiscountedAmount() {
 		global $DBobject;
 		
@@ -864,9 +838,9 @@ class cart {
 						$promo_style = unserialize ( $row ['promotion_style_id'] );
 						$promo_material = unserialize ( $row ['promotion_material_id'] );
 						$promo_prod = unserialize ( $row ['promotion_product_id'] );
-						/*
-						 * if($promo_cat && count($promo_cat) > 0){ foreach($promo_cat as $cat){ if(isset($cats[$cat]) || (count($promo_cat) == 1 && $cat == 0)){ $item_c_check = true; break; } } }
-						 */
+						
+						 // if($promo_cat && count($promo_cat) > 0){ foreach($promo_cat as $cat){ if(isset($cats[$cat]) || (count($promo_cat) == 1 && $cat == 0)){ $item_c_check = true; break; } } }
+						 
 						if ($promo_style && count ( $promo_style ) > 0) {
 							foreach ( $promo_style as $s ) {
 								if (isset ( $sty [$s] ) || (count ( $promo_style ) == 1 && $s == 0)) {
@@ -914,188 +888,9 @@ class cart {
 		
 		return $discounted;
 	}
-	/*
-	 * function StainlessSteelDiscount(){ global $DBobject; if(!empty($_SESSION['user']['user_id']) && $_SESSION['user']['has_purchased']){ return 0; } ////// //Stainless Steel check ////// $ss_check = false; $pcount = 0; $discounted = 0 ; $pprice = 0; if($this->VerifySessionCart(session_id()) == true && $this->cart_id != '0' ){ $cartitems = $this->ListCart(); if($cartitems && count($cartitems) > 0){ foreach($cartitems as $item){ //if($item['cartitem_product_special'] || $item['cartitem_product_name'] == 'Donation' || $item['cartitem_product_category_id'] == '26' || $item['cartitem_product_category_id'] == '27'){ if( $item['cartitem_product_name'] == 'Donation' || $item['cartitem_product_category_id'] == '26' || $item['cartitem_product_category_id'] == '30' || $item['cartitem_product_category_id'] == '27'){ continue; } $pcount= $pcount + intval($item['cartitem_product_quantity']); //Count number of actual products on the cart //////////////////////////// //Stainless Steel Discount// //////////////////////////// $pid = $item['cartitem_product_id']; $res = GetAnyCell('product_material_id', 'tbl_product', "product_id = '{$pid}'"); if(!empty($res)){ $mats = unserialize($res); if(in_array('1', $mats)){ if($item['cartitem_product_price'] > 30){ $pprice = $item['cartitem_product_price']; } $ss_check = true; } } } } } if($ss_check && $pcount >= 2 ){ $discounted = $pprice - 30; //Discount by 25 Dollars to reduce a stainless steel items to 30 dollars if($discounted < 0) { $discounted = 0; } } return $discounted; } function DiscountPrice($price,$discount_amount,$discount_type){ if($discount_type == 'dollar'){ return $price - $discount_amount; } if($discount_type == 'percentage'){ return $price * ((100-$discount_amount)/100); } } function DiscountValue($price,$discount_amount,$discount_type){ if($discount_type == 'dollar'){ return $discount_amount; } if($discount_type == 'percentage'){ return $price * (($discount_amount)/100); } } function GetCategories($category_id){ global $DBobject; $cats = array(); $cat_id = $category_id; $cats[$cat_id] = $cat_id; while(true){ $res = GetAnyCell('product_category_product_category_id', 'tbl_product_category', 'product_category_id = "'.$cat_id.'"'); if($res && $res != 0){ $cat_id = $res; $cats[$cat_id] = $cat_id; }else{ break; } } return $cats; } function GetMaterials($product_id){ global $DBobject; $mats = array(); $prod_id = $product_id; $res = GetAnyCell('product_material_id', 'tbl_product', 'product_id = "'.$prod_id.'"'); $arr_res = unserialize($res); foreach($arr_res as $va){ $mats[$va] = $va; } return $mats; } function GetStyles($product_id){ global $DBobject; $sty = array(); $prod_id = $product_id; $res = GetAnyCell('product_style_id', 'tbl_product', 'product_id = "'.$prod_id.'"'); $arr_res = unserialize($res); foreach($arr_res as $va){ $sty[$va] = $va; } return $sty; } function GetProduct($product_id,$product_category){ global $DBobject; $res = GetRow('tbl_cartitem', "cartitem_cart_id	= '".clean($this->cart_id)."' AND cartitem_product_id = '".clean($product_id)."' AND cartitem_product_category_id = '".clean($product_category)."' AND cartitem_deleted is null"); if($res){ return $res; }else{ return false; } }
 	 */
-	function CloseThisCart() {
-		global $DBobject;
-		
-		$res = UpdateField ( 'tbl_cart', 'cart_closed_date', 'now()', " cart_id	= '" . clean ( $this->cart_id ) . "' AND cart_deleted is null " );
-		$res = UpdateField ( 'tbl_cart', 'cart_closed_date', 'now()', " cart_id	= '" . clean ( $_COOKIE ["cart_id"] ) . "' AND cart_deleted is null " );
-		return $res;
-	}
-	function GetCartID() {
-		global $DBobject;
-		
-		$res = $DBobject->wrappedSqlGetSingle ( "SELECT cart_id
-    									FROM tbl_cart
-    									WHERE
-    									cart_closed_date is null
-    									AND cart_deleted is null
-    									AND cart_session = '" . session_id () . "'
-    									" );
-		if ($res != 0) {
-			return $res;
-		} else {
-			return false;
-		}
-	}
+
 	
-	/*
-	 * function GetPromotionCode(){ global $DBobject; $res = GetAnyCell('cart_promotion_code', 'tbl_cart', 'cart_id = "'.$this->cart_id.'"'); if($res){ return $res; }else{ return false; } }
-	 */
-	function ValidateCartItems() {
-		global $DBobject;
-		
-		$buf = '';
-		$cart_items = $this->ListCart ();
-		if (! $cart_items) {
-			return '';
-		}
-		
-		foreach ( $cart_items as $item ) {
-			if ($item ['cartitem_product_id'] == 286) {
-				if (! ($_SESSION ['pending_update'])) {
-					// $this->RemoveFromCart($item['cartitem_id']);
-				}
-			}
-			
-			// SPECIAL PROMOTION PRODUCT ADDED 10 MAY 2013
-			if ($item ['cartitem_product_id'] == '470') {
-				
-				$promo = GetAnyCell ( 'cart_promotion_code', 'tbl_cart', 'cart_id = "' . $this->cart_id . '"' );
-				if ($promo != 'SPORTS13') {
-					$this->RemoveFromCart ( $item ['cartitem_id'] );
-					continue;
-				}
-				if (! empty ( $_SESSION ['user'] ['user_id'] ) && $_SESSION ['user'] ['has_purchased']) {
-					$this->RemoveFromCart ( $item ['cartitem_id'] );
-					continue;
-				}
-				if (! $this->StyleOnCart ( '3' )) {
-					$this->RemoveFromCart ( $item ['cartitem_id'] );
-					continue;
-				}
-			}
-			
-			$product_id = $item ['cartitem_product_id'];
-			$emblem_id = $item ['cartitem_emblem_id'];
-			$length_id = $item ['cartitem_product_length_id'];
-			$price = $item ['cartitem_product_price'];
-			$name = $item ['cartitem_product_name'];
-			$special = $item ['cartitem_product_special'];
-			if ($emblem_id) {
-				$pspecial = GetAnyCell ( 'product_special', 'tbl_product', 'product_id = "' . $emblem_id . '"' );
-				$pprice = GetAnyCell ( 'product_price', 'tbl_product', 'product_id = "' . $emblem_id . '"' );
-				$spprice = GetAnyCell ( 'product_specialprice', 'tbl_product', 'product_id = "' . $emblem_id . '"' );
-				$lspecial = GetAnyCell ( 'product_length_special', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-				$lprice = GetAnyCell ( 'product_length_price', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-				$lsprice = GetAnyCell ( 'product_length_specialprice', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-				if ($pspecial && $spprice && $spprice < $pprice && $spprice != 0) {
-					$pprice = $spprice;
-					$special = 1;
-				}
-				if ($lprice && $lprice != 0) {
-					$pprice = $lprice;
-					$special = 0;
-				}
-				if ($lspecial && $lsprice && $lsprice < $pprice && $lsprice != 0) {
-					$pprice = $lsprice;
-					$special = 1;
-				}
-				
-				if (! empty ( $_SESSION ['user'] ['user_id'] ) && $_SESSION ['user'] ['has_purchased']) {
-					$mpprice = GetAnyCell ( 'product_member_price', 'tbl_product', 'product_id = "' . $emblem_id . '"' );
-					$mspprice = GetAnyCell ( 'product_member_specialprice', 'tbl_product', 'product_id = "' . $emblem_id . '"' );
-					$mlprice = GetAnyCell ( 'product_length_member_price', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-					$mlsprice = GetAnyCell ( 'product_length_member_specialprice', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-					if ($mpprice && $mpprice < $pprice && $mpprice != 0) {
-						$pprice = $mpprice;
-						$special = 0;
-					}
-					if ($pspecial && $mspprice && $mspprice < $pprice && $mspprice != 0) {
-						$pprice = $mspprice;
-						$special = 1;
-					}
-					if ($mlprice && $mlprice != 0) {
-						$pprice = $mlprice;
-						$special = 0;
-					}
-					if ($lspecial && $mlsprice && $mlsprice < $pprice && $mlsprice != 0) {
-						$pprice = $mlsprice;
-						$special = 1;
-					}
-				}
-				
-				if ($pprice) {
-					if ($pprice && $pprice != $price) {
-						$pname = GetAnyCell ( 'product_name', 'tbl_product', 'product_id = "' . $emblem_id . '"' );
-						UpdateField ( 'tbl_cartitem', 'cartitem_product_price', $pprice, 'cartitem_id = "' . $item ['cartitem_id'] . '"' ); // update cart item
-						UpdateField ( 'tbl_cartitem', 'cartitem_product_special', $special, 'cartitem_id = "' . $item ['cartitem_id'] . '"' ); // update cart item
-						$buf .= 'The price for ' . $name . ' - ' . $pname . ' has changed. Your shopping cart has been updated.<br />';
-					}
-				} else {
-					// update cart item
-					UpdateField ( 'tbl_cartitem', 'cartitem_deleted', 'now()', 'cartitem_id = "' . $item ['cartitem_id'] . '"' );
-					$buf .= $name . ' - ' . $pname . ' is no longer available. Your shopping cart has been updated.<br />';
-				}
-			} else {
-				$pspecial = GetAnyCell ( 'product_special', 'tbl_product', 'product_id = "' . $product_id . '"' );
-				$pprice = GetAnyCell ( 'product_price', 'tbl_product', 'product_id = "' . $product_id . '"' );
-				$spprice = GetAnyCell ( 'product_specialprice', 'tbl_product', 'product_id = "' . $product_id . '"' );
-				$lspecial = GetAnyCell ( 'product_length_special', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-				$lprice = GetAnyCell ( 'product_length_price', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-				$lsprice = GetAnyCell ( 'product_length_specialprice', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-				if ($pspecial && $spprice && $spprice < $pprice && $spprice != 0) {
-					$pprice = $spprice;
-					$special = 1;
-				}
-				if ($lprice && $lprice != 0) {
-					$pprice = $lprice;
-					$special = 0;
-				}
-				if ($lspecial && $lsprice && $lsprice < $pprice && $lsprice != 0) {
-					$pprice = $lsprice;
-					$special = 1;
-				}
-				
-				if (! empty ( $_SESSION ['user'] ['user_id'] ) && $_SESSION ['user'] ['has_purchased']) {
-					$mpprice = GetAnyCell ( 'product_member_price', 'tbl_product', 'product_id = "' . $product_id . '"' );
-					$mspprice = GetAnyCell ( 'product_member_specialprice', 'tbl_product', 'product_id = "' . $product_id . '"' );
-					$mlprice = GetAnyCell ( 'product_length_member_price', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-					$mlsprice = GetAnyCell ( 'product_length_member_specialprice', 'tbl_product_length', 'product_length_id = "' . $length_id . '"' );
-					if ($mpprice && $mpprice < $pprice && $mpprice != 0) {
-						$pprice = $mpprice;
-						$special = 0;
-					}
-					if ($pspecial && $mspprice && $mspprice < $pprice && $mspprice != 0) {
-						$pprice = $mspprice;
-						$special = 1;
-					}
-					if ($mlprice && $mlprice != 0) {
-						$pprice = $mlprice;
-						$special = 0;
-					}
-					if ($lspecial && $mlsprice && $mlsprice < $pprice && $mlsprice != 0) {
-						$pprice = $mlsprice;
-						$special = 1;
-					}
-				}
-				
-				if ($pprice) {
-					if ($pprice != $price) {
-						// update cart item
-						UpdateField ( 'tbl_cartitem', 'cartitem_product_price', $pprice, 'cartitem_id = "' . $item ['cartitem_id'] . '"' ); // update cart item
-						UpdateField ( 'tbl_cartitem', 'cartitem_product_special', $special, 'cartitem_id = "' . $item ['cartitem_id'] . '"' ); // update cart item
-						$buf .= 'The price for ' . $name . ' has changed. Your shopping cart has been updated.<br />';
-					}
-				} else {
-					// update cart item
-					UpdateField ( 'tbl_cartitem', 'cartitem_deleted', 'now()', 'cartitem_id = "' . $item ['cartitem_id'] . '"' );
-					$buf .= $name . ' is no longer available. Your shopping cart has been updated.<br />';
-				}
-			}
-		}
-		return $buf;
-	}
+
+
 }

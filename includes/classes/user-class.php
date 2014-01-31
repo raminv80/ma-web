@@ -8,7 +8,7 @@ class UserClass {
     function Create($user){
     	global $DBobject;
     
-    	if ($this->RetrieveByEmail()) {
+    	if ($this->RetrieveByUsername($user)) {
     		return array ('error' => 'This email is already been used.');
     	} else {
     		
@@ -25,7 +25,8 @@ class UserClass {
 	    	);
 	    	
 	    	$sql = "INSERT INTO tbl_user (
-										user_gname,
+										user_username,
+	    								user_gname,
 										user_surname,
 										user_email,
 										user_password,
@@ -34,6 +35,7 @@ class UserClass {
 										user_created
 									)
 									values(
+	    								:email,
 										:gname,
 										:surname,
 										:email,
@@ -59,13 +61,13 @@ class UserClass {
     }
     
     
-    function RetrieveByEmail($email){
+    function RetrieveByUsername($uname){
     	global $DBobject;
     
     	$sql = "SELECT user_id, user_gname, user_surname, user_email FROM tbl_user
-				WHERE user_email = :email AND user_deleted IS NULL AND user_social_id IS NULL";
+				WHERE user_username = :uname AND user_deleted IS NULL";
     	 
-    	$res  = $DBobject->wrappedSql($sql, array( ":email" => $email ));
+    	$res  = $DBobject->wrappedSql($sql, array( ":uname" => $uname ));
     
     	return $res[0];
     }
@@ -145,11 +147,8 @@ class UserClass {
     	global $DBobject;
     	
 		if ($user['id']) {
-			
-			$sql = "SELECT * FROM tbl_user
-				WHERE user_social_id = :id AND user_social_name = 'facebook' AND user_deleted IS NULL";
     
-    		if ($res  = $DBobject->wrappedSql($sql, array( ":id" => $user['id'] ))) { // ALREADY REGISTERED
+			if ($this->RetrieveByUsername($user['id'])) { // ALREADY REGISTERED
     			$user_arr["id"]=$res[0]["user_id"];
     			$user_arr["gname"]=$res[0]["user_gname"];
     			$user_arr["surname"]=$res[0]["user_surname"];
@@ -171,6 +170,7 @@ class UserClass {
     			);
     			
     			$sql = "INSERT INTO tbl_user (
+										user_username,
 										user_gname,
 										user_surname,
 										user_email,
@@ -182,6 +182,7 @@ class UserClass {
 										user_created
 									)
 									values(
+										:social_id,
 										:gname,
 										:surname,
 										:email,

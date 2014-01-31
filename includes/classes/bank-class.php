@@ -14,7 +14,6 @@ class Bank {
 	}	
 	
 	function PreparePayment($data){}
-	
 	function GetResponseMessage(){}
 	function GetResponseCode(){}
 	

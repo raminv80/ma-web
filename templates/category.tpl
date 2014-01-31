@@ -1,11 +1,47 @@
 {block name=body}
+{* Define the function *} 
+{function name=render_products level=0 parentUrl=''} 
+	<div class="row">
+	{foreach from=$items key=k item=it}
+		<div class="col-xs-3 image">
+		{foreach from=$it.gallery key=k item=g}
+			{if $g.gallery_ishero == 1}
+			<img src="{$g.gallery_link}" alt="{$g.gallery_alt_tag}" title="{$g.gallery_title}" />
+			<span class="caption">{$g.gallery_caption}</span>
+			{/if}
+		{/foreach}
+		</div>
+		<div class="col-xs-9">
+		<div class="col-xs-12">{$it.product_name}</div>
+		<div class="col-xs-12">{$it.product_price}</div>
+		<div class="col-xs-12">{$it.product_description}</div>
+		<div class="col-xs-12"><a href="{$parentUrl}{$it.product_name}-{$it.product_id}">Click Here</a></div>
+		</div>
+	{/foreach} 
+	</div>
+{/function}
+
+{function name=render_categories level=0 parentUrl=''} 
+	<div class="row">
+	{foreach from=$items key=k item=cat}
+		<div class="col-xs-3 image">
+			<img src="{$cat.listing_image}" alt="{$cat.listing_title}" title="{$cat.listing_title}" />
+		</div>
+		<div class="col-xs-9">
+		<div class="col-xs-12">{$cat.listing_title}</div>
+		<div class="col-xs-12"><a href="{$parentUrl}{$cat.listing_url}">Click Here</a></div>
+		</div>
+		{call name=render_products items=$cat.products parentUrl=$parentUrl+"/"+$cat.listing_url}
+	{/foreach} 
+	</div>
+{/function}
 
 	<header>
 		<div id="headout" class="headerbg">
 				<div id="videobox">
 					<div class="container">
-						<div class="row-fluid">
-							<div class="span7">
+						<div class="row">
+							<div class="col-xs-12">
 					  			{include file='breadcrumbs.tpl'}
 					  			<h3 class="toptitle">{$listing_title}</h3>
 				  			</div>
@@ -16,15 +52,9 @@
 	</header>
 	<div class="container">
 		<div class="row">
-			<h3>Products in {$listing_title}</h3>
-			{if !$product_info} <div class="row">No products found.</div>{/if}
-			{foreach $product_info as $prod }
-				<div class="row"><a href="./{$listing_url}/{$prod.product_url}-{$prod.product_id}" >{$prod.product_name}</a></div>
-			{/foreach}
+			<div class="col-xs-12"><h3>Products in {$listing_title}</h3></div>
+			{call name=render_products items=$data.products parentUrl="./store/"}
+			{call name=render_categories items=$data.listings parentUrl="./store/"}
 		</div>
-		
-		{include file='full-product-cat.tpl'}
 	</div>
-
-
 {/block}

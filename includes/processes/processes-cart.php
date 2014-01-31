@@ -6,26 +6,12 @@ if($_POST["action"]){
 			$cart_obj = new cart();
 			$message = 'Error: This item was not added to your cart. ';
 			
-			$item = $cart_obj->GetProductCalculation($_POST["product_id"], $_POST["attr"]);
-			$qty = intval($_POST["quantity"]);
-			$price = floatval($_POST["price"]);
-                        
-			if ($item['error']) {
-				$message = $message .$item['error_message']; 
-			} else {
-            	//COMPARE FRONT-END PRICE WITH DB PRICE
-				if ($cart_obj->AddToCart($item, $qty)) {
-					if ( $price == $item['product_price']) {
-						$message= 'This item was added to your cart.';
-					} else {
-						$message = 'This item was added to your cart and its price has been updated. ';
-					}
-				}
-			}
+			$response = $cart_obj->AddToCart($_POST["product_id"], $_POST["attr"], $_POST["quantity"], $_POST["price"]);
+			
 			$itemsCount = $cart_obj->NumberOfProductsOnCart();
 		    
 			echo json_encode(array(
-		    				"message"=>$message,
+		    				"message"=>$response,
 		    				"itemsCount"=> $itemsCount
 	    				));
 		    exit;

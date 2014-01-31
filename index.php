@@ -65,17 +65,6 @@ while ( true ) {
 		$template = $CONFIG->index_page->template;
 		$menu = $obj->LoadMenu ( $CONFIG->index_page->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
-		
-		/**
-		 * ************************************
-		 * Load Instagram images for homepage *
-		 * ***********************************
-		 */
-		/* global $SOCIAL;
-		if ($res = $SOCIAL->GetData ( '1', '10' )) {
-			$SMARTY->assign ( 'instagram', $res );
-		} */
-		
 		break 1;
 	}
 	
@@ -93,22 +82,6 @@ while ( true ) {
 		}
 		die();
 	}
-	
-	/*
-	 * **** Social Wall ******
-	
-	foreach ( $CONFIG->socialwall as $sp ) {
-		if ($sp->url == $_request ['arg1']) {
-			$res = $SOCIAL->ResultsArray ();
-			$SMARTY->assign ( 'socialwall', $res );
-			$obj = new $class ( '', $struct );
-			$template = $obj->Load ( $sp->pageID );
-			$template = $sp->template;
-			$menu = $obj->LoadMenu ( $sp->pageID );
-			$SMARTY->assign ( 'menuitems', $menu );
-			break 2;
-		}
-	} */
 	
 	/**
 	 * ***** Goes to search ******
@@ -133,6 +106,8 @@ while ( true ) {
 		$menu = $obj->LoadMenu ( $CONFIG->checkout->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
 		$cart_obj = new cart();
+		$validation = $cart_obj->ValidateCartItems();
+		$SMARTY->assign ( 'validation', $validation );
 		$products = $cart_obj->GetDataProductsOnCart(); 
 		$SMARTY->assign ( 'products', $products );
 		$cart = $cart_obj->GetDataCart();
@@ -151,6 +126,8 @@ while ( true ) {
 		$menu = $obj->LoadMenu ( $CONFIG->cart->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
 		$cart_obj = new cart();
+		$validation = $cart_obj->ValidateCartItems();
+		$SMARTY->assign ( 'validation', $validation );
 		$products = $cart_obj->GetDataProductsOnCart(); 
 		$SMARTY->assign ( 'products', $products );
 		$cart = $cart_obj->GetDataCart();

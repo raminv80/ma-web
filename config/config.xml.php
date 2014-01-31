@@ -111,63 +111,6 @@
 		<!-- The template used if the field is matched --> 
 	</cart>
 
- 	<static_page complex="true"> 
-		<url>punters-corner/meetings</url> 
-		<pageID>100</pageID> 
-		<type>1</type> 
-		<file>ListClass</file>
-		<table>
-			<!-- This table will be the details table -->
-			<name>tbl_listing</name>
-			<field>listing_url</field>
-			<!-- The field used to match the URL -->
-			<associated> 
-				<id>meeting_id</id>
-				<name>meeting</name>
-				<table>tbl_meeting</table>
-				<field>meeting_listing_id</field> 
-				<where>meeting_published = 1 AND DATE_FORMAT(meeting_date,'%Y%m%d') >= DATE_FORMAT(now(),'%Y%m%d')</where>
-				<orderby>meeting_date ASC</orderby>
-				<associated> 
-					<id>race_id</id>
-					<name>race</name>
-					<table>tbl_race</table>
-					<field>race_meeting_id</field> 
-					<orderby>race_start_time ASC</orderby>
-					<limit>1</limit>
-				</associated>
-			</associated>
-		</table>
-		<template>meetings.tpl</template> 
-		<!-- The template used if the field is matched --> 
-	</static_page>
-	
-	<race_meeting complex="true"> 
-		<url>punters-corner/meetings</url> 
-		<pageID>100</pageID> 
-		<type>1</type> 
-		<file>ListClass</file>
-		<table>
-			<!-- This table will be the details table -->
-			<name>tbl_listing</name>
-			<field>listing_url</field>
-		</table>
-		<template>formguide.tpl</template> 
-		<!-- The template used if the field is matched --> 
-	</race_meeting>
-	<print complex="true"> 
-		<url>print/meetings</url> 
-		<pageID>100</pageID> 
-		<type>1</type> 
-		<file>ListClass</file>
-		<table>
-			<!-- This table will be the details table -->
-			<name>tbl_listing</name>
-			<field>listing_url</field>
-		</table>
-		<template>formguide.tpl</template> 
-		<!-- The template used if the field is matched --> 
-	</print>
 	
 	<process>
 		<url>process/cart</url>
@@ -179,7 +122,11 @@
 		<file>includes/processes/processes-user.php</file>
 		<return_url></return_url>
 	</process>
-
+	<process>
+		<url>process/contact-us</url>
+		<file>includes/processes/processes-contactus.php</file>
+		<return_url></return_url>
+	</process>
 	 	
 
 	<smartytemplate_config>
