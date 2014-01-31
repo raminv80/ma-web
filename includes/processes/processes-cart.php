@@ -33,13 +33,21 @@ if($_POST["action"]){
 	    case 'DeleteItem':
 	    	$cart_obj = new cart();
 	    	$response = $cart_obj->RemoveFromCart($_POST["cartitem_id"]);
-	    	echo json_encode(array("response"=>$response));
+                $total = $cart_obj->CalculateTotal();
+	    	echo json_encode(array(
+                                "response"=> $response,
+                                "total"=>$total
+                ));
 	    	exit;
 
     	case 'updateCart':
     		$cart_obj = new cart();
-    		$response = $cart_obj->UpdateQtyCart($_POST["qty"]);
-    		echo json_encode(array("response"=>$response));
+    		$subtotals = $cart_obj->UpdateQtyCart($_POST["qty"]);
+    		$total = $cart_obj->CalculateTotal();
+    		echo json_encode(array(
+    				"subtotals"=>$subtotals,
+    				"total"=>$total,
+    		));
     		exit;
 	    	
 	    	// ==================== OLD STUFFS =====================

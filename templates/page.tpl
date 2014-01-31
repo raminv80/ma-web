@@ -35,7 +35,8 @@
 <script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/includes/js/custom.js"></script>
-<script type="text/javascript" src="/includes/js/validation.js"></script>
+<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/includes/js/facebook.js"></script>
 
 <script type="text/javascript">var switchTo5x=true;</script>
 <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
@@ -51,6 +52,7 @@
 
 </head>
 <body>
+<div id="fb-root"></div>
 	<header>
 		<div id="header1">
 			<div id="header1in" class="container">
@@ -80,5 +82,8 @@
 
 	{block name=body}{/block}
 	{include file='footer.tpl'}
+	<script>
+		var fBlogged = {if $user.id} true {else} false {/if};
+	</script>
 </body>
 </html>

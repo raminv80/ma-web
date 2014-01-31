@@ -13,6 +13,14 @@ foreach ( $_SESSION ['smarty'] as $key => $val ) {
 $SMARTY->assign ( 'error', $_SESSION ['error'] );
 $SMARTY->assign ( 'notice', $_SESSION ['notice'] );
 
+// ASSIGN POST FOR FORM VARIABLES  
+$SMARTY->assign ( 'post', $_SESSION ['post'] );
+$_SESSION ['post'] = "";
+unset ( $_SESSION ['post'] );
+
+// ASSIGN USER FOR TEMPLATES
+$SMARTY->assign ( 'user', $_SESSION ['user'] );
+
 $_SESSION ['error'] = "";
 unset ( $_SESSION ['error'] );
 $_SESSION ['notice'] = "";
@@ -116,6 +124,24 @@ while ( true ) {
 	}
 	
 	/**
+	 * ***** Goes to CHECKOUT ******
+	 */
+	if ($_request ['arg1'] == 'store/checkout') {
+		$obj = new $class ( '', $struct );
+		$template = $obj->Load ( $CONFIG->checkout->pageID );
+		$template = $CONFIG->checkout->template;
+		$menu = $obj->LoadMenu ( $CONFIG->checkout->pageID );
+		$SMARTY->assign ( 'menuitems', $menu );
+		$cart_obj = new cart();
+		$products = $cart_obj->GetDataProductsOnCart(); 
+		$SMARTY->assign ( 'products', $products );
+		$cart = $cart_obj->GetDataCart();
+		$SMARTY->assign ( 'cart', $cart );
+		break 1;
+	}
+        
+        
+	/**
 	 * ***** Goes to SHOPPING CART ******
 	 */
 	if ($_request ['arg1'] == 'store/shopping-cart') {
@@ -125,8 +151,10 @@ while ( true ) {
 		$menu = $obj->LoadMenu ( $CONFIG->cart->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
 		$cart_obj = new cart();
-		$products = $cart_obj->GetProductsOnCart(); 
+		$products = $cart_obj->GetDataProductsOnCart(); 
 		$SMARTY->assign ( 'products', $products );
+		$cart = $cart_obj->GetDataCart();
+		$SMARTY->assign ( 'cart', $cart );
 		break 1;
 	}
 	

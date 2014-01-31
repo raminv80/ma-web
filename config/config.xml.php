@@ -31,6 +31,12 @@
 		<template>404.tpl</template>
 		<pageID>2</pageID>
 	</error404>
+	<static_page>
+		<url>login</url>
+		<template>login.tpl</template>
+		<pageID>14</pageID>
+	</static_page>
+	
 	<inspections>
 		<template>inspections.tpl</template>
 		<pageID>35</pageID>
@@ -40,6 +46,7 @@
 		<template>contact-us.tpl</template>
 		<pageID>44</pageID>
 	</static_page>
+
 
 	
  	<product_page name="store">
@@ -165,6 +172,11 @@
 	<process>
 		<url>process/cart</url>
 		<file>includes/processes/processes-cart.php</file>
+		<return_url></return_url>
+	</process>	
+	<process>
+		<url>process/user</url>
+		<file>includes/processes/processes-user.php</file>
 		<return_url></return_url>
 	</process>
 

@@ -21,7 +21,7 @@
 		{/foreach}
 		</div>
 		<div class="row">Description: {$product_description}</div>
-		<div class="row">
+		<div class="row" style="margin:40px;">
 		<form class="form-horizontal" id="product-form" accept-charset="UTF-8" action="" method="post">
 			
 			<input type="hidden" value="ADDTOCART" name="action" id="action" /> 
@@ -33,8 +33,7 @@
 						<select id="attr-{$attr.attribute_id}" name="attr[{$attr.attribute_id}]" class='modifier' >
 							{foreach $attr.attr_value as $value }
 								<option value="{$value.attr_value_id}" 
-										price="{$value.attr_value_price}"
-										specialprice="{$value.attr_value_specialprice}"
+										price="{if $product_specialprice neq '0.00'}{$value.attr_value_specialprice}{else}{$value.attr_value_price}{/if}"
 										instock="{$value.attr_value_instock}"
 										weight ="{$value.attr_value_weight}"
 										width ="{$value.attr_value_width}"
@@ -49,21 +48,20 @@
 				{/foreach}
 				
 				<div style="display:inline;">Price: $</div>
-				<div style="display:inline;" id="cal-price" value="{$product_price}">{$product_price}</div>
+				<div style="display:inline;" id="cal-price" value="{if $product_specialprice neq '0.00'}{$product_specialprice}{else}{$product_price}{/if}">{if $product_specialprice neq '0.00'}{$product_specialprice}{else}{$product_price}{/if}</div>
 				<div style="display:inline;"><input type="hidden" value="{$product_price}" name="price" id="price" /> </div>
 				
 				
 				<div style="display:inline;"><input type="text" value="1" name="quantity" id="quantity" class="unsigned-int gt-zero" ></div>
 				<div style="display:inline;"><a class="btn-primary btn" onclick="addCart();">Add to Cart</a></div>
 				
-				
+		</form>		
 						
-			</div>
-		
-		</form>
+		</div>
 		
 		
-		{include file='full-product-cat.tpl'}
+		
+
 	</div>
 
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>

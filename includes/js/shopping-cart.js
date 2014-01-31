@@ -12,6 +12,14 @@ $('.modifier').change(function() {
 });
 
 
+
+$('.gt-zero').change(function() {
+	if(parseInt($(this).val()) < 1 || $(this).val() == '') {
+		$(this).val('1');
+	}
+	
+});
+
 $('.unsigned-int').keyup(function () {
     if (this.value != this.value.replace(/[^0-9]/g, '')) {
        this.value = this.value.replace(/[^0-9]/g, '');
@@ -76,9 +84,17 @@ function updateCart(){
 		    success: function(data) {
 		    	try{
 		    		var obj = $.parseJSON(data);
-		    		var response = obj.response;  
-				 	if (response) {
-				 		
+		    		var subtotals = obj.subtotals;
+		    		var total = obj.total;
+				 	if (subtotals) {
+				 		$.each(subtotals, function(id, value){
+				 			amount = parseFloat(value);
+				 			$('#subtotal-'+id).html('$'+amount.toFixed(2));
+				 		});
+				 		$.each(total, function(id, value){
+				 			amount = parseFloat(value);
+				 			$('#'+id).html('$'+amount.toFixed(2));
+				 		});
 						/* RECALCULATE SUBTOTAL/TOTAL */
 					} else {
 						alert('Error: Cannot be updated');
@@ -109,10 +125,18 @@ function deleteItem(ID){
 	    success: function(data) {
 	    	try{
 	    		var obj = $.parseJSON(data);
-			 	var response = obj.response;  
+			 	var response = obj.response;
+                                var total = obj.total;
 			 	if (response) {
-			 		$( '#'+ ID ).hide('slow');
-					/* RECALCULATE TOTAL */
+			 		if ( $('.product-item:visible').length = 1 ){
+                                            location.reload();
+                                        } else {
+                                            $( '#'+ ID ).hide('slow');
+                                             $.each(total, function(id, value){
+				 			amount = parseFloat(value);
+				 			$('#'+id).html('$'+amount.toFixed(2));
+				 		});
+                                        }
 				} else {
 					$( '#'+ ID ).fadeTo( "fast", 1 ); 
 					alert('Item cannot be deleted');
