@@ -2,7 +2,7 @@
 class cart {
 	public $SHIPPING_FEE = 15; // <<<<<<<======== REMEMBER TO CHANGE THIS ====================
 	public $cart_id;
-	public $cart_user_id;
+	public $cart_user_id = null;
 	public $created_date;
 	public $closed_date;
 	public $cart_session;
@@ -13,6 +13,7 @@ class cart {
 			if (!isset($_SESSION['user']) && $this->cart_user_id) {
 				session_regenerate_id();
 				$this->CreateCart ();
+				$this->cart_user_id = null;
 			}
 			$this->cart_id = $this->ses_cart_id; // do nothing since session cart exists and user is not logged in
 		} else {
@@ -364,14 +365,18 @@ class cart {
 	 * Return the recordset of the current cart
 	 * @return array
 	 */
-	function GetDataCart() {
+	function GetDataCart($cartId = null) {
 		global $DBobject;
 		
+                if (is_null($cartId)){
+                    $cartId = $this->cart_id;
+                }
+                
 		$sql = "SELECT * FROM tbl_cart
     			WHERE cart_id = :id AND cart_deleted IS NULL AND cart_id <> '0'";
 		
 		$res = $DBobject->wrappedSql ( $sql, array (
-				":id" => $this->cart_id 
+				":id" => $cartId 
 		) );
 		
 		return $res [0];
@@ -712,6 +717,105 @@ class cart {
 	}
 
 	/**
+	 * Insert new address in tbl_address and returns address_id
+	 * 
+	 * @param array $addressArr
+	 * @return int
+	 */
+	private	function InsertNewAddress($addressArr) {
+		global $DBobject;
+	
+		$sql = " INSERT INTO tbl_address (
+        						address_user_id, address_name, address_telephone, address_mobile, address_line1, address_line2, 
+								address_suburb, address_state, address_country, address_postcode,
+        						address_created
+								)
+							VALUES (
+								:address_user_id, :address_name, :address_telephone, :address_mobile, :address_line1, :address_line2, 
+								:address_suburb, :address_state, :address_country, :address_postcode,
+        						now()
+							)";
+		$params = array (
+				":address_user_id" => $addressArr['address_user_id'],
+				":address_name" => $addressArr['address_name'],
+				":address_telephone" => $addressArr['address_telephone'],
+				":address_mobile" => $addressArr['address_mobile'],
+				":address_line1" => $addressArr['address_line1'],
+				":address_line2" => $addressArr['address_line2'],
+				":address_suburb" => $addressArr['address_suburb'],
+				":address_state" => $addressArr['address_state'],
+				":address_country" => $addressArr['address_country'],
+				":address_postcode" => $addressArr['address_postcode']
+		);
+		
+		if ( $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
+			return $DBobject->wrappedSqlIdentity();
+		}
+		return 0;
+	}
+	
+	function PlaceOrder($paymentArr, $billingAddressArr, $shippingAddressArr = array() ) {
+		global $DBobject;
+		
+		$dbTotal = $this->CalculateTotal();
+		
+		if (!empty($dbTotal) && $this->cart_id == $paymentArr['payment_cart_id'] 
+							&& $dbTotal['subtotal'] == $paymentArr['payment_subtotal'] 
+							&& $dbTotal['shipping'] == $paymentArr['payment_shipping_fee'] 
+							&& floatval($dbTotal['total']) == floatval($paymentArr['payment_charged_amount']) ) {
+			
+			
+			if ($res = $this->InsertNewAddress($billingAddressArr)) {
+				$billingAddressId = $res;
+			} else {
+				return array( 'error' => 'Connection problem - Billing Address was not created. Please, try again');
+			}
+			
+			if (empty($shippingAddressArr)) {
+				$shippingAdddressId = $billingAddressId;
+			} else {
+				if ($res = $this->InsertNewAddress($shippingAddressArr)) {
+					$shippingAdddressId = $res;
+				} else {
+					return array( 'error' => 'Connection problem - Shipping Address was not created. Please, try again');
+				}
+			}
+			
+			$sql = " INSERT INTO tbl_payment (
+        						payment_cart_id, payment_user_id, payment_billing_address_id, payment_shipping_address_id,  
+								payment_status, payment_subtotal, payment_shipping_fee, payment_charged_amount,
+        						payment_user_ip, 
+								payment_created
+								)
+							VALUES (
+								:payment_cart_id, :payment_user_id, :payment_billing_address_id, :payment_shipping_address_id, 
+								:payment_status, :payment_subtotal, :payment_shipping_fee, :payment_charged_amount,
+        						:payment_user_ip, 
+        						now()
+							)";
+			$params = array (
+					":payment_cart_id" => $paymentArr['payment_cart_id'],
+					":payment_user_id" => $paymentArr['payment_user_id'],
+					":payment_billing_address_id" => $billingAddressId,
+					":payment_shipping_address_id" => $shippingAdddressId,
+					":payment_status" => 'P', 
+					":payment_subtotal" => $paymentArr['payment_subtotal'],
+					":payment_shipping_fee" => $paymentArr['payment_shipping_fee'],
+					":payment_charged_amount" => $paymentArr['payment_charged_amount'],
+					":payment_user_ip" => $_SERVER ['REMOTE_ADDR']
+			);
+			
+			if ( $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
+				$this->CloseCart($this->cart_id);
+				$this->CreateCart($paymentArr['payment_user_id']);
+				return array( 'success' => 'Thank you for Buying!');
+			}
+			
+		}
+		return array( 'error' => 'Connection problem or Values do not match. Please, try again');
+	}
+	
+	/**
 	 * Validate all items on current cart and return messages in array.  
 	 * @return array
 	 */
@@ -750,44 +854,129 @@ class cart {
 		return $message;
 	}
 	
+	private function getParentList($parentId, $root = 0, $list = array()) {
+		global $DBobject;
+		
+		$sql = "SELECT listing_parent_id FROM tbl_listing WHERE listing_id = :id";
+		if ($res = $DBobject->wrappedSql ( $sql, array( ":id" => $parentId ) )) {
+			if ($res[0]['listing_parent_id'] == $root ) {
+                            return array_merge(array($parentId), $list);
+                        } else {
+                            return $this->getParentList($res[0]['listing_parent_id'], $root, array_merge(array($parentId), $list));
+                        }
+		} 
+                return array();
+                
+	}
+        
+        private function getProductCatParentList($productId, $root = 0) {
+		global $DBobject;
+		
+		$sql = "SELECT product_listing_id FROM tbl_product WHERE product_id = :id";
+		if ($res = $DBobject->wrappedSql ( $sql, array( ":id" => $productId ) )) {
+			
+                    return $this->getParentList($res[0]['product_listing_id'], $root);
+                        
+		} 
+                return array();
+                
+	}
 
-
-	function ApplyDiscountCode($code = null) { //****************** NOT FINISHED YET ***********************
+	function ApplyDiscountCode($code, $cartId = null) { //****************** NOT FINISHED YET ***********************
 		global $DBobject;
 	
-		$result = array ();
-		if (is_null ( $code )) {
-			$sql = "SELECT cart_discount_code FROM tbl_cart
-	    	WHERE cart_id = :id AND cart_discount_code IS NOT NULL AND cart_deleted IS NULL AND cart_id <> 0";
-				
-			if ($res = $DBobject->wrappedSql ( $sql, array (
-					":id" => $this->cart_id
-			) )) {
-				$code = $res [0] ['cart_discount_code'];
-			} else {
-				return $result;
-			}
+		if (is_null($cartId)) {
+			$cartId = $this->cart_id;
 		}
+		$result = array ();
+		
 	
-		$sql = "SELECT * AS SUM FROM tbl_discount
+		$sql = "SELECT *  FROM tbl_discount
 	    			WHERE discount_code = :id AND discount_published = 1 AND discount_deleted IS NULL";
 	
-		if ($res = $DBobject->wrappedSql ( $sql, array (
-				":id" => $code
-		) )) {
+		if ($res = $DBobject->wrappedSql ( $sql, array ( ":id" => $code	) )) {
 			$today = strtotime ( date ( "Y-m-d H:i:s" ) );
 			if (strtotime ( $res ['discount_start_date'] ) <= $today && $today <= strtotime ( $res ['discount_end_date'] )) {
-	
-				// UPDATE tbl_cart with: amount in cart_discount / code in cart_discount_code
+                             
+                            $cart = $this->GetDataCart();
+                            
+                            if (is_null($res['discount_listing_id']) && is_null($res['discount_product_id'])){
+                                
+                               if ($res['discount_amount_percentage']) {
+                                   $discount = floatval($cart['cart_subtotal']) * floatval($res['discount_amount']) / 100;
+                               } else {
+                                   $discount = $res['discount_amount']; 
+                               }
+                                
+                            } else {
+                                $sql = "SELECT 	cartitem_product_id, cartitem_subtotal FROM tbl_cartitem
+                                        WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
+
+                                if ( $cart = $DBobject->wrappedSql ( $sql, array ( ":id" => $cartId ) )) {
+                                    $discount = 0;
+                                    $listingMatchSubtotal = 0;
+                                    foreach ($cart as $item){
+                                
+                                        if ($res['discount_listing_id']){
+                                           $listingArr = $this->getProductCatParentList($item['cartitem_product_id']);
+                                           if (in_array($res['discount_listing_id'], $listingArr)){
+                                               if ($res['discount_amount_percentage']) {
+                                                    $discount += floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
+                                                } else {
+                                                    $listingMatchSubtotal += floatval($item['cartitem_subtotal']);
+                                                    
+                                                }
+                                           }
+                                        }
+                                        if ($res['discount_product_id'] == $item['cartitem_product_id']){
+                                               if ($res['discount_amount_percentage']) {
+                                                    $discount = floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
+                                                } else {
+                                                    if ($res['discount_amount'] > $item['cartitem_subtotal']){
+                                                        $discount = $item['cartitem_subtotal']; 
+                                                    } else {
+                                                        $discount = $res['discount_amount'];
+                                                    }
+                                                }
+                                           
+                                        }
+                                    }
+                                    if ($listingMatchSubtotal > 0) {
+                                        if ($res['discount_amount'] > $listingMatchSubtotal){
+                                            $discount = $listingMatchSubtotal; 
+                                        } else {
+                                            $discount = $res['discount_amount'];
+                                        }
+                                    } 
+                                }
+                            }
+                            
+                            $total = floatval($cart['cart_subtotal']) + floatval($cart['cart_shipping_fee']) - $discount;
+
+                            $params = array (
+                                            ":id" => $cartId,
+                                            ":discount" => $discount,
+                                            ":total" => $total 
+                            );
+                            $sql = "UPDATE tbl_cart SET cart_discount = :discount, cart_total = :total, cart_modified = now() WHERE cart_id = :id";
+
+                            if ( $DBobject->wrappedSql ( $sql, $params )) {
+                                 $result ['discount'] = $discount;
+                            }
+                                
 			} else {
 				$result ['error'] = 'This code has expired';
 			}
 		} else {
 			$result ['error'] = 'Invalid Code';
 		}
-		// UPDATE tbl_cart with: 0 in cart_discount / empty field in cart_discount_code
+		
 		return $result;
 	}						//****************** NOT FINISHED YET ***********************
+	
+	
+	
+	
 	
 /* 
 	function DiscountedAmount() {

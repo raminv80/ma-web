@@ -60,11 +60,51 @@ class UserClass {
     	
     }
     
+    function UpdatePassword($data){
+    	global $DBobject;
+    
+        
+    	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($data['email'])))) . md5(stripslashes(strtoupper($data['old_password']))));
+    	
+    	$sql = "SELECT user_id FROM tbl_user WHERE user_email = :email AND user_password = :password AND user_deleted IS NULL";
+    	$params = array( 
+    				"email" => $data['email'], 
+    				"password" => $temp_str 
+    	);
+        
+        
+    	if ($res  = $DBobject->wrappedSql($sql, $params)) {
+    	
+	    	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($data['email'])))) . md5(stripslashes(strtoupper($data['password']))));
+	    	
+	    	$params = array (
+	    			":id" => $res[0]['user_id'],
+	    			":password" => $temp_str,
+	        		":ip" => $_SERVER['REMOTE_ADDR'],
+	        		":browser" => $_SERVER['HTTP_USER_AGENT']
+	    	);
+	    	$sql = "UPDATE tbl_user SET 
+                                            user_password = :password, 
+                                            user_ip = :ip,
+                                            user_browser = :browser,
+                                            user_modified = now()
+				WHERE user_id = :id ";
+	    	
+	    	if ( $DBobject->wrappedSql($sql, $params) ) {
+	    		return array ('success' => 'Password has been updated.');
+	    	} else {
+	    		return array ('error' => 'There was a connection problem. Please, try again!');
+	    	}
+	    	
+    	} 
+        return array ('error' => 'Incorrect old password.');
+    	
+    }
     
     function RetrieveByUsername($uname){
     	global $DBobject;
     
-    	$sql = "SELECT user_id, user_gname, user_surname, user_email FROM tbl_user
+    	$sql = "SELECT * FROM tbl_user
 				WHERE user_username = :uname AND user_deleted IS NULL";
     	 
     	$res  = $DBobject->wrappedSql($sql, array( ":uname" => $uname ));
@@ -90,7 +130,7 @@ class UserClass {
     	$user_arr = array();
     	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($email)))) . md5(stripslashes(strtoupper($pass))));
     	
-    	$sql = "SELECT * FROM tbl_user WHERE user_email = :email AND user_password = :password";
+    	$sql = "SELECT * FROM tbl_user WHERE user_email = :email AND user_password = :password AND user_deleted IS NULL";
     	$params = array( 
     				"email" => $email , 
     				"password" => $temp_str 
@@ -135,11 +175,50 @@ class UserClass {
     }
     
     
-    function ResetPassword(){
+    function ResetPassword($email){
     	global $DBobject;
     
-    
-    	return false;
+        if ($res = $this->RetrieveByUsername($email)){
+            $newPass = generateRandomString(10);
+            
+            $temp_str = sha1(md5(bin2hex(strrev(stripslashes($email)))) . md5(stripslashes(strtoupper($newPass))));
+            
+            
+            $params = array (
+                            ":id" => $res['user_id'],
+                            ":password" => $temp_str,
+                            ":ip" => $_SERVER['REMOTE_ADDR'],
+                            ":browser" => $_SERVER['HTTP_USER_AGENT']
+            );
+            $sql = "UPDATE tbl_user SET 
+                                        user_password = :password, 
+                                        user_ip = :ip,
+                                        user_browser = :browser,
+                                        user_modified = now()
+                            WHERE user_id = :id ";
+
+            if ( $DBobject->wrappedSql($sql, $params) ) {
+                
+                $buf ="<h2>{$_SERVER['HTTP_HOST']}</h2><br/><br/>";
+                $buf.='<br/> Your password has been reseted. <br/>';
+                $buf.='<br/>Your temporary password is: <br/> <b>'.$newPass.'</b><br/>';
+
+                $body = $buf;
+                $subject = "Account Settings - {$_SERVER['HTTP_HOST']}";
+                $fromEmail = "noreply@{$_SERVER['HTTP_HOST']}";
+                $from = "{$_SERVER['HTTP_HOST']} - Website";
+                $to = $email;
+
+
+                if(sendMail($to, $from, $fromEmail, $subject, $body)){
+                        return array ('success' => 'Password has been reseted and sent to your email.');
+                }else{
+                        return array ('error' => 'There was a email problem. Please, try again!');
+                }
+            } 
+            return array ('error' => 'There was a connection problem. Please, try again!');
+        }
+    	return array( 'error' => 'This email does not exist in our database.');
     }
     
     
@@ -148,13 +227,13 @@ class UserClass {
     	
 		if ($user['id']) {
     
-			if ($this->RetrieveByUsername($user['id'])) { // ALREADY REGISTERED
-    			$user_arr["id"]=$res[0]["user_id"];
-    			$user_arr["gname"]=$res[0]["user_gname"];
-    			$user_arr["surname"]=$res[0]["user_surname"];
-    			$user_arr["email"]=$res[0]["user_email"];
-    			$user_arr["social_name"]=$res[0]["user_social_name"];
-    			$user_arr["social_id"]=$res[0]["user_social_id"];
+			if ($res = $this->RetrieveByUsername($user['id'])) { // ALREADY REGISTERED
+    			$user_arr["id"]=$res["user_id"];
+    			$user_arr["gname"]=$res["user_gname"];
+    			$user_arr["surname"]=$res["user_surname"];
+    			$user_arr["email"]=$res["user_email"];
+    			$user_arr["social_name"]=$res["user_social_name"];
+    			$user_arr["social_id"]=$res["user_social_id"];
     			//SaveAdminLogIn($row['admin_id']);		//<<<<<<<<<======= Login log????
     		
     		} else {			//REGISTER WITH FACEBOOK DETAILS
@@ -197,9 +276,11 @@ class UserClass {
     				$userId =  $DBobject->wrappedSqlIdentity();
     				$user_arr = array (
     						"id" => $userId,
-    						"gname" => $user['gname'],
-    						"surname" => $user['surname'],
+    						"gname" => $user['first_name'],
+    						"surname" => $user['last_name'],
     						"email" => $user['email'],
+    						"social_name" => 'facebook',
+    						"social_id" => $user['id']
     				);
     			}
     		}

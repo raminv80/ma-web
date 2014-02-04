@@ -15,7 +15,7 @@
 		<div class="col-xs-12">{$it.product_name}</div>
 		<div class="col-xs-12">{$it.product_price}</div>
 		<div class="col-xs-12">{$it.product_description}</div>
-		<div class="col-xs-12"><a href="{$parentUrl}{$it.product_name}-{$it.product_id}">Click Here</a></div>
+		<div class="col-xs-12"><a href="{$parentUrl}{$it.product_url}-{$it.product_id}">Click Here</a></div>
 		</div>
 	{/foreach} 
 	</div>
@@ -53,8 +53,8 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12"><h3>Products in {$listing_title}</h3></div>
-			{call name=render_products items=$data.products parentUrl="./store/"}
-			{call name=render_categories items=$data.listings parentUrl="./store/"}
+			{call name=render_products items=$data.products parentUrl="./{$listing_url}/"}
+			{call name=render_categories items=$data.listings parentUrl="./{$listing_url}/"}
 		</div>
 	</div>
 {/block}

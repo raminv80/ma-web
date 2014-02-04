@@ -50,11 +50,18 @@
 				<div style="display:inline;">Price: $</div>
 				<div style="display:inline;" id="cal-price" value="{if $product_specialprice neq '0.00'}{$product_specialprice}{else}{$product_price}{/if}">{if $product_specialprice neq '0.00'}{$product_specialprice}{else}{$product_price}{/if}</div>
 				<div style="display:inline;"><input type="hidden" value="{$product_price}" name="price" id="price" /> </div>
-				
-				
+				{if $product_gst}
+				<div style="display:inline;color:#aaa"><small>(Incl. GST)</small></div>
+				{else}
+				<div style="display:inline;color:#aaa"><small>(GST-free)</small></div>
+				{/if}
+				{if $product_instock}  
+				<div style="display:inline;">Qty: </div>
 				<div style="display:inline;"><input type="text" value="1" name="quantity" id="quantity" class="unsigned-int gt-zero" ></div>
 				<div style="display:inline;"><a class="btn-primary btn" onclick="addCart();">Add to Cart</a></div>
-				
+				{else}
+				<div style="display:inline;color:#ff0000">Out of stock</div>
+				{/if}
 		</form>		
 						
 		</div>

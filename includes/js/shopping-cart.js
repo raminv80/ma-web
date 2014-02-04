@@ -36,7 +36,14 @@ function calculatePrice(){
 	$('#price').val(price.toFixed(2)); 
 }
 
-
+function sameAddress() {
+	$('#shipping-subform').toggle();
+	if ($('#shipping-subform:visible').length > 0) {
+		$('.shipping-req').attr('required', 'required');
+	} else {
+		$('.shipping-req').removeAttr('required');
+	}
+}
 
 function addCart(){
 	if ($('#quantity').val() > 0 ) {
@@ -68,7 +75,7 @@ function addCart(){
           	}
 		});
 	} else {
-		alert('Quantity must be greater than 0')
+		alert('Quantity must be greater than 0');
 	}
 }
 
@@ -84,8 +91,10 @@ function updateCart(){
 		    success: function(data) {
 		    	try{
 		    		var obj = $.parseJSON(data);
+				var items = obj.itemsCount;  
 		    		var subtotals = obj.subtotals;
 		    		var total = obj.total;
+                                $('#shopping-cart').html(items);
 				 	if (subtotals) {
 				 		$.each(subtotals, function(id, value){
 				 			amount = parseFloat(value);

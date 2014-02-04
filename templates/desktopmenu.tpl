@@ -33,9 +33,7 @@
 {if $user.id}
 	<li><a title="Log In" href="/login">G'day {$user.gname}</a></li>
 	
-	<li><a title="Log Out" 
-	{if $user.social_id} href="javascript:void(0)" onclick="FBlogout();" {else} href="/process/user?logout=true" {/if}
-	><span class="glyphicon glyphicon-log-out"></span><div style="display:inline;">Log Out</div></a></li>
+	<li><a title="Log Out"  href="/process/user?logout=true"><span class="glyphicon glyphicon-log-out"></span><div style="display:inline;">Log Out</div></a></li>
 	
 {else}
 	<li><a title="Log In" href="/login">Log In</a></li>

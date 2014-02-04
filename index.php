@@ -82,6 +82,19 @@ while ( true ) {
 		}
 		die();
 	}
+	/**
+	 * **** Goes to login ******
+	 */
+	if ($_request ['arg1'] == 'login') {
+		$obj = new $class ( '', $struct );
+		$template = $obj->Load ( $CONFIG->login->pageID );
+		$template = $CONFIG->login->template;
+		$menu = $obj->LoadMenu ( $CONFIG->login->pageID );
+		$SMARTY->assign ( 'menuitems', $menu );
+		$_SESSION ['login_referer'] = $_SERVER['HTTP_REFERER'];
+		break 1;
+	}
+	
 	
 	/**
 	 * ***** Goes to search ******
@@ -100,7 +113,10 @@ while ( true ) {
 	 * ***** Goes to CHECKOUT ******
 	 */
 	if ($_request ['arg1'] == 'store/checkout') {
-		$obj = new $class ( '', $struct );
+		if (is_null($_SESSION['user']['id'])) { 
+	    	header("Location: /login");
+		}
+		$obj = new $class ( '', $struct ); 
 		$template = $obj->Load ( $CONFIG->checkout->pageID );
 		$template = $CONFIG->checkout->template;
 		$menu = $obj->LoadMenu ( $CONFIG->checkout->pageID );

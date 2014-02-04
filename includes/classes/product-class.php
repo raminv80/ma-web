@@ -168,10 +168,10 @@ class ProductClass extends ListClass {
 			$SMARTY->assign ( "{$f->name}", $options);
 		}
 			
-		if(!empty($data)){
-			$template = $this->CONFIG_OBJ->template;
+		 if ($arrChk['isProduct']) {
+		 	$template = $this->CONFIG_OBJ->table->template;
 		}else{
-			$template = $this->CONFIG_OBJ->table->template;
+			$template = $this->CONFIG_OBJ->template;
 		}
 	
 		return $template;
@@ -311,7 +311,7 @@ class ProductClass extends ListClass {
 				}
 				$count += 1;
 	
-				$data ["{$row['listing_id']}"] = unclean ( $row );
+				$data ['listings']["{$row['listing_id']}"] = unclean ( $row );
 				foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
 					if ($a->attributes ()->listing) {
 						$data ["{$row['listing_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row['listing_id']);

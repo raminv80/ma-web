@@ -31,11 +31,11 @@
 		<template>404.tpl</template>
 		<pageID>2</pageID>
 	</error404>
-	<static_page>
+	<login>
 		<url>login</url>
 		<template>login.tpl</template>
 		<pageID>14</pageID>
-	</static_page>
+	</login>
 	
 	<inspections>
 		<template>inspections.tpl</template>
@@ -110,6 +110,18 @@
 		<template>shopping-cart.tpl</template> 
 		<!-- The template used if the field is matched --> 
 	</cart>
+	<checkout> 
+		<url>store/checkout</url> 
+		<pageID>15</pageID> 
+		<type>1</type> 
+		<file>ListClass</file>
+		<table>			<!-- This table will be the details table -->
+			<name>tbl_cart</name>
+			<field>listing_url</field>	<!-- The field used to match the URL -->
+		</table>
+		<template>checkout.tpl</template> 
+		<!-- The template used if the field is matched --> 
+	</checkout>
 
 	
 	<process>

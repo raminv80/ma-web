@@ -62,8 +62,11 @@
 			<div style="display:inline; text-align:right;" class="col-md-2" id="shipping">${$cart.cart_shipping_fee}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
-			<div style="display:inline; text-align:right;" class="col-md-10">Total</div>
-			<div style="display:inline; text-align:right;" class="col-md-2" id="total">${$cart.cart_total}</div>
+			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-10">Total</div>
+			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-2" id="total">${$cart.cart_total}</div>
+		</div>
+		<div class="row" style="margin-top: 20px;">
+			<div class="col-md-offset-10"><a class="btn-success btn btn-sm" href="/store/checkout">Proceed to Checkout</a></div>
 		</div>
 	
 		<form class="form-horizontal" id="discount-form" accept-charset="UTF-8" action="" method="post">
