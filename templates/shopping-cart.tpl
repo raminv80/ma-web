@@ -14,7 +14,7 @@
 			</div>
 	</header>
 	<div class="container">
-	{if $products }
+	{if $productsOnCart }
 		<div class="row" style="margin-top: 40px; background-color: rgb(238, 238, 238);">
 			<div style="display:inline;" class="col-md-6">Product</div>
 			<div style="display:inline; text-align:right;" class="col-md-2">Unit Price</div>
@@ -25,7 +25,7 @@
 		
 		<form class="form-horizontal" id="shopping-cart-form" accept-charset="UTF-8" action="" method="post">
 			<div class="row" style="margin-top: 20px; margin-bottom: 40px;" id="products-container"> 
-				{foreach from=$products item=item}
+				{foreach from=$productsOnCart item=item}
 				<div class="row  product-item" style="margin-top: 10px;" id="{$item.cartitem_id}">
 					<div style="display:inline;" class="col-md-6">{$item.cartitem_product_name}
 					{if $item.attributes } 
@@ -54,7 +54,7 @@
 			<div style="display:inline; text-align:right;" class="col-md-2" id="subtotal">${$cart.cart_subtotal}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
-			<div style="display:inline; text-align:right;" class="col-md-10">Discount</div>
+			<div style="display:inline; text-align:right;" class="col-md-10">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
 			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">${$cart.cart_discount}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
@@ -69,11 +69,15 @@
 			<div class="col-md-offset-10"><a class="btn-success btn btn-sm" href="/store/checkout">Proceed to Checkout</a></div>
 		</div>
 	
-		<form class="form-horizontal" id="discount-form" accept-charset="UTF-8" action="" method="post">
+		<form class="form-horizontal" id="discount-form" accept-charset="UTF-8" action="/process/cart" method="post">
+			<input type="hidden" value="applyDiscount" name="action" id="action" /> 
 			<div class="row" style="margin-top: 20px; margin-bottom: 40px;"> 
 				<div style="display:inline;">Enter discount code: </div>
-				<div style="display:inline;"><input type="text" value="" name="discount_code" id="discount"></div>
-				<div style="display:inline;"><a class="btn-primary btn btn-sm" onclick="applyDiscount();">Apply</a></div>
+				<div style="display:inline;"><input type="text" value="{if $post}{$post.discount_code}{/if}" name="discount_code" id="discount"></div>
+				<div style="display:inline;"><a class="btn-primary btn btn-sm" onclick="$('#discount-form').submit();">Apply</a></div>
+				{if $error}
+				<div style="margin-left:10px; display:inline; color:#ff0000">{$error}</div>
+		        {/if}
 			</div>
 		</form>	
 	{else}

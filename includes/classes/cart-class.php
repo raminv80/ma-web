@@ -403,13 +403,12 @@ class cart {
 			$subtotal = $res [0] ['SUM'];
 			
 			// --------------- DISCOUNT AMOUNT ------------
-			$sql = "SELECT cart_discount FROM tbl_cart
-	    		WHERE cart_id = :id AND cart_deleted IS NULL AND cart_id <> '0'";
+			$discount = 0;
 			
-			if ($res = $DBobject->wrappedSql ( $sql, array (
-					":id" => $this->cart_id 
-			) )) {
-				$discount = $res [0] ['cart_discount'];
+			$cart = $this->GetDataCart();
+			if ($cart['cart_discount_code']) {
+				$discArr = $this->ApplyDiscountCode($cart['cart_discount_code']);
+				$discount = $discArr['discount'];
 			}
 			
 			// --------------- SHIPPING FEE ------------
@@ -758,7 +757,7 @@ class cart {
 		global $DBobject;
 		
 		$dbTotal = $this->CalculateTotal();
-		
+		return array( 'error' => 'Connection problem - Billing Address was not created. Please, try again');
 		if (!empty($dbTotal) && $this->cart_id == $paymentArr['payment_cart_id'] 
 							&& $dbTotal['subtotal'] == $paymentArr['payment_subtotal'] 
 							&& $dbTotal['shipping'] == $paymentArr['payment_shipping_fee'] 
@@ -816,10 +815,10 @@ class cart {
 	}
 	
 	/**
-	 * Validate all items on current cart and return messages in array.  
+	 * Validate all items on current cart and totals and return messages in array.  
 	 * @return array
 	 */
-	function ValidateCartItems() {
+	function ValidateCart() {
 		global $DBobject;
 	
 		$message = array();
@@ -845,9 +844,6 @@ class cart {
 				}
 			}
 		}
-		//<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>	
-		//<<<<<<<<<<< REMEMBER TO VALIDATE DISCOUNT CODE
-		//<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		
 		$this->CalculateTotal();
 		
@@ -882,203 +878,110 @@ class cart {
                 
 	}
 
-	function ApplyDiscountCode($code, $cartId = null) { //****************** NOT FINISHED YET ***********************
+	/**
+	 * Validate the given discount code and calculate the amount according to items on cart. 
+	 * Limit the discount amount to subtotal value. 
+	 * 
+	 * @param string $code
+	 * @param string $cartId
+	 * @return array
+	 */
+	function ApplyDiscountCode($code, $cartId = null) { 
 		global $DBobject;
 	
 		if (is_null($cartId)) {
 			$cartId = $this->cart_id;
 		}
-		$result = array ();
+		$result = array();
 		
-	
+		$cart = $this->GetDataCart();
+		
+		$discount = 0;
+		
 		$sql = "SELECT *  FROM tbl_discount
 	    			WHERE discount_code = :id AND discount_published = 1 AND discount_deleted IS NULL";
 	
 		if ($res = $DBobject->wrappedSql ( $sql, array ( ":id" => $code	) )) {
 			$today = strtotime ( date ( "Y-m-d H:i:s" ) );
-			if (strtotime ( $res ['discount_start_date'] ) <= $today && $today <= strtotime ( $res ['discount_end_date'] )) {
-                             
-                            $cart = $this->GetDataCart();
-                            
-                            if (is_null($res['discount_listing_id']) && is_null($res['discount_product_id'])){
-                                
-                               if ($res['discount_amount_percentage']) {
-                                   $discount = floatval($cart['cart_subtotal']) * floatval($res['discount_amount']) / 100;
-                               } else {
-                                   $discount = $res['discount_amount']; 
-                               }
-                                
-                            } else {
-                                $sql = "SELECT 	cartitem_product_id, cartitem_subtotal FROM tbl_cartitem
-                                        WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
-
-                                if ( $cart = $DBobject->wrappedSql ( $sql, array ( ":id" => $cartId ) )) {
-                                    $discount = 0;
-                                    $listingMatchSubtotal = 0;
-                                    foreach ($cart as $item){
-                                
-                                        if ($res['discount_listing_id']){
-                                           $listingArr = $this->getProductCatParentList($item['cartitem_product_id']);
-                                           if (in_array($res['discount_listing_id'], $listingArr)){
-                                               if ($res['discount_amount_percentage']) {
-                                                    $discount += floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
-                                                } else {
-                                                    $listingMatchSubtotal += floatval($item['cartitem_subtotal']);
-                                                    
-                                                }
-                                           }
-                                        }
-                                        if ($res['discount_product_id'] == $item['cartitem_product_id']){
-                                               if ($res['discount_amount_percentage']) {
-                                                    $discount = floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
-                                                } else {
-                                                    if ($res['discount_amount'] > $item['cartitem_subtotal']){
-                                                        $discount = $item['cartitem_subtotal']; 
-                                                    } else {
-                                                        $discount = $res['discount_amount'];
-                                                    }
-                                                }
-                                           
-                                        }
+			if (strtotime ( $res[0]['discount_start_date'] ) <= $today && $today <= strtotime ( $res[0]['discount_end_date'] )) {
+				// Valid code by date
+				if ( $res[0]['discount_listing_id'] == 0 && $res[0]['discount_product_id'] == 0 ){
+					// No filter or special code for particular category/product 
+                	if ($res[0]['discount_amount_percentage']) {
+                    	$discount = floatval($cart['cart_subtotal']) * floatval($res[0]['discount_amount']) / 100;
+                    } else {
+                    	// Discount must not be higher than subtotal
+                    	if (floatval($res[0]['discount_amount']) > floatval($cart['cart_subtotal']) ){
+                    		$discount = $cart['cart_subtotal'];
+                    	} else {
+                    		$discount = $res[0]['discount_amount'];
+                    	}
+                    }
+				} else { // With filter or special code for a category/product
+                	$sql = "SELECT 	cartitem_product_id, cartitem_subtotal FROM tbl_cartitem
+                    		WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
+					if ( $cartItems = $DBobject->wrappedSql ( $sql, array ( ":id" => $cartId ) )) {
+                    	$listingMatchSubtotal = 0;
+                        foreach ($cartItems as $item){
+                        	if ($res[0]['discount_listing_id']){
+                        		// Special code for category only
+                            	$listingArr = $this->getProductCatParentList($item['cartitem_product_id']);
+                                if (in_array($res[0]['discount_listing_id'], $listingArr)){
+                                	if ($res[0]['discount_amount_percentage']) {
+                                    	$discount += floatval($item['cartitem_subtotal']) * floatval($res[0]['discount_amount']) / 100;
+                                    } else {
+                                    	$listingMatchSubtotal += floatval($item['cartitem_subtotal']);
+									}
+								}
+							} elseif ($res[0]['discount_product_id'] == $item['cartitem_product_id']){
+								// Special code for product only
+                            	if ($res[0]['discount_amount_percentage']) {
+                                	$discount = floatval($item['cartitem_subtotal']) * floatval($res[0]['discount_amount']) / 100;
+								} else {
+									// Discount must not be higher than subtotal
+                                	if ($res[0]['discount_amount'] > $item['cartitem_subtotal']){
+                                    	$discount = $item['cartitem_subtotal']; 
+									} else {
+                                    	$discount = $res[0]['discount_amount'];
                                     }
-                                    if ($listingMatchSubtotal > 0) {
-                                        if ($res['discount_amount'] > $listingMatchSubtotal){
-                                            $discount = $listingMatchSubtotal; 
-                                        } else {
-                                            $discount = $res['discount_amount'];
-                                        }
-                                    } 
-                                }
-                            }
-                            
-                            $total = floatval($cart['cart_subtotal']) + floatval($cart['cart_shipping_fee']) - $discount;
-
-                            $params = array (
-                                            ":id" => $cartId,
-                                            ":discount" => $discount,
-                                            ":total" => $total 
-                            );
-                            $sql = "UPDATE tbl_cart SET cart_discount = :discount, cart_total = :total, cart_modified = now() WHERE cart_id = :id";
-
-                            if ( $DBobject->wrappedSql ( $sql, $params )) {
-                                 $result ['discount'] = $discount;
-                            }
-                                
+								}
+							}
+						}
+						if ($listingMatchSubtotal > 0) {
+							if ($res[0]['discount_amount'] > $listingMatchSubtotal){
+                            	$discount = $listingMatchSubtotal; 
+							} else {
+                            	$discount = $res[0]['discount_amount'];
+							}
+						} 
+					}
+				}
 			} else {
 				$result ['error'] = 'This code has expired';
+				$code = null;
 			}
 		} else {
 			$result ['error'] = 'Invalid Code';
+			$code = null;
 		}
+		
+		$result ['discount'] = $discount;
+		$total = floatval($cart['cart_subtotal']) + floatval($cart['cart_shipping_fee']) - $discount;
+		
+		$params = array (
+				":id" => $cartId,
+				":discount" => $discount,
+				":discount_code" => $code,
+				":total" => $total
+		);
+		$sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount = :discount, cart_total = :total, cart_modified = now() WHERE cart_id = :id";
+		$res = $DBobject->wrappedSql ( $sql, $params );
 		
 		return $result;
-	}						//****************** NOT FINISHED YET ***********************
+	}						
 	
 	
 	
-	
-	
-/* 
-	function DiscountedAmount() {
-		global $DBobject;
-		
-		$discounted = 0;
-		$discounted = $this->StainlessSteelDiscount ();
-		if ($discounted != 0) {
-			$ss_discount = true;
-		}
-		
-		$promo = GetAnyCell ( 'cart_promotion_code', 'tbl_cart', 'cart_id = "' . $this->cart_id . '"' );
-		if ($promo) {
-			$tbl_promo = GetTable ( 'tbl_promotion', 'promotion_code LIKE BINARY "' . $promo . '" AND promotion_active = "1"' );
-		} else {
-			return $discounted;
-		}
-		
-		if ($this->VerifySessionCart ( session_id () ) == true && $this->cart_id != '0') {
-			$cartitems = $this->ListCart ();
-			
-			if ($cartitems && count ( $cartitems ) > 0 && $tbl_promo && count ( $tbl_promo ) > 0) {
-				
-				foreach ( $cartitems as $item ) {
-					if ($item ['cartitem_product_name'] == 'Donation' || $item ['cartitem_product_special']) {
-						continue;
-					}
-					
-					$cats = $this->GetCategories ( $item ['cartitem_product_id'] );
-					$mats = $this->GetMaterials ( $item ['cartitem_product_id'] );
-					$sty = $this->GetStyles ( $item ['cartitem_product_id'] );
-					
-					if ($ss_discount && in_array ( '1', $mats )) {
-						$ss_discount = false;
-						continue;
-					}
-					
-					foreach ( $tbl_promo as $row ) {
-						$dtype = 'dollar';
-						$promo_n = 0;
-						$promo_s = 0;
-						$item_c_check = true;
-						$item_p_check = false;
-						$item_m_check = false;
-						$item_s_check = false;
-						
-						$promo_cat = unserialize ( $row ['promotion_product_category_id'] );
-						$promo_style = unserialize ( $row ['promotion_style_id'] );
-						$promo_material = unserialize ( $row ['promotion_material_id'] );
-						$promo_prod = unserialize ( $row ['promotion_product_id'] );
-						
-						 // if($promo_cat && count($promo_cat) > 0){ foreach($promo_cat as $cat){ if(isset($cats[$cat]) || (count($promo_cat) == 1 && $cat == 0)){ $item_c_check = true; break; } } }
-						 
-						if ($promo_style && count ( $promo_style ) > 0) {
-							foreach ( $promo_style as $s ) {
-								if (isset ( $sty [$s] ) || (count ( $promo_style ) == 1 && $s == 0)) {
-									$item_s_check = true;
-									break;
-								}
-							}
-						}
-						if ($promo_material && count ( $promo_material ) > 0) {
-							foreach ( $promo_material as $ma ) {
-								if (isset ( $mats [$ma] ) || (count ( $promo_material ) == 1 && $ma == 0)) {
-									$item_m_check = true;
-									break;
-								}
-							}
-						}
-						
-						if ($promo_prod && count ( $promo_prod ) > 0) {
-							foreach ( $promo_prod as $prod ) {
-								if ($item ['cartitem_product_id'] == $prod || (count ( $promo_prod ) == 1 && $prod == 0)) {
-									$item_p_check = true;
-									break;
-								}
-							}
-						}
-						if ($item_c_check && $item_p_check && $item_m_check && $item_s_check) {
-							$dtype = GetAnyCell ( 'dtype_description', 'tbl_dtype', 'dtype_id = "' . $row ['promotion_dtype_id'] . '"' );
-							$promo_n = $row ['promotion_amount'];
-							$promo_s = $row ['promotion_special_amount'];
-							break;
-						}
-					}
-					if ($item_c_check && $item_p_check && $item_m_check && $item_s_check) {
-						if ($item ['cartitem_product_special']) {
-							$discounted = $discounted + ($this->DiscountValue ( $item ['cartitem_product_price'], $promo_s, $dtype ) * $item ['cartitem_product_quantity']);
-							continue;
-						} else {
-							$discounted = $discounted + ($this->DiscountValue ( $item ['cartitem_product_price'], $promo_n, $dtype ) * $item ['cartitem_product_quantity']);
-							continue;
-						}
-					}
-				}
-			}
-		}
-		
-		return $discounted;
-	}
-	 */
-
 	
 
 

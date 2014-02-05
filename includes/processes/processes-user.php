@@ -148,13 +148,9 @@ if($_POST["action"]){
                         $user_obj = new UserClass();
                         $res = $user_obj->AuthenticateFacebook($profile);
                         if( $res['error'] ) {
-							//$_SESSION['error']= $res['error'];
+							$_SESSION['error']= $res['error'];
 							//header("Location: /login#error");
-	                        echo json_encode(array(
-	                        		"error" => true,
-									"login_url" => null,
-	                        		"message" => $res['error']
-	                        ));
+	                        echo "<script> window.opener.redirectWin('http://{$_SERVER['HTTP_HOST']}/login#error');  window.close();</script> ";
 						} else {
 							$cart_obj = new cart();
 			                                $cart_obj->SetUserCart($res['id']);

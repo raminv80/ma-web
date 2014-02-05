@@ -6,31 +6,48 @@ if($_POST["action"]){
 			$cart_obj = new cart();
 			$response = $cart_obj->AddToCart($_POST["product_id"], $_POST["attr"], $_POST["quantity"], $_POST["price"]);
 			$itemsCount = $cart_obj->NumberOfProductsOnCart();
+			$cart = $cart_obj->GetDataCart();
+			$productsOnCart = $cart_obj->GetDataProductsOnCart();
+			$SMARTY->assign('productsOnCart',$productsOnCart);
+			$popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+			
 			echo json_encode(array(
-		    				"message"=>$response,
-		    				"itemsCount"=> $itemsCount
+		    				"message" => $response,
+		    				"itemsCount" => $itemsCount,
+		    				"subtotal" => $cart['cart_subtotal'],
+							"popoverShopCart" =>  str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $popoverShopCart)
 	    				));
 		    exit;
 		    
 	    case 'DeleteItem':
 	    	$cart_obj = new cart();
 	    	$response = $cart_obj->RemoveFromCart($_POST["cartitem_id"]);
-                $total = $cart_obj->CalculateTotal();
+            $totals = $cart_obj->CalculateTotal();
+            $itemsCount = $cart_obj->NumberOfProductsOnCart();
+            $productsOnCart = $cart_obj->GetDataProductsOnCart();
+            $SMARTY->assign('productsOnCart',$productsOnCart);
+            $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 	    	echo json_encode(array(
-                                "response"=> $response,
-                                "total"=>$total
-                ));
+	    					"itemsCount" => $itemsCount,
+                            "response"=> $response,
+                            "totals"=>$totals,
+							"popoverShopCart" =>  str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $popoverShopCart)
+            ));
 	    	exit;
 
     	case 'updateCart':
     		$cart_obj = new cart();
     		$subtotals = $cart_obj->UpdateQtyCart($_POST["qty"]);
-    		$total = $cart_obj->CalculateTotal();
-                $itemsCount = $cart_obj->NumberOfProductsOnCart();
+    		$totals = $cart_obj->CalculateTotal();
+            $itemsCount = $cart_obj->NumberOfProductsOnCart();
+            $productsOnCart = $cart_obj->GetDataProductsOnCart();
+            $SMARTY->assign('productsOnCart',$productsOnCart);
+            $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
     		echo json_encode(array(
+		    		"itemsCount"=> $itemsCount,
     				"subtotals"=>$subtotals,
-    				"total"=>$total,
-		    		"itemsCount"=> $itemsCount
+    				"totals"=>$totals,
+					"popoverShopCart" =>  str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $popoverShopCart)
     		));
     		exit;
     		
@@ -51,12 +68,16 @@ if($_POST["action"]){
     		
     		exit;
 	    	
-	    	// ==================== OLD STUFFS =====================
-		case 'SetPromoCode':
+		case 'applyDiscount':
 		    $cart_obj = new cart();
-		    $promocode = clean($_POST['CheckoutPromoCode']);
-		    $cart_obj->AddPromoCode($promocode);
-		    header("Location: /checkout");
+		    $res = $cart_obj->ApplyDiscountCode($_POST["discount_code"]);
+		    if ($res['error']) {
+		    	$_SESSION['error']= $res['error'];
+		    	$_SESSION['post']= $_POST;
+		    	header("Location: ".$_SERVER['HTTP_REFERER']."#error");
+		    } else {
+		    	header("Location: ".$_SERVER['HTTP_REFERER']);
+		    }
 		    exit;
 
 

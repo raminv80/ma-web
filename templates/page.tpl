@@ -69,7 +69,6 @@
 				{include file='desktopmenu.tpl'}
 			</div>
 		</div>
-		
 		<div id="headbanner">
 			<div id="headbannerin" class="container">
 				<div class="row">
@@ -82,5 +81,11 @@
 	{block name=body}{/block}
 	{include file='footer.tpl'}
 	
+	<script>
+	$(document).ready(function(){
+		 $('#shop-cart-btn').popover();
+	});
+
+	</script>
 </body>
 </html>

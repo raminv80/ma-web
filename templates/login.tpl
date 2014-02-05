@@ -14,9 +14,9 @@
 			</div>
 	</header>
 	<div class="container">
-            {if $error}
+        {if $error}
 		<div class="row" style="margin:20px; color:#ff0000">{$error}</div>
-            {/if}
+        {/if}
 	{if !$user.id}
 		<!-- LOGIN SECTION  -->
 		<div class="row" id="login" style="margin:40px;">
@@ -26,13 +26,14 @@
 				    <label for="email" class="col-sm-2 control-label">Email</label>
 				    <div class="col-sm-10">
 				      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="email" name="email" required>
+				      	<span class="help-block"></span>
 					</div>
 				</div>
 				<div class="form-group">
 				    <label for="password" class="col-sm-2 control-label">Password</label>
 				    <div class="col-sm-10">
 				    	<input type="password" value="" class="form-control" id="pass" name="pass" required>
-                                        <span class="help-block"><a href="javascript:void(0)" onclick="$('#reset-pass').show('slow');$('#login').hide('slow');">Forgotten your password?</a></span>
+                        <span class="help-block"><a href="javascript:void(0)" onclick="$('#reset-pass').show('slow');$('#login').hide('slow');">Forgotten your password?</a></span>
 					</div>
 				</div>
 			 	<div class="form-group">
@@ -66,6 +67,7 @@
 				    <label for="email" class="col-sm-2 control-label">Email</label>
 				    <div class="col-sm-10">
 				      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="email" name="email" required>
+						<span class="help-block"></span>
 					</div>
 				</div>
 			</form>
@@ -86,30 +88,42 @@
 				    <label for="gname" class="col-sm-2 control-label">Given Name</label>
 				    <div class="col-sm-10">
 				      	<input type="text" value="{if $post}{$post.gname}{/if}" class="form-control" id="gname" name="gname" required>
+						<span class="help-block"></span>
 					</div>
 				</div>
 				<div class="form-group">
 				    <label for="surname" class="col-sm-2 control-label">Surname</label>
 				    <div class="col-sm-10">
 				      	<input type="text" value="{if $post}{$post.surname}{/if}" class="form-control" id="surname" name="surname" required>
+						<span class="help-block"></span>
 					</div>
 				</div>
 				<div class="form-group">
 				    <label for="email" class="col-sm-2 control-label">Email</label>
 				    <div class="col-sm-10">
-				      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="email" name="email" required>
+				      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="reg-email" name="email" required>
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="form-group">
+				    <label for="confirm_email" class="col-sm-2 control-label">Re-enter Email</label>
+				    <div class="col-sm-10">
+				      	<input type="text" value="{if $post}{$post.confirm_email}{/if}" class="form-control" id="confirm_email" name="confirm_email" required>
+						<span class="help-block"></span>
 					</div>
 				</div>
 				<div class="form-group">
 				    <label for="password" class="col-sm-2 control-label">Password</label>
 				    <div class="col-sm-10">
 				    	<input type="password" value="" class="form-control" id="password" name="password" required>
+			    		<span class="help-block"></span>
 			    	</div>
 				</div>
 				<div class="form-group">
 				    <label for="confirm_password" class="col-sm-2 control-label">Re-enter Password</label>
 				    <div class="col-sm-10">
 				    	<input type="password" class="form-control req" id="confirm_password" name="confirm_password" required>
+						<span class="help-block"></span>
 					</div>
 				</div>
 			 	<div class="form-group">
@@ -160,6 +174,7 @@
 				    <label for="confirm_password" class="col-sm-2 control-label">Re-enter New Password</label>
 				    <div class="col-sm-10">
 				    	<input type="password" class="form-control req" id="confirm_password" name="confirm_password" required>
+				    	<span class="help-block"></span>
 					</div>
 				</div>
 			 	<div class="form-group">
@@ -200,7 +215,7 @@
 		    submitHandler: function (form) {
 		      if ($(form).valid()) {
 			      $('#submit-register').hide();
-			      $('#processing-btn').show();
+			     /*  $('#processing-btn').show(); */
 		          form.submit();
 		      }
 		    }
@@ -217,6 +232,14 @@
 			      equalTo: '#password',
 			      messages: {
 			        equalTo: "The passwords you have entered do not match. Please check them."
+			      }
+			 });
+
+			$('#confirm_email').rules("add", {
+			      required: true,
+			      equalTo: '#reg-email',
+			      messages: {
+			        equalTo: "The emails you have entered do not match. Please check them."
 			      }
 			 });
 		})

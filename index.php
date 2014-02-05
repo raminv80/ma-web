@@ -122,12 +122,13 @@ while ( true ) {
 		$menu = $obj->LoadMenu ( $CONFIG->checkout->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
 		$cart_obj = new cart();
-		$validation = $cart_obj->ValidateCartItems();
+		$validation = $cart_obj->ValidateCart();
 		$SMARTY->assign ( 'validation', $validation );
-		$products = $cart_obj->GetDataProductsOnCart(); 
-		$SMARTY->assign ( 'products', $products );
-		$cart = $cart_obj->GetDataCart();
-		$SMARTY->assign ( 'cart', $cart );
+		$sql = "SELECT DISTINCT postcode_state FROM tbl_postcode where postcode_state != 'OTHE' ORDER BY postcode_state";
+		$states = $DBobject->wrappedSql($sql);
+		$SMARTY->assign ( 'options_state', $states );
+		//$productsOnCart = $cart_obj->GetDataProductsOnCart(); 
+		//$SMARTY->assign ( 'productsOnCart', $productsOnCart );
 		break 1;
 	}
         
@@ -142,12 +143,10 @@ while ( true ) {
 		$menu = $obj->LoadMenu ( $CONFIG->cart->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
 		$cart_obj = new cart();
-		$validation = $cart_obj->ValidateCartItems();
+		$validation = $cart_obj->ValidateCart();
 		$SMARTY->assign ( 'validation', $validation );
-		$products = $cart_obj->GetDataProductsOnCart(); 
-		$SMARTY->assign ( 'products', $products );
-		$cart = $cart_obj->GetDataCart();
-		$SMARTY->assign ( 'cart', $cart );
+		//$productsOnCart = $cart_obj->GetDataProductsOnCart(); 
+		//$SMARTY->assign ( 'productsOnCart', $productsOnCart );
 		break 1;
 	}
 	
@@ -265,12 +264,16 @@ while ( true ) {
 
 /**
  * ***************************************
- * Load Number of Items on Shopping Cart *
+ * Load Data Shopping Cart for all pages *
  * ***************************************
  */
 $cart_obj = new cart();
 $itemNumber = $cart_obj->NumberOfProductsOnCart();
 $SMARTY->assign ( 'itemNumber', $itemNumber );
+$cart = $cart_obj->GetDataCart();
+$SMARTY->assign ( 'cart', $cart );
+$productsOnCart = $cart_obj->GetDataProductsOnCart();
+$SMARTY->assign ( 'productsOnCart', $productsOnCart );
 
 $SMARTY->display ( "extends:page.tpl|$template" );
 die ();

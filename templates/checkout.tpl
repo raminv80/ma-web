@@ -14,7 +14,7 @@
 			</div>
 	</header>
 	<div class="container">
-	{if $products }
+	{if $productsOnCart }
 		{if $error}
 		<div class="row" style="margin:20px; color:#ff0000">{$error}</div>
         {/if}
@@ -27,7 +27,7 @@
 		</div>
 		
 			<div class="row" style="margin-top: 20px; margin-bottom: 10px;" id="products-container"> 
-				{foreach from=$products item=item}
+				{foreach from=$productsOnCart item=item}
 				<div class="row" style="margin-top: 10px;" id="{$item.cartitem_id}">
 					<div style="display:inline;" class="col-md-6">{$item.cartitem_product_name}
 					{if $item.attributes } 
@@ -53,7 +53,7 @@
 			<div style="display:inline; text-align:right;" class="col-md-2" id="subtotal">${$cart.cart_subtotal}</div>
 		</div>
 		<div class="row" style="margin-top: 10px;">
-			<div style="display:inline; text-align:right;" class="col-md-10">Discount</div>
+			<div style="display:inline; text-align:right;" class="col-md-10">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
 			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">${$cart.cart_discount}</div>
 		</div>
 		<div class="row" style="margin-top: 10px;">
@@ -116,13 +116,20 @@
 					<div class="form-group">
 					    <label for="address_state" class="col-sm-2 control-label">State</label>
 					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.1.address_state}{/if}" class="form-control" id="address_state" name="address[1][address_state]" required>
+					      	<select id="address_state" name="address[1][address_state]" class="form-control required" >
+								<option value="">Select a state</option>
+								{foreach $options_state as $value }
+									<option value="{$value.postcode_state}" {if $post.address.1.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option>
+								{/foreach}
+							</select>
 						</div>
 					</div>
 					<div class="form-group">
 					    <label for="address_country" class="col-sm-2 control-label">Country</label>
 					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.1.address_country}{/if}" class="form-control" id="address_country" name="address[1][address_country]" required>
+					      	<select id="address_country" name="address[1][address_country]" class="form-control" >
+								<option value="Australia">Australia</option>
+							</select>
 						</div>
 					</div>
 					<div class="form-group">
@@ -135,14 +142,14 @@
 	    				<div class="col-sm-offset-2 col-sm-10">
 							<div class="checkbox">
 							    <label>
-							    	<input type="checkbox" name="same_address" checked="checked" onclick="sameAddress();"> Shipping same as Billing details
+							    	<input type="checkbox" name="same_address" {if $post}{if $post.same_address}checked="checked"{else}{/if}{else}checked="checked"{/if} onclick="sameAddress();"> Shipping same as Billing details
 							    </label>
 							</div>
 						</div>
 					</div>
 				</div>
 				
-				<div class="row" id="shipping-subform" style="display:none;"> 
+				<div class="row" id="shipping-subform" {if $post}{if $post.same_address}style="display:none;"{else}{/if}{else}style="display:none;"{/if} > 
 				<!-- SHIPPING SECTION - Hidden by default -->
 	                <div class="row">
 	                    <h3>Shipping Details</h3>
@@ -187,13 +194,20 @@
 					<div class="form-group">
 					    <label for="address_state" class="col-sm-2 control-label">State</label>
 					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.2.address_state}{/if}" class="form-control shipping-req" id="address_state" name="address[2][address_state]" >
+					      	<select id="address_state" name="address[2][address_state]" class="form-control shipping-select-req" >
+								<option value="">Select a state</option>
+								{foreach $options_state as $value }
+									<option value="{$value.postcode_state}" {if $post.address.2.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option>
+								{/foreach}
+							</select>
 						</div>
 					</div>
 					<div class="form-group">
 					    <label for="address_country" class="col-sm-2 control-label">Country</label>
 					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.2.address_country}{/if}" class="form-control shipping-req" id="address_country" name="address[2][address_country]" >
+							<select id="address_country" name="address[2][address_country]" class="form-control" >
+								<option value="Australia">Australia</option>
+							</select>
 						</div>
 					</div>
 					<div class="form-group">

@@ -40,8 +40,10 @@ function sameAddress() {
 	$('#shipping-subform').toggle();
 	if ($('#shipping-subform:visible').length > 0) {
 		$('.shipping-req').attr('required', 'required');
+		$('.shipping-select-req').addClass('required');
 	} else {
 		$('.shipping-req').removeAttr('required');
+		$('.shipping-select-req').removeClass('required');
 	}
 }
 
@@ -58,11 +60,16 @@ function addCart(){
 		    success: function(data) {
 		    	try{
 		    		var obj = $.parseJSON(data);
-				 	var msg = obj.message;
-				 	var items = obj.itemsCount;  
-				 	$('#shopping-cart').html(items);
+				 	$('#nav-itemNumber').html(obj.itemsCount);
+				 	$('#nav-subtotal').html('$'+obj.subtotal);
 				 	$('body').css('cursor','default');
-				 	alert (msg);
+				 	$('#shop-cart-btn').attr('data-content', obj.popoverShopCart );
+				 	$('#shop-cart-btn').popover('show');
+				 	setTimeout(function() {
+				 		$('#shop-cart-btn').popover('hide');
+				    }, 3000);
+				 	
+				 	/*alert (obj.message);*/
 		    		
 				}catch(err){
 					$('body').css('cursor','default'); 
@@ -91,16 +98,17 @@ function updateCart(){
 		    success: function(data) {
 		    	try{
 		    		var obj = $.parseJSON(data);
-				var items = obj.itemsCount;  
 		    		var subtotals = obj.subtotals;
-		    		var total = obj.total;
-                                $('#shopping-cart').html(items);
+		    		var totals = obj.totals;
+                    $('#nav-itemNumber').html(obj.itemsCount);
+				 	$('#nav-subtotal').html('$'+obj.totals['subtotal']);
+				 	$('#shop-cart-btn').attr('data-content', obj.popoverShopCart );
 				 	if (subtotals) {
 				 		$.each(subtotals, function(id, value){
 				 			amount = parseFloat(value);
 				 			$('#subtotal-'+id).html('$'+amount.toFixed(2));
 				 		});
-				 		$.each(total, function(id, value){
+				 		$.each(totals, function(id, value){
 				 			amount = parseFloat(value);
 				 			$('#'+id).html('$'+amount.toFixed(2));
 				 		});
@@ -135,17 +143,20 @@ function deleteItem(ID){
 	    	try{
 	    		var obj = $.parseJSON(data);
 			 	var response = obj.response;
-                                var total = obj.total;
+                var totals = obj.totals;
+                $('#nav-itemNumber').html(obj.itemsCount);
+                $('#nav-subtotal').html('$'+obj.totals['subtotal']);
+			 	$('#shop-cart-btn').attr('data-content', obj.popoverShopCart );
 			 	if (response) {
-			 		if ( $('.product-item:visible').length = 1 ){
-                                            location.reload();
-                                        } else {
-                                            $( '#'+ ID ).hide('slow');
-                                             $.each(total, function(id, value){
-				 			amount = parseFloat(value);
-				 			$('#'+id).html('$'+amount.toFixed(2));
+			 		if ( parseInt(obj.itemsCount) > 0 ){
+                        $( '#'+ ID ).hide('slow');
+                        $.each(totals, function(id, value){
+                        	amount = parseFloat(value);
+                        	$('#'+id).html('$'+amount.toFixed(2));
 				 		});
-                                        }
+                    } else {
+                        location.reload();
+                    }
 				} else {
 					$( '#'+ ID ).fadeTo( "fast", 1 ); 
 					alert('Item cannot be deleted');

@@ -28,7 +28,14 @@
 
 <ul id="menu" class="nav navbar-nav">
  {call name=render_list items=$menuitems}
- <li><a title="Shopping Cart" href="/store/shopping-cart"><span class="glyphicon glyphicon-shopping-cart"></span><div style="display:inline;" id="shopping-cart">{$itemNumber}</div></a></li>
+ <li><a href="/store/shopping-cart" id="shop-cart-btn" data-html="true" data-container="body" data-placement="bottom" data-trigger="hover" data-content="{include file='popover-shopping-cart.tpl'}" data-toggle="popover" data-title="Your Shopping Cart">
+ 		<span class="glyphicon glyphicon-shopping-cart"></span>
+ 		<div style="display:inline;" id="nav-itemNumber">{$itemNumber}</div>
+ 		
+ 		<div class="badge" style="display:inline;" id="nav-subtotal">${$cart.cart_subtotal}</div>
+ 		
+ 	</a>
+ </li>
  
 {if $user.id}
 	<li><a title="Log In" href="/login">G'day {$user.gname}</a></li>
