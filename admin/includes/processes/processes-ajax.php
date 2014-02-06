@@ -3,7 +3,7 @@ set_include_path($_SERVER['DOCUMENT_ROOT']);
 include 'admin/includes/functions/admin-functions.php';
 if(empty($_SESSION[admin]) && $_POST["Action"] != 'AdminLogIn'){ die();}
 $Action = strip_tags($_POST["Action"]);
-if(checkToken($_POST["token"])){
+if(checkToken('admin',$_POST["token"])){
 	switch ($Action) {
 		case 'AdminLogIn':
 			$result = AdminLogIn($_POST['email'],$_POST['password']);

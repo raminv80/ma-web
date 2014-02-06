@@ -22,6 +22,7 @@
 		<div class="row" id="login" style="margin:40px;">
 			<form class="form-horizontal" id="login-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
 				<input type="hidden" value="login" name="action" id="action" /> 
+				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				<div class="form-group">
 				    <label for="email" class="col-sm-2 control-label">Email</label>
 				    <div class="col-sm-10">
@@ -45,6 +46,7 @@
 			<div class="row" style="margin:20px;">
 				 <form id="facebook-form" action="/process/user" method="post">
 					<input type="hidden" value="FBlogin" name="action" id="action" /> <!--  onclick="$('#facebook-form').submit();" -->
+					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 					<a href='javascript:void(0)' onclick="FBlogin();"><img src="/images/loginFB.gif" alt="login with facebook"></a>
 				</form> 
 				<!--<fb:login-button autologoutlink="true" data-scope="email, user_birthday, user_location" >Log In with Facebook</fb:login-button>
@@ -63,6 +65,7 @@
                     </div>
 			<form class="form-horizontal" id="reset-pass-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
 				<input type="hidden" value="resetPassword" name="action" id="action" /> 
+				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				<div class="form-group">
 				    <label for="email" class="col-sm-2 control-label">Email</label>
 				    <div class="col-sm-10">
@@ -84,6 +87,7 @@
                     </div>
 			<form class="form-horizontal" id="register-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
 				<input type="hidden" value="create" name="action" id="action" /> 
+				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				<div class="form-group">
 				    <label for="gname" class="col-sm-2 control-label">Given Name</label>
 				    <div class="col-sm-10">
@@ -157,7 +161,7 @@
                     
 			<form class="form-horizontal" id="update-pass-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
 				<input type="hidden" value="updatePassword" name="action" id="action" /> 
-				
+				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				<div class="form-group">
 				    <label for="password" class="col-sm-2 control-label">Old Password</label>
 				    <div class="col-sm-10">
@@ -246,11 +250,12 @@
 		
 		
 		function FBlogin(){
+			var datastring = $("#facebook-form").serialize();
 			$.ajax({
 				type: "POST",
 			    url: "/process/user",
 				cache: false,
-				data: 'action=FBlogin',
+				data: datastring,
 				dataType: "html",
 			    success: function(data) {
 			    	try{
@@ -263,7 +268,7 @@
 					 		doRedirect = true;
 					 		var left  = ($(window).width()/2)-(500/2),
 					 	    	top   = ($(window).height()/2)-(270/2),
-					 	     	popup = window.open (login_url, "Login with Facebook", "width=500, height=270, top="+top+", left="+left);
+					 	     	popup = window.open (login_url, "Login_with_Facebook", "width=500, height=270, top="+top+", left="+left);
 					 	    
 						}else if (msg && error) {
 						 	alert (msg);

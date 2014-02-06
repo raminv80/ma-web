@@ -4,7 +4,14 @@
 class UserClass {
 
 	
-    
+    /**
+     * Insert a new record in tbl_user and return associative array: ('id', 'gname', 'surname', 'email') 
+     * On error return associative array: ('error')
+     * Require associative array: ('gname', 'surname', 'password', 'email')
+     *  
+     * @param array $user
+     * @return array
+     */
     function Create($user){
     	global $DBobject;
     
@@ -60,21 +67,24 @@ class UserClass {
     	
     }
     
+    
+    /**
+     * Update password field of a specific record in tbl_user and return associative array: ('success') 
+     * On error return associative array: ('error')
+     * Require associative array: ( 'email', 'password', 'old_password')
+     * 
+     * @param array $data
+     * @return array
+     */
     function UpdatePassword($data){
     	global $DBobject;
-    
         
-    	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($data['email'])))) . md5(stripslashes(strtoupper($data['old_password']))));
-    	
-    	$sql = "SELECT user_id FROM tbl_user WHERE user_email = :email AND user_password = :password AND user_deleted IS NULL";
-    	$params = array( 
-    				"email" => $data['email'], 
-    				"password" => $temp_str 
-    	);
+        $res = $this->Authenticate($data['email'], $data['old_password']);
         
-        
-    	if ($res  = $DBobject->wrappedSql($sql, $params)) {
-    	
+    	if ($res['error']) {
+    		return array ('error' => 'Incorrect old password.');
+    		
+    	} else {
 	    	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($data['email'])))) . md5(stripslashes(strtoupper($data['password']))));
 	    	
 	    	$params = array (
@@ -95,12 +105,18 @@ class UserClass {
 	    	} else {
 	    		return array ('error' => 'There was a connection problem. Please, try again!');
 	    	}
-	    	
     	} 
-        return array ('error' => 'Incorrect old password.');
-    	
     }
     
+    
+    /**
+     * Get a single non-deleted record from tbl_user given the username
+     * On error return false
+     * Require string: username
+     * 
+     * @param string $uname
+     * @return mixed
+     */
     function RetrieveByUsername($uname){
     	global $DBobject;
     
@@ -112,6 +128,15 @@ class UserClass {
     	return $res[0];
     }
     
+    
+    /**
+     * Get a single non-deleted record from tbl_user given the user id
+     * On error return false
+     * Require int: user_id
+     * 
+     * @param int $id
+     * @return mixed
+     */
     function RetrieveById($id){
     	global $DBobject;
     
@@ -124,6 +149,15 @@ class UserClass {
     }
     
     
+    /**
+     * Get a user record in tbl_user given the email/password and return associative array: ('id', 'gname', 'surname', 'email') 
+     * On error return associative array: ('error')
+     * Require strings:  email and password
+     * 
+     * @param string $email
+     * @param string $pass
+     * @return array
+     */
     function Authenticate($email, $pass){
     	global $DBobject;
     
@@ -148,38 +182,28 @@ class UserClass {
     	return $user_arr;
     }
   
-
+	/**
+	 * NOT DEFINED YET
+	 */
     function Update(){
     	global $DBobject;
     
-    	/*   	$params = array (
-    	 ":gname" => $user['gname'],
-    			":surname" => $user['surname'],
-    			":password" => $user['password'],
-    			":ip" => $_SERVER['REMOTE_ADDR'],
-    			":browser" => $_SERVER['HTTP_USER_AGENT']
-    	);
-    	 
-    	$sql = "UPDATE tbl_user
-    	SET user_gname = :gname,
-    	user_surname = :surname,
-    	user_password = :password,
-    	user_ip = :ip,
-    	user_browser = :browser,
-    	user_modified = now()
-    	WHERE user_email = :email";
-    	 
-    	$res  = $DBobject->wrappedSql($sql, $params);
-    
-    	return false; */
     }
     
     
+    /**
+     * Update the password field given the email in tbl_user and return associative array: ('success') 
+     * On error return associative array: ('error')
+     * Require strings:  email and password
+     * 
+     * @param string $email
+     * @return array
+     */
     function ResetPassword($email){
     	global $DBobject;
     
         if ($res = $this->RetrieveByUsername($email)){
-            $newPass = generateRandomString(10);
+            $newPass = genRandomString(10);
             
             $temp_str = sha1(md5(bin2hex(strrev(stripslashes($email)))) . md5(stripslashes(strtoupper($newPass))));
             
@@ -221,7 +245,74 @@ class UserClass {
     	return array( 'error' => 'This email does not exist in our database.');
     }
     
+    /**
+     * Insert new address in tbl_address and returns address_id
+     * Require associative array: (address_user_id, address_name, address_telephone, address_mobile, address_line1, address_line2,
+								address_suburb, address_state, address_country, address_postcode)
+     * @param array $addressArr
+     * @return int
+     */
+    function InsertNewAddress($addressArr) {
+    	global $DBobject;
+    	
+    	$params = array (
+    			":address_user_id" => $addressArr['address_user_id'],
+    			":address_name" => $addressArr['address_name'],
+    			":address_telephone" => $addressArr['address_telephone'],
+    			":address_mobile" => $addressArr['address_mobile'],
+    			":address_line1" => $addressArr['address_line1'],
+    			":address_line2" => $addressArr['address_line2'],
+    			":address_suburb" => $addressArr['address_suburb'],
+    			":address_state" => $addressArr['address_state'],
+    			":address_country" => $addressArr['address_country'],
+    			":address_postcode" => $addressArr['address_postcode']
+    	);
+    	
+    	$sql = "SELECT address_id FROM tbl_address WHERE 
+    					address_user_id = :address_user_id AND 
+    					address_name = :address_name AND  
+    					address_telephone = :address_telephone AND  
+    					address_mobile = :address_mobile AND  
+    					address_line1 = :address_line1 AND  
+    					address_line2 = :address_line2 AND  
+    					address_suburb = :address_suburb AND  
+    					address_state = :address_state AND  
+    					address_country = :address_country AND  
+    					address_postcode = :address_postcode AND 
+    					address_deleted IS NULL";
+    	
+    	if ( $res = $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
+    		return $res[0]['address_id'];
+    	} else {
+	    	$sql = " INSERT INTO tbl_address (
+	        						address_user_id, address_name, address_telephone, address_mobile, address_line1, address_line2,
+									address_suburb, address_state, address_country, address_postcode,
+	        						address_created
+									)
+								VALUES (
+									:address_user_id, :address_name, :address_telephone, :address_mobile, :address_line1, :address_line2,
+									:address_suburb, :address_state, :address_country, :address_postcode,
+	        						now()
+								)";
+	    
+	    	if ( $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
+	    		return $DBobject->wrappedSqlIdentity();
+	    	}
+    	}
+    	return 0;
+    }
     
+    
+    /**
+     * Authenticate the user using Facebook account.
+     * First time, Insert a new record in tbl_user with additional Facebook info and return associative array: ('id', 'gname', 'surname', 'email', 'social_name', 'social_id') 
+     * On existing, just return associative array: ('id', 'gname', 'surname', 'email', 'social_name', 'social_id') 
+     * On error return associative array: ('error')
+     * Require associative array: ('id', 'first_name', 'last_name', 'email', additional fields )
+     * 
+     * @param array $user
+     * @return array
+     */
     function AuthenticateFacebook($user){
     	global $DBobject;
     	
@@ -294,8 +385,7 @@ class UserClass {
     function AuthenticateTwitter(){
     	global $DBobject;
     
-    
-    	return false;
+   
     }
 }
 	

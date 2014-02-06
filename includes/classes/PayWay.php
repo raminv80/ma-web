@@ -1,6 +1,6 @@
 <?php
 
-require_once './bank-class.php';
+require_once 'bank-class.php';
 
 class PayWay extends Bank {
 	

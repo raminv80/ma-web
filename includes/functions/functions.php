@@ -24,7 +24,8 @@ include 'includes/classes/listing-class.php';
 include 'includes/classes/product-class.php';
 include 'includes/classes/user-class.php';
 include 'includes/classes/cart-class.php';
-include 'includes/functions/functions-general.php';
+include 'includes/classes/PayWay.php';
+
 include 'includes/functions/functions-search.php';
 
 require 'includes/social/youtube.class.php';

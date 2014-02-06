@@ -30,6 +30,9 @@ unset ( $_SESSION ['smarty'] );
 $_request = clean ( $_REQUEST );
 // ProcessUpdateNewsStatus();
 
+$token = getToken('frontend');
+$SMARTY->assign('token',$token);
+
 while ( true ) {
 	$struct = $CONFIG->page_strut;
 	$class = ( string ) $struct->file;
@@ -116,7 +119,7 @@ while ( true ) {
 		if (is_null($_SESSION['user']['id'])) { 
 	    	header("Location: /login");
 		}
-		$obj = new $class ( '', $struct ); 
+		$obj = new $class ( '', $CONFIG->checkout ); 
 		$template = $obj->Load ( $CONFIG->checkout->pageID );
 		$template = $CONFIG->checkout->template;
 		$menu = $obj->LoadMenu ( $CONFIG->checkout->pageID );
@@ -124,9 +127,12 @@ while ( true ) {
 		$cart_obj = new cart();
 		$validation = $cart_obj->ValidateCart();
 		$SMARTY->assign ( 'validation', $validation );
+		/* $sql = "SELECT DISTINCT postcode_state FROM tbl_address where address_user_id = :uid ORDER BY address_id";
+		$states = $DBobject->wrappedSql($sql);
+		$SMARTY->assign ( 'options_state', $states );*/
 		$sql = "SELECT DISTINCT postcode_state FROM tbl_postcode where postcode_state != 'OTHE' ORDER BY postcode_state";
 		$states = $DBobject->wrappedSql($sql);
-		$SMARTY->assign ( 'options_state', $states );
+		$SMARTY->assign ( 'options_state', $states ); 
 		//$productsOnCart = $cart_obj->GetDataProductsOnCart(); 
 		//$SMARTY->assign ( 'productsOnCart', $productsOnCart );
 		break 1;

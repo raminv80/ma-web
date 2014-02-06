@@ -129,6 +129,22 @@ class ListClass {
 			$t_data = $this->LoadAssociated($a,$_ID);
 			$SMARTY->assign ( "{$a->name}", $t_data );
 		}
+		 
+		//------------- LOAD OPTIONS FOR SELECT INPUTS --------------
+		foreach ( $this->CONFIG_OBJ->table->options->field as $f ) {
+			$pre = str_replace ( "tbl_", "", $f->table );
+			$sql = "SELECT {$f->reference}, {$pre}_id FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+			if ($res = $DBobject->wrappedSqlGet ( $sql )) {
+				$options = array();
+				foreach ( $res as $key => $row ) {
+					$options[] = array (
+							'id' => $row ["{$pre}_id"],
+							'value' => $row ["{$f->reference}"]
+					);
+				}
+			}
+			$SMARTY->assign ( "{$f->name}", $options);
+		}
 			
 		if(!empty($data)){
 			$template = $this->CONFIG_OBJ->template;

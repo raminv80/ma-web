@@ -120,11 +120,13 @@ function endsWith($haystack, $needle)
 	return (strtolower(substr($haystack, $start)) === strtolower($needle));
 }
 
-
-function genRandomString($length) {
-	if(!$length){
-		$length = 5;
-	}
+/**
+ * Generate random-alphanumeric-character string with a given number for its length.
+ *
+ * @param int $length
+ * @return string
+ */
+function genRandomString($length = 5) {
 	$characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$string = '';
 	for ($p = 0; $p < $length; $p++) {
@@ -300,23 +302,45 @@ function unclean( $str ){
 	return $str;
 }
 
-function getToken(){
-	if($_SESSION["formToken"] && !empty($_SESSION["formToken"])){
-		return $_SESSION["formToken"];
+/**
+ * Get a specific token if not created then generate it
+ * 
+ * @param string $name
+ * @return string
+ */
+function getToken($name){
+	if($_SESSION[$name . "-token"] && !empty($_SESSION[$name . "-token"])){
+		return $_SESSION[$name . "-token"];
 	}else{
-		$_SESSION["formToken"] = generatetoken();
-		return $_SESSION["formToken"];
+		$_SESSION[$name . "-token"] = generatetoken();
+		return $_SESSION[$name . "-token"];
 	}
 }
 
+/**
+ * Generate token 
+ * 
+ * @return string
+ */
 function generatetoken(){
 	$token = sha1($_SERVER['REMOTE_ADDR'].md5(date("D M j G:i:s T Y")). md5(uniqid(mt_rand(rand(50,rand()),rand(500,23493244)), true)));
 	return $token;
 }
 
-function checkToken($token){
-	if($_SESSION["formToken"] == $token && !empty($token)){
+/**
+ * Verify specific token and optionally renew it when valid  
+ * 
+ * @param string $name
+ * @param string $token
+ * @param boolean $deleteAfterValidCheck
+ * @return boolean
+ */
+function checkToken($name, $token, $deleteAfterValidCheck = false){
+	if($_SESSION[$name . "-token"] == $token && !empty($token)){
 		$isValid = true;
+		if ($deleteAfterValidCheck) {
+			$_SESSION[$name . "-token"] = '';
+		}
 	}else{
 		$isValid = false;
 	}
@@ -420,14 +444,32 @@ function nz_postcode_dist($postcode1, $postcode2, $db) {
 	}
 }
 
-	/**
-	 * Enter description here ...
-	 * @return unknown
-	 */
-	function LinkedFiles($misc, $id){
-		if( $id != '' && $misc != ''){
-			$linkfiles_obj = new filelink_class($misc, $id);
-			$var	=	$linkfiles_obj->DisplayFiles();
-		}
-		return  $var;
+/**
+ * Enter description here ...
+ * @return unknown
+ */
+function LinkedFiles($misc, $id){
+	if( $id != '' && $misc != ''){
+		$linkfiles_obj = new filelink_class($misc, $id);
+		$var	=	$linkfiles_obj->DisplayFiles();
 	}
+	return  $var;
+}
+
+/**
+ * Checks if a value exists in an multidimensional array.
+ * Searches haystack for needle using loose comparison unless strict is set.
+ *
+ * @param mixed $needle
+ * @param array $haystack
+ * @param boolean $strict
+ * @return boolean
+ */
+function in_array_r($needle, $haystack, $strict = false) {
+	foreach ($haystack as $item) {
+		if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
+			return true;
+		}
+	}
+	return false;
+}

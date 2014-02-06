@@ -11,14 +11,10 @@
 {else}
 <meta name="robots" content="index,follow" />
 {/if}
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>{$category_name|replace:'and':'&'|ucfirst} {$product_name|ucfirst} {$listing_seo_title}</title>
 <link href="/images/favicon.ico" type="image/x-icon" rel="shortcut icon">
-
-<!--[if lt IE 9]>
-	     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	 <![endif]-->
 
 <!-- Bootstrap -->
 <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>

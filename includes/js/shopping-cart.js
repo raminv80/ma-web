@@ -132,12 +132,12 @@ function updateCart(){
 
 function deleteItem(ID){
 	$( '#'+ ID ).fadeTo( "fast", 0.5 );
-	var datastring = $("#product-form").serialize();
+	var frmTkn = $("#formToken").val();
 	$.ajax({
 		type: "POST",
 	    url: "/process/cart",
 		cache: false,
-		data: 'action=DeleteItem&cartitem_id='+ID,
+		data: 'action=DeleteItem&cartitem_id='+ID+'&formToken='+frmTkn,
 		dataType: "html",
 	    success: function(data) {
 	    	try{

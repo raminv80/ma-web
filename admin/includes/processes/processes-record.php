@@ -1,7 +1,7 @@
 <?php
 set_include_path($_SERVER['DOCUMENT_ROOT']);
 include 'admin/includes/functions/admin-functions.php';
-if(checkToken($_POST["formToken"])){
+if(checkToken('admin', $_POST["formToken"])){
 	$tables = $DBobject->ShowTables();
 	if($tables){
 		

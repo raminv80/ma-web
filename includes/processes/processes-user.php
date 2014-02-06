@@ -1,6 +1,6 @@
 <?php
 
-if($_POST["action"]){
+if(checkToken('frontend',$_POST["formToken"], true)){
 	
 	switch ($_POST["action"]) {
 		

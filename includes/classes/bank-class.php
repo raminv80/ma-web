@@ -14,7 +14,11 @@ class Bank {
 	}	
 	
 	function PreparePayment($data){}
+	
+	
 	function GetResponseMessage(){}
+	
+	
 	function GetResponseCode(){}
 	
 	/**
@@ -59,8 +63,8 @@ class Bank {
 	function StorePaymentRecord($payment){
 		global $DBobject;
 		
-		$sql="INSERT INTO tbl_payment (payment_cart_id,payment_user_id,payment_billing_address_id,payment_shipping_address_id,payment_status,payment_subtotal,payment_shipping_fee,payment_charged_amount,payment_payee_name,payment_transaction_no,payment_response_summary_code,payment_response_code,payment_response_msg,payment_response_receipt_no,payment_response_settlementdate,payment_response_transactiondate,payment_response_cardscheme,payment_response,payment_user_ip)
-			VALUES(:payment_cart_id,:payment_user_id,:payment_billing_address_id,:payment_shipping_address_id,:payment_status,:payment_subtotal,:payment_shipping_fee,:payment_charged_amount,:payment_payee_name,:payment_transaction_no,:payment_response_summary_code,:payment_response_code,:payment_response_msg,:payment_response_receipt_no,:payment_response_settlementdate,:payment_response_transactiondate,:payment_response_cardscheme,:payment_response,:payment_user_ip)";
+		$sql="INSERT INTO tbl_payment (payment_cart_id,payment_user_id,payment_billing_address_id,payment_shipping_address_id,payment_status,payment_subtotal,payment_shipping_fee,payment_charged_amount,payment_payee_name,payment_transaction_no,payment_response_summary_code,payment_response_code,payment_response_msg,payment_response_receipt_no,payment_response_settlementdate,payment_response_transactiondate,payment_response_cardscheme,payment_response,payment_user_ip,payment_created)
+			VALUES(:payment_cart_id,:payment_user_id,:payment_billing_address_id,:payment_shipping_address_id,:payment_status,:payment_subtotal,:payment_shipping_fee,:payment_charged_amount,:payment_payee_name,:payment_transaction_no,:payment_response_summary_code,:payment_response_code,:payment_response_msg,:payment_response_receipt_no,:payment_response_settlementdate,:payment_response_transactiondate,:payment_response_cardscheme,:payment_response,:payment_user_ip,now())";
 		$params = array(
 				"payment_cart_id" => $payment['payment_cart_id'],
 				"payment_user_id" => $payment['payment_user_id'],

@@ -25,6 +25,7 @@
 		
 		<form class="form-horizontal" id="shopping-cart-form" accept-charset="UTF-8" action="" method="post">
 			<div class="row" style="margin-top: 20px; margin-bottom: 40px;" id="products-container"> 
+				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				{foreach from=$productsOnCart item=item}
 				<div class="row  product-item" style="margin-top: 10px;" id="{$item.cartitem_id}">
 					<div style="display:inline;" class="col-md-6">{$item.cartitem_product_name}
@@ -71,6 +72,7 @@
 	
 		<form class="form-horizontal" id="discount-form" accept-charset="UTF-8" action="/process/cart" method="post">
 			<input type="hidden" value="applyDiscount" name="action" id="action" /> 
+			<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 			<div class="row" style="margin-top: 20px; margin-bottom: 40px;"> 
 				<div style="display:inline;">Enter discount code: </div>
 				<div style="display:inline;"><input type="text" value="{if $post}{$post.discount_code}{/if}" name="discount_code" id="discount"></div>

@@ -4,7 +4,7 @@ include "includes/functions/functions.php";
 $Action = strip_tags($_POST["Action"]);
 $Error_check = false;
 $Errors = '';
-if($Action	|| checkToken($_POST["formToken"])){
+if($Action	|| checkToken('frontend',$_POST["formToken"], true)){
 	switch ($Action) {
 		case 'Redirect' :
 			if($_POST['redirect']){

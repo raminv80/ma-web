@@ -23,7 +23,7 @@ unset($_SESSION['smarty']);
 $_request = clean($_REQUEST);
 
 
-$token = getToken();
+$token = getToken('admin');
 $SMARTY->assign('token',$token);
 
 //HANDLE USER PERMISSSIONS TO VIEW SITE. REDIRECT ALL NON-LOGGED IN USERS TO LOGIN

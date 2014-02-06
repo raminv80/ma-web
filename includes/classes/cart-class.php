@@ -224,6 +224,9 @@ class cart {
 	function CloseCart($cart_id) {
 		global $DBobject;
 		
+		if (is_null($cart_id)){
+			$cart_id = $this->cart_id;
+		}
 		$sql = "UPDATE tbl_cart SET cart_closed_date = now() WHERE cart_id = :id";
 		return $DBobject->wrappedSql ( $sql, array (
 				":id" => $cart_id 
@@ -239,6 +242,9 @@ class cart {
 	function DeleteCart($cart_id) {
 		global $DBobject;
 		
+		if (is_null($cart_id)){
+			$cart_id = $this->cart_id;
+		}
 		$sql = "UPDATE tbl_cart SET cart_deleted = now() WHERE cart_id = :id";
 		return $DBobject->wrappedSql ( $sql, array (
 				":id" => $cart_id 
@@ -715,104 +721,6 @@ class cart {
 		return $result;
 	}
 
-	/**
-	 * Insert new address in tbl_address and returns address_id
-	 * 
-	 * @param array $addressArr
-	 * @return int
-	 */
-	private	function InsertNewAddress($addressArr) {
-		global $DBobject;
-	
-		$sql = " INSERT INTO tbl_address (
-        						address_user_id, address_name, address_telephone, address_mobile, address_line1, address_line2, 
-								address_suburb, address_state, address_country, address_postcode,
-        						address_created
-								)
-							VALUES (
-								:address_user_id, :address_name, :address_telephone, :address_mobile, :address_line1, :address_line2, 
-								:address_suburb, :address_state, :address_country, :address_postcode,
-        						now()
-							)";
-		$params = array (
-				":address_user_id" => $addressArr['address_user_id'],
-				":address_name" => $addressArr['address_name'],
-				":address_telephone" => $addressArr['address_telephone'],
-				":address_mobile" => $addressArr['address_mobile'],
-				":address_line1" => $addressArr['address_line1'],
-				":address_line2" => $addressArr['address_line2'],
-				":address_suburb" => $addressArr['address_suburb'],
-				":address_state" => $addressArr['address_state'],
-				":address_country" => $addressArr['address_country'],
-				":address_postcode" => $addressArr['address_postcode']
-		);
-		
-		if ( $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
-			return $DBobject->wrappedSqlIdentity();
-		}
-		return 0;
-	}
-	
-	function PlaceOrder($paymentArr, $billingAddressArr, $shippingAddressArr = array() ) {
-		global $DBobject;
-		
-		$dbTotal = $this->CalculateTotal();
-		return array( 'error' => 'Connection problem - Billing Address was not created. Please, try again');
-		if (!empty($dbTotal) && $this->cart_id == $paymentArr['payment_cart_id'] 
-							&& $dbTotal['subtotal'] == $paymentArr['payment_subtotal'] 
-							&& $dbTotal['shipping'] == $paymentArr['payment_shipping_fee'] 
-							&& floatval($dbTotal['total']) == floatval($paymentArr['payment_charged_amount']) ) {
-			
-			
-			if ($res = $this->InsertNewAddress($billingAddressArr)) {
-				$billingAddressId = $res;
-			} else {
-				return array( 'error' => 'Connection problem - Billing Address was not created. Please, try again');
-			}
-			
-			if (empty($shippingAddressArr)) {
-				$shippingAdddressId = $billingAddressId;
-			} else {
-				if ($res = $this->InsertNewAddress($shippingAddressArr)) {
-					$shippingAdddressId = $res;
-				} else {
-					return array( 'error' => 'Connection problem - Shipping Address was not created. Please, try again');
-				}
-			}
-			
-			$sql = " INSERT INTO tbl_payment (
-        						payment_cart_id, payment_user_id, payment_billing_address_id, payment_shipping_address_id,  
-								payment_status, payment_subtotal, payment_shipping_fee, payment_charged_amount,
-        						payment_user_ip, 
-								payment_created
-								)
-							VALUES (
-								:payment_cart_id, :payment_user_id, :payment_billing_address_id, :payment_shipping_address_id, 
-								:payment_status, :payment_subtotal, :payment_shipping_fee, :payment_charged_amount,
-        						:payment_user_ip, 
-        						now()
-							)";
-			$params = array (
-					":payment_cart_id" => $paymentArr['payment_cart_id'],
-					":payment_user_id" => $paymentArr['payment_user_id'],
-					":payment_billing_address_id" => $billingAddressId,
-					":payment_shipping_address_id" => $shippingAdddressId,
-					":payment_status" => 'P', 
-					":payment_subtotal" => $paymentArr['payment_subtotal'],
-					":payment_shipping_fee" => $paymentArr['payment_shipping_fee'],
-					":payment_charged_amount" => $paymentArr['payment_charged_amount'],
-					":payment_user_ip" => $_SERVER ['REMOTE_ADDR']
-			);
-			
-			if ( $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
-				$this->CloseCart($this->cart_id);
-				$this->CreateCart($paymentArr['payment_user_id']);
-				return array( 'success' => 'Thank you for Buying!');
-			}
-			
-		}
-		return array( 'error' => 'Connection problem or Values do not match. Please, try again');
-	}
 	
 	/**
 	 * Validate all items on current cart and totals and return messages in array.  
@@ -850,6 +758,14 @@ class cart {
 		return $message;
 	}
 	
+	/**
+	 * Recursive function which returns listings(categories) parents' id from a given listing_id
+	 * 
+	 * @param int $parentId
+	 * @param int $root
+	 * @param array $list
+	 * @return array
+	 */
 	private function getParentList($parentId, $root = 0, $list = array()) {
 		global $DBobject;
 		
@@ -864,23 +780,28 @@ class cart {
                 return array();
                 
 	}
-        
-        private function getProductCatParentList($productId, $root = 0) {
+
+	/**
+	 * Return a multidimensional array with the product parents' id from a given product_id
+	 * 
+	 * @param int $productId
+	 * @param int $root
+	 * @return array 
+	 */
+	private function getProductCatParentList($productId, $root = 0) {
 		global $DBobject;
 		
 		$sql = "SELECT product_listing_id FROM tbl_product WHERE product_id = :id";
 		if ($res = $DBobject->wrappedSql ( $sql, array( ":id" => $productId ) )) {
-			
-                    return $this->getParentList($res[0]['product_listing_id'], $root);
-                        
+			return $this->getParentList($res[0]['product_listing_id'], $root);
 		} 
-                return array();
-                
+		return array();
 	}
 
 	/**
 	 * Validate the given discount code and calculate the amount according to items on cart. 
 	 * Limit the discount amount to subtotal value. 
+	 * Returns array['discount']:float or array['error']:string
 	 * 
 	 * @param string $code
 	 * @param string $cartId
@@ -926,7 +847,7 @@ class cart {
                         	if ($res[0]['discount_listing_id']){
                         		// Special code for category only
                             	$listingArr = $this->getProductCatParentList($item['cartitem_product_id']);
-                                if (in_array($res[0]['discount_listing_id'], $listingArr)){
+                                if (in_array_r($res[0]['discount_listing_id'], $listingArr)){
                                 	if ($res[0]['discount_amount_percentage']) {
                                     	$discount += floatval($item['cartitem_subtotal']) * floatval($res[0]['discount_amount']) / 100;
                                     } else {
@@ -981,6 +902,67 @@ class cart {
 	}						
 	
 	
+/* 	function PlaceOrder($paymentArr, $billingAddressArr, $shippingAddressArr = array() ) {
+		global $DBobject;
+	
+		$dbTotal = $this->CalculateTotal();
+		return array( 'error' => 'Connection problem - Billing Address was not created. Please, try again');
+		if (!empty($dbTotal) && $this->cart_id == $paymentArr['payment_cart_id']
+		&& $dbTotal['subtotal'] == $paymentArr['payment_subtotal']
+		&& $dbTotal['shipping'] == $paymentArr['payment_shipping_fee']
+		&& floatval($dbTotal['total']) == floatval($paymentArr['payment_charged_amount']) ) {
+				
+				
+			if ($res = $this->InsertNewAddress($billingAddressArr)) {
+				$billingAddressId = $res;
+			} else {
+				return array( 'error' => 'Connection problem - Billing Address was not created. Please, try again');
+			}
+				
+			if (empty($shippingAddressArr)) {
+				$shippingAdddressId = $billingAddressId;
+			} else {
+				if ($res = $this->InsertNewAddress($shippingAddressArr)) {
+					$shippingAdddressId = $res;
+				} else {
+					return array( 'error' => 'Connection problem - Shipping Address was not created. Please, try again');
+				}
+			}
+				
+			$sql = " INSERT INTO tbl_payment (
+        						payment_cart_id, payment_user_id, payment_billing_address_id, payment_shipping_address_id,
+								payment_status, payment_subtotal, payment_shipping_fee, payment_charged_amount,
+        						payment_user_ip,
+								payment_created
+								)
+							VALUES (
+								:payment_cart_id, :payment_user_id, :payment_billing_address_id, :payment_shipping_address_id,
+								:payment_status, :payment_subtotal, :payment_shipping_fee, :payment_charged_amount,
+        						:payment_user_ip,
+        						now()
+							)";
+			$params = array (
+					":payment_cart_id" => $paymentArr['payment_cart_id'],
+					":payment_user_id" => $paymentArr['payment_user_id'],
+					":payment_billing_address_id" => $billingAddressId,
+					":payment_shipping_address_id" => $shippingAdddressId,
+					":payment_status" => 'P',
+					":payment_subtotal" => $paymentArr['payment_subtotal'],
+					":payment_shipping_fee" => $paymentArr['payment_shipping_fee'],
+					":payment_charged_amount" => $paymentArr['payment_charged_amount'],
+					":payment_user_ip" => $_SERVER ['REMOTE_ADDR']
+			);
+				
+			if ( $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
+				$this->CloseCart($this->cart_id);
+				$this->CreateCart($paymentArr['payment_user_id']);
+				return array( 'success' => 'Thank you for Buying!');
+			}
+				
+		}
+		return array( 'error' => 'Connection problem or Values do not match. Please, try again');
+	} */
+
 	
 	
 

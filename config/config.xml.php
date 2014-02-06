@@ -116,7 +116,7 @@
 		<type>1</type> 
 		<file>ListClass</file>
 		<table>			<!-- This table will be the details table -->
-			<name>tbl_cart</name>
+			<name>tbl_listing</name>
 			<field>listing_url</field>	<!-- The field used to match the URL -->
 		</table>
 		<template>checkout.tpl</template> 

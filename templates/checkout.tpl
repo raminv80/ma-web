@@ -69,7 +69,7 @@
 			
 			<div class="row" id="order" style="margin:40px;">
 				<input type="hidden" value="placeOrder" name="action"/> 
-				
+				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				
 				<!-- BILLING SECTION - Hidden by default -->
 				<div class="row" id="billing-subform">
@@ -259,7 +259,7 @@
 							<div class="form-group">
 							    <label for="cc-number" class="col-sm-2 control-label">Credit card number</label>
 							    <div class="col-sm-10">
-							      	<input type="text" value="" class="form-control " autocomplete="off" id="cc-number" name="cc-number" >
+							      	<input type="number" value="" class="form-control " autocomplete="off" id="cc-number" name="cc-number" pattern="[0-9]">
 								</div>
 							</div>
 							<div class="form-group">
@@ -358,7 +358,14 @@
 		$(document).ready(function(){
 
 			$('#order-form').validate();
-			
+
+			$('#cc-number').rules("add", {
+			      required: true,
+			      creditcard: true,
+			      messages: {
+			        equalTo: "Number not valid."
+			      }
+			 });
 		})
 		
 		

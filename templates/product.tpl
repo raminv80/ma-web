@@ -25,6 +25,7 @@
 		<form class="form-horizontal" id="product-form" accept-charset="UTF-8" action="" method="post">
 			
 			<input type="hidden" value="ADDTOCART" name="action" id="action" /> 
+			<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 			<input type="hidden" value="{$product_id}" name="product_id" id="product_id" /> 
 						
 				{foreach $product_info.attribute as $attr }
