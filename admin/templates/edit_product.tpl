@@ -8,11 +8,11 @@
 	{/foreach} 
 {/function}
 
-<div class="row-fluid">
-	<div class="span12">
+<div class="row">
+	<div class="col-md-12">
 		<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" action="/admin/includes/processes/processes-record.php" method="post">
-			<div class="row-fluid">
-				<div class="span12">
+			<div class="row">
+				<div class="col-md-12">
 					<fieldset>
 						<legend>
 							{if $fields.product_id neq ""}Edit{else}New{/if} {$zone} 
@@ -38,152 +38,116 @@
 			<div class="tab-content">
 				<!--===+++===+++===+++===+++===+++ DETAILS TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane active" id="details">
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_name">Name</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_name}" name="field[1][tbl_product][{$cnt}][product_name]" id="id_product_name" class="req" onchange="seturl(this.value);">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_name">Name</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_name}" name="field[1][tbl_product][{$cnt}][product_name]" id="id_product_name" class="req" onchange="seturl(this.value);">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_url">Url</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" style="width: 70%;">
+					<div class="form-group">
+							<label class="col-md-2 control-label" for="id_product_url">Url</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url">
 						</div>
 					</div>		
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_listing">Category</label>
-						</div>
-						<div class="span9 controls">
-							<select name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_listing">Category</label>
+						<div class="col-md-3 ">
+							<select  class="form-control" name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing">
 								<option value="{$rootParentID}">Select one</option> 
 								{call name=options_list opts=$fields.options.product_listing_id}
 							</select>
 						</div>
 					</div>			
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_seo_title">SEO Title</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_seo_title}" name="field[1][tbl_product][{$cnt}][product_seo_title]" id="id_product_seo_title" style="width: 70%;">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_seo_title">SEO Title</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_seo_title}" name="field[1][tbl_product][{$cnt}][product_seo_title]" id="id_product_seo_title">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_meta_description">Meta Description</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_meta_description}" name="field[1][tbl_product][{$cnt}][product_meta_description]" id="id_product_meta_description" style="width: 70%;">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_meta_description">Meta Description</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_meta_description}" name="field[1][tbl_product][{$cnt}][product_meta_description]" id="id_product_meta_description">
 						</div>
 					</div>					
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_meta_words">Meta Words</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_meta_words}" name="field[1][tbl_product][{$cnt}][product_meta_words]" id="id_product_meta_words" style="width: 70%;">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_meta_words">Meta Words</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_meta_words}" name="field[1][tbl_product][{$cnt}][product_meta_words]" id="id_product_meta_words">
 						</div>
 					</div>
-		 			<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_meta_words">Microdata</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_microdata}" name="field[1][tbl_product][{$cnt}][product_microdata]" id="id_product_microdata" style="width: 70%;">
+		 			<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_meta_words">Microdata</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_microdata}" name="field[1][tbl_product][{$cnt}][product_microdata]" id="id_product_microdata">
 						</div>
 					</div> 
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_description">Description</label><br />
-						</div>
-						<div class="span9 controls">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_description">Description</label><br />
+						<div class="col-md-3 ">
 							<textarea name="field[1][tbl_product][{$cnt}][product_description]" id="id_product_description" class="tinymce">{$fields.product_description}</textarea>
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_instock">In stock</label>
-						</div>
-						<div class="span9 controls">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_instock">In stock</label>
+						<div class="col-md-3 ">
 							<input type="hidden" value="{if $fields.product_instock eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_instock]" class="value"> <input type="checkbox" {if $fields.product_instock eq 1 || $fields.product_id eq ""}checked="checked"
 								{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_instock">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_gst">Incl. GST</label>
-						</div>
-						<div class="span9 controls">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_gst">Incl. GST</label>
+						<div class="col-md-3 ">
 							<input type="hidden" value="{if $fields.product_gst eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_gst]" class="value"> <input type="checkbox" {if $fields.product_gst eq 1 || $fields.product_id eq ""}checked="checked"
 								{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_gst">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_price">Price</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_price}" name="field[1][tbl_product][{$cnt}][product_price]" id="id_product_price" class="double validDouble">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_price">Price</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_price}" name="field[1][tbl_product][{$cnt}][product_price]" id="id_product_price" class="double validDouble">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_specialprice">Special Price</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_specialprice}" name="field[1][tbl_product][{$cnt}][product_specialprice]" id="id_product_specialprice" class="double validDouble">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_specialprice">Special Price</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_specialprice}" name="field[1][tbl_product][{$cnt}][product_specialprice]" id="id_product_specialprice" class="double validDouble">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_weight">Weight (Kg)</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_weight}" name="field[1][tbl_product][{$cnt}][product_weight]" id="id_product_weight" class="double validDouble">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_weight">Weight (Kg)</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_weight}" name="field[1][tbl_product][{$cnt}][product_weight]" id="id_product_weight" class="double validDouble">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_width">Width (cm)</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_width}" name="field[1][tbl_product][{$cnt}][product_width]" id="id_product_width" class="double validDouble">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_width">Width (cm)</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_width}" name="field[1][tbl_product][{$cnt}][product_width]" id="id_product_width" class="double validDouble">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_height">Height (cm)</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_height}" name="field[1][tbl_product][{$cnt}][product_height]" id="id_product_height" class="double validDouble">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_height">Height (cm)</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_height}" name="field[1][tbl_product][{$cnt}][product_height]" id="id_product_height" class="double validDouble">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_length">Length (cm)</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_length}" name="field[1][tbl_product][{$cnt}][product_length]" id="id_product_length" class="double validDouble">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_length">Length (cm)</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_length}" name="field[1][tbl_product][{$cnt}][product_length]" id="id_product_length" class="double validDouble">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_order">Order</label>
-						</div>
-						<div class="span9 controls">
-							<input type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order" class="number">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_order">Order</label>
+						<div class="col-md-3 ">
+							<input class="form-control" type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order" class="number">
 						</div>
 					</div>
-					<div class="row-fluid control-group">
-						<div class="span3">
-							<label class="control-label" for="id_product_published">Published</label>
-						</div>
-						<div class="span9 controls">
+					<div class="form-group">
+						<label class="col-md-2 control-label" for="id_product_published">Published</label>
+						<div class="col-md-3 ">
 							<input type="hidden" value="{if $fields.product_published eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_published]" class="value"> <input type="checkbox" {if $fields.product_published eq 1}checked="checked"
 								{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_published">
 						</div>
@@ -193,12 +157,10 @@
 				<div class="tab-pane" id="images">
 					<!--  gallery -->
 					
-					<div class="row-fluid control-group" id="select-hero-img">
-						<div class="span3">
-							<label class="control-label" for="id_product_hero_image">Hero Image</label>
-						</div>
-						<div class="span9 controls">
-							<select name="product_hero_image" id="id_product_hero_image">
+					<div class="form-group" id="select-hero-img">
+							<label class="col-md-2 control-label" for="id_product_hero_image">Hero Image</label>
+						<div class="col-md-3 ">
+							<select  class="form-control" name="product_hero_image" id="id_product_hero_image">
 								{assign var='cntlst' value=0}
 								{foreach $fields.gallery as $opt}
 									{assign var='cntlst' value=$cntlst+1}
@@ -218,9 +180,9 @@
 						{include file='gallery.tpl'}
 					{/foreach}
 					</div>
-					<div class="row-fluid">
+					<div class="row">
 						<input type="hidden" value="{$imageno}" id="imageno">
-						<div class="span11">
+						<div class="col-md-11">
 							<input type="hidden" id="error" name="error" value="0" />
 							<script type="text/javascript">
 		
@@ -318,9 +280,9 @@
 						{include file='form_attribute.tpl'}
 					{/foreach}
 					</div>
-					<div class="row-fluid">
+					<div class="row">
 						<input type="hidden" value="{$attributeno}" id="attributeno">
-						<div class="span11">
+						<div class="col-md-11">
 							<input type="hidden" id="error" name="error" value="0" />
 							<script type="text/javascript">
 		
@@ -470,7 +432,7 @@
 				</div>
 			</div>
 			
-			<div class="row-fluid control-group">
+			<div class="form-group">
 				<div class="form-actions">
 					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
 					{if $fields.product_id neq ""} 

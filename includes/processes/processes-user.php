@@ -63,7 +63,22 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 	    		header("Location: ".$_SERVER['HTTP_REFERER']."#error");//<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
 	    	}
 	    	exit;
-	   
+
+    	case 'updateDetails':
+    		$user_obj = new UserClass();
+    		$data = array_merge($_POST, array('email'=>$_SESSION['user']['email']));
+    		$res = $user_obj->UpdateDetails($data);
+    		if ( $res['error'] ) {
+    			$_SESSION['error']= $res['error'];
+    			header("Location: ".$_SERVER['HTTP_REFERER']."#error");
+    		} else {
+    			$_SESSION['user']['gname']= $_POST["gname"];
+    			$_SESSION['user']['surname']= $_POST["surname"];
+    			$_SESSION['error']= $res['success'];  //<<<<<<<<<<<<<<<<<<< CHANGE THIS TO NOTIFICATION VARIABLE, not error!
+    			header("Location: ".$_SERVER['HTTP_REFERER']."#error");//<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
+    		}
+    		exit;
+	    		
     	case 'FBlogin':
                 $facebook = new Facebook(array(
                         'appId'  => '208591239336752',

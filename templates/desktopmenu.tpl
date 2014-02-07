@@ -38,7 +38,7 @@
  </li>
  
 {if $user.id}
-	<li><a title="Log In" href="/login">G'day {$user.gname}</a></li>
+	<li><a title="My Account" href="/my-account">G'day {$user.gname}</a></li>
 	
 	<li><a title="Log Out"  href="/process/user?logout=true"><span class="glyphicon glyphicon-log-out"></span><div style="display:inline;">Log Out</div></a></li>
 	

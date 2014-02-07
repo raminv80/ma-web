@@ -89,12 +89,34 @@ while ( true ) {
 	 * **** Goes to login ******
 	 */
 	if ($_request ['arg1'] == 'login') {
+		if ($_SESSION['user']['id']) { 
+	    	header("Location: /my-account");
+	    	exit;
+		}
 		$obj = new $class ( '', $struct );
 		$template = $obj->Load ( $CONFIG->login->pageID );
 		$template = $CONFIG->login->template;
 		$menu = $obj->LoadMenu ( $CONFIG->login->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
 		$_SESSION ['login_referer'] = $_SERVER['HTTP_REFERER'];
+		break 1;
+	}
+	/**
+	 * **** Goes to my-account ******
+	 */
+	if ($_request ['arg1'] == 'my-account') {
+		if (is_null($_SESSION['user']['id'])) {
+			header("Location: /login");
+			exit;
+		}
+		$obj = new $class ( '', $struct );
+		$template = $obj->Load ( $CONFIG->account->pageID );
+		$template = $CONFIG->account->template;
+		$menu = $obj->LoadMenu ( $CONFIG->account->pageID );
+		$SMARTY->assign ( 'menuitems', $menu );
+		$cart_obj = new cart();
+		$orders = $cart_obj->GetOrderHistoryByUser($_SESSION['user']['id']);
+		$SMARTY->assign ( 'orders', $orders );
 		break 1;
 	}
 	
@@ -118,6 +140,7 @@ while ( true ) {
 	if ($_request ['arg1'] == 'store/checkout') {
 		if (is_null($_SESSION['user']['id'])) { 
 	    	header("Location: /login");
+	    	exit;
 		}
 		$obj = new $class ( '', $CONFIG->checkout ); 
 		$template = $obj->Load ( $CONFIG->checkout->pageID );
@@ -127,10 +150,10 @@ while ( true ) {
 		$cart_obj = new cart();
 		$validation = $cart_obj->ValidateCart();
 		$SMARTY->assign ( 'validation', $validation );
-		/* $sql = "SELECT DISTINCT postcode_state FROM tbl_address where address_user_id = :uid ORDER BY address_id";
-		$states = $DBobject->wrappedSql($sql);
-		$SMARTY->assign ( 'options_state', $states );*/
-		$sql = "SELECT DISTINCT postcode_state FROM tbl_postcode where postcode_state != 'OTHE' ORDER BY postcode_state";
+		$sql = "SELECT * FROM tbl_address WHERE address_user_id = :uid ORDER BY address_id";
+		$addresses = $DBobject->wrappedSql($sql, array(':uid' => $_SESSION['user']['id']));
+		$SMARTY->assign ( 'addresses', $addresses );
+		$sql = "SELECT DISTINCT postcode_state FROM tbl_postcode WHERE postcode_state != 'OTHE' ORDER BY postcode_state";
 		$states = $DBobject->wrappedSql($sql);
 		$SMARTY->assign ( 'options_state', $states ); 
 		//$productsOnCart = $cart_obj->GetDataProductsOnCart(); 

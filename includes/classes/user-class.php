@@ -185,9 +185,32 @@ class UserClass {
 	/**
 	 * NOT DEFINED YET
 	 */
-    function Update(){
+    function UpdateDetails($data){
     	global $DBobject;
-    
+    	
+    	if ($res = $this->RetrieveByUsername($data['email'])){
+    	
+    		$params = array (
+    				":id" => $res[0]['user_id'],
+    				":gname" => $data['gname'],
+	    			":surname" => $data['surname'],
+    				":ip" => $_SERVER['REMOTE_ADDR'],
+    				":browser" => $_SERVER['HTTP_USER_AGENT']
+    		);
+    		$sql = "UPDATE tbl_user SET
+                                        user_gname = :gname,
+										user_surname = :surname,
+                                        user_ip = :ip,
+                                        user_browser = :browser,
+                                        user_modified = now()
+                            WHERE user_id = :id ";
+    	
+    		if ( $DBobject->wrappedSql($sql, $params) ) {
+    			return array ('success' => 'Your details have been updated.');
+    		}
+    		return array ('error' => 'There was a connection problem. Please, try again!');
+    	}
+    	return array( 'error' => 'This email does not exist in our database.');
     }
     
     

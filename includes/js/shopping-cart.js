@@ -36,17 +36,6 @@ function calculatePrice(){
 	$('#price').val(price.toFixed(2)); 
 }
 
-function sameAddress() {
-	$('#shipping-subform').toggle();
-	if ($('#shipping-subform:visible').length > 0) {
-		$('.shipping-req').attr('required', 'required');
-		$('.shipping-select-req').addClass('required');
-	} else {
-		$('.shipping-req').removeAttr('required');
-		$('.shipping-select-req').removeClass('required');
-	}
-}
-
 function addCart(){
 	if ($('#quantity').val() > 0 ) {
 		$('body').css('cursor','wait');

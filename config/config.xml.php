@@ -31,11 +31,6 @@
 		<template>404.tpl</template>
 		<pageID>2</pageID>
 	</error404>
-	<login>
-		<url>login</url>
-		<template>login.tpl</template>
-		<pageID>14</pageID>
-	</login>
 	
 	<inspections>
 		<template>inspections.tpl</template>
@@ -98,6 +93,16 @@
 		<template>category.tpl</template>
  	</product_page>
 
+ 	<login>
+		<url>login</url>
+		<template>login.tpl</template>
+		<pageID>14</pageID>
+	</login>
+	<account>
+		<url>my-account</url>
+		<template>account.tpl</template>
+		<pageID>22</pageID>
+	</account>
  	<cart> 
 		<url>store/shopping-cart</url> 
 		<pageID>13</pageID> 

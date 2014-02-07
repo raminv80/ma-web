@@ -61,7 +61,7 @@ class cart {
 		global $DBobject;
 		
 		$sql = "SELECT * FROM tbl_cart
-    			WHERE cart_user_id = :id AND cart_closed_date IS NULL AND cart_deleted IS NULL AND cart_id <> '0'";
+    			WHERE cart_user_id = :id AND cart_closed_date IS NULL AND cart_deleted IS NULL AND cart_id <> '0' ORDER BY cart_id DESC";
 		
 		if ($res = $DBobject->wrappedSql ( $sql, array ( ":id" => $userId ))) {
 			if ($this->NumberOfProductsOnCart ( $res [0] ['cart_id'] )) {
@@ -326,8 +326,12 @@ class cart {
 	 * 
 	 * @return array
 	 */
-	function GetDataProductsOnCart() {
+	function GetDataProductsOnCart($cartId) {
 		global $DBobject;
+		
+		if (is_null($cartId)){
+			$cartId = $this->cart_id;
+		}
 		
 		$cart_arr = array ();
 		
@@ -336,7 +340,7 @@ class cart {
     			WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
 		
 		$res = $DBobject->wrappedSql ( $sql, array (
-				":id" => $this->cart_id 
+				":id" => $cartId 
 		) );
 		
 		foreach ( $res as $p ) {
@@ -371,12 +375,12 @@ class cart {
 	 * Return the recordset of the current cart
 	 * @return array
 	 */
-	function GetDataCart($cartId = null) {
+	function GetDataCart($cartId) {
 		global $DBobject;
 		
-                if (is_null($cartId)){
-                    $cartId = $this->cart_id;
-                }
+		if (is_null($cartId)){
+			$cartId = $this->cart_id;
+		}
                 
 		$sql = "SELECT * FROM tbl_cart
     			WHERE cart_id = :id AND cart_deleted IS NULL AND cart_id <> '0'";
@@ -386,6 +390,29 @@ class cart {
 		) );
 		
 		return $res [0];
+	}
+	
+	/**
+	 * Return array with closed carts and products details of a given user_id
+	 * 
+	 * @param int $userId
+	 * @return array
+	 */
+	function GetOrderHistoryByUser($userId) {
+		global $DBobject;
+		
+		$cart_arr = array ();
+		
+		$sql = "SELECT * FROM tbl_cart
+    			WHERE cart_user_id = :uid AND cart_deleted IS NULL AND cart_closed_date IS NOT NULL AND cart_id <> '0' ORDER BY cart_closed_date";
+	
+		if ($res = $DBobject->wrappedSql ( $sql, array (":uid" => $userId) ) ){
+			foreach ($res as $cart) {
+				$cart_arr[$cart['cart_id']] = $cart;
+				$cart_arr[$cart['cart_id']]['items'] = $this->GetDataProductsOnCart($cart['cart_id']);
+			}
+		}
+		return $cart_arr;
 	}
 	
 	/**

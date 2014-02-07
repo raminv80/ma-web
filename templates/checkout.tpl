@@ -77,65 +77,88 @@
 	                    <h3>Billing Details</h3>
 	                </div>
 	                <input type="hidden" value="{$user.id}" name="address[1][address_user_id]" id="address_user_id" /> 
-					<div class="form-group">
-					    <label for="address_name" class="col-sm-2 control-label">Name</label>
+	                <div class="form-group">
+					    <label for="previous-address-1" class="col-sm-2 control-label"></label>
 					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.1.address_name}{/if}" class="form-control" id="address_name" name="address[1][address_name]" required>
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_telephone" class="col-sm-2 control-label">Phone</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.1.address_telephone}{/if}" class="form-control" id="address_telephone" name="address[1][address_telephone]" >
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_mobile" class="col-sm-2 control-label">Mobile</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.1.address_mobile}{/if}" class="form-control" id="address_mobile" name="address[1][address_mobile]" >
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_line1" class="col-sm-2 control-label">Address</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.1.address_line1}{/if}" class="form-control" id="address_line1" name="address[1][address_line1]" required>
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_line1" class="col-sm-2 control-label"></label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.1.address_line2}{/if}" class="form-control" id="address_line2" name="address[1][address_line2]">
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_suburb" class="col-sm-2 control-label">Suburb</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.1.address_suburb}{/if}" class="form-control" id="address_suburb" name="address[1][address_suburb]" required>
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_state" class="col-sm-2 control-label">State</label>
-					    <div class="col-sm-10">
-					      	<select id="address_state" name="address[1][address_state]" class="form-control required" >
-								<option value="">Select a state</option>
-								{foreach $options_state as $value }
-									<option value="{$value.postcode_state}" {if $post.address.1.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option>
+					      	<select id="previous-address-1" name="previous-address-1" class="form-control" >
+								<option value="0">Select previous addresses to fill out the form</option>
+								{foreach $addresses as $add }
+									<option value="{$add.address_id}" {if $post.previous-address-1 eq $add.address_id}selected="selected"{/if}
+											name="{$add.address_name}"
+											line1="{$add.address_line1}"
+											line2="{$add.address_line2}"
+											suburb="{$add.address_suburb}"
+											state="{$add.address_state}"
+											country="{$add.address_country}"
+											postcode="{$add.address_postcode}"
+											telephone="{$add.address_telephone}"
+											mobile="{$add.address_mobile}"
+									>{$add.address_name}, {$add.address_line1} {$add.address_line2}, {$add.address_suburb}, {$add.address_state}, {$add.address_country}, {$add.address_postcode}. {$add.address_telephone}{if $add.address_mobile} / {$add.address_mobile}{/if}</option>
 								{/foreach}
 							</select>
 						</div>
 					</div>
-					<div class="form-group">
-					    <label for="address_country" class="col-sm-2 control-label">Country</label>
-					    <div class="col-sm-10">
-					      	<select id="address_country" name="address[1][address_country]" class="form-control" >
-								<option value="Australia">Australia</option>
-							</select>
+					<div class="row" id="billing-subform-content">
+						<div class="form-group">
+						    <label for="address_name_1" class="col-sm-2 control-label">Name</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.1.address_name}{/if}" class="form-control biling-req" id="address_name_1" name="address[1][address_name]" required>
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_postcode" class="col-sm-2 control-label">Postcode</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.1.address_postcode}{/if}" class="form-control" id="address_postcode" name="address[1][address_postcode]" required>
+						<div class="form-group">
+						    <label for="address_line1_1" class="col-sm-2 control-label">Address</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.1.address_line1}{/if}" class="form-control biling-req" id="address_line1_1" name="address[1][address_line1]" required>
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_line2_1" class="col-sm-2 control-label"></label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.1.address_line2}{/if}" class="form-control" id="address_line2_1" name="address[1][address_line2]">
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_suburb_1" class="col-sm-2 control-label">Suburb</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.1.address_suburb}{/if}" class="form-control biling-req" id="address_suburb_1" name="address[1][address_suburb]" required>
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_state_1" class="col-sm-2 control-label">State</label>
+						    <div class="col-sm-10">
+						      	<select id="address_state_1" name="address[1][address_state]" class="form-control required" >
+									<option value="">Select a state</option>
+									{foreach $options_state as $value }
+										<option value="{$value.postcode_state}" {if $post.address.1.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option>
+									{/foreach}
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_country_1" class="col-sm-2 control-label">Country</label>
+						    <div class="col-sm-10">
+						      	<select id="address_country_1" name="address[1][address_country]" class="form-control" >
+									<option value="Australia">Australia</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_postcode_1" class="col-sm-2 control-label">Postcode</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.1.address_postcode}{/if}" class="form-control" id="address_postcode_1" name="address[1][address_postcode]" required>
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_telephone_1" class="col-sm-2 control-label">Phone</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.1.address_telephone}{/if}" class="form-control" id="address_telephone_1" name="address[1][address_telephone]" >
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_mobile_1" class="col-sm-2 control-label">Mobile</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.1.address_mobile}{/if}" class="form-control biling-req" id="address_mobile_1" name="address[1][address_mobile]" >
+							</div>
 						</div>
 					</div>
 					<div class="form-group">
@@ -156,64 +179,87 @@
 	                </div>
 	                <input type="hidden" value="{$user.id}" name="address[2][address_user_id]" id="address_user_id" />
 					<div class="form-group">
-					    <label for="address_name" class="col-sm-2 control-label">Name</label>
+					    <label for="previous-address-2" class="col-sm-2 control-label"></label>
 					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.2.address_name}{/if}" class="form-control shipping-req" id="address_name" name="address[2][address_name]" >
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_telephone" class="col-sm-2 control-label">Phone</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.2.address_telephone}{/if}" class="form-control" id="address_telephone" name="address[2][address_telephone]" >
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_mobile" class="col-sm-2 control-label">Mobile</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.2.address_mobile}{/if}" class="form-control" id="address_mobile" name="address[2][address_mobile]" >
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_line1" class="col-sm-2 control-label">Address</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.2.address_line1}{/if}" class="form-control shipping-req" id="address_line1" name="address[2][address_line1]" >
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_line1" class="col-sm-2 control-label"></label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.2.address_line2}{/if}" class="form-control" id="address_line2" name="address[2][address_line2]">
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_suburb" class="col-sm-2 control-label">Suburb</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.2.address_suburb}{/if}" class="form-control shipping-req" id="address_suburb" name="address[2][address_suburb]" >
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_state" class="col-sm-2 control-label">State</label>
-					    <div class="col-sm-10">
-					      	<select id="address_state" name="address[2][address_state]" class="form-control shipping-select-req" >
-								<option value="">Select a state</option>
-								{foreach $options_state as $value }
-									<option value="{$value.postcode_state}" {if $post.address.2.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option>
+					      	<select id="previous-address-2" name="previous-address-2" class="form-control" >
+								<option value="0">Select previous addresses to fill out the form</option>
+								{foreach $addresses as $add }
+									<option value="{$add.address_id}" {if $post.previous-address-2 eq $add.address_id}selected="selected"{/if}
+											name="{$add.address_name}"
+											line1="{$add.address_line1}"
+											line2="{$add.address_line2}"
+											suburb="{$add.address_suburb}"
+											state="{$add.address_state}"
+											country="{$add.address_country}"
+											postcode="{$add.address_postcode}"
+											telephone="{$add.address_telephone}"
+											mobile="{$add.address_mobile}"
+									>{$add.address_name}, {$add.address_line1} {$add.address_line2}, {$add.address_suburb}, {$add.address_state}, {$add.address_country}, {$add.address_postcode}. {$add.address_telephone}{if $add.address_mobile} / {$add.address_mobile}{/if}</option>
 								{/foreach}
 							</select>
 						</div>
 					</div>
-					<div class="form-group">
-					    <label for="address_country" class="col-sm-2 control-label">Country</label>
-					    <div class="col-sm-10">
-							<select id="address_country" name="address[2][address_country]" class="form-control" >
-								<option value="Australia">Australia</option>
-							</select>
+					<div class="row" id="shipping-subform-content">
+						<div class="form-group">
+						    <label for="address_name_2" class="col-sm-2 control-label">Name</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.2.address_name}{/if}" class="form-control shipping-req" id="address_name_2" name="address[2][address_name]" >
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-					    <label for="address_postcode" class="col-sm-2 control-label">Postcode</label>
-					    <div class="col-sm-10">
-					      	<input type="text" value="{if $post}{$post.address.2.address_postcode}{/if}" class="form-control shipping-req" id="address_postcode" name="address[2][address_postcode]" >
+						<div class="form-group">
+						    <label for="address_line1_2" class="col-sm-2 control-label">Address</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.2.address_line1}{/if}" class="form-control shipping-req" id="address_line1_2" name="address[2][address_line1]" >
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_line1_2" class="col-sm-2 control-label"></label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.2.address_line2}{/if}" class="form-control" id="address_line2_2" name="address[2][address_line2]">
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_suburb_2" class="col-sm-2 control-label">Suburb</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.2.address_suburb}{/if}" class="form-control shipping-req" id="address_suburb_2" name="address[2][address_suburb]" >
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_state_2" class="col-sm-2 control-label">State</label>
+						    <div class="col-sm-10">
+						      	<select id="address_state_2" name="address[2][address_state]" class="form-control shipping-select-req" >
+									<option value="">Select a state</option>
+									{foreach $options_state as $value }
+										<option value="{$value.postcode_state}" {if $post.address.2.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option>
+									{/foreach}
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_country_2" class="col-sm-2 control-label">Country</label>
+						    <div class="col-sm-10">
+								<select id="address_country_2" name="address[2][address_country]" class="form-control" >
+									<option value="Australia">Australia</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_postcode_2" class="col-sm-2 control-label">Postcode</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.2.address_postcode}{/if}" class="form-control shipping-req" id="address_postcode_2" name="address[2][address_postcode]" pattern="[0-9]">
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_telephone_2" class="col-sm-2 control-label">Phone</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.2.address_telephone}{/if}" class="form-control" id="address_telephone_2" name="address[2][address_telephone]" >
+							</div>
+						</div>
+						<div class="form-group">
+						    <label for="address_mobile_2" class="col-sm-2 control-label">Mobile</label>
+						    <div class="col-sm-10">
+						      	<input type="text" value="{if $post}{$post.address.2.address_mobile}{/if}" class="form-control" id="address_mobile_2" name="address[2][address_mobile]" >
+							</div>
 						</div>
 					</div>
 				</div>
@@ -237,18 +283,12 @@
 					</div>
 					<div class="radio">
 					  	<label>
-					    	<input type="radio" name="payment[payment_option]" id="payment_option2" value="payway">
-					    	PayWay
-					  	</label>
-					</div>
-					<div class="radio">
-					  	<label>
 					    	<input type="radio" name="payment[payment_option]" id="payment_option2" value="credit">
 					    	Credit Card
 					  	</label>
 					</div>
 					
-					<div class="row" id="credit" style="margin:20px; ">
+					<div class="row" id="credit-subform" style="margin:20px; ">
 					
 						<div class="col-md-8">
 							    <div class="col-sm-offset-2" style="margin-bottom:10px;">
@@ -299,7 +339,7 @@
 							<div class="form-group">
 							    <label for="cc-cvc" class="col-sm-2 control-label">CVC</label>
 							    <div class="col-sm-10">
-							      	<input type="text" value="" class="form-control " autocomplete="off" id="cc-cvc" name="cc-cvc" >
+							      	<input type="text" value="" class="form-control " autocomplete="off" id="cc-cvc" name="cc-cvc" pattern="[0-9]">
 								</div>
 							</div>
 						</div>
@@ -325,7 +365,6 @@
 	{/if}
 	</div>
 	
-	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>
 	<script type="text/javascript">
 	
 		if (jQuery.validator) {
@@ -360,14 +399,74 @@
 			$('#order-form').validate();
 
 			$('#cc-number').rules("add", {
-			      required: true,
 			      creditcard: true,
 			      messages: {
 			        equalTo: "Number not valid."
 			      }
 			 });
+
+			$('#credit-subform').hide();
+			
+			$('input:radio').change(function() {
+		        if (this.value == 'credit') {
+		        	$('#credit-subform').show();
+		        }
+		        else if (this.value == 'transfer') {
+		            $('#credit-subform').hide();
+		        }
+		    });
+
+			$('#previous-address-1').change(function() {
+				if ($(this).val() > 0) {
+						$('#address_name_1').val($('option:selected', this).attr('name'));
+						$('#address_line1_1').val($('option:selected', this).attr('line1'));
+						$('#address_line2_1').val($('option:selected', this).attr('line2'));
+						$('#address_suburb_1').val($('option:selected', this).attr('suburb'));
+						$('#address_state_1').val($('option:selected', this).attr('state'));
+						$('#address_country_1').val($('option:selected', this).attr('country'));
+						$('#address_postcode_1').val($('option:selected', this).attr('postcode'));
+						$('#address_telephone_1').val($('option:selected', this).attr('telephone'));
+						$('#address_mobile_1').val($('option:selected', this).attr('mobile'));					
+				}
+			});
+
+			$('#previous-address-2').change(function() {
+				if ($(this).val() > 0) {
+						$('#address_name_2').val($('option:selected', this).attr('name'));
+						$('#address_line1_2').val($('option:selected', this).attr('line1'));
+						$('#address_line2_2').val($('option:selected', this).attr('line2'));
+						$('#address_suburb_2').val($('option:selected', this).attr('suburb'));
+						$('#address_state_2').val($('option:selected', this).attr('state'));
+						$('#address_country_2').val($('option:selected', this).attr('country'));
+						$('#address_postcode_2').val($('option:selected', this).attr('postcode'));
+						$('#address_telephone_2').val($('option:selected', this).attr('telephone'));
+						$('#address_mobile_2').val($('option:selected', this).attr('mobile'));					
+				}
+			});
+
+			/* $('#previous-address-2').change(function() {
+				if ($(this).val() > 0) {
+					$('.shipping-req').removeAttr('required');
+					$('#shipping-subform-content').hide();
+				} else {
+					$('.shipping-req').attr('required', 'required');
+					$('#shipping-subform-content').show();
+				}
+			}); */
+		    
 		})
 		
+		function sameAddress() {
+			$('#shipping-subform').toggle();
+			if ($('#shipping-subform:visible').length > 0) {
+				$('.shipping-req').attr('required', 'required');
+				$('.shipping-select-req').addClass('required');
+			} else {
+				$('.shipping-req').removeAttr('required');
+				$('.shipping-select-req').removeClass('required');
+			}
+		}
+
 		
 	</script>
 

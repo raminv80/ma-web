@@ -54,9 +54,9 @@
 			<!-- end of logo -->
 		</div>
 		<!-- end ofcontainer_16 -->
-		<div class="row-fluid">
-			<div class="span3">{block name=nav}{/block}</div>
-			<div class="span9">
+		<div class="row">
+			<div class="col-sm-3">{block name=nav}{/block}</div>
+			<div class="col-sm-9">
 				<div id="elfinder"></div>
 				<div class="row-fluid alert alert-block hidden" id="edited">
 					<div class="span12">

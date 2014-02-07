@@ -17,7 +17,7 @@
         {if $error}
 		<div class="row" style="margin:20px; color:#ff0000">{$error}</div>
         {/if}
-	{if !$user.id}
+	
 		<!-- LOGIN SECTION  -->
 		<div class="row" id="login" style="margin:40px;">
 			<form class="form-horizontal" id="login-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
@@ -141,61 +141,6 @@
 			</div>
 		</div>
 	
-        {else}
-              {if $user.social_id}                          
-              <div class="row" id="update-pass" style="margin:40px; ">
-                    <div class="row">
-                        <h3>{$user.gname}, you're logged in using Facebook!</h3>
-                    </div>
-                    <div class="row">
-                        <a title="Log Out"  href="/process/user?logout=true"><img src="/images/logoutFB.png" alt="Log out Facebook"></a>
-                    </div>
-              </div>
-              {else}
-		<!-- UPDATE PASSWORD SECTION  -->
-		<div class="row" id="update-pass" style="margin:40px;">
-                    
-                    <div class="row">
-                        <h3>Account Settings: <small>Change Password</small> </h3>
-                    </div>
-                    
-			<form class="form-horizontal" id="update-pass-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
-				<input type="hidden" value="updatePassword" name="action" id="action" /> 
-				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-				<div class="form-group">
-				    <label for="password" class="col-sm-2 control-label">Old Password</label>
-				    <div class="col-sm-10">
-				    	<input type="password" value="" class="form-control" id="old_password" name="old_password" required>
-                                    </div>
-                                </div>
-                                 <div class="form-group">
-				    <label for="password" class="col-sm-2 control-label">New Password</label>
-				    <div class="col-sm-10">
-				    	<input type="password" value="" class="form-control" id="password" name="password" required>
-			    	</div>
-				</div>
-				<div class="form-group">
-				    <label for="confirm_password" class="col-sm-2 control-label">Re-enter New Password</label>
-				    <div class="col-sm-10">
-				    	<input type="password" class="form-control req" id="confirm_password" name="confirm_password" required>
-				    	<span class="help-block"></span>
-					</div>
-				</div>
-			 	<div class="form-group">
-			    	<div class="col-sm-offset-2 col-sm-10">
-			      		<button onclick="$('#update-pass-form').submit();" class="btn btn-primary">Update</button>
-			    	</div>
-			  	</div>
-			</form>
-			
-		</div>
-		
-        
-            {/if}
-        
-        {/if}	
-        
-		
 	</div>
 	
 	<script type="text/javascript">
