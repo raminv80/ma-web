@@ -4,9 +4,8 @@ include 'admin/includes/functions/admin-functions.php';
 if(checkToken('admin', $_POST["formToken"])){
 	$tables = $DBobject->ShowTables();
 	if($tables){
-		
+		$returnIDs = array();
 		$stored = array();
-		
 		$fields = $_POST['field'];
 		foreach($fields as $order => $set){
 			foreach($set as $tbl => $group){
@@ -69,10 +68,12 @@ if(checkToken('admin', $_POST["formToken"])){
 						}
 						if($insert_table != ''){
 							$o = $DBobject->PDO->lastInsertId();
-							$stored["{$id}"] = $o;
+							$key = "field[{$order}][{$tbl}][{$index}][{$id}]";
+							$returnIDs[$key] = $o;
+							/* $stored["{$id}"] = $o;
 							if(empty($back_to_id)){
 								$back_to_id = '/'.$o;
-							}
+							} */
 						}
 						
 					}
@@ -84,6 +85,12 @@ if(checkToken('admin', $_POST["formToken"])){
 
 
 global $EDITED;
-$_SESSION['notice']= $EDITED;
-header("Location: {$_SERVER['HTTP_REFERER']}{$back_to_id}");
+
+
+echo json_encode(array(
+		"notice" => $EDITED,
+		"IDs" => $returnIDs
+));
+//$_SESSION['notice']= $EDITED;
+//header("Location: {$_SERVER['HTTP_REFERER']}{$back_to_id}");
 die();

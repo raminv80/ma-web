@@ -5,6 +5,7 @@
 <meta name="Description" content="{$page_metadescription}" />
 <meta name="Keywords" content="{$page_metawords}" />
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="Distribution" content="Global" />
 <meta name="Robots" content="index,follow" />
 <title>{$page_seo_title}</title>
@@ -24,11 +25,6 @@
 <link rel="stylesheet" type="text/css" href="/admin/includes/css/bootstrap.min.css" />
 <script src="/admin/includes/js/bootstrap.min.js"></script>
 <!-- End Responsive -->
-<script type="text/javascript" src="/admin/includes/js/validation.js"></script>
-<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
-<script type="text/javascript" src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>
-<script type="text/javascript" src="/admin/includes/fileManager/js/elfinder.full.js"></script>
-<script type="text/javascript" src="/admin/includes/js/jquery-ui-1.10.3.custom.min.js"></script>
 
 <link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600' rel='stylesheet' type='text/css'>
 
@@ -58,25 +54,17 @@
 			<div class="col-sm-3">{block name=nav}{/block}</div>
 			<div class="col-sm-9">
 				<div id="elfinder"></div>
-				<div class="row-fluid alert alert-block hidden" id="edited">
-					<div class="span12">
-						<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully edited.</b>
-					</div>
+				<div class="row alert alert-block hidden notification" id="edited">
+					<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully edited.</b>
 				</div>
-				<div class="row-fluid alert alert-block hidden" id="deleted">
-					<div class="span12">
-						<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully deleted.</b>
-					</div>
+				<div class="row alert alert-block hidden notification" id="deleted">
+					<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully deleted.</b>
 				</div>
-				<div class="row-fluid alert alert-block hidden" id="warning">
-					<div class="span12">
-						<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>There is something wrong. Please check that you have filled out the fields correctly.</b>
-					</div>
+				<div class="row alert alert-block hidden notification" id="warning">
+					<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>There is something wrong. Please check that you have filled out the fields correctly.</b>
 				</div>
-				<div class="row-fluid alert alert-block hidden" id="error">
-					<div class="span12">
-						<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>An unknown error occured.</b>
-					</div>
+				<div class="row alert alert-block hidden notification" id="error">
+					<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>An unknown error occured.</b>
 				</div>
 				{if $notice neq ''}
 				<script>
@@ -151,5 +139,9 @@
 
 	</div>
 	<script type="text/javascript" src="/admin/includes/js/admin-general.js"></script>
+	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
+	<script type="text/javascript" src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>
+	<script type="text/javascript" src="/admin/includes/fileManager/js/elfinder.full.js"></script>
+	<script type="text/javascript" src="/admin/includes/js/jquery-ui-1.10.3.custom.min.js"></script>
 </body>
 </html>
