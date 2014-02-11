@@ -14,8 +14,11 @@
 				<div class="well">
 					<ul class='nav nav-list'>
 						<li class="nav-header">{$item.title}</li>
-						<li><a href='{$item.url}' class='list-header'>ALL</a></li> {foreach item=li from=$item.list}
-						<li><a href='{$li.url}' class='list-header'>{$li.title}</a></li> {/foreach}
+						<li><a href='{$item.url}' class='list-header'>ALL</a></li>
+						<li><a href='{$item.addNewUrl}' class='list-header'>ADD NEW</a></li> 
+						{foreach item=li from=$item.list}
+						<li><a href='{$li.url}' class='list-header'>{$li.title}</a></li> 
+						{/foreach}
 					</ul>
 				</div>
 			</div>

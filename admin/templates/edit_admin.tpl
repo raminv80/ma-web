@@ -14,39 +14,45 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="admin_name">Name</label>
+				<label class="col-sm-3 control-label" for="admin_name">Name *</label>
 				<div class="col-sm-5">
 					<input class="form-control" type="text" value="{$fields.admin_name}" name="field[1][tbl_admin][{$cnt}][admin_name]" id="admin_name" required>
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="admin_surname">Surname</label>
 				<div class="col-sm-5">
 					<input class="form-control" type="text" value="{$fields.admin_surname}" name="field[1][tbl_admin][{$cnt}][admin_surname]" id="admin_surname">
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="admin_email">Email</label>
+				<label class="col-sm-3 control-label" for="admin_email">Email *</label>
 				<div class="col-sm-5">
 					<input class="form-control" type="email" value="{$fields.admin_email}" name="field[1][tbl_admin][{$cnt}][admin_email]" id="admin_email" required>
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="admin_reemail">Retype Email</label>
+				<label class="col-sm-3 control-label" for="admin_reemail">Retype Email *</label>
 				<div class="col-sm-5">
 					<input class="form-control" type="text" value="{$fields.admin_email}" id="admin_reemail" required>
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="password">Password</label>
+				<label class="col-sm-3 control-label" for="password">Password *</label>
 				<div class="col-sm-5">
-					<input class="form-control" type="password" value="" id="password" required>
+					<input class="form-control" type="password" value="" name="field1" id="password" >
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="re_password">Retype Password</label>
+				<label class="col-sm-3 control-label" for="re_password">Retype Password *</label>
 				<div class="col-sm-5">
-					<input class="form-control" type="password" value="" id="re_password" required>
+					<input class="form-control" type="password" value="" name="field2" id="re_password" >
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group" style="display: none">
@@ -63,8 +69,8 @@
 				<input type="hidden" id="error" name="error" value="0" />
 
 				<div class="row form-group">
-					<div class="col-sm-offset-3 col-sm-5">
-						<a href="javascript:void(0)" class="btn btn-primary" onClick="$('#Edit_Record').submit();">Submit</a>
+					<div class="col-sm-offset-3 col-sm-9">
+						<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
 					</div>
 				</div>
 
@@ -79,11 +85,8 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-
-	$('#Edit_Record').validate();
 	
 	$('#re_password').rules("add", {
-	      required: true,
 	      equalTo: '#password',
 	      messages: {
 	        equalTo: "The passwords you have entered do not match. Please check them."
@@ -91,7 +94,6 @@ $(document).ready(function(){
 	 });
 
 	$('#admin_reemail').rules("add", {
-	      required: true,
 	      equalTo: '#admin_email',
 	      messages: {
 	        equalTo: "The emails you have entered do not match. Please check them."

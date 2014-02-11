@@ -30,6 +30,7 @@
 			</div>		
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+				<li><a href="#pricing" data-toggle="tab">Pricing</a></li>
 				<li><a href="#images" data-toggle="tab">Images</a></li>
 				<li><a href="#attributes" data-toggle="tab">Attributes</a></li>
 				<!-- <button class="btn btn-primary" onClick="$('#Edit_Record').submit();" type="submit">Submit</button> -->
@@ -38,121 +39,129 @@
 			<div class="tab-content">
 				<!--===+++===+++===+++===+++===+++ DETAILS TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane active" id="details">
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_name">Name</label>
-						<div class="col-sm-5">
-							<input class="form-control" type="text" value="{$fields.product_name}" name="field[1][tbl_product][{$cnt}][product_name]" id="id_product_name" class="req" onchange="seturl(this.value);">
+					<div class="row form">
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_name">Name *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.product_name}" name="field[1][tbl_product][{$cnt}][product_name]" id="id_product_name" onchange="seturl(this.value);" required>
+								<span class="help-block"></span>
+							</div>
 						</div>
-					</div>
-					<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_product_url">Url</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url">
+						<div class="row form-group">
+								<label class="col-sm-3 control-label" for="id_product_url">URL *</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" required>
+								<span class="help-block"></span>
+							</div>
+						</div>		
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_listing">Category</label>
+							<div class="col-sm-5 ">
+								<select  class="form-control" name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing">
+									<option value="{$rootParentID}">Select one</option> 
+									{call name=options_list opts=$fields.options.product_listing_id}
+								</select>
+							</div>
+						</div>			
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_seo_title">SEO Title *</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_seo_title}" name="field[1][tbl_product][{$cnt}][product_seo_title]" id="id_product_seo_title" required>
+								<span class="help-block"></span>
+							</div>
 						</div>
-					</div>		
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_listing">Category</label>
-						<div class="col-sm-5 ">
-							<select  class="form-control" name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing">
-								<option value="{$rootParentID}">Select one</option> 
-								{call name=options_list opts=$fields.options.product_listing_id}
-							</select>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_meta_description">Meta Description</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_meta_description}" name="field[1][tbl_product][{$cnt}][product_meta_description]" id="id_product_meta_description">
+							</div>
+						</div>					
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_meta_words">Meta Words</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_meta_words}" name="field[1][tbl_product][{$cnt}][product_meta_words]" id="id_product_meta_words">
+							</div>
 						</div>
-					</div>			
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_seo_title">SEO Title</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_seo_title}" name="field[1][tbl_product][{$cnt}][product_seo_title]" id="id_product_seo_title">
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_description">Description</label><br />
+							<div class="col-sm-5 ">
+								<textarea name="field[1][tbl_product][{$cnt}][product_description]" id="id_product_description" class="tinymce">{$fields.product_description}</textarea>
+							</div>
 						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_meta_description">Meta Description</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_meta_description}" name="field[1][tbl_product][{$cnt}][product_meta_description]" id="id_product_meta_description">
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_order">Order</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order" class="number">
+							</div>
 						</div>
-					</div>					
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_meta_words">Meta Words</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_meta_words}" name="field[1][tbl_product][{$cnt}][product_meta_words]" id="id_product_meta_words">
-						</div>
-					</div>
-		 			<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_meta_words">Microdata</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_microdata}" name="field[1][tbl_product][{$cnt}][product_microdata]" id="id_product_microdata">
-						</div>
-					</div> 
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_description">Description</label><br />
-						<div class="col-sm-5 ">
-							<textarea name="field[1][tbl_product][{$cnt}][product_description]" id="id_product_description" class="tinymce">{$fields.product_description}</textarea>
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_instock">In stock</label>
-						<div class="col-sm-5 ">
-							<input type="hidden" value="{if $fields.product_instock eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_instock]" class="value"> <input type="checkbox" {if $fields.product_instock eq 1 || $fields.product_id eq ""}checked="checked"
-								{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_instock">
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_gst">Incl. GST</label>
-						<div class="col-sm-5 ">
-							<input type="hidden" value="{if $fields.product_gst eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_gst]" class="value"> <input type="checkbox" {if $fields.product_gst eq 1 || $fields.product_id eq ""}checked="checked"
-								{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_gst">
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_price">Price</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_price}" name="field[1][tbl_product][{$cnt}][product_price]" id="id_product_price" class="double validDouble">
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_specialprice">Special Price</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_specialprice}" name="field[1][tbl_product][{$cnt}][product_specialprice]" id="id_product_specialprice" class="double validDouble">
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_weight">Weight (Kg)</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_weight}" name="field[1][tbl_product][{$cnt}][product_weight]" id="id_product_weight" class="double validDouble">
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_width">Width (cm)</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_width}" name="field[1][tbl_product][{$cnt}][product_width]" id="id_product_width" class="double validDouble">
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_height">Height (cm)</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_height}" name="field[1][tbl_product][{$cnt}][product_height]" id="id_product_height" class="double validDouble">
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_length">Length (cm)</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_length}" name="field[1][tbl_product][{$cnt}][product_length]" id="id_product_length" class="double validDouble">
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_order">Order</label>
-						<div class="col-sm-5 ">
-							<input class="form-control" type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order" class="number">
-						</div>
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-3 control-label" for="id_product_published">Published</label>
-						<div class="col-sm-5 ">
-							<input type="hidden" value="{if $fields.product_published eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_published]" class="value"> <input type="checkbox" {if $fields.product_published eq 1}checked="checked"
-								{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_published">
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_published">Published</label>
+							<div class="col-sm-5 ">
+								<input type="hidden" value="{if $fields.product_published eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_published]" class="value"> 
+								<input class="chckbx" type="checkbox" {if $fields.product_published eq 1}checked="checked"{/if} 
+									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_published">
+							</div>
 						</div>
 					</div>
 				</div>
+				<!--===+++===+++===+++===+++===+++ PRICING TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane" id="pricing">
+					<div class="row form">
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_price">Price ($)</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_price}" name="field[1][tbl_product][{$cnt}][product_price]" id="id_product_price" class="double validDouble">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_specialprice">Special Price ($)</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_specialprice}" name="field[1][tbl_product][{$cnt}][product_specialprice]" id="id_product_specialprice" class="double validDouble">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_weight">Weight (Kg)</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_weight}" name="field[1][tbl_product][{$cnt}][product_weight]" id="id_product_weight" class="double validDouble">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_width">Width (cm)</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_width}" name="field[1][tbl_product][{$cnt}][product_width]" id="id_product_width" class="double validDouble">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_height">Height (cm)</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_height}" name="field[1][tbl_product][{$cnt}][product_height]" id="id_product_height" class="double validDouble">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_length">Length (cm)</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_length}" name="field[1][tbl_product][{$cnt}][product_length]" id="id_product_length" class="double validDouble">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_gst">Incl. GST</label>
+							<div class="col-sm-5 ">
+								<input type="hidden" value="{if $fields.product_gst eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_gst]" class="value">
+								<input class="chckbx" type="checkbox" {if $fields.product_gst eq 1 || $fields.product_id eq ""}checked="checked" {/if} 
+									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_gst">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_instock">In stock</label>
+							<div class="col-sm-5 ">
+								<input type="hidden" value="{if $fields.product_instock eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_instock]" class="value"> 
+								<input class="chckbx" type="checkbox" {if $fields.product_instock eq 1 || $fields.product_id eq ""}checked="checked" {/if} 
+									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_instock">
+							</div>
+						</div>
+					</div>
+				</div>
+				
 				<!--===+++===+++===+++===+++===+++ IMAGES TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="images">
 					<!--  gallery -->
@@ -178,8 +187,8 @@
 						{include file='gallery.tpl'}
 					{/foreach}
 					</div>
-					<div class="col-sm-offset-1" style="margin-bottom: 100px;">
-						<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="$('.images').hide();newImage();"> Add New Image</a>
+					<div class="row btn-inform">
+						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.images').hide();newImage();"> Add New Image</a>
 					</div>
 					<div class="row">
 						<input type="hidden" value="{$imageno}" id="imageno">
@@ -270,16 +279,15 @@
 				</div>
 				<!--===+++===+++===+++===+++===+++ ATTRIBUTES TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="attributes">
-					
-					<div class="col-sm-offset-9" style="margin-bottom: 22px;">
-						<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="$('.attributes').hide();newAttribute();"> Add New Attribute</a>
-					</div>
 					<div id="attributes-wrapper">
 					{assign var='attributeno' value=0}
 					{foreach $fields.attribute as $attribute}
 						{assign var='attributeno' value=$attributeno+1}
 						{include file='form_attribute.tpl'}
 					{/foreach}
+					</div>
+					<div class="row btn-inform">
+						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.attributes').hide();newAttribute();"> Add New Attribute</a>
 					</div>
 					<div class="row">
 						<input type="hidden" value="{$attributeno}" id="attributeno">
@@ -435,10 +443,7 @@
 			
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
-					{if $fields.product_id neq ""} 
-						<!-- <a class="btn btn-success pull-right" href="./"> <i class="icon-plus icon-white"></i> Add New {$zone}</a>  -->
-					{/if}
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
 				</div>
 			</div>
 		</form>
@@ -462,6 +467,13 @@ function seturl(str){
 	    }
 	});
 }
+
+$(document).ready(function(){
+	
+	$('#id_product_url').rules("add", {
+		uniqueURLProduct: { id: "{if $fields.product_id}{$fields.product_id}{else}0{/if}" }
+	 });
+});
 
 $('.validDouble').keyup(function () {
     if (this.value != this.value.replace(/[^0-9\.]/g, '')) {

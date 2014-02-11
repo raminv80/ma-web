@@ -1,8 +1,11 @@
-<div id="image_wrapper{$imageno}" rel="{$imageno}" class="gallery-image">
+<div id="image_wrapper{$imageno}" rel="{$imageno}" class="gallery-image sub-form">
 	<div class="row" >
 		<div class="col-sm-8">
 			<fieldset>
-				<legend>{if $images.gallery_file}{$images.gallery_file}{else}Image #{$imageno}{/if}</legend>
+				<legend style="font-size:17px;">
+					<div id="gallery_image_{$imageno}_preview">{if $images.gallery_link}<img src="{$images.gallery_link}" alt="{$images.gallery_alt}" height="50px" width="50px">{/if}</div>
+					<div id="gallery_title_{$imageno}_preview">{if $images.gallery_title}{$images.gallery_title}{else}Image #{$imageno}{/if}</div>
+				</legend>
 			</fieldset>
 		</div>
 		<div class="col-sm-2">
@@ -24,7 +27,7 @@
 				<input type="hidden" value="{$images.gallery_product_id}" name="field[10][tbl_gallery][{$imageno}][gallery_product_id]" id="gallery_product_id" >
 				<input type="hidden" value="{$images.gallery_link}" name="field[10][tbl_gallery][{$imageno}][gallery_link]" id="gallery_image_{$imageno}_link" class="fileinput"> 
 				<span class="file-view" id="gallery_image_view_{$imageno}" {if $images.gallery_link eq ""}style="display: none"{/if} > 
-					<a href="{$images.gallery_link}" target="_blank" id="gallery_image_{$imageno}_path">{$images.gallery_link}</a>
+					<a href="{$images.gallery_link}" target="_blank" id="gallery_image_{$imageno}_path">View Image</a>
 				</span> 
 				<span class="file-view" id="gallery_image_none_{$imageno}" {if $images.gallery_link neq ""}style="display: none"{/if}>None</span> 
 				<a href="javascript:void(0);" class="btn btn-info marg-5r"
@@ -47,19 +50,19 @@
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="gallery_title">Title</label>
 			<div class="col-sm-5">
-				<input class="form-control" type="text" value="{$images.gallery_title}" name="field[10][tbl_gallery][{$imageno}][gallery_title]" id="gallery_title">
+				<input class="form-control" type="text" value="{$images.gallery_title}" name="field[10][tbl_gallery][{$imageno}][gallery_title]" id="gallery_title_{$imageno}" onchange="$('#gallery_title_{$imageno}_preview').html(this.value);">
 			</div>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="gallery_caption">Caption</label>
 			<div class="col-sm-5">
-				<input class="form-control" type="text" value="{$images.gallery_caption}" name="field[10][tbl_gallery][{$imageno}][gallery_caption]" id="gallery_caption">
+				<input class="form-control" type="text" value="{$images.gallery_caption}" name="field[10][tbl_gallery][{$imageno}][gallery_caption]" id="gallery_caption_{$imageno}">
 			</div>
 		</div>				
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="gallery_alt_tag">Alt Tag</label>
 			<div class="col-sm-5">
-				<input class="form-control" type="text" value="{$images.gallery_alt_tag}" name="field[10][tbl_gallery][{$imageno}][gallery_alt_tag]" id="gallery_alt_tag" >
+				<input class="form-control" type="text" value="{$images.gallery_alt_tag}" name="field[10][tbl_gallery][{$imageno}][gallery_alt_tag]" id="gallery_alt_tag_{$imageno}" >
 			</div>
 		</div>
 	</div>

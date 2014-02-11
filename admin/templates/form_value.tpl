@@ -1,11 +1,11 @@
 <div id="attr_value_wrapper{$attributeno*20+$attrvalueno}" class="attribute-attr_values attribute_attr_values{$attributeno}" rel="{$attributeno*20+$attrvalueno}" fieldno="{$attributeno*20+1}">
 	<div class="row attribute-attr_values-title">
-		<div class="col-sm-7">
+		<div class="col-sm-offset-1  col-sm-7">
 			<fieldset>
-				<legend style="font-size:18px;">{if $attr_value.attr_value_name} {$attr_value.attr_value_name}{else} Attr_value #{$attrvalueno}{/if}</legend>
+				<legend style="font-size:17px;">{if $attr_value.attr_value_name} {$attr_value.attr_value_name}{else} Attr_value #{$attrvalueno}{/if}</legend>
 			</fieldset>
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-2">
 			<a href="javascript:void(0);" class="btn btn-warning trainer-btn" onclick="toggleAttr_value('{$attributeno*20+$attrvalueno}')">Show / Hide</a>
 		</div>																			
 		<div class="col-sm-2">

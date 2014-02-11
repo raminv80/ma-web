@@ -1,4 +1,4 @@
-<div id="attribute_wrapper{$attributeno}" rel="{$attributeno}" fieldno="{$attributeno*20}" class="form-attribute">
+<div id="attribute_wrapper{$attributeno}" rel="{$attributeno}" fieldno="{$attributeno*20}" class="form-attribute sub-form">
 	<div class="row form-attribute-title" >
 		<div class="col-sm-8">
 			<fieldset>
@@ -14,7 +14,7 @@
 	</div>
 	<div class="row attributes" id="attribute{$attributeno}">
 		<div class="row form-group">
-				<label class="col-sm-3 control-label" for="attribute_name">Name</label>
+				<label class="col-sm-2 control-label" for="attribute_name">Name</label>
 				<input type="hidden" value="product_id" name="default[attribute_product_id]" />
 				<input type="hidden" value="{$attribute.attribute_id}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_id]" id="attribute_id" />
 				<input type="hidden" value="attribute_id" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][id]" id="id" /> 
@@ -24,19 +24,16 @@
 			</div>
 		</div>
 		<div class="row form-group">
-				<label class="col-sm-3 control-label" for="attribute_order">Order</label>
+				<label class="col-sm-2 control-label" for="attribute_order">Order</label>
 			<div class="col-sm-5">
 				<input class="form-control" type="text" value="{$attribute.attribute_order}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_order]" id="attribute_order" class="number">
 			</div>
 		</div>
-		<div class="col-sm-offset-1 col-sm-10 sub-form">
+		<div class="col-sm-12 sub-form">
 			<div class="col-sm-8">
 				<fieldset>
-					<legend> Values </legend>
+					<legend style="font-size:19px;margin-left: 18px;"> Values </legend>
 				</fieldset>
-			</div>
-			<div class="col-sm-4">
-				<a href="javascript:void(0);" class="btn btn-default" onclick="$('.attr_values').hide();newAttr_value({$attributeno});">Add New Value</a>
 			</div>
 		
 			<div id="attr_value-wrapper{$attributeno}">
@@ -46,6 +43,9 @@
 					{include file='form_value.tpl'}
 				{/foreach}
 				<input type="hidden" value="{$attrvalueno}" id="attr_valueno{$attributeno}">
+			</div>
+			<div class="col-sm-4">
+				<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.attr_values').hide();newAttr_value({$attributeno});">Add New Value</a>
 			</div>
 		</div>
 	</div>

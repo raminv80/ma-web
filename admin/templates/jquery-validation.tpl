@@ -34,12 +34,10 @@ if (jQuery.validator) {
 	    		    	try{
 	    		    		var obj = $.parseJSON(data);
 	    				 	var notice = obj.notice;
-	    				 	$('#'+ notice).removeClass('hidden');
+	    				 	$('#'+ notice).show();
 	    					setTimeout(function(){
-	    						$('#'+ notice).fadeOut('slow', function() {
-	    							$('#'+ notice).addClass('hidden');
-	    						});
-	    			    	},6000);
+	    						$('#'+ notice).fadeOut('slow');
+	    			    	},4000);
 	    					$.each(obj.IDs, function(k, v) {
 	    					    $('input[name="'+k+'"]').val(v);
 	    					});
@@ -60,9 +58,63 @@ if (jQuery.validator) {
 	      }
 	    }
 	  });
+
+	  jQuery.validator.addMethod(
+	  		"uniqueURLProduct", 
+	  		function(value, element, params) {
+	  			var response = false;
+	  			$.ajax({
+	  				type: "POST",
+	  			    url: "/admin/includes/processes/urlencode.php",
+	  				cache: false,
+	  				async: false,
+	  				data: "value="+encodeURIComponent(value)+"&id="+params.id+"&product=true",
+	  				dataType: "json",
+	  			    success: function(res, textStatus) {
+	  			    	try{
+	  			    		if ( res.error ) {
+	  			    			response = false;
+		  			    	} else {
+			  			    	response = true;
+			  			    }
+	  			    	}catch(err){ }
+	  			    }
+	  			});
+	  			return response;
+	  			
+			}, 
+			"This URL is currently being used.");
+
+	  jQuery.validator.addMethod(
+		  		"uniqueURL", 
+		  		function(value, element, params) {
+		  			var response = false;
+		  			$.ajax({
+		  				type: "POST",
+		  			    url: "/admin/includes/processes/urlencode.php",
+		  				cache: false,
+		  				async: false,
+		  				data: "value="+encodeURIComponent(value)+"&id="+params.id,
+		  				dataType: "json",
+		  			    success: function(res, textStatus) {
+		  			    	try{
+		  			    		if ( res.error ) {
+		  			    			response = false;
+			  			    	} else {
+				  			    	response = true;
+				  			    }
+		  			    	}catch(err){ }
+		  			    }
+		  			});
+		  			return response;
+		  			
+				}, 
+				"This URL is currently being used.");
+		
 	}
 
 $(document).ready(function(){
+	
 	$('#Edit_Record').validate();
 });
 

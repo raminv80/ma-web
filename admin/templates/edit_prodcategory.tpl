@@ -17,34 +17,37 @@
 						<legend>
 							{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone} 
 							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
-							{if $fields.listing_id neq ""} 
-								<a class="btn btn-small btn-success right pull-right" href="./"> <i class="icon-plus icon-white"></i>Add New</a> 
-							{/if}
+							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
+							
 						</legend>
 					</fieldset>
 					<input type="hidden" value="listing_id" name="field[1][tbl_listing][{$cnt}][id]" id="id"/> 
 					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_id">
 					<input type="hidden" value="{$typeID}" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id"> 
 					<input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" id="listing_parent_flag"> 
-					<input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" id="listing_display_menu"> 
+					<input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" id="listing_display_menu">
+					<input type="hidden" name="formToken" id="formToken" value="{$token}" /> 
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_name">Name</label>
+				<label class="col-sm-3 control-label" for="id_listing_name">Name *</label>
 				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_name}" name="field[1][tbl_listing][{$cnt}][listing_name]" id="id_listing_name" required onchange="seturl(this.value);">
+					<input class="form-control" type="text" value="{$fields.listing_name}" name="field[1][tbl_listing][{$cnt}][listing_name]" id="id_listing_name" onchange="seturl(this.value);" required>
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_title">Title</label>
+				<label class="col-sm-3 control-label" for="id_listing_title">Title *</label>
 				<div class="col-sm-5">
 					<input class="form-control" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" required>
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_url">URL</label>
+				<label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
 				<div class="col-sm-5">
 					<input class="form-control" type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" required>
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group">
@@ -57,9 +60,10 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_seo_title">SEO Title</label>
+				<label class="col-sm-3 control-label" for="id_listing_seo_title">SEO Title *</label>
 				<div class="col-sm-5">
 					<input class="form-control" type="text" value="{$fields.listing_seo_title}" name="field[1][tbl_listing][{$cnt}][listing_seo_title]" id="id_listing_seo_title" required>
+					<span class="help-block"></span>
 				</div>
 			</div>
 			<div class="row form-group">
@@ -83,8 +87,9 @@
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_listing_published">Published</label>
 				<div class="col-sm-5">
-					<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value"> <input type="checkbox" {if $fields.listing_published eq 1}checked="checked"
-						{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
+					<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value"> 
+					<input class="chckbx" type="checkbox" {if $fields.listing_published eq 1}checked="checked" {/if} 
+					onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
 				</div>
 			</div>
 			<div class="row form-group">
@@ -108,8 +113,7 @@
 
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
-					<button class="btn btn-primary" onClick="$('#Edit_Record').submit();" type="submit">Submit</button>
-					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
 				</div>
 			</div>
 		</form>
@@ -133,5 +137,11 @@ function seturl(str){
 	});
 }
 
+$(document).ready(function(){
+	
+	$('#id_listing_url').rules("add", {
+    	  uniqueURL: { id: "{if $fields.listing_id}{$fields.listing_id}{else}0{/if}" }
+	 });
+});
 </script>
 {/block}

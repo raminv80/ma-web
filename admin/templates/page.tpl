@@ -42,6 +42,7 @@
 <title>Website administration</title>
 </head>
 <body>
+
 	<div class='container'>
 		<div class="masthead">
 			<div id="logo">
@@ -54,35 +55,16 @@
 			<div class="col-sm-3">{block name=nav}{/block}</div>
 			<div class="col-sm-9">
 				<div id="elfinder"></div>
-				<div class="row alert alert-block hidden notification" id="edited">
-					<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully edited.</b>
-				</div>
-				<div class="row alert alert-block hidden notification" id="deleted">
-					<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully deleted.</b>
-				</div>
-				<div class="row alert alert-block hidden notification" id="warning">
-					<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>There is something wrong. Please check that you have filled out the fields correctly.</b>
-				</div>
-				<div class="row alert alert-block hidden notification" id="error">
-					<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>An unknown error occured.</b>
-				</div>
-				{if $notice neq ''}
-				<script>
-			$('#{$notice}').removeClass('hidden');
-			setTimeout(function(){
-				//$('.alert').fadeOut('slow');
-				$('#{$notice}').fadeOut('slow', function() {
-					$('#{$notice}').addClass('hidden');
-				});
-	    	},6000);
-			</script>
-				{/if}
+				
 				<!--  block body start -->
 				{block name=body}{/block}
 				<!--  block body end -->
 			</div>
 		</div>
 		{block name=footer}{/block}
+		
+		
+		
 		<script type="text/javascript">
 		$(document).ready(function(){
 			$('textarea.tinymce').tinymce({
@@ -136,8 +118,32 @@
             return false;
         }
 	</script>
-
 	</div>
+	
+	<div class="alert alert-block notification" id="edited" style="display:none;">
+		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully edited.</b>
+	</div>
+	<div class="alert alert-block notification" id="deleted" style="display:none;">
+		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully deleted.</b>
+	</div>
+	<div class="alert alert-block notification" id="warning" style="display:none;">
+		<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>There is something wrong. Please check that you have filled out the fields correctly.</b>
+	</div>
+	<div class="alert alert-block notification" id="error" style="display:none;">
+		<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>An unknown error occured.</b>
+	</div>
+	{if $notice neq ''}
+		<script>
+			$('#{$notice}').removeClass('hidden');
+			setTimeout(function(){
+				//$('.alert').fadeOut('slow');
+				$('#{$notice}').fadeOut('slow', function() {
+					$('#{$notice}').addClass('hidden');
+				});
+	    	},6000);
+		</script>
+	{/if}
+	
 	<script type="text/javascript" src="/admin/includes/js/admin-general.js"></script>
 	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
 	<script type="text/javascript" src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>

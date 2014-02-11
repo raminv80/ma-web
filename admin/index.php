@@ -195,7 +195,7 @@ foreach($CONFIG->section as $sp){
 		$record = new Record($sp);
 		$list = $record->getRecordList();
 	}
-	$menu[] = array("title"=>$sp->title,"url"=>"/admin/list/{$sp->url}","list"=>$list);
+	$menu[] = array("title"=>$sp->title,"url"=>"/admin/list/{$sp->url}","list"=>$list,"addNewUrl"=>"/admin/edit/{$sp->url}");
 }
 $SMARTY->assign("menu",$menu);
 $SMARTY->display("extends:page.tpl|$nav|$template");

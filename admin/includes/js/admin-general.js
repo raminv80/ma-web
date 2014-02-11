@@ -35,6 +35,8 @@ function getFileType(ID,parent,listing_id){
 					$('#'+ID+'_file').html(file.name);
 			        $('#'+ID+'_path').attr('href','/'+file.path);
 			        $('#'+ID+'_path').html('View');
+			        
+			        $('#'+ID+'_preview').html('<img src="/'+file.path+'" alt="preview-image" height="50px" width="50px">');
 				}
 				elf = '';
 				$('#elfinder').elfinder('close').elfinder('destroy');
@@ -47,6 +49,7 @@ function getFileType(ID,parent,listing_id){
         scrollTop: $('#elfinder').offset().top
     }, 2000);
 }
+
 
 function deleteFileType(ID){
 	var count = $('#'+ID).parent().attr('rel');
