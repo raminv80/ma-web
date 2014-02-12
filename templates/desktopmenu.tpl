@@ -32,7 +32,7 @@
  		<span class="glyphicon glyphicon-shopping-cart"></span>
  		<div style="display:inline;" id="nav-itemNumber">{$itemNumber}</div>
  		
- 		<div class="badge" style="display:inline;" id="nav-subtotal">${$cart.cart_subtotal}</div>
+ 		<div class="badge" style="display:inline;" id="nav-subtotal">${$cart.cart_subtotal|number_format:2:'.':','}</div>
  		
  	</a>
  </li>

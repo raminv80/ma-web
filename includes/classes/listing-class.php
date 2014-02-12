@@ -120,15 +120,17 @@ class ListClass {
 			}
 			$p_data = $this->LoadParents ( $res[0]['listing_parent_id'] );
 			$SMARTY->assign ( "listing_parent", $p_data );
+			
+			foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
+				$t_data = $this->LoadAssociated($a,$res[0]["{$a->linkfield}"]);
+				$SMARTY->assign ( "{$a->name}", $t_data );
+			}
 		}else{
 			header ( "Location: /404" );
 			die ();
 		}
 			
-		foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
-			$t_data = $this->LoadAssociated($a,$_ID);
-			$SMARTY->assign ( "{$a->name}", $t_data );
-		}
+		
 		 
 		//------------- LOAD OPTIONS FOR SELECT INPUTS --------------
 		foreach ( $this->CONFIG_OBJ->table->options->field as $f ) {
@@ -198,7 +200,7 @@ class ListClass {
 		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
 			$data = $res [0];
 			foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
-				$data ["{$a->name}"] = $this->LoadAssociated($a, $_id);
+				$data ["{$a->name}"] = $this->LoadAssociated($a, $data["{$a->linkfield}"]);
 			}
 			// $data['listing_parent'] = $this->LoadParents($res[0]['listing_parent_id']);
 		}
@@ -209,7 +211,7 @@ class ListClass {
 		$data = $this->GetDataSingleSet ( $_ID );
 		
 		foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
-			$data ["{$a->name}"] = $this->LoadAssociated($a, $_ID);
+			$data ["{$a->name}"] = $this->LoadAssociated($a, $data["{$asc->linkfield}"]);
 		}
 		foreach ( $this->CONFIG_OBJ->table->extends as $a ) {
 			$t_data = array ();
@@ -448,7 +450,7 @@ class ListClass {
 				$data ["{$row['listing_id']}"] = unclean ( $row );
 				foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
 					if ($a->attributes ()->listing) {
-						$data ["{$row['listing_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row['listing_id'],true);
+						$data ["{$row['listing_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row["{$a->linkfield}"],true);
 					}
 				}
 				$subs = self::LoadTree ( $row ['listing_id'], $level ++ ,$count);
@@ -484,7 +486,7 @@ class ListClass {
 			foreach( $res2 as $row2 ) {
 				foreach ( $a->associated as $asc ) {
 					if(!empty($a->id)){
-						$row2["{$asc->name}"] = self::LoadAssociated($asc, $row2["{$a->id}"]);
+						$row2["{$asc->name}"] = self::LoadAssociated($asc, $row2["{$asc->linkfield}"]);
 					}
 				}
 				$t_data[] = $row2;

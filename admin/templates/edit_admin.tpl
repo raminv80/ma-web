@@ -1,16 +1,22 @@
 {block name=body}
 <div class="row">
 	<div class="col-sm-12">
-		<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" action="/admin/includes/processes/processes-record.php" method="post">
+		<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
 			<div class="row">
 				<div class="col-sm-12">
 					<fieldset>
-						<legend> {if $fields.admin_id neq ""}Edit{else}New{/if} Admin {if $cnt eq ""}{assign var=cnt value=0}{/if} </legend>
+						<legend> {if $fields.admin_id neq ""}Edit{else}New{/if} Admin {if $cnt eq ""}{assign var=cnt value=0}{/if} 
+							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;">Save</a>
+						</legend>
 					</fieldset>
 					<input type="hidden" value="{$fields.admin_id}" name="field[1][tbl_admin][{$cnt}][admin_id]" id="admin_id" /> 
 					<input type="hidden" value="admin_id" name="field[1][tbl_admin][{$cnt}][id]" id="id" /> 
 					<input type="hidden" value="{$fields.admin_username}" name="field[1][tbl_admin][{$cnt}][admin_username]" id="admin_username"> 
 					<input type="hidden" value="{$fields.admin_password}" name="field[1][tbl_admin][{$cnt}][admin_password]" id="admin_password">
+					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
+					
+					<input type="hidden" id="error" name="error" value="0" />
+					
 				</div>
 			</div>
 			<div class="row form-group">
@@ -30,7 +36,7 @@
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="admin_email">Email *</label>
 				<div class="col-sm-5">
-					<input class="form-control" type="email" value="{$fields.admin_email}" name="field[1][tbl_admin][{$cnt}][admin_email]" id="admin_email" required>
+					<input class="form-control" type="email" value="{$fields.admin_email}" name="field[1][tbl_admin][{$cnt}][admin_email]" id="admin_email" onchange="$('#admin_username').val(this.value);createPassword();" required>
 					<span class="help-block"></span>
 				</div>
 			</div>
@@ -44,7 +50,7 @@
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="password">Password *</label>
 				<div class="col-sm-5">
-					<input class="form-control" type="password" value="" name="field1" id="password" >
+					<input class="form-control" type="password" value="" name="field1" id="password" onchange="createPassword();">
 					<span class="help-block"></span>
 				</div>
 			</div>
@@ -65,17 +71,10 @@
 					</select>
 				</div>
 			</div>
-			<div class="row">
-				<input type="hidden" id="error" name="error" value="0" />
-
-				<div class="row form-group">
-					<div class="col-sm-offset-3 col-sm-9">
-						<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
-					</div>
+			<div class="row form-group">
+				<div class="col-sm-offset-3 col-sm-9">
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
 				</div>
-
-
-				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 			</div>
 		</form>
 	</div>
@@ -84,13 +83,23 @@
 {include file='jquery-validation.tpl'}
 
 <script type="text/javascript">
+var init_pass = "{if $fields.admin_password}{$fields.admin_password}{/if}";
+
 $(document).ready(function(){
+
+	$('#Edit_Record').validate({
+		onkeyup: false
+	});
 	
 	$('#re_password').rules("add", {
 	      equalTo: '#password',
 	      messages: {
 	        equalTo: "The passwords you have entered do not match. Please check them."
 	      }
+	 });
+	 
+	$('#admin_email').rules("add", {
+		uniqueEmail: { id: "{if $fields.admin_id}{$fields.admin_id}{else}0{/if}" }
 	 });
 
 	$('#admin_reemail').rules("add", {
@@ -100,6 +109,27 @@ $(document).ready(function(){
 	      }
 	 });
 });
+
+function createPassword() {
+
+ 	if ($('#password').val() != '' && $('#admin_email').val() != '') {
+		$.ajax({
+			type: "POST",
+		    url: "/admin/includes/processes/createPass.php",
+			cache: false,
+			data: "username="+$('#admin_email').val()+"&password="+$('#password').val(),
+			dataType: "json",
+		    success: function(res, textStatus) {
+		    	try{
+		    		$('#admin_password').val(res.password);
+				}catch(err){ }
+		    }
+		});
+	} else {
+		$('#admin_password').val(init_pass);
+	} 
+}
+
 </script>
 
 {/block}

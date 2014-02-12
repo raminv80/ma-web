@@ -26,7 +26,7 @@
 		                  		Order placed: <b> {$order.cart_closed_date|date_format:"%e %B %Y"}</b>
 		                  	</div>
 		                  	<div class="row">
-		                  		Total: <b> ${$order.cart_total}</b>
+		                  		Total: <b> ${$order.cart_total|number_format:2:".":","}</b>
 		                  	</div>
 		                  	{foreach $order.items as $item}
 			                  	<ul>

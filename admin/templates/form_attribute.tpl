@@ -2,7 +2,7 @@
 	<div class="row form-attribute-title" >
 		<div class="col-sm-8">
 			<fieldset>
-				<legend>{if $attribute.attribute_name}{$attribute.attribute_name}{else}Attribute #{$attributeno}{/if}</legend>
+				<legend><div id="attribute_name_{$attributeno}_preview">{if $attribute.attribute_name}{$attribute.attribute_name}{else}Attribute #{$attributeno}{/if}</div></legend>
 			</fieldset>
 		</div>
 		<div class="col-sm-2">
@@ -20,7 +20,7 @@
 				<input type="hidden" value="attribute_id" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][id]" id="id" /> 
 				<input type="hidden" value="{$attribute.attribute_product_id}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_product_id]" id="attribute_product_id" />  
 			<div class="col-sm-5">
-				<input class="form-control" type="text" value="{$attribute.attribute_name}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_name]" id="attribute_name">
+				<input class="form-control" type="text" value="{$attribute.attribute_name}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_name]" id="attribute_name" onchange="$('#attribute_name_{$attributeno}_preview').html(this.value);">
 			</div>
 		</div>
 		<div class="row form-group">
@@ -30,7 +30,7 @@
 			</div>
 		</div>
 		<div class="col-sm-12 sub-form">
-			<div class="col-sm-8">
+			<div class="col-sm-11">
 				<fieldset>
 					<legend style="font-size:19px;margin-left: 18px;"> Values </legend>
 				</fieldset>

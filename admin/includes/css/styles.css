@@ -29,6 +29,7 @@
 .sub-form {
 	background-color: rgb(238, 238, 238); 
 	padding: 15px;
+	margin-bottom: 25px;
 }
 
 
@@ -41,9 +42,6 @@
     width: 100%;
 	margin: 0 !important;
 	text-align: center;
-}
-.sub-form {
-	margin-top: 25px;
 }
 .btn-add-new {
 	margin-top: 15px;

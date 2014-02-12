@@ -61,6 +61,7 @@
 		<associated> 
 			<name>gallery</name>
 			<table>tbl_gallery</table>
+			<linkfield>listing_id</linkfield>
 			<field>gallery_listing_id</field> 
 		</associated>
 		<list_template>list.tpl</list_template>
@@ -113,12 +114,14 @@
 				<id>attribute_id</id>
 				<name>attribute</name>
 				<table>tbl_attribute</table>
+				<linkfield>product_id</linkfield>
 				<field>attribute_product_id</field> 
 				<orderby>attribute_order ASC</orderby>
 				<associated> 
 					<id>attr_value_id</id>
 					<name>attr_value</name>
 					<table>tbl_attr_value</table>
+					<linkfield>attribute_id</linkfield>
 					<field>attr_value_attribute_id</field> 
 					<orderby>attr_value_order ASC</orderby>
 				</associated>
@@ -126,6 +129,7 @@
 			<associated> 
 				<name>gallery</name>
 				<table>tbl_gallery</table>
+				<linkfield>product_id</linkfield>
 				<field>gallery_product_id</field> 
 			</associated>
 			<options> 
@@ -139,6 +143,67 @@
 		</table>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_product.tpl</edit_template>
+	</section> 
+	
+	<!-- THIS SECTION IS USED TO MANAGE THE "CART/ORDERS" TABLE. -->
+	<section>
+		<showlist>FALSE</showlist>
+		<url>orders</url>
+		<title>Orders</title>
+		<type>TABLE</type>
+		<type_id>2</type_id>
+		<table>
+			<name>tbl_cart</name>
+			<id>cart_id</id>
+			<field>cart_closed_date</field>
+			<deleted>cart_deleted</deleted>
+			<where>cart_closed_date IS NOT NULL</where> 
+			<orderby>cart_closed_date DESC</orderby>
+			<associated> 
+				<id>cartitem_id</id>
+				<name>items</name>
+				<table>tbl_cartitem</table>
+				<linkfield>cart_id</linkfield>
+				<field>cartitem_cart_id</field> 
+				<associated> 
+					<id>cartitem_attr_id</id>
+					<name>attributes</name>
+					<table>tbl_cartitem_attr</table>
+					<linkfield>cartitem_id</linkfield>
+					<field>cartitem_attr_cartitem_id</field> 
+				</associated>
+			</associated>
+			<associated> 
+				<id>user_id</id>
+				<name>user</name>
+				<table>tbl_user</table>
+				<linkfield>cart_user_id</linkfield>
+				<field>user_id</field> 
+			</associated>
+			<associated> 
+				<id>payment_id</id>
+				<name>payment</name>
+				<table>tbl_payment</table>
+				<linkfield>cart_id</linkfield>
+				<field>payment_cart_id</field> 
+				<associated> 
+					<id>address_id</id>
+					<name>billing_address</name>
+					<table>tbl_address</table>
+					<linkfield>payment_billing_address_id</linkfield>
+					<field>address_id</field> 
+				</associated>
+				<associated> 
+					<id>address_id</id>
+					<name>shipping_address</name>
+					<table>tbl_address</table>
+					<linkfield>payment_shipping_address_id</linkfield>
+					<field>address_id</field> 
+				</associated>
+			</associated>
+		</table>
+		<list_template>list_order.tpl</list_template>
+		<edit_template>edit_order.tpl</edit_template>
 	</section> 
 	<!-- THIS SECTION IS USED TO MANAGE THE HORSE TABLE. -->
 <!-- 	<section>

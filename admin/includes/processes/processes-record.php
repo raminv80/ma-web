@@ -70,10 +70,10 @@ if(checkToken('admin', $_POST["formToken"])){
 							$o = $DBobject->PDO->lastInsertId();
 							$key = "field[{$order}][{$tbl}][{$index}][{$id}]";
 							$returnIDs[$key] = $o;
-							/* $stored["{$id}"] = $o;
-							if(empty($back_to_id)){
-								$back_to_id = '/'.$o;
-							} */
+							$stored["{$id}"] = $o;
+							if($_POST['primary_id'] == $id){
+								$primaryID = $o;
+							}
 						}
 						
 					}
@@ -86,11 +86,16 @@ if(checkToken('admin', $_POST["formToken"])){
 
 global $EDITED;
 
-
-echo json_encode(array(
-		"notice" => $EDITED,
-		"IDs" => $returnIDs
-));
-//$_SESSION['notice']= $EDITED;
-//header("Location: {$_SERVER['HTTP_REFERER']}{$back_to_id}");
+if(!empty($primaryID)){
+	echo json_encode(array(
+			"notice" => $EDITED,
+			"IDs" => $returnIDs,
+			"primaryID" => $primaryID
+	));
+}else{
+	echo json_encode(array(
+			"notice" => $EDITED,
+			"IDs" => $returnIDs
+	));
+}
 die();

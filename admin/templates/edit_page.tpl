@@ -102,7 +102,7 @@
 					<small>Size: 1960px Wide x 345px Tall <br>("None" for default image)</small></label>
 				<div class="col-sm-9">
 					<input type="hidden" value="{$fields.listing_image}" name="field[1][tbl_listing][{$cnt}][listing_image]" id="listing_image_link" class="fileinput"> <span class="file-view" id="listing_image_view" {if $fields.listing_image eq ""}style="display: none"{/if} > <a
-						href="{$fields.listing_image}" target="_blank" id="listing_image_path">{$fields.listing_image}</a>
+						href="{$fields.listing_image}" target="_blank" id="listing_image_path">View</a>
 					</span> <span class="file-view" id="listing_image_none" {if $fields.listing_image neq ""}style="display: none"{/if}>None</span> <a href="javascript:void(0);" class="btn btn-info marg-5r"
 						onclick="
 					getFileType('listing_image','','');
@@ -157,6 +157,10 @@ function seturl(str){
 }
 
 $(document).ready(function(){
+
+	$('#Edit_Record').validate({
+		onkeyup: false
+	});
 	
 	$('#id_listing_url').rules("add", {
     	  uniqueURL: { id: "{if $fields.listing_id}{$fields.listing_id}{else}0{/if}" }

@@ -8,14 +8,14 @@
 						<legend>
 							{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone} 
 							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
-							{if $fields.listing_id neq ""} 
-								<a class="btn btn-small btn-success right pull-right" href="./"> <i class="icon-plus icon-white"></i>Add New</a> 
-							{/if}
+							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
+							
 						</legend>
 					</fieldset>
 					<input type="hidden" value="listing_id" name="field[1][tbl_listing][{$cnt}][id]" id="id" /> 
 					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_id"> 
 					<input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
+					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				</div>
 			</div>
 			<div class="row form-group">
@@ -130,8 +130,7 @@
 			</div>
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
-					<button class="btn btn-primary">Submit</button>
-					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
 				</div>
 			</div>
 		</form>
@@ -140,7 +139,7 @@
 
 {include file='jquery-validation.tpl'}
 
-<script>
+<script type="text/javascript">
 
 function seturl(str){
 	$.ajax({
@@ -158,10 +157,12 @@ function seturl(str){
 }
 
 $(document).ready(function(){
+	$('#Edit_Record').validate({
+		onkeyup: false
+	});
 	
 	$('#id_listing_url').rules("add", {
-	      required: true,
-	      uniqueURL: true
+    	  uniqueURL: { id: "{if $fields.listing_id}{$fields.listing_id}{else}0{/if}" }
 	 });
 });
 

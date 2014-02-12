@@ -51,9 +51,23 @@ class Listing {
 					}
 				}
 			}
+			
+			foreach ( $this->CONFIG_OBJ->associated as $a ) {
+				$listing_f ["{$a->name}"] = $this->getAssociated($a, $res[0]["{$a->linkfield}"]);
+			}
+			foreach ( $this->CONFIG_OBJ->extends as $a ) {
+				$pre = str_replace ( "tbl_", "", $a->table );
+				$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL "; 
+				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
+					foreach ( $res [0] as $key => $field ) {
+						$r_array ["{$key}"] = $field;
+					}
+					$listing_f ["{$a->name}"] [] = $r_array;
+				}
+			}
 		}
 		foreach ( $this->CONFIG_OBJ->options->field as $f ) {
-			if ($f->attributes()->recursive) { 
+			if ($f->attributes()->recursive) {
 				$parentID = 0;
 				if ($this->CONFIG_OBJ->root_parent_id) {
 					$parentID = $this->CONFIG_OBJ->root_parent_id;
@@ -61,31 +75,17 @@ class Listing {
 				$listing_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
 			} else {
 				$pre = str_replace ( "tbl_", "", $f->table );
-				$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : ""); 
+				$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 					foreach ( $res as $key => $row ) {
 						$listing_f ['options'] ["{$f->name}"] ["{$row ["{$pre}_id"]}"] = array (
 								'id' => $row ["{$pre}_id"],
-								'value' => $row ["{$f->reference}"] 
+								'value' => $row ["{$f->reference}"]
 						);
 					}
+					}
 				}
-			}
 		}
-		foreach ( $this->CONFIG_OBJ->associated as $a ) {
-			$listing_f ["{$a->name}"] = $this->getAssociated($a, $id);
-		}
-		foreach ( $this->CONFIG_OBJ->extends as $a ) {
-			$pre = str_replace ( "tbl_", "", $a->table );
-			$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL "; 
-			if ($res = $DBobject->wrappedSqlGet ( $sql )) {
-				foreach ( $res [0] as $key => $field ) {
-					$r_array ["{$key}"] = $field;
-				}
-				$listing_f ["{$a->name}"] [] = $r_array;
-			}
-		}
-		
 		return $listing_f;
 	}
 	function getOptionsCatTree($f, $pid){
@@ -126,7 +126,7 @@ class Listing {
 				}
 	
 				foreach($a->associated as $as){
-					$r_array["{$as->name}"] = $this->getAssociated($as, $row["{$a->id}"]);
+					$r_array["{$as->name}"] = $this->getAssociated($as, $row["{$as->linkfield}"]);
 				}
 				$results[] = $r_array;
 			}

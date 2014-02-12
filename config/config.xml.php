@@ -17,6 +17,7 @@
 			<associated>
 				<name>gallery</name>
 				<table>tbl_gallery</table>
+				<linkfield>listing_id</linkfield>
 				<field>gallery_listing_id</field>
 			</associated>
 		</table>
@@ -65,18 +66,21 @@
 				<id>product_id</id>
 				<name>product_info</name>
 				<table>tbl_product</table>
+				<linkfield>listing_id</linkfield>
 				<field>product_listing_id</field>
 				<orderby>product_order ASC</orderby>
 				<associated> 
 					<id>attribute_id</id>
 					<name>attribute</name>
 					<table>tbl_attribute</table>
+					<linkfield>product_id</linkfield>
 					<field>attribute_product_id</field> 
 					<orderby>attribute_order ASC</orderby>
 					<associated> 
 						<id>attr_value_id</id>
 						<name>attr_value</name>
 						<table>tbl_attr_value</table>
+						<linkfield>attribute_id</linkfield>
 						<field>attr_value_attribute_id</field> 
 						<orderby>attr_value_order ASC</orderby>
 					</associated>
@@ -84,6 +88,7 @@
 				<associated>
 					<name>gallery</name>
 					<table>tbl_gallery</table>
+					<linkfield>product_id</linkfield>
 					<field>gallery_product_id</field>
 					<orderby>gallery_ishero DESC</orderby> 
 				</associated>

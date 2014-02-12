@@ -120,6 +120,10 @@
 	</script>
 	</div>
 	
+	<div class="alert alert-block notification" id="form-error" style="display:none;">
+		<img alt="success" src="/admin/images/warning.png" width="28" height="28" style="margin-right: 14px;"/>
+		<div style="display:inline;" id="form-error-msg"></div>
+	</div>
 	<div class="alert alert-block notification" id="edited" style="display:none;">
 		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully edited.</b>
 	</div>
@@ -134,13 +138,10 @@
 	</div>
 	{if $notice neq ''}
 		<script>
-			$('#{$notice}').removeClass('hidden');
+			$('#{$notice}').show();
 			setTimeout(function(){
-				//$('.alert').fadeOut('slow');
-				$('#{$notice}').fadeOut('slow', function() {
-					$('#{$notice}').addClass('hidden');
-				});
-	    	},6000);
+				$('#{$notice}').fadeOut('slow');
+	    	},4000);
 		</script>
 	{/if}
 	

@@ -27,7 +27,7 @@
 				<input type="hidden" value="{$images.gallery_product_id}" name="field[10][tbl_gallery][{$imageno}][gallery_product_id]" id="gallery_product_id" >
 				<input type="hidden" value="{$images.gallery_link}" name="field[10][tbl_gallery][{$imageno}][gallery_link]" id="gallery_image_{$imageno}_link" class="fileinput"> 
 				<span class="file-view" id="gallery_image_view_{$imageno}" {if $images.gallery_link eq ""}style="display: none"{/if} > 
-					<a href="{$images.gallery_link}" target="_blank" id="gallery_image_{$imageno}_path">View Image</a>
+					<a href="{$images.gallery_link}" target="_blank" id="gallery_image_{$imageno}_path">View</a>
 				</span> 
 				<span class="file-view" id="gallery_image_none_{$imageno}" {if $images.gallery_link neq ""}style="display: none"{/if}>None</span> 
 				<a href="javascript:void(0);" class="btn btn-info marg-5r"

@@ -49,7 +49,7 @@
 				{/foreach}
 				
 				<div style="display:inline;">Price: $</div>
-				<div style="display:inline;" id="cal-price" value="{if $product_specialprice neq '0.00'}{$product_specialprice}{else}{$product_price}{/if}">{if $product_specialprice neq '0.00'}{$product_specialprice}{else}{$product_price}{/if}</div>
+				<div style="display:inline;" id="cal-price" value="{if $product_specialprice neq '0.00'}{$product_specialprice}{else}{$product_price}{/if}">{if $product_specialprice neq '0.00'}{$product_specialprice|number_format:2:'.':','}{else}{$product_price|number_format:2:'.':','}{/if}</div>
 				<div style="display:inline;"><input type="hidden" value="{$product_price}" name="price" id="price" /> </div>
 				{if $product_gst}
 				<div style="display:inline;color:#aaa"><small>(Incl. GST)</small></div>

@@ -11,7 +11,7 @@
 				</small>
 			{/if}
 			</div>
-			<div style='display:inline; text-align:right;' class='col-md-6'>{$item.cartitem_quantity} x ${$item.cartitem_product_price}</div>
+			<div style='display:inline; text-align:right;' class='col-md-6'>{$item.cartitem_quantity} x ${$item.cartitem_product_price|number_format:2:'.':','}</div>
 			
 			
 		</div>		

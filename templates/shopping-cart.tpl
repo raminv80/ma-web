@@ -37,10 +37,10 @@
 						</small>
 					{/if}
 					</div>
-					<div style="display:inline; text-align:right;" class="col-md-2">${$item.cartitem_product_price}</div>
+					<div style="display:inline; text-align:right;" class="col-md-2">${$item.cartitem_product_price|number_format:2:".":","}</div>
 					<div style="display:inline;" class="col-md-1"><input type="text" value="{$item.cartitem_quantity}" name="qty[{$item.cartitem_id}]" id="quantity" class="unsigned-int gt-zero" style="width: 30px; text-align: right;"></div>
 					
-					<div style="display:inline; text-align:right;" class="col-md-2" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal}</div>
+					<div style="display:inline; text-align:right;" class="col-md-2" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
 					<div style="display:inline;" class="col-md-1"><a href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');"><span class="label label-danger">Delete</span></a></div>
 				</div>		
 				{/foreach} 
@@ -52,19 +52,19 @@
 		
 		<div class="row" style="margin-top: 20px;">
 			<div style="display:inline; text-align:right;" class="col-md-10">Subtotal</div>
-			<div style="display:inline; text-align:right;" class="col-md-2" id="subtotal">${$cart.cart_subtotal}</div>
+			<div style="display:inline; text-align:right;" class="col-md-2" id="subtotal">${$cart.cart_subtotal|number_format:2:".":","}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
 			<div style="display:inline; text-align:right;" class="col-md-10">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
-			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">${$cart.cart_discount}</div>
+			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">${$cart.cart_discount|number_format:2:".":","}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
 			<div style="display:inline; text-align:right;" class="col-md-10">Postage & Handling</div>
-			<div style="display:inline; text-align:right;" class="col-md-2" id="shipping">${$cart.cart_shipping_fee}</div>
+			<div style="display:inline; text-align:right;" class="col-md-2" id="shipping">${$cart.cart_shipping_fee|number_format:2:".":","}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
 			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-10">Total</div>
-			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-2" id="total">${$cart.cart_total}</div>
+			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-2" id="total">${$cart.cart_total|number_format:2:".":","}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
 			<div class="col-md-offset-10"><a class="btn-success btn btn-sm" href="/store/checkout">Proceed to Checkout</a></div>

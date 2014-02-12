@@ -129,24 +129,26 @@ class ProductClass extends ListClass {
 			}
 			$p_data = $this->LoadParents ( $res[0][$parentField] );
 			$SMARTY->assign ( "listing_parent", $p_data );
+			
+			//------------- LOAD ASSOCIATED TABLES --------------
+			foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
+				if ($arrChk['isProduct'] == 'product') {
+					$t_data = array();
+					foreach ( $a->associated as $a2 ) {
+						$t_data[ "{$a2->name}"] = $this->LoadAssociated($a2, $res[0]["{$a2->linkfield}"]);
+					}
+				} else {
+					$t_data = $this->LoadAssociated($a, $res[0]["{$a->linkfield}"]);
+				}
+				$SMARTY->assign ( "{$a->name}", $t_data );
+					
+			}
+			
 		}else{
 			header ( "Location: /404" );
 			die ();
 		}
 		
-		//------------- LOAD ASSOCIATED TABLES --------------
-		foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
-			if ($arrChk['isProduct'] == 'product') {
-				$t_data = array();
-				foreach ( $a->associated as $a2 ) {
-					$t_data[ "{$a2->name}"] = $this->LoadAssociated($a2,$_ID);
-				}
-			} else {
-				$t_data = $this->LoadAssociated($a,$_ID);
-			}
-			$SMARTY->assign ( "{$a->name}", $t_data );
-			
-		}
 		
 		//------------- LOAD OPTIONS FOR SELECT INPUTS --------------
 		foreach ( $this->CONFIG_OBJ->table->options->field as $f ) {
@@ -292,7 +294,7 @@ class ProductClass extends ListClass {
 			foreach ( $res as $row ) {
 				$data ['products']["{$row['product_id']}"] = unclean ( $row );
 				foreach ( $this->CONFIG_OBJ->table->associated->associated as $a ) {
-					$data ['products']["{$row['product_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row['product_id']);
+					$data ['products']["{$row['product_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row["{$a->linkfield}"]);
 				}
 			}
 		}
@@ -314,7 +316,7 @@ class ProductClass extends ListClass {
 				$data ['listings']["{$row['listing_id']}"] = unclean ( $row );
 				foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
 					if ($a->attributes ()->listing) {
-						$data ["{$row['listing_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row['listing_id']);
+						$data ["{$row['listing_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row["{$a->linkfield}"]);
 					}
 				}
 				$subs = self::LoadTree ( $row ['listing_id'], $level ++ ,$count);

@@ -8,7 +8,7 @@
 </tr>
 {if count($item.subs) > 0} {call name=render_list items=$item.subs level=$level+1} {/if} {/foreach} {/function}
 
-<div class="row-fluid ">
+<div class="row ">
 	<table class="table table-bordered table-striped table-hover">
 		<thead>
 			<tr>

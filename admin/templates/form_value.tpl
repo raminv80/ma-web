@@ -2,7 +2,7 @@
 	<div class="row attribute-attr_values-title">
 		<div class="col-sm-offset-1  col-sm-7">
 			<fieldset>
-				<legend style="font-size:17px;">{if $attr_value.attr_value_name} {$attr_value.attr_value_name}{else} Attr_value #{$attrvalueno}{/if}</legend>
+				<legend style="font-size:17px;"><div id="attr_value_name_{$attributeno*20+$attrvalueno}_preview">{if $attr_value.attr_value_name} {$attr_value.attr_value_name}{else} Attr_value #{$attrvalueno}{/if}</div></legend>
 			</fieldset>
 		</div>
 		<div class="col-sm-2">
@@ -20,7 +20,7 @@
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_name">Name</label>
 			<div class="col-sm-2">
-				<input class="form-control" type="text" value="{$attr_value.attr_value_name}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_name]" id="attr_value_name">
+				<input class="form-control" type="text" value="{$attr_value.attr_value_name}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_name]" id="attr_value_name" onchange="$('#attr_value_name_{$attributeno*20+$attrvalueno}_preview').html(this.value);">
 			</div>
 		</div>
 		<div class="row form-group">
