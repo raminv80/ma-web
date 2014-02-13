@@ -95,19 +95,10 @@
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="listing_image">Image<br><small>Size: 480px Wide x 480px Tall</small></label>
 				<div class="col-sm-9">
-					<input type="hidden" value="{$fields.listing_image}" name="field[1][tbl_listing][{$cnt}][listing_image]" id="listing_image_link" class="fileinput"> <span class="file-view" id="listing_image_view" {if $fields.listing_image eq ""}style="display: none"{/if} > <a
-						href="{$fields.listing_image}" target="_blank" id="listing_image_path">View</a>
-					</span> <span class="file-view" id="listing_image_none" {if $fields.listing_image neq ""}style="display: none"{/if}>None</span> <a href="javascript:void(0);" class="btn btn-info marg-5r"
-						onclick="
-					getFileType('listing_image','','');
-					$('#listing_image_view').css('display','block');
-					$('#listing_image_none').css('display','none');
-					">Select File</a> <a href="javascript:void(0);" class="btn btn-info"
-						onclick="
-				$('#listing_image').val('');
-				$('#listing_image_view').css('display','none');
-				$('#listing_image_none').css('display','block');
-				">Remove File</a>
+					<input type="hidden" value="{$fields.listing_image}" name="field[1][tbl_listing][{$cnt}][listing_image]" id="listing_image_link" class="fileinput"> 
+					<span class="file-view" id="listing_image_path"> {if $fields.listing_image}<a href="{$fields.listing_image}" target="_blank" >View</a>{else}None{/if} </span> 
+					<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('listing_image','','');">Select File</a> 
+					<a href="javascript:void(0);" class="btn btn-info" onclick="$('#listing_image_link').val('');$('#listing_image_path').html('None');">Remove File</a>
 				</div>
 			</div>
 

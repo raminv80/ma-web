@@ -200,8 +200,8 @@
 					<!--  gallery -->
 				</div>
 				<!--===+++===+++===+++===+++===+++ ATTRIBUTES TAB +++===+++===+++===+++===+++====-->
-				<div class="row form" class="tab-pane" id="attributes">
-					<div id="attributes-wrapper">
+				<div class="tab-pane" id="attributes">
+					<div class="row form" id="attributes-wrapper">
 					{assign var='attributeno' value=0}
 					{foreach $fields.attribute as $attribute}
 						{assign var='attributeno' value=$attributeno+1}

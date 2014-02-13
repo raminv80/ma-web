@@ -1,53 +1,32 @@
 /**file types ***/
 var elf='';
 function getFileType(ID,parent,listing_id){
+	if (elf != '') {
+		$('#elfinder').elfinder('close').elfinder('destroy');
+	}
 	elf = $('#elfinder').elfinder({
 			url : '/admin/includes/fileManager/php/connector.php',
 			getFileCallback : function(file) {
-		   	    if(ID == ""){
-					var last = $('#'+parent).find('.gallery_item:last-child');
-					var count = $('#'+parent).find('.gallery_item:last-child').attr('rel');
-					if(count === undefined){
-						count=0;
-					}
-					count++;
-					var html = '';
-					html += '<div class="row-fluid gallery_item" rel="'+count+'">';
-					html += '<div class="span4" id="gallery_'+count+'" >';
-						html += '<input type="hidden" value="gallery_id" name="field[1][tbl_gallery]['+count+'][id]" id="id" />';
-						html += '<input type="hidden" value="listing_id" name="default[gallery_listing_id]" />';
-						html += '<input type="hidden" value="" name="field[1][tbl_gallery]['+count+'][gallery_id]" >';
-						html += '<input type="hidden" value="'+file.name+'" name="field[1][tbl_gallery]['+count+'][gallery_file]" id="gallery_image_'+count+'">';
-						html += '<input type="hidden" value="'+listing_id+'" name="field[1][tbl_gallery]['+count+'][gallery_listing_id]"  class="fileinput">';
-						html += '<input type="text" value="/'+file.path+'" name="field[1][tbl_gallery]['+count+'][gallery_link]" class="fileinput" id="gallery_image_'+count+'_link">';
-						html += '<span id="gallery_image_'+count+'_file">'+file.name+'</span>';
-					html += '</div>';
-					html += '<div class="span8">';
-					html += '<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType(\'gallery_image_'+count+'\',\'\',\'\')">Update</a>';
-					html += '<a href="/'+file.path+'" target="_blank" class="btn btn-info marg-5r" id="gallery_image_'+count+'_path">View</a>';
-					html += '<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="deleteFileType(\'gallery_'+count+'\')">Delete</a>';
-					html += '</div>';
-					html += '</div>';
-					$('#'+parent).append(html);
-				}else{
-					$('#'+ID).val(file.name);
-					$('#'+ID+'_link').val('/'+file.path);
-					$('#'+ID+'_file').html(file.name);
-			        $('#'+ID+'_path').attr('href','/'+file.path);
-			        $('#'+ID+'_path').html('View');
-			        
-			        $('#'+ID+'_preview').html('<img src="/'+file.path+'" alt="preview-image" height="50px" width="50px">');
-				}
+		   	    
+				$('#'+ID).val(file.name);
+				$('#'+ID+'_link').val('/'+file.path);
+				$('#'+ID+'_file').html(file.name);
+		        $('#'+ID+'_path').html('<a href="/'+file.path+'" target="_blank" >View</a>');
+		        $('#'+ID+'_preview').html('<img src="/'+file.path+'" alt="preview-image" height="50px" width="50px">');
+				
 				elf = '';
 				$('#elfinder').elfinder('close').elfinder('destroy');
+				$('#modal-elfinder').modal('hide');
 	        },
 	        dialog : { title : 'files', modal : true, height: 900 },
 	        resizable: true
 	}).elfinder('instance');
 	$('#elfinder').elfinder('open');
-	$('html, body').animate({
+	$('#modal-elfinder').modal('show');
+
+	/*$('html, body').animate({
         scrollTop: $('#elfinder').offset().top
-    }, 2000);
+    }, 2000);*/
 }
 
 

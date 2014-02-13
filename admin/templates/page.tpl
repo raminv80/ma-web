@@ -54,7 +54,7 @@
 		<div class="row">
 			<div class="col-sm-3">{block name=nav}{/block}</div>
 			<div class="col-sm-9">
-				<div id="elfinder"></div>
+				
 				
 				<!--  block body start -->
 				{block name=body}{/block}
@@ -144,6 +144,18 @@
 	    	},4000);
 		</script>
 	{/if}
+	
+	<div class="modal fade bs-modal-lg" id="modal-elfinder" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+	    	<div class="modal-content">
+	    		<div class="modal-header">
+					<button class="close" aria-hidden="true" data-dismiss="modal" type="button">×</button>
+					<h4 class="modal-title">Select a file</h4>
+				</div>
+	      		<div id="elfinder"></div>
+			</div>
+	  	</div>
+	</div>
 	
 	<script type="text/javascript" src="/admin/includes/js/admin-general.js"></script>
 	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>

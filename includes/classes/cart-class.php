@@ -217,11 +217,11 @@ class cart {
 	
 	
 	/**
-	 * Close cart by setting current datetime in cart_closed_date field
+	 * Close current cart (or given cart_id) by setting current datetime in cart_closed_date field
 	 * @param int $cart_id
 	 * @return boolean
 	 */
-	function CloseCart($cart_id) {
+	function CloseCart($cart_id = null) {
 		global $DBobject;
 		
 		if (is_null($cart_id)){
@@ -235,11 +235,11 @@ class cart {
 	
 	
 	/**
-	 * Delete cart by seeting current datetime in cart_deleted field
+	 * Delete current cart (or given cart_id) by seeting current datetime in cart_deleted field
 	 * @param unknown $cart_id
 	 * @return Ambigous <multitype:, boolean, void, resource, unknown, multitype:>
 	 */
-	function DeleteCart($cart_id) {
+	function DeleteCart($cart_id = null) {
 		global $DBobject;
 		
 		if (is_null($cart_id)){
@@ -322,11 +322,12 @@ class cart {
 	}
 	
 	/**
-	 * Return array with saved product details on cart (tbl_cartitem AND tbl_cartitem_attr) and product image gallery
+	 * Return array with product details on current cart (or given cartId) 
+	 * Include tbl_cartitem, tbl_cartitem_attr and product image gallery
 	 * 
 	 * @return array
 	 */
-	function GetDataProductsOnCart($cartId) {
+	function GetDataProductsOnCart($cartId = null) {
 		global $DBobject;
 		
 		if (is_null($cartId)){
@@ -372,10 +373,10 @@ class cart {
 	}
 	
 	/**
-	 * Return the recordset of the current cart
+	 * Return a recordset array of the current cart (or given cartId). Only tbl_cart.
 	 * @return array
 	 */
-	function GetDataCart($cartId) {
+	function GetDataCart($cartId = null) {
 		global $DBobject;
 		
 		if (is_null($cartId)){
@@ -826,7 +827,7 @@ class cart {
 	}
 
 	/**
-	 * Validate the given discount code and calculate the amount according to items on cart. 
+	 * Validate the given discount code and calculate the amount according to items on current cart (or given cartId). 
 	 * Limit the discount amount to subtotal value. 
 	 * Returns array['discount']:float or array['error']:string
 	 * 
