@@ -1,10 +1,10 @@
 <?php
 
-if(checkToken('frontend',$_POST["formToken"], true)){
-	switch ($_POST["action"]) {
+if(checkToken('frontend',$_POST['formToken'], true)){
+	switch ($_POST['action']) {
 		case 'ADDTOCART':
 			$cart_obj = new cart();
-			$response = $cart_obj->AddToCart($_POST["product_id"], $_POST["attr"], $_POST["quantity"], $_POST["price"]);
+			$response = $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['price']);
 			$itemsCount = $cart_obj->NumberOfProductsOnCart();
 			$cart = $cart_obj->GetDataCart();
 			$productsOnCart = $cart_obj->GetDataProductsOnCart();
@@ -12,64 +12,64 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 			$popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 			
 			echo json_encode(array(
-		    				"message" => $response,
-		    				"itemsCount" => $itemsCount,
-		    				"subtotal" => $cart['cart_subtotal'],
-							"popoverShopCart" =>  str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $popoverShopCart)
+		    				'message' => $response,
+		    				'itemsCount' => $itemsCount,
+		    				'subtotal' => $cart['cart_subtotal'],
+							'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
 	    				));
 		    exit;
 		    
 	    case 'DeleteItem':
 	    	$cart_obj = new cart();
-	    	$response = $cart_obj->RemoveFromCart($_POST["cartitem_id"]);
+	    	$response = $cart_obj->RemoveFromCart($_POST['cartitem_id']);
             $totals = $cart_obj->CalculateTotal();
             $itemsCount = $cart_obj->NumberOfProductsOnCart();
             $productsOnCart = $cart_obj->GetDataProductsOnCart();
             $SMARTY->assign('productsOnCart',$productsOnCart);
             $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 	    	echo json_encode(array(
-	    					"itemsCount" => $itemsCount,
-                            "response"=> $response,
-                            "totals"=>$totals,
-							"popoverShopCart" =>  str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $popoverShopCart)
+	    					'itemsCount' => $itemsCount,
+                            'response'=> $response,
+                            'totals'=>$totals,
+							'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
             ));
 	    	exit;
 
     	case 'updateCart':
     		$cart_obj = new cart();
-    		$subtotals = $cart_obj->UpdateQtyCart($_POST["qty"]);
+    		$subtotals = $cart_obj->UpdateQtyCart($_POST['qty']);
     		$totals = $cart_obj->CalculateTotal();
             $itemsCount = $cart_obj->NumberOfProductsOnCart();
             $productsOnCart = $cart_obj->GetDataProductsOnCart();
             $SMARTY->assign('productsOnCart',$productsOnCart);
             $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
     		echo json_encode(array(
-		    		"itemsCount"=> $itemsCount,
-    				"subtotals"=>$subtotals,
-    				"totals"=>$totals,
-					"popoverShopCart" =>  str_replace(array("\r\n", "\r", "\n", "\t"), ' ', $popoverShopCart)
+		    		'itemsCount'=> $itemsCount,
+    				'subtotals'=>$subtotals,
+    				'totals'=>$totals,
+					'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
     		));
     		exit;
     		
 		case 'applyDiscount':
 		    $cart_obj = new cart();
-		    $res = $cart_obj->ApplyDiscountCode($_POST["discount_code"]);
+		    $res = $cart_obj->ApplyDiscountCode($_POST['discount_code']);
 		    if ($res['error']) {
 		    	$_SESSION['error']= $res['error'];
 		    	$_SESSION['post']= $_POST;
-		    	header("Location: ".$_SERVER['HTTP_REFERER']."#error");
+		    	header('Location: '.$_SERVER['HTTP_REFERER'].'#error');
 		    } else {
-		    	header("Location: ".$_SERVER['HTTP_REFERER']);
+		    	header('Location: '.$_SERVER['HTTP_REFERER']);
 		    }
 		    exit;
 		    
 		case 'placeOrder':
     		
     		$user_obj = new UserClass();
-    		$billID = $user_obj->InsertNewAddress($_POST["address"][1]);
+    		$billID = $user_obj->InsertNewAddress($_POST['address'][1]);
     		$shipID = $billID;
     		if (is_null($_POST['same_address'])) { 
-    			$shipID = $user_obj->InsertNewAddress($_POST["address"][2]);
+    			$shipID = $user_obj->InsertNewAddress($_POST['address'][2]);
     		}
     		
     		if ($billID && $shipID) {
@@ -87,20 +87,48 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 	    		}
 	    		
 	    		$params = array_merge(array(
-	    				"payment_billing_address_id" => $billID,
-	    				"payment_shipping_address_id" => $shipID,
-	    				"payment_status" => 'P',
+	    				'payment_billing_address_id' => $billID,
+	    				'payment_shipping_address_id' => $shipID,
+	    				'payment_status' => 'P',
 	    		),
-	    				$_POST["payment"]
+	    				$_POST['payment']
 	    		);
 	    		$pay_obj->StorePaymentRecord($params);
 	    		
 	    		if ($reponse){
 	    			// PAYMENT SUCCESS
 	    			$cart_obj = new cart();
+	    			$order_cartId = $cart_obj->cart_id;
 	    			$cart_obj->CloseCart();
 	    			$cart_obj->CreateCart($_SESSION['user']['id']);
-	    			header("Location: /thank-you-for-buying");
+	    			
+	    			// SEND CONFIRMATION EMAIL
+	    			$SMARTY->assign('user',$_SESSION['user']);
+	    			
+					$billing = $user_obj->GetAddress($billID);
+					$SMARTY->assign('billing',$billing);
+					
+					$shipping = $user_obj->GetAddress($shipID);
+					$SMARTY->assign('shipping',$shipping);
+					
+					$order = $cart_obj->GetDataCart($order_cartId);
+					$SMARTY->assign('order',$order);
+					
+					$orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
+					$SMARTY->assign('orderItems',$orderItems);
+					
+					$buffer= $SMARTY->fetch('templates/email-confirmation.tpl');
+					
+					$to = $_SESSION['user']['email'];
+					$from = 'eShop';
+					$fromEmail = 'noreply@cms.themserver.com';
+					$subject = 'Confirmation of your order';
+					$body = $buffer;
+				
+					sendMail($to, $from, $fromEmail, $subject, $body);
+	    		
+	    			// REDIRECT TO THANK YOU PAGE	
+	    			header('Location: /thank-you-for-buying');
 	    			exit;
 	    			
 	    		} else {
@@ -115,12 +143,13 @@ if(checkToken('frontend',$_POST["formToken"], true)){
     		}
     		
     		$_SESSION['post']= $_POST;
-    		header("Location: ".$_SERVER['HTTP_REFERER']."#error");
+    		header('Location: '.$_SERVER['HTTP_REFERER'].'#error');
     		
     		exit;
 
 
 	}
+	
 }else{
 	die('');
 }

@@ -325,6 +325,20 @@ class UserClass {
     	return 0;
     }
     
+    /**
+     * Return array recordset given the address_id
+     * 
+     * @param int $addressId
+     * @return array
+     */
+    function GetAddress($addressId) {
+    	global $DBobject;
+    	 
+    	$sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
+    	$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $addressId) );
+    	return $res[0];
+    }
+    
     
     /**
      * Authenticate the user using Facebook account.
