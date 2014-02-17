@@ -7,6 +7,9 @@ body,input, button, select, textarea {
     max-width:350px !important;
     
 }
+ul.nav li.dropdown:hover > ul.dropdown-menu {
+    display: block;    
+}
 .carousel-indicators li {
 	cursor: pointer;
 }

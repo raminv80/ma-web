@@ -28,14 +28,25 @@
 
 <ul id="menu" class="nav navbar-nav">
  {call name=render_list items=$menuitems}
- <li><a href="/store/shopping-cart" id="shop-cart-btn" data-html="true" data-container="body" data-placement="bottom" data-trigger="hover" data-content="{include file='popover-shopping-cart.tpl'}" data-toggle="popover" data-title="Your Shopping Cart">
+	<li class="dropdown navbar-right">
+	 	<a href="/store/shopping-cart" class="dropdown-toggle">
+	        <span class="glyphicon glyphicon-shopping-cart"></span>
+	 		<div style="display:inline;" class="nav-itemNumber">{$itemNumber}</div>
+	 		
+	 		<div class="badge nav-subtotal" style="display:inline;">${$cart.cart_subtotal|number_format:2:'.':','}</div>
+	    </a>
+	    <ul class="dropdown-menu" id="shop-cart-btn">
+	        {include file='popover-shopping-cart.tpl'}
+	    </ul>
+	</li>
+ <!-- <li><a href="/store/shopping-cart" id="shop-cart-btn" data-html="true" data-container="body" data-placement="bottom" data-trigger="hover" data-content="{include file='popover-shopping-cart.tpl'}" data-toggle="popover" data-title="Your Shopping Cart">
  		<span class="glyphicon glyphicon-shopping-cart"></span>
  		<div style="display:inline;" id="nav-itemNumber">{$itemNumber}</div>
  		
  		<div class="badge" style="display:inline;" id="nav-subtotal">${$cart.cart_subtotal|number_format:2:'.':','}</div>
  		
  	</a>
- </li>
+ </li> -->
  
 {if $user.id}
 	<li><a title="My Account" href="/my-account">G'day {$user.gname}</a></li>
@@ -48,3 +59,5 @@
 
 </ul>
 {/block}
+
+

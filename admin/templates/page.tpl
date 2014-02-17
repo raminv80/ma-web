@@ -7,24 +7,23 @@
 <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="Distribution" content="Global" />
-<meta name="Robots" content="index,follow" />
+<meta name="Robots" content="noindex,nofollow" />
 <title>{$page_seo_title}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon">
 
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
-<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+
+
+<script src="/admin/includes/js/jquery-1.9.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/admin/includes/css/jqui.css" />
 <link rel="stylesheet" type="text/css" href="/admin/includes/css/styles.css" />
 <link rel="stylesheet" type="text/css" href="/admin/includes/js/timepicker/jquery.ui.timepicker.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/elfinder.min.css">
 <link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/theme.css">
 
-<!-- Responsive -->
 <link rel="stylesheet" type="text/css" href="/admin/includes/css/bootstrap.min.css" />
-<script src="/admin/includes/js/bootstrap.min.js"></script>
-<!-- End Responsive -->
 
 <link href='http://fonts.googleapis.com/css?family=Raleway:400,500,600' rel='stylesheet' type='text/css'>
 
@@ -40,6 +39,11 @@
 		});
 	</script>
 <title>Website administration</title>
+<!--[if lte IE 8]>
+	  <script src="/admin/includes/js/respond.min.js"></script>
+      <script src="/admin/includes/js/html5shiv.js"></script>
+ 	<![endif]-->
+
 </head>
 <body>
 
@@ -157,10 +161,13 @@
 	  	</div>
 	</div>
 	
-	<script type="text/javascript" src="/admin/includes/js/admin-general.js"></script>
-	<script type="text/javascript" src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
-	<script type="text/javascript" src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>
-	<script type="text/javascript" src="/admin/includes/fileManager/js/elfinder.full.js"></script>
-	<script type="text/javascript" src="/admin/includes/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<script src="/admin/includes/js/jquery-migrate-1.2.1.min.js"></script>
+	<script src="/admin/includes/js/jquery-ui-1.10.2.min.js"></script>
+	<script src="/admin/includes/js/admin-general.js"></script>
+	<script src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
+	<script src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>
+	<script src="/admin/includes/fileManager/js/elfinder.full.js"></script>
+	<script src="/admin/includes/js/bootstrap.min.js"></script>
+
 </body>
 </html>

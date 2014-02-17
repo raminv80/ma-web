@@ -151,6 +151,14 @@
 	</process>
 	 	
 
+	<responsiveImages>
+		<resolutions></resolutions><!-- the resolution break-points to use (screen widths, in pixels) -->
+		<cache></cache> <!-- where to store the generated re-sized images. Specify from your document root! -->
+		<quality></quality> <!-- the quality of any generated JPGs on a scale of 0 to 100 -->
+		<sharpen></sharpen> <!-- Shrinking images can blur details, perform a sharpen on re-scaled images? -->
+		<watch_cache></watch_cache> <!-- check that the adapted image isn't stale (ensures updated source images are re-cached) -->
+		<browser_cache></browser_cache><!-- How long the BROWSER cache should last (seconds, minutes, hours, days. 7days by default) -->
+	</responsiveImages>
 	<smartytemplate_config>
 		<templates>/templates</templates>
 		<templates_c>/templates_c</templates_c>

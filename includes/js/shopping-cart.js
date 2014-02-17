@@ -49,16 +49,15 @@ function addCart(){
 		    success: function(data) {
 		    	try{
 		    		var obj = $.parseJSON(data);
-				 	$('#nav-itemNumber').html(obj.itemsCount);
-				 	$('#nav-subtotal').html('$'+obj.subtotal);
+				 	$('.nav-itemNumber').html(obj.itemsCount);
+				 	$('.nav-subtotal2').html('$'+obj.subtotal);
 				 	$('body').css('cursor','default');
-				 	$('#shop-cart-btn').attr('data-content', obj.popoverShopCart );
-				 	$('#shop-cart-btn').popover('show');
+				 	$('#shop-cart-btn').html( obj.popoverShopCart );
+				 	$('#shop-cart-btn').fadeIn('400', 'linear' )
 				 	setTimeout(function() {
-				 		$('#shop-cart-btn').popover('hide');
+				 		$('#shop-cart-btn').removeAttr('style');
 				    }, 3000);
 				 	
-				 	/*alert (obj.message);*/
 		    		
 				}catch(err){
 					$('body').css('cursor','default'); 
@@ -89,9 +88,9 @@ function updateCart(){
 		    		var obj = $.parseJSON(data);
 		    		var subtotals = obj.subtotals;
 		    		var totals = obj.totals;
-                    $('#nav-itemNumber').html(obj.itemsCount);
-				 	$('#nav-subtotal').html('$'+obj.totals['subtotal']);
-				 	$('#shop-cart-btn').attr('data-content', obj.popoverShopCart );
+                    $('.nav-itemNumber').html(obj.itemsCount);
+				 	$('.nav-subtotal').html('$'+obj.totals['subtotal']);
+				 	$('#shop-cart-btn').html( obj.popoverShopCart );
 				 	if (subtotals) {
 				 		$.each(subtotals, function(id, value){
 				 			amount = parseFloat(value);
@@ -133,9 +132,9 @@ function deleteItem(ID){
 	    		var obj = $.parseJSON(data);
 			 	var response = obj.response;
                 var totals = obj.totals;
-                $('#nav-itemNumber').html(obj.itemsCount);
-                $('#nav-subtotal').html('$'+obj.totals['subtotal']);
-			 	$('#shop-cart-btn').attr('data-content', obj.popoverShopCart );
+                $('.nav-itemNumber').html(obj.itemsCount);
+                $('.nav-subtotal').html('$'+obj.totals['subtotal']);
+			 	$('#shop-cart-btn').html( obj.popoverShopCart );
 			 	if (response) {
 			 		if ( parseInt(obj.itemsCount) > 0 ){
                         $( '#'+ ID ).hide('slow');

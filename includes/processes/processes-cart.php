@@ -1,6 +1,6 @@
 <?php
-
-if(checkToken('frontend',$_POST['formToken'], true)){
+$referer = parse_url($_SERVER['HTTP_REFERER']);
+if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	switch ($_POST['action']) {
 		case 'ADDTOCART':
 			$cart_obj = new cart();
@@ -9,6 +9,8 @@ if(checkToken('frontend',$_POST['formToken'], true)){
 			$cart = $cart_obj->GetDataCart();
 			$productsOnCart = $cart_obj->GetDataProductsOnCart();
 			$SMARTY->assign('productsOnCart',$productsOnCart);
+			$SMARTY->assign('itemNumber',$itemsCount);
+			$SMARTY->assign('cart',$cart);
 			$popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 			
 			echo json_encode(array(
@@ -24,8 +26,11 @@ if(checkToken('frontend',$_POST['formToken'], true)){
 	    	$response = $cart_obj->RemoveFromCart($_POST['cartitem_id']);
             $totals = $cart_obj->CalculateTotal();
             $itemsCount = $cart_obj->NumberOfProductsOnCart();
+            $cart = $cart_obj->GetDataCart();
             $productsOnCart = $cart_obj->GetDataProductsOnCart();
             $SMARTY->assign('productsOnCart',$productsOnCart);
+            $SMARTY->assign('itemNumber',$itemsCount);
+            $SMARTY->assign('cart',$cart);
             $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 	    	echo json_encode(array(
 	    					'itemsCount' => $itemsCount,
@@ -40,8 +45,11 @@ if(checkToken('frontend',$_POST['formToken'], true)){
     		$subtotals = $cart_obj->UpdateQtyCart($_POST['qty']);
     		$totals = $cart_obj->CalculateTotal();
             $itemsCount = $cart_obj->NumberOfProductsOnCart();
+            $cart = $cart_obj->GetDataCart();
             $productsOnCart = $cart_obj->GetDataProductsOnCart();
             $SMARTY->assign('productsOnCart',$productsOnCart);
+            $SMARTY->assign('itemNumber',$itemsCount);
+            $SMARTY->assign('cart',$cart);
             $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
     		echo json_encode(array(
 		    		'itemsCount'=> $itemsCount,
@@ -147,9 +155,10 @@ if(checkToken('frontend',$_POST['formToken'], true)){
     		
     		exit;
 
-
-	}
 	
+	}
+	die();
 }else{
-	die('');
+	header('Location: /404');
+    die();
 }
