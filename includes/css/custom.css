@@ -8,8 +8,54 @@ body,input, button, select, textarea {
     
 }
 ul.nav li.dropdown:hover > ul.dropdown-menu {
-    display: block;    
+   /*  display: block;    */ 
 }
+
+.cart-overview-image {
+    height: 60px;
+    width: 60px;
+}
+.cart-product-summary table tr td {
+    padding-bottom: 10px;
+}
+.cart-product-summary-details {
+    color: #555555;
+    font-size: 12px;
+}
+.cart-product-summary-details strong {
+    font-size: 14px;
+}
+.cart-product-summary-price {
+    color: #555555;
+    font-size: 16px;
+    font-weight: bold;
+    padding-left: 20px;
+    text-align: right;
+}
+.cart-total-price-2 {
+    border-bottom: 2px solid #E7E7E7;
+    border-top: 2px solid #E7E7E7;
+}
+.cart-total-price-2 table {
+    border-bottom: 3px solid #FFFFFF;
+    border-top: 3px solid #FFFFFF;
+}
+.cart-total-price-2 table tr {
+    background-color: #F2F2F2;
+    color: #555555;
+}
+.cart-total-price-2 table tr td {
+    padding: 10px;
+}
+.cart-total-price-2 {
+    font-size: 14px;
+    font-weight: bold;
+}
+.cart-total-price-2 strong {
+    font-size: 24px;
+}
+
+
 .carousel-indicators li {
 	cursor: pointer;
 }

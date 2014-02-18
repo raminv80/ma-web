@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true"> 
+<config debug="true" staging="true"> 
 	<company></company> 
 	<database> 
 		<host>m4-mysql1-1.ilisys.com.au</host> 
@@ -136,7 +136,7 @@
 				<field recursive="true"> 
 					<name>product_listing_id</name>
 					<table>tbl_listing</table>
-					<reference>listing_name</reference> 
+					<reference>listing_title</reference> 
 					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
 				</field> 
 			</options>

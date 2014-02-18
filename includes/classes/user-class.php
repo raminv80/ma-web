@@ -15,7 +15,7 @@ class UserClass {
     function Create($user){
     	global $DBobject;
     
-    	if ($this->RetrieveByUsername($user)) {
+    	if ($this->RetrieveByUsername($user['email'])) {
     		return array ('error' => 'This email is already been used.');
     	} else {
     		

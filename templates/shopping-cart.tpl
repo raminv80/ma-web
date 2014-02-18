@@ -56,7 +56,7 @@
 		</div>
 		<div class="row" style="margin-top: 20px;">
 			<div style="display:inline; text-align:right;" class="col-md-10">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
-			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">${$cart.cart_discount|number_format:2:".":","}</div>
+			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">-${$cart.cart_discount|number_format:2:".":","}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
 			<div style="display:inline; text-align:right;" class="col-md-10">Postage & Handling</div>

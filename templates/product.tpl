@@ -31,7 +31,17 @@
 				{foreach $product_info.attribute as $attr }
 					{if $attr.attr_value}
 					<div style="display:inline;"><b>{$attr.attribute_name}: </b> 
-						<select id="attr-{$attr.attribute_id}" name="attr[{$attr.attribute_id}]" class='modifier' >
+						<select id="{urlencode data=$attr.attribute_name}" name="attr[{$attr.attribute_id}]" class='modifier' >
+								<option value=""
+										price="0"
+										instock="0"
+										weight ="0"
+										width ="0"
+										height ="0"
+										length ="0"
+										name =""
+										>Select one
+								</option>
 							{foreach $attr.attr_value as $value }
 								<option value="{$value.attr_value_id}" 
 										price="{if $product_specialprice neq '0.00'}{$value.attr_value_specialprice}{else}{$value.attr_value_price}{/if}"
@@ -40,6 +50,7 @@
 										width ="{$value.attr_value_width}"
 										height ="{$value.attr_value_height}"
 										length ="{$value.attr_value_length}"
+										name ="{urlencode data=$value.attr_value_name}"
 										>{$value.attr_value_name}
 								</option>
 							{/foreach}
@@ -73,4 +84,26 @@
 	</div>
 
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>
+	
+	<script type="text/javascript">
+		function getParameterByName(name) {
+		    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+		    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		        results = regex.exec(location.search);
+		    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+		
+		$(document).ready(function(){
+			{if $product_info.attribute}
+				{foreach $product_info.attribute as $attr }
+					var {urlencode data=$attr.attribute_name} = getParameterByName('{urlencode data=$attr.attribute_name}');
+
+					$("#{urlencode data=$attr.attribute_name} option[name*='"+ {urlencode data=$attr.attribute_name} +"']").attr("selected", "selected"); 
+				{/foreach}
+			{/if}
+			
+			calculatePrice();
+		});
+	</script>
+	
 {/block}

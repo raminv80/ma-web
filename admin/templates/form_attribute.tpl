@@ -26,7 +26,7 @@
 		<div class="row form-group">
 				<label class="col-sm-2 control-label" for="attribute_order">Order</label>
 			<div class="col-sm-5">
-				<input class="form-control" type="text" value="{$attribute.attribute_order}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_order]" id="attribute_order" class="number">
+				<input class="form-control number" type="text" value="{$attribute.attribute_order}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_order]" id="attribute_order">
 			</div>
 		</div>
 		<div class="col-sm-12 sub-form">

@@ -1,13 +1,6 @@
 
-$(document).ready(function(){
-			
-	/* $('.modifier').trigger('change'); */
-	calculatePrice();
-	
-});
 
 $('.modifier').change(function() {
-	/* alert($(this).val()); */
 	calculatePrice();
 });
 
@@ -50,12 +43,12 @@ function addCart(){
 		    	try{
 		    		var obj = $.parseJSON(data);
 				 	$('.nav-itemNumber').html(obj.itemsCount);
-				 	$('.nav-subtotal2').html('$'+obj.subtotal);
+				 	$('.nav-subtotal').html('$'+obj.subtotal);
 				 	$('body').css('cursor','default');
 				 	$('#shop-cart-btn').html( obj.popoverShopCart );
-				 	$('#shop-cart-btn').fadeIn('400', 'linear' )
+				 	$('#shop-cart-btn').slideDown();
 				 	setTimeout(function() {
-				 		$('#shop-cart-btn').removeAttr('style');
+				 		$('#shop-cart-btn').slideUp();
 				    }, 3000);
 				 	
 		    		

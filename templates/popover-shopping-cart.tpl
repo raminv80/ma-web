@@ -4,13 +4,13 @@
 			<tbody>
 			{foreach from=$productsOnCart item=item}
 				<tr>
-					<td><img src='' class='cart-overview-image'></td>
+					<td><img src='{$item.gallery.0.gallery_link}' alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" class='cart-overview-image'></td>
 					<td class='cart-product-summary-details'><strong>{$item.cartitem_product_name}</strong>
 						<br>{foreach from=$item.attributes item=attr}
 								- {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name} 
 							{/foreach}
 						<br>Qty: {$item.cartitem_quantity}</td>
-					<td class='cart-product-summary-price'>${$item.cartitem_product_price|number_format:2:'.':','}</td>
+					<td class='cart-product-summary-price'>${$item.cartitem_subtotal|number_format:2:'.':','}</td>
 				</tr>
 			{/foreach} 
 			</tbody>

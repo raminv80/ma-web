@@ -125,27 +125,32 @@
 	</div>
 	
 	<div class="alert alert-block notification" id="form-error" style="display:none;">
-		<img alt="success" src="/admin/images/warning.png" width="28" height="28" style="margin-right: 14px;"/>
+		<img alt="success" src="/admin/images/warning.png" width="28" height="28"/>
 		<div style="display:inline;" id="form-error-msg"></div>
+		<button type="button" class="close pull-right" onclick="$('#form-error').fadeOut('slow');">x</button>
 	</div>
 	<div class="alert alert-block notification" id="edited" style="display:none;">
 		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully edited.</b>
+		<button type="button" class="close pull-right" onclick="$('#edited').fadeOut('slow');">x</button>
 	</div>
 	<div class="alert alert-block notification" id="deleted" style="display:none;">
 		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully deleted.</b>
+		<button type="button" class="close pull-right" onclick="$('#deleted').fadeOut('slow');">x</button>
 	</div>
 	<div class="alert alert-block notification" id="warning" style="display:none;">
 		<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>There is something wrong. Please check that you have filled out the fields correctly.</b>
+		<button type="button" class="close pull-right" onclick="$('#warning').fadeOut('slow');">x</button>
 	</div>
 	<div class="alert alert-block notification" id="error" style="display:none;">
 		<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>An unknown error occured.</b>
+		<button type="button" class="close pull-right" onclick="$('#error').fadeOut('slow');">x</button>
 	</div>
 	{if $notice neq ''}
 		<script>
 			$('#{$notice}').show();
 			setTimeout(function(){
 				$('#{$notice}').fadeOut('slow');
-	    	},4000);
+	    	},14000);
 		</script>
 	{/if}
 	

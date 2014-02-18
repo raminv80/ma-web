@@ -23,7 +23,7 @@ if (jQuery.validator) {
 		      	$('#form-error').show();
 				setTimeout(function(){
 					$('#form-error').fadeOut('slow');
-		    	},4000);
+		    	},14000);
 		   }
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
@@ -157,6 +157,17 @@ if (jQuery.validator) {
 		}, 
 		"Email needs to be unique, other user is already using that email address."
 	);
+
+	jQuery.validator.addClassRules({
+		double: {
+			number: true
+		},
+		number: {
+			number: true,
+			digits: true,
+			maxlength: 4
+		},
+	});
 
 }
 

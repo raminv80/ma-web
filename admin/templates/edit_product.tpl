@@ -92,7 +92,7 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_order">Order</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order" class="number">
+								<input class="form-control number" type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
 							</div>
 						</div>
 						<div class="row form-group">
@@ -111,37 +111,37 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_price">Price ($)</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_price}" name="field[1][tbl_product][{$cnt}][product_price]" id="id_product_price" class="double validDouble">
+								<input class="form-control double" type="text" value="{$fields.product_price}" name="field[1][tbl_product][{$cnt}][product_price]" id="id_product_price">
 							</div>
 						</div>
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_specialprice">Special Price ($)</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_specialprice}" name="field[1][tbl_product][{$cnt}][product_specialprice]" id="id_product_specialprice" class="double validDouble">
+								<input class="form-control double" type="text" value="{$fields.product_specialprice}" name="field[1][tbl_product][{$cnt}][product_specialprice]" id="id_product_specialprice">
 							</div>
 						</div>
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_weight">Weight (Kg)</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_weight}" name="field[1][tbl_product][{$cnt}][product_weight]" id="id_product_weight" class="double validDouble">
+								<input class="form-control double" type="text" value="{$fields.product_weight}" name="field[1][tbl_product][{$cnt}][product_weight]" id="id_product_weight">
 							</div>
 						</div>
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_width">Width (cm)</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_width}" name="field[1][tbl_product][{$cnt}][product_width]" id="id_product_width" class="double validDouble">
+								<input class="form-control double" type="text" value="{$fields.product_width}" name="field[1][tbl_product][{$cnt}][product_width]" id="id_product_width">
 							</div>
 						</div>
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_height">Height (cm)</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_height}" name="field[1][tbl_product][{$cnt}][product_height]" id="id_product_height" class="double validDouble">
+								<input class="form-control double" type="text" value="{$fields.product_height}" name="field[1][tbl_product][{$cnt}][product_height]" id="id_product_height">
 							</div>
 						</div>
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_length">Length (cm)</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_length}" name="field[1][tbl_product][{$cnt}][product_length]" id="id_product_length" class="double validDouble">
+								<input class="form-control double" type="text" value="{$fields.product_length}" name="field[1][tbl_product][{$cnt}][product_length]" id="id_product_length">
 							</div>
 						</div>
 						<div class="row form-group">
@@ -189,7 +189,7 @@
 						{/foreach}
 					</div>
 					<div class="row btn-inform">
-						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.images').hide();newImage();"> Add New Image</a>
+						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.images').slideUp();newImage();"> Add New Image</a>
 					</div>
 					<div class="row">
 						<input type="hidden" value="{$imageno}" id="imageno">
@@ -209,7 +209,7 @@
 					{/foreach}
 					</div>
 					<div class="row btn-inform">
-						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.attributes').hide();newAttribute();"> Add New Attribute</a>
+						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.attributes').slideUp();newAttribute();"> Add New Attribute</a>
 					</div>
 					<div class="row">
 						<input type="hidden" value="{$attributeno}" id="attributeno">
@@ -236,14 +236,17 @@
 
 $(document).ready(function(){
 
+	
 	$('#Edit_Record').validate({
 		onkeyup: false
 	});
+	
 	
 	$('#id_product_url').rules("add", {
 		uniqueURLProduct: { id: "{if $fields.product_id}{$fields.product_id}{else}0{/if}" }
 	 });
 
+		
 	$('.images').hide();
 
 	if ($('#imageno').val() == 0 ) {
@@ -253,12 +256,6 @@ $(document).ready(function(){
 	$('.attributes').hide();
 	$('.attr_values').hide();
 
-	$('.validDouble').keyup(function () {
-	    if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
-	       this.value = this.value.replace(/[^0-9\.]/g, '');
-	    }
-	});
-	
 	$('#id_product_hero_image').change(function() {
 		$('.ishero').val('0');
 		$('#gallery_ishero_'+ $(this).val()).val('1');
@@ -305,19 +302,19 @@ function newAttribute(){
 
 function toggleAttribute(ID){
 	if ($('#attribute'+ID).is(':visible')){
-		$('.attributes').hide();
+		$('.attributes').slideUp();
 	}else{
-		$('.attributes').hide();
-		$('#attribute'+ID).show();
+		$('.attributes').slideUp();
+		$('#attribute'+ID).slideDown();
 	}
 }
 
 function toggleAttr_value(ID){
 	if ($('#attr_value'+ID).is(':visible')){
-		$('.attr_values').hide();
+		$('.attr_values').slideUp();
 	}else{
-		$('.attr_values').hide();
-		$('#attr_value'+ID).show();
+		$('.attr_values').slideUp();
+		$('#attr_value'+ID).slideDown();;
 	}
 }
 
@@ -449,10 +446,10 @@ function newImage(){
 
 function toggleImage(ID){
 	if ($('#image'+ID).is(':visible')){
-		$('.images').hide();
+		$('.images').slideUp();
 	}else{
-		$('.images').hide();
-		$('#image'+ID).show();
+		$('.images').slideUp();
+		$('#image'+ID).slideDown();
 	}
 }
 

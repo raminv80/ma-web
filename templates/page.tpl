@@ -80,5 +80,15 @@
 	{block name=body}{/block}
 	{include file='footer.tpl'}
 	
+	<script type="text/javascript">
+	$(document).ready(function(){
+		
+		$('.dropdown.navbar-right ').hover(function() { 
+		  $(this).find('.dropdown-menu').slideDown();
+		}, function() {
+		  $(this).find('.dropdown-menu').slideUp()
+		});
+	});
+	</script>
 </body>
 </html>

@@ -54,7 +54,7 @@
 		</div>
 		<div class="row" style="margin-top: 10px;">
 			<div style="display:inline; text-align:right;" class="col-md-10">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
-			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">${$cart.cart_discount}</div>
+			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">-${$cart.cart_discount}</div>
 		</div>
 		<div class="row" style="margin-top: 10px;">
 			<div style="display:inline; text-align:right;" class="col-md-10">Postage & Handling</div>
@@ -77,11 +77,12 @@
 	                    <h3>Billing Details</h3>
 	                </div>
 	                <input type="hidden" value="{$user.id}" name="address[1][address_user_id]" id="address_user_id" /> 
+	                {if $addresses}
 	                <div class="form-group">
 					    <label for="previous-address-1" class="col-sm-2 control-label"></label>
 					    <div class="col-sm-10">
 					      	<select id="previous-address-1" name="previous-address-1" class="form-control" >
-								<option value="0">Select previous addresses to fill out the form</option>
+								<option value="0">Previously used addresses</option>
 								{foreach $addresses as $add }
 									<option value="{$add.address_id}" {if $post.previous-address-1 eq $add.address_id}selected="selected"{/if}
 											name="{$add.address_name}"
@@ -98,6 +99,7 @@
 							</select>
 						</div>
 					</div>
+					{/if}
 					<div class="row" id="billing-subform-content">
 						<div class="form-group">
 						    <label for="address_name_1" class="col-sm-2 control-label">Name</label>
@@ -178,11 +180,12 @@
 	                    <h3>Shipping Details</h3>
 	                </div>
 	                <input type="hidden" value="{$user.id}" name="address[2][address_user_id]" id="address_user_id" />
+					{if $addresses}
 					<div class="form-group">
 					    <label for="previous-address-2" class="col-sm-2 control-label"></label>
 					    <div class="col-sm-10">
 					      	<select id="previous-address-2" name="previous-address-2" class="form-control" >
-								<option value="0">Select previous addresses to fill out the form</option>
+								<option value="0">Previously used addresses</option>
 								{foreach $addresses as $add }
 									<option value="{$add.address_id}" {if $post.previous-address-2 eq $add.address_id}selected="selected"{/if}
 											name="{$add.address_name}"
@@ -199,6 +202,7 @@
 							</select>
 						</div>
 					</div>
+					{/if}
 					<div class="row" id="shipping-subform-content">
 						<div class="form-group">
 						    <label for="address_name_2" class="col-sm-2 control-label">Name</label>

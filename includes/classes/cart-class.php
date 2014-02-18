@@ -358,7 +358,7 @@ class cart {
 			
 			// ---------------- PRODUCTS DETAILS FROM tbl_gallery ----------------
 			$sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery 
-					WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
+					WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_ishero DESC";
 			
 			$res2 = $DBobject->wrappedSql ( $sql, array (
 					":id" => $p ['cartitem_product_id'] 

@@ -210,11 +210,13 @@
 					 	var error = obj.error;  
 
 					 	if (login_url) {
-					 		doRedirect = true;
-					 		var left  = ($(window).width()/2)-(500/2),
-					 	    	top   = ($(window).height()/2)-(270/2),
-					 	     	popup = window.open (login_url, "Login_with_Facebook", "width=500, height=270, top="+top+", left="+left);
-					 	    
+					 		if (obj.new_window) {
+						 		var left  = ($(window).width()/2)-(500/2),
+						 	    	top   = ($(window).height()/2)-(270/2),
+						 	     	popup = window.open (login_url, "Login_with_Facebook", "width=500, height=270, top="+top+", left="+left);
+					 		} else {
+					 			window.location.href = login_url;
+							}    
 						}else if (msg && error) {
 						 	alert (msg);
 					 	}

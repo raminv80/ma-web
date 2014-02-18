@@ -2,55 +2,55 @@
 
 <div class="row">
 	<div class="col-sm-12">
-		<div class="row">
-			<div class="col-sm-offset-1">
-				Order No: <b> {$fields.cart_id}</b>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-offset-1">
-				Order placed: <b> {$fields.cart_closed_date|date_format:"%e %B %Y"}</b>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-offset-1">
-				User's Detail: <b>{$fields.user.0.user_gname} {$fields.user.0.user_surname} / {$fields.user.0.user_email}</b>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-offset-1">
-				Billing Address: <b>{$fields.payment.0.billing_address.0.address_name}, 
-									{$fields.payment.0.billing_address.0.address_line1} 
-									{$fields.payment.0.billing_address.0.address_line2} 
-									{$fields.payment.0.billing_address.0.address_suburb}, 
-									{$fields.payment.0.billing_address.0.address_state}, 
-									{$fields.payment.0.billing_address.0.address_country} 
-									{$fields.payment.0.billing_address.0.address_postcode}. 
-									{if $fields.payment.0.billing_address.0.address_telephone} {$fields.payment.0.billing_address.0.address_telephone}{/if}
-									{if $fields.payment.0.billing_address.0.address_telephone && $fields.payment.0.billing_address.0.address_telephone} / {/if} 
-									{if $fields.payment.0.billing_address.0.address_mobile} {$fields.payment.0.billing_address.0.address_mobile} {/if}</b>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-offset-1">
-				Shipping Address: <b>{$fields.payment.0.shipping_address.0.address_name}, 
-									{$fields.payment.0.shipping_address.0.address_line1} 
-									{$fields.payment.0.shipping_address.0.address_line2} 
-									{$fields.payment.0.shipping_address.0.address_suburb}, 
-									{$fields.payment.0.shipping_address.0.address_state}, 
-									{$fields.payment.0.shipping_address.0.address_country} 
-									{$fields.payment.0.shipping_address.0.address_postcode}. 
-									{if $fields.payment.0.shipping_address.0.address_telephone} {$fields.payment.0.shipping_address.0.address_telephone}{/if}
-									{if $fields.payment.0.shipping_address.0.address_telephone && $fields.payment.0.shipping_address.0.address_telephone} / {/if} 
-									{if $fields.payment.0.shipping_address.0.address_mobile} {$fields.payment.0.shipping_address.0.address_mobile} {/if}</b>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-offset-1">
-				Payment Status: <b>{if $fields.payment.0.payment_status eq 'P'}PAID{else}{$fields.payment.0.payment_status}{/if}</b>
-			</div>
-		</div>	
-		
+		<table class="table table-bordered table-striped table-hover" style="margin-top:40px;">
+			<tbody>
+				<tr>
+					<td><b>Order No:</b></td>
+					<td style="text-align: center;">{$fields.cart_id}</td>
+					<td><b>Order placed:</b></td>
+					<td style="text-align: center;">{$fields.cart_closed_date|date_format:"%e %B %Y"}</td>
+				</tr>
+				<tr>
+					<td><b>User's Detail:</b></td>
+					<td style="text-align: center;">{$fields.user.0.user_gname} {$fields.user.0.user_surname} / {$fields.user.0.user_email}</td>
+					<td><b>Payment Status:</b></td>
+					<td style="text-align: center;"> <b>{if $fields.payment.0.payment_status eq 'P'}PAID{else}{$fields.payment.0.payment_status}{/if}</b></td>
+				</tr>
+				<tr>
+					<td><b>Billing Address:</b></td>
+					<td style="text-align: center;">{$fields.payment.0.billing_address.0.address_name}</td>
+					<td style="text-align: center;" colspan="2">
+						{$fields.payment.0.billing_address.0.address_line1} 
+						{$fields.payment.0.billing_address.0.address_line2} 
+						{$fields.payment.0.billing_address.0.address_suburb}, 
+						{$fields.payment.0.billing_address.0.address_state}, 
+						{$fields.payment.0.billing_address.0.address_country} 
+						{$fields.payment.0.billing_address.0.address_postcode}. 
+						{if $fields.payment.0.billing_address.0.address_telephone} {$fields.payment.0.billing_address.0.address_telephone}{/if}
+						{if $fields.payment.0.billing_address.0.address_telephone && $fields.payment.0.billing_address.0.address_telephone} / {/if} 
+						{if $fields.payment.0.billing_address.0.address_mobile} {$fields.payment.0.billing_address.0.address_mobile} {/if}
+					</td>
+				</tr>
+				<tr>
+					<td><b>Shipping Address:</b></td>
+					<td style="text-align: center;">{$fields.payment.0.shipping_address.0.address_name}</td>
+					<td style="text-align: center;" colspan="2">
+						{$fields.payment.0.shipping_address.0.address_line1} 
+						{$fields.payment.0.shipping_address.0.address_line2} 
+						{$fields.payment.0.shipping_address.0.address_suburb}, 
+						{$fields.payment.0.shipping_address.0.address_state}, 
+						{$fields.payment.0.shipping_address.0.address_country} 
+						{$fields.payment.0.shipping_address.0.address_postcode}. 
+						{if $fields.payment.0.shipping_address.0.address_telephone} {$fields.payment.0.shipping_address.0.address_telephone}{/if}
+						{if $fields.payment.0.shipping_address.0.address_telephone && $fields.payment.0.shipping_address.0.address_telephone} / {/if} 
+						{if $fields.payment.0.shipping_address.0.address_mobile} {$fields.payment.0.shipping_address.0.address_mobile} {/if}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div class="col-sm-12">
 		<table class="table table-bordered table-striped table-hover" style="margin-top:15px;">
 			<thead>
 				<tr>
@@ -81,7 +81,7 @@
 				</tr>
 				<tr>
 					<td style="text-align: right;" colspan="3">Discount {if $fields.cart_discount_code}<small>[Code: {$fields.cart_discount_code}]</small>{/if}</td>
-					<td style="text-align: right;">${$fields.cart_discount|number_format:2:".":","}</td>
+					<td style="text-align: right;">-${$fields.cart_discount|number_format:2:".":","}</td>
 				</tr>
 				<tr>
 					<td style="text-align: right;" colspan="3">Postage & Handling</td>
@@ -96,7 +96,29 @@
 	</div>
 </div>
 
-
+<div class="row">
+	<form class="well form-horizontal" id="" accept-charset="UTF-8" method="post">
+		{if $cnt eq ""}{assign var=cnt value=0}{/if} 
+		<input type="hidden" value="{$fields.cart_id}" name="field[1][tbl_cart][{$cnt}][cart_id]" id="cart_id"> 
+					
+		<div class="row form-group">
+			<label class="col-sm-3 control-label" for="id_cart_order_status">Order Status</label>
+			<div class="col-sm-5">
+				<select class="form-control" name="field[1][tbl_cart][{$cnt}][cart_order_status]" id="id_cart_order_status">
+					<option value="0">Unverified</option> 
+					<option value="1">Cancelled</option> 
+					<option value="2">Verified</option> 
+					<option value="3">Shipped</option> 
+				</select>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-sm-offset-3 col-sm-9">
+				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
+			</div>
+		</div>
+	</form>
+</div>
 
 
 

@@ -55,26 +55,26 @@ Class Record{
 				$article_f["{$a->name}"] = $this->getAssociated($a, $res[0]["{$a->linkfield}"]);
 			}
 
-			foreach ( $this->CONFIG->table->options->field as $f ) {
-				if ($f->attributes()->recursive) { 
-					$parentID = 0;
-					if ($this->CONFIG->root_parent_id) {
-						$parentID = $this->CONFIG->root_parent_id;
+		}
+		foreach ( $this->CONFIG->table->options->field as $f ) {
+			if ($f->attributes()->recursive) {
+				$parentID = 0;
+				if ($this->CONFIG->root_parent_id) {
+					$parentID = $this->CONFIG->root_parent_id;
+				}
+				$article_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
+			} else {
+				$pre = str_replace ( "tbl_", "", $f->table );
+				$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
+					foreach ( $res as $key => $row ) {
+						$article_f ['options'] ["{$f->name}"] [] = array (
+								'id' => $row ["{$pre}_id"],
+								'value' => $row ["{$f->reference}"]
+						);
 					}
-					$article_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
-				} else {
-					$pre = str_replace ( "tbl_", "", $f->table );
-					$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : ""); 
-					if ($res = $DBobject->wrappedSqlGet ( $sql )) {
-						foreach ( $res as $key => $row ) {
-							$article_f ['options'] ["{$f->name}"] [] = array (
-									'id' => $row ["{$pre}_id"],
-									'value' => $row ["{$f->reference}"] 
-							);
-						}
 					}
 				}
-			}
 		}
 
 		return  $article_f;
