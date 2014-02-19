@@ -19,7 +19,7 @@ $_SESSION ['post'] = "";
 unset ( $_SESSION ['post'] );
 
 // ASSIGN USER FOR TEMPLATES
-$SMARTY->assign ( 'user', $_SESSION ['user'] );
+$SMARTY->assign ( 'user', $_SESSION['user']['public'] );
 
 $_SESSION ['error'] = "";
 unset ( $_SESSION ['error'] );
@@ -89,7 +89,7 @@ while ( true ) {
 	 * **** Goes to login ******
 	 */
 	if ($_request ['arg1'] == 'login') {
-		if ($_SESSION['user']['id']) { 
+		if ($_SESSION['user']['public']['id']) { 
 	    	header("Location: /my-account");
 	    	exit;
 		}
@@ -105,7 +105,7 @@ while ( true ) {
 	 * **** Goes to my-account ******
 	 */
 	if ($_request ['arg1'] == 'my-account') {
-		if (is_null($_SESSION['user']['id'])) {
+		if (is_null($_SESSION['user']['public']['id'])) {
 			header("Location: /login");
 			exit;
 		}
@@ -115,7 +115,7 @@ while ( true ) {
 		$menu = $obj->LoadMenu ( $CONFIG->account->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
 		$cart_obj = new cart();
-		$orders = $cart_obj->GetOrderHistoryByUser($_SESSION['user']['id']);
+		$orders = $cart_obj->GetOrderHistoryByUser($_SESSION['user']['public']['id']);
 		$SMARTY->assign ( 'orders', $orders );
 		break 1;
 	}
@@ -138,7 +138,7 @@ while ( true ) {
 	 * ***** Goes to CHECKOUT ******
 	 */
 	if ($_request ['arg1'] == 'store/checkout') {
-		if (is_null($_SESSION['user']['id'])) { 
+		if (is_null($_SESSION['user']['public']['id'])) { 
 	    	header("Location: /login");
 	    	exit;
 		}
@@ -151,7 +151,7 @@ while ( true ) {
 		$validation = $cart_obj->ValidateCart();
 		$SMARTY->assign ( 'validation', $validation );
 		$sql = "SELECT * FROM tbl_address WHERE address_user_id = :uid ORDER BY address_id";
-		$addresses = $DBobject->wrappedSql($sql, array(':uid' => $_SESSION['user']['id']));
+		$addresses = $DBobject->wrappedSql($sql, array(':uid' => $_SESSION['user']['public']['id']));
 		$SMARTY->assign ( 'addresses', $addresses );
 		$sql = "SELECT DISTINCT postcode_state FROM tbl_postcode WHERE postcode_state != 'OTHE' ORDER BY postcode_state";
 		$states = $DBobject->wrappedSql($sql);

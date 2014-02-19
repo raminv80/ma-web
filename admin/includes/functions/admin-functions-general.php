@@ -7,11 +7,11 @@ function AdminLogIn($email,$password){
 	$params = array( "email" => $email , "password" => $temp_str );
 	$res = $DBobject->executeSQL($sql , $params );
 	if($res){
-		$_SESSION["admin"]["id"]=$res[0]["admin_id"];
-		$_SESSION["admin"]["name"]=$res[0]["admin_name"];
-		$_SESSION["admin"]["surname"]=$res[0]["admin_surname"];
-		$_SESSION["admin"]["email"]=$res[0]["admin_email"];
-		$_SESSION["admin"]["level"]=$res[0]["admin_level"];
+		$_SESSION['user']['admin']["id"]=$res[0]["admin_id"];
+		$_SESSION['user']['admin']["name"]=$res[0]["admin_name"];
+		$_SESSION['user']['admin']["surname"]=$res[0]["admin_surname"];
+		$_SESSION['user']['admin']["email"]=$res[0]["admin_email"];
+		$_SESSION['user']['admin']["level"]=$res[0]["admin_level"];
 		SaveAdminLogIn($row['admin_id']);
 		return true;
 	}else{

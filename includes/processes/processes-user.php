@@ -17,7 +17,7 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 			} else {
 				$cart_obj = new cart();
 				$cart_obj->SetUserCart($res['id']);
-                                $_SESSION['user'] = $res;
+                                $_SESSION['user']['public'] = $res;
 				header("Location: " . $_SESSION ['login_referer']);
 			}
 			exit;
@@ -33,7 +33,7 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 	    	} else {
 	    		$cart_obj = new cart();
 	    		$cart_obj->SetUserCart($res['id']);
-	    		$_SESSION['user'] = $res;
+	    		$_SESSION['user']['public'] = $res;
 	    		header("Location: " . $_SESSION ['login_referer']);
 	    	}
 	    	exit;
@@ -53,7 +53,7 @@ if(checkToken('frontend',$_POST["formToken"], true)){
                 
         case 'updatePassword':
 	    	$user_obj = new UserClass();
-                $data = array_merge($_POST, array('email'=>$_SESSION['user']['email']));
+                $data = array_merge($_POST, array('email'=>$_SESSION['user']['public']['email']));
 	    	 $res = $user_obj->UpdatePassword($data); 
 	    	 if ( $res['error'] ) {
 	    	 	$_SESSION['error']= $res['error'];
@@ -66,14 +66,14 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 
     	case 'updateDetails':
     		$user_obj = new UserClass();
-    		$data = array_merge($_POST, array('email'=>$_SESSION['user']['email']));
+    		$data = array_merge($_POST, array('email'=>$_SESSION['user']['public']['email']));
     		$res = $user_obj->UpdateDetails($data);
     		if ( $res['error'] ) {
     			$_SESSION['error']= $res['error'];
     			header("Location: ".$_SERVER['HTTP_REFERER']."#error");
     		} else {
-    			$_SESSION['user']['gname']= $_POST["gname"];
-    			$_SESSION['user']['surname']= $_POST["surname"];
+    			$_SESSION['user']['public']['gname']= $_POST["gname"];
+    			$_SESSION['user']['public']['surname']= $_POST["surname"];
     			$_SESSION['error']= $res['success'];  //<<<<<<<<<<<<<<<<<<< CHANGE THIS TO NOTIFICATION VARIABLE, not error!
     			header("Location: ".$_SERVER['HTTP_REFERER']."#error");//<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
     		}
@@ -97,7 +97,7 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 						} else {
 							$cart_obj = new cart();
                             $cart_obj->SetUserCart($res['id']);
-                            $_SESSION['user'] = $res;
+                            $_SESSION['user']['public'] = $res;
 							//header("Location: " . $_SESSION ['login_referer']);
 							echo json_encode(array(
 									"error" => false,
@@ -143,7 +143,7 @@ if(checkToken('frontend',$_POST["formToken"], true)){
      
 	}
 }elseif ($_GET["logout"]) {
-                if ($_SESSION ['user']['social_id']) {
+                if ($_SESSION['user']['public']['social_id']) {
                     $facebook = new Facebook(array(
                             'appId'  => '208591239336752',
                             'secret' => '21ffc84783a7275f8cb9a43c49e00d78'
@@ -154,8 +154,8 @@ if(checkToken('frontend',$_POST["formToken"], true)){
                 } else {
                     $logout_url = $_SERVER['HTTP_REFERER'];
                 }
-    		$_SESSION ['user'] = "";
-		unset ( $_SESSION ['user'] );
+    		$_SESSION['user']['public'] = "";
+		unset ( $_SESSION['user']['public'] );
                 
                 session_regenerate_id();
                 session_destroy();
@@ -190,7 +190,7 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 						} else {
 							$cart_obj = new cart();
 			                                $cart_obj->SetUserCart($res['id']);
-			                                $_SESSION['user'] = $res;
+			                                $_SESSION['user']['public'] = $res;
 			                if ($redirectThis) {
 			                	header("Location: " . $_SESSION ['login_referer']);
 			                } else {

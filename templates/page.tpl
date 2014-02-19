@@ -84,9 +84,9 @@
 	$(document).ready(function(){
 		
 		$('.dropdown.navbar-right ').hover(function() { 
-		  $(this).find('.dropdown-menu').slideDown();
+		  $(this).find('.dropdown-menu:hidden').slideDown();
 		}, function() {
-		  $(this).find('.dropdown-menu').slideUp()
+		  $(this).find('.dropdown-menu:visible').slideUp()
 		});
 	});
 	</script>

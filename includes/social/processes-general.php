@@ -2,7 +2,7 @@
 set_include_path($_SERVER['DOCUMENT_ROOT']);
 require 'includes/functions/functions.php';
 global $SOCIAL,$DBobject;
-$SMARTY->assign('admin',$_SESSION['admin']['email']) ;
+$SMARTY->assign('admin',$_SESSION['user']['admin']['email']) ;
 switch ($_REQUEST['action']) {
 	case 'update':
 		header('Data-g0:'.$_POST['limit']);

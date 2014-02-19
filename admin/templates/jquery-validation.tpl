@@ -20,10 +20,10 @@ if (jQuery.validator) {
 		   };
 		   if (error_msg.toString()) {
 			   	$('#form-error-msg').html(error_msg.toString().replace(',', '<br>') );
-		      	$('#form-error').show();
+		      	$('#form-error').slideDown();
 				setTimeout(function(){
-					$('#form-error').fadeOut('slow');
-		    	},14000);
+					$('#form-error').slideUp();
+		    	},10000);
 		   }
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
@@ -48,10 +48,10 @@ if (jQuery.validator) {
 	    		    	try{
 	    		    		var obj = $.parseJSON(data);
 	    				 	var notice = obj.notice;
-	    				 	$('#'+ notice).show();
+	    				 	$('#'+ notice).slideDown();
 	    					setTimeout(function(){
-	    						$('#'+ notice).fadeOut('slow');
-	    			    	},4000);
+	    						$('#'+ notice).slideUp();
+	    			    	},10000);
 		    			    if(obj.primaryID != null){
 		    			    	setTimeout(function(){
 		    			    		window.location =document.URL+"/"+obj.primaryID;
@@ -158,9 +158,20 @@ if (jQuery.validator) {
 		"Email needs to be unique, other user is already using that email address."
 	);
 
+	jQuery.validator.addMethod(
+	  		"double", 
+	  		function(value, element) {
+	  			if ($.isNumeric(value) || value =='') {
+	  				return true;
+	  			} 
+	  			return false;
+			}, 
+			"Invalid value. Must be numeric."
+	);
+
 	jQuery.validator.addClassRules({
 		double: {
-			number: true
+			double: true
 		},
 		number: {
 			number: true,

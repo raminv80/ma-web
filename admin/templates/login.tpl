@@ -1,6 +1,6 @@
 {block name=body}
 <form>
-	<div class="form-group">
+	<div class="row form-group">
 		<div class="col-sm-12">
 			<h3>Login Details</h3>
 		</div>

@@ -173,7 +173,7 @@
 					<field>cartitem_attr_cartitem_id</field> 
 				</associated>
 			</associated>
-			<associated> 
+			<associated inlist="true"> 
 				<id>user_id</id>
 				<name>user</name>
 				<table>tbl_user</table>
@@ -186,6 +186,13 @@
 				<table>tbl_payment</table>
 				<linkfield>cart_id</linkfield>
 				<field>payment_cart_id</field> 
+				<associated> 
+					<id>order_id</id>
+					<name>order</name>
+					<table>tbl_order</table>
+					<linkfield>payment_id</linkfield>
+					<field>order_payment_id</field> 
+				</associated>
 				<associated> 
 					<id>address_id</id>
 					<name>billing_address</name>
@@ -201,6 +208,14 @@
 					<field>address_id</field> 
 				</associated>
 			</associated>
+			<options> 
+				<field> 
+					<name>status</name>
+					<table>tbl_status</table>
+					<reference>status_name</reference> 
+					<orderby>status_order</orderby> 
+				</field> 
+			</options>
 		</table>
 		<list_template>list_order.tpl</list_template>
 		<edit_template>edit_order.tpl</edit_template>

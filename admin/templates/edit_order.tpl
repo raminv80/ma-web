@@ -105,10 +105,9 @@
 			<label class="col-sm-3 control-label" for="id_cart_order_status">Order Status</label>
 			<div class="col-sm-5">
 				<select class="form-control" name="field[1][tbl_cart][{$cnt}][cart_order_status]" id="id_cart_order_status">
-					<option value="0">Unverified</option> 
-					<option value="1">Cancelled</option> 
-					<option value="2">Verified</option> 
-					<option value="3">Shipped</option> 
+					{foreach $fields.options.status as $opt}
+							<option value="{$opt.id}" {if $fields.order eq $opt.id}selected="selected"{/if}>{$opt.value}</option>
+					{/foreach} 
 				</select>
 			</div>
 		</div>

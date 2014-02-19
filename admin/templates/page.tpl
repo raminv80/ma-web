@@ -124,33 +124,33 @@
 	</script>
 	</div>
 	
-	<div class="alert alert-block notification" id="form-error" style="display:none;">
+	<div class="notification" id="form-error" style="display:none;">
 		<img alt="success" src="/admin/images/warning.png" width="28" height="28"/>
 		<div style="display:inline;" id="form-error-msg"></div>
-		<button type="button" class="close pull-right" onclick="$('#form-error').fadeOut('slow');">x</button>
+		<button type="button" class="close pull-right" onclick="$('#form-error').slideUp();">x</button>
 	</div>
-	<div class="alert alert-block notification" id="edited" style="display:none;">
+	<div class="notification" id="edited" style="display:none;">
 		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully edited.</b>
-		<button type="button" class="close pull-right" onclick="$('#edited').fadeOut('slow');">x</button>
+		<button type="button" class="close pull-right" onclick="$('#edited').slideUp();">x</button>
 	</div>
-	<div class="alert alert-block notification" id="deleted" style="display:none;">
+	<div class="notification" id="deleted" style="display:none;">
 		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The item was successfully deleted.</b>
-		<button type="button" class="close pull-right" onclick="$('#deleted').fadeOut('slow');">x</button>
+		<button type="button" class="close pull-right" onclick="$('#deleted').slideUp();">x</button>
 	</div>
-	<div class="alert alert-block notification" id="warning" style="display:none;">
+	<div class="notification" id="warning" style="display:none;">
 		<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>There is something wrong. Please check that you have filled out the fields correctly.</b>
-		<button type="button" class="close pull-right" onclick="$('#warning').fadeOut('slow');">x</button>
+		<button type="button" class="close pull-right" onclick="$('#warning').slideUp();">x</button>
 	</div>
-	<div class="alert alert-block notification" id="error" style="display:none;">
+	<div class="notification" id="error" style="display:none;">
 		<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>An unknown error occured.</b>
-		<button type="button" class="close pull-right" onclick="$('#error').fadeOut('slow');">x</button>
+		<button type="button" class="close pull-right" onclick="$('#error').slideUp();">x</button>
 	</div>
 	{if $notice neq ''}
 		<script>
 			$('#{$notice}').show();
 			setTimeout(function(){
-				$('#{$notice}').fadeOut('slow');
-	    	},14000);
+				$('#{$notice}').slideUp();
+	    	},10000);
 		</script>
 	{/if}
 	

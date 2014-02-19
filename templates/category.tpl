@@ -9,7 +9,47 @@
 		</div>
 		<div class="col-xs-9">
 		<div class="col-xs-12">{$it.product_name}</div>
-		<div class="col-xs-12">from ${$it.product_price}</div>
+		
+		{if $it.attribute} 
+			{if $it.product_specialprice eq '0.00'}
+				{assign var='lowest' value=$it.product_price}
+				{foreach $it.attribute key=katt item=itatt name=attr}
+					{foreach $itatt.attr_value key=kattval item=itattval name=attr_val}
+						{if $smarty.foreach.attr_val.first}
+							{assign var='lowest_attr' value=$itattval.attr_value_price}
+						{else}
+							{if $itattval.attr_value_price lt $lowest_attr}
+								{assign var='lowest_attr' value=$itattval.attr_value_price}
+							{/if}
+						{/if}
+					{/foreach} 
+					{assign var="lowest" value=$lowest_attr+$lowest}
+				{/foreach} 
+				<div class="col-xs-12">from ${$lowest|number_format:2:'.':','}</div>
+			{else}
+				{assign var='lowest' value=$it.product_specialprice}
+				{foreach $it.attribute key=katt item=itatt name=attr}
+					{foreach $itatt.attr_value key=kattval item=itattval name=attr_val}
+						{if $smarty.foreach.attr_val.first}
+							{assign var='lowest_attr' value=$itattval.attr_value_specialprice}
+						{else}
+							{if $itattval.attr_value_specialprice lt $lowest_attr}
+								{assign var='lowest_attr' value=$itattval.attr_value_specialprice}
+							{/if}
+						{/if}
+					{/foreach} 
+					{assign var="lowest" value=$lowest_attr+$lowest}
+				{/foreach} 
+				<div class="col-xs-12" style="color:#FF4822">Special Price from ${$lowest|number_format:2:'.':','}</div>
+			{/if} 
+		{else}
+			{if $it.product_specialprice eq '0.00'}
+				<div class="col-xs-12">${$it.product_price|number_format:2:'.':','}</div>
+			{else}
+				<div class="col-xs-12" style="text-decoration: line-through;">${$it.product_price|number_format:2:'.':','}</div>
+				<div class="col-xs-12" style="color:#FF4822">Special Price: ${$it.product_specialprice|number_format:2:'.':','}</div>
+			{/if}
+		{/if}
 		<div class="col-xs-12">{$it.product_description}</div>
 		<div class="col-xs-12"><a href="{$parentUrl}{$it.product_url}-{$it.product_id}" class="btn btn-info">View product</a></div>
 		</div>

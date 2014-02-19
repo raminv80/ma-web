@@ -31,51 +31,53 @@
 		</div>
 		<!-- <div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_instock">In Stock</label>
-			<div class="col-sm-2">
+			<div class="col-sm-7">
 				<input type="hidden" value="{if $attr_value.attr_value_instock eq 1}1{else}0{/if}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_instock]" class="value"> 
 				<input type="checkbox" {if $attr_value.attr_value_scratch eq 1}checked="checked"{/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="attr_value_instock">
 			</div>
 		</div> -->
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_price">Price ($)</label>
-			<div class="col-sm-4">
-				<input class="form-control double modifier" type="text" value="{$attr_value.attr_value_price}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_price]" id="attr_value_price" modify="price" resultid="result_price{$attributeno*20+$attrvalueno}">
-				<span id="result_price{$attributeno*20+$attrvalueno}"></span>
+			<div class="col-sm-7">
+				<input class="form-control double modifier" type="text" value="{$attr_value.attr_value_price}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_price]" id="attr_value_price{$attributeno*20+$attrvalueno}" modify="price" onchange="refreshResult('attr_value_price{$attributeno*20+$attrvalueno}');">
+				<span class="form-help-text">Please use +/- to change the pricing: Product price for this attribute is</span>
+				<span class="form-help-value"></span>
 			</div>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_specialprice">Special Price ($)</label>
-			<div class="col-sm-4">
-				<input class="form-control double modifier" type="text" value="{$attr_value.attr_value_specialprice}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_specialprice]" id="attr_value_specialprice" modify="specialprice" resultid="result_specialprice{$attributeno*20+$attrvalueno}">
-				<span id="result_specialprice{$attributeno*20+$attrvalueno}"></span>
+			<div class="col-sm-7">
+				<input class="form-control double modifier" type="text" value="{$attr_value.attr_value_specialprice}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_specialprice]" id="attr_value_specialprice{$attributeno*20+$attrvalueno}" modify="specialprice" onchange="refreshResult('attr_value_specialprice{$attributeno*20+$attrvalueno}');">
+				<span class="form-help-text">Please use +/- to change the pricing: Product special price for this attribute is</span>
+				<span class="form-help-value"></span>
 			</div>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_price">Weight (Kg)</label>
-			<div class="col-sm-4">
-				<input class="form-control double modifier" type="text" value="{$attr_value.attr_value_weight}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_weight]" id="attr_value_weight" modify="weight" resultid="result_weight{$attributeno*20+$attrvalueno}">
-				<span id="result_weight{$attributeno*20+$attrvalueno}"></span>
+			<div class="col-sm-7">
+				<input class="form-control double" type="text" value="{$attr_value.attr_value_weight}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_weight]" id="attr_value_weight{$attributeno*20+$attrvalueno}" modify="weight">
+				<!-- <span class="form-help-value"></span> -->
 			</div>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_width">Width (cm)</label>
-			<div class="col-sm-4">
-				<input class="form-control double modifier" type="text" value="{$attr_value.attr_value_width}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_width]" id="attr_value_width" modify="width" resultid="result_width{$attributeno*20+$attrvalueno}">
-				<span id="result_width{$attributeno*20+$attrvalueno}"></span>
+			<div class="col-sm-7">
+				<input class="form-control double" type="text" value="{$attr_value.attr_value_width}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_width]" id="attr_value_width{$attributeno*20+$attrvalueno}" modify="width">
+				<!-- <span class="form-help-value"></span> -->
 			</div>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_height">Height (cm)</label>
-			<div class="col-sm-4">
-				<input class="form-control double modifier" type="text" value="{$attr_value.attr_value_height}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_height]" id="attr_value_height" modify="height" resultid="result_height{$attributeno*20+$attrvalueno}">
-				<span id="result_height{$attributeno*20+$attrvalueno}"></span>
+			<div class="col-sm-7">
+				<input class="form-control double" type="text" value="{$attr_value.attr_value_height}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_height]" id="attr_value_height{$attributeno*20+$attrvalueno}" modify="height">
+				<!-- <span class="form-help-value"></span> -->
 			</div>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_length">Length (cm)</label>
-			<div class="col-sm-4">
-				<input class="form-control double modifier" type="text" value="{$attr_value.attr_value_length}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_length]" id="attr_value_length" modify="length" resultid="result_length{$attributeno*20+$attrvalueno}">
-				<span id="result_length{$attributeno*20+$attrvalueno}"></span>
+			<div class="col-sm-7">
+				<input class="form-control double" type="text" value="{$attr_value.attr_value_length}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_length]" id="attr_value_length{$attributeno*20+$attrvalueno}" modify="length">
+				<!-- <span class="form-help-value"></span> -->
 			</div>
 		</div>
 	</div>

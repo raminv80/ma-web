@@ -10,7 +10,7 @@ class cart {
 	// private $user_cart_id;
 	function __construct() {
 		if ($this->VerifySessionCart ( session_id () )) {
-			if (!isset($_SESSION['user']) && $this->cart_user_id) {
+			if (!isset($_SESSION['user']['public']) && $this->cart_user_id) {
 				session_regenerate_id();
 				$this->CreateCart ();
 				$this->cart_user_id = null;

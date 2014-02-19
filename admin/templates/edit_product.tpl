@@ -332,8 +332,9 @@ function newAttr_value(attribute_no){
 		data: "template=form_value.tpl&attributeno="+attribute_no+"&attrvalueno="+no,
 		dataType: "html",
 	    success: function(data, textStatus) {
-	    	try{
+	    	try{ 
 	    		$('#attr_value-wrapper'+attribute_no).append(data);
+	    		displayResults();
 	    		$('body').css('cursor','default');
 	    		scrolltodiv('#attr_value_wrapper'+attribute_no+'-'+ no);
 			}catch(err){ $('body').css('cursor','default'); }
@@ -479,39 +480,30 @@ function deleteImage(ID){
 }
 
 
-
-/* $('.modifier').keyup(function (obj) {
-	var modifierValue = this.value; 
-	var productValue = parseFloat($('#id_product_'+ this.getAttribute('modify')).val());
-     if ($.isNumeric(modifierValue)) {
-    	var result = productValue + parseFloat(modifierValue);
-    	$('#' + this.getAttribute('resultId')).html( '= '+result.toFixed(2));
-    	
-	} else {
-		if (modifierValue != '-' && modifierValue != '+' && modifierValue != ''){
-			this.value= modifierValue.replace(/[^0-9\.]/g, '');
-		} else if  (modifierValue == '') {
-			$('#' + this.getAttribute('resultId')).html( '= '+productValue.toFixed(2));
-		}
-	} 
-});
-
 function displayResults(){ 
-	$(".modifier").each(function(){	
-		var modifierValue = this.value; 
-		var productValue = parseFloat($('#id_product_'+ this.getAttribute('modify')).val());
-	     if ($.isNumeric(modifierValue)) {
-	    	var result = productValue + parseFloat(modifierValue);
-	    	$('#' + this.getAttribute('resultId')).html( '= '+result.toFixed(2));
-		} else {
-			$('#' + this.getAttribute('resultId')).html( '= '+productValue.toFixed(2));
-		} 
+	$(".modifier").each(function(i){	
+		refreshResult(this.id); 
 	});
 }
+
+function refreshResult(ID){
+	var obj = document.getElementById(ID);
+	var modifierValue = obj.value; 
+	var productValue = parseFloat($('#id_product_'+ obj.getAttribute('modify')).val());
+     if ($.isNumeric(modifierValue)) {
+    	var result = productValue + parseFloat(modifierValue);
+    	$(obj).closest('.form-group').find('.form-help-value').text( result.toFixed(2));
+	} else {
+		$(obj).closest('.form-group').find('.form-help-value').text( productValue.toFixed(2));
+	} 
+}
+
+
+
 
 $('#myTab a[href="#attributes"]').click(function () {
 	displayResults();
 })
- */    
+    
 </script>
 {/block}

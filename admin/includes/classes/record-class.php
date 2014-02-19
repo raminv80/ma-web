@@ -144,13 +144,8 @@ Class Record{
 	function getRecordList($hierarchy_id=null){
 		global $SMARTY,$DBobject;
 		$records = array();
-		
-		$tfields="";
-		foreach($this->FIELD as $f){
-			$tfields .= "{$f},";
-			$n++;
-		}
-		$sql = "SELECT {$tfields} {$this->TABLE}.* FROM {$this->TABLE} WHERE {$this->DELETED}  IS NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ".($this->ORDERBY!=''?" ORDER BY {$this->ORDERBY} ":" ");
+
+		$sql = "SELECT * FROM {$this->TABLE} WHERE {$this->DELETED}  IS NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ".($this->ORDERBY!=''?" ORDER BY {$this->ORDERBY} ":" ");
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $key => $val) {
 				$n = 0;
@@ -160,7 +155,14 @@ Class Record{
 					$n++;
 				}
 				$records[$val["{$this->ID}"]] = array("title"=>$title,"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}");
+				
+				foreach($this->CONFIG->table->associated as $a){
+					if ($a->attributes()->inlist) {
+						$records[$val["{$this->ID}"]]["{$a->name}"] = $this->getAssociated($a, $val["{$a->linkfield}"]);
+					}
+				}
 			}
+			
 		}
 		
 		

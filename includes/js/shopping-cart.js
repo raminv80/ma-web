@@ -30,41 +30,37 @@ function calculatePrice(){
 }
 
 function addCart(){
-	if ($('#quantity').val() > 0 ) {
-		$('body').css('cursor','wait');
-		var datastring = $("#product-form").serialize();
-		$.ajax({
-			type: "POST",
-		    url: "/process/cart",
-			cache: false,
-			data: datastring,
-			dataType: "html",
-		    success: function(data) {
-		    	try{
-		    		var obj = $.parseJSON(data);
-				 	$('.nav-itemNumber').html(obj.itemsCount);
-				 	$('.nav-subtotal').html('$'+obj.subtotal);
-				 	$('body').css('cursor','default');
-				 	$('#shop-cart-btn').html( obj.popoverShopCart );
-				 	$('#shop-cart-btn').slideDown();
-				 	setTimeout(function() {
-				 		$('#shop-cart-btn').slideUp();
-				    }, 3000);
-				 	
-		    		
-				}catch(err){
-					$('body').css('cursor','default'); 
-					console.log('TRY-CATCH error');
-				}
-		    },
-			error: function(){
+	$('body').css('cursor','wait');
+	var datastring = $("#product-form").serialize();
+	$.ajax({
+		type: "POST",
+	    url: "/process/cart",
+		cache: false,
+		data: datastring,
+		dataType: "html",
+	    success: function(data) {
+	    	try{
+	    		var obj = $.parseJSON(data);
+			 	$('.nav-itemNumber').html(obj.itemsCount);
+			 	$('.nav-subtotal').html('$'+obj.subtotal);
+			 	$('body').css('cursor','default');
+			 	$('#shop-cart-btn').html( obj.popoverShopCart );
+			 	$('#shop-cart-btn').slideDown();
+			 	setTimeout(function() {
+			 		$('#shop-cart-btn').slideUp();
+			    }, 3000);
+			 	
+	    		
+			}catch(err){
 				$('body').css('cursor','default'); 
-				console.log('AJAX error');
-          	}
-		});
-	} else {
-		alert('Quantity must be greater than 0');
-	}
+				console.log('TRY-CATCH error');
+			}
+	    },
+		error: function(){
+			$('body').css('cursor','default'); 
+			console.log('AJAX error');
+      	}
+	});
 }
 
 function updateCart(){

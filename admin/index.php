@@ -33,18 +33,18 @@ if($_request['arg1']  == 'logout' ){
 	session_start();
 }
 
-if((!isset($_SESSION['admin']) || empty($_SESSION['admin']) ) && $_request['arg1']  != 'register' && $_request['arg1']  != 'login' && $_request['arg1']  != 'recover-password'){
+if((!isset($_SESSION['user']['admin']) || empty($_SESSION['user']['admin']) ) && $_request['arg1']  != 'register' && $_request['arg1']  != 'login' && $_request['arg1']  != 'recover-password'){
 	header("Location:/admin/login");
 	die();
 }
 
-if(!empty($_SESSION['admin']) && $_request['arg1']  == 'login'){
+if(!empty($_SESSION['user']['admin']) && $_request['arg1']  == 'login'){
 	die('here');
 	header("Location:/admin");
 	die();
 }
 
-if(!isset($_SESSION['admin']) || empty($_SESSION['admin']) ){
+if(!isset($_SESSION['user']['admin']) || empty($_SESSION['user']['admin']) ){
 	$nav = "non-authd-nav.tpl|non-authd-footer.tpl";
 }else{
 	$nav = "nav.tpl|footer.tpl";

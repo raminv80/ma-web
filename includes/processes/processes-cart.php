@@ -108,10 +108,10 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    			$cart_obj = new cart();
 	    			$order_cartId = $cart_obj->cart_id;
 	    			$cart_obj->CloseCart();
-	    			$cart_obj->CreateCart($_SESSION['user']['id']);
+	    			$cart_obj->CreateCart($_SESSION['user']['public']['id']);
 	    			
 	    			// SEND CONFIRMATION EMAIL
-	    			$SMARTY->assign('user',$_SESSION['user']);
+	    			$SMARTY->assign('user',$_SESSION['user']['public']);
 	    			
 					$billing = $user_obj->GetAddress($billID);
 					$SMARTY->assign('billing',$billing);
@@ -127,7 +127,7 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 					
 					$buffer= $SMARTY->fetch('templates/email-confirmation.tpl');
 					
-					$to = $_SESSION['user']['email'];
+					$to = $_SESSION['user']['public']['email'];
 					$from = 'eShop';
 					$fromEmail = 'noreply@cms.themserver.com';
 					$subject = 'Confirmation of your order';
