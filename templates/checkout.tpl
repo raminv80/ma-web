@@ -136,14 +136,16 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group">
+						<!-- <div class="form-group">
 						    <label for="address_country_1" class="col-sm-2 control-label">Country</label>
 						    <div class="col-sm-10">
 						      	<select id="address_country_1" name="address[1][address_country]" class="form-control" >
 									<option value="Australia">Australia</option>
 								</select>
 							</div>
-						</div>
+						</div> -->
+						<input type="hidden" value="Australia" name="address[1][address_country]"/> 
+						
 						<div class="form-group">
 						    <label for="address_postcode_1" class="col-sm-2 control-label">Postcode</label>
 						    <div class="col-sm-10">
@@ -239,14 +241,16 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group">
+						<!-- <div class="form-group">
 						    <label for="address_country_2" class="col-sm-2 control-label">Country</label>
 						    <div class="col-sm-10">
 								<select id="address_country_2" name="address[2][address_country]" class="form-control" >
 									<option value="Australia">Australia</option>
 								</select>
 							</div>
-						</div>
+						</div> -->
+						<input type="hidden" value="Australia" name="address[2][address_country]"/> 
+						
 						<div class="form-group">
 						    <label for="address_postcode_2" class="col-sm-2 control-label">Postcode</label>
 						    <div class="col-sm-10">

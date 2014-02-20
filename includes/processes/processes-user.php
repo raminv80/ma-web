@@ -151,14 +151,16 @@ if(checkToken('frontend',$_POST["formToken"], true)){
                     $user_id = $facebook->getUser();
 
                     $logout_url = $facebook->getLogoutUrl(array( 'next' => $_SERVER['HTTP_REFERER'] )); 
+                    unset ( $_SESSION['fb_208591239336752_code'] );
+                    unset ( $_SESSION['fb_208591239336752_access_token'] );
+                    unset ( $_SESSION['fb_208591239336752_user_id'] );
+                    
                 } else {
                     $logout_url = $_SERVER['HTTP_REFERER'];
                 }
-    		$_SESSION['user']['public'] = "";
-		unset ( $_SESSION['user']['public'] );
-                
+    	
+				unset ( $_SESSION['user']['public'] );
                 session_regenerate_id();
-                session_destroy();
                 header('Location: ' . $logout_url );
                 
 		exit;

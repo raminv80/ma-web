@@ -46,7 +46,8 @@ while ( true ) {
 		if(strtolower((string)$CONFIG->error404->attributes()->standalone) == 'true'){
 			$obj = new $class ( '', $struct );
 			$template = $obj->Load( $CONFIG->error404->pageID );
-			$template = $CONFIG->error404->template;
+			$template = $CONFIG->error404->template; 
+			$SMARTY->assign ( 'requested_page', $_SERVER['HTTP_REFERER'] );
 			$SMARTY->display ( "extends:$template" );
 			die();
 		}else{
@@ -55,6 +56,7 @@ while ( true ) {
 			$template = $CONFIG->error404->template;
 			$menu = $obj->LoadMenu ( $CONFIG->error404->pageID );
 			$SMARTY->assign ( 'menuitems', $menu );
+			$SMARTY->assign ( 'requested_page', $_SERVER['HTTP_REFERER'] );
 			break 1;
 		}
 	}
@@ -98,7 +100,14 @@ while ( true ) {
 		$template = $CONFIG->login->template;
 		$menu = $obj->LoadMenu ( $CONFIG->login->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
-		$_SESSION ['login_referer'] = $_SERVER['HTTP_REFERER'];
+		if (preg_match ( "/login/", $_SERVER['HTTP_REFERER'] ) == 0) {
+			$referer = parse_url($_SERVER['HTTP_REFERER']);
+			if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
+				$_SESSION ['login_referer'] = $_SERVER['HTTP_REFERER'];
+			} else {
+				$_SESSION ['login_referer'] = "/store";
+			}
+		}
 		break 1;
 	}
 	/**

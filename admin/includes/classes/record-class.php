@@ -162,7 +162,22 @@ Class Record{
 					}
 				}
 			}
-			
+			foreach ( $this->CONFIG->table->options->field as $f ) {
+				if ($f->attributes()->inlist) {
+					$options = array();
+					$pre = str_replace ( "tbl_", "", $f->table );
+					$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+					if ($res = $DBobject->wrappedSqlGet ( $sql )) {
+						foreach ( $res as $key => $row ) {
+							$options ["{$f->name}"] [] = array (
+									'id' => $row ["{$pre}_id"],
+									'value' => $row ["{$f->reference}"]
+							);
+						}
+						$SMARTY->assign("options",$options);
+					}
+				}
+			}
 		}
 		
 		

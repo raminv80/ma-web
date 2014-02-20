@@ -22,6 +22,8 @@ $_SESSION['smarty'] = "";
 unset($_SESSION['smarty']);
 $_request = clean($_REQUEST);
 
+// ASSIGN ADMIN USER FOR TEMPLATES
+$SMARTY->assign ( 'admin', $_SESSION['user']['admin'] );
 
 $token = getToken('admin');
 $SMARTY->assign('token',$token);

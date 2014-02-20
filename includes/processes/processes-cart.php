@@ -101,13 +101,14 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    		),
 	    				$_POST['payment']
 	    		);
-	    		$pay_obj->StorePaymentRecord($params);
+	    		$paymentId = $pay_obj->StorePaymentRecord($params);
 	    		
 	    		if ($reponse){
 	    			// PAYMENT SUCCESS
 	    			$cart_obj = new cart();
 	    			$order_cartId = $cart_obj->cart_id;
 	    			$cart_obj->CloseCart();
+	    			$pay_obj->SetOrderStatus($paymentId);
 	    			$cart_obj->CreateCart($_SESSION['user']['public']['id']);
 	    			
 	    			// SEND CONFIRMATION EMAIL

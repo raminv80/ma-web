@@ -90,4 +90,37 @@ class Bank {
 		$sql_res = $DBobject->wrappedSql($sql, $params);
 		return $DBobject->wrappedSqlIdentity();
 	}
+	
+	/**
+	 * Add a new status for closed cart.
+	 * Require payment_id and status_id is set (1) as default
+	 * Optional: admin_id
+	 *
+	 * @param int $paymentId
+	 * @param int $statusId
+	 * @param int $adminId
+	 * @return boolean
+	 */
+	function SetOrderStatus($paymentId, $statusId = 1, $adminId = null) {
+		global $DBobject;
+	
+		$sql = " INSERT INTO tbl_order (
+								order_payment_id,
+								order_status_id,
+								order_admin_id,
+        						order_created
+								)
+							VALUES (
+								:pid,
+								:sid,
+								:aid,
+        						now()
+							)";
+		$params = array (
+				":pid" => $paymentId,
+				":sid" => $statusId,
+				":aid" => $adminId
+		);
+		return $DBobject->wrappedSql ( $sql, $params );
+	}
 }

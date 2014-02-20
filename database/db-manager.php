@@ -4,7 +4,8 @@
  */
 
 Class DBmanager{
-
+	public $LAST_INSERTED_ID;
+	 
 	/**
 	 * Enter description here ...
 	 */
@@ -48,17 +49,39 @@ Class DBmanager{
 				//die($MySQL);
 				header('Location: /404');
 				die();
-			}
-
+			} 
+			$this->LAST_INSERTED_ID =  $this->PDO->lastInsertId();
 			$this->lastquery = $MySQL;
-
+			
 			try{
 				$result = $STH->fetchAll(PDO::FETCH_ASSOC);
 				$this->lastresult = $result;
-				return $result;
 			}catch(Exception $e){
-				return $execute_res;
+				$result = $execute_res;
 			}
+			
+			// ========== SAVE IN LOG TABLE ==============
+			$MySQL = trim($MySQL);
+			if ( preg_match ( "/^UPDATE/i", $MySQL ) || preg_match ( "/^INSERT/i", $MySQL ) || preg_match ( "/^DELETE/i", $MySQL ) ) {
+				$logSQL = " INSERT INTO tbl_log (log_user, log_sql, log_params, log_ip, log_browser)
+								VALUES (:user, :sql, :params, :ip, :browser)";
+				$logParams = array (
+						":user" => serialize($_SESSION['user']), ":sql" => $MySQL,
+						":params" => serialize($params), ":ip" => $_SERVER ['REMOTE_ADDR'],
+						":browser" => $_SERVER ['HTTP_USER_AGENT']
+				);
+				
+				$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				if($STH = $this->PDO->prepare($logSQL)){
+					foreach ($logParams as $key => &$val) {
+						$STH->bindParam(":{$key}", $val);
+					}
+					$STH->execute($logParams);
+				}
+			}
+			// ==========================================
+			
+			return $result;
 		}
 	}
 
@@ -66,7 +89,7 @@ Class DBmanager{
 	 * Enter description here ...
 	 */
 	function wrappedSqlIdentity() {
-		return $this->PDO->lastInsertId();
+		return $this->LAST_INSERTED_ID;
 	}
 
 	/**
@@ -238,5 +261,7 @@ Class DBmanager{
 		}
 		return true;
 	}
+	
+	
 
 }

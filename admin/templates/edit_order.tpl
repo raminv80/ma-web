@@ -97,16 +97,19 @@
 </div>
 
 <div class="row">
-	<form class="well form-horizontal" id="" accept-charset="UTF-8" method="post">
+	<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
 		{if $cnt eq ""}{assign var=cnt value=0}{/if} 
-		<input type="hidden" value="{$fields.cart_id}" name="field[1][tbl_cart][{$cnt}][cart_id]" id="cart_id"> 
+		<input type="hidden" value="order_id" name="field[1][tbl_order][{$cnt}][id]" id="id" /> 
+		<input type="hidden" value="{$fields.payment.0.order.0.order_payment_id}" name="field[1][tbl_order][{$cnt}][order_payment_id]" id="order_payment_id">
+		<input type="hidden" value="{$admin.id}" name="field[1][tbl_order][{$cnt}][order_admin_id]" id="order_admin_id">
+		<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 					
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="id_cart_order_status">Order Status</label>
 			<div class="col-sm-5">
-				<select class="form-control" name="field[1][tbl_cart][{$cnt}][cart_order_status]" id="id_cart_order_status">
+				<select class="form-control" name="field[1][tbl_order][{$cnt}][order_status_id]" id="order_status_id">
 					{foreach $fields.options.status as $opt}
-							<option value="{$opt.id}" {if $fields.order eq $opt.id}selected="selected"{/if}>{$opt.value}</option>
+							<option value="{$opt.id}" {if $fields.payment.0.order.0.order_status_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option>
 					{/foreach} 
 				</select>
 			</div>
@@ -120,15 +123,15 @@
 </div>
 
 
-
+{include file='jquery-validation.tpl'}
 
 <script type="text/javascript">
 
-
 $(document).ready(function(){
+
+	$('#Edit_Record').validate();
 	
 });
-
 
 </script>
 {/block}

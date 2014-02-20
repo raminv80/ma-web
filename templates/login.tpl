@@ -34,7 +34,7 @@
 				    <label for="password" class="col-sm-2 control-label">Password</label>
 				    <div class="col-sm-10">
 				    	<input type="password" value="" class="form-control" id="pass" name="pass" required>
-                        <span class="help-block"><a href="javascript:void(0)" onclick="$('#reset-pass').show('slow');$('#login').hide('slow');">Forgotten your password?</a></span>
+                        <span class="form-help-block"><a href="javascript:void(0)" onclick="$('#reset-pass').show('slow');$('#login').hide('slow');">Forgotten your password?</a></span>
 					</div>
 				</div>
 			 	<div class="form-group">

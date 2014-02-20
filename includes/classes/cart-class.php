@@ -929,6 +929,7 @@ class cart {
 		return $result;
 	}						
 	
+
 	
 /* 	function PlaceOrder($paymentArr, $billingAddressArr, $shippingAddressArr = array() ) {
 		global $DBobject;

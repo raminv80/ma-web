@@ -180,7 +180,7 @@
 				<linkfield>cart_user_id</linkfield>
 				<field>user_id</field> 
 			</associated>
-			<associated> 
+			<associated inlist="true"> 
 				<id>payment_id</id>
 				<name>payment</name>
 				<table>tbl_payment</table>
@@ -192,6 +192,7 @@
 					<table>tbl_order</table>
 					<linkfield>payment_id</linkfield>
 					<field>order_payment_id</field> 
+					<orderby>order_modified DESC</orderby> 
 				</associated>
 				<associated> 
 					<id>address_id</id>
@@ -209,7 +210,7 @@
 				</associated>
 			</associated>
 			<options> 
-				<field> 
+				<field inlist="true"> 
 					<name>status</name>
 					<table>tbl_status</table>
 					<reference>status_name</reference> 
