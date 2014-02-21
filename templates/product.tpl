@@ -16,7 +16,7 @@
 	</header>
 	<div class="container">
 		<div class="row">
-		{foreach $product_info.gallery as $image }
+		{foreach $gallery as $image }
 			<img src="{$image.gallery_link}" title="{$image.gallery_title}" alt="{$image.gallery_alt_tag}">
 		{/foreach}
 		</div>
@@ -28,7 +28,7 @@
 			<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 			<input type="hidden" value="{$product_id}" name="product_id" id="product_id" /> 
 						
-				{foreach $product_info.attribute as $attr }
+				{foreach $attribute as $attr }
 					{if $attr.attr_value}
 					<div class="form-group">
 						<label for="address_state_1" class="col-sm-2 control-label">{$attr.attribute_name}:</label>
@@ -141,8 +141,8 @@
 
 			$('#product-form').validate();
 			
-			{if $product_info.attribute}
-				{foreach $product_info.attribute as $attr }
+			{if $attribute}
+				{foreach $attribute as $attr }
 					var {urlencode data=$attr.attribute_name} = getParameterByName('{urlencode data=$attr.attribute_name}');
 	
 					$("#{urlencode data=$attr.attribute_name} option[name*='"+ {urlencode data=$attr.attribute_name} +"']").attr("selected", "selected"); 

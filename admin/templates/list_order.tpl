@@ -9,15 +9,6 @@
 			<label class="" for="to">To:</label> 
 			<input type="text" class="form-control dates" value="{$smarty.now|date_format:"%d/%m/%Y"}" name="to" id="to" required>
 		</div>
-		<div class="form-group">
-			<label class="" for="status">Status</label> 
-			<select class="form-control" name="status" id="status">
-				<option value="">ALL</option>
-				{foreach $options.status as $opt}
-						<option value="{$opt.id}"}>{$opt.value}</option>
-				{/foreach} 
-			</select>
-		</div>
 		<a href="javascript:void(0);" onClick="$('#filter-form').submit();" class="btn btn-info" style="margin-left: 10px;">Filter</a>
 	</form>
 </div> 
@@ -25,25 +16,20 @@
 	<table class="table table-bordered table-striped table-hover" id="orders-table">
 		<thead>
 			<tr>
-				<th colspan="4">{$zone|upper}</th>
+				<th colspan="2">{$zone|upper}</th>
+				<th>
+					<select class="form-control" name="status" id="status">
+						<option value="0">All Status</option>
+						{foreach $options.status as $opt}
+								<option value="{$opt.id}"}>{$opt.value}</option>
+						{/foreach} 
+					</select>
+				</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
-			{if list}
-				{foreach $list as $item}
-					<tr>
-						<td><b>{$item.user.0.user_gname} {$item.user.0.user_surname}</b></td>
-						<td><b>{$item.title|date_format:"%e %B %Y - %H:%M:%S"}</b></td>
-						<td><b>{getvaluename id=$item.payment.0.order.0.order_status_id options=$options.status}</b></td>
-						<td>{if $item.url} <a href='{$item.url}' class='btn btn-small btn-warning pull-right'>Edit</a> {/if}
-						</td>
-					</tr>
-				{/foreach}
-			{else}
-				<tr>
-					<td colspan="4"><b>No orders were found.</b></td>
-				</tr>
-			{/if}
+			{include file='orders.tpl'}
 		</tbody>
 	</table>
 </div>
@@ -69,7 +55,6 @@
 		    submitHandler: function (form) {
 		      if ($(form).valid()) {
 		    	  getOrdersFiltered();
-		    	  
 		      } 
 		    }
 		});
@@ -106,6 +91,17 @@
 		});
 
 		$('#filter-form').validate();
+
+		$('#status').change(function(){
+			if ( $(this).val() == 0 ) {
+				$('.order').show();
+			} else {
+				$('.order').hide();
+				$('.'+ $(this).val() ).show();
+			}
+			checkVisible();
+		});
+		
 	});
 
 	function getOrdersFiltered () {
@@ -120,6 +116,7 @@
 		    success: function(data) {
 		    	try{
 		    		var obj = $.parseJSON(data);
+		    		$('#status').val('0');
 				 	$('#orders-table tbody').html(obj.body);
    					$('body').css('cursor','default');
     			    
@@ -133,6 +130,14 @@
 				console.log('AJAX error');
 	         	}
 		});
+	}
+
+	function checkVisible() {
+		if ( $('.order:visible').length > 0 ) {
+			$('.no-orders').hide();
+		} else {
+			$('.no-orders').show();
+		}
 	}
 </script>
 

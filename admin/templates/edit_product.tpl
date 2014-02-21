@@ -34,6 +34,7 @@
 				<li><a href="#pricing" data-toggle="tab">Pricing</a></li>
 				<li><a href="#images" data-toggle="tab">Images</a></li>
 				<li><a href="#attributes" data-toggle="tab">Attributes</a></li>
+				<li><a href="#tags" data-toggle="tab">Tags</a></li>
 				<!-- <button class="btn btn-primary" onClick="$('#Edit_Record').submit();" type="submit">Submit</button> -->
 			</ul>
 		
@@ -191,12 +192,7 @@
 					<div class="row btn-inform">
 						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.images').slideUp();newImage();"> Add New Image</a>
 					</div>
-					<div class="row">
-						<input type="hidden" value="{$imageno}" id="imageno">
-						<div class="col-md-11">
-							<input type="hidden" id="error" name="error" value="0" />
-						</div>
-					</div>
+					<input type="hidden" value="{$imageno}" id="imageno">
 					<!--  gallery -->
 				</div>
 				<!--===+++===+++===+++===+++===+++ ATTRIBUTES TAB +++===+++===+++===+++===+++====-->
@@ -211,12 +207,25 @@
 					<div class="row btn-inform">
 						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.attributes').slideUp();newAttribute();"> Add New Attribute</a>
 					</div>
-					<div class="row">
-						<input type="hidden" value="{$attributeno}" id="attributeno">
-						<div class="col-md-11">
-							<input type="hidden" id="error" name="error" value="0" />
+					<input type="hidden" value="{$attributeno}" id="attributeno">
+				</div>
+				<!--===+++===+++===+++===+++===+++ TAGS TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane" id="tags">
+					<div class="row form" id="tags-wrapper">
+					{assign var='tagno' value=0}
+					{foreach $fields.tags as $tag}
+						{assign var='tagno' value=$tagno+1}
+						{include file='tag.tpl'}
+					{/foreach}
+					</div>
+					<div class="row btn-inform">
+						<div class="ui-widget">
+							<label for="tags">Tags: </label> 
+							<input id="tags">
+							<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.tags').slideUp();newTag();"> Add Tag</a>
 						</div>
 					</div>
+					<input type="hidden" value="{$tagno}" id="tagno">
 				</div>
 			</div>
 			
@@ -232,278 +241,351 @@
 {include file='jquery-validation.tpl'}
 
 <script type="text/javascript">
+	$(document).ready(function() {
 
-
-$(document).ready(function(){
-
-	
-	$('#Edit_Record').validate({
-		onkeyup: false
-	});
-	
-	
-	$('#id_product_url').rules("add", {
-		uniqueURLProduct: { id: "{if $fields.product_id}{$fields.product_id}{else}0{/if}" }
-	 });
-
-		
-	$('.images').hide();
-
-	if ($('#imageno').val() == 0 ) {
-		$('#select-hero-img').hide();
-	}
-
-	$('.attributes').hide();
-	$('.attr_values').hide();
-
-	$('#id_product_hero_image').change(function() {
-		$('.ishero').val('0');
-		$('#gallery_ishero_'+ $(this).val()).val('1');
-	});
-
-});
-
-
-function seturl(str){
-	$.ajax({
-		type: "POST",
-	    url: "/admin/includes/processes/urlencode.php",
-		cache: false,
-		data: "value="+encodeURIComponent(str),
-		dataType: "json",
-	    success: function(res, textStatus) {
-	    	try{
-	    		$('#id_product_url').val(res.url);
-	    	}catch(err){ }
-	    }
-	});
-}
-
-function newAttribute(){
-	$('body').css('cursor','wait');
-	var no = $('#attributeno').val();
-	no++;
-	$('#attributeno').val(no);
-	$.ajax({
-		type: "POST",
-	    url: "/admin/includes/processes/load-template.php",
-		cache: false,
-		data: "template=form_attribute.tpl&attributeno="+no+"&attrvalueno=0",
-		dataType: "html",
-	    success: function(data, textStatus) {
-	    	try{
-	    		$('#attributes-wrapper').append(data);
-	    		$('body').css('cursor','default');
-	    		scrolltodiv('#attribute_wrapper'+no);
-			}catch(err){ $('body').css('cursor','default'); }
-	    }
-	});
-}
-
-function toggleAttribute(ID){
-	if ($('#attribute'+ID).is(':visible')){
-		$('.attributes').slideUp();
-	}else{
-		$('.attributes').slideUp();
-		$('#attribute'+ID).slideDown();
-	}
-}
-
-function toggleAttr_value(ID){
-	if ($('#attr_value'+ID).is(':visible')){
-		$('.attr_values').slideUp();
-	}else{
-		$('.attr_values').slideUp();
-		$('#attr_value'+ID).slideDown();;
-	}
-}
-
-function newAttr_value(attribute_no){
-	$('body').css('cursor','wait');
-	var attribute = new String(attribute_no);
-	var no = $('#attr_valueno' + attribute).val();
-	no++;
-	$('#attr_valueno' + attribute).val(no);
-	
-	$.ajax({
-		type: "POST",
-	    url: "/admin/includes/processes/load-template.php",
-		cache: false,
-		data: "template=form_value.tpl&attributeno="+attribute_no+"&attrvalueno="+no,
-		dataType: "html",
-	    success: function(data, textStatus) {
-	    	try{ 
-	    		$('#attr_value-wrapper'+attribute_no).append(data);
-	    		displayResults();
-	    		$('body').css('cursor','default');
-	    		scrolltodiv('#attr_value_wrapper'+attribute_no+'-'+ no);
-			}catch(err){ $('body').css('cursor','default'); }
-	    }
-	});
-}
-function deleteAttribute(rid){
-	if (ConfirmDelete()) {
-		var ID = 'attribute_wrapper'+rid;
-		var count = $('#'+ID).attr('rel');
-		var fieldno = $('#'+ID).attr('fieldno');
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1;//January is 0!
-		var yyyy = today.getFullYear(); 
-		var hh = today.getHours();
-		var MM = today.getMinutes();
-		var ss = today.getSeconds();
-		
-		html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field['+fieldno+'][tbl_attribute]['+count+'][attribute_deleted]" />';
-		$('#'+ID).append(html);
-		var entno = $('.attribute_attr_values'+rid).length;
-		
-		for ( var i=1; i<=entno;i++){
-			var elem = new String(rid*20+i);
-			var del = 'attr_value_wrapper' + elem;
-			//deleteAttr_value(del);
-			var acount = $('#'+del).attr('rel');
-			var afieldno = $('#'+del).attr('fieldno');
-			html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field['+afieldno+'][tbl_attr_value]['+acount+'][attr_value_deleted]" />';
-			$('#'+del).append(html);
-			$('#'+del).css('display','none');
-			$('#'+del).removeClass('attr_values');
-		}
-		
-		$('#'+ID).css('display','none');
-		$('#'+ID).removeClass('attributes');
-	}else{ 
-		return false;
-	}
-	
-}
-function deleteAttr_value(ID){
-	if (ConfirmDelete()) {
-		var count = $('#'+ID).attr('rel');
-		var fieldno = $('#'+ID).attr('fieldno');
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1;//January is 0!
-		var yyyy = today.getFullYear(); 
-		var hh = today.getHours();
-		var MM = today.getMinutes();
-		var ss = today.getSeconds();
-		
-		html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field['+fieldno+'][tbl_attr_value]['+count+'][attr_value_deleted]" />';
-		$('#'+ID).append(html);
-		$('#'+ID).css('display','none');
-		$('#'+ID).removeClass('attr_values');
-
-	}else{ 
-		return false;
-	}
-}
-
-function validate(){
-	$('body').css('cursor','wait');
-	var pass = validateForm();
-	if(!pass){
-		$('body').css('cursor','pointer');
-		return false;
-	}else{
-		$('#Edit_Record').submit();
-	}
-}
-
-function scrolltodiv(id){
-	$('html,body').animate({
-		   scrollTop: $(id).offset().top
+		$('#Edit_Record').validate({
+			onkeyup : false
 		});
-}
 
-function newImage(){
-	$('body').css('cursor','wait');
-	var no = $('#imageno').val();
-	no++;
-	$('#imageno').val(no);
-	$.ajax({
-		type: "POST",
-	    url: "/admin/includes/processes/load-template.php",
-		cache: false,
-		data: "template=gallery.tpl&imageno="+no,
-		dataType: "html",
-	    success: function(data, textStatus) {
-	    	try{
-	    		$('#images-wrapper').append(data);
-	    		$('body').css('cursor','default');
-	    		scrolltodiv('#image_wrapper'+no);
-	    		if (no == 1) { 
-	    			$('#gallery_ishero_1').val('1');
-	    		}
-    			$('#select-hero-img').show();
-	    		$('#id_product_hero_image').append($('<option>', {
-	    		    value: no,
-	    		    text: 'Image #'+no
-	    		}));
-			}catch(err){ $('body').css('cursor','default'); }
-	    }
-	});
-}
+		$('#id_product_url').rules("add", {
+			uniqueURLProduct : {
+				id : "{if $fields.product_id}{$fields.product_id}{else}0{/if}"
+			}
+		});
 
-function toggleImage(ID){
-	if ($('#image'+ID).is(':visible')){
-		$('.images').slideUp();
-	}else{
-		$('.images').slideUp();
-		$('#image'+ID).slideDown();
-	}
-}
+		$('.images').hide();
 
-function deleteImage(ID){
-	if (ConfirmDelete()) {
-		var count = $('#'+ID).attr('rel');
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1;//January is 0!
-		var yyyy = today.getFullYear(); 
-		var hh = today.getHours();
-		var MM = today.getMinutes();
-		var ss = today.getSeconds();
-		
-		html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[10][tbl_gallery]['+count+'][gallery_deleted]" />';
-		$('#'+ID).append(html);
-		$('#'+ID).css('display','none');
-		$('#'+ID).removeClass('images');
-		$('#id_product_hero_image option[value='+ count +']').remove();
-		$('#id_product_hero_image').trigger('change');
-		if ($('#id_product_hero_image option').length == 0) {
+		if ($('#imageno').val() == 0) {
 			$('#select-hero-img').hide();
 		}
-	}else{ 
-		return false;
-	}
-}
 
+		$('.attributes').hide();
+		$('.attr_values').hide();
 
-function displayResults(){ 
-	$(".modifier").each(function(i){	
-		refreshResult(this.id); 
+		$('#id_product_hero_image').change(function() {
+			$('.ishero').val('0');
+			$('#gallery_ishero_' + $(this).val()).val('1');
+		});
+
 	});
-}
 
-function refreshResult(ID){
-	var obj = document.getElementById(ID);
-	var modifierValue = obj.value; 
-	var productValue = parseFloat($('#id_product_'+ obj.getAttribute('modify')).val());
-     if ($.isNumeric(modifierValue)) {
-    	var result = productValue + parseFloat(modifierValue);
-    	$(obj).closest('.form-group').find('.form-help-value').text( result.toFixed(2));
-	} else {
-		$(obj).closest('.form-group').find('.form-help-value').text( productValue.toFixed(2));
-	} 
-}
+	$(function() {
+		var availableTags = [
+			'Product1',
+			'Product 2',
+			'Product 3',
+			'Beret',
+			'Top hat',
+			'cap',
+			'My Hat',
+			'Product 28',
+			'test1',
+			'awesome',
+			'Pants',
+			'Happy Meal'
+			/* {foreach $fields.options.products_list as $opt}
+				'{$opt.value}',
+			{/foreach} */
+			] ;
+		$("#tags").autocomplete({
+			source : availableTags
+		});
+	});
 
+	function seturl(str) {
+		$.ajax({
+			type : "POST",
+			url : "/admin/includes/processes/urlencode.php",
+			cache : false,
+			data : "value=" + encodeURIComponent(str),
+			dataType : "json",
+			success : function(res, textStatus) {
+				try {
+					$('#id_product_url').val(res.url);
+				} catch (err) {
+				}
+			}
+		});
+	}
 
+	function newAttribute() {
+		$('body').css('cursor', 'wait');
+		var no = $('#attributeno').val();
+		no++;
+		$('#attributeno').val(no);
+		$.ajax({
+			type : "POST",
+			url : "/admin/includes/processes/load-template.php",
+			cache : false,
+			data : "template=form_attribute.tpl&attributeno=" + no
+					+ "&attrvalueno=0",
+			dataType : "html",
+			success : function(data, textStatus) {
+				try {
+					$('#attributes-wrapper').append(data);
+					$('body').css('cursor', 'default');
+					scrolltodiv('#attribute_wrapper' + no);
+				} catch (err) {
+					$('body').css('cursor', 'default');
+				}
+			}
+		});
+	}
 
+	function toggleAttribute(ID) {
+		if ($('#attribute' + ID).is(':visible')) {
+			$('.attributes').slideUp();
+		} else {
+			$('.attributes').slideUp();
+			$('#attribute' + ID).slideDown();
+		}
+	}
 
-$('#myTab a[href="#attributes"]').click(function () {
-	displayResults();
-})
-    
+	function toggleAttr_value(ID) {
+		if ($('#attr_value' + ID).is(':visible')) {
+			$('.attr_values').slideUp();
+		} else {
+			$('.attr_values').slideUp();
+			$('#attr_value' + ID).slideDown();
+			;
+		}
+	}
+
+	function newAttr_value(attribute_no) {
+		$('body').css('cursor', 'wait');
+		var attribute = new String(attribute_no);
+		var no = $('#attr_valueno' + attribute).val();
+		no++;
+		$('#attr_valueno' + attribute).val(no);
+
+		$
+				.ajax({
+					type : "POST",
+					url : "/admin/includes/processes/load-template.php",
+					cache : false,
+					data : "template=form_value.tpl&attributeno="
+							+ attribute_no + "&attrvalueno=" + no,
+					dataType : "html",
+					success : function(data, textStatus) {
+						try {
+							$('#attr_value-wrapper' + attribute_no)
+									.append(data);
+							displayResults();
+							$('body').css('cursor', 'default');
+							scrolltodiv('#attr_value_wrapper' + attribute_no
+									+ '-' + no);
+						} catch (err) {
+							$('body').css('cursor', 'default');
+						}
+					}
+				});
+	}
+	function deleteAttribute(rid) {
+		if (ConfirmDelete()) {
+			var ID = 'attribute_wrapper' + rid;
+			var count = $('#' + ID).attr('rel');
+			var fieldno = $('#' + ID).attr('fieldno');
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1;//January is 0!
+			var yyyy = today.getFullYear();
+			var hh = today.getHours();
+			var MM = today.getMinutes();
+			var ss = today.getSeconds();
+
+			html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field['+fieldno+'][tbl_attribute]['+count+'][attribute_deleted]" />';
+			$('#' + ID).append(html);
+			var entno = $('.attribute_attr_values' + rid).length;
+
+			for ( var i = 1; i <= entno; i++) {
+				var elem = new String(rid * 20 + i);
+				var del = 'attr_value_wrapper' + elem;
+				//deleteAttr_value(del);
+				var acount = $('#' + del).attr('rel');
+				var afieldno = $('#' + del).attr('fieldno');
+				html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field['+afieldno+'][tbl_attr_value]['+acount+'][attr_value_deleted]" />';
+				$('#' + del).append(html);
+				$('#' + del).css('display', 'none');
+				$('#' + del).removeClass('attr_values');
+			}
+
+			$('#' + ID).css('display', 'none');
+			$('#' + ID).removeClass('attributes');
+		} else {
+			return false;
+		}
+
+	}
+	function deleteAttr_value(ID) {
+		if (ConfirmDelete()) {
+			var count = $('#' + ID).attr('rel');
+			var fieldno = $('#' + ID).attr('fieldno');
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1;//January is 0!
+			var yyyy = today.getFullYear();
+			var hh = today.getHours();
+			var MM = today.getMinutes();
+			var ss = today.getSeconds();
+
+			html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field['+fieldno+'][tbl_attr_value]['+count+'][attr_value_deleted]" />';
+			$('#' + ID).append(html);
+			$('#' + ID).css('display', 'none');
+			$('#' + ID).removeClass('attr_values');
+
+		} else {
+			return false;
+		}
+	}
+
+	function validate() {
+		$('body').css('cursor', 'wait');
+		var pass = validateForm();
+		if (!pass) {
+			$('body').css('cursor', 'pointer');
+			return false;
+		} else {
+			$('#Edit_Record').submit();
+		}
+	}
+
+	function scrolltodiv(id) {
+		$('html,body').animate({
+			scrollTop : $(id).offset().top
+		});
+	}
+
+	function newImage() {
+		$('body').css('cursor', 'wait');
+		var no = $('#imageno').val();
+		no++;
+		$('#imageno').val(no);
+		$.ajax({
+			type : "POST",
+			url : "/admin/includes/processes/load-template.php",
+			cache : false,
+			data : "template=gallery.tpl&imageno=" + no,
+			dataType : "html",
+			success : function(data, textStatus) {
+				try {
+					$('#images-wrapper').append(data);
+					$('body').css('cursor', 'default');
+					scrolltodiv('#image_wrapper' + no);
+					if (no == 1) {
+						$('#gallery_ishero_1').val('1');
+					}
+					$('#select-hero-img').show();
+					$('#id_product_hero_image').append($('<option>', {
+						value : no,
+						text : 'Image #' + no
+					}));
+				} catch (err) {
+					$('body').css('cursor', 'default');
+				}
+			}
+		});
+	}
+
+	function toggleImage(ID) {
+		if ($('#image' + ID).is(':visible')) {
+			$('.images').slideUp();
+		} else {
+			$('.images').slideUp();
+			$('#image' + ID).slideDown();
+		}
+	}
+
+	function deleteImage(ID) {
+		if (ConfirmDelete()) {
+			var count = $('#' + ID).attr('rel');
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1;//January is 0!
+			var yyyy = today.getFullYear();
+			var hh = today.getHours();
+			var MM = today.getMinutes();
+			var ss = today.getSeconds();
+
+			html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[10][tbl_gallery]['+count+'][gallery_deleted]" />';
+			$('#' + ID).append(html);
+			$('#' + ID).css('display', 'none');
+			$('#' + ID).removeClass('images');
+			$('#id_product_hero_image option[value=' + count + ']').remove();
+			$('#id_product_hero_image').trigger('change');
+			if ($('#id_product_hero_image option').length == 0) {
+				$('#select-hero-img').hide();
+			}
+		} else {
+			return false;
+		}
+	}
+
+	function newTag(VALUE) {
+		$('body').css('cursor', 'wait');
+		var no = $('#tagno').val();
+		no++;
+		$('#tagno').val(no);
+		$.ajax({
+			type : "POST",
+			url : "/admin/includes/processes/load-template.php",
+			cache : false,
+			data : "template=tag.tpl&tagno=" + no + "&tags%5Btag_value%5D="
+					+ VALUE,
+			dataType : "html",
+			success : function(data, textStatus) {
+				try {
+					$('#tags-wrapper').append(data);
+					$('body').css('cursor', 'default');
+				} catch (err) {
+					$('body').css('cursor', 'default');
+				}
+			}
+		});
+	}
+
+	function deleteTag(ID) {
+		if (ConfirmDelete()) {
+			var count = $('#' + ID).attr('rel');
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1;//January is 0!
+			var yyyy = today.getFullYear();
+			var hh = today.getHours();
+			var MM = today.getMinutes();
+			var ss = today.getSeconds();
+
+			html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[15][tbl_tag]['+count+'][tag_deleted]" />';
+			$('#' + ID).append(html);
+			$('#' + ID).css('display', 'none');
+			$('#' + ID).removeClass('tags');
+		} else {
+			return false;
+		}
+	}
+
+	function displayResults() {
+		$(".modifier").each(function(i) {
+			refreshResult(this.id);
+		});
+	}
+
+	function refreshResult(ID) {
+		var obj = document.getElementById(ID);
+		var modifierValue = obj.value;
+		var productValue = parseFloat($(
+				'#id_product_' + obj.getAttribute('modify')).val());
+		if ($.isNumeric(modifierValue)) {
+			var result = productValue + parseFloat(modifierValue);
+			$(obj).closest('.form-group').find('.form-help-value').text(
+					result.toFixed(2));
+		} else {
+			$(obj).closest('.form-group').find('.form-help-value').text(
+					productValue.toFixed(2));
+		}
+	}
+
+	$('#myTab a[href="#attributes"]').click(function() {
+		displayResults();
+	})
 </script>
 {/block}

@@ -5,9 +5,15 @@ global $CONFIG, $SMARTY, $DBobject;
 
 foreach($CONFIG->section as $sp){
 	if ($sp->url == 'orders') {
-		$sp->table->where = "cart_closed_date IS NOT NULL AND ";
+		$from = DateTime::createFromFormat('d/m/Y', $_POST['from']);
+		$to = DateTime::createFromFormat('d/m/Y', $_POST['to']);
+		$sp->table->where = "cart_closed_date BETWEEN '{$from->format('Y-m-d')}' AND '{$to->format('Y-m-d')}'";
 		$record = new Record($sp);
 		$list = $record->getRecordList();
+		$SMARTY->assign("list",$list);
+		$body= $SMARTY->fetch('orders.tpl');
+		echo json_encode(array(
+				'body' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $body)
+		));
 	}
 }
-$popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');

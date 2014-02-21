@@ -107,16 +107,18 @@ class ProductClass extends ListClass {
         $SMARTY->assign ( "breadcrumbs", $bdata );
 	
         //------------ LOAD PRODUCT/CATEGORY DATA, PARENT AND EXTENDS TABLE ----------
+        $LOCALCONF = $this->CONFIG_OBJ->table;
         if ($arrChk['isProduct']) {
         	$tableName = 'tbl_product';
         	$parentField = 'product_listing_id';
+        	$LOCALCONF = $this->CONFIG_OBJ->producttable;
         } else {
         	$tableName = 'tbl_listing';
         	$parentField = 'listing_parent_id';
         }
         $pre = str_replace ( "tbl_", "", $tableName );
 		$extends = "";
-		foreach ( $this->CONFIG_OBJ->table->extends as $a ) {
+		foreach ( $LOCALCONF->extends as $a ) {
 			$extends .= " LEFT JOIN {$a->table} ON {$pre}_id = {$a->field}"; 
 		}
 		$sql = "SELECT * FROM {$tableName} {$extends} WHERE {$pre}_id = :id AND {$pre}_deleted IS NULL AND {$pre}_published = 1 ";
@@ -131,19 +133,10 @@ class ProductClass extends ListClass {
 			$SMARTY->assign ( "listing_parent", $p_data );
 			
 			//------------- LOAD ASSOCIATED TABLES --------------
-			foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
-				if ($arrChk['isProduct'] == 'product') {
-					$t_data = array();
-					foreach ( $a->associated as $a2 ) {
-						$t_data[ "{$a2->name}"] = $this->LoadAssociated($a2, $res[0]["{$a2->linkfield}"]);
-					}
-				} else {
-					$t_data = $this->LoadAssociated($a, $res[0]["{$a->linkfield}"]);
-				}
-				$SMARTY->assign ( "{$a->name}", $t_data );
-					
+			foreach ( $LOCALCONF->associated as $a ) {
+				$t_data = $this->LoadAssociated($a, $res[0]["{$a->linkfield}"]);
+				$SMARTY->assign ( "{$a->name}", $t_data );	
 			}
-			
 		}else{
 			header ( "Location: /404" );
 			die ();
@@ -151,7 +144,7 @@ class ProductClass extends ListClass {
 		
 		
 		//------------- LOAD OPTIONS FOR SELECT INPUTS --------------
-		foreach ( $this->CONFIG_OBJ->table->options->field as $f ) {
+		foreach ( $LOCALCONF->options->field as $f ) {
 			if ($f->attributes()->recursive) {
 				$options = $this->getOptionsCatTree($f, $this->ROOT_PARENT_ID );
 			} else {
@@ -171,7 +164,7 @@ class ProductClass extends ListClass {
 		}
 			
 		 if ($arrChk['isProduct']) {
-		 	$template = $this->CONFIG_OBJ->table->template;
+		 	$template = $this->CONFIG_OBJ->producttable->template;
 		}else{
 			$template = $this->CONFIG_OBJ->template;
 		}
@@ -275,14 +268,14 @@ class ProductClass extends ListClass {
 		
 		//---------------------- GET PRODUCTS CHILDREN
 		$prod_extends = "";
-		foreach ( $this->CONFIG_OBJ->table->associated->extends as $a ) {	// extends product table
+		foreach ( $this->CONFIG_OBJ->producttable->extends as $a ) {	// extends product table
 			$pre = str_replace ( "tbl_", "", $a->table );
 			$prod_extends = " LEFT JOIN {$a->table} ON product_id = {$a->field}";
 		}
 		
 		$prod_order = "";
-		if (! empty ( $this->CONFIG_OBJ->table->associated->orderby )) { 
-			$prod_order = " ORDER BY " . $this->CONFIG_OBJ->table->associated->orderby;
+		if (! empty ( $this->CONFIG_OBJ->producttable->orderby )) { 
+			$prod_order = " ORDER BY " . $this->CONFIG_OBJ->producttable->orderby;
 		}
 		
 		$sql = "SELECT * FROM tbl_product {$prod_extends} WHERE product_listing_id = :cid AND product_deleted IS NULL AND product_published = 1" . $prod_order;
@@ -293,7 +286,7 @@ class ProductClass extends ListClass {
 		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
 			foreach ( $res as $row ) {
 				$data ['products']["{$row['product_id']}"] = unclean ( $row );
-				foreach ( $this->CONFIG_OBJ->table->associated->associated as $a ) {
+				foreach ( $this->CONFIG_OBJ->producttable->associated as $a ) {
 					$data ['products']["{$row['product_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row["{$a->linkfield}"]);
 				}
 			}

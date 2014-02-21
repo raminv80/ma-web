@@ -132,13 +132,25 @@
 				<linkfield>product_id</linkfield>
 				<field>gallery_product_id</field> 
 			</associated>
+			<associated>
+				<name>tags</name>
+				<table>tbl_tag</table>
+				<linkfield>product_id</linkfield>
+				<field>tag_object_id</field>
+				<where>tag_object_table = 'tbl_product'</where> 
+			</associated>
 			<options> 
+				<field> 
+					<name>products_list</name>
+					<table>tbl_product</table>
+					<reference>product_name</reference> 
+				</field>
 				<field recursive="true"> 
 					<name>product_listing_id</name>
 					<table>tbl_listing</table>
 					<reference>listing_title</reference> 
 					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
-				</field> 
+				</field>  
 			</options>
 		</table>
 		<list_template>list.tpl</list_template>
@@ -157,7 +169,7 @@
 			<id>cart_id</id>
 			<field>cart_closed_date</field>
 			<deleted>cart_deleted</deleted>
-			<where>cart_closed_date IS NOT NULL</where> 
+			<where>cart_closed_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND CURDATE()</where> 
 			<orderby>cart_closed_date DESC</orderby>
 			<associated> 
 				<id>cartitem_id</id>
