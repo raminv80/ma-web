@@ -143,7 +143,8 @@
 				<field> 
 					<name>products_list</name>
 					<table>tbl_product</table>
-					<reference>product_name</reference> 
+					<reference>product_group</reference> 
+					<where>product_group IS NOT NULL AND product_group != ''</where> 
 				</field>
 				<field recursive="true"> 
 					<name>product_listing_id</name>

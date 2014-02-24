@@ -15,7 +15,7 @@ class UserClass {
     function Create($user){
     	global $DBobject;
     
-    	if ($this->RetrieveByUsername($user['email'])) {
+    	if ($this->RetrieveByUsername($user['username'])) {
     		return array ('error' => 'This email is already been used.');
     	} else {
     		
@@ -23,6 +23,7 @@ class UserClass {
 	    	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($user['email'])))) . md5(stripslashes(strtoupper($user['password']))));
 	    	
 	    	$params = array (
+	    			":username" => $user['username'],
 	    			":gname" => $user['gname'],
 	    			":surname" => $user['surname'],
 	    			":email" => $user['email'],
@@ -42,7 +43,7 @@ class UserClass {
 										user_created
 									)
 									values(
-	    								:email,
+	    								:username,
 										:gname,
 										:surname,
 										:email,
@@ -57,7 +58,7 @@ class UserClass {
 	    				"id" => $userId,
 	    				"gname" => $user['gname'],
 	    				"surname" => $user['surname'],
-	    				"email" => $user['email'],
+	    				"email" => $user['email']
 	    		);
 	    	} else {
 	    		$result = array ('error' => 'There was a connection problem. Please, try again!');

@@ -125,6 +125,10 @@ class ListClass {
 				$t_data = $this->LoadAssociated($a,$res[0]["{$a->linkfield}"]);
 				$SMARTY->assign ( "{$a->name}", $t_data );
 			}
+			foreach ( $this->CONFIG_OBJ->table->tags as $a ) {
+				$t_data = $this->LoadAssociatedByTag($a,$res[0]["{$a->object_id}"]);
+				$SMARTY->assign ( "{$a->name}", $t_data );
+			}
 		}else{
 			header ( "Location: /404" );
 			die ();
@@ -490,6 +494,35 @@ class ListClass {
 					}
 				}
 				$t_data[] = $row2;
+			}
+		}
+		return $t_data;
+	}
+
+
+	function LoadAssociatedByTag($a, $value){
+		global $CONFIG, $SMARTY, $DBobject;
+		$t_data = array();
+		$group = "";$order = "";$limit = "";$where = "";
+		if (! empty ( $a->groupby )) {
+			$group = " GROUP BY ".$a->groupby;
+		}
+		if (! empty ( $a->orderby )) {
+			$order = " ORDER BY ".$a->orderby;
+		}
+		if (! empty ( $a->limit )) {
+			$limit = " LIMIT ".$a->limit;
+		}
+		if (! empty ( $a->where )) {
+			$where = " AND ".$a->where;
+		}
+		
+		$pre = str_replace ( "tbl_", "", $a->table );
+		$sql = "SELECT {$pre}_object_id FROM {$a->table} WHERE {$pre}_object_table = {$a->object_table} AND {$pre}_value = :value  AND {$pre}_deleted IS NULL ".$where." ".$group." ".$order." ".$limit;
+		$params = array(':value'=>$value);
+		if($res = $DBobject->wrappedSqlGet($sql,$params)) {
+			foreach ( $res as $obj ) {
+				$t_data = null;
 			}
 		}
 		return $t_data;

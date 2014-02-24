@@ -6,6 +6,7 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 		
 		case 'create':
 			$user_obj = new UserClass();
+			$_POST['username'] = $_POST['email'];
 			$res = $user_obj->Create($_POST);
 			
 			if( $res['error'] ) {
@@ -21,7 +22,29 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 				header("Location: " . $_SESSION ['login_referer']);
 			}
 			exit;
-	    
+
+		case 'guest':
+			$user_obj = new UserClass();
+			$values = array();
+			$values = $_POST;
+			$values['username'] = $_POST['email'] . '#' . strtotime("now");
+			$values['password'] = session_id ();
+			$values['gname'] = 'Guest';
+			$values['surname'] = '';
+			$res = $user_obj->Create($values);
+				
+			if( $res['error'] ) {
+				$_SESSION['error']= $res['error'];
+				$_SESSION['post']= $_POST;
+				header("Location: ".$_SERVER['HTTP_REFERER']."#error");
+			} else {
+				$cart_obj = new cart();
+				$cart_obj->SetUserCart($res['id']);
+				$_SESSION['user']['public'] = $res;
+				header("Location: " . $_SESSION ['login_referer']);
+			}
+			exit;
+				    
 	    case 'login':
 	    	$user_obj = new UserClass();
 	    	 $res = $user_obj->Authenticate($_POST["email"], $_POST["pass"]); 

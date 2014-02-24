@@ -107,6 +107,12 @@
 				<field>tag_object_id</field>
 				<where>tag_object_table = 'tbl_product'</where> 
 			</associated>
+			<tags>
+				<name>associated_products</name>
+				<table>tbl_tag</table>
+				<object_table>tbl_product</object_table>
+				<object_value>product_group</object_value>
+			</tags>
 			<template>product.tpl</template>
 		</producttable>
  	</product_page>

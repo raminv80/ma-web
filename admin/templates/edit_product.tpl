@@ -89,6 +89,12 @@
 							<div class="col-sm-5 ">
 								<textarea name="field[1][tbl_product][{$cnt}][product_description]" id="id_product_description" class="tinymce">{$fields.product_description}</textarea>
 							</div>
+						</div>					
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_product_group">Associated Group</label>
+							<div class="col-sm-5 ">
+								<input class="form-control" type="text" value="{$fields.product_group}" name="field[1][tbl_product][{$cnt}][product_group]" id="id_product_group">
+							</div>
 						</div>
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_order">Order</label>
@@ -218,11 +224,13 @@
 						{include file='tag.tpl'}
 					{/foreach}
 					</div>
-					<div class="row btn-inform">
-						<div class="ui-widget">
-							<label for="tags">Tags: </label> 
-							<input id="tags">
-							<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.tags').slideUp();newTag();"> Add Tag</a>
+					<div class="row form-group">
+						<label class="col-sm-2 control-label" for="new_tag">Tag</label>
+						<div class="col-sm-5">
+							<div class="ui-widget">
+								<input class="form-control" id="new_tag">
+								<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="newTag();"> Add Tag</a>
+							</div>
 						</div>
 					</div>
 					<input type="hidden" value="{$tagno}" id="tagno">
@@ -267,30 +275,17 @@
 			$('#gallery_ishero_' + $(this).val()).val('1');
 		});
 
-	});
-
-	$(function() {
 		var availableTags = [
-			'Product1',
-			'Product 2',
-			'Product 3',
-			'Beret',
-			'Top hat',
-			'cap',
-			'My Hat',
-			'Product 28',
-			'test1',
-			'awesome',
-			'Pants',
-			'Happy Meal'
-			/* {foreach $fields.options.products_list as $opt}
+			{foreach $fields.options.products_list as $opt}
 				'{$opt.value}',
-			{/foreach} */
-			] ;
-		$("#tags").autocomplete({
+			{/foreach} 
+         			] ;
+		
+		$("#new_tag").autocomplete({
 			source : availableTags
 		});
 	});
+
 
 	function seturl(str) {
 		$.ajax({
@@ -520,27 +515,29 @@
 		}
 	}
 
-	function newTag(VALUE) {
-		$('body').css('cursor', 'wait');
-		var no = $('#tagno').val();
-		no++;
-		$('#tagno').val(no);
-		$.ajax({
-			type : "POST",
-			url : "/admin/includes/processes/load-template.php",
-			cache : false,
-			data : "template=tag.tpl&tagno=" + no + "&tags%5Btag_value%5D="
-					+ VALUE,
-			dataType : "html",
-			success : function(data, textStatus) {
-				try {
-					$('#tags-wrapper').append(data);
-					$('body').css('cursor', 'default');
-				} catch (err) {
-					$('body').css('cursor', 'default');
+	function newTag() {
+		if ( $('#new_tag').val() != '' ) { 
+			$('body').css('cursor', 'wait');
+			var no = $('#tagno').val();
+			no++;
+			$('#tagno').val(no);
+			$.ajax({
+				type : "POST",
+				url : "/admin/includes/processes/load-template.php",
+				cache : false,
+				data : "template=tag.tpl&tagno=" + no + "&tag%5Btag_value%5D="	+  $('#new_tag').val(),
+				dataType : "html",
+				success : function(data, textStatus) {
+					try {
+						$('#tags-wrapper').append(data);
+						$('#new_tag').val('');
+						$('body').css('cursor', 'default');
+					} catch (err) {
+						$('body').css('cursor', 'default');
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	function deleteTag(ID) {
