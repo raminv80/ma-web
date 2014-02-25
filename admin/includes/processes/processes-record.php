@@ -67,7 +67,7 @@ if(checkToken('admin', $_POST["formToken"])){
 							}
 						}
 						if($insert_table != ''){
-							$o = $DBobject->PDO->lastInsertId();
+							$o = $DBobject->wrappedSqlIdentity();
 							$key = "field[{$order}][{$tbl}][{$index}][{$id}]";
 							$returnIDs[$key] = $o;
 							$stored["{$id}"] = $o;

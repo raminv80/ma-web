@@ -3,6 +3,7 @@
 {function name=render_products level=0 parentUrl=''} 
 	<div class="row">
 	{foreach from=$items key=k item=it}
+	<div class="row">
 		<div class="col-xs-3 image">
 			<img src="{$it.gallery.0.gallery_link}" alt="{$g.gallery_alt_tag}" title="{$g.gallery_title}" style="width:90px; height:90px;"/>
 			<span class="caption">{$g.gallery_caption}</span>
@@ -53,6 +54,7 @@
 		<div class="col-xs-12">{$it.product_description}</div>
 		<div class="col-xs-12"><a href="{$parentUrl}{$it.product_url}-{$it.product_id}" class="btn btn-info">View product</a></div>
 		</div>
+	</div>
 	{/foreach} 
 	</div>
 {/function}

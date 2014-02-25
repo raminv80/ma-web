@@ -22,7 +22,6 @@
 			</associated>
 		</table>
 		<template>standardpage.tpl</template><!-- The template used if the field is matched -->
-		<renting>rentingstandardpage.tpl</renting>
 	</page_strut>
 	<index_page>
 		<template>home.tpl</template>
@@ -32,11 +31,6 @@
 		<template>404.tpl</template>
 		<pageID>2</pageID>
 	</error404>
-	
-	<inspections>
-		<template>inspections.tpl</template>
-		<pageID>35</pageID>
-	</inspections>
 	<static_page>
 		<url>contact-us</url>
 		<template>contact-us.tpl</template>
@@ -54,20 +48,18 @@
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>
 			<field>listing_url</field><!-- The field used to match the URL -->
-			<options>
-				<field recursive="true"> 
-					<name>options_categories</name>
-					<table>tbl_listing</table>
-					<reference>listing_name</reference> 
-					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
-				</field> 
-			</options>
 			<associated>
 				<name>gallery</name>
 				<table>tbl_gallery</table>
 				<linkfield>listing_id</linkfield>
 				<field>gallery_listing_id</field>
 			</associated>
+			<tags>
+				<name>associated_categories</name>
+				<table>tbl_tag</table>
+				<object_table>tbl_listing</object_table>
+				<object_value>listing_name</object_value>
+			</tags>
 		</table>
 		<template>category.tpl</template>
 		<producttable>
@@ -122,7 +114,7 @@
 		<template>login.tpl</template>
 		<pageID>14</pageID>
 	</login>
-	<account>
+	<account restricted="true">
 		<url>my-account</url>
 		<template>account.tpl</template>
 		<pageID>22</pageID>

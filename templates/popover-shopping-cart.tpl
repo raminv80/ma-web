@@ -31,7 +31,7 @@
 		<div class='cart-cont-shopping'>
 			<a href='/store'>&laquo; Continue shopping</a>
 		</div>
-		<a href='/store/checkout' class='btn btn-success pull-right'>Checkout</a>
+		<a href='/store/shopping-cart' class='btn btn-success pull-right'>Shopping Cart</a>
 		<div class='clear'></div>
 	</div>
 </div>

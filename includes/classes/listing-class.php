@@ -88,14 +88,14 @@ class ListClass {
 		// Split the URL
 		$_url = ltrim ( rtrim ( $this->URL, '/' ), '/' );
 
-		if ($id = $this->ChkCache ( $_url )) {	
-			$data = $this->LoadTree ($id);
+		if ($this->ID = $this->ChkCache ( $_url )) {	
+			$data = $this->LoadTree ($this->ID);
 			$SMARTY->assign ( 'data', unclean ( $data ) );
 		}
 		
 		if(empty($_ID)){
-			if(!empty($id) ){
-				$_ID = $id;
+			if(!empty($this->ID) ){
+				$_ID = $this->ID;
 			}else{
 				header ( "Location: /404" );
 				die ();
@@ -108,7 +108,7 @@ class ListClass {
 		$extends = "";
 		foreach ( $this->CONFIG_OBJ->table->extends as $a ) {
 			$pre = str_replace ( "tbl_", "", $a->table );
-			$extends = " LEFT JOIN {$a->table} ON tbl_listing.listing_id = {$a->field}"; // AND article_deleted IS NULL";
+			$extends = " LEFT JOIN {$a->table} ON tbl_listing.listing_id = {$a->field}"; 
 		}
 		$sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_id = :id AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 ";
 		$params = array (
@@ -125,10 +125,7 @@ class ListClass {
 				$t_data = $this->LoadAssociated($a,$res[0]["{$a->linkfield}"]);
 				$SMARTY->assign ( "{$a->name}", $t_data );
 			}
-			foreach ( $this->CONFIG_OBJ->table->tags as $a ) {
-				$t_data = $this->LoadAssociatedByTag($a,$res[0]["{$a->object_id}"]);
-				$SMARTY->assign ( "{$a->name}", $t_data );
-			}
+			
 		}else{
 			header ( "Location: /404" );
 			die ();
@@ -322,7 +319,7 @@ class ListClass {
 				return self::BuildUrl ( $res [0] ['listing_parent_id'], $url ); // category_listing_id
 			} else {
 				$url = $res [0] ['listing_url'] . '/' . $url;
-				$url = ltrim ( rtrim ( $url, '/' ), '/' );
+				$url = ltrim ( rtrim ( $url, '/' ), '/' ); 
 				return true;
 			}
 		} else {
@@ -500,32 +497,53 @@ class ListClass {
 	}
 
 
-	function LoadAssociatedByTag($a, $value){
+	function LoadAssociatedByTag($cfg){
 		global $CONFIG, $SMARTY, $DBobject;
-		$t_data = array();
-		$group = "";$order = "";$limit = "";$where = "";
-		if (! empty ( $a->groupby )) {
-			$group = " GROUP BY ".$a->groupby;
-		}
-		if (! empty ( $a->orderby )) {
-			$order = " ORDER BY ".$a->orderby;
-		}
-		if (! empty ( $a->limit )) {
-			$limit = " LIMIT ".$a->limit;
-		}
-		if (! empty ( $a->where )) {
-			$where = " AND ".$a->where;
-		}
-		
-		$pre = str_replace ( "tbl_", "", $a->table );
-		$sql = "SELECT {$pre}_object_id FROM {$a->table} WHERE {$pre}_object_table = {$a->object_table} AND {$pre}_value = :value  AND {$pre}_deleted IS NULL ".$where." ".$group." ".$order." ".$limit;
-		$params = array(':value'=>$value);
-		if($res = $DBobject->wrappedSqlGet($sql,$params)) {
-			foreach ( $res as $obj ) {
-				$t_data = null;
+
+		foreach ( $cfg->table->tags as $a ) {
+			$preObjTbl = str_replace ( "tbl_", "", $a->object_table );
+			$sql = "SELECT {$a->object_value} AS VALUE FROM {$a->object_table} WHERE {$preObjTbl}_id = :id AND {$preObjTbl}_deleted IS NULL AND {$preObjTbl}_published = 1 ";
+			$params = array (
+					":id" => $this->ID
+			);
+			if ($res = $DBobject->wrappedSqlGet($sql,$params)) {
+				
+				$group = "";$order = "";$limit = "";$where = "";
+				if (! empty ( $a->groupby )) {
+					$group = " GROUP BY ".$a->groupby;
+				}
+				if (! empty ( $a->orderby )) {
+					$order = " ORDER BY ".$a->orderby;
+				}
+				if (! empty ( $a->limit )) {
+					$limit = " LIMIT ".$a->limit;
+				}
+				if (! empty ( $a->where )) {
+					$where = " AND ".$a->where;
+				}
+				
+				$pre = str_replace ( "tbl_", "", $a->table );
+				$sql = "SELECT {$a->object_table}.* FROM {$a->table} LEFT JOIN {$a->object_table} ON  {$preObjTbl}_id = {$pre}_object_id 
+						WHERE {$pre}_object_table = :objTable AND {$pre}_value = :objValue  AND {$pre}_deleted IS NULL 
+								AND {$preObjTbl}_deleted IS NULL AND {$preObjTbl}_published = 1 ".$where." ".$group." ".$order." ".$limit;
+				$params = array(':objTable'=>$a->object_table,':objValue'=>$res[0]["VALUE"]);
+				
+				$data = array();
+				if ($objs = $DBobject->wrappedSqlGet($sql,$params) ) {
+					foreach ($objs as $o ) {
+						$data["{$o["{$preObjTbl}_id"]}"] = $o;
+						$url = $o["{$preObjTbl}_url"];
+						$this->BuildUrl ( $o["{$preObjTbl}_parent_id"], $url );
+						$data ["{$o["{$preObjTbl}_id"]}"]["absolute_url"] = $url;
+						
+						foreach ( $cfg->table->associated as $b ) {
+							$data ["{$o["{$preObjTbl}_id"]}"]["{$b->name}"] =  $this->LoadAssociated($b, $o["{$b->linkfield}"]);
+						}
+					}
+				}
+				$SMARTY->assign ( "{$a->name}", $data );
 			}
 		}
-		return $t_data;
 	}
 	
 	/**

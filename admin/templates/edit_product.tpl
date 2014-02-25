@@ -532,11 +532,14 @@
 						$('#tags-wrapper').append(data);
 						$('#new_tag').val('');
 						$('body').css('cursor', 'default');
+						$('#new_tag').closest('.form-group').removeClass('has-success').removeClass('has-error');
 					} catch (err) {
 						$('body').css('cursor', 'default');
 					}
 				}
 			});
+		} else {
+			$('#new_tag').closest('.form-group').removeClass('has-success').addClass('has-error');
 		}
 	}
 

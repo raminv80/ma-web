@@ -114,7 +114,7 @@ while ( true ) {
 	 * **** Goes to my-account ******
 	 */
 	if ($_request ['arg1'] == 'my-account') {
-		if (is_null($_SESSION['user']['public']['id'])) {
+		if ( $CONFIG->account->attributes()->restricted && empty($_SESSION['user']['public']['id'])) {
 			header("Location: /login");
 			exit;
 		}
@@ -147,7 +147,7 @@ while ( true ) {
 	 * ***** Goes to CHECKOUT ******
 	 */
 	if ($_request ['arg1'] == 'store/checkout') {
-		if (is_null($_SESSION['user']['public']['id'])) { 
+		if (empty($_SESSION['user']['public']['id'])) { 
 	    	header("Location: /login");
 	    	exit;
 		}
@@ -217,8 +217,10 @@ while ( true ) {
 			$class = ( string ) $lp->file;
 			$obj = new $class ( $_nurl, $lp );
 			$template = $obj->Load ();
-			$productsList = $obj->getProductList($lp->root_parent_id, true);
-			$SMARTY->assign ( 'productsList', $productsList );
+			//$productsList = $obj->getProductList($lp->root_parent_id, true);
+			//$SMARTY->assign ( 'productsList', $productsList );
+			$obj->LoadAssociatedByTag($lp);
+			
 			$menu = $obj->LoadMenu ( $lp->pageID );
 			$SMARTY->assign ( 'menuitems', $menu );
 				

@@ -2,7 +2,8 @@
 class ProductClass extends ListClass {
 	private $DBPRODTABLE;
 	private $TYPE_ID;
-        private $ROOT_PARENT_ID;
+    private $ROOT_PARENT_ID;
+    private $IS_PRODUCT;
 	
 	
 	function __construct($_URL, $_CONFIG_OBJ){
@@ -11,72 +12,7 @@ class ProductClass extends ListClass {
         $this->ROOT_PARENT_ID = $_CONFIG_OBJ->root_parent_id;
 		$this->DBTABLE = " tbl_listing
 							LEFT JOIN tbl_type ON tbl_listing.listing_type_id = tbl_type.type_id";
-		$this->DBPRODTABLE = " tbl_product
-							LEFT JOIN tbl_attribute ON product_id = attribute_product_id
-							LEFT JOIN tbl_attr_value ON attr_value_attribute_id = attribute_id";
-	}
-	
-	function getProductList($parent_id='0', $firstTime = false){
-		global $SMARTY,$DBobject;
-		
-		$list = array();
-		$rootUrl = '';
-		$params = array (
-				":pid" => $parent_id
-		);
-		
-		if ($parent_id <> '0' && $firstTime) {
-			$sql = "SELECT listing_url FROM tbl_listing WHERE listing_id = :pid AND listing_deleted IS NULL ";
-			$res = $DBobject->wrappedSqlGetSingle ( $sql, $params );
-			$rootUrl = '/' . $res['listing_url'];
-		}
-		
-		// ------------- Products List ------------------
-		$order = " ORDER BY product_order ASC, product_name ASC";
-		
-		$sql = "SELECT * FROM {$this->DBPRODTABLE}
-		WHERE product_listing_id = :pid AND product_listing_id IS NOT NULL AND product_deleted IS NULL AND product_published = 1 " . $order;
-		
-		
-		
-		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
-			foreach ( $res as $key => $val ) {
-				$list ["p{$val['product_id']}"] = array (
-						"title" => $val ['product_name'],
-						"id" => $val ['product_id'],
-						"url" => "{$rootUrl}/{$val['product_url']}-{$val['product_id']}"
-				);
-			}
-		}
-		
-		// ------------- Product Categories List ------------------
-		
-		$order = " ORDER BY tbl_listing.listing_order ASC";
-		
-		$sql = "SELECT * FROM {$this->DBTABLE}
-				WHERE listing_parent_id = :pid AND tbl_listing.listing_type_id = :type AND
-				tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL " . $order;
-		
-		$params = array (
-			":type" => $this->TYPE_ID,
-			":pid" => $parent_id
-		);
-		
-		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
-			foreach ( $res as $key => $val ) {
-					$subs = array ();
-					$subs = $this->getProductList ( $val ['listing_id']);
-					if ($val ['listing_type_id'] == $this->TYPE_ID) {
-						$list ["l{$val['listing_id']}"] = array (
-												"title" => $val ['listing_name'],
-												"id" => $val ['listing_id'],
-												"url" => "{$rootUrl}/{$val ['listing_url']}",
-												"subs" => $subs
-						);
-					}
-			}
-		}
-		return  $list;
+		$this->DBPRODTABLE = $_CONFIG_OBJ->producttable->table;
 	}
 	
 	
@@ -88,15 +24,16 @@ class ProductClass extends ListClass {
 		$_url = ltrim ( rtrim ( $this->URL, '/' ), '/' );
 	
 		if ($arrChk = $this->ChkCache ( $_url )) {
-			$id = $arrChk['id'];
+			$this->ID = $arrChk['id'];
+			$this->IS_PRODUCT = $arrChk['isProduct'];
 			if (!$arrChk['isProduct']) {
-				$data = $this->LoadTree ($id);
+				$data = $this->LoadTree ($this->ID);
 				$SMARTY->assign ( 'data', unclean ( $data ) );
 			} 
 		} 
 		if(empty($_ID)){
-			if(!empty($id) ){
-				$_ID = $id;
+			if(!empty($this->ID) ){
+				$_ID = $this->ID;
 			}else{
 				header ( "Location: /404" );
 				die ();
@@ -387,6 +324,7 @@ class ProductClass extends ListClass {
 		}
 		return false;
 	}
+	
 	function BuildCache() {
 		global $SMARTY, $DBobject;
 		$sql [0] = "CREATE TABLE IF NOT EXISTS `cache_tbl_product` (
@@ -429,6 +367,136 @@ class ProductClass extends ListClass {
 		$DBobject->wrappedSql ( $sql [2], $params );
 	}
 	
+
+	function LoadAssociatedByTag($cfg) {
+		global $CONFIG, $SMARTY, $DBobject;
+		
+		if (!$this->IS_PRODUCT) {
+			parent::LoadAssociatedByTag($cfg);
+		} else {
+			foreach ( $cfg->producttable->tags as $a ) {
+				$preObjTbl = str_replace ( "tbl_", "", $a->object_table );
+				$sql = "SELECT  {$a->object_value} AS VALUE  FROM {$a->object_table} WHERE {$preObjTbl}_id = :id AND {$preObjTbl}_deleted IS NULL AND {$preObjTbl}_published = 1 ";
+				$params = array (
+						":id" => $this->ID 
+				);
+				if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
+					
+					$group = "";
+					$order = "";
+					$limit = "";
+					$where = "";
+					if (! empty ( $a->groupby )) {
+						$group = " GROUP BY " . $a->groupby;
+					}
+					if (! empty ( $a->orderby )) {
+						$order = " ORDER BY " . $a->orderby;
+					}
+					if (! empty ( $a->limit )) {
+						$limit = " LIMIT " . $a->limit;
+					}
+					if (! empty ( $a->where )) {
+						$where = " AND " . $a->where;
+					}
+					
+					$pre = str_replace ( "tbl_", "", $a->table );
+					$sql = "SELECT {$a->object_table}.* FROM {$a->table} LEFT JOIN {$a->object_table} ON  {$preObjTbl}_id = {$pre}_object_id
+					WHERE {$pre}_object_table = :objTable AND {$pre}_value = :objValue  AND {$pre}_deleted IS NULL
+					AND {$preObjTbl}_deleted IS NULL AND {$preObjTbl}_published = 1 " . $where . " " . $group . " " . $order . " " . $limit;
+					$params = array (
+							':objTable' => $a->object_table,
+							':objValue' => $res [0] ["VALUE"] 
+					);
+					
+					$data = array ();
+					if ($objs = $DBobject->wrappedSqlGet ( $sql, $params )) {
+						foreach ( $objs as $o ) {
+							$data ["{$o["{$preObjTbl}_id"]}"] = $o;
+							$url = $o ["{$preObjTbl}_url"] . '-' . $o ["{$preObjTbl}_id"];
+							$this->BuildUrl ( $o ["{$preObjTbl}_listing_id"], $url );
+							$data ["{$o["{$preObjTbl}_id"]}"]["absolute_url"] = $url;
+							
+							foreach ( $cfg->producttable->associated as $b ) {
+								$data ["{$o["{$preObjTbl}_id"]}"] ["{$b->name}"] = $this->LoadAssociated ( $b, $o["{$b->linkfield}"] );
+							}
+						}
+					}
+					$SMARTY->assign ( "{$a->name}", $data );
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * Return array with products and categories starting by a given parent_id (product_listing_id as product category)
+	 * 
+	 * @param int $parent_id
+	 * @param boolean $firstTime
+	 * @return array
+	 */
+	function getProductList($parent_id='0', $firstTime = false){
+		global $SMARTY,$DBobject;
+	
+		$list = array();
+		$rootUrl = '';
+		$params = array (
+				":pid" => $parent_id
+		);
+	
+		if ($parent_id <> '0' && $firstTime) {
+			$sql = "SELECT listing_url FROM tbl_listing WHERE listing_id = :pid AND listing_deleted IS NULL ";
+			$res = $DBobject->wrappedSqlGetSingle ( $sql, $params );
+			$rootUrl = '/' . $res['listing_url'];
+		}
+	
+		// ------------- Products List ------------------
+		$order = " ORDER BY product_order ASC, product_name ASC";
+	
+		$sql = "SELECT * FROM {$this->DBPRODTABLE}
+		WHERE product_listing_id = :pid AND product_listing_id IS NOT NULL AND product_deleted IS NULL AND product_published = 1 " . $order;
+	
+	
+	
+		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
+		foreach ( $res as $key => $val ) {
+		$list ["p{$val['product_id']}"] = array (
+		"title" => $val ['product_name'],
+		"id" => $val ['product_id'],
+		"url" => "{$rootUrl}/{$val['product_url']}-{$val['product_id']}"
+				);
+		}
+		}
+	
+		// ------------- Product Categories List ------------------
+	
+		$order = " ORDER BY tbl_listing.listing_order ASC";
+	
+		$sql = "SELECT * FROM {$this->DBTABLE}
+		WHERE listing_parent_id = :pid AND tbl_listing.listing_type_id = :type AND
+		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL " . $order;
+	
+		$params = array (
+		":type" => $this->TYPE_ID,
+		":pid" => $parent_id
+		);
+	
+		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
+			foreach ( $res as $key => $val ) {
+			$subs = array ();
+				$subs = $this->getProductList ( $val ['listing_id']);
+				if ($val ['listing_type_id'] == $this->TYPE_ID) {
+						$list ["l{$val['listing_id']}"] = array (
+						"title" => $val ['listing_name'],
+						"id" => $val ['listing_id'],
+								"url" => "{$rootUrl}/{$val ['listing_url']}",
+								"subs" => $subs
+						);
+				}
+			}
+		}
+		return  $list;
+	}
 	
 	
 }

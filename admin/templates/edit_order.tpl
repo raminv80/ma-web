@@ -95,6 +95,21 @@
 		</table>
 	</div>
 </div>
+<div class="row">
+	<form class="well form-horizontal" id="send_invoice_email" accept-charset="UTF-8" method="post">
+		<input type="hidden" value="{$fields.payment.0.billing_address.0.address_id}" name="bill_ID" /> 
+		<input type="hidden" value="{$fields.payment.0.shipping_address.0.address_id}" name="ship_ID" /> 
+		<input type="hidden" value="{$fields.user.0.user_gname}" name="user[gname]" /> 
+		<input type="hidden" value="{$fields.cart_id}" name="cart_id" /> 
+		<input type="hidden" name="formToken" id="formToken" value="{$token}" />
+					
+		<div class="row form-group">
+			<div class="col-sm-offset-3 col-sm-9">
+				<a href="javascript:void(0);" onClick="sendInvoiceEmail();" id="send-btn" class="btn btn-primary pull-right" style="margin-top: 50px;">Re-send Invoice</a>
+			</div>
+		</div>
+	</form>
+</div>
 
 <div class="row">
 	<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
@@ -132,6 +147,32 @@ $(document).ready(function(){
 	$('#Edit_Record').validate();
 	
 });
+
+function sendInvoiceEmail(){
+	var datastring = $("#send_invoice_email").serialize();
+	$.ajax({
+		type: "POST",
+	    url: "/admin/includes/processes/send-invoice-email.php",
+		cache: false,
+		data: datastring,
+		dataType: "html",
+	    success: function(data) {
+	    	try{
+	    		var obj = $.parseJSON(data);
+			 	if (obj.response) {
+					$('#send-btn').html('Sent!');
+				}
+			 	
+			}catch(err){
+				console.log('TRY-CATCH error');
+			}
+	    },
+		error: function(){
+			console.log('AJAX error');
+      	}
+	});
+	
+}
 
 </script>
 {/block}
