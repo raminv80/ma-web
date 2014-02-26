@@ -1,7 +1,7 @@
 <?php
 set_include_path ( $_SERVER ['DOCUMENT_ROOT'] );
 include_once 'admin/includes/functions/admin-functions.php';
-global $DBobject;
+global $DBobject, $SMARTY;
 
 if(checkToken('admin', $_POST["formToken"])){
 	
@@ -33,9 +33,9 @@ if(checkToken('admin', $_POST["formToken"])){
 	}
 	$SMARTY->assign('orderItems', $cart_arr);
 		
-	$buffer= $SMARTY->fetch('templates/email-confirmation.tpl');
+	$buffer= $SMARTY->fetch('email-confirmation.tpl');
 		
-	$to = $_SESSION['user']['public']['email'];
+	$to = $_POST['email'];
 	$from = 'eShop';
 	$fromEmail = 'noreply@cms.themserver.com';
 	$subject = 'Confirmation of your order';

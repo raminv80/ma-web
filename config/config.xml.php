@@ -31,6 +31,10 @@
 		<template>404.tpl</template>
 		<pageID>2</pageID>
 	</error404>
+	<search>
+		<template>search.tpl</template>
+		<pageID>28</pageID>
+	</search>
 	<static_page>
 		<url>contact-us</url>
 		<template>contact-us.tpl</template>
@@ -131,7 +135,7 @@
 		<template>shopping-cart.tpl</template> 
 		<!-- The template used if the field is matched --> 
 	</cart>
-	<checkout> 
+	<checkout restricted="false"> 
 		<url>store/checkout</url> 
 		<pageID>15</pageID> 
 		<type>1</type> 

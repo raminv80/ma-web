@@ -67,7 +67,10 @@
 			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-2" id="total">${$cart.cart_total|number_format:2:".":","}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
-			<div class="col-md-offset-10"><a class="btn-success btn btn-sm" href="/store/checkout">Proceed to Checkout</a></div>
+			<div class="pull-right">
+				{if !$user.id} <a class="btn-info btn btn-sm" href="/login" id="login-btn">Log In</a>{/if}
+				<a class="btn-success btn btn-sm" href="/store/checkout" id="checkout-btn">Checkout {if !$user.id}as Guest{/if}</a>
+			</div>
 		</div>
 	
 		<form class="form-horizontal" id="discount-form" accept-charset="UTF-8" action="/process/cart" method="post">

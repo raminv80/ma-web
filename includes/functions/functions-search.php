@@ -24,8 +24,8 @@ function searchcms($str){
 	$results['news']  = array_merge($tags['news'],SearchNews($str));
 	$results['faq']  = array_merge($tags['faq'],SearchFAQ($str));
 	$results['video']  = array_merge($tags['video'],SearchVideo($str));*/
-	$results = SearchListing($str);
-	
+	//$results = SearchListing($str);
+	$results = SearchProduct($str);
 	$count = count($results);
 	
 	$SMARTY->assign('count',$count);
@@ -74,6 +74,38 @@ function SearchListing($search){
 		}
 	}
 	return $data;
+}
+
+
+function SearchProduct($search){
+	global  $CONFIG,$SMARTY,$DBobject;
+	$data = array();
+	$sql= "SELECT DISTINCT(cache_url), product_name, product_description, 
+			MATCH(product_name,
+				product_description,
+				product_seo_title,
+				product_meta_description,
+				product_meta_words,
+				product_group
+			) AGAINST (:search) AS Relevance1,
+			MATCH(attr_value_name ) AGAINST (:search) AS Relevance2
+		FROM tbl_product 
+			LEFT JOIN cache_tbl_product ON product_id = cache_record_id
+			LEFT JOIN tbl_attribute ON product_id = attribute_product_id
+			LEFT JOIN tbl_attr_value ON attribute_id = attr_value_attribute_id
+		WHERE product_published = 1 AND product_deleted IS NULL AND attribute_deleted IS NULL AND attr_value_deleted IS NULL AND
+			( MATCH(product_name,
+				product_description,
+				product_seo_title,
+				product_meta_description,
+				product_meta_words,
+				product_group
+			) AGAINST(:search IN BOOLEAN MODE) OR
+			MATCH(attr_value_name ) AGAINST (:search IN BOOLEAN MODE) )
+			HAVING Relevance1 > 0.2 OR Relevance2 > 0.2
+			ORDER BY Relevance1 DESC, Relevance2 DESC";
+	$params = array(":search"=>$search);
+	return $DBobject->wrappedSql($sql,$params);
 }
 /* 
 //SEARCH TAGS

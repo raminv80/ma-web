@@ -37,6 +37,7 @@ if (jQuery.validator) {
 	      if ($(form).valid()) {
 
 	    	  	$('body').css('cursor','wait');
+	    	  	$('.btn-primary').addClass('disabled');
 	    		var datastring = $("#Edit_Record").serialize();
 	    		$.ajax({
 	    			type: "POST",
@@ -61,15 +62,16 @@ if (jQuery.validator) {
 		    					$.each(obj.IDs, function(k, v) {
 		    					    $('input[name="'+k+'"]').val(v);
 		    					});
-		    					$('body').css('cursor','default');
 		    			    } 
 	    				}catch(err){
-	    					$('body').css('cursor','default'); 
 	    					console.log('TRY-CATCH error');
 	    				}
+	    				$('body').css('cursor','default'); 
+	    				$('.btn-primary').removeClass('disabled');
 	    		    },
 	    			error: function(){
 	    				$('body').css('cursor','default'); 
+	    				$('.btn-primary').removeClass('disabled');
 	    				console.log('AJAX error');
 	    	         	}
 	    		});

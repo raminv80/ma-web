@@ -58,6 +58,10 @@
 {/if}
 
 </ul>
+
+<div id="search" class="pull-right">
+	<input id="searchbox" type="text" placeholder="Search Product" value="">
+</div>
 {/block}
 
 

@@ -145,6 +145,10 @@
 		<img alt="error" src="/admin/images/warning.png" width="28" height="28" /><b>An unknown error occured.</b>
 		<button type="button" class="close pull-right" onclick="$('#error').slideUp();">x</button>
 	</div>
+	<div class="notification" id="sent" style="display:none;">
+		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The invoice was successfully sent.</b>
+		<button type="button" class="close pull-right" onclick="$('#edited').slideUp();">x</button>
+	</div>
 	{if $notice neq ''}
 		<script>
 			$('#{$notice}').show();

@@ -72,8 +72,34 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 		    exit;
 		    
 		case 'placeOrder':
+    		if (empty($_SESSION['user']['public']['id'])) {
+    			$user_obj = new UserClass();
+    			$values = array();
+    			$values['username'] = $_POST['email'] . '#' . strtotime("now");
+    			$values['email'] = $_POST['email'];
+    			$values['password'] = session_id ();
+    			$values['gname'] = 'Guest';
+    			$values['surname'] = '';
+    			$res = $user_obj->Create($values);
+    			
+    			if( $res['error'] ) {
+    				$_SESSION['error']= $res['error'];
+    				$_SESSION['post']= $_POST;
+    				header("Location: ".$_SERVER['HTTP_REFERER']."#error");
+    				exit;
+    				die();
+    			} else {
+    				$cart_obj = new cart();
+    				$cart_obj->SetUserCart($res['id']);
+    				$_SESSION['user']['public'] = $res;
+    				$_POST['address'][1]['address_user_id'] = $res['id']; 
+    				$_POST['address'][2]['address_user_id'] = $res['id']; 
+    			}
+    			
+    		} else {
+    			$user_obj = new UserClass();
+    		}
     		
-    		$user_obj = new UserClass();
     		$billID = $user_obj->InsertNewAddress($_POST['address'][1]);
     		$shipID = $billID;
     		if (is_null($_POST['same_address'])) { 

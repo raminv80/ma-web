@@ -114,7 +114,7 @@ while ( true ) {
 	 * **** Goes to my-account ******
 	 */
 	if ($_request ['arg1'] == 'my-account') {
-		if ( $CONFIG->account->attributes()->restricted && empty($_SESSION['user']['public']['id'])) {
+		if ( $CONFIG->checkout->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])) {
 			header("Location: /login");
 			exit;
 		}
@@ -139,7 +139,7 @@ while ( true ) {
 		$template = $CONFIG->search->template;
 		$menu = $obj->LoadMenu ( $CONFIG->search->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
-		searchcms ( $_POST ['search'] );
+		searchcms ( $_GET ['q'] );
 		break 1;
 	}
 	
@@ -147,7 +147,7 @@ while ( true ) {
 	 * ***** Goes to CHECKOUT ******
 	 */
 	if ($_request ['arg1'] == 'store/checkout') {
-		if (empty($_SESSION['user']['public']['id'])) { 
+		if ( $CONFIG->checkout->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])) { 
 	    	header("Location: /login");
 	    	exit;
 		}

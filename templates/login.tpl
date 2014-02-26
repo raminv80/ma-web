@@ -21,26 +21,6 @@
 		
 		<!-- LOGIN SECTION  -->
 		<div class="row" id="login" style="margin:40px;">
-			<!-- GUEST  SECTION  -->
-			<h3>Login as Guest</h3>
-			<form class="form-horizontal" id="guest-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
-				<input type="hidden" value="guest" name="action" id="action" /> 
-				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-				<div class="form-group">
-				    <label for="email" class="col-sm-2 control-label">Email</label>
-				    <div class="col-sm-10">
-				      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="email" name="email" required>
-				      	<span class="help-block"></span>
-					</div>
-				</div>
-			 	<div class="form-group">
-			    	<div class="col-sm-offset-2 col-sm-10">
-			      		<button onclick="$('#guest-form').submit();" class="btn btn-primary">Log In</button>
-			    	</div>
-			  	</div>
-			</form>
-		
-			<!-- EXISTING SECTION  -->
 			<h3>Existing Customer</h3>
 			<form class="form-horizontal" id="login-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
 				<input type="hidden" value="login" name="action" id="action" /> 

@@ -60,11 +60,7 @@
 		});
 
 
-		jQuery.validator.addClassRules({
-			dates: {
-				date: true
-			}
-		});
+		
 		
 	}
 

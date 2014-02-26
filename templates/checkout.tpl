@@ -71,6 +71,13 @@
 				<input type="hidden" value="placeOrder" name="action"/> 
 				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				
+				<div class="form-group">
+				    <label for="email" class="col-sm-2 control-label">Email</label>
+				    <div class="col-sm-10">
+				      	<input type="email" value="{if $post}{$post.email}{else}{if $user.email}{$user.email}{/if}{/if}" class="form-control" id="email" name="email" required>
+					</div>
+				</div>
+				
 				<!-- BILLING SECTION - Hidden by default -->
 				<div class="row" id="billing-subform">
 	                <div class="row">

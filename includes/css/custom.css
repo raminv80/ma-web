@@ -253,12 +253,14 @@ a:hover{
 }
 
 #searchbox{
-	background: #5d5148 url(../../images/mag.png) no-repeat 150px 5px;
+	background: #eeeeee url(../../images/mag.png) no-repeat 150px 5px;
 	border-radius: 15px;
 	border: 1px solid #6d655e;
-	color: #ffffff;
-	height:23px;
-	width:170px;
+	color: #354568;
+	height:32px;
+	width:182px;
+	padding: 8px;
+	margin: 10px;
 }
 
 #social img{
@@ -766,12 +768,12 @@ display:block;
 h4.resulttitle, h4.locationtitle{
 	font-size: 25px;
 	line-height: 40px;
-	color: #ffffff;
+	color: #020202;
 	
 }
 
 .resulttext, .resulttags{
-	color:#fff;
+	color:#aaa;
 	font-size: 13px;
 	line-height: 21px;
 }
@@ -801,7 +803,7 @@ h4.resulttitle, h4.locationtitle{
 }
 
 .resultpag ul li.current a, .resultpag ul li a:hover{
-	color: #fff;
+	color: #C2C2C2;
 }
 
 #locationbox .button1{

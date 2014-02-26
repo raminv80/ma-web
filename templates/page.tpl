@@ -82,11 +82,16 @@
 	
 	<script type="text/javascript">
 	$(document).ready(function(){
+		$('#searchbox').bind('keyup', function(event) {
+		    if(event.keyCode==13){
+		    	window.location.href = 'http://'+(document.domain)+ '/search?q=' + $('#searchbox').val();
+		    }
+		});
 		
 		$('.dropdown.navbar-right ').hover(function() { 
-		  $(this).find('.dropdown-menu:hidden').slideDown();
+		  $(this).find('.dropdown-menu:hidden').slideDown('slow');
 		}, function() {
-		  $(this).find('.dropdown-menu:visible').slideUp()
+		  $(this).find('.dropdown-menu:visible').slideUp('slow')
 		});
 	});
 	</script>

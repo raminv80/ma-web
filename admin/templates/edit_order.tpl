@@ -100,12 +100,13 @@
 		<input type="hidden" value="{$fields.payment.0.billing_address.0.address_id}" name="bill_ID" /> 
 		<input type="hidden" value="{$fields.payment.0.shipping_address.0.address_id}" name="ship_ID" /> 
 		<input type="hidden" value="{$fields.user.0.user_gname}" name="user[gname]" /> 
+		<input type="hidden" value="{$fields.user.0.user_email}" name="email" /> 
 		<input type="hidden" value="{$fields.cart_id}" name="cart_id" /> 
 		<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 					
-		<div class="row form-group">
+		<div class="row">
 			<div class="col-sm-offset-3 col-sm-9">
-				<a href="javascript:void(0);" onClick="sendInvoiceEmail();" id="send-btn" class="btn btn-primary pull-right" style="margin-top: 50px;">Re-send Invoice</a>
+				<a href="javascript:void(0);" onClick="sendInvoiceEmail();" id="send-btn" class="btn btn-info pull-right">Re-send Invoice</a>
 			</div>
 		</div>
 	</form>
@@ -131,7 +132,7 @@
 		</div>
 		<div class="row form-group">
 			<div class="col-sm-offset-3 col-sm-9">
-				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
+				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right"> Save</a>
 			</div>
 		</div>
 	</form>
@@ -150,6 +151,8 @@ $(document).ready(function(){
 
 function sendInvoiceEmail(){
 	var datastring = $("#send_invoice_email").serialize();
+	$('body').css('cursor','wait');
+	$('#send-btn').addClass('disabled');
 	$.ajax({
 		type: "POST",
 	    url: "/admin/includes/processes/send-invoice-email.php",
@@ -160,14 +163,26 @@ function sendInvoiceEmail(){
 	    	try{
 	    		var obj = $.parseJSON(data);
 			 	if (obj.response) {
-					$('#send-btn').html('Sent!');
+			 		$('#sent').slideDown();
+					setTimeout(function(){
+						$('#sent').slideUp();
+			    	},10000);
+				} else {
+					$('#error').slideDown();
+					setTimeout(function(){
+						$('#error').slideUp();
+			    	},10000);
 				}
 			 	
 			}catch(err){
 				console.log('TRY-CATCH error');
 			}
+			$('body').css('cursor','default');
+			$('#send-btn').removeClass('disabled');
 	    },
 		error: function(){
+			$('body').css('cursor','default');
+			$('#send-btn').removeClass('disabled');
 			console.log('AJAX error');
       	}
 	});
