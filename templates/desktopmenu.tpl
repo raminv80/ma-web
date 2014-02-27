@@ -54,13 +54,16 @@
 	<li><a title="Log Out"  href="/process/user?logout=true"><span class="glyphicon glyphicon-log-out"></span><div style="display:inline;">Log Out</div></a></li>
 	
 {else}
-	<li><a title="Log In" href="/login">Log In</a></li>
+	<!-- <li><a title="Log In" href="/login">Log In</a></li> -->
+	<li><a title="Log In" href="javascript:void(0)" data-toggle="modal" data-target="#login-modal">Log In</a></li>
 {/if}
 
 </ul>
 
 <div id="search" class="pull-right">
-	<input id="searchbox" type="text" placeholder="Search Product" value="">
+	<form accept-charset="UTF-8" action="/search" method="get" id="search-form" > 
+		<input id="searchbox" type="text" name="q" placeholder="Search Product" value="">
+	</form>
 </div>
 {/block}
 

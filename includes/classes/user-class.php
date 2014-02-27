@@ -89,7 +89,7 @@ class UserClass {
 	    	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($data['email'])))) . md5(stripslashes(strtoupper($data['password']))));
 	    	
 	    	$params = array (
-	    			":id" => $res[0]['user_id'],
+	    			":id" => $res['id'],
 	    			":password" => $temp_str,
 	        		":ip" => $_SERVER['REMOTE_ADDR'],
 	        		":browser" => $_SERVER['HTTP_USER_AGENT']
@@ -192,7 +192,7 @@ class UserClass {
     	if ($res = $this->RetrieveByUsername($data['email'])){
     	
     		$params = array (
-    				":id" => $res[0]['user_id'],
+    				":id" => $res['user_id'],
     				":gname" => $data['gname'],
 	    			":surname" => $data['surname'],
     				":ip" => $_SERVER['REMOTE_ADDR'],

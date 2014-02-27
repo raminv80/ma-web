@@ -80,7 +80,8 @@ function SearchListing($search){
 function SearchProduct($search){
 	global  $CONFIG,$SMARTY,$DBobject;
 	$data = array();
-	$sql= "SELECT DISTINCT(cache_url), product_name, product_description, 
+	$sql= "SELECT DISTINCT(cache_url), product_name, product_description FROM (
+			SELECT cache_url, product_name, product_description, 
 			MATCH(product_name,
 				product_description,
 				product_seo_title,
@@ -103,7 +104,7 @@ function SearchProduct($search){
 			) AGAINST(:search IN BOOLEAN MODE) OR
 			MATCH(attr_value_name ) AGAINST (:search IN BOOLEAN MODE) )
 			HAVING Relevance1 > 0.2 OR Relevance2 > 0.2
-			ORDER BY Relevance1 DESC, Relevance2 DESC";
+			ORDER BY (Relevance1+Relevance2) DESC ) AS stbl";
 	$params = array(":search"=>$search);
 	return $DBobject->wrappedSql($sql,$params);
 }

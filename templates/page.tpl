@@ -80,11 +80,26 @@
 	{block name=body}{/block}
 	{include file='footer.tpl'}
 	
+	<div class="modal fade bs-modal-lg" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+	    	<div class="modal-content">
+	    		<div class="modal-header">
+					<button class="close" aria-hidden="true" data-dismiss="modal" type="button">×</button>
+					<!-- <h4 class="modal-title">Login</h4> -->
+				</div>
+	      		<div class="modal-body">
+	      			{include file='login.tpl'}
+	      		</div>
+			</div>
+	  	</div>
+	</div>
+	
+	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>	
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$('#searchbox').bind('keyup', function(event) {
 		    if(event.keyCode==13){
-		    	window.location.href = 'http://'+(document.domain)+ '/search?q=' + $('#searchbox').val();
+		    	$('#search-form').submit();
 		    }
 		});
 		
@@ -93,6 +108,11 @@
 		}, function() {
 		  $(this).find('.dropdown-menu:visible').slideUp('slow')
 		});
+
+		{if $login_referer}
+			$('.redirect').val('{$login_referer}');
+			$('#login-modal').modal('show');
+		{/if}
 	});
 	</script>
 </body>

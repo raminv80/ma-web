@@ -1,78 +1,65 @@
 <?php
 
-if(checkToken('frontend',$_POST["formToken"], true)){
+if(checkToken('frontend',$_POST["formToken"], false)){
 	
 	switch ($_POST["action"]) {
 		
 		case 'create':
 			$user_obj = new UserClass();
-			$_POST['username'] = $_POST['email'];
+			$_POST['username'] = $_POST['email']; 
 			$res = $user_obj->Create($_POST);
 			
 			if( $res['error'] ) {
-				$_SESSION['error']= $res['error'];
-				$_POST["password"] = '';
-				$_POST["confirm_password"] = '';
-				$_SESSION['post']= $_POST;
-				header("Location: ".$_SERVER['HTTP_REFERER']."#error");
+				echo json_encode(array(
+						'error' => $res['error'],
+						'url'=> null
+				));
 			} else {
 				$cart_obj = new cart();
 				$cart_obj->SetUserCart($res['id']);
-                                $_SESSION['user']['public'] = $res;
-				header("Location: " . $_SESSION ['login_referer']);
+                $_SESSION['user']['public'] = $res;
+                $url = $_SERVER['HTTP_REFERER'];
+                if ($_POST['redirect']) {
+                	$url = $_POST['redirect'];
+                }
+				echo json_encode(array(
+						'error' => null,
+						'url'=> $url
+				));
 			}
-			exit;
-
-/* 		case 'guest':
-			$user_obj = new UserClass();
-			$values = array();
-			$values = $_POST;
-			$values['username'] = $_POST['email'] . '#' . strtotime("now");
-			$values['password'] = session_id ();
-			$values['gname'] = 'Guest';
-			$values['surname'] = '';
-			$res = $user_obj->Create($values);
-				
-			if( $res['error'] ) {
-				$_SESSION['error']= $res['error'];
-				$_SESSION['post']= $_POST;
-				header("Location: ".$_SERVER['HTTP_REFERER']."#error");
-			} else {
-				$cart_obj = new cart();
-				$cart_obj->SetUserCart($res['id']);
-				$_SESSION['user']['public'] = $res;
-				header("Location: " . $_SESSION ['login_referer']);
-			}
-			exit; */
+			die();
 				    
 	    case 'login':
-	    	$user_obj = new UserClass();
+	    	$user_obj = new UserClass();	
 	    	 $res = $user_obj->Authenticate($_POST["email"], $_POST["pass"]); 
 	    	 if ( $res['error'] ) {
-	    	 	$_SESSION['error']= $res['error'];
-	    	 	$_POST["pass"] = '';
-	    	 	$_SESSION['post']= $_POST;
-	    	 	header("Location: ".$_SERVER['HTTP_REFERER']."#error");
+	    	 	echo json_encode(array(
+	    	 			'error' => $res['error'],
+	    	 			'url'=> null
+	    	 	));
 	    	} else {
 	    		$cart_obj = new cart();
 	    		$cart_obj->SetUserCart($res['id']);
 	    		$_SESSION['user']['public'] = $res;
-	    		header("Location: " . $_SESSION ['login_referer']);
+	    		$url = $_SERVER['HTTP_REFERER'];
+	    		if ($_POST['redirect']) {
+                	$url = $_POST['redirect'];
+                }
+				echo json_encode(array(
+						'error' => null,
+						'url'=> $url
+				));
 	    	}
-	    	exit;
+	    	die();
                 
         case 'resetPassword':
 	    	$user_obj = new UserClass();
-	    	 $res = $user_obj->resetPassword($_POST["email"]); 
-	    	 if ( $res['error'] ) {
-	    	 	$_SESSION['error']= $res['error'];
-                        $_SESSION['post']= $_POST;
-	    	 	header("Location: ".$_SERVER['HTTP_REFERER']."#error");
-	    	} else {
-	    		$_SESSION['error']= $res['success'];  //<<<<<<<<<<<<<<<<<<< CHANGE THIS TO NOTIFICATION VARIABLE, not error!
-	    		header("Location: ".$_SERVER['HTTP_REFERER']."#error");//<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
-	    	}
-	    	exit;
+	    	$res = $user_obj->resetPassword($_POST["email"]); 
+    		echo json_encode(array(
+    				'error' => $res['error'],
+    				'success' => $res['success']
+    		));
+	    	die();
                 
         case 'updatePassword':
 	    	$user_obj = new UserClass();
@@ -121,7 +108,6 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 							$cart_obj = new cart();
                             $cart_obj->SetUserCart($res['id']);
                             $_SESSION['user']['public'] = $res;
-							//header("Location: " . $_SESSION ['login_referer']);
 							echo json_encode(array(
 									"error" => false,
 									"login_url" => null,
@@ -130,8 +116,6 @@ if(checkToken('frontend',$_POST["formToken"], true)){
 							));
 						}
                     } catch(FacebookApiException $e) {
-                        //$_SESSION['error'] = "Error({$e->getType()}): {$e->getMessage()}";
-                        //header("Location: /login#error");
                         echo json_encode(array(
                         		"error" => true,
 								"login_url" => null,
@@ -153,14 +137,17 @@ if(checkToken('frontend',$_POST["formToken"], true)){
                 		$newWindow = true;
                 	}
                     $login_url = $facebook->getLoginUrl($optionsFB);
-                    //header("Location: " .$login_url);
                     echo json_encode(array(
                         	"error" => false,
 							"login_url" => $login_url,
                     		'new_window' => $newWindow,
                         	"message" => null
                     ));
-                }			
+                }
+                $_SESSION['fb_referer'] = $_SERVER['HTTP_REFERER'];
+                if ($_POST['redirect']) {
+                	$_SESSION['fb_referer'] = $_POST['redirect'];
+                } 
     		exit;
     		
      
@@ -208,35 +195,35 @@ if(checkToken('frontend',$_POST["formToken"], true)){
                         if( $res['error'] ) {
 							$_SESSION['error']= $res['error'];
 							if ($redirectThis) {
-								header("Location: /login#error");
+								header("Location: {$_SESSION['fb_referer']}#error");
 							} else {
-	                        	echo "<script> window.opener.redirectWin('http://{$_SERVER['HTTP_HOST']}/login#error');  window.close();</script> ";
+	                        	echo "<script> window.opener.redirectWin('{$_SESSION['fb_referer']}#error');  window.close();</script> ";
 							}
 						} else {
 							$cart_obj = new cart();
 			                                $cart_obj->SetUserCart($res['id']);
 			                                $_SESSION['user']['public'] = $res;
 			                if ($redirectThis) {
-			                	header("Location: " . $_SESSION ['login_referer']);
+			                	header("Location: " . $_SESSION['fb_referer']);
 			                } else {
-								echo "<script> window.opener.redirectWin('{$_SESSION ['login_referer']}');  window.close();</script> ";
+								echo "<script> window.opener.redirectWin('{$_SESSION['fb_referer']}');  window.close();</script> ";
 			                }
 						}
                         
                     } catch(FacebookApiException $e) {
                         $_SESSION['error'] = "Error({$e->getType()}): {$e->getMessage()}";
                         if ($redirectThis) {
-                        	header("Location: /login#error");
+                        	header("Location: {$_SESSION['fb_referer']}#error");
                         } else {
-                        	echo "<script> window.opener.redirectWin('http://{$_SERVER['HTTP_HOST']}/login#error');  window.close();</script> ";
+                        	echo "<script> window.opener.redirectWin('{$_SESSION['fb_referer']}#error');  window.close();</script> ";
                         }
                     }
                 } else {
                 	$_SESSION['error'] = "Connection to Facebook failed.";
                 	if ($redirectThis) {
-                		header("Location: /login#error");
+                		header("Location: {$_SESSION['fb_referer']}#error");
                 	} else {
-                		echo "<script> window.opener.redirectWin('http://{$_SERVER['HTTP_HOST']}/login#error');  window.close();</script> ";
+                		echo "<script> window.opener.redirectWin('{$_SESSION['fb_referer']}#error');  window.close();</script> ";
                 	}
                 }
 		exit;

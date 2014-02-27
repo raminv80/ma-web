@@ -15,8 +15,11 @@ $SMARTY->assign ( 'notice', $_SESSION ['notice'] );
 
 // ASSIGN POST FOR FORM VARIABLES  
 $SMARTY->assign ( 'post', $_SESSION ['post'] );
-$_SESSION ['post'] = "";
 unset ( $_SESSION ['post'] );
+
+// ASSIGN REDIRECT URL VALUE AFTER LOGIN AND SHOW LOGIN MODAL  
+$SMARTY->assign ( 'login_referer', $_SESSION ['login_referer'] );
+unset ( $_SESSION ['login_referer']);
 
 // ASSIGN USER FOR TEMPLATES
 $SMARTY->assign ( 'user', $_SESSION['user']['public'] );
@@ -87,35 +90,14 @@ while ( true ) {
 		}
 		die();
 	}
-	/**
-	 * **** Goes to login ******
-	 */
-	if ($_request ['arg1'] == 'login') {
-		if ($_SESSION['user']['public']['id']) { 
-	    	header("Location: /my-account");
-	    	exit;
-		}
-		$obj = new $class ( '', $struct );
-		$template = $obj->Load ( $CONFIG->login->pageID );
-		$template = $CONFIG->login->template;
-		$menu = $obj->LoadMenu ( $CONFIG->login->pageID );
-		$SMARTY->assign ( 'menuitems', $menu );
-		if (preg_match ( "/login/", $_SERVER['HTTP_REFERER'] ) == 0) {
-			$referer = parse_url($_SERVER['HTTP_REFERER']);
-			if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
-				$_SESSION ['login_referer'] = $_SERVER['HTTP_REFERER'];
-			} else {
-				$_SESSION ['login_referer'] = "/store";
-			}
-		}
-		break 1;
-	}
+
 	/**
 	 * **** Goes to my-account ******
 	 */
 	if ($_request ['arg1'] == 'my-account') {
-		if ( $CONFIG->checkout->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])) {
-			header("Location: /login");
+		if ( $CONFIG->account->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])) {
+			$_SESSION ['login_referer'] = "http://" . $_SERVER['HTTP_HOST'] . "/my-account";
+	    	header("Location: /");
 			exit;
 		}
 		$obj = new $class ( '', $struct );
@@ -147,8 +129,9 @@ while ( true ) {
 	 * ***** Goes to CHECKOUT ******
 	 */
 	if ($_request ['arg1'] == 'store/checkout') {
-		if ( $CONFIG->checkout->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])) { 
-	    	header("Location: /login");
+		if ( $CONFIG->checkout->attributes()->guest != 'true' && empty($_SESSION['user']['public']['id'])) {
+			$_SESSION ['login_referer'] =  "http://" . $_SERVER['HTTP_HOST'] . "/store/checkout";
+	    	header("Location: /store/shopping-cart");
 	    	exit;
 		}
 		$obj = new $class ( '', $CONFIG->checkout ); 
@@ -165,8 +148,6 @@ while ( true ) {
 		$sql = "SELECT DISTINCT postcode_state FROM tbl_postcode WHERE postcode_state != 'OTHE' ORDER BY postcode_state";
 		$states = $DBobject->wrappedSql($sql);
 		$SMARTY->assign ( 'options_state', $states ); 
-		//$productsOnCart = $cart_obj->GetDataProductsOnCart(); 
-		//$SMARTY->assign ( 'productsOnCart', $productsOnCart );
 		break 1;
 	}
         
@@ -175,6 +156,11 @@ while ( true ) {
 	 * ***** Goes to SHOPPING CART ******
 	 */
 	if ($_request ['arg1'] == 'store/shopping-cart') {
+		$allowGuest = false;
+		if ( $CONFIG->checkout->attributes()->guest == 'true' ) {
+			$allowGuest = true;
+		}
+		$SMARTY->assign ( 'allowGuest', $allowGuest );
 		$obj = new $class ( '', $struct );
 		$template = $obj->Load ( $CONFIG->cart->pageID );
 		$template = $CONFIG->cart->template;
@@ -183,8 +169,6 @@ while ( true ) {
 		$cart_obj = new cart();
 		$validation = $cart_obj->ValidateCart();
 		$SMARTY->assign ( 'validation', $validation );
-		//$productsOnCart = $cart_obj->GetDataProductsOnCart(); 
-		//$SMARTY->assign ( 'productsOnCart', $productsOnCart );
 		break 1;
 	}
 	
@@ -208,7 +192,6 @@ while ( true ) {
 	 */
 	$arr = explode ( "/", $_request ["arg1"] );
 	foreach ( $CONFIG->product_page as $lp ) {
-		// if($lp->url == $arr[0] ){
 		$needle = str_replace ( "/", "\/", $lp->url );
 		$haystack = $_request ["arg1"];
 		if (preg_match ( "/^{$needle}/", $haystack )) {
@@ -233,7 +216,6 @@ while ( true ) {
 	 */
 	$arr = explode ( "/", $_request ["arg1"] );
 	foreach ( $CONFIG->listing_page as $lp ) {
-		// if($lp->url == $arr[0] ){
 		$needle = str_replace ( "/", "\/", $lp->url );
 		$haystack = $_request ["arg1"];
 		if (preg_match ( "/^{$needle}/", $haystack )) {

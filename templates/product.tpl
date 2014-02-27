@@ -163,37 +163,15 @@
 		{/if}
 	</div>
 
-	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>
-	
 	<script type="text/javascript">
-	if (jQuery.validator) {
-		  jQuery.validator.setDefaults({
-		    debug: true,
-		    errorClass: 'has-error',
-		    validClass: 'has-success',
-		    ignore: "",
-		    highlight: function (element, errorClass, validClass) {
-		      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-		      $('#error-text').html('Error, please check the red highlighted fields and submit again.');
-		    },
-		    unhighlight: function (element, errorClass, validClass) {
-		      $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-		      $(element).closest('.form-group').find('.help-block').text('');
-		    },
-		    errorPlacement: function (error, element) {
-		      $(element).closest('.form-group').find('.help-block').text(error.text());
-		    },
-		    submitHandler: function (form) {
-		      if ($(form).valid()) {
-		          addCart();
-		      }
-		    }
-		  });
-		}
+
 
 		$(document).ready(function(){
 
-			$('#product-form').validate();
+			$('#product-form').validate({
+				onkeyup: false,
+				onclick: false
+			});
 			
 			{if $attribute}
 				{foreach $attribute as $attr }

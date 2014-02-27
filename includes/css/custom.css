@@ -18,6 +18,24 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
    /*  display: block;    */ 
 }
 
+.error-msg {
+	color: #CF0000;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px;
+    text-align: center;
+	display: none;
+}
+
+.success-msg {
+	color: #00a000;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px;
+    text-align: center;
+	display: none;
+}
+
 .cart-overview-image {
     height: 60px;
     width: 60px;

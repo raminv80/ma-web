@@ -72,7 +72,7 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 		    exit;
 		    
 		case 'placeOrder':
-    		if (empty($_SESSION['user']['public']['id'])) {
+    		if (empty($_SESSION['user']['public']['id'])) { // ADD GUEST USER
     			$user_obj = new UserClass();
     			$values = array();
     			$values['username'] = $_POST['email'] . '#' . strtotime("now");
@@ -135,10 +135,19 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    			$order_cartId = $cart_obj->cart_id;
 	    			$cart_obj->CloseCart();
 	    			$pay_obj->SetOrderStatus($paymentId);
+	    			
+	    			$user = $_SESSION['user']['public'];
+	    			// LOG OUT GUEST USER
+	    			if ($_SESSION['user']['public']['gname'] == 'Guest') {
+	    				unset ( $_SESSION['user']['public'] );
+	    				session_regenerate_id();
+	    			}
+	    			
+	    			// OPEN NEW CART
 	    			$cart_obj->CreateCart($_SESSION['user']['public']['id']);
 	    			
 	    			// SEND CONFIRMATION EMAIL
-	    			$SMARTY->assign('user',$_SESSION['user']['public']);
+	    			$SMARTY->assign('user',$user);
 	    			
 					$billing = $user_obj->GetAddress($billID);
 					$SMARTY->assign('billing',$billing);
@@ -154,14 +163,14 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 					
 					$buffer= $SMARTY->fetch('templates/email-confirmation.tpl');
 					
-					$to = $_SESSION['user']['public']['email'];
+					$to = $_POST['email'];
 					$from = 'eShop';
 					$fromEmail = 'noreply@cms.themserver.com';
 					$subject = 'Confirmation of your order';
 					$body = $buffer;
 				
 					sendMail($to, $from, $fromEmail, $subject, $body);
-	    		
+					
 	    			// REDIRECT TO THANK YOU PAGE	
 	    			header('Location: /thank-you-for-buying');
 	    			exit;

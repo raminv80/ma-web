@@ -113,11 +113,6 @@
 		</producttable>
  	</product_page>
 
- 	<login>
-		<url>login</url>
-		<template>login.tpl</template>
-		<pageID>14</pageID>
-	</login>
 	<account restricted="true">
 		<url>my-account</url>
 		<template>account.tpl</template>
@@ -135,7 +130,7 @@
 		<template>shopping-cart.tpl</template> 
 		<!-- The template used if the field is matched --> 
 	</cart>
-	<checkout restricted="false"> 
+	<checkout guest="true"> 
 		<url>store/checkout</url> 
 		<pageID>15</pageID> 
 		<type>1</type> 

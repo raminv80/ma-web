@@ -1,4 +1,44 @@
-
+if (jQuery.validator) {
+	  jQuery.validator.setDefaults({
+	    errorClass: 'has-error',
+	    validClass: 'has-success',
+	    ignore: "",
+	    highlight: function (element, errorClass, validClass) {
+	      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+	      /*$('#error-text').html('Error, please check the red highlighted fields and submit again.');*/
+	    },
+	    unhighlight: function (element, errorClass, validClass) {
+	      $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+	      $(element).closest('.form-group').find('.help-block').text('');
+	    },
+	    errorPlacement: function (error, element) {
+	      $(element).closest('.form-group').find('.help-block').text(error.text());
+	    },
+	    submitHandler: function (form) {
+	      if ($(form).valid()) {
+	    	  var formID = $(form).attr('id');
+	          switch ( formID ) {
+	          	
+	          	case 'product-form': 
+	          		addCart(formID);
+	          		break;
+	          		
+	          	case 'login-form':
+	        	case 'create-form':
+	        		userLogin(formID);
+	        		break;
+	        	
+	        	case 'reset-pass-form': 
+	        		resetPass(formID);
+	        		break;
+	        		
+	          	default:
+	          		form.submit();
+	          }
+	      }
+	    }
+	  });
+}
 
 $('.modifier').change(function() {
 	calculatePrice();
@@ -29,9 +69,73 @@ function calculatePrice(){
 	$('#price').val(price.toFixed(2)); 
 }
 
-function addCart(){
+
+function userLogin(form){
 	$('body').css('cursor','wait');
-	var datastring = $("#product-form").serialize();
+	var datastring = $('#'+form).serialize();
+	$.ajax({
+		type: "POST",
+	    url: "/process/user",
+		cache: false,
+		data: datastring,
+		dataType: "html",
+	    success: function(data) {
+	    	try{
+	    		var obj = $.parseJSON(data);
+			 	if (obj.error) {
+			 		$('#login-error').html(obj.error).show();
+			 		
+			 	} else {
+			 		window.location.href = obj.url;
+			 	}
+			 	
+			}catch(err){
+				console.log('TRY-CATCH error');
+			}
+			$('body').css('cursor','default'); 
+	    },
+		error: function(){
+			$('body').css('cursor','default'); 
+			console.log('AJAX error');
+      	}
+	});
+}
+
+function resetPass(form){
+	$('body').css('cursor','wait');
+	var datastring = $('#'+form).serialize();
+	$.ajax({
+		type: "POST",
+	    url: "/process/user",
+		cache: false,
+		data: datastring,
+		dataType: "html",
+	    success: function(data) {
+	    	try{
+	    		var obj = $.parseJSON(data);
+			 	if (obj.error) {
+			 		$('#login-error').html(obj.error).show();
+			 		$('#login-success').hide();
+			 	} else {
+			 		$('#login-success').html(obj.success).show();
+			 		$('#login-error').hide();
+			 	}
+			 	
+			}catch(err){
+				console.log('TRY-CATCH error');
+			}
+			$('body').css('cursor','default'); 
+	    },
+		error: function(){
+			$('body').css('cursor','default'); 
+			console.log('AJAX error');
+      	}
+	});
+}
+
+function addCart(form){
+	$('body').css('cursor','wait');
+	var datastring = $('#'+form).serialize();
 	$.ajax({
 		type: "POST",
 	    url: "/process/cart",
@@ -43,18 +147,16 @@ function addCart(){
 	    		var obj = $.parseJSON(data);
 			 	$('.nav-itemNumber').html(obj.itemsCount);
 			 	$('.nav-subtotal').html('$'+obj.subtotal);
-			 	$('body').css('cursor','default');
 			 	$('#shop-cart-btn').html( obj.popoverShopCart );
 			 	$('#shop-cart-btn').slideDown();
 			 	setTimeout(function() {
 			 		$('#shop-cart-btn').slideUp();
 			    }, 3000);
 			 	
-	    		
 			}catch(err){
-				$('body').css('cursor','default'); 
 				console.log('TRY-CATCH error');
 			}
+			$('body').css('cursor','default'); 
 	    },
 		error: function(){
 			$('body').css('cursor','default'); 
@@ -93,11 +195,10 @@ function updateCart(){
 					} else {
 						alert('Error: Cannot be updated');
 					}
-				 	$('body').css('cursor','default'); 
 				}catch(err){
-					$('body').css('cursor','default'); 
 					console.log('TRY-CATCH error');
 				}
+				$('body').css('cursor','default'); 
 		    },
 			error: function(){
 				$('body').css('cursor','default'); 
@@ -108,6 +209,7 @@ function updateCart(){
 }
 
 function deleteItem(ID){
+	$('body').css('cursor','wait');
 	$( '#'+ ID ).fadeTo( "fast", 0.5 );
 	var frmTkn = $("#formToken").val();
 	$.ajax({
@@ -142,10 +244,12 @@ function deleteItem(ID){
 				$( '#'+ ID ).fadeTo( "slow", 1 ); 
 				console.log('TRY-CATCH error');
 			}
+			$('body').css('cursor','default'); 
 	    },
 		error: function(){
 			$( '#'+ ID ).fadeTo( "slow", 1 );
 			console.log('AJAX error');
+			$('body').css('cursor','default'); 
       	}
 	});
 	
