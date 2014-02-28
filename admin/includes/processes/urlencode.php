@@ -5,24 +5,17 @@ global $DBobject;
 
 $name = $_POST ['value'];
 $url = urlSafeString( htmlspecialchars_decode($name, ENT_QUOTES));
-if (isset($_POST ['id'])) {
-	$error = false;
-	if ($_POST ['product']) {
-		$sql = "SELECT product_id AS ID FROM tbl_product WHERE product_url = :url AND product_deleted IS NULL";
-		if($res = $DBobject->wrappedSql($sql,array(':url'=>$url))){
-			if ($res[0]['ID'] != $_POST ['id']){
-				$error = true;
-			}
-		}
-	} else {
-		$sql = "SELECT listing_id AS ID FROM tbl_listing WHERE listing_url = :url AND listing_deleted IS NULL";
-		if($res = $DBobject->wrappedSql($sql,array(':url'=>$url))){
-			if ($res[0]['ID'] != $_POST ['id']){
-					$error = true;
-			}
+$duplicated = null;
+
+if (isset($_POST ['id']) && isset($_POST ['table']) && isset($_POST ['field']) ) {
+	$duplicated = false;
+	$pre = str_replace ( "tbl_", "", $_POST ['table'] );
+	$sql = "SELECT {$pre}_id AS ID FROM {$_POST ['table']} WHERE {$_POST ['field']} = :url AND {$pre}_deleted IS NULL";
+	if($res = $DBobject->wrappedSql($sql,array(':url'=>$url))){
+		if ($res[0]['ID'] != $_POST ['id']){
+			$duplicated = true;
 		}
 	}
 }
-
-echo json_encode ( array ("url" => $url, "error" => $error  ) );
+echo json_encode ( array ("url" => $url, "duplicated" => $duplicated  ) );
 die ();

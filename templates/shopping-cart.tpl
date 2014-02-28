@@ -59,10 +59,6 @@
 			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">-${$cart.cart_discount|number_format:2:".":","}</div>
 		</div>
 		<div class="row" style="margin-top: 20px;">
-			<div style="display:inline; text-align:right;" class="col-md-10">Postage & Handling</div>
-			<div style="display:inline; text-align:right;" class="col-md-2" id="shipping">${$cart.cart_shipping_fee|number_format:2:".":","}</div>
-		</div>
-		<div class="row" style="margin-top: 20px;">
 			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-10">Total</div>
 			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-2" id="total">${$cart.cart_total|number_format:2:".":","}</div>
 		</div>

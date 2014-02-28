@@ -14,7 +14,7 @@
 {/if}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<title>{$category_name|replace:'and':'&'|ucfirst} {$product_name|ucfirst} {$listing_seo_title}</title>
+<title>{$listing_name|replace:'and':'&'|ucfirst} {$product_name|ucfirst} {$listing_seo_title}</title>
 <link href="/images/favicon.ico" type="image/x-icon" rel="shortcut icon">
 
 <!-- Bootstrap -->

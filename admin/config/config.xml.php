@@ -69,7 +69,6 @@
 		
 		<custom_template field="listing_id" value="12">custom_home_edit_page.tpl</custom_template>	<!-- Home -->
 		<custom_template field="listing_id" value="888">redirect_edit_page.tpl</custom_template> <!-- New to Wagering  -->
-		<custom_template field="listing_id" value="8888">custom_leading_driver_edit_page.tpl</custom_template> <!--  Leading Trainer / Driver Profile -->
 		
 	</section>
 
@@ -149,7 +148,7 @@
 				<field recursive="true"> 
 					<name>product_listing_id</name>
 					<table>tbl_listing</table>
-					<reference>listing_title</reference> 
+					<reference>listing_name</reference> 
 					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
 				</field>  
 			</options>
@@ -234,61 +233,42 @@
 		<list_template>list_order.tpl</list_template>
 		<edit_template>edit_order.tpl</edit_template>
 	</section> 
-	<!-- THIS SECTION IS USED TO MANAGE THE HORSE TABLE. -->
-<!-- 	<section>
+
+		
+	<!-- THIS SECTION IS USED TO MANAGE THE "DISCOUNT CODE" TABLE. -->
+	<section>
 		<showlist>FALSE</showlist>
-		<url>horse</url>
-		<title>HORSE</title>
+		<url>discounts</url>
+		<title>Discount Codes</title>
 		<type>TABLE</type>
+		<type_id>2</type_id>
+		<root_parent_id>10</root_parent_id>
 		<table>
-			<name>tbl_horse</name>
-			<id>horse_id</id>
-			<field>horse_name</field>
-			<deleted>horse_deleted</deleted>
-			<orderby>horse_name ASC</orderby>
-		</table>
-		<list_template>list.tpl</list_template>
-		<edit_template>edit_horse.tpl</edit_template>
-	</section> -->
-	
-	<!-- THIS SECTION IS USED TO MANAGE THE HORSE TABLE. -->
-	<!-- <section>
-		<showlist>FALSE</showlist>
-		<url>meeting</url>
-		<title>Meeting</title>
-		<type>TABLE</type>
-		<table>
-			<name>tbl_meeting</name>
-			<id>meeting_id</id>
-			<field>meeting_title</field>
-			<field>DATE_FORMAT(meeting_date,'%d-%b-%Y')</field>
-			<deleted>meeting_deleted</deleted>
-			<orderby>meeting_date DESC</orderby>
-			<associated> 
-				<id>race_id</id>
-				<name>race</name>
-				<table>tbl_race</table>
-				<field>race_meeting_id</field> 
-				<orderby>race_start_time ASC</orderby>
-				<associated> 
-					<id>race_id</id>
-					<name>entrant</name>
-					<table>tbl_entrant</table>
-					<field>entrant_race_id</field> 
-				</associated>
-			</associated>
+			<name>tbl_discount</name>
+			<id>discount_id</id>
+			<field>discount_name</field>
+			<deleted>discount_deleted</deleted>
+			<orderby>discount_id DESC</orderby>
 			<options> 
+				<field recursive="true"> 
+					<name>categories</name>
+					<table>tbl_listing</table>
+					<reference>listing_name</reference> 
+					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
+				</field> 
 				<field> 
-					<name>entrant_horse_id</name>
-					<table>tbl_horse</table>
-					<reference>horse_name</reference> 
+					<name>products</name>
+					<table>tbl_product</table>
+					<reference>product_name</reference> 
+					<orderby>product_name</orderby>
 				</field> 
 			</options>
 		</table>
 		<list_template>list.tpl</list_template>
-		<edit_template>edit_meeting.tpl</edit_template>
-	</section> -->
-
+		<edit_template>edit_discount.tpl</edit_template>
+	</section> 
+	
+	
 	<smartytemplate_config><!-- This element contains the smarty template values -->
 		<templates>/templates</templates>
 		<templates_c>/templates_c</templates_c>

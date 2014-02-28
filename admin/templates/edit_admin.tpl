@@ -9,6 +9,7 @@
 							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;">Save</a>
 						</legend>
 					</fieldset>
+					<input type="hidden" value="admin_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="{$fields.admin_id}" name="field[1][tbl_admin][{$cnt}][admin_id]" id="admin_id" /> 
 					<input type="hidden" value="admin_id" name="field[1][tbl_admin][{$cnt}][id]" id="id" /> 
 					<input type="hidden" value="{$fields.admin_username}" name="field[1][tbl_admin][{$cnt}][admin_username]" id="admin_username"> 

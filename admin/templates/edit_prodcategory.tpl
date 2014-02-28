@@ -2,8 +2,8 @@
 {* Define the function *} {function name=options_list level=0} 
 	{foreach $opts as $opt}
 		{if $fields.listing_id neq $opt.id}
-			<option value="{$opt.id}" {if $fields.listing_parent_id eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
-			{if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1} {/if} 
+			<option value="{$opt.id}" {if  $selected eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
+			{if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1 selected=$selected} {/if} 
 		{/if}
 	{/foreach} 
 {/function}
@@ -21,6 +21,7 @@
 							
 						</legend>
 					</fieldset>
+					<input type="hidden" value="listing_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="listing_id" name="field[1][tbl_listing][{$cnt}][id]" id="id"/> 
 					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_id">
 					<input type="hidden" value="{$typeID}" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id"> 
@@ -37,13 +38,6 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_title">Title *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" required>
-					<span class="help-block"></span>
-				</div>
-			</div>
-			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
 				<div class="col-sm-5">
 					<input class="form-control" type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" required>
@@ -55,7 +49,7 @@
 				<div class="col-sm-5">
 					<select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
 						<option value="{$rootParentID}">None</option> 
-						{call name=options_list opts=$fields.options.listing_parent_id}
+						{call name=options_list opts=$fields.options.listing_parent_id selected=$fields.listing_parent_id}
 					</select>
 				</div>
 			</div>
@@ -135,8 +129,12 @@ $(document).ready(function(){
 	});
 	
 	$('#id_listing_url').rules("add", {
-    	  uniqueURL: { id: "{if $fields.listing_id}{$fields.listing_id}{else}0{/if}" }
-	 });
+	  	  uniqueURL: { 
+	      	  	id: "{if $fields.listing_id}{$fields.listing_id}{else}0{/if}",
+		        	table : "tbl_listing",
+		        	field : "listing_url"
+			  }
+	});
 });
 </script>
 {/block}

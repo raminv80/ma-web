@@ -74,6 +74,7 @@ class Bank {
 				"payment_subtotal" => $payment['payment_subtotal'],
 				"payment_shipping_fee" => $payment['payment_shipping_fee'],
 				"payment_charged_amount" => $payment['payment_charged_amount'],
+				"payment_shipping_method" => $payment['payment_shipping_method'],
 				"payment_payee_name" => $payment['payment_payee_name'],
 				"payment_transaction_no" => $payment['payment_transaction_no'],
 				"payment_response_summary_code" => $payment['payment_response_summary_code'],

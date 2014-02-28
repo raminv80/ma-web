@@ -5,9 +5,7 @@ global $CONFIG, $SMARTY, $DBobject;
 
 foreach($CONFIG->section as $sp){
 	if ($sp->url == 'orders') {
-		$from = DateTime::createFromFormat('d/m/Y', $_POST['from']);
-		$to = DateTime::createFromFormat('d/m/Y', $_POST['to']);
-		$sp->table->where = "DATE(cart_closed_date) BETWEEN '{$from->format('Y-m-d')}' AND '{$to->format('Y-m-d')}'";
+		$sp->table->where = "DATE(cart_closed_date) BETWEEN '{$_POST['from']}' AND '{$_POST['to']}'";
 		$record = new Record($sp);
 		$list = $record->getRecordList();
 		$SMARTY->assign("list",$list);

@@ -151,7 +151,7 @@
 	</div>
 	{if $notice neq ''}
 		<script>
-			$('#{$notice}').show();
+			$('#{$notice}').slideDown();
 			setTimeout(function(){
 				$('#{$notice}').slideUp();
 	    	},10000);

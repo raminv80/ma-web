@@ -256,8 +256,10 @@
 		});
 
 		$('#id_product_url').rules("add", {
-			uniqueURLProduct : {
-				id : "{if $fields.product_id}{$fields.product_id}{else}0{/if}"
+			uniqueURL : {
+				id : "{if $fields.product_id}{$fields.product_id}{else}0{/if}",
+	        	table : "tbl_product",
+	        	field : "product_url"
 			}
 		});
 

@@ -100,10 +100,14 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
     			$user_obj = new UserClass();
     		}
     		
-    		$billID = $user_obj->InsertNewAddress($_POST['address'][1]);
+    		$billID = $user_obj->InsertNewAddress(array_merge(array( 
+    									'address_user_id' => $_SESSION['user']['public']['id']
+    									),$_POST['address'][1] ) );
     		$shipID = $billID;
     		if (is_null($_POST['same_address'])) { 
-    			$shipID = $user_obj->InsertNewAddress($_POST['address'][2]);
+    			$shipID = $user_obj->InsertNewAddress(array_merge(array( 
+    									'address_user_id' => $_SESSION['user']['public']['id']
+    									),$_POST['address'][2] ) );
     		}
     		
     		if ($billID && $shipID) {
@@ -120,19 +124,27 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    			$error_msg = 'Payment failed: Connection Error. ';
 	    		}
 	    		
+	    		$cart_obj = new cart();
+	    		$order_cartId = $cart_obj->cart_id;
+	    		$subtotals = $cart_obj->CalculateShippingFee();
+	    		$totals = $cart_obj->CalculateTotal();
+	    		
 	    		$params = array_merge(array(
 	    				'payment_billing_address_id' => $billID,
 	    				'payment_shipping_address_id' => $shipID,
 	    				'payment_status' => 'P',
-	    		),
+	    				'payment_cart_id' => $order_cartId,
+	    				'payment_user_id' => $_SESSION['user']['public']['id'],
+	    				'payment_subtotal' => 0,
+	    				'payment_shipping_fee' => 0,
+	    				'payment_charged_amount' => 0
+	    				),
 	    				$_POST['payment']
 	    		);
 	    		$paymentId = $pay_obj->StorePaymentRecord($params);
 	    		
 	    		if ($reponse){
 	    			// PAYMENT SUCCESS
-	    			$cart_obj = new cart();
-	    			$order_cartId = $cart_obj->cart_id;
 	    			$cart_obj->CloseCart();
 	    			$pay_obj->SetOrderStatus($paymentId);
 	    			

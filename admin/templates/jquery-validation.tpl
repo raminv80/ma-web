@@ -56,7 +56,7 @@ if (jQuery.validator) {
 		    			    if(obj.primaryID != null){
 		    			    	setTimeout(function(){
 		    			    		window.location =document.URL+"/"+obj.primaryID;
-		    			    	},2000);
+		    			    	},4000);
 			    			    return;
 		    			    }else{
 		    					$.each(obj.IDs, function(k, v) {
@@ -79,31 +79,6 @@ if (jQuery.validator) {
 	    }
 	});
 
-	  jQuery.validator.addMethod(
-	  		"uniqueURLProduct", 
-	  		function(value, element, params) {
-	  			var response = false;
-	  			$.ajax({
-	  				type: "POST",
-	  			    url: "/admin/includes/processes/urlencode.php",
-	  				cache: false,
-	  				async: false,
-	  				data: "value="+encodeURIComponent(value)+"&id="+params.id+"&product=true",
-	  				dataType: "json",
-	  			    success: function(res, textStatus) {
-	  			    	try{
-	  			    		if ( res.error ) {
-	  			    			response = false;
-		  			    	} else {
-			  			    	response = true;
-			  			    }
-	  			    	}catch(err){ }
-	  			    }
-	  			});
-	  			return response;
-			}, 
-			"This URL is currently being used."
-	);
 
 	jQuery.validator.addMethod(
   		"uniqueURL", 
@@ -114,11 +89,11 @@ if (jQuery.validator) {
   			    url: "/admin/includes/processes/urlencode.php",
   				cache: false,
   				async: false,
-  				data: "value="+encodeURIComponent(value)+"&id="+params.id,
+  				data: "value="+encodeURIComponent(value)+"&id="+params.id+"&table="+params.table+"&field="+params.field,
   				dataType: "json",
   			    success: function(res, textStatus) {
   			    	try{
-  			    		if ( res.error ) {
+  			    		if ( res.duplicated ) {
   			    			response = false;
 	  			    	} else {
 		  			    	response = true;
@@ -129,7 +104,7 @@ if (jQuery.validator) {
   			return response;
   			
 		}, 
-		"This URL is currently being used."
+		"Invalid URL: It's currently being used or has non-alphanumeric characters."
 	);
 	
 
@@ -158,6 +133,34 @@ if (jQuery.validator) {
   			
 		}, 
 		"Email needs to be unique, other user is already using that email address."
+	);
+
+
+	jQuery.validator.addMethod(
+  		"uniqueCODE", 
+  		function(value, element, params) {
+  			var response = false;
+  			$.ajax({
+  				type: "POST",
+  			    url: "/admin/includes/processes/checkCode.php",
+  				cache: false,
+  				async: false,
+  				data: "value="+encodeURIComponent(value)+"&id="+params.id,
+  				dataType: "json",
+  			    success: function(res, textStatus) {
+  			    	try{
+  			    		if ( res.error ) {
+  			    			response = false;
+	  			    	} else {
+		  			    	response = true;
+		  			    }
+  			    	}catch(err){ }
+  			    }
+  			});
+  			return response;
+  			
+		}, 
+		"This CODE is currently being used."
 	);
 
 	jQuery.validator.addMethod(

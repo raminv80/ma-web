@@ -1,6 +1,5 @@
 <?php
 class cart {
-	public $SHIPPING_FEE = 15; // <<<<<<<======== REMEMBER TO CHANGE THIS ====================
 	public $cart_id;
 	public $cart_user_id = null;
 	public $created_date;
@@ -423,53 +422,39 @@ class cart {
 	function CalculateTotal() {
 		global $DBobject;
 		
-		$subtotal = 0;
+		$subtotal = $this->GetSubtotal();
 		$discount = 0;
-		$shipping = 0;
-		$total = 0;
-		// --------------- SUBTOTAL ------------
+		
+		$cart = $this->GetDataCart();
+		if ($cart['cart_discount_code']) {
+			$discArr = $this->ApplyDiscountCode($cart['cart_discount_code']);
+			$discount = $discArr['discount'];
+		}
+			
+		return array (
+			'subtotal' => $subtotal,
+			'discount' => $discount,
+			'total' => $subtotal - $discount
+		);
+	}
+	
+	/**
+	 * Return subtotal of a given cart_id
+	 * @return array
+	 */
+	function GetSubtotal( $cartId = null ) {
+		global $DBobject;
+	
+		if ( is_null($cartId) ) {
+			$cartId = $this->cart_id;
+		}
+		
 		$sql = "SELECT SUM(cartitem_subtotal) AS SUM FROM tbl_cartitem
     			WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
 		$res = $DBobject->wrappedSql ( $sql, array (
-				":id" => $this->cart_id 
+				":id" => $cartId
 		) );
-		if ($res [0] ['SUM']) {
-			$subtotal = $res [0] ['SUM'];
-			
-			// --------------- DISCOUNT AMOUNT ------------
-			$discount = 0;
-			
-			$cart = $this->GetDataCart();
-			if ($cart['cart_discount_code']) {
-				$discArr = $this->ApplyDiscountCode($cart['cart_discount_code']);
-				$discount = $discArr['discount'];
-			}
-			
-			// --------------- SHIPPING FEE ------------
-			$shipping = $this->SHIPPING_FEE; // <<<<===== CHANGE THIS
-			/*
-			 * $sql = "SELECT SUM(cartitem_subtotal) AS SUM FROM tbl_cartitem WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'"; if ( $res = $DBobject->wrappedSql($sql, array( ":id" => $this->cart_id )) ) { $subtotal = $res[0]['SUM']; }
-			 */
-			
-			$total = $subtotal + $shipping - $discount;
-		}
-		$params = array (
-				":id" => $this->cart_id,
-				":subtotal" => $subtotal,
-				":fee" => $shipping,
-				":total" => $total 
-		);
-		$sql = "UPDATE tbl_cart SET cart_subtotal = :subtotal, cart_shipping_fee = :fee, cart_total = :total, cart_modified = now() WHERE cart_id = :id";
-		
-		$sum = array ();
-		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
-			$sum ['subtotal'] = $subtotal;
-			$sum ['shipping'] = $shipping;
-			$sum ['discount'] = $discount;
-			$sum ['total'] = $total;
-		}
-		
-		return $sum;
+		return $res[0]['SUM'];
 	}
 	
 	/**
@@ -582,7 +567,6 @@ class cart {
 					}
 				}
 				if ($errorCnt == 0) {
-					$this->CalculateTotal ();
 					return "'{$product ['product_name']}' was added. {$message}";
 				}
 			}
@@ -599,7 +583,6 @@ class cart {
 	                WHERE cartitem_id = :id";
 			
 			if ($DBobject->wrappedSql ( $sql, $params )) {
-				$this->CalculateTotal ();
 				return "'{$product ['product_name']}' was added. {$message}";
 			}
 		}
@@ -781,8 +764,6 @@ class cart {
 			}
 		}
 		
-		$this->CalculateTotal();
-		
 		return $message;
 	}
 	
@@ -843,7 +824,7 @@ class cart {
 		}
 		$result = array();
 		
-		$cart = $this->GetDataCart();
+		$subtotal = floatval( $this->GetSubtotal() );
 		
 		$discount = 0;
 		
@@ -851,17 +832,19 @@ class cart {
 	    			WHERE discount_code = :id AND discount_published = 1 AND discount_deleted IS NULL";
 	
 		if ($res = $DBobject->wrappedSql ( $sql, array ( ":id" => $code	) )) {
-			$today = strtotime ( date ( "Y-m-d H:i:s" ) );
-			if (strtotime ( $res[0]['discount_start_date'] ) <= $today && $today <= strtotime ( $res[0]['discount_end_date'] )) {
+			$today = strtotime ( date ( "Y-m-d" ) );
+			if ( (strtotime($res[0]['discount_start_date']) <= $today && $today <= strtotime($res[0]['discount_end_date']) ) 
+					|| ( strtotime($res[0]['discount_start_date']) <= $today && $res[0]['discount_end_date'] == '0000-00-00' ) ) {
+				
 				// Valid code by date
 				if ( $res[0]['discount_listing_id'] == 0 && $res[0]['discount_product_id'] == 0 ){
 					// No filter or special code for particular category/product 
                 	if ($res[0]['discount_amount_percentage']) {
-                    	$discount = floatval($cart['cart_subtotal']) * floatval($res[0]['discount_amount']) / 100;
+                    	$discount = $subtotal * floatval($res[0]['discount_amount']) / 100;
                     } else {
                     	// Discount must not be higher than subtotal
-                    	if (floatval($res[0]['discount_amount']) > floatval($cart['cart_subtotal']) ){
-                    		$discount = $cart['cart_subtotal'];
+                    	if (floatval($res[0]['discount_amount']) > $subtotal ){
+                    		$discount = $subtotal;
                     	} else {
                     		$discount = $res[0]['discount_amount'];
                     	}
@@ -915,82 +898,25 @@ class cart {
 		}
 		
 		$result ['discount'] = $discount;
-		$total = floatval($cart['cart_subtotal']) + floatval($cart['cart_shipping_fee']) - $discount;
-		
-		$params = array (
-				":id" => $cartId,
-				":discount" => $discount,
-				":discount_code" => $code,
-				":total" => $total
-		);
-		$sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount = :discount, cart_total = :total, cart_modified = now() WHERE cart_id = :id";
-		$res = $DBobject->wrappedSql ( $sql, $params );
 		
 		return $result;
 	}						
 	
-
 	
-/* 	function PlaceOrder($paymentArr, $billingAddressArr, $shippingAddressArr = array() ) {
-		global $DBobject;
-	
-		$dbTotal = $this->CalculateTotal();
-		return array( 'error' => 'Connection problem - Billing Address was not created. Please, try again');
-		if (!empty($dbTotal) && $this->cart_id == $paymentArr['payment_cart_id']
-		&& $dbTotal['subtotal'] == $paymentArr['payment_subtotal']
-		&& $dbTotal['shipping'] == $paymentArr['payment_shipping_fee']
-		&& floatval($dbTotal['total']) == floatval($paymentArr['payment_charged_amount']) ) {
-				
-				
-			if ($res = $this->InsertNewAddress($billingAddressArr)) {
-				$billingAddressId = $res;
-			} else {
-				return array( 'error' => 'Connection problem - Billing Address was not created. Please, try again');
-			}
-				
-			if (empty($shippingAddressArr)) {
-				$shippingAdddressId = $billingAddressId;
-			} else {
-				if ($res = $this->InsertNewAddress($shippingAddressArr)) {
-					$shippingAdddressId = $res;
-				} else {
-					return array( 'error' => 'Connection problem - Shipping Address was not created. Please, try again');
-				}
-			}
-				
-			$sql = " INSERT INTO tbl_payment (
-        						payment_cart_id, payment_user_id, payment_billing_address_id, payment_shipping_address_id,
-								payment_status, payment_subtotal, payment_shipping_fee, payment_charged_amount,
-        						payment_user_ip,
-								payment_created
-								)
-							VALUES (
-								:payment_cart_id, :payment_user_id, :payment_billing_address_id, :payment_shipping_address_id,
-								:payment_status, :payment_subtotal, :payment_shipping_fee, :payment_charged_amount,
-        						:payment_user_ip,
-        						now()
-							)";
-			$params = array (
-					":payment_cart_id" => $paymentArr['payment_cart_id'],
-					":payment_user_id" => $paymentArr['payment_user_id'],
-					":payment_billing_address_id" => $billingAddressId,
-					":payment_shipping_address_id" => $shippingAdddressId,
-					":payment_status" => 'P',
-					":payment_subtotal" => $paymentArr['payment_subtotal'],
-					":payment_shipping_fee" => $paymentArr['payment_shipping_fee'],
-					":payment_charged_amount" => $paymentArr['payment_charged_amount'],
-					":payment_user_ip" => $_SERVER ['REMOTE_ADDR']
-			);
-				
-			if ( $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
-				$this->CloseCart($this->cart_id);
-				$this->CreateCart($paymentArr['payment_user_id']);
-				return array( 'success' => 'Thank you for Buying!');
-			}
-				
+	/**
+	 * Calculate and return shipping fee  
+	 * 
+	 * @param int $cartId
+	 * @return float
+	 */
+	function CalculateShippingFee($cartId = null) {
+		if (is_null($cartId)) {
+			$cartId = $this->cart_id;
 		}
-		return array( 'error' => 'Connection problem or Values do not match. Please, try again');
-	} */
+		// DEPENDS ON CLIENT
+		return 15;
+	}
+
 
 	
 	

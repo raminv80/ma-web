@@ -63,10 +63,10 @@
 	<div class="row">
 	{foreach from=$items key=k item=cat}
 		<div class="col-xs-3 image">
-			<img src="{$cat.listing_image}" alt="{$cat.listing_title}" title="{$cat.listing_title}" style="width:90px; height:90px;"/>
+			<img src="{$cat.listing_image}" alt="{$cat.listing_name}" title="{$cat.listing_name}" style="width:90px; height:90px;"/>
 		</div>
 		<div class="col-xs-9">
-		<div class="col-xs-12">{$cat.listing_title}</div>
+		<div class="col-xs-12">{$cat.listing_name}</div>
 		<div class="col-xs-12"><a href="{$parentUrl}{$cat.listing_url}" class="btn btn-default">View Category</a></div>
 		</div>
 		{call name=render_products items=$cat.products parentUrl=$parentUrl+"/"+$cat.listing_url}
@@ -81,7 +81,7 @@
 						<div class="row">
 							<div class="col-xs-12">
 					  			{include file='breadcrumbs.tpl'}
-					  			<h3 class="toptitle">{$listing_title}</h3>
+					  			<h3 class="toptitle">{$listing_name}</h3>
 				  			</div>
 						</div>
 					</div>
@@ -90,7 +90,7 @@
 	</header>
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12"><h3>Products in {$listing_title}</h3></div>
+			<div class="col-xs-12"><h3>Products in {$listing_name}</h3></div>
 			{call name=render_products items=$data.products parentUrl="./{$listing_url}/"}
 			<div class="row" style="height:50px;"></div>
 			{call name=render_categories items=$data.listings parentUrl="./{$listing_url}/"}

@@ -334,7 +334,7 @@ class ListClass {
 				":id" => $_id 
 		);
 		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
-			$data [$res [0] ['listing_id']] ["title"] = ucfirst ( unclean ( $res [0] ['listing_title'] ) );
+			$data [$res [0] ['listing_id']] ["title"] = ucfirst ( unclean ( $res [0] ['listing_name'] ) );
 			$data [$res [0] ['listing_id']] ["url"] = $res [0] ['listing_url'];
 			$data [$res [0] ['listing_id']] ["subs"] = $_subs;
 			if (! empty ( $res [0] ['listing_parent_id'] ) && $res [0] ['listing_parent_id'] != 0) {
@@ -363,7 +363,7 @@ class ListClass {
 				$t_array = array (
 						"category_name" => ucfirst ( unclean ( $row ['listing_name'] ) ),
 						"category_id" => $row ['listing_id'],
-						"title" => ucfirst ( unclean ( $row ['listing_title'] ) ),
+						"title" => ucfirst ( unclean ( $row ['listing_name'] ) ),
 						"url" => $row ['listing_url'],
 						"selected" => 0,
 						"listings" => 0 

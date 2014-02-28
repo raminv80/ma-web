@@ -12,6 +12,7 @@
 							
 						</legend>
 					</fieldset>
+					<input type="hidden" value="listing_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="listing_id" name="field[1][tbl_listing][{$cnt}][id]" id="id" /> 
 					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_id"> 
 					<input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
@@ -41,13 +42,13 @@
 					<span class="help-block"></span>
 				</div>
 			</div>
-			<div class="row form-group">
+<!-- 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_listing_title">Title *</label>
 				<div class="col-sm-5">
 					<input class="form-control" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" onchange="seturl(this.value);" required>
 					<span class="help-block"></span>
 				</div>
-			</div>
+			</div> -->
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
 				<div class="col-sm-5">
@@ -154,8 +155,12 @@ $(document).ready(function(){
 	});
 	
 	$('#id_listing_url').rules("add", {
-    	  uniqueURL: { id: "{if $fields.listing_id}{$fields.listing_id}{else}0{/if}" }
-	 });
+	  	  uniqueURL: { 
+	      	  	id: "{if $fields.listing_id}{$fields.listing_id}{else}0{/if}",
+		        	table : "tbl_listing",
+		        	field : "listing_url"
+			  }
+	});
 });
 
 

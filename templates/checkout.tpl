@@ -59,7 +59,7 @@
 			</div>
 			<div class="row" style="margin-top: 10px;">
 				<div style="display:inline; text-align:right;" class="col-md-10">Postage & Handling</div>
-				<div style="display:inline; text-align:right;" class="col-md-2" id="shipping">${$cart.cart_shipping_fee}</div>
+				<div style="display:inline; text-align:right;" class="col-md-2" id="shipping">$0.00</div>
 			</div>
 			<div class="row" style="margin-top: 10px;">
 				<div style="display:inline; text-align:right;" class="col-md-10">Total</div>
@@ -79,13 +79,18 @@
 					      	<input type="email" value="{if $post}{$post.email}{else}{if $user.email}{$user.email}{/if}{/if}" class="form-control" id="email" name="email" required>
 						</div>
 					</div>
+					<div class="radio">
+					  	<label>
+					   		<input type="radio" name="payment[payment_shipping_method]" id="payment_method_1" value="Standard" checked>
+					    	Shipping Method
+					  	</label>
+					</div>
 					
 					<!-- BILLING SECTION - Hidden by default -->
 					<div class="row" id="billing-subform">
 		                <div class="row">
 		                    <h3>Billing Details</h3>
 		                </div>
-		                <input type="hidden" value="{$user.id}" name="address[1][address_user_id]" id="address_user_id" /> 
 		                {if $addresses}
 		                <div class="form-group">
 						    <label for="previous-address-1" class="col-sm-2 control-label"></label>
@@ -190,7 +195,6 @@
 		                <div class="row">
 		                    <h3>Shipping Details</h3>
 		                </div>
-		                <input type="hidden" value="{$user.id}" name="address[2][address_user_id]" id="address_user_id" />
 						{if $addresses}
 						<div class="form-group">
 						    <label for="previous-address-2" class="col-sm-2 control-label"></label>
@@ -286,12 +290,6 @@
 		                <div class="row">
 		                    <h3>Payment</h3>
 		                </div>
-		                <input type="hidden" value="{$cart.cart_id}" name="payment[payment_cart_id]" id="payment_cart_id" />
-		                <input type="hidden" value="{$cart.cart_user_id}" name="payment[payment_user_id]" id="payment_user_id" />
-		                <input type="hidden" value="{$cart.cart_subtotal}" name="payment[payment_subtotal]" id="payment_cart_id" />
-		                <input type="hidden" value="{$cart.cart_shipping_fee}" name="payment[payment_shipping_fee]" id="payment_cart_id" />
-		                <input type="hidden" value="{$cart.cart_total}" name="payment[payment_charged_amount]" id="payment_cart_id" />
-		                
 		                <div class="radio">
 						  	<label>
 						   		<input type="radio" name="payment[payment_option]" id="payment_option1" value="transfer" checked>

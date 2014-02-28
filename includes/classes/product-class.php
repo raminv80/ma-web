@@ -126,7 +126,7 @@ class ProductClass extends ListClass {
                 $pData [$res [0] ['product_id']] ["title"] = ucfirst ( unclean ( $res [0] ['product_name'] ) );
                 $pData [$res [0] ['product_id']] ["url"] = $res [0] ['product_url'] .'-'. $res [0] ['product_id'];
 
-                $data [$res [0] ['listing_id']] ["title"] = ucfirst ( unclean ( $res [0] ['listing_title'] ) );
+                $data [$res [0] ['listing_id']] ["title"] = ucfirst ( unclean ( $res [0] ['listing_name'] ) );
                 $data [$res [0] ['listing_id']] ["url"] = $res [0] ['listing_url'];
                 $data [$res [0] ['listing_id']] ["subs"] = $pData;
                 if (! empty ( $res [0] ['listing_parent_id'] ) && $res [0] ['listing_parent_id'] != 0) {
