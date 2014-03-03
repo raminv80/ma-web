@@ -17,6 +17,9 @@ $SMARTY->assign ( 'notice', $_SESSION ['notice'] );
 $SMARTY->assign ( 'post', $_SESSION ['post'] );
 unset ( $_SESSION ['post'] );
 
+// ASSIGN POST FOR FORM VARIABLES
+$SMARTY->assign ( 'address', $_SESSION['address'] );
+
 // ASSIGN REDIRECT URL VALUE AFTER LOGIN AND SHOW LOGIN MODAL  
 $SMARTY->assign ( 'login_referer', $_SESSION ['login_referer'] );
 unset ( $_SESSION ['login_referer']);
@@ -142,6 +145,8 @@ while ( true ) {
 		$cart_obj = new cart();
 		$validation = $cart_obj->ValidateCart();
 		$SMARTY->assign ( 'validation', $validation );
+		$totals = $cart_obj->CalculateTotal();
+		$SMARTY->assign ( 'totals', $totals );
 		$sql = "SELECT * FROM tbl_address WHERE address_user_id = :uid ORDER BY address_id";
 		$addresses = $DBobject->wrappedSql($sql, array(':uid' => $_SESSION['user']['public']['id']));
 		$SMARTY->assign ( 'addresses', $addresses );
@@ -169,6 +174,8 @@ while ( true ) {
 		$cart_obj = new cart();
 		$validation = $cart_obj->ValidateCart();
 		$SMARTY->assign ( 'validation', $validation );
+		$totals = $cart_obj->CalculateTotal();
+		$SMARTY->assign ( 'totals', $totals );
 		break 1;
 	}
 	
@@ -294,6 +301,8 @@ $itemNumber = $cart_obj->NumberOfProductsOnCart();
 $SMARTY->assign ( 'itemNumber', $itemNumber );
 $cart = $cart_obj->GetDataCart();
 $SMARTY->assign ( 'cart', $cart );
+$subtotal = $cart_obj->GetSubtotal();
+$SMARTY->assign('subtotal', $subtotal);
 $productsOnCart = $cart_obj->GetDataProductsOnCart();
 $SMARTY->assign ( 'productsOnCart', $productsOnCart );
 

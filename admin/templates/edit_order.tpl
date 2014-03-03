@@ -17,6 +17,12 @@
 					<td style="text-align: center;"> <b>{if $fields.payment.0.payment_status eq 'P'}PAID{else}{$fields.payment.0.payment_status}{/if}</b></td>
 				</tr>
 				<tr>
+					<td><b>Transaction No:</b></td>
+					<td style="text-align: center;">{$fields.payment.0.payment_transaction_no}</td>
+					<td><b>Card:</b></td>
+					<td style="text-align: center;">{$fields.payment.0.payment_response_cardscheme}</td>
+				</tr>
+				<tr>
 					<td><b>Billing Address:</b></td>
 					<td style="text-align: center;">{$fields.payment.0.billing_address.0.address_name}</td>
 					<td style="text-align: center;" colspan="2">
@@ -45,6 +51,11 @@
 						{if $fields.payment.0.shipping_address.0.address_telephone && $fields.payment.0.shipping_address.0.address_telephone} / {/if} 
 						{if $fields.payment.0.shipping_address.0.address_mobile} {$fields.payment.0.shipping_address.0.address_mobile} {/if}
 					</td>
+				</tr>
+				<tr>
+					<td><b>Shipping Method:</b></td>
+					<td style="text-align: center;">{$fields.payment.0.payment_shipping_method}</td>
+					<td style="text-align: center;" colspan="2"></td>
 				</tr>
 			</tbody>
 		</table>
@@ -77,19 +88,19 @@
 				{/foreach} 
 				<tr>
 					<td style="text-align: right;" colspan="3">Subtotal</td>
-					<td style="text-align: right;">${$fields.cart_subtotal|number_format:2:".":","}</td>
+					<td style="text-align: right;">${$fields.payment.0.payment_subtotal|number_format:2:".":","}</td>
 				</tr>
 				<tr>
 					<td style="text-align: right;" colspan="3">Discount {if $fields.cart_discount_code}<small>[Code: {$fields.cart_discount_code}]</small>{/if}</td>
-					<td style="text-align: right;">-${$fields.cart_discount|number_format:2:".":","}</td>
+					<td style="text-align: right;">-${$fields.payment.0.payment_discount|number_format:2:".":","}</td>
 				</tr>
 				<tr>
 					<td style="text-align: right;" colspan="3">Postage & Handling</td>
-					<td style="text-align: right;">${$fields.cart_shipping_fee|number_format:2:".":","}</td>
+					<td style="text-align: right;">${$fields.payment.0.payment_shipping_fee|number_format:2:".":","}</td>
 				</tr>
 				<tr>
 					<td style="text-align: right;" colspan="3"><b>Total</b></td>
-					<td style="text-align: right;"><b> ${$fields.cart_total|number_format:2:".":","}</b></td>
+					<td style="text-align: right;"><b> ${$fields.payment.0.payment_charged_amount|number_format:2:".":","}</b></td>
 				</tr>
 			</tbody>
 		</table>
@@ -97,6 +108,7 @@
 </div>
 <div class="row">
 	<form class="well form-horizontal" id="send_invoice_email" accept-charset="UTF-8" method="post">
+		<input type="hidden" value="{$fields.payment.0.payment_id}" name="payment_id" /> 
 		<input type="hidden" value="{$fields.payment.0.billing_address.0.address_id}" name="bill_ID" /> 
 		<input type="hidden" value="{$fields.payment.0.shipping_address.0.address_id}" name="ship_ID" /> 
 		<input type="hidden" value="{$fields.user.0.user_gname}" name="user[gname]" /> 

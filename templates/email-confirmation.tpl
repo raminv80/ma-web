@@ -162,19 +162,19 @@ table td {
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td><strong>Sub Total</strong></td>
-		<td style="text-align: right">$ {$order.cart_subtotal|number_format:2:".":","}</td>
+		<td style="text-align: right">$ {$payment.payment_subtotal|number_format:2:".":","}</td>
 	</tr>
 	<tr valign="top" align="left">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td><strong>Discount</strong></td>
-		<td style="text-align: right">$ -{$order.cart_discount|number_format:2:".":","}</td>
+		<td style="text-align: right">$ -{$payment.payment_discount|number_format:2:".":","}</td>
 	</tr>
 	<tr valign="top" align="left">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td><strong>Postage & Handling</strong></td>
-		<td style="text-align: right">$ {$order.cart_shipping_fee|number_format:2:".":","}</td>
+		<td style="text-align: right">$ {$payment.payment_shipping_fee|number_format:2:".":","}</td>
 	</tr>
 	<tr valign="top" align="left">
 		<td colspan="4"><hr></td>
@@ -183,7 +183,7 @@ table td {
 		<td><strong>TOTAL</strong></td>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
-		<td style="text-align: right"><strong>$ {$order.cart_total|number_format:2:".":","}</strong></td>
+		<td style="text-align: right"><strong>$ {$payment.payment_charged_amount|number_format:2:".":","}</strong></td>
 	</tr>
 	<tr valign="top" align="left">
 		<td colspan="4"><hr></td>

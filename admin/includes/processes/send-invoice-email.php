@@ -7,6 +7,10 @@ if(checkToken('admin', $_POST["formToken"])){
 	
 	$SMARTY->assign('user', $_POST["user"]);
 	
+	$sql = "SELECT * FROM tbl_payment WHERE payment_id = :id ";
+	$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $_POST["payment_id"]) );
+	$SMARTY->assign('payment',$res[0]);
+	
 	$sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
 	$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $_POST["bill_ID"]) );
 	$SMARTY->assign('billing',$res[0]);

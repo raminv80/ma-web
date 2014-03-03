@@ -36,6 +36,30 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 	display: none;
 }
 
+#products-container {
+	margin-top: 20px; 
+	margin-bottom: 40px;
+}
+.product-item {
+	margin-top: 10px;	
+}
+.cart-table-header {
+	margin-top: 40px; 
+	background-color: rgb(238, 238, 238);
+}
+
+.checkout-collapse {
+	margin-top: 40px;
+}
+.totals{
+	margin-top: 20px;
+}
+
+.cart-info{
+	width: 315px;
+	margin: 15px;
+}
+
 .cart-overview-image {
     height: 60px;
     width: 60px;

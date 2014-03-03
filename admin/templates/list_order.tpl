@@ -16,7 +16,7 @@
 	<table class="table table-bordered table-striped table-hover" id="orders-table">
 		<thead>
 			<tr>
-				<th colspan="2">{$zone|upper}</th>
+				<th colspan="3">{$zone|upper}</th>
 				<th>
 					<select class="form-control" name="status" id="status">
 						<option value="0">All Status</option>

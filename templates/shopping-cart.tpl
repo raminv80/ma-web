@@ -14,21 +14,29 @@
 			</div>
 	</header>
 	<div class="container">
+	{if $validation}
+		{foreach $validation as $val_msg}
+			<div class="alert alert-danger fade in">
+				<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
+				<strong>{$val_msg}</strong>
+			</div>
+		{/foreach}
+	{/if}
 	{if $productsOnCart }
-		<div class="row" style="margin-top: 40px; background-color: rgb(238, 238, 238);">
-			<div style="display:inline;" class="col-md-6">Product</div>
-			<div style="display:inline; text-align:right;" class="col-md-2">Unit Price</div>
-			<div style="display:inline;" class="col-md-1">Qty</div>
-			<div style="display:inline; text-align:right;" class="col-md-2">Subtotal</div>
-			<div style="display:inline;" class="col-md-1"></div>
+		<div class="row cart-table-header">
+			<div class="col-md-6">Product</div>
+			<div class="col-md-2 text-right">Unit Price</div>
+			<div class="col-md-1">Qty</div>
+			<div class="col-md-2 text-right">Subtotal</div>
+			<div class="col-md-1"></div>
 		</div>
 		
 		<form class="form-horizontal" id="shopping-cart-form" accept-charset="UTF-8" action="" method="post">
-			<div class="row" style="margin-top: 20px; margin-bottom: 40px;" id="products-container"> 
+			<div class="row" id="products-container"> 
 				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				{foreach from=$productsOnCart item=item}
-				<div class="row  product-item" style="margin-top: 10px;" id="{$item.cartitem_id}">
-					<div style="display:inline;" class="col-md-6">{$item.cartitem_product_name}
+				<div class="row  product-item" id="{$item.cartitem_id}">
+					<div class="col-md-6">{$item.cartitem_product_name}
 					{if $item.attributes } 
 						<small>
 						{foreach from=$item.attributes item=attr}
@@ -37,11 +45,11 @@
 						</small>
 					{/if}
 					</div>
-					<div style="display:inline; text-align:right;" class="col-md-2">${$item.cartitem_product_price|number_format:2:".":","}</div>
-					<div style="display:inline;" class="col-md-1"><input type="text" value="{$item.cartitem_quantity}" name="qty[{$item.cartitem_id}]" id="quantity" class="unsigned-int gt-zero" style="width: 30px; text-align: right;"></div>
+					<div class="col-md-2 text-right">${$item.cartitem_product_price|number_format:2:".":","}</div>
+					<div class="col-md-1"><input type="text" value="{$item.cartitem_quantity}" name="qty[{$item.cartitem_id}]" id="quantity" class="unsigned-int gt-zero" style="width: 30px; text-align: right;"></div>
 					
-					<div style="display:inline; text-align:right;" class="col-md-2" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
-					<div style="display:inline;" class="col-md-1"><a href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');"><span class="label label-danger">Delete</span></a></div>
+					<div class="col-md-2 text-right" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
+					<div class="col-md-1"><a href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');"><span class="label label-danger">Delete</span></a></div>
 				</div>		
 				{/foreach} 
 			</div>
@@ -50,19 +58,19 @@
 			</div>
 		</form>
 		
-		<div class="row" style="margin-top: 20px;">
-			<div style="display:inline; text-align:right;" class="col-md-10">Subtotal</div>
-			<div style="display:inline; text-align:right;" class="col-md-2" id="subtotal">${$cart.cart_subtotal|number_format:2:".":","}</div>
+		<div class="row totals">
+			<div class="col-md-10 text-right">Subtotal</div>
+			<div class="col-md-2 text-right" id="subtotal">${$totals.subtotal|number_format:2:".":","}</div>
 		</div>
-		<div class="row" style="margin-top: 20px;">
-			<div style="display:inline; text-align:right;" class="col-md-10">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
-			<div style="display:inline; text-align:right;" class="col-md-2" id="discount">-${$cart.cart_discount|number_format:2:".":","}</div>
+		<div class="row totals">
+			<div class="col-md-10 text-right">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
+			<div class="col-md-2 text-right" id="discount">-${$totals.discount|number_format:2:".":","}</div>
 		</div>
-		<div class="row" style="margin-top: 20px;">
-			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-10">Total</div>
-			<div style="display:inline; text-align:right;font-weight: bold;" class="col-md-2" id="total">${$cart.cart_total|number_format:2:".":","}</div>
+		<div class="row totals">
+			<div class="col-md-10 text-right"><b>Total</b></div>
+			<div class="col-md-2 text-right" id="total"><b>${$totals.total|number_format:2:".":","}</b></div>
 		</div>
-		<div class="row" style="margin-top: 20px;">
+		<div class="row totals">
 			<div class="pull-right">
 				{if $allowGuest}
 					{if !$user.id} <a class="btn-info btn btn-sm" href="javascript:void(0)" onclick="$('#login-modal').modal('show');" id="login-btn">Log In</a>{/if}

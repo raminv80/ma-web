@@ -753,10 +753,11 @@ class cart {
 					$this->RemoveFromCart($item['cartitem_id']);
 				} else {
 					if ($DBproduct['product_price'] <> $item['cartitem_product_price'] ) {
-						$sql = "UPDATE tbl_cartitem SET cartitem_product_price = :price WHERE cartitem_id = :id";
+						$sql = "UPDATE tbl_cartitem SET cartitem_product_price = :price,  cartitem_subtotal = :subtotal  WHERE cartitem_id = :id";
 						$DBobject->wrappedSql ( $sql, array ( 
 													":id" => $item['cartitem_id'],
-													":price" => $DBproduct['product_price']
+													":price" => $DBproduct['product_price'],
+													":subtotal" => floatval($DBproduct['product_price']) * $item['cartitem_quantity'] 
 						));
 						$message[] = "The price of '{$DBproduct['product_name']}' has been updated. ";
 					}
@@ -899,7 +900,17 @@ class cart {
 		
 		$result ['discount'] = $discount;
 		
-		return $result;
+		
+		$params = array (
+				":id" => $cartId,
+				":discount_code" => $code,
+		);
+		$sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_modified = now() WHERE cart_id = :id";
+		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
+			return $result;
+		}
+		
+		return array( 'error' => 'Undefined error');
 	}						
 	
 	
@@ -909,7 +920,7 @@ class cart {
 	 * @param int $cartId
 	 * @return float
 	 */
-	function CalculateShippingFee($cartId = null) {
+	function CalculateShippingFee($method = null, $cartId = null) {
 		if (is_null($cartId)) {
 			$cartId = $this->cart_id;
 		}

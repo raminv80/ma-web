@@ -63,8 +63,8 @@ class Bank {
 	function StorePaymentRecord($payment){
 		global $DBobject;
 		
-		$sql="INSERT INTO tbl_payment (payment_cart_id,payment_user_id,payment_billing_address_id,payment_shipping_address_id,payment_status,payment_subtotal,payment_shipping_fee,payment_charged_amount,payment_payee_name,payment_transaction_no,payment_response_summary_code,payment_response_code,payment_response_msg,payment_response_receipt_no,payment_response_settlementdate,payment_response_transactiondate,payment_response_cardscheme,payment_response,payment_user_ip,payment_created)
-			VALUES(:payment_cart_id,:payment_user_id,:payment_billing_address_id,:payment_shipping_address_id,:payment_status,:payment_subtotal,:payment_shipping_fee,:payment_charged_amount,:payment_payee_name,:payment_transaction_no,:payment_response_summary_code,:payment_response_code,:payment_response_msg,:payment_response_receipt_no,:payment_response_settlementdate,:payment_response_transactiondate,:payment_response_cardscheme,:payment_response,:payment_user_ip,now())";
+		$sql="INSERT INTO tbl_payment (payment_cart_id,payment_user_id,payment_billing_address_id,payment_shipping_address_id,payment_status,payment_subtotal,payment_discount,payment_shipping_fee,payment_charged_amount,payment_shipping_method,payment_payee_name,payment_transaction_no,payment_response_summary_code,payment_response_code,payment_response_msg,payment_response_receipt_no,payment_response_settlementdate,payment_response_transactiondate,payment_response_cardscheme,payment_response,payment_user_ip,payment_created)
+			VALUES(:payment_cart_id,:payment_user_id,:payment_billing_address_id,:payment_shipping_address_id,:payment_status,:payment_subtotal,:payment_discount,:payment_shipping_fee,:payment_charged_amount,:payment_shipping_method,:payment_payee_name,:payment_transaction_no,:payment_response_summary_code,:payment_response_code,:payment_response_msg,:payment_response_receipt_no,:payment_response_settlementdate,:payment_response_transactiondate,:payment_response_cardscheme,:payment_response,:payment_user_ip,now())";
 		$params = array(
 				"payment_cart_id" => $payment['payment_cart_id'],
 				"payment_user_id" => $payment['payment_user_id'],
@@ -72,6 +72,7 @@ class Bank {
 				"payment_shipping_address_id" => $payment['payment_shipping_address_id'],
 				"payment_status" => $payment['payment_status'],
 				"payment_subtotal" => $payment['payment_subtotal'],
+				"payment_discount" => $payment['payment_discount'],
 				"payment_shipping_fee" => $payment['payment_shipping_fee'],
 				"payment_charged_amount" => $payment['payment_charged_amount'],
 				"payment_shipping_method" => $payment['payment_shipping_method'],
@@ -124,4 +125,21 @@ class Bank {
 		);
 		return $DBobject->wrappedSql ( $sql, $params );
 	}
+	
+	
+	/**
+	 * Return payment record given the payment_id 
+	 * 
+	 * @param int $paymentId
+	 * @return array
+	 */
+	function GetPaymentRecord($paymentId) {
+		global $DBobject;
+	
+		$sql = "SELECT * FROM tbl_payment WHERE payment_id = :id AND payment_deleted IS NULL";
+		$res = $DBobject->wrappedSql ( $sql, array (":id" => $paymentId) );
+		return $res[0];
+		
+	}
+	
 }

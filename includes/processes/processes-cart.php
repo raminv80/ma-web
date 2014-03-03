@@ -6,17 +6,17 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 			$cart_obj = new cart();
 			$response = $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['price']);
 			$itemsCount = $cart_obj->NumberOfProductsOnCart();
-			$cart = $cart_obj->GetDataCart();
+			$subtotal = $cart_obj->GetSubtotal();
 			$productsOnCart = $cart_obj->GetDataProductsOnCart();
 			$SMARTY->assign('productsOnCart',$productsOnCart);
 			$SMARTY->assign('itemNumber',$itemsCount);
-			$SMARTY->assign('cart',$cart);
+			$SMARTY->assign('subtotal', $subtotal);
 			$popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 			
 			echo json_encode(array(
 		    				'message' => $response,
 		    				'itemsCount' => $itemsCount,
-		    				'subtotal' => $cart['cart_subtotal'],
+		    				'subtotal' => $subtotal,
 							'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
 	    				));
 		    exit;
@@ -70,13 +70,34 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 		    	header('Location: '.$_SERVER['HTTP_REFERER']);
 		    }
 		    exit;
-		    
+		
+
+	    case 'getShippingFees':
+	    	$_SESSION['address'] = $_POST['address'];
+	    	
+	    	//TODO: CALL SHIPPING CLASS TO GET FEES BASED ON ADDRESS 
+	    	$methods = array('Standard', 'Express');
+	    	
+	    	//CALCULATE FEES FOR EACH METHODS
+	    	$cart_obj = new cart();
+	    	$fess = array();
+	    	foreach ($methods as $m) {
+	    		$fees["{$m}"] = $cart_obj->CalculateShippingFee($m);
+	    	}	
+	    	echo json_encode(array(
+	    			'shippingMethods'=> $fees,
+	    			'billing'=> $_POST['address']['B'],
+	    			'shipping'=> $_POST['address']['S'],
+	    			'same'=> $_POST['address']['same_address']
+	    	));
+	    	exit;
+		    	
 		case 'placeOrder':
     		if (empty($_SESSION['user']['public']['id'])) { // ADD GUEST USER
     			$user_obj = new UserClass();
     			$values = array();
-    			$values['username'] = $_POST['email'] . '#' . strtotime("now");
-    			$values['email'] = $_POST['email'];
+    			$values['username'] = $_SESSION['address']['B']['email'] . '#' . strtotime("now");
+    			$values['email'] = $_SESSION['address']['B']['email'];
     			$values['password'] = session_id ();
     			$values['gname'] = 'Guest';
     			$values['surname'] = '';
@@ -92,8 +113,8 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
     				$cart_obj = new cart();
     				$cart_obj->SetUserCart($res['id']);
     				$_SESSION['user']['public'] = $res;
-    				$_POST['address'][1]['address_user_id'] = $res['id']; 
-    				$_POST['address'][2]['address_user_id'] = $res['id']; 
+    				$_POST['address']['B']['address_user_id'] = $res['id']; 
+    				$_POST['address']['S']['address_user_id'] = $res['id']; 
     			}
     			
     		} else {
@@ -102,12 +123,12 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
     		
     		$billID = $user_obj->InsertNewAddress(array_merge(array( 
     									'address_user_id' => $_SESSION['user']['public']['id']
-    									),$_POST['address'][1] ) );
+    									),$_SESSION['address']['B'] ) );
     		$shipID = $billID;
-    		if (is_null($_POST['same_address'])) { 
+    		if (is_null($_SESSION['address']['same_address'])) { 
     			$shipID = $user_obj->InsertNewAddress(array_merge(array( 
     									'address_user_id' => $_SESSION['user']['public']['id']
-    									),$_POST['address'][2] ) );
+    									),$_SESSION['address']['S'] ) );
     		}
     		
     		if ($billID && $shipID) {
@@ -126,18 +147,20 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    		
 	    		$cart_obj = new cart();
 	    		$order_cartId = $cart_obj->cart_id;
-	    		$subtotals = $cart_obj->CalculateShippingFee();
+	    		$shippingFee = $cart_obj->CalculateShippingFee($_POST['payment']['payment_shipping_method']);
 	    		$totals = $cart_obj->CalculateTotal();
 	    		
 	    		$params = array_merge(array(
 	    				'payment_billing_address_id' => $billID,
 	    				'payment_shipping_address_id' => $shipID,
 	    				'payment_status' => 'P',
+	    				'payment_transaction_no' => $order_cartId . '-' .  strtotime("now"),
 	    				'payment_cart_id' => $order_cartId,
 	    				'payment_user_id' => $_SESSION['user']['public']['id'],
-	    				'payment_subtotal' => 0,
-	    				'payment_shipping_fee' => 0,
-	    				'payment_charged_amount' => 0
+	    				'payment_subtotal' => $totals['subtotal'],
+	    				'payment_discount' => $totals['discount'],
+	    				'payment_shipping_fee' => $shippingFee,
+	    				'payment_charged_amount' => $totals['total'] + $shippingFee
 	    				),
 	    				$_POST['payment']
 	    		);
@@ -154,6 +177,7 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    				unset ( $_SESSION['user']['public'] );
 	    				session_regenerate_id();
 	    			}
+	    			unset ( $_SESSION['address'] );
 	    			
 	    			// OPEN NEW CART
 	    			$cart_obj->CreateCart($_SESSION['user']['public']['id']);
@@ -170,12 +194,15 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 					$order = $cart_obj->GetDataCart($order_cartId);
 					$SMARTY->assign('order',$order);
 					
+					$payment = $pay_obj->GetPaymentRecord($paymentId);
+					$SMARTY->assign('payment',$payment);
+					
 					$orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
 					$SMARTY->assign('orderItems',$orderItems);
 					
 					$buffer= $SMARTY->fetch('templates/email-confirmation.tpl');
 					
-					$to = $_POST['email'];
+					$to = $_SESSION['address']['B']['email'];
 					$from = 'eShop';
 					$fromEmail = 'noreply@cms.themserver.com';
 					$subject = 'Confirmation of your order';

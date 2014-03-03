@@ -33,7 +33,7 @@
 	        <span class="glyphicon glyphicon-shopping-cart"></span>
 	 		<div style="display:inline;" class="nav-itemNumber">{$itemNumber}</div>
 	 		
-	 		<div class="badge nav-subtotal" style="display:inline;">${$cart.cart_subtotal|number_format:2:'.':','}</div>
+	 		<div class="badge nav-subtotal" style="display:inline;">${$subtotal|number_format:2:'.':','}</div>
 	    </a>
 	    <ul class="dropdown-menu" id="shop-cart-btn">
 	        {include file='popover-shopping-cart.tpl'}

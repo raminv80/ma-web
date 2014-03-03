@@ -1,8 +1,9 @@
 {if $list}
 	{foreach $list as $item}
 		<tr class="order {$item.payment.0.order.0.order_status_id}">
+			<td><b>{$item.payment.0.payment_transaction_no}</b></td>
 			<td><b>{$item.user.0.user_gname} {$item.user.0.user_surname}</b></td>
-			<td><b>{$item.title|date_format:"%e %B %Y - %H:%M:%S"}</b></td>
+			<td><b>{$item.title|date_format:"%e %b %Y - %H:%M:%S"}</b></td>
 			<td><b>{getvaluename id=$item.payment.0.order.0.order_status_id options=$options.status}</b></td>
 			<td>{if $item.url} <a href='{$item.url}' class='btn btn-small btn-warning pull-right'>Edit</a> {/if}
 			</td>

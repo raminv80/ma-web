@@ -27,7 +27,11 @@ if (jQuery.validator) {
 	        	case 'create-form':
 	        		userLogin(formID);
 	        		break;
-	        	
+	        		
+	        	case 'step1-form': 
+	        		getShippingMethods(formID); 
+	          		break;
+	          		
 	        	case 'reset-pass-form': 
 	        		resetPass(formID);
 	        		break;
@@ -135,6 +139,7 @@ function resetPass(form){
 
 function addCart(form){
 	$('body').css('cursor','wait');
+  	$('.btn-primary').addClass('disabled');
 	var datastring = $('#'+form).serialize();
 	$.ajax({
 		type: "POST",
@@ -157,55 +162,55 @@ function addCart(form){
 				console.log('TRY-CATCH error');
 			}
 			$('body').css('cursor','default'); 
+			$('.btn-primary').removeClass('disabled');
+	    },
+		error: function(){
+			$('body').css('cursor','default'); 
+			console.log('AJAX error');
+			$('.btn-primary').removeClass('disabled');
+      	}
+	});
+}
+
+function updateCart(){
+	$('body').css('cursor','wait');
+	var datastring = $("#shopping-cart-form").serialize();
+	$.ajax({
+		type: "POST",
+	    url: "/process/cart",
+		cache: false,
+		data: 'action=updateCart&' + datastring,
+		dataType: "html",
+	    success: function(data) {
+	    	try{
+	    		var obj = $.parseJSON(data);
+	    		var subtotals = obj.subtotals;
+	    		var totals = obj.totals;
+                $('.nav-itemNumber').html(obj.itemsCount);
+			 	$('.nav-subtotal').html('$'+obj.totals['subtotal']);
+			 	$('#shop-cart-btn').html( obj.popoverShopCart );
+			 	if (subtotals) {
+			 		$.each(subtotals, function(id, value){
+			 			amount = parseFloat(value);
+			 			$('#subtotal-'+id).html('$'+amount.toFixed(2));
+			 		});
+			 		$.each(totals, function(id, value){
+			 			amount = parseFloat(value);
+			 			$('#'+id).html('$'+amount.toFixed(2));
+			 		});
+				} else {
+					alert('Error: Cannot be updated');
+				}
+			}catch(err){
+				console.log('TRY-CATCH error');
+			}
+			$('body').css('cursor','default'); 
 	    },
 		error: function(){
 			$('body').css('cursor','default'); 
 			console.log('AJAX error');
       	}
 	});
-}
-
-function updateCart(){
-		$('body').css('cursor','wait');
-		var datastring = $("#shopping-cart-form").serialize();
-		$.ajax({
-			type: "POST",
-		    url: "/process/cart",
-			cache: false,
-			data: 'action=updateCart&' + datastring,
-			dataType: "html",
-		    success: function(data) {
-		    	try{
-		    		var obj = $.parseJSON(data);
-		    		var subtotals = obj.subtotals;
-		    		var totals = obj.totals;
-                    $('.nav-itemNumber').html(obj.itemsCount);
-				 	$('.nav-subtotal').html('$'+obj.totals['subtotal']);
-				 	$('#shop-cart-btn').html( obj.popoverShopCart );
-				 	if (subtotals) {
-				 		$.each(subtotals, function(id, value){
-				 			amount = parseFloat(value);
-				 			$('#subtotal-'+id).html('$'+amount.toFixed(2));
-				 		});
-				 		$.each(totals, function(id, value){
-				 			amount = parseFloat(value);
-				 			$('#'+id).html('$'+amount.toFixed(2));
-				 		});
-						/* RECALCULATE SUBTOTAL/TOTAL */
-					} else {
-						alert('Error: Cannot be updated');
-					}
-				}catch(err){
-					console.log('TRY-CATCH error');
-				}
-				$('body').css('cursor','default'); 
-		    },
-			error: function(){
-				$('body').css('cursor','default'); 
-				console.log('AJAX error');
-          	}
-		});
-	
 }
 
 function deleteItem(ID){
@@ -252,5 +257,74 @@ function deleteItem(ID){
 			$('body').css('cursor','default'); 
       	}
 	});
+}
+
+
+function getShippingMethods(form) {
+	$('body').css('cursor','wait');
+  	$('.btn-primary').addClass('disabled');
+	var datastring = $("#"+form).serialize();
+	$.ajax({
+		type: "POST",
+	    url: "/process/cart",
+		cache: false,
+		data:  datastring,
+		dataType: "html",
+	    success: function(data) {
+	    	try{
+			 	var total = parseFloat($('#total').attr('amount'));
+				$('#total').html('$'+ total.toFixed(2));
+				$('#shipping-fee-value').html('$0.00');
+				
+	    		var obj = $.parseJSON(data);
+	    		var html = '';
+			 	if (obj.shippingMethods) {
+			 		$.each(obj.shippingMethods, function(id, value){
+			 			html += "<div class='radio'><label><input  class='required' type='radio' onclick='calculateTotal(\""+ value +"\");' name='payment[payment_shipping_method]' amount='"+ value +"' value='"+ id +"'>"+id + " ($" + value.toFixed(2) + ")</label></div>";
+			 		});
+			 		$('#shipping_methods').html(html);
+				} else {
+					$('#shipping_methods').html('<b>Sorry! We are not shipping to your address</b>');
+				}
+			 	html = "<div class='row'><h4>Billing address</h4></div>";
+			 	$.each(obj.billing, function(id, value){
+		 			html += "<div class='row'>"+ value +"</div>";
+		 		});
+			 	$('#billing-address-step2').html(html + '<br>');
+			 	
+			 	html = "<div class='row'><h4>Shipping address</h4></div>";
+			 	if (obj.same) {
+			 		html += "<div class='row'>Same as Billing details</div>";
+			 	} else {
+				 	$.each(obj.shipping, function(id, value){
+			 			html += "<div class='row'>"+ value +"</div>";
+			 		});
+	    		}
+			 	$('#shipping-address-step2').html(html + '<br>');
+			 	
+			 	$('#step1').hide();
+			 	$('#collapseTwo').collapse('show');
+			 	$('#review-step1').show();
+			 	scrolltodiv('#step2');
+			}catch(err){
+				console.log('TRY-CATCH error');
+			}
+			$('body').css('cursor','default'); 
+			$('.btn-primary').removeClass('disabled');
+	    },
+		error: function(){
+			$('body').css('cursor','default'); 
+			console.log('AJAX error');
+			$('.btn-primary').removeClass('disabled');
+      	}
+	});
 	
+}
+
+function calculateTotal(str) {
+	var value = parseFloat(str);
+	$('#shipping-fee-value').html('$'+ value.toFixed(2));
+	var total = parseFloat($('#total').attr('amount')) + value ;
+	$('#total').html('$'+ total.toFixed(2));
+
 }

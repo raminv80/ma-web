@@ -33,6 +33,12 @@ function animateContent1(direction) {
 	}
 }
 
+function scrolltodiv(id) {
+	$('html,body').animate({
+		scrollTop : $(id).offset().top
+	});
+}
+
 jQuery(document).ready(function($){
 	
         $("#down").click(function () {
