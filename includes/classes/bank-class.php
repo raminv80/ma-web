@@ -44,8 +44,11 @@ class Bank {
 	 * payment_shipping_address_id => the record ID for the address record which is used for the shipping address,
 	 * payment_status => status of the payment. This can be either A,F,P which are (A)pprove, (F)ail, (P)ending.
 	 * payment_subtotal => product cost component,
+	 * payment_discount => discount amount component,
 	 * payment_shipping_fee => the shipping fee component,
 	 * payment_charged_amount => total payment amount being charged to the banking system,
+	 * payment_gst => GST amount component,
+	 * payment_shipping_method => shipping method selected by user,
 	 * payment_payee_name => payee name which was entered by user,
 	 * payment_transaction_no => transaction number returned by the banking system,
 	 * payment_response_summary_code => summary code returned by the banking system,
@@ -63,8 +66,8 @@ class Bank {
 	function StorePaymentRecord($payment){
 		global $DBobject;
 		
-		$sql="INSERT INTO tbl_payment (payment_cart_id,payment_user_id,payment_billing_address_id,payment_shipping_address_id,payment_status,payment_subtotal,payment_discount,payment_shipping_fee,payment_charged_amount,payment_shipping_method,payment_payee_name,payment_transaction_no,payment_response_summary_code,payment_response_code,payment_response_msg,payment_response_receipt_no,payment_response_settlementdate,payment_response_transactiondate,payment_response_cardscheme,payment_response,payment_user_ip,payment_created)
-			VALUES(:payment_cart_id,:payment_user_id,:payment_billing_address_id,:payment_shipping_address_id,:payment_status,:payment_subtotal,:payment_discount,:payment_shipping_fee,:payment_charged_amount,:payment_shipping_method,:payment_payee_name,:payment_transaction_no,:payment_response_summary_code,:payment_response_code,:payment_response_msg,:payment_response_receipt_no,:payment_response_settlementdate,:payment_response_transactiondate,:payment_response_cardscheme,:payment_response,:payment_user_ip,now())";
+		$sql="INSERT INTO tbl_payment (payment_cart_id,payment_user_id,payment_billing_address_id,payment_shipping_address_id,payment_status,payment_subtotal,payment_discount,payment_shipping_fee,payment_charged_amount,payment_gst,payment_shipping_method,payment_payee_name,payment_transaction_no,payment_response_summary_code,payment_response_code,payment_response_msg,payment_response_receipt_no,payment_response_settlementdate,payment_response_transactiondate,payment_response_cardscheme,payment_response,payment_user_ip,payment_created)
+			VALUES(:payment_cart_id,:payment_user_id,:payment_billing_address_id,:payment_shipping_address_id,:payment_status,:payment_subtotal,:payment_discount,:payment_shipping_fee,:payment_charged_amount,:payment_gst,:payment_shipping_method,:payment_payee_name,:payment_transaction_no,:payment_response_summary_code,:payment_response_code,:payment_response_msg,:payment_response_receipt_no,:payment_response_settlementdate,:payment_response_transactiondate,:payment_response_cardscheme,:payment_response,:payment_user_ip,now())";
 		$params = array(
 				"payment_cart_id" => $payment['payment_cart_id'],
 				"payment_user_id" => $payment['payment_user_id'],
@@ -75,6 +78,7 @@ class Bank {
 				"payment_discount" => $payment['payment_discount'],
 				"payment_shipping_fee" => $payment['payment_shipping_fee'],
 				"payment_charged_amount" => $payment['payment_charged_amount'],
+				"payment_gst" => $payment['payment_gst'],
 				"payment_shipping_method" => $payment['payment_shipping_method'],
 				"payment_payee_name" => $payment['payment_payee_name'],
 				"payment_transaction_no" => $payment['payment_transaction_no'],

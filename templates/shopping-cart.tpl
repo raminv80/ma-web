@@ -72,9 +72,8 @@
 		</div>
 		<div class="row totals">
 			<div class="pull-right">
-				{if $allowGuest}
-					{if !$user.id} <a class="btn-info btn btn-sm" href="javascript:void(0)" onclick="$('#login-modal').modal('show');" id="login-btn">Log In</a>{/if}
-					<a class="btn-success btn btn-sm" href="/store/checkout" id="checkout-btn">Checkout {if !$user.id}as Guest{/if}</a>
+				{if $user.gname}
+					<a class="btn-success btn btn-sm" href="/store/checkout" id="checkout-btn">Checkout</a>
 				{else}
 					<a class="btn-success btn btn-sm" href="javascript:void(0)" onclick="$('.redirect').val('http://'+(document.domain)+ '/store/checkout');$('#login-modal').modal('show');" id="checkout-btn">Checkout</a>
 				{/if}

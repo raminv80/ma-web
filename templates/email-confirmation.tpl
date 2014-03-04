@@ -46,7 +46,7 @@ table td {
 	</tr>
 	<tr align="left">
 		<td width="50%">Order Number:</td>
-		<td>{$order.cart_id}</td>
+		<td>{$payment.payment_transaction_no}</td>
 	</tr>
 	<tr align="left">
 		<td>Order Date:</td>
@@ -146,7 +146,7 @@ table td {
 	</tr>
 	{foreach $orderItems as $item}
 	<tr valign="top" aling="left">
-		<td>{$item.cartitem_product_name} 	
+		<td>{if $item.cartitem_product_gst eq '0'} {assign var=free value=1} *{/if}{$item.cartitem_product_name} 
 			{if $item.attributes} 
 				{foreach $item.attributes as $attr}
 					<small>/ {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</small>
@@ -175,6 +175,12 @@ table td {
 		<td>&nbsp;</td>
 		<td><strong>Postage & Handling</strong></td>
 		<td style="text-align: right">$ {$payment.payment_shipping_fee|number_format:2:".":","}</td>
+	</tr>
+	<tr valign="top" align="left">
+		<td>{if $free}(*)GST free item.{/if}</td>
+		<td>&nbsp;</td>
+		<td><strong>Incl. GST</strong></td>
+		<td style="text-align: right">($ {$payment.payment_gst|number_format:2:".":","})</td>
 	</tr>
 	<tr valign="top" align="left">
 		<td colspan="4"><hr></td>

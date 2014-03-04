@@ -6,7 +6,7 @@
 			<tbody>
 				<tr>
 					<td><b>Order No:</b></td>
-					<td style="text-align: center;">{$fields.cart_id}</td>
+					<td style="text-align: center;">{$fields.payment.0.payment_transaction_no}</td>
 					<td><b>Order placed:</b></td>
 					<td style="text-align: center;">{$fields.cart_closed_date|date_format:"%e %B %Y"}</td>
 				</tr>
@@ -17,8 +17,8 @@
 					<td style="text-align: center;"> <b>{if $fields.payment.0.payment_status eq 'P'}PAID{else}{$fields.payment.0.payment_status}{/if}</b></td>
 				</tr>
 				<tr>
-					<td><b>Transaction No:</b></td>
-					<td style="text-align: center;">{$fields.payment.0.payment_transaction_no}</td>
+					<td><b>Shipping Method:</b></td>
+					<td style="text-align: center;">{$fields.payment.0.payment_shipping_method}</td>
 					<td><b>Card:</b></td>
 					<td style="text-align: center;">{$fields.payment.0.payment_response_cardscheme}</td>
 				</tr>
@@ -52,11 +52,6 @@
 						{if $fields.payment.0.shipping_address.0.address_mobile} {$fields.payment.0.shipping_address.0.address_mobile} {/if}
 					</td>
 				</tr>
-				<tr>
-					<td><b>Shipping Method:</b></td>
-					<td style="text-align: center;">{$fields.payment.0.payment_shipping_method}</td>
-					<td style="text-align: center;" colspan="2"></td>
-				</tr>
 			</tbody>
 		</table>
 	</div>
@@ -65,7 +60,7 @@
 		<table class="table table-bordered table-striped table-hover" style="margin-top:15px;">
 			<thead>
 				<tr>
-					<th>Description</th>
+					<th>Item</th>
 					<th style="text-align: right;">Qty</th>
 					<th style="text-align: right;">Unit Price</th>
 					<th style="text-align: right;">Subtotal</th>
@@ -74,7 +69,7 @@
 			<tbody>
 				{foreach $fields.items as $item}
 				<tr>
-					<td>{$item.cartitem_product_name} 
+					<td>{if $item.cartitem_product_gst eq '0'}*{/if}{$item.cartitem_product_name} 
 						{if $item.attributes} 
 			  				{foreach $item.attributes as $attr}
 			    				<small>/ {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</small>
@@ -97,6 +92,11 @@
 				<tr>
 					<td style="text-align: right;" colspan="3">Postage & Handling</td>
 					<td style="text-align: right;">${$fields.payment.0.payment_shipping_fee|number_format:2:".":","}</td>
+				</tr>
+				<tr>
+					<td colspan="2"><small>(*) GST Free item.</small></td>
+					<td style="text-align: right;">Incl. GST</td>
+					<td style="text-align: right;">(${$fields.payment.0.payment_gst|number_format:2:".":","})</td>
 				</tr>
 				<tr>
 					<td style="text-align: right;" colspan="3"><b>Total</b></td>

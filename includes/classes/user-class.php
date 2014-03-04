@@ -16,7 +16,7 @@ class UserClass {
     	global $DBobject;
     
     	if ($this->RetrieveByUsername($user['username'])) {
-    		return array ('error' => 'This email is already been used.');
+    		return array ('error' => "This email '{$user['username']}' has already been used.");
     	} else {
     		
     	
@@ -211,7 +211,7 @@ class UserClass {
     		}
     		return array ('error' => 'There was a connection problem. Please, try again!');
     	}
-    	return array( 'error' => 'This email does not exist in our database.');
+    	return array( 'error' => "This email '{$data['email']}' does not exist in our database.");
     }
     
     
@@ -261,12 +261,12 @@ class UserClass {
                 if(sendMail($to, $from, $fromEmail, $subject, $body)){
                         return array ('success' => 'Password has been reseted and sent to your email.');
                 }else{
-                        return array ('error' => 'There was a email problem. Please, try again!');
+                        return array ('error' => 'There was a connection problem. Please, try again!');
                 }
             } 
             return array ('error' => 'There was a connection problem. Please, try again!');
         }
-    	return array( 'error' => 'This email does not exist in our database.');
+    	return array( 'error' => "This email '{$email}' does not exist in our database.");
     }
     
     /**

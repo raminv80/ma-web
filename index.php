@@ -27,6 +27,7 @@ unset ( $_SESSION ['login_referer']);
 // ASSIGN USER FOR TEMPLATES
 $SMARTY->assign ( 'user', $_SESSION['user']['public'] );
 
+
 $_SESSION ['error'] = "";
 unset ( $_SESSION ['error'] );
 $_SESSION ['notice'] = "";
@@ -161,11 +162,6 @@ while ( true ) {
 	 * ***** Goes to SHOPPING CART ******
 	 */
 	if ($_request ['arg1'] == 'store/shopping-cart') {
-		$allowGuest = false;
-		if ( $CONFIG->checkout->attributes()->guest == 'true' ) {
-			$allowGuest = true;
-		}
-		$SMARTY->assign ( 'allowGuest', $allowGuest );
 		$obj = new $class ( '', $struct );
 		$template = $obj->Load ( $CONFIG->cart->pageID );
 		$template = $CONFIG->cart->template;
@@ -176,6 +172,9 @@ while ( true ) {
 		$SMARTY->assign ( 'validation', $validation );
 		$totals = $cart_obj->CalculateTotal();
 		$SMARTY->assign ( 'totals', $totals );
+		if ( $CONFIG->checkout->attributes()->guest == 'true' && $totals['subtotal'] > 0) {
+			$allowGuest = true;
+		}
 		break 1;
 	}
 	
@@ -291,6 +290,11 @@ while ( true ) {
 	}
 }
 
+
+
+
+
+$SMARTY->assign ( 'allowGuest', $allowGuest );
 /**
  * ***************************************
  * Load Data Shopping Cart for all pages *

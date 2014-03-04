@@ -403,8 +403,8 @@ class cart {
 		
 		$cart_arr = array ();
 		
-		$sql = "SELECT * FROM tbl_cart
-    			WHERE cart_user_id = :uid AND cart_deleted IS NULL AND cart_closed_date IS NOT NULL AND cart_id <> '0' ORDER BY cart_closed_date";
+		$sql = "SELECT * FROM tbl_cart LEFT JOIN tbl_payment ON cart_id = payment_cart_id
+    			WHERE cart_user_id = :uid AND cart_deleted IS NULL AND cart_closed_date IS NOT NULL AND cart_id <> '0' ORDER BY cart_closed_date DESC";
 	
 		if ($res = $DBobject->wrappedSql ( $sql, array (":uid" => $userId) ) ){
 			foreach ($res as $cart) {
@@ -423,6 +423,7 @@ class cart {
 		global $DBobject;
 		
 		$subtotal = $this->GetSubtotal();
+		$gst_taxable = $this->GetGSTSubtotal();
 		$discount = 0;
 		
 		$cart = $this->GetDataCart();
@@ -434,8 +435,28 @@ class cart {
 		return array (
 			'subtotal' => $subtotal,
 			'discount' => $discount,
+			'GST_Taxable' => $gst_taxable - $discount,
 			'total' => $subtotal - $discount
 		);
+	}
+	
+	/**
+	 * Return subtotal amount of items which incl-GST a given cart_id
+	 * @return array
+	 */
+	function GetGSTSubtotal( $cartId = null ) {
+		global $DBobject;
+	
+		if ( is_null($cartId) ) {
+			$cartId = $this->cart_id;
+		}
+	
+		$sql = "SELECT SUM(cartitem_subtotal) AS SUM FROM tbl_cartitem
+    			WHERE cartitem_cart_id = :id AND cartitem_product_gst = 1 AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
+		$res = $DBobject->wrappedSql ( $sql, array (
+				":id" => $cartId
+		) );
+		return $res[0]['SUM'];
 	}
 	
 	/**

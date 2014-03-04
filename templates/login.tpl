@@ -15,40 +15,48 @@
 	</header> -->
 	<div class="container">
 		<div class="col-sm-5">
-			<div class="row error-msg" id="login-error"></div>
-			<div class="row success-msg" id="login-success"></div>
-		
 			
 			<!-- LOGIN SECTION  -->
 			<div class="row" id="login">
+				<div class="row error-msg" id="login-form-error"></div>
+			
+				<div class="row text-right">
+					<a href="javascript:void(0)" class="sign-in" onclick="$('#register').show('slow');$('#login').hide('slow');" >Create an account</a>
+				</div>
 				<h3>Existing Customer</h3>
 				<form class="form-horizontal" id="login-form" role="form" accept-charset="UTF-8" action="" method="post">
 					<input type="hidden" value="login" name="action" id="action" /> 
 					<input type="hidden" value="" name="redirect" class="redirect" /> 
 					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 					<div class="form-group">
-					    <label for="email" class="col-sm-3 control-label">Email</label>
-					    <div class="col-sm-9">
+					    <label for="email" class="col-sm-2 control-label">Email</label>
+					    <div class="col-sm-10">
 					      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="email" name="email" required>
 					      	<span class="help-block"></span>
 						</div>
 					</div>
 					<div class="form-group">
-					    <label for="password" class="col-sm-3 control-label">Password</label>
-					    <div class="col-sm-9">
+					    <label for="password" class="col-sm-2 control-label">Password</label>
+					    <div class="col-sm-10">
 					    	<input type="password" value="" class="form-control" id="pass" name="pass" required>
 					    	<span class="help-block"></span>
-	                        <span class="form-help-block"><a href="javascript:void(0)" onclick="$('#reset-pass').show('slow');$('#login').hide('slow');">Forgotten your password?</a></span>
 						</div>
+						<span class="form-help-block"><a href="javascript:void(0)" onclick="$('#reset-pass').show('slow');$('#login').hide('slow');">Forgot your password?</a></span>
 					</div>
 				 	<div class="form-group">
-				    	<div class="col-sm-offset-2 col-sm-10">
+				    	<div class="col-sm-offset-1 col-sm-10">
 				      		<button type="submit" class="btn btn-primary">Log In</button>
-				      		
 				    	</div>
 				  	</div>
 				</form>
-				<div class="row" style="margin:20px;">
+				{if $allowGuest}
+					<hr class="or-separator">
+					<div class="row">
+						<a href="/store/checkout" class="btn btn-info" >Continue as Guest</a>
+					</div>
+				{/if}
+				<hr class="or-separator">
+				<div class="row" id="social-login">
 					 <form id="facebook-form" action="/process/user" method="post">
 						<input type="hidden" value="FBlogin" name="action" id="action" /> <!--  onclick="$('#facebook-form').submit();" -->
 						<input type="hidden" name="formToken" id="formToken" value="{$token}" />
@@ -58,28 +66,27 @@
 					<!--<fb:login-button autologoutlink="true" data-scope="email, user_birthday, user_location" >Log In with Facebook</fb:login-button>
 					-->
 				</div>
-				<div class="row" style="margin:20px;">
-					<a href="javascript:void(0)" class="btn btn-success" onclick="$('#register').show('slow');$('#login').hide('slow');" >New User</a>
-				</div>
 				
 			</div>
 			
 	                <!-- RESET PASSWORD SECTION - Hidden by default -->
 			<div class="row" id="reset-pass" style="display:none;">
-	                    <div class="row">
-	                        <h3>Reset password</h3>
-	                    </div>
+				<div class="row error-msg" id="reset-pass-form-error"></div>
+				<div class="row success-msg" id="reset-pass-form-success"></div>
+				<div class="row">
+					<h3>Reset password</h3>
+				</div>
 				<form class="form-horizontal" id="reset-pass-form" role="form" accept-charset="UTF-8" action="" method="post">
 					<input type="hidden" value="resetPassword" name="action" id="action" /> 
 					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 					<div class="form-group">
-					    <label for="email" class="col-sm-3 control-label">Email</label>
-					    <div class="col-sm-9">
+					    <label for="email" class="col-sm-2 control-label">Email</label>
+					    <div class="col-sm-10">
 					      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="email" name="email" required>
 							<span class="help-block"></span>
 						</div>
 					</div>
-					<div class="col-md-offset-4" style="margin:20px;">
+					<div class="col-sm-offset-1 col-sm-10" >
 						<a href="javascript:void(0)" class="btn btn-default" onclick="$('#reset-pass').hide('slow');$('#login').show('slow');" >Back</a>
 		                <button type="submit" class="btn btn-primary">Submit</button>
 					</div>
@@ -88,9 +95,10 @@
 			
 			<!-- REGISTER SECTION - Hidden by default -->
 			<div class="row" id="register" style="display:none;">
-	                    <div class="row">
-	                        <h3>Create an account</h3>
-	                    </div>
+				<div class="row error-msg" id="register-form-error"></div>
+				<div class="row">
+					<h3>Create an account</h3>
+				</div>
 				<form class="form-horizontal" id="register-form" role="form" accept-charset="UTF-8" action="" method="post">
 					<input type="hidden" value="create" name="action" id="action" /> 
 					<input type="hidden" value="" name="redirect" class="redirect" /> 
@@ -133,19 +141,17 @@
 					<div class="form-group">
 					    <label for="confirm_password" class="col-sm-3 control-label">Re-enter Password</label>
 					    <div class="col-sm-9">
-					    	<input type="password" class="form-control req" id="confirm_password" name="confirm_password" required>
+					    	<input type="password" value="" class="form-control" id="confirm_password" name="confirm_password" required>
 							<span class="help-block"></span>
 						</div>
 					</div>
 				 	<div class="form-group">
 				    	<div class="col-sm-offset-2 col-sm-10">
+				    		<a href="javascript:void(0)" class="btn btn-default" onclick="$('#register').hide('slow');$('#login').show('slow');" >Back</a>
 				      		<button type="submit" class="btn btn-primary">Sign Up</button>
 				    	</div>
 				  	</div>
 				</form>
-				<div class="col-md-offset-4" style="margin:20px;">
-					<a href="javascript:void(0)" class="btn btn-success" onclick="$('#register').hide('slow');$('#login').show('slow');" >I'm already registered</a>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -175,7 +181,7 @@
 			        equalTo: "The emails you have entered do not match. Please check them."
 			      }
 			 }); 
-		})
+		});
 		
 		
 		function FBlogin(){

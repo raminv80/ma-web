@@ -160,7 +160,8 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    				'payment_subtotal' => $totals['subtotal'],
 	    				'payment_discount' => $totals['discount'],
 	    				'payment_shipping_fee' => $shippingFee,
-	    				'payment_charged_amount' => $totals['total'] + $shippingFee
+	    				'payment_charged_amount' => $totals['total'] + $shippingFee,
+	    				'payment_gst' => ($totals['GST_Taxable'] + $shippingFee)/10
 	    				),
 	    				$_POST['payment']
 	    		);
@@ -177,7 +178,6 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    				unset ( $_SESSION['user']['public'] );
 	    				session_regenerate_id();
 	    			}
-	    			unset ( $_SESSION['address'] );
 	    			
 	    			// OPEN NEW CART
 	    			$cart_obj->CreateCart($_SESSION['user']['public']['id']);
@@ -209,7 +209,7 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 					$body = $buffer;
 				
 					sendMail($to, $from, $fromEmail, $subject, $body);
-					
+					unset ( $_SESSION['address'] );
 	    			// REDIRECT TO THANK YOU PAGE	
 	    			header('Location: /thank-you-for-buying');
 	    			exit;

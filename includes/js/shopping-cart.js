@@ -24,8 +24,8 @@ if (jQuery.validator) {
 	          		break;
 	          		
 	          	case 'login-form':
-	        	case 'create-form':
-	        		userLogin(formID);
+	        	case 'register-form':
+	        		userLogin(formID); 
 	        		break;
 	        		
 	        	case 'step1-form': 
@@ -87,7 +87,7 @@ function userLogin(form){
 	    	try{
 	    		var obj = $.parseJSON(data);
 			 	if (obj.error) {
-			 		$('#login-error').html(obj.error).show();
+			 		$('#'+form+'-error').html(obj.error).show();
 			 		
 			 	} else {
 			 		window.location.href = obj.url;
@@ -118,11 +118,11 @@ function resetPass(form){
 	    	try{
 	    		var obj = $.parseJSON(data);
 			 	if (obj.error) {
-			 		$('#login-error').html(obj.error).show();
-			 		$('#login-success').hide();
+			 		$('#'+form+'-error').html(obj.error).show();
+			 		$('#'+form+'-success').hide();
 			 	} else {
-			 		$('#login-success').html(obj.success).show();
-			 		$('#login-error').hide();
+			 		$('#'+form+'-success').html(obj.success).show();
+			 		$('#'+form+'-error').hide();
 			 	}
 			 	
 			}catch(err){
@@ -153,9 +153,9 @@ function addCart(form){
 			 	$('.nav-itemNumber').html(obj.itemsCount);
 			 	$('.nav-subtotal').html('$'+obj.subtotal);
 			 	$('#shop-cart-btn').html( obj.popoverShopCart );
-			 	$('#shop-cart-btn').slideDown();
+			 	$('#shop-cart-btn').fadeIn(200);
 			 	setTimeout(function() {
-			 		$('#shop-cart-btn').slideUp();
+			 		$('#shop-cart-btn').fadeOut(200);
 			    }, 3000);
 			 	
 			}catch(err){
@@ -282,7 +282,7 @@ function getShippingMethods(form) {
 			 		$.each(obj.shippingMethods, function(id, value){
 			 			html += "<div class='radio'><label><input  class='required' type='radio' onclick='calculateTotal(\""+ value +"\");' name='payment[payment_shipping_method]' amount='"+ value +"' value='"+ id +"'>"+id + " ($" + value.toFixed(2) + ")</label></div>";
 			 		});
-			 		$('#shipping_methods').html(html);
+			 		$('#shipping_methods').html(html + "<div class='help-block'></div>");
 				} else {
 					$('#shipping_methods').html('<b>Sorry! We are not shipping to your address</b>');
 				}
@@ -325,6 +325,8 @@ function calculateTotal(str) {
 	var value = parseFloat(str);
 	$('#shipping-fee-value').html('$'+ value.toFixed(2));
 	var total = parseFloat($('#total').attr('amount')) + value ;
-	$('#total').html('$'+ total.toFixed(2));
+	$('.total-amount').html('$'+ total.toFixed(2));
+	var gst = (parseFloat($('#gst').attr('amount')) + value ) /10 ;
+	$('#gst').html('$'+ gst.toFixed(2));
 
 }

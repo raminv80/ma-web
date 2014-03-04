@@ -18,6 +18,58 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
    /*  display: block;    */ 
 }
 
+#login, #register, #reset-pass {
+	text-align:center;	
+}
+
+.gst {
+	font-size:85%;
+	opacity: 0.6;
+}
+
+.sign-in {
+	font-weight:bold;	
+}
+#social-login {
+	margin:10px;	
+}
+.total-amount{
+	font-weight:bold;	
+}
+
+hr.or-separator {
+	padding: 0;
+	border: none;
+	border-top: thin outset #333;
+	color: #333;
+	text-align: center;
+
+}
+
+hr.or-separator:after {
+	content: "OR";
+	display: inline-block;
+	position: relative;
+	top: -0.7em;
+	padding: 0 0.25em;
+	background: white;
+	margin-bottom:10px;
+}
+
+#tab-container {
+	background-color: #fafafa;
+	margin: 20px 0 40px;
+	padding-bottom: 5px;
+}
+#orders-list {
+	margin:30px;
+}
+#account-tab a {
+	color:#428BCA;
+}
+.tab-content-open {
+	margin: 30px 0 30px;
+}
 .error-msg {
 	color: #CF0000;
     font-size: 18px;
@@ -50,6 +102,7 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 
 .checkout-collapse {
 	margin-top: 40px;
+	margin-bottom: 40px;
 }
 .totals{
 	margin-top: 20px;
@@ -103,7 +156,9 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 .cart-total-price-2 strong {
     font-size: 24px;
 }
-
+.modal-header {
+	background-color: #dddddd;
+}
 
 .carousel-indicators li {
 	cursor: pointer;

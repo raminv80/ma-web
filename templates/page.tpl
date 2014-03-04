@@ -84,8 +84,8 @@
 		<div class="modal-dialog modal-lg">
 	    	<div class="modal-content">
 	    		<div class="modal-header">
-					<button class="close" aria-hidden="true" data-dismiss="modal" type="button">×</button>
-					<!-- <h4 class="modal-title">Login</h4> -->
+	    			&nbsp;
+					<button class="close" aria-hidden="true" data-dismiss="modal" type="button">&times;</button>
 				</div>
 	      		<div class="modal-body">
 	      			{include file='login.tpl'}
@@ -104,9 +104,9 @@
 		});
 		
 		$('.dropdown.navbar-right ').hover(function() { 
-		  $(this).find('.dropdown-menu:hidden').slideDown('slow');
+		  $(this).find('.dropdown-menu:hidden').fadeIn(200);
 		}, function() {
-		  $(this).find('.dropdown-menu:visible').slideUp('slow')
+		  $(this).find('.dropdown-menu:visible').fadeOut(200)
 		});
 
 		{if $login_referer}

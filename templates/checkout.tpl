@@ -28,31 +28,31 @@
         {/if}
         <div class="col-sm-8">	
 			<div class="row cart-table-header">
-				<div class="col-md-6">Product</div>
+				<div class="col-md-6">Item</div>
 				<div class="col-md-2 text-right">Unit Price</div>
 				<div class="col-md-1">Qty</div>
 				<div class="col-md-2 text-right">Subtotal</div>
 				<div class="col-md-1"></div>
 			</div>
 			
-				<div class="row" id="products-container"> 
-					{foreach from=$productsOnCart item=item}
-					<div class="row product-item" id="{$item.cartitem_id}">
-						<div class="col-md-6">{$item.cartitem_product_name}
-						{if $item.attributes } 
-							<small>
-							{foreach from=$item.attributes item=attr}
-								- {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name} 
-							{/foreach}
-							</small>
-						{/if}
-						</div>
-						<div class="col-md-2 text-right">${$item.cartitem_product_price|number_format:2:".":","}</div>
-						<div class="col-md-1 text-right">{$item.cartitem_quantity}</div>
-						<div class="col-md-2 text-right">${$item.cartitem_subtotal|number_format:2:".":","}</div>
-					</div>		
-					{/foreach} 
-				</div>
+			<div class="row" id="products-container"> 
+				{foreach from=$productsOnCart item=item}
+				<div class="row product-item" id="{$item.cartitem_id}">
+					<div class="col-md-6">{if $item.cartitem_product_gst eq '0'}*{/if} {$item.cartitem_product_name}
+					{if $item.attributes } 
+						<small>
+						{foreach from=$item.attributes item=attr}
+							- {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name} 
+						{/foreach}
+						</small>
+					{/if}
+					</div>
+					<div class="col-md-2 text-right">${$item.cartitem_product_price|number_format:2:".":","}</div>
+					<div class="col-md-1 text-right">{$item.cartitem_quantity}</div>
+					<div class="col-md-2 text-right">${$item.cartitem_subtotal|number_format:2:".":","}</div>
+				</div>		
+				{/foreach} 
+			</div>
 				
 			<div class="row totals">
 				<div class="col-md-9 text-right">Subtotal</div>
@@ -67,16 +67,23 @@
 				<div class="col-md-2 text-right" id="shipping-fee-value">$0.00</div>
 			</div>
 			<div class="row totals">
-				<div class="col-md-9 text-right"><b>Total</b></div>
-				<div class="col-md-2 text-right" id="total" amount="{$totals.total}"><b>${$totals.total|number_format:2:".":","}</b></div>
+				<div class="col-md-9 text-right gst">Incl. GST</div> {assign var=gst value=$totals.GST_Taxable/10}
+				<div class="col-md-2 text-right gst" id="gst" amount="{$totals.GST_Taxable}">(${$gst|number_format:2:".":","})</div>
 			</div>
+			<div class="row totals">
+				<div class="col-md-9 text-right"><b>Total</b></div>
+				<div class="col-md-2 text-right total-amount" id="total" amount="{$totals.total}">${$totals.total|number_format:2:".":","}</div>
+			</div>
+			{if $totals.GST_Taxable neq $totals.total}
+				<div class="row gst">(*) GST Free item.</div>
+			{/if}
 		</div>
 		<div class="col-sm-8 checkout-collapse">
 
 		<div class="panel-group" id="accordion">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4 class="panel-title">Step #1</h4>
+					<div class="panel-title">Billing and Shipping Address</div>
 				</div>
 				<div id="collapseOne" class="panel-collapse collapse in">
 					<div class="panel-body">
@@ -293,7 +300,7 @@
 			</div>
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h4 class="panel-title">Step #2</h4>
+					<div class="panel-title">Shipping and Payment Methods</div>
 				</div>
 				<div id="collapseTwo" class="panel-collapse collapse">
 					<div class="panel-body">
@@ -308,12 +315,13 @@
 									<div class="row">
 										<h3>Shipping Method</h3>
 									</div>
-									<div id="shipping_methods">
-										<div class="radio">
-											<label> <input type="radio" name="payment[payment_shipping_method]" id="payment_shipping_method_1" value="default" checked> Default
-											</label>
+									<div class="form-group col-sm-8">
+										<div id="shipping_methods">
 										</div>
-
+									</div>
+									<div class="col-sm-4">
+										<div class="text-right"><b>Total Amount</b></div>
+										<div class="text-right total-amount">${$totals.total|number_format:2:".":","}</div>
 									</div>
 								</div>
 

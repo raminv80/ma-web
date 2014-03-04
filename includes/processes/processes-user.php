@@ -69,8 +69,8 @@ if(checkToken('frontend',$_POST["formToken"], false)){
 	    	 	$_SESSION['error']= $res['error'];
 	    	 	header("Location: ".$_SERVER['HTTP_REFERER']."#error");
 	    	} else {
-	    		$_SESSION['error']= $res['success'];  //<<<<<<<<<<<<<<<<<<< CHANGE THIS TO NOTIFICATION VARIABLE, not error!
-	    		header("Location: ".$_SERVER['HTTP_REFERER']."#error");//<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
+	    		$_SESSION['notice']= $res['success'];  
+	    		header("Location: ".$_SERVER['HTTP_REFERER']."#notice");
 	    	}
 	    	exit;
 
@@ -84,8 +84,8 @@ if(checkToken('frontend',$_POST["formToken"], false)){
     		} else {
     			$_SESSION['user']['public']['gname']= $_POST["gname"];
     			$_SESSION['user']['public']['surname']= $_POST["surname"];
-    			$_SESSION['error']= $res['success'];  //<<<<<<<<<<<<<<<<<<< CHANGE THIS TO NOTIFICATION VARIABLE, not error!
-    			header("Location: ".$_SERVER['HTTP_REFERER']."#error");//<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>
+    			$_SESSION['notice']= $res['success'];  
+    			header("Location: ".$_SERVER['HTTP_REFERER']."#notice");
     		}
     		exit;
 	    		
