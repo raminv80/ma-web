@@ -43,17 +43,15 @@
 			</div>
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_discount_amount">Amount *</label>
-				<div class="col-sm-5">
+				<div class="col-sm-9">
 					<input class="form-control double" type="text" value="{$fields.discount_amount}" name="field[1][tbl_discount][{$cnt}][discount_amount]" id="id_discount_amount" required>
+					<div class="col-sm-2">
+						<input type="radio" name="field[1][tbl_discount][{$cnt}][discount_amount_percentage]" id="id_discount_amount_percentage1" value="0" {if $fields.discount_amount_percentage eq 0}checked{/if}> $ AUD 
+					</div>
+					<div class="col-sm-3">
+						<input type="radio" name="field[1][tbl_discount][{$cnt}][discount_amount_percentage]" id="id_discount_amount_percentage2" value="1" {if $fields.discount_amount_percentage eq 1}checked{/if}> % Percentage
+					</div>
 					<span class="help-block"></span>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_discount_amount_percentage">Is Percentage Amount?</label>
-				<div class="col-sm-5">
-					<input type="hidden" value="{if $fields.discount_amount_percentage eq 1}1{else}0{/if}" name="field[1][tbl_discount][{$cnt}][discount_amount_percentage]" class="value"> 
-					<input class="chckbx" type="checkbox" {if $fields.discount_amount_percentage eq 1}checked="checked" {/if} 
-					onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_discount_amount_percentage">
 				</div>
 			</div>
 			<div class="row form-group">
@@ -85,6 +83,17 @@
 				<label class="col-sm-3 control-label" for="id_discount_end_date">End Date <br><small>(yyyy-mm-dd)</small></label>
 				<div class="col-sm-5">
 					<input class="form-control dates" type="text" value="{$fields.discount_end_date}" name="field[1][tbl_discount][{$cnt}][discount_end_date]" id="id_discount_end_date">
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-sm-3 control-label" for="id_discount_onetime">Lifespan</label>
+				<div class="col-sm-9">
+					<div class="radio">
+						<input type="radio" name="field[1][tbl_discount][{$cnt}][discount_onetime]" id="id_discount_onetime1" value="0" {if $fields.discount_onetime eq 0}checked{/if}> Multiple time use 
+					</div>
+					<div class="radio">
+						<input type="radio" name="field[1][tbl_discount][{$cnt}][discount_onetime]" id="id_discount_onetime2" value="1" {if $fields.discount_onetime eq 1}checked{/if}> One-time use
+					</div>
 				</div>
 			</div>
 			<div class="row form-group">

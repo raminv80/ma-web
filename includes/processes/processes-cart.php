@@ -209,6 +209,12 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 					$body = $buffer;
 				
 					sendMail($to, $from, $fromEmail, $subject, $body);
+					
+					//UNPUBLISH ON-TIME USE DISCOUNT CODE 
+					if ($order['cart_discount_code']) {
+						$cart_obj->UnpublishOnTimeDiscountCode($order['cart_discount_code']);  
+					}
+					
 					unset ( $_SESSION['address'] );
 	    			// REDIRECT TO THANK YOU PAGE	
 	    			header('Location: /thank-you-for-buying');

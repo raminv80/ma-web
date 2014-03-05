@@ -934,6 +934,29 @@ class cart {
 		return array( 'error' => 'Undefined error');
 	}						
 	
+	/**
+	 * Unpublish a given discount code when it is 'on-time use'
+	 * Return true if the update was made, otherwise false.
+	 * 
+	 * @param string $code
+	 * @return boolean
+	 */
+	function UnpublishOnTimeDiscountCode($code) {
+		global $DBobject;
+	
+		$sql = "SELECT * FROM tbl_discount
+	    			WHERE discount_code = :id AND discount_published = 1 AND discount_deleted IS NULL";
+		$params = array ( ":id" => $code );
+		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
+			if ($res[0]['discount_onetime']) {
+				$sql = "UPDATE tbl_discount SET discount_published = 0, discount_modified = now() WHERE discount_code = :id";
+				if ($res = $DBobject->wrappedSql ( $sql, $params )) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * Calculate and return shipping fee  
