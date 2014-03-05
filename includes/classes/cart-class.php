@@ -405,11 +405,17 @@ class cart {
 		
 		$sql = "SELECT * FROM tbl_cart LEFT JOIN tbl_payment ON cart_id = payment_cart_id
     			WHERE cart_user_id = :uid AND cart_deleted IS NULL AND cart_closed_date IS NOT NULL AND cart_id <> '0' ORDER BY cart_closed_date DESC";
-	
+		
 		if ($res = $DBobject->wrappedSql ( $sql, array (":uid" => $userId) ) ){
-			foreach ($res as $cart) {
-				$cart_arr[$cart['cart_id']] = $cart;
-				$cart_arr[$cart['cart_id']]['items'] = $this->GetDataProductsOnCart($cart['cart_id']);
+			foreach ($res as $order) {
+				$cart_arr[$order['cart_id']] = $order;
+				$cart_arr[$order['cart_id']]['items'] = $this->GetDataProductsOnCart($order['cart_id']);
+				
+				$sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
+    			$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $order['payment_billing_address_id']) );
+    			$cart_arr[$order['cart_id']]['billing'] = $res[0];
+    			$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $order['payment_shipping_address_id']) );
+    			$cart_arr[$order['cart_id']]['shipping'] = $res[0];
 			}
 		}
 		return $cart_arr;

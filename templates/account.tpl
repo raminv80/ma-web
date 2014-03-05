@@ -70,17 +70,85 @@
 									</div>
 									<div id="{$order.payment_transaction_no}" class="panel-collapse collapse">
 										<div class="panel-body">
-			              					{foreach $order.items as $item}
-						                  	<ul>
-						                  		<li>{$item.cartitem_quantity} x {$item.cartitem_product_name} 
-						                  		{if $item.attributes} 
-							                  		{foreach $item.attributes as $attr}
-									                  		<small>/ {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</small>
-								                  	{/foreach}
-							                  	{/if}
-							                  	</li>
-						                  	</ul>
-					                  	{/foreach}
+						                  	<table cellspacing="0" width="100%" cellpadding="0" border="0">
+												<tr align="left">
+													<th>Items</th>
+													<th class="text-right">Qty</th>
+													<th class="text-right">Unit Price</th>
+													<th class="text-right">Total Price</th>
+												</tr>
+												{foreach $order.items  as $item}
+												<tr valign="top" aling="left">{assign var=free value=0}
+													<td>{if $item.cartitem_product_gst eq '0'} {assign var=free value=1} *{/if}{$item.cartitem_product_name} 
+														{if $item.attributes} 
+															{foreach $item.attributes as $attr}
+																<small>/ {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</small>
+															{/foreach}
+														{/if}
+													</td>
+													<td width="10%" class="text-right">{$item.cartitem_quantity}</td>
+													<td width="20%" class="text-right">$ {$item.cartitem_product_price|number_format:2:".":","}</td>
+													<td width="20%" class="text-right">$ {$item.cartitem_subtotal|number_format:2:".":","}</td>
+												</tr>
+												{/foreach}
+												<tr valign="top" align="left">
+													<td colspan="4"><hr></td>
+												</tr>
+												<tr valign="top" align="left">
+													<td>&nbsp;</td>
+													<td>&nbsp;</td>
+													<td class="text-right"><strong>Sub Total</strong></td>
+													<td style="text-align: right">$ {$order.payment_subtotal|number_format:2:".":","}</td>
+												</tr>
+												<tr valign="top" align="left">
+													<td>&nbsp;</td>
+													<td>&nbsp;</td>
+													<td class="text-right"><strong>Discount</strong></td>
+													<td class="text-right">$ -{$order.payment_discount|number_format:2:".":","}</td>
+												</tr>
+												<tr valign="top" align="left">
+													<td>&nbsp;</td>
+													<td colspan="2" class="text-right"><strong>Postage & Handling</strong></td>
+													<td style="text-align: right">$ {$order.payment_shipping_fee|number_format:2:".":","}</td>
+												</tr>
+												<tr valign="top" align="left">
+													<td>{if $free}(*)GST free item.{/if}</td>
+													<td>&nbsp;</td>
+													<td class="text-right"><strong>Incl. GST</strong></td>
+													<td style="text-align: right">($ {$order.payment_gst|number_format:2:".":","})</td>
+												</tr>
+												<tr valign="top" align="left">
+													<td colspan="4"><hr></td>
+												</tr>
+												<tr valign="top" align="left">
+													<td colspan="3" class="text-right"><strong>TOTAL</strong></td>
+													<td style="text-align: right"><strong>$ {$order.payment_charged_amount|number_format:2:".":","}</strong></td>
+												</tr>
+												<tr valign="top" align="left">
+													<td colspan="4"><hr></td>
+												</tr>
+											</table>
+											<div class="col-sm-12">
+												<div class="col-sm-6">
+													<div><h4>Billing Address</h4></div>
+													<div>{$order.billing.address_name}</div>
+													<div>{$order.billing.address_line1} {$order.billing.address_line2}</div>
+													<div>{$order.billing.address_suburb}, {$order.billing.address_state}</div>
+													<div>{$order.billing.address_country} {$order.billing.address_postcode}</div>
+													<div>{$order.billing.address_telephone}</div>
+													<div> {$order.billing.address_mobile}</div>
+												</div>
+												<div class="col-sm-6">
+													<div><h4>Shipping Address</h4></div>
+													<div>{$order.shipping.address_name}</div>
+													<div>{$order.shipping.address_line1} {$order.shipping.address_line2}</div>
+													<div>{$order.shipping.address_suburb}, {$order.shipping.address_state}</div>
+													<div>{$order.shipping.address_country} {$order.shipping.address_postcode}</div>
+													<div>{$order.shipping.address_telephone}</div>
+													<div>{$order.shipping.address_mobile}</div>
+													<strong>Shipping Method:</strong> {$order.payment_shipping_method}
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>

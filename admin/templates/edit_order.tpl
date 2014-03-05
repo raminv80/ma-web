@@ -6,26 +6,26 @@
 			<tbody>
 				<tr>
 					<td><b>Order No:</b></td>
-					<td style="text-align: center;">{$fields.payment.0.payment_transaction_no}</td>
+					<td class="text-center">{$fields.payment.0.payment_transaction_no}</td>
 					<td><b>Order placed:</b></td>
-					<td style="text-align: center;">{$fields.cart_closed_date|date_format:"%e %B %Y"}</td>
+					<td class="text-center">{$fields.cart_closed_date|date_format:"%e %B %Y"}</td>
 				</tr>
 				<tr>
 					<td><b>User's Detail:</b></td>
-					<td style="text-align: center;">{$fields.user.0.user_gname} {$fields.user.0.user_surname} / {$fields.user.0.user_email}</td>
+					<td class="text-center">{$fields.user.0.user_gname} {$fields.user.0.user_surname} / {$fields.user.0.user_email}</td>
 					<td><b>Payment Status:</b></td>
-					<td style="text-align: center;"> <b>{if $fields.payment.0.payment_status eq 'P'}PAID{else}{$fields.payment.0.payment_status}{/if}</b></td>
+					<td class="text-center"> <b>{if $fields.payment.0.payment_status eq 'P'}PAID{else}{$fields.payment.0.payment_status}{/if}</b></td>
 				</tr>
 				<tr>
 					<td><b>Shipping Method:</b></td>
-					<td style="text-align: center;">{$fields.payment.0.payment_shipping_method}</td>
+					<td class="text-center">{$fields.payment.0.payment_shipping_method}</td>
 					<td><b>Card:</b></td>
-					<td style="text-align: center;">{$fields.payment.0.payment_response_cardscheme}</td>
+					<td class="text-center">{$fields.payment.0.payment_response_cardscheme}</td>
 				</tr>
 				<tr>
 					<td><b>Billing Address:</b></td>
-					<td style="text-align: center;">{$fields.payment.0.billing_address.0.address_name}</td>
-					<td style="text-align: center;" colspan="2">
+					<td class="text-center">{$fields.payment.0.billing_address.0.address_name}</td>
+					<td class="text-center" colspan="2">
 						{$fields.payment.0.billing_address.0.address_line1} 
 						{$fields.payment.0.billing_address.0.address_line2} 
 						{$fields.payment.0.billing_address.0.address_suburb}, 
@@ -39,8 +39,8 @@
 				</tr>
 				<tr>
 					<td><b>Shipping Address:</b></td>
-					<td style="text-align: center;">{$fields.payment.0.shipping_address.0.address_name}</td>
-					<td style="text-align: center;" colspan="2">
+					<td class="text-center">{$fields.payment.0.shipping_address.0.address_name}</td>
+					<td class="text-center" colspan="2">
 						{$fields.payment.0.shipping_address.0.address_line1} 
 						{$fields.payment.0.shipping_address.0.address_line2} 
 						{$fields.payment.0.shipping_address.0.address_suburb}, 
@@ -61,9 +61,9 @@
 			<thead>
 				<tr>
 					<th>Item</th>
-					<th style="text-align: right;">Qty</th>
-					<th style="text-align: right;">Unit Price</th>
-					<th style="text-align: right;">Subtotal</th>
+					<th class="text-right">Qty</th>
+					<th class="text-right">Unit Price</th>
+					<th class="text-right">Subtotal</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -76,31 +76,31 @@
 		   					{/foreach}
 		  				{/if}
 		  			</td>
-					<td style="text-align: right;">{$item.cartitem_quantity}</td>
-					<td style="text-align: right;">${$item.cartitem_product_price|number_format:2:".":","}</td>
-					<td style="text-align: right;">${$item.cartitem_subtotal|number_format:2:".":","}</td>
+					<td class="text-right">{$item.cartitem_quantity}</td>
+					<td class="text-right">${$item.cartitem_product_price|number_format:2:".":","}</td>
+					<td class="text-right">${$item.cartitem_subtotal|number_format:2:".":","}</td>
 				</tr>
 				{/foreach} 
 				<tr>
-					<td style="text-align: right;" colspan="3">Subtotal</td>
-					<td style="text-align: right;">${$fields.payment.0.payment_subtotal|number_format:2:".":","}</td>
+					<td class="text-right" colspan="3">Subtotal</td>
+					<td class="text-right">${$fields.payment.0.payment_subtotal|number_format:2:".":","}</td>
 				</tr>
 				<tr>
-					<td style="text-align: right;" colspan="3">Discount {if $fields.cart_discount_code}<small>[Code: {$fields.cart_discount_code}]</small>{/if}</td>
-					<td style="text-align: right;">-${$fields.payment.0.payment_discount|number_format:2:".":","}</td>
+					<td class="text-right" colspan="3">Discount {if $fields.cart_discount_code}<small>[Code: {$fields.cart_discount_code}]</small>{/if}</td>
+					<td class="text-right">-${$fields.payment.0.payment_discount|number_format:2:".":","}</td>
 				</tr>
 				<tr>
-					<td style="text-align: right;" colspan="3">Postage & Handling</td>
-					<td style="text-align: right;">${$fields.payment.0.payment_shipping_fee|number_format:2:".":","}</td>
+					<td class="text-right" colspan="3">Postage & Handling</td>
+					<td class="text-right">${$fields.payment.0.payment_shipping_fee|number_format:2:".":","}</td>
 				</tr>
 				<tr>
 					<td colspan="2"><small>(*) GST Free item.</small></td>
-					<td style="text-align: right;">Incl. GST</td>
-					<td style="text-align: right;">(${$fields.payment.0.payment_gst|number_format:2:".":","})</td>
+					<td class="text-right">Incl. GST</td>
+					<td class="text-right">(${$fields.payment.0.payment_gst|number_format:2:".":","})</td>
 				</tr>
 				<tr>
-					<td style="text-align: right;" colspan="3"><b>Total</b></td>
-					<td style="text-align: right;"><b> ${$fields.payment.0.payment_charged_amount|number_format:2:".":","}</b></td>
+					<td class="text-right" colspan="3"><b>Total</b></td>
+					<td class="text-right"><b> ${$fields.payment.0.payment_charged_amount|number_format:2:".":","}</b></td>
 				</tr>
 			</tbody>
 		</table>
