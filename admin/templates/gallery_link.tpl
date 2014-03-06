@@ -60,6 +60,12 @@
 				<input class="form-control" type="text" value="{$images.gallery_alt_tag}" name="field[10][tbl_gallery][{$imageno}][gallery_alt_tag]" id="gallery_alt_tag_{$imageno}" >
 			</div>
 		</div>
+		<div class="row form-group">
+			<label class="col-sm-3 control-label" for="gallery_alt_tag">External Link</label>
+			<div class="col-sm-5">
+				<input class="form-control" type="text" value="{$images.gallery_external_link}" name="field[10][tbl_gallery][{$imageno}][gallery_external_link]" id="gallery_alt_external_link_{$imageno}" >
+			</div>
+		</div>
 	</div>
 </div>
 {/block}

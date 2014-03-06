@@ -1,4 +1,11 @@
 <?php
+if (preg_match('/[A-Z]/', $_SERVER['REQUEST_URI']))
+{
+  $lowercase_file_url = strtolower(isset($_SERVER['HTTPS'])?"https://":"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+  header("HTTP/1.1 301 Moved Permanently");
+  header("Location: $lowercase_file_url");
+  exit();
+}
 /*
  * header("Pragma: no-cache"); header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
  */

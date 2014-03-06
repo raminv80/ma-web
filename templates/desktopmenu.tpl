@@ -6,7 +6,7 @@
 		{if $level lt 1}
 			{assign var='news' value=0}
 			{if $item.url eq 'blog'}{assign var='blog' value=1}{/if}
-				<li class="{if count($item.subs) > 0}dropdown{/if} {if $item.selected eq 1}active{/if}"><a title="{$item.title}" href="{$parenturl}/{$item.url}" >{$item.title}</a>
+				<li class="{if count($item.subs) > 0}dropdown{/if} {if $item.selected eq 1}active{/if}"><a title="{$item.title}" {if $item.url|strstr:"http://"}target="_blank"{/if} href="{if $item.url|strstr:"http://"}{$item.url}{else}{$parenturl}/{$item.url}{/if}" >{$item.title}</a>
 			{if count($item.subs) > 0}
                 {if $blog neq 1} 
                     <ul class="dropdown-menu">                                
@@ -18,9 +18,9 @@
 		{else}
 			{if $event eq 1}
 				{assign var='count' value=$count+1}
-				<li {if $item.selected eq 1}class="active"{/if}><a title="{$item.title}" href="{$parenturl}/{$item.url}">{$item.title}</a>
+				<li {if $item.selected eq 1}class="active"{/if}><a title="{$item.title}" {if $item.url|strstr:"http://"}target="_blank"{/if} href="{if $item.url|strstr:"http://"}{$item.url}{else}{$parenturl}/{$item.url}{/if}">{$item.title}</a>
 			{else}
-				<li {if $item.selected eq 1}class="active"{/if}><a title="{$item.title}" href="{$parenturl}/{$item.url}">{$item.title}</a>
+				<li {if $item.selected eq 1}class="active"{/if}><a title="{$item.title}" {if $item.url|strstr:"http://"}target="_blank"{/if} href="{if $item.url|strstr:"http://"}{$item.url}{else}{$parenturl}/{$item.url}{/if}">{$item.title}</a>
 			{/if}
 		{/if}
 	{/foreach}	
@@ -39,15 +39,6 @@
 	        {include file='popover-shopping-cart.tpl'}
 	    </ul>
 	</li>
- <!-- <li><a href="/store/shopping-cart" id="shop-cart-btn" data-html="true" data-container="body" data-placement="bottom" data-trigger="hover" data-content="{include file='popover-shopping-cart.tpl'}" data-toggle="popover" data-title="Your Shopping Cart">
- 		<span class="glyphicon glyphicon-shopping-cart"></span>
- 		<div style="display:inline;" id="nav-itemNumber">{$itemNumber}</div>
- 		
- 		<div class="badge" style="display:inline;" id="nav-subtotal">${$cart.cart_subtotal|number_format:2:'.':','}</div>
- 		
- 	</a>
- </li> -->
- 
 {if $user.id}
 	<li><a title="My Account" href="/my-account">G'day {$user.gname}</a></li>
 	

@@ -311,13 +311,12 @@ class cart {
 			$sql = "SELECT SUM(cartitem_quantity) AS SUM FROM tbl_cartitem
 					WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
 			
-			$cart_arr = $DBobject->wrappedSql ( $sql, array (
-					":id" => $cid 
-			) );
-			return $cart_arr [0] ['SUM'];
-		} else {
-			return 0;
-		}
+			$cart_arr = $DBobject->wrappedSql ( $sql, array (":id" => $cid ));
+			if ( $cart_arr [0] ['SUM'] ) {
+				return $cart_arr [0] ['SUM'];
+			}
+		} 
+		return 0;
 	}
 	
 	/**

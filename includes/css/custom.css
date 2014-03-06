@@ -164,19 +164,6 @@ hr.or-separator:after {
 	cursor: pointer;
 }
 
-.videoBG_wrapper{
-	position: relative!important;
-}
-.videoBG_wrapper #headout{
-	background: none!important;
-}
-.videoBG{
-	background: #3a180d no-repeat top center;
-}
-.videoBG video{
-	width:100%;
-}
-
 a, a:active, a:selected, a:focus { 
     border: none;
     outline: none;

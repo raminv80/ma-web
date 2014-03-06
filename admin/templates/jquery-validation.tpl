@@ -137,33 +137,6 @@ if (jQuery.validator) {
 
 
 	jQuery.validator.addMethod(
-  		"uniqueCODE", 
-  		function(value, element, params) {
-  			var response = false;
-  			$.ajax({
-  				type: "POST",
-  			    url: "/admin/includes/processes/checkCode.php",
-  				cache: false,
-  				async: false,
-  				data: "value="+encodeURIComponent(value)+"&id="+params.id,
-  				dataType: "json",
-  			    success: function(res, textStatus) {
-  			    	try{
-  			    		if ( res.error ) {
-  			    			response = false;
-	  			    	} else {
-		  			    	response = true;
-		  			    }
-  			    	}catch(err){ }
-  			    }
-  			});
-  			return response;
-  			
-		}, 
-		"This CODE is currently being used."
-	);
-
-	jQuery.validator.addMethod(
 	  		"double", 
 	  		function(value, element) {
 	  			if ($.isNumeric(value) || value =='') {

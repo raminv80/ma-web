@@ -1,5 +1,5 @@
 
-ErrorDocument 404 /404
+ErrorDocument 404 /404.php
 RewriteEngine  on
 
 # stuff to let through (ignore)
@@ -7,9 +7,10 @@ RewriteEngine  on
   RewriteCond %{REQUEST_URI} "/new_admin/" [OR]
   RewriteCond %{REQUEST_URI} "/includes/"
   RewriteRule (.*) $1 [L]
+  
 
 RewriteCond %{HTTP_HOST} !^www\.
-RewriteRule ^(.*)$ www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+RewriteRule ^(.*)$ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 ##### ATTEMPT TO SEE IF I CAN MAP page=XX TO THE CORRENT FRIENDLY URL
 RewriteRule ^([^.]+)?$ index.php?arg1=$1 [QSA]

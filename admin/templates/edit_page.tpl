@@ -52,7 +52,7 @@
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
 				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" required>
+					<input class="form-control" type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" >
 					<span class="help-block"></span>
 				</div>
 			</div>

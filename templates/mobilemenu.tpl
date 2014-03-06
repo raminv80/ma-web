@@ -4,7 +4,7 @@
 		{if $level lt 1}
 			{assign var='news' value=0}
 			<!-- {if $item.url eq 'news'}{assign var='news' value=1}{/if} -->
-			<li {if $item.selected eq 1}class="active"{/if}><a title="{$item.title}" href="{$parenturl}/{$item.url}">{$item.title}</a>
+			<li {if $item.selected eq 1}class="active"{/if}><a title="{$item.title}" href="{if $item.url|strstr:"http://"}{$item.url}{else}{$parenturl}/{$item.url}{/if}">{$item.title}</a>
 			{if count($item.subs) > 0}
                 <!--  {if $news neq 1} -->
                                 <ul>
@@ -14,7 +14,7 @@
 			{/if}
 			</li>
 		{else}
-			<li {if $item.selected eq 1}class="active"{/if}><a title="{$item.title}" href="{$parenturl}/{$item.url}">{$item.title}</a>
+			<li {if $item.selected eq 1}class="active"{/if}><a title="{$item.title}" href="{if $item.url|strstr:"http://"}{$item.url}{else}{$parenturl}/{$item.url}{/if}">{$item.title}</a>
 		{/if}
 	{/foreach}	
 	

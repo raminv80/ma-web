@@ -461,7 +461,7 @@
 			type : "POST",
 			url : "/admin/includes/processes/load-template.php",
 			cache : false,
-			data : "template=gallery.tpl&imageno=" + no,
+			data : "template=gallery.tpl&imageno=" + no + "&table_name=product",
 			dataType : "html",
 			success : function(data, textStatus) {
 				try {
