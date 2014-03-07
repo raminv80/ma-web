@@ -143,11 +143,10 @@ class Listing {
 		}
 		
 		$sql = "SELECT * FROM {$this->DBTABLE}
-		WHERE listing_parent_id = :pid AND tbl_listing.listing_type_id = :type AND
+		WHERE listing_parent_id = :pid AND 
 		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL " . ($this->WHERE != '' ? "AND {$this->WHERE} " : " ") .$order;
 		
 		$params = array (
-				":type" => $this->TYPE_ID,
 				":pid" => $parent_id
 		);
                 
@@ -164,7 +163,7 @@ class Listing {
 							"subs" => $subs 
 					);
 				} else {
-					$records ["c{$val['listing_parent_id']}"] = array (
+					$records ["c{$val['listing_id']}"] = array (
 							"title" => $val ['listing_name'],
 							"id" => $val ['listing_id'],
 							"subs" => $subs 

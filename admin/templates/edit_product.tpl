@@ -435,17 +435,6 @@
 		}
 	}
 
-	function validate() {
-		$('body').css('cursor', 'wait');
-		var pass = validateForm();
-		if (!pass) {
-			$('body').css('cursor', 'pointer');
-			return false;
-		} else {
-			$('#Edit_Record').submit();
-		}
-	}
-
 	function scrolltodiv(id) {
 		$('html,body').animate({
 			scrollTop : $(id).offset().top
@@ -527,7 +516,7 @@
 				type : "POST",
 				url : "/admin/includes/processes/load-template.php",
 				cache : false,
-				data : "template=tag.tpl&tagno=" + no + "&tag%5Btag_value%5D="	+  $('#new_tag').val(),
+				data : "template=tag.tpl&tagno=" + no + "&tag%5Btag_value%5D="	+  $('#new_tag').val() + "&table_name=product",
 				dataType : "html",
 				success : function(data, textStatus) {
 					try {

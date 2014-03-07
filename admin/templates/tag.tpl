@@ -1,10 +1,10 @@
 {block name=tags}
 <div id="tag_wrapper{$tagno}" rel="{$tagno}" class="sub-form">
 	<div class="row" id="tag{$tagno}">
-		<input type="hidden" value="product_id" name="default[tag_object_id]" />
+		<input type="hidden" value="{$table_name}_id" name="default[tag_object_id]" />
 		<input type="hidden" value="tag_id" name="field[15][tbl_tag][{$tagno}][id]" id="id" />
 		<input type="hidden" value="{$tag.tag_id}" name="field[15][tbl_tag][{$tagno}][tag_id]" >
-		<input type="hidden" value="tbl_product" name="field[15][tbl_tag][{$tagno}][tag_object_table]" id="tag_object_table">
+		<input type="hidden" value="tbl_{$table_name}" name="field[15][tbl_tag][{$tagno}][tag_object_table]" id="tag_object_table">
 		<input type="hidden" value="{$tag.tag_object_id}" name="field[15][tbl_tag][{$tagno}][tag_object_id]" id="tag_object_id" >
 		<input type="hidden" value="{$tag.tag_value}" name="field[15][tbl_tag][{$tagno}][tag_value]" id="tag_value">
 		<div class="col-sm-offset-2">
