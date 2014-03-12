@@ -154,6 +154,7 @@ function logError($trace, $err, $sql = false) {
 
 function sendMail($to,$from,$fromEmail,$subject,$body){
 	global $DBobject;
+	require_once 'database/safemail.php';
 
 	/* To send HTML mail, you can set the Content-type header. */
 	$headers  = "MIME-Version: 1.0\r\n";
@@ -163,32 +164,57 @@ function sendMail($to,$from,$fromEmail,$subject,$body){
 	$headers .= "From: ". $from . " <".$fromEmail.">\r\n";
 	$headers .= "Bcc: cmsemails@them.com.au\r\n";
 
-	ini_set('sendmail_from', $fromEmail);
+	$mailSent = 0;
 	try{
-	  	$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content) VALUES ('".clean($to)."','".clean($headers)."','".clean($subject)."','".clean($body)."')";
-	  	$DBobject->executeSQL($sql);
+	  if(function_exists("SafeMail")){
+	    $mailSent = SafeMail($to,$subject,$body,$headers);
+	  }
 	}catch(Exception $e){}
-	$mailSent = mail($to,$subject,$body,$headers);
-	ini_restore('sendmail_from');
+	
+	try{
+	  $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_sent) VALUES 
+	      (:to,:header,:subject,:content,:sent)";
+	  $params = array(
+	      ":to"=>$to,
+	      ":header"=>$headers,
+	      ":subject"=>$subject,
+	      ":content"=>$body,
+	      ":sent"=>$mailSent,
+	  );
+	  $DBobject->executeSQL($sql,$params);
+	}catch(Exception $e){}
 
 	return $mailSent;
 }
 
 function sendMailV2($to,$from,$fromEmail,$subject,$body){
-	global $DBobject;
-    define("DEFCALLBACKMAIL", "{$fromEmail}");
-    define("DEFCALLBACKNAME", "MedicAlert Foundation");
-    $final_msg = preparehtmlmail($body, $boundary);
+  global $DBobject;
+  require_once 'database/safemail.php';
+  define("DEFCALLBACKMAIL", "{$fromEmail}");
+  define("DEFCALLBACKNAME", "MedicAlert Foundation");
+  $final_msg = preparehtmlmail($body);
 
-    ini_set('sendmail_from', $fromEmail);
-	try{
-	  	$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content) VALUES ('".clean($to)."','".clean($final_msg['headers'])."','".clean($subject)."','".clean($final_msg['multipart'])."')";
-	  	$DBobject->executeSQL($sql);
-	}catch(Exception $e){}
-    $mailSent = mail($to,$subject,$final_msg['headers'],$final_msg['multipart']);
-    ini_restore('sendmail_from');
+  $mailSent = 0;
+  try{
+    if(function_exists("SafeMail")){
+      $mailSent = SafeMail($to,$subject,$final_msg['headers'],$final_msg['multipart']);
+    }
+  }catch(Exception $e){}
 
-    return $mailSent;
+  try{
+    $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_sent) VALUES
+	      (:to,:header,:subject,:content,:sent)";
+    $params = array(
+        ":to"=>$to,
+        ":header"=>$final_msg['headers'],
+        ":subject"=>$subject,
+        ":content"=>$final_msg['multipart'],
+        ":sent"=>$mailSent,
+    );
+    $DBobject->executeSQL($sql,$params);
+  }catch(Exception $e){}
+
+  return $mailSent;
 }
 
 function preparehtmlmail($html) {
