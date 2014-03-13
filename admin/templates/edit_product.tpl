@@ -154,7 +154,7 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_gst">Incl. GST</label>
 							<div class="col-sm-5 ">
-								<input type="hidden" value="{if $fields.product_gst eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_gst]" class="value">
+								<input type="hidden" value="{if $fields.product_id}{if $fields.product_gst eq 1}1{else}0{/if}{else}1{/if}" name="field[1][tbl_product][{$cnt}][product_gst]" class="value">
 								<input class="chckbx" type="checkbox" {if $fields.product_gst eq 1 || $fields.product_id eq ""}checked="checked" {/if} 
 									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_gst">
 							</div>
@@ -162,7 +162,7 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_instock">In stock</label>
 							<div class="col-sm-5 ">
-								<input type="hidden" value="{if $fields.product_instock eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_instock]" class="value"> 
+								<input type="hidden" value="{if $fields.product_id}{if $fields.product_instock eq 1}1{else}0{/if}{else}1{/if}" name="field[1][tbl_product][{$cnt}][product_instock]" class="value"> 
 								<input class="chckbx" type="checkbox" {if $fields.product_instock eq 1 || $fields.product_id eq ""}checked="checked" {/if} 
 									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_instock">
 							</div>

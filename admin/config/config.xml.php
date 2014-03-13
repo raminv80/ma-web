@@ -153,7 +153,7 @@
 				</field>  
 			</options>
 		</table>
-		<list_template>list.tpl</list_template>
+		<list_template>listall.tpl</list_template>
 		<edit_template>edit_product.tpl</edit_template>
 	</section> 
 	
