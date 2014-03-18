@@ -168,54 +168,49 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    		$paymentId = $pay_obj->StorePaymentRecord($params);
 	    		
 	    		if ($reponse){
+	    		  try{
+	    		    // SEND CONFIRMATION EMAIL
+	    		    $user = $_SESSION['user']['public'];
+	    		    $SMARTY->assign('user',$user);
+	    		    $billing = $user_obj->GetAddress($billID);
+	    		    $SMARTY->assign('billing',$billing);
+	    		    $shipping = $user_obj->GetAddress($shipID);
+	    		    $SMARTY->assign('shipping',$shipping);
+	    		    $order = $cart_obj->GetDataCart($order_cartId);
+	    		    $SMARTY->assign('order',$order);
+	    		    $payment = $pay_obj->GetPaymentRecord($paymentId);
+	    		    $SMARTY->assign('payment',$payment);
+	    		    $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
+	    		    $SMARTY->assign('orderItems',$orderItems);
+	    		    $buffer= $SMARTY->fetch('templates/email-confirmation.tpl');
+	    		    $to = $_SESSION['address']['B']['email'];
+	    		    $from = 'eShop';
+	    		    $fromEmail = 'noreply@cms.themserver.com';
+	    		    $subject = 'Confirmation of your order';
+	    		    $body = $buffer;
+	    		    $mailID = sendMail($to, $from, $fromEmail, $subject, $body);
+	    		  }catch(Exception $e){}
+	    		  
 	    			// PAYMENT SUCCESS
 	    			$cart_obj->CloseCart();
 	    			$pay_obj->SetOrderStatus($paymentId);
 	    			
-	    			$user = $_SESSION['user']['public'];
+	    			
 	    			// LOG OUT GUEST USER
 	    			if ($_SESSION['user']['public']['gname'] == 'Guest') {
 	    				unset ( $_SESSION['user']['public'] );
 	    				session_regenerate_id();
 	    			}
-	    			
 	    			// OPEN NEW CART
 	    			$cart_obj->CreateCart($_SESSION['user']['public']['id']);
-	    			
-	    			// SEND CONFIRMATION EMAIL
-	    			$SMARTY->assign('user',$user);
-	    			
-					$billing = $user_obj->GetAddress($billID);
-					$SMARTY->assign('billing',$billing);
-					
-					$shipping = $user_obj->GetAddress($shipID);
-					$SMARTY->assign('shipping',$shipping);
-					
-					$order = $cart_obj->GetDataCart($order_cartId);
-					$SMARTY->assign('order',$order);
-					
-					$payment = $pay_obj->GetPaymentRecord($paymentId);
-					$SMARTY->assign('payment',$payment);
-					
-					$orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
-					$SMARTY->assign('orderItems',$orderItems);
-					
-					$buffer= $SMARTY->fetch('templates/email-confirmation.tpl');
-					
-					$to = $_SESSION['address']['B']['email'];
-					$from = 'eShop';
-					$fromEmail = 'noreply@cms.themserver.com';
-					$subject = 'Confirmation of your order';
-					$body = $buffer;
-				
-					sendMail($to, $from, $fromEmail, $subject, $body);
-					
-					//UNPUBLISH ON-TIME USE DISCOUNT CODE 
-					if ($order['cart_discount_code']) {
-						$cart_obj->UnpublishOnTimeDiscountCode($order['cart_discount_code']);  
-					}
-					
-					unset ( $_SESSION['address'] );
+
+  					
+  					//UNPUBLISH ON-TIME USE DISCOUNT CODE 
+  					if ($order['cart_discount_code']) {
+  						$cart_obj->UnpublishOnTimeDiscountCode($order['cart_discount_code']);  
+  					}
+  					
+  					unset ( $_SESSION['address'] );
 	    			// REDIRECT TO THANK YOU PAGE	
 	    			header('Location: /thank-you-for-buying');
 	    			exit;

@@ -50,30 +50,6 @@ if(!empty($_POST)){
 	foreach($_POST as $key => $p){
 		$_SESSION["{$key}"] = $p;
 	}
-
-	try{
-		if ($_FILES["receipt"]["error"] == 0){
-			if (($_FILES["receipt"]["type"] == "application/pdf" )	||	 strtolower(substr($_FILES["receipt"]["name"], -3))=='pdf' || strtolower(substr($_FILES["receipt"]["name"], -3))=='jpg' ||  strtolower(substr($_FILES["receipt"]["name"], -3))=='png' ||  strtolower(substr($_FILES["receipt"]["name"], -3))=='gif'  ){
-				$path =  getcwd().'/';
-				$file_short = time().'_'.str_replace(" ", '', $_FILES["receipt"]["name"]);
-				$_POST['filename']=$file_short;
-				$file_name = $path."uploads/" .$file_short;
-				//$file_name = $path."uploads/" .$file_short;
-				if(move_uploaded_file($_FILES["receipt"]["tmp_name"],$file_name)){
-				}
-			}else{
-				$_SESSION['error']='Please check your file extension (use PDF, JPG , GIF or  PNG).';
-				header("Location: error.php");
-				exit;
-			}
-		}else{
-			$_SESSION['error']='Please check your file and  try again later.';
-			header("Location: error.php");
-			exit;
-		}
-	}catch(Exception $e){
-		$exceptions += var_dump($e,1);
-	}
 	
 	try{
 		//store on API
@@ -216,7 +192,5 @@ if(!empty($_POST)){
 	header("Location: thank-you.php");
 	exit;
 }
-
-
 
 

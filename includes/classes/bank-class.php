@@ -114,13 +114,13 @@ class Bank {
 								order_payment_id,
 								order_status_id,
 								order_admin_id,
-        						order_created
+        				order_created
 								)
 							VALUES (
 								:pid,
 								:sid,
 								:aid,
-        						now()
+        				now()
 							)";
 		$params = array (
 				":pid" => $paymentId,

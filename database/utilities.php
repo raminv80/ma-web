@@ -14,7 +14,6 @@ function checkEmail($usr){
 	return 'false';
 }
 
-
 function urlSafeString($str){
 	$str = str_replace('&','and',$str);
 	$str = preg_replace("/[\"\']/", "", $str);
@@ -29,7 +28,6 @@ function urlPrep($str){
 	$str = trim($str,'/');
 	return $str;
 }
-
 
 function isValidInetAddress($data, $strict = false)
 {
@@ -93,11 +91,9 @@ function formatBytes($size, $precision = 2)
 {
 	$base = log($size) / log(1024);
 	$suffixes = array('', 'k', 'M', 'G', 'T');
-
 	return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
 }
 /**
- *
  * Checks if the string $haystack starts with the string $needle
  * @param string $haystack
  * @param string $needle
@@ -109,7 +105,6 @@ function startsWith($haystack, $needle)
 	return (strtolower(substr($haystack, 0, $length)) === strtolower($needle));
 }
 /**
- *
  * Checks if the string $haystack ends with the string $needle
  * @param string $haystack
  * @param string $needle
@@ -146,8 +141,6 @@ function logError($trace, $err, $sql = false) {
 	}
 	$msg .= "<br/>$trace";
 	sendMail("cmsemails@them.com.au", $CONFIG->attributes->company_name.'-Website', 'noreply@website.com.au', 'Error', $msg);
-	//echo $msg;
-	//die();
 	header('Location: /404');
 	die();
 }
@@ -182,9 +175,10 @@ function sendMail($to,$from,$fromEmail,$subject,$body){
 	      ":sent"=>$mailSent,
 	  );
 	  $DBobject->executeSQL($sql,$params);
+	  return $DBobject->wrappedSqlIdentity();
 	}catch(Exception $e){}
-
-	return $mailSent;
+	
+	return false;
 }
 
 function sendMailV2($to,$from,$fromEmail,$subject,$body){
@@ -234,7 +228,6 @@ function preparehtmlmail($html) {
       $paths[$i++]['cid'] = $content_id;
     }
   }
-
 
   $boundary = "--".md5(uniqid(time()));
   $headers .= "MIME-Version: 1.0\n";
@@ -375,12 +368,6 @@ function checkToken($name, $token, $deleteAfterValidCheck = false){
 	return $isValid;
 }
 
-function insertToken(){
-	$this_buf='';
-	$this_buf='<input type="hidden" name="formToken" id="formToken" value="'.getToken().'" >';
-	return $this_buf;
-}
-
 /*
  *
 * Gets distance over 2 places
@@ -472,17 +459,6 @@ function nz_postcode_dist($postcode1, $postcode2, $db) {
 	}
 }
 
-/**
- * Enter description here ...
- * @return unknown
- */
-function LinkedFiles($misc, $id){
-	if( $id != '' && $misc != ''){
-		$linkfiles_obj = new filelink_class($misc, $id);
-		$var	=	$linkfiles_obj->DisplayFiles();
-	}
-	return  $var;
-}
 
 /**
  * Checks if a value exists in an multidimensional array.

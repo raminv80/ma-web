@@ -4,7 +4,7 @@
  */
 
 Class DBmanager{
-	public $LAST_INSERTED_ID;
+	private $LAST_INSERTED_ID;
 	 
 	/**
 	 * Enter description here ...

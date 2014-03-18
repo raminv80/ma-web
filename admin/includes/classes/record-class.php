@@ -108,7 +108,7 @@ Class Record{
 		}
 		
 		$pre = str_replace("tbl_","",$a->table);
-		$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . $order;
+		$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . ($a->where != '' ? "AND {$a->where} " : "") . $order;
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $row) {
 				$r_array = array();
