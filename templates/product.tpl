@@ -17,7 +17,11 @@
 	<div class="container">
 		<div class="row">
 		{foreach $gallery as $image }
-			<img src="{$image.gallery_link}" title="{$image.gallery_title}" alt="{$image.gallery_alt_tag}">
+			<div class="col-xs-3">
+				<div class="image">
+					<img src="{$image.gallery_link}" title="{$image.gallery_title}" alt="{$image.gallery_alt_tag}">
+				</div>
+			</div>
 		{/foreach}
 		</div>
 		<div class="row">Description: {$product_description}</div>
@@ -108,8 +112,10 @@
 				<h4>Related products</h4>
 				{foreach from=$associated_products key=k item=it}
 					<div class="row">
-						<div class="col-xs-3 image">
-							<img src="{$it.gallery.0.gallery_link}" alt="{$it.gallery.0.gallery_alt_tag}" title="{$it.gallery.0.gallery_title}" style="width:90px; height:90px;"/>
+						<div class="col-xs-3">
+							<div class="image">
+								<img src="{$it.gallery.0.gallery_link}" alt="{$it.gallery.0.gallery_alt_tag}" title="{$it.gallery.0.gallery_title}" style="width:90px; height:90px;"/>
+							</div>
 						</div>
 						<div class="col-xs-9">
 							<div class="col-xs-12">{$it.product_name}</div>

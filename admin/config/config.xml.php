@@ -64,6 +64,13 @@
 			<linkfield>listing_id</linkfield>
 			<field>gallery_listing_id</field> 
 		</associated>
+		<associated>
+			<name>tags</name>
+			<table>tbl_tag</table>
+			<linkfield>listing_id</linkfield>
+			<field>tag_object_id</field>
+			<where>tag_object_table = 'tbl_listing'</where> 
+		</associated>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_page.tpl</edit_template>
 		
@@ -91,6 +98,13 @@
 				<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
 			</field> 
 		</options>
+		<associated>
+			<name>tags</name>
+			<table>tbl_tag</table>
+			<linkfield>listing_id</linkfield>
+			<field>tag_object_id</field>
+			<where>tag_object_table = 'tbl_listing'</where> 
+		</associated>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_prodcategory.tpl</edit_template>
 	</section>  

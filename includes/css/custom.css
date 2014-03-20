@@ -3,162 +3,6 @@ body,input, button, select, textarea {
 	font-weight: 400;
 }
 
-.popover{
-    max-width:350px !important;
-    
-}
-.form-help-block {
-    color: #737373;
-    display: block;
-    margin-bottom: 10px;
-    margin-top: 5px;
-}
-
-ul.nav li.dropdown:hover > ul.dropdown-menu {
-   /*  display: block;    */ 
-}
-
-#login, #register, #reset-pass {
-	text-align:center;	
-}
-
-.gst {
-	font-size:85%;
-	opacity: 0.6;
-}
-
-.sign-in {
-	font-weight:bold;	
-}
-#social-login {
-	margin:10px;	
-}
-.total-amount{
-	font-weight:bold;	
-}
-
-hr.or-separator {
-	padding: 0;
-	border: none;
-	border-top: thin outset #333;
-	color: #333;
-	text-align: center;
-
-}
-
-hr.or-separator:after {
-	content: "OR";
-	display: inline-block;
-	position: relative;
-	top: -0.7em;
-	padding: 0 0.25em;
-	background: white;
-	margin-bottom:10px;
-}
-
-#tab-container {
-	background-color: #fafafa;
-	margin: 20px 0 40px;
-	padding-bottom: 5px;
-}
-#orders-list {
-	margin:30px;
-}
-#account-tab a {
-	color:#428BCA;
-}
-.tab-content-open {
-	margin: 30px 0 30px;
-}
-.error-msg {
-	color: #CF0000;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 20px;
-    text-align: center;
-	display: none;
-}
-
-.success-msg {
-	color: #00a000;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 20px;
-    text-align: center;
-	display: none;
-}
-
-#products-container {
-	margin-top: 20px; 
-	margin-bottom: 40px;
-}
-.product-item {
-	margin-top: 10px;	
-}
-.cart-table-header {
-	margin-top: 40px; 
-	background-color: rgb(238, 238, 238);
-}
-
-.checkout-collapse {
-	margin-top: 40px;
-	margin-bottom: 40px;
-}
-.totals{
-	margin-top: 20px;
-}
-
-.cart-info{
-	width: 315px;
-	margin: 15px;
-}
-
-.cart-overview-image {
-    height: 60px;
-    width: 60px;
-}
-.cart-product-summary table tr td {
-    padding-bottom: 10px;
-}
-.cart-product-summary-details {
-    color: #555555;
-    font-size: 12px;
-}
-.cart-product-summary-details strong {
-    font-size: 14px;
-}
-.cart-product-summary-price {
-    color: #555555;
-    font-size: 16px;
-    font-weight: bold;
-    padding-left: 20px;
-    text-align: right;
-}
-.cart-total-price-2 {
-    border-bottom: 2px solid #E7E7E7;
-    border-top: 2px solid #E7E7E7;
-}
-.cart-total-price-2 table {
-    border-bottom: 3px solid #FFFFFF;
-    border-top: 3px solid #FFFFFF;
-}
-.cart-total-price-2 table tr {
-    background-color: #F2F2F2;
-    color: #555555;
-}
-.cart-total-price-2 table tr td {
-    padding: 10px;
-}
-.cart-total-price-2 {
-    font-size: 14px;
-    font-weight: bold;
-}
-.cart-total-price-2 strong {
-    font-size: 24px;
-}
-.modal-header {
-	background-color: #dddddd;
-}
 
 .carousel-indicators li {
 	cursor: pointer;
@@ -173,12 +17,6 @@ a, a:active, a:selected, a:focus {
 }
 .breadcrumbs > a {
 	color:#cccccc;
-}
-.page{
-	display:none;
-}
-.page.current{
-	display:block;
 }
 
 .locationinfo .address,.locationinfo .times  {
@@ -196,7 +34,6 @@ a, a:active, a:selected, a:focus {
 	text-decoration: underline;
 }
 
-.clear{clear:both;}
 
 .instafeed-wrapper{
 	background-color: #eeeeee;
@@ -334,17 +171,6 @@ a:hover{
 
 #social img:hover, #franchise img:hover{
 	opacity: 1;
-}
-
-#searchbox{
-	background: #eeeeee url(../../images/mag.png) no-repeat 150px 5px;
-	border-radius: 15px;
-	border: 1px solid #6d655e;
-	color: #354568;
-	height:32px;
-	width:182px;
-	padding: 8px;
-	margin: 10px;
 }
 
 #social img{
@@ -845,50 +671,8 @@ display:block;
 	border: 1px solid #ccc;
 }
 
-#resultbox{
-	padding: 30px 0;
-}
 
-h4.resulttitle, h4.locationtitle{
-	font-size: 25px;
-	line-height: 40px;
-	color: #020202;
-	
-}
 
-.resulttext, .resulttags{
-	color:#aaa;
-	font-size: 13px;
-	line-height: 21px;
-}
-
-.resulttags a:hover{
-	color: #291607;
-}
-
-.result .button1{
-	width: 30%;
-	float: left;
-	margin: 20px 0 30px;
-}
-
-.resultpag ul{
-	list-style: none;
-	margin: 0;
-}
-
-.resultpag ul li{
-	float:left;
-	margin-right: 7px;
-}
-
-.resultpag ul li a, .resultpag ul li{
-	color:#f4b27f;
-}
-
-.resultpag ul li.current a, .resultpag ul li a:hover{
-	color: #C2C2C2;
-}
 
 #locationbox .button1{
 	width: auto !important;

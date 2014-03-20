@@ -34,48 +34,45 @@ if (jQuery.validator) {
 	      $(element).closest('.form-group').find('.help-block').text(error.text());
 	    },
 	    submitHandler: function (form) {
-	      if ($(form).valid()) {
-
-	    	  	$('body').css('cursor','wait');
-	    	  	$('.btn-primary').addClass('disabled');
-	    		var datastring = $("#Edit_Record").serialize();
-	    		$.ajax({
-	    			type: "POST",
-	    		    url: "/admin/includes/processes/processes-record.php",
-	    			cache: false,
-	    			data: datastring,
-	    			dataType: "html",
-	    		    success: function(data) {
-	    		    	try{
-	    		    		var obj = $.parseJSON(data);
-	    				 	var notice = obj.notice;
-	    				 	$('#'+ notice).slideDown();
-	    					setTimeout(function(){
-	    						$('#'+ notice).slideUp();
-	    			    	},10000);
-		    			    if(obj.primaryID != null){
-		    			    	setTimeout(function(){
-		    			    		window.location =document.URL+"/"+obj.primaryID;
-		    			    	},4000);
-			    			    return;
-		    			    }else{
-		    					$.each(obj.IDs, function(k, v) {
-		    					    $('input[name="'+k+'"]').val(v);
-		    					});
-		    			    } 
-	    				}catch(err){
-	    					console.log('TRY-CATCH error');
-	    				}
-	    				$('body').css('cursor','default'); 
-	    				$('.btn-primary').removeClass('disabled');
-	    		    },
-	    			error: function(){
-	    				$('body').css('cursor','default'); 
-	    				$('.btn-primary').removeClass('disabled');
-	    				console.log('AJAX error');
-	    	         	}
-	    		});
-	      } 
+    	  	$('body').css('cursor','wait');
+    	  	$('.btn-primary').addClass('disabled');
+    		var datastring = $("#Edit_Record").serialize();
+    		$.ajax({
+    			type: "POST",
+    		    url: "/admin/includes/processes/processes-record.php",
+    			cache: false,
+    			data: datastring,
+    			dataType: "html",
+    		    success: function(data) {
+    		    	try{
+    		    		var obj = $.parseJSON(data);
+    				 	var notice = obj.notice;
+    				 	$('#'+ notice).slideDown();
+    					setTimeout(function(){
+    						$('#'+ notice).slideUp();
+    			    	},10000);
+	    			    if(obj.primaryID != null){
+	    			    	setTimeout(function(){
+	    			    		window.location =document.URL+"/"+obj.primaryID;
+	    			    	},4000);
+		    			    return;
+	    			    }else{
+	    					$.each(obj.IDs, function(k, v) {
+	    					    $('input[name="'+k+'"]').val(v);
+	    					});
+	    			    } 
+    				}catch(err){
+    					console.log('TRY-CATCH error');
+    				}
+    				$('body').css('cursor','default'); 
+    				$('.btn-primary').removeClass('disabled');
+    		    },
+    			error: function(){
+    				$('body').css('cursor','default'); 
+    				$('.btn-primary').removeClass('disabled');
+    				console.log('AJAX error');
+    	         	}
+    		});
 	    }
 	});
 

@@ -297,10 +297,6 @@ while ( true ) {
 	}
 }
 
-
-
-
-
 $SMARTY->assign ( 'allowGuest', $allowGuest );
 /**
  * ***************************************

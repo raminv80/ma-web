@@ -1,120 +1,62 @@
 {block name=body}
-{* Define the function *}
-{function name=render_menu level=0 menu=0}
-	{foreach $items as $item}
-		{if $level lt 1}
-		
-			{if $item.url eq 'our-locations'}
-				{call name=render_menu items=$item.subs level=$level+1 parenturl=$parenturl|cat:"/"|cat:$item.url menu=2}
-			{/if}
-		{else}
-			{if $menu eq 2}
-				{if $item.category eq 1 and $item.listings eq 1}
-				<a href="{$parenturl}#{$item.category_name|strtolower}" id="{$item.category_name|strtolower}" class="button1{if $listing_category_id eq $item.category_id} selected{/if}">{$item.category_name}</a>
-				{call name=render_menu items=$item.subs level=$level+1 parenturl=$parenturl menu=$menu}
-				{/if}
-			{/if}
-		{/if}
-	{/foreach}	
-{/function}
 
-	<header>
-		{include file='mobilemenu.tpl'}
-		<div id="headout" class="headerbg">
-				{include file='desktopmenu.tpl'}
-				<div id="videobox">
-					<div class="container">
-						<div class="row-fluid">
-							<div class="span7">
-					  			{include file='breadcrumbs.tpl'}
-					  			<h3 class="toptitle">{$listing_parent.listing_title}</h3>
-					  			<div class="toptext">
-					  				{$listing_parent.listing_content1}
-					  			</div>
-				  			</div>
-						</div>
-					</div>
-				</div>
-			</div>
-	</header>
-	<div id="orangebox">
-	  	<div class="container" id="locationbox">
-	  		
-	  		<div class="row-fluid" id="statelist2">
-		  		<a href="/our-locations#all" class="button1">All</a>
-		  		{call name=render_menu items=$menuitems}
-	  		</div>
-	  		
-	  		<div class="row-fluid">
-	  			<div class="span7 loc all" latitude="{$location_latitude}" longitude="{$location_longitude}" title="{$listing_title}" pin="{$location_pin}">
-	  				<div class="row-fluid">
-	  					<div class="span5">
-	  						<div class="row-fluid" id="big-image">
-	  							<img src="{$listing_image}" alt="{$listing_title}"/>
-	  						</div>
-	  						<div class="row-fluid small-images">
-								<div class="span3">
-		  							<a href="{$listing_image}"><img src="{$listing_image}" alt="{$listing_title}"/></a>
-		  						</div>
-							{foreach $gallery as $item}
-								<div class="span3">
-		  							<a href="{$item.gallery_link}"><img src="{$item.gallery_link}" alt="{$item.gallery_file}"/></a>
-		  						</div>
-							{/foreach}
-	  						</div>
-	  					</div>
-	  					<div class="span7 locationinfo">
-	  						<h4 class="locationtitle">{$listing_title}</h4>
-	  						{if $listing_flag1 eq 1}<div class="new"></div>{/if}
-	  						<div class="address">{$listing_content1}</div>
-	  						<div class="times">{$listing_content2}</div>
-	  						<div class="content">{$listing_content3}</div>
-	  					</div>
-	  				</div>					  					  				
-	  			</div>
-	  			<div class="span5">
-	  				<div class="map" id="map"></div>
-	  			</div>
-	  		</div>
-	  		<div class="row-fluid">
-	  		<div class="span4">
-		  			<img src="/images/menu.png" alt="" />
-		  			<div class="quicktitle">View Our Menu</div>
-		  			<div class="quicktext">{$listing_parent.listing_content2}</div>
-		  			<a href="/our-menu" class="button">View Menu</a>
-		  		</div>
-		  		<div class="span4">
-		  			<img src="/images/vipquick.png" alt="" />
-		  			<div class="quicktitle">VIP Customer Program</div>
-		  			<div class="quicktext">{$listing_parent.listing_content3}</div>
-		  			<a href="/community/vip-customer-program" class="button">View Details</a>
-		  	  		</div>
-		  		<div class="span4">
-		  			<img src="/images/careers.png" alt="" />
-		  			<div class="quicktitle">Careers</div>
-		  			<div class="quicktext">{$listing_parent.listing_content4}</div>
-		  			<a href="/community/careers" class="button">View Careers</a>
-		  		</div>
-	  		</div>
-	  	</div>
-	  </div>  
-	  
-	  <div id="whitebox1">
-	  	<div class="container">
-		  	<div class="row-fluid">
-			  	<div class="span7">
-			  		{$listing_parent.listing_content5}
-			  	</div>
-			  	<div class="span5">
-			  		<img src="/images/cocoa.png" alt="Cocoa spilling out of a shaker onto white bench" />
-			  	</div>
-		  	</div>
-	  	</div>
-	  </div>
+<div class="container content">
+  	<div class="row">
+        <div class="col-md-push-9 col-md-3">
+            	<div class="search">
+            		<form accept-charset="UTF-8" action="/search" method="get" id="search-form" > 
+            			<input type="text" name="q" value="Site search" onfocus="if(this.value == 'Site search') { this.value = ''; }" onblur="if(this.value == '') { this.value = 'Site search'; }" id="searchbox" />
+            		</form>
+            	</div><!-- /.search -->
+        </div>
+  	
+		<div class="col-md-pull-3 col-md-8">    
+	        {include file='breadcrumbs.tpl'}
+	        <h1>{$listing_name}</h1>
+		</div>
 
-	<script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-	<script src="/includes/js/jquery.ba-bbq.min.js"></script>
-    <script src="/includes/js/location-menu.js"></script>  
+ 		<div class="col-sm-9">
+			{$listing_content1}
+        </div>
 
-	{include file='signup.tpl'} {include file='footer.tpl'}
+ 		<div class="col-sm-3">
+        	{if $listing_content2}<img src="{$listing_content2}" />{/if}
+        </div>
+      </div><!-- /.row -->
+      
+      <div class="row">
+    	<div class="col-md-12">
+            <div id="map-canvas">Loading Map...</div>
+            <small>
+				<a href="javascript:void(0);" onclick="mapInNewWindow();" title="View Larger Map" >View Larger Map</a>
+			</small>
+			
+            <br><br>
+            <div class="find-nearest-location">
+            <p>Find your nearest location</p>
+            
+            	<div class="location-postcode">
+                    <form accept-charset="UTF-8" action="" onsubmit="return false;" method="post" id="find-store-form" > 
+                    <input type="text" value="{if $find_location.postcode}{$find_location.postcode}{else}Enter your postcode{/if}" name="postcode" onfocus="if(this.value == 'Enter your postcode') { this.value = ''; }" onblur="if(this.value == '') { this.value = 'Enter your postcode'; }" id="location-postcode" /><br>
+                    <input type="checkbox" name="7day" {if $find_location.7day} checked {/if} value="7daypharmacy"> Show me the closest 7 day pharmacy<br>
+                    <input type="checkbox"  name="day_night" {if $find_location.day_night} checked {/if} value="daynightpharmacy"> Show me the closest day/night pharmacy<br>
+                    <a href="javascript:void(0);" onclick="findStore();" class="find-store-btn btn">Find</a>
+                    </form>
+            	</div><!-- /.location-postcode -->
+                <div class="clear"></div>
+            </div><!-- /.find-nearest-location -->
+        </div><br><br>
+        
+     	<div id="location-wrapper" class="col-md-12">
+       		{include file='location-summary.tpl'}
+       	</div>
+     </div>
+    
+  </div><!-- /.container -->
+  
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script src="/includes/js/location.js"></script>  
+
+
+
 {/block}

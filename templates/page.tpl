@@ -14,13 +14,14 @@
 {/if}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<title>{$listing_name|replace:'and':'&'|ucfirst} {$product_name|ucfirst} {$listing_seo_title}</title>
+<title>{$product_name|ucfirst} {$listing_seo_title}</title>
 <link href="/images/favicon.ico" type="image/x-icon" rel="shortcut icon">
 
 <!-- Bootstrap -->
 <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
 <link href="/includes/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/includes/css/cart.css" rel="stylesheet" media="screen">
 <link href="/includes/css/tipTip.css" rel="stylesheet" media="screen">
 <link href="/includes/css/custom.css" rel="stylesheet" media="screen">
 <link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
@@ -32,13 +33,6 @@
  	<![endif]-->
  	
 <script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/includes/js/custom.js"></script>
-<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-<script type="text/javascript">var switchTo5x=true;</script>
-<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-<script type="text/javascript">stLight.options({ publisher: "ur-fe757e87-3393-e43b-6170-ceee5d67e29", doNotHash: false, doNotCopy: false, hashAddressBar: false });</script>
 
 {block name=head}{/block}
 
@@ -94,6 +88,13 @@
 	  	</div>
 	</div>
 	
+	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/includes/js/custom.js"></script>
+	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+	<script type="text/javascript">var switchTo5x=true;</script>
+	<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+	<script type="text/javascript">stLight.options({ publisher: "ur-fe757e87-3393-e43b-6170-ceee5d67e29", doNotHash: false, doNotCopy: false, hashAddressBar: false });</script>
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>	
 	<script type="text/javascript">
 	$(document).ready(function(){

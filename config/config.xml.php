@@ -143,7 +143,6 @@
 		<!-- The template used if the field is matched --> 
 	</checkout>
 
-	
 	<process>
 		<url>process/cart</url>
 		<file>includes/processes/processes-cart.php</file>
@@ -159,8 +158,17 @@
 		<file>includes/processes/processes-contactus.php</file>
 		<return_url></return_url>
 	</process>
-	 	
-
+	<process>
+		<url>process/general</url>
+		<file>includes/processes/processes-general.php</file>
+		<return_url></return_url>
+	</process>	
+	<process>
+		<url>process/e-newsletter</url>
+		<file>includes/processes/process-campaignmonitor.php</file>
+		<return_url></return_url>
+	</process>	 	
+	
 	<responsiveImages>
 		<resolutions></resolutions><!-- the resolution break-points to use (screen widths, in pixels) -->
 		<cache></cache> <!-- where to store the generated re-sized images. Specify from your document root! -->

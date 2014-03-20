@@ -19,105 +19,141 @@
 					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				</div>
 			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_parent_flag">Is Parent?</label>
-				<div class="col-sm-5">
-					<input type="hidden" value="{if $fields.listing_parent_flag eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" class="value"> 
-					<input class="chckbx" type="checkbox" {if $fields.listing_parent_flag eq 1} checked="checked" {/if} 
-						onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_parent_flag">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+				<li><a href="#tags" data-toggle="tab">Tags</a></li>
+			</ul>
+		
+			<div class="tab-content">
+				<!--===+++===+++===+++===+++===+++ DETAILS TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane active" id="details">
+					<div class="row form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_parent_flag">Is Parent?</label>
+							<div class="col-sm-5">
+								<input type="hidden" value="{if $fields.listing_parent_flag eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" class="value"> 
+								<input class="chckbx" type="checkbox" {if $fields.listing_parent_flag eq 1} checked="checked" {/if} 
+									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_parent_flag">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_display_menu">Display in Menu?</label>
+							<div class="col-sm-5">
+								<input type="hidden" value="{if $fields.listing_display_menu eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" class="value">
+								<input class="chckbx" type="checkbox" {if $fields.listing_display_menu eq 1} checked="checked" {/if}
+									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_display_menu">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_name">Name *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.listing_name}" name="field[1][tbl_listing][{$cnt}][listing_name]" id="id_listing_name" onchange="seturl(this.value);" required>
+								<span class="help-block"></span>
+							</div>
+						</div>
+			<!-- 			<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_title">Title *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" onchange="seturl(this.value);" required>
+								<span class="help-block"></span>
+							</div>
+						</div> -->
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" >
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_parent">Parent</label>
+							<div class="col-sm-5">
+								<select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
+									<option value="0">Select one</option> {foreach $fields.options.listing_parent_id as $opt}
+									<option value="{$opt.id}" {if $fields.listing_parent_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option> {/foreach}
+								</select>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_seo_title">SEO Title *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.listing_seo_title}" name="field[1][tbl_listing][{$cnt}][listing_seo_title]" id="id_listing_seo_title" required>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_meta_description">Meta Description</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.listing_meta_description}" name="field[1][tbl_listing][{$cnt}][listing_meta_description]" id="id_listing_meta_description">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_meta_words">Meta Words</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.listing_meta_words}" name="field[1][tbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_order">Order</label>
+							<div class="col-sm-5">
+								<input class="form-control number" type="text" value="{$fields.listing_order}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_published">Published</label>
+							<div class="col-sm-5">
+								<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value">
+								<input class="chckbx" type="checkbox" {if $fields.listing_published eq 1} checked="checked" {/if}
+									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
+							</div>
+						</div>
+						<div class="row form-group">
+								<label class="col-sm-3 control-label" for="listing_image">Header Image<br>
+								<small>Size: 1960px Wide x 345px Tall <br>("None" for default image)</small></label>
+							<div class="col-sm-9">
+								<input type="hidden" value="{$fields.listing_image}" name="field[1][tbl_listing][{$cnt}][listing_image]" id="listing_image_link" class="fileinput"> 
+								<span class="file-view" id="listing_image_path"> {if $fields.listing_image}<a href="{$fields.listing_image}" target="_blank" >View</a>{else}None{/if} </span> 
+								<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('listing_image','','');">Select File</a> 
+								<a href="javascript:void(0);" class="btn btn-info" onclick="$('#listing_image_link').val('');$('#listing_image_path').html('None');">Remove File</a>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_content5">Ad-Banner Link</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.listing_content5}" name="field[1][tbl_listing][{$cnt}][listing_content5]" id="id_listing_content5">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_content1">Content</label><br />
+							<div class="col-sm-5">
+								<textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_display_menu">Display in Menu?</label>
-				<div class="col-sm-5">
-					<input type="hidden" value="{if $fields.listing_display_menu eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" class="value">
-					<input class="chckbx" type="checkbox" {if $fields.listing_display_menu eq 1} checked="checked" {/if}
-						 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_display_menu">
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_name">Name *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_name}" name="field[1][tbl_listing][{$cnt}][listing_name]" id="id_listing_name" onchange="seturl(this.value);" required>
-					<span class="help-block"></span>
-				</div>
-			</div>
-<!-- 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_title">Title *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" onchange="seturl(this.value);" required>
-					<span class="help-block"></span>
-				</div>
-			</div> -->
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" >
-					<span class="help-block"></span>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_parent">Parent</label>
-				<div class="col-sm-5">
-					<select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
-						<option value="0">Select one</option> {foreach $fields.options.listing_parent_id as $opt}
-						<option value="{$opt.id}" {if $fields.listing_parent_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option> {/foreach}
-					</select>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_seo_title">SEO Title *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_seo_title}" name="field[1][tbl_listing][{$cnt}][listing_seo_title]" id="id_listing_seo_title" required>
-					<span class="help-block"></span>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_meta_description">Meta Description</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_meta_description}" name="field[1][tbl_listing][{$cnt}][listing_meta_description]" id="id_listing_meta_description">
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_meta_words">Meta Words</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_meta_words}" name="field[1][tbl_listing][{$cnt}][listing_meta_words]" id="id_listing_meta_words">
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_order">Order</label>
-				<div class="col-sm-5">
-					<input class="form-control number" type="text" value="{$fields.listing_order}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_published">Published</label>
-				<div class="col-sm-5">
-					<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value">
-					<input class="chckbx" type="checkbox" {if $fields.listing_published eq 1} checked="checked" {/if}
-						 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
-				</div>
-			</div>
-			<div class="row form-group">
-					<label class="col-sm-3 control-label" for="listing_image">Header Image<br>
-					<small>Size: 1960px Wide x 345px Tall <br>("None" for default image)</small></label>
-				<div class="col-sm-9">
-					<input type="hidden" value="{$fields.listing_image}" name="field[1][tbl_listing][{$cnt}][listing_image]" id="listing_image_link" class="fileinput"> 
-					<span class="file-view" id="listing_image_path"> {if $fields.listing_image}<a href="{$fields.listing_image}" target="_blank" >View</a>{else}None{/if} </span> 
-					<a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('listing_image','','');">Select File</a> 
-					<a href="javascript:void(0);" class="btn btn-info" onclick="$('#listing_image_link').val('');$('#listing_image_path').html('None');">Remove File</a>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_content5">Ad-Banner Link</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.listing_content5}" name="field[1][tbl_listing][{$cnt}][listing_content5]" id="id_listing_content5">
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_listing_content1">Content</label><br />
-				<div class="col-sm-5">
-					<textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
+				<!--===+++===+++===+++===+++===+++ TAGS TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane" id="tags">
+					<div class="form">
+						<div class="row form-group">
+							<label class="col-sm-2 control-label" for="new_tag">Tag</label>
+							<div class="col-sm-5">
+								<div class="ui-widget">
+									<input class="form-control" id="new_tag">
+									<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="newTag();"> Add Tag</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row form" id="tags-wrapper">
+					{assign var='tagno' value=0}
+					{assign var='table_name' value='tbl_listing'}
+					{assign var='default' value='listing_id'}
+					{foreach $fields.tags as $tag}
+						{assign var='tagno' value=$tagno+1}
+						{include file='tag.tpl'}
+					{/foreach}
+					</div>
+					<input type="hidden" value="{$tagno}" id="tagno">
 				</div>
 			</div>
 			<div class="row form-group">
@@ -163,6 +199,54 @@ $(document).ready(function(){
 	 });
 });
 
+
+function newTag() {
+	if ( $('#new_tag').val() != '' ) { 
+		$('body').css('cursor', 'wait');
+		var no = $('#tagno').val();
+		no++;
+		$('#tagno').val(no);
+		$.ajax({
+			type : "POST",
+			url : "/admin/includes/processes/processes-tags.php",
+			cache : false,
+			data : "template=tag.tpl&tagno=" + no + "&tag%5Btag_value%5D="	+  $('#new_tag').val() + "&table_name=tbl_listing&default=listing_id&objId=" + $('#listing_id').val(),
+			dataType : "html",
+			success : function(data, textStatus) {
+				try {
+					$('#tags-wrapper').prepend(data);
+					$('#new_tag').val('');
+					$('body').css('cursor', 'default');
+					$('#new_tag').closest('.form-group').removeClass('has-success').removeClass('has-error');
+				} catch (err) {
+					$('body').css('cursor', 'default');
+				}
+			}
+		});
+	} else {
+		$('#new_tag').closest('.form-group').removeClass('has-success').addClass('has-error');
+	}
+}
+
+function deleteTag(ID) {
+	if (ConfirmDelete()) {
+		var count = $('#' + ID).attr('rel');
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1;//January is 0!
+		var yyyy = today.getFullYear();
+		var hh = today.getHours();
+		var MM = today.getMinutes();
+		var ss = today.getSeconds();
+
+		html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[15][tbl_tag]['+count+'][tag_deleted]" />';
+		$('#' + ID).append(html);
+		$('#' + ID).css('display', 'none');
+		$('#' + ID).removeClass('tags');
+	} else {
+		return false;
+	}
+}
 
 </script>
 {/block}

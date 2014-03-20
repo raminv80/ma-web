@@ -217,21 +217,25 @@
 				</div>
 				<!--===+++===+++===+++===+++===+++ TAGS TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="tags">
+					<div class="form">
+						<div class="row form-group">
+							<label class="col-sm-2 control-label" for="new_tag">Tag</label>
+							<div class="col-sm-5">
+								<div class="ui-widget">
+									<input class="form-control" id="new_tag">
+									<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="newTag();"> Add Tag</a>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="row form" id="tags-wrapper">
 					{assign var='tagno' value=0}
+					{assign var='table_name' value='tbl_product'}
+					{assign var='default' value='product_id'}
 					{foreach $fields.tags as $tag}
 						{assign var='tagno' value=$tagno+1}
 						{include file='tag.tpl'}
 					{/foreach}
-					</div>
-					<div class="row form-group">
-						<label class="col-sm-2 control-label" for="new_tag">Tag</label>
-						<div class="col-sm-5">
-							<div class="ui-widget">
-								<input class="form-control" id="new_tag">
-								<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="newTag();"> Add Tag</a>
-							</div>
-						</div>
 					</div>
 					<input type="hidden" value="{$tagno}" id="tagno">
 				</div>
@@ -514,13 +518,13 @@
 			$('#tagno').val(no);
 			$.ajax({
 				type : "POST",
-				url : "/admin/includes/processes/load-template.php",
+				url : "/admin/includes/processes/processes-tags.php",
 				cache : false,
-				data : "template=tag.tpl&tagno=" + no + "&tag%5Btag_value%5D="	+  $('#new_tag').val() + "&table_name=product",
+				data : "template=tag.tpl&tagno=" + no + "&tag%5Btag_value%5D="	+  $('#new_tag').val() + "&table_name=tbl_product&default=product_id&objId=" + $('#product_id').val(),
 				dataType : "html",
 				success : function(data, textStatus) {
 					try {
-						$('#tags-wrapper').append(data);
+						$('#tags-wrapper').prepend(data);
 						$('#new_tag').val('');
 						$('body').css('cursor', 'default');
 						$('#new_tag').closest('.form-group').removeClass('has-success').removeClass('has-error');

@@ -1,5 +1,6 @@
 
-ErrorDocument 404 /404.php
+ErrorDocument 404 /404
+ErrorDocument 503 /home/6-web/68/10/themserver.com/public/cms/503.html
 RewriteEngine  on
 
 # stuff to let through (ignore)
@@ -8,6 +9,8 @@ RewriteEngine  on
   RewriteCond %{REQUEST_URI} "/includes/"
   RewriteRule (.*) $1 [L]
   
+#RewriteCond %{REQUEST_URI} "/503.html"
+#RewriteRule (.*) /503.html [R=503,L]
 
 RewriteCond %{HTTP_HOST} !^www\.
 RewriteRule ^(.*)$ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
