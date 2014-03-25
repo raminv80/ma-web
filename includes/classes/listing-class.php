@@ -279,7 +279,7 @@ class ListClass {
 		$sql [3] = "TRUNCATE cache_tbl_listing;";
 		$sql [2] = "INSERT INTO cache_tbl_listing (cache_record_id,cache_url,cache_modified) VALUES  ";
 		$params = array ();
-		$sql [1] = "SELECT listing_id AS id FROM tbl_listing WHERE listing_published = '1' AND listing_deleted IS NULL";
+		$sql [1] = "SELECT DISTINCT (listing_object_id) AS id FROM tbl_listing WHERE listing_published = '1' AND listing_deleted IS NULL";
 		$res = $DBobject->wrappedSql ( $sql [1] );
 		$n = 1;
 		
@@ -306,7 +306,7 @@ class ListClass {
 	}
 	function BuildUrl($_id, &$url) {
 		global $DBobject;
-		$sql = "SELECT tbl_listing.* FROM tbl_listing WHERE listing_id = :id";
+		$sql = "SELECT * FROM tbl_listing WHERE listing_object_id = :id ORDER BY listing_modified DESC";
 		$params = array (
 				":id" => $_id 
 		);
