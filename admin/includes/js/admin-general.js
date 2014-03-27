@@ -32,6 +32,40 @@ function getFileType(ID,parent,listing_id){
 
 function deleteFileType(ID){
 	var count = $('#'+ID).parent().attr('rel');
+	var today = mysql_now();
+	
+	html = '<input type="hidden" value="'+today+'" name="field[5][tbl_gallery]['+count+'][gallery_deleted]" />';
+	$('#'+ID).append(html);
+	$('#'+ID).parent().css('display','none');
+}
+
+
+function buildCache(table_name,object_id,preview){
+	var str = '';
+	if(object_id != ''){
+		str = '&objid='+$('#'+object_id).val();
+	}
+	$.ajax({
+		type : "POST",
+		url : "/admin/includes/processes/processes-cache.php",
+		cache: false,
+		async: false,
+		data : 'table='+table_name+str,
+		dataType: "html",
+		success : function(data, textStatus) {
+			try {
+				var obj = $.parseJSON(data);
+				if(preview){
+					window.open('http://'+(document.domain)+'/draft/'+obj.url,'_blank');
+				}
+			} catch (err) {}
+		}
+	});
+}
+
+
+
+function mysql_now(){
 	var today = new Date();
 	var dd = today.getDate();
 	var mm = today.getMonth()+1;//January is 0!
@@ -40,30 +74,7 @@ function deleteFileType(ID){
 	var MM = today.getMinutes();
 	var ss = today.getSeconds();
 	
-	html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[1][tbl_gallery]['+count+'][gallery_deleted]" />';
-	$('#'+ID).append(html);
-	$('#'+ID).parent().css('display','none');
-}
-
-
-function deleteInspection(ID){
-	if (ConfirmDelete()) {
-		var count = $('#'+ID).attr('rel');
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1;//January is 0!
-		var yyyy = today.getFullYear(); 
-		var hh = today.getHours();
-		var MM = today.getMinutes();
-		var ss = today.getSeconds();
-		
-		html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[1][tbl_inspection]['+count+'][inspection_deleted]" />';
-		$('#'+ID).append(html);
-		$('#'+ID).css('display','none');
-	}else{ 
-		return false;
-	}
-
+	return yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss;
 }
 
 /**tool tips ***/

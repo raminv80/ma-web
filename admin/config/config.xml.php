@@ -11,7 +11,10 @@
 	<resource> 
 		<url>file-manager</url> 
 		<template>filemanager.tpl</template> 
-	</resource> 
+	</resource>
+	<sequence> 
+		<table>tbl_sequence</table> 
+	</sequence> 
 	
 	<!-- THIS SECTION IS USED TO MANAGE THE ADMINISTRATOR TABLE. ADMINISTRATORS AND USERS FOR THE CMS ARE MANAGED HERE. -->
 	<section>
@@ -54,8 +57,9 @@
 			<field> 
 				<name>listing_parent_id</name>
 				<table>tbl_listing</table>
+				<id>listing_object_id</id>
 				<reference>listing_name</reference> 
-				<where>listing_parent_flag = '1' AND listing_type_id = '1'</where> 
+				<where>listing_parent_flag = '1' AND listing_type_id = '1' AND listing_published = '1'</where> 
 			</field> 
 		</options>
 		<associated> 
@@ -94,8 +98,9 @@
 			<field recursive="true"> 
 				<name>listing_parent_id</name>
 				<table>tbl_listing</table>
+				<id>listing_object_id</id>
 				<reference>listing_name</reference> 
-				<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
+				<where>listing_parent_flag = '1' AND listing_type_id = '2' AND listing_published = '1'</where> 
 			</field> 
 		</options>
 		<associated>
@@ -122,7 +127,6 @@
 			<id>product_id</id>
 			<field>product_name</field>
 			<deleted>product_deleted</deleted>
-			<orderby>product_order ASC</orderby>
 			<associated> 
 				<id>attribute_id</id>
 				<name>attribute</name>
@@ -156,14 +160,15 @@
 				<field> 
 					<name>products_list</name>
 					<table>tbl_product</table>
+					<id>product_object_id</id>
 					<reference>product_group</reference> 
-					<where>product_group IS NOT NULL AND product_group != ''</where> 
+					<where>product_group IS NOT NULL AND product_group != '' AND product_published = '1'</where> 
 				</field>
 				<field recursive="true"> 
 					<name>product_listing_id</name>
 					<table>tbl_listing</table>
 					<reference>listing_name</reference> 
-					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
+					<where>listing_parent_flag = '1' AND listing_type_id = '2' AND listing_published = '1'</where> 
 				</field>  
 			</options>
 		</table>
@@ -239,6 +244,7 @@
 				<field inlist="true"> 
 					<name>status</name>
 					<table>tbl_status</table>
+					<id>status_id</id>
 					<reference>status_name</reference> 
 					<orderby>status_order</orderby> 
 				</field> 
@@ -267,14 +273,16 @@
 				<field recursive="true"> 
 					<name>categories</name>
 					<table>tbl_listing</table>
+					<id>listing_object_id</id>
 					<reference>listing_name</reference> 
-					<where>listing_parent_flag = '1' AND listing_type_id = '2'</where> 
+					<where>listing_parent_flag = '1' AND listing_type_id = '2' AND listing_published = '1'</where> 
 				</field> 
 				<field> 
 					<name>products</name>
 					<table>tbl_product</table>
+					<id>product_object_id</id>
 					<reference>product_name</reference> 
-					<orderby>product_name</orderby>
+					<orderby>product_name AND product_published = '1'</orderby>
 				</field> 
 			</options>
 		</table>

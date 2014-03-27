@@ -1,23 +1,25 @@
 <?php
 // Fatal Error Handler
-// register_shutdown_function( "fatal_handler" );
-set_error_handler ( "fatal_handler" );
-
-function fatal_handler($errno, $errstr, $errfile, $errline) {
-  if($errno === E_USER_ERROR || $errno === E_RECOVERABLE_ERROR){
+# Registering shutdown function
+register_shutdown_function( "fatal_handler" );
+function fatal_handler() {
+  # Getting last error
+  $errno = error_get_last();
+  if($errno['type'] === E_USER_ERROR || $errno['type'] === E_ERROR){
     $to = "nick@them.com.au,apolo@them.com.au";
     $from = "noreply@" . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
     $fromEmail = "noreply@" . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
-    $subject = "Fatal Error - ";
-    $trace = print_r ( debug_backtrace ( false ), true );
+    $subject = "Fatal Error Occured ";
     $body = "<table><thead bgcolor='#c8c8c8'><th>Item</th><th>Description</th></thead><tbody>";
-    $body .= "<tr valign='top'><td><b>Error</b></td><td><pre>$errstr</pre></td></tr>";
-    $body .= "<tr valign='top'><td><b>Errno</b></td><td><pre>$errno</pre></td></tr>";
-    $body .= "<tr valign='top'><td><b>File</b></td><td>$errfile</td></tr>";
-    $body .= "<tr valign='top'><td><b>Line</b></td><td>$errline</td></tr>";
-    $body .= "<tr valign='top'><td><b>Trace</b></td><td><pre>$trace</pre></td></tr>";
+    $body .= "<tr valign='top'><td><b>Error</b></td><td><pre>{$errno['message']}</pre></td></tr>";
+    $body .= "<tr valign='top'><td><b>Errno</b></td><td><pre>{$errno['type']}</pre></td></tr>";
+    $body .= "<tr valign='top'><td><b>File</b></td><td>{$errno['file']}</td></tr>";
+    $body .= "<tr valign='top'><td><b>Line</b></td><td>{$errno['line']}</td></tr>";
     $body .= '</tbody></table>';
-    $body .= serialize ( $_POST );
+    $body .= '<br />$_POST<br/>';
+    $body .= print_r ( $_POST,true );
+    $body .= '<br />$_SERVER<br/>';
+    $body .= print_r ( $_SERVER,true );
     /* To send HTML mail, you can set the Content-type header. */
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
@@ -31,10 +33,12 @@ function fatal_handler($errno, $errstr, $errfile, $errline) {
     }
     ini_restore ( 'sendmail_from' );
     $_SESSION ['error'] = 'We had trouble saving your entry. Please review your entry and try again. If this continues please contact us.';
-    header('location: /503.html');
+    header('location: /503');
     die ('@ 503 Service Temporarily Unavailable');
   }
 }
+
+
 set_include_path ( $_SERVER ['DOCUMENT_ROOT'] );
 ini_set ( 'display_errors', 1 );
 error_reporting ( 1 );

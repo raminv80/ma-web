@@ -16,7 +16,7 @@ class ProductClass extends ListClass {
 	}
 	
 	
-	function Load($_ID = null) {
+	function Load($_ID = null, $_PUBLISHED = 1) {
 		global $SMARTY, $DBobject;
 		$template = "";
 		$data = "";
@@ -40,8 +40,6 @@ class ProductClass extends ListClass {
 			}
 		}
 	
-       	$bdata = $this->LoadBreadcrumb ( $_ID, $arrChk['isProduct']);
-        $SMARTY->assign ( "breadcrumbs", $bdata );
 	
         //------------ LOAD PRODUCT/CATEGORY DATA, PARENT AND EXTENDS TABLE ----------
         $LOCALCONF = $this->CONFIG_OBJ->table;
@@ -58,15 +56,20 @@ class ProductClass extends ListClass {
 		foreach ( $LOCALCONF->extends as $a ) {
 			$extends .= " LEFT JOIN {$a->table} ON {$pre}_id = {$a->field}"; 
 		}
-		$sql = "SELECT * FROM {$tableName} {$extends} WHERE {$pre}_id = :id AND {$pre}_deleted IS NULL AND {$pre}_published = 1 ";
+		$sql = "SELECT * FROM {$tableName} {$extends} WHERE {$pre}_object_id = :id AND {$pre}_deleted IS NULL ORDER BY {$pre}_published = :published DESC ";
 		$params = array (
-				":id" => $_ID
+			":id" => $_ID,
+			":published" => $_PUBLISHED
 		);
 		if($res = $DBobject->wrappedSqlGet( $sql, $params )) {
 			foreach ( $res[0] as $key => $val ) {
 				$SMARTY->assign ( $key, unclean ( $val ) );
 			}
-			$p_data = $this->LoadParents ( $res[0][$parentField] );
+
+			$bdata = $this->LoadBreadcrumb (  $res[0]["{$pre}_object_id"], $arrChk['isProduct'], 1);
+			$SMARTY->assign ( "breadcrumbs", $bdata );
+			
+			$p_data = $this->LoadParents ( $res[0][$parentField], 1);
 			$SMARTY->assign ( "listing_parent", $p_data );
 			
 			//------------- LOAD ASSOCIATED TABLES --------------
@@ -108,7 +111,7 @@ class ProductClass extends ListClass {
 	
 		return $template;
 	}
-	function LoadBreadcrumb($_id, $_isProduct) {
+	function LoadBreadcrumb($_id, $_isProduct, $_PUBLISHED = 1) {
 		global  $DBobject;
 		                
         $data = array();
@@ -116,9 +119,9 @@ class ProductClass extends ListClass {
         if ($_isProduct) {
                 
         	$sql = "SELECT * FROM tbl_listing LEFT JOIN tbl_product ON listing_id = product_listing_id 
-                    WHERE product_id = :id AND product_deleted IS NULL AND product_published = 1 AND listing_deleted IS NULL  AND listing_published = 1";
+                    WHERE product_id = :id AND product_deleted IS NULL AND listing_deleted IS NULL";
             $params = array (
-            			":id" => $_id
+            	":id" => $_id 
             );
                         
             if ($res = $DBobject->wrappedSql ( $sql, $params )) {
@@ -130,12 +133,13 @@ class ProductClass extends ListClass {
                 $data [$res [0] ['listing_id']] ["url"] = $res [0] ['listing_url'];
                 $data [$res [0] ['listing_id']] ["subs"] = $pData;
                 if (! empty ( $res [0] ['listing_parent_id'] ) && $res [0] ['listing_parent_id'] != 0) {
-                	$sql2 = "SELECT * FROM tbl_listing WHERE tbl_listing.listing_id = :cid AND tbl_listing.listing_deleted IS NULL";
+                	$sql2 = "SELECT * FROM tbl_listing WHERE listing_object_id = :cid AND listing_deleted IS NULL ORDER BY listing_published = :published DESC";
                     $params2 = array (
-                    	":cid" => $res [0] ['listing_parent_id']
+                    	":cid" => $res [0] ['listing_parent_id'],
+		        		":published" => $_PUBLISHED
                     );
                     if ($res2 = $DBobject->wrappedSql ( $sql2, $params2 )) { 
-                    	$data = parent::LoadBreadcrumb( $res2[0]['listing_id'], $data );
+                    	$data = parent::LoadBreadcrumb( $res2[0]['listing_id'], $data, $_PUBLISHED );
 					}
             	}
 			}
@@ -166,7 +170,7 @@ class ProductClass extends ListClass {
 		return $results;
 	}
 	
-	function LoadTree($_cid = 0, $level = 0, $count = 0) {
+	function LoadTree($_cid = 0, $level = 0, $count = 0, $_PUBLISHED = 1) {
 		global $CONFIG, $SMARTY, $DBobject;
 		$data = array ();
 	
@@ -215,9 +219,10 @@ class ProductClass extends ListClass {
 			$prod_order = " ORDER BY " . $this->CONFIG_OBJ->producttable->orderby;
 		}
 		
-		$sql = "SELECT * FROM tbl_product {$prod_extends} WHERE product_listing_id = :cid AND product_deleted IS NULL AND product_published = 1" . $prod_order;
+		$sql = "SELECT * FROM tbl_product {$prod_extends} WHERE product_listing_id = :cid AND product_deleted IS NULL AND product_published = :published" . $prod_order;
 		$params = array (
-				":cid" => $_cid
+				":cid" => $_cid,
+		    	":published" => $_PUBLISHED  
 		);
 		
 		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
@@ -243,14 +248,14 @@ class ProductClass extends ListClass {
 				}
 				$count += 1;
 	
-				$data ['listings']["{$row['listing_id']}"] = unclean ( $row );
+				$data ['listings']["{$row['listing_object_id']}"] = unclean ( $row );
 				foreach ( $this->CONFIG_OBJ->table->associated as $a ) {
 					if ($a->attributes ()->listing) {
-						$data ["{$row['listing_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row["{$a->linkfield}"]);
+						$data ["{$row['listing_object_id']}"] ["{$a->name}"] = $this->LoadAssociated($a,$row["{$a->linkfield}"]);
 					}
 				}
-				$subs = self::LoadTree ( $row ['listing_id'], $level ++ ,$count);
-				$data ["{$row['listing_id']}"] ['listings'] = $subs;
+				$subs = self::LoadTree ( $row ['listing_object_id'], $level ++ ,$count, $_PUBLISHED);
+				$data ["{$row['listing_object_id']}"] ['listings'] = $subs;
 			}
 		}
 	
@@ -273,7 +278,7 @@ class ProductClass extends ListClass {
 				$sqlCat = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url"; // Check for CATEGORIES
 				$row = $DBobject->wrappedSql ( $sqlCat, $params );
 				if (empty ( $row )) {
-					$sqlp = "SELECT product_id FROM tbl_product WHERE CONCAT(product_url, '-', product_id) = :url";
+					$sqlp = "SELECT product_object_id FROM tbl_product WHERE CONCAT(product_url, '-', product_object_id) = :url";
 					$params2 = array (
 							":url" => $a
 					);
@@ -298,7 +303,7 @@ class ProductClass extends ListClass {
 			$sqlCat = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url"; // Check for CATEGORIES
                         $row = $DBobject->wrappedSql ( $sqlCat, $params );
                         if (empty ( $row )) {
-                                $sqlp = "SELECT product_id FROM tbl_product WHERE CONCAT(product_url, '-', product_id) = :url";
+                                $sqlp = "SELECT product_object_id FROM tbl_product WHERE CONCAT(product_url, '-', product_object_id) = :url";
 								$params2 = array (
                                                 ":url" => $a
                                 );
@@ -339,22 +344,24 @@ class ProductClass extends ListClass {
 		$DBobject->wrappedSql ( $sql [0] );
 	
 		$sql [3] = "TRUNCATE cache_tbl_product;";
-		$sql [2] = "INSERT INTO cache_tbl_product (cache_record_id,cache_url,cache_modified) VALUES  ";
+		$sql [2] = "INSERT INTO cache_tbl_product (cache_record_id,cache_published,cache_url,cache_modified) VALUES  ";
 		$params = array ();
-		$sql [1] = "SELECT product_id AS id, product_url AS url, product_listing_id AS pid FROM tbl_product WHERE product_published = '1' AND product_deleted IS NULL";
+		$sql [1] = "SELECT product_object_id AS id, product_url AS url, product_listing_id, product_published, AS pid FROM tbl_product WHERE product_deleted IS NULL";
 		$res = $DBobject->wrappedSql ( $sql [1] );
 		$n = 1;
 	
 		foreach ( $res as $row ) {
 			$id = $row ['id'];
 			$url = $row ['url'] . '-' . $row ['id'];
-			if (! $this->BuildUrl( $row ['pid'], $url )) {
+			$published = $row ['product_published'];
+			if (! $this->BuildUrl( $row ['pid'], $url )) { 
 				continue;
 			}
 				
 			$sql [2] .= " ( :id{$n}, :title{$n}, now() ) ,";
 			$params = array_merge ( $params, array (
 					":id{$n}" => $id,
+					":published{$n}" => $published, 
 					":title{$n}" => $url
 			) );
 			$n ++;

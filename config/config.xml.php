@@ -24,12 +24,16 @@
 		<template>standardpage.tpl</template><!-- The template used if the field is matched -->
 	</page_strut>
 	<index_page>
-		<template>home.tpl</template>
+		<template>standardpage.tpl</template>
 		<pageID>12</pageID>
 	</index_page>
-	<error404 standalone="true">
+	<!-- <error404 standalone="true">
 		<template>404.tpl</template>
 		<pageID>2</pageID>
+	</error404> -->
+	<error404>
+		<template>standardpage.tpl</template>
+		<pageID>11</pageID>
 	</error404>
 	<search>
 		<template>search.tpl</template>

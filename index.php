@@ -12,6 +12,19 @@ if (preg_match('/[A-Z]/', $_SERVER['REQUEST_URI']))
 include "includes/functions/functions.php";
 global $CONFIG, $SMARTY, $DBobject;
 
+// ASSIGN PUBLISHED 1 THIS IS TO MAKE SURE ALL PAGES WHICH ARE LOADED ARE PUBLISHED
+$_PUBLISHED = 1;
+
+// ASSIGN DRAFT VARIABLE IF THE URL CONTAINS "DRAFT". ALSO SET CONFIG TO STAGING = TRUE TO PREVENT GOOGLE INDEX.
+$uri_prefix_draft    = "/(^|\s)(draft\/)/";
+if (preg_match($uri_prefix_draft, $_REQUEST ['arg1']))
+{
+  $_REQUEST ['arg1'] = preg_replace($uri_prefix_draft, "", $_REQUEST ['arg1']);
+  $_DRAFT = true;
+  $_PUBLISHED = 0; // UPDATE PUBLISHED TO 0 TO LOAD THE DRAFT VERSIONS
+  $SMARTY->assign ( "staging", true );
+}
+
 // ASSIGN ALL STORED SMARTY VALUES
 foreach ( $_SESSION ['smarty'] as $key => $val ) {
 	$SMARTY->assign ( $key, $val );
@@ -56,17 +69,16 @@ while ( true ) {
 	 */
 	if ($_request ['arg1'] == '404') {
 		header ( "HTTP/1.0 404 Not Found" );
-		
 		if(strtolower((string)$CONFIG->error404->attributes()->standalone) == 'true'){
 			$obj = new $class ( '', $struct );
-			$template = $obj->Load( $CONFIG->error404->pageID );
+			$template = $obj->Load( $CONFIG->error404->pageID, $_PUBLISHED );
 			$template = $CONFIG->error404->template; 
 			$SMARTY->assign ( 'requested_page', $_SERVER['HTTP_REFERER'] );
 			$SMARTY->display ( "extends:$template" );
 			die();
 		}else{
 			$obj = new $class ( '', $struct );
-			$template = $obj->Load ( $CONFIG->error404->pageID );
+			$template = $obj->Load ( $CONFIG->error404->pageID, $_PUBLISHED );
 			$template = $CONFIG->error404->template;
 			$menu = $obj->LoadMenu ( $CONFIG->error404->pageID );
 			$SMARTY->assign ( 'menuitems', $menu );
@@ -80,7 +92,7 @@ while ( true ) {
 	 */
 	if ($_request ['arg1'] == '') {
 		$obj = new $class ( '', $struct );
-		$template = $obj->Load ( $CONFIG->index_page->pageID );
+		$template = $obj->Load ( $CONFIG->index_page->pageID, $_PUBLISHED );
 		$template = $CONFIG->index_page->template;
 		$menu = $obj->LoadMenu ( $CONFIG->index_page->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
@@ -112,7 +124,7 @@ while ( true ) {
 			exit;
 		}
 		$obj = new $class ( '', $struct );
-		$template = $obj->Load ( $CONFIG->account->pageID );
+		$template = $obj->Load ( $CONFIG->account->pageID, $_PUBLISHED );
 		$template = $CONFIG->account->template;
 		$menu = $obj->LoadMenu ( $CONFIG->account->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
@@ -128,7 +140,7 @@ while ( true ) {
 	 */
 	if ($_request ['arg1'] == 'search') {
 		$obj = new $class ( '', $struct );
-		$template = $obj->Load ( $CONFIG->search->pageID );
+		$template = $obj->Load ( $CONFIG->search->pageID, $_PUBLISHED );
 		$template = $CONFIG->search->template;
 		$menu = $obj->LoadMenu ( $CONFIG->search->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
@@ -146,7 +158,7 @@ while ( true ) {
 	    	exit;
 		}
 		$obj = new $class ( '', $CONFIG->checkout ); 
-		$template = $obj->Load ( $CONFIG->checkout->pageID );
+		$template = $obj->Load ( $CONFIG->checkout->pageID, $_PUBLISHED );
 		$template = $CONFIG->checkout->template;
 		$menu = $obj->LoadMenu ( $CONFIG->checkout->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
@@ -170,7 +182,7 @@ while ( true ) {
 	 */
 	if ($_request ['arg1'] == 'store/shopping-cart') {
 		$obj = new $class ( '', $struct );
-		$template = $obj->Load ( $CONFIG->cart->pageID );
+		$template = $obj->Load ( $CONFIG->cart->pageID, $_PUBLISHED );
 		$template = $CONFIG->cart->template;
 		$menu = $obj->LoadMenu ( $CONFIG->cart->pageID );
 		$SMARTY->assign ( 'menuitems', $menu );
@@ -191,7 +203,7 @@ while ( true ) {
 	foreach ( $CONFIG->static_page as $sp ) {
 		if ($sp->url == $_request ['arg1']) {
 			$obj = new $class ( '', $struct );
-			$template = $obj->Load ( $sp->pageID );
+			$template = $obj->Load ( $sp->pageID, $_PUBLISHED );
 			$template = $sp->template;
 			$menu = $obj->LoadMenu ( $sp->pageID );
 			$SMARTY->assign ( 'menuitems', $menu );
@@ -236,7 +248,7 @@ while ( true ) {
 			$_nurl = $_request ["arg1"];
 			$class = ( string ) $lp->file;
 			$obj = new $class ( $_nurl, $lp );
-			$template = $obj->Load ();
+			$template = $obj->Load (null, $_PUBLISHED);
 			
 			$menu = $obj->LoadMenu ( $lp->pageID );
 			$SMARTY->assign ( 'menuitems', $menu );
@@ -252,26 +264,26 @@ while ( true ) {
 	$arr = explode ( "/", $_request ["arg1"] );
 	foreach ( $arr as $a ) {
 		if ($a !== end ( $arr )) {
-			$sql = "SELECT listing_id FROM tbl_listing WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_url = :url ";
+			$sql = "SELECT listing_object_id FROM tbl_listing WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_url = :url ";
 			$params = array (
 					":url" => $a 
 			);
 			if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
-				$url_parent_id = $res ['0'] ['listing_id'];
+				$url_parent_id = $res ['0'] ['listing_object_id'];
 				continue;
 			} else {
 				break 1;
 			}
 		} else {
-			$sql = "SELECT listing_id FROM tbl_listing WHERE tbl_listing.listing_url = :url AND tbl_listing.listing_parent_id = :pcat AND tbl_listing.listing_deleted IS NULL ";
+			$sql = "SELECT listing_object_id FROM tbl_listing WHERE tbl_listing.listing_url = :url AND tbl_listing.listing_parent_id = :pcat AND tbl_listing.listing_deleted IS NULL ";
 			if ($res = $DBobject->wrappedSqlGet ( $sql, array (
 					":url" => $a,
 					":pcat" => $url_parent_id 
 			) )) {
 				$obj = new $class ( '', $struct );
-				$template = $obj->Load ( $res [0] ['listing_id'] );
+				$template = $obj->Load ( $res [0] ['listing_object_id'], $_PUBLISHED );
 				$template = $struct->template;
-				$menu = $obj->LoadMenu ( $res [0] ['listing_id'] );
+				$menu = $obj->LoadMenu ( $res [0] ['listing_object_id'] );
 				$SMARTY->assign ( 'menuitems', $menu );
 				break 2;
 			} else {

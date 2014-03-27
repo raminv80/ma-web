@@ -71,7 +71,7 @@
 				COPYRIGHT {'Y'|date} SA HARNESS | <a href="/privacy-policy" title="Privacy policy">Privacy policy</a> | <a href="/disclaimer" title="Disclaimer">Disclaimer</a>
 				</div>
 				<div id="them" class="col-sm-4 col-sm-offset-2">
-					made by <a target="_blank" href="http://www.them.com.au" title="THEM Advertising & Digital">them advertising & digital</a>
+					made by <a target="_blank" href="http://www.them.com.au" title="Them Advertising">Them Advertising</a>
 				</div>
 			</div>
 		</div>

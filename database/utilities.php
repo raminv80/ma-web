@@ -477,3 +477,16 @@ function in_array_r($needle, $haystack, $strict = false) {
 	}
 	return false;
 }
+
+function arrayToCSV($array){
+	$buf = "";
+	foreach($array as $key => $val){
+		if(is_array($val)){
+			foreach($val as $key => $field){
+				$buf.= "$field,";
+			}
+		}
+		$buf.= "\r\n";
+	}
+	return $buf;
+}

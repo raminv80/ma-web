@@ -122,7 +122,7 @@ class cart {
 				":sid" => $this->cart_session,
 				":uid" => $userId 
 		);
-		$res = $DBobject->wrappedSqlInsert ( $sql, $params );
+		$res = $DBobject->wrappedSql ( $sql, $params );
 		$this->cart_id = $DBobject->wrappedSqlIdentity ();
 	}
 	
@@ -411,9 +411,9 @@ class cart {
 				$cart_arr[$order['cart_id']]['items'] = $this->GetDataProductsOnCart($order['cart_id']);
 				
 				$sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
-    			$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $order['payment_billing_address_id']) );
+    			$res = $DBobject->wrappedSql ( $sql, array(':id' => $order['payment_billing_address_id']) );
     			$cart_arr[$order['cart_id']]['billing'] = $res[0];
-    			$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $order['payment_shipping_address_id']) );
+    			$res = $DBobject->wrappedSql ( $sql, array(':id' => $order['payment_shipping_address_id']) );
     			$cart_arr[$order['cart_id']]['shipping'] = $res[0];
 			}
 		}
@@ -946,7 +946,7 @@ class cart {
 	 * @param string $code
 	 * @return boolean
 	 */
-	function UnpublishOnTimeDiscountCode($code) {
+	function UnpublishOneTimeDiscountCode($code) {
 		global $DBobject;
 	
 		$sql = "SELECT * FROM tbl_discount

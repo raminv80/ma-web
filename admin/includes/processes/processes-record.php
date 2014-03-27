@@ -12,13 +12,16 @@ if(checkToken('admin', $_POST["formToken"])){
 				if(in_array($tbl, $tables)){
 					foreach ( $group as $index => $vals) {
 						$id =  $vals['id'];
-						$id_check = '';
+						if(!is_array($id)){
+							$id = array($id);
+						}
+						$id_check = array();
 						$_update_vals = array();
 						$_insert_vals = array();
 						$_insert_fields = array();
 						$_params = array();
 						if(is_array($vals)){
-							if($tbl == 'tbl_link'){
+/* 							if($tbl == 'tbl_link'){
 								if(!empty($vals['link_type_id']) && !empty($vals['link_list_id'])){
 									$slq_link = 'UPDATE tbl_link SET link_deleted = NOW() WHERE link_type_id = :link_type_id AND link_list_id = :link_list_id';
 									$result = $DBobject->executeSQL($slq_link ,array('link_type_id' => $vals['link_type_id'], 'link_list_id'=>$vals['link_list_id'] ));
@@ -33,11 +36,11 @@ if(checkToken('admin', $_POST["formToken"])){
 									$result = $DBobject->executeSQL($slq_link ,array('link_type_id'=>$vals['link_type_id'],'link_list_id'=>$vals['link_list_id'],'link_parent_id'=>$vals['link_parent_id']));
 								}
 								continue;
-							}
+							} */
 							foreach($vals as $key => $val){
 								if($key == 'id'){ continue; }
-								if($key == $id){
-									$id_check = "{$key} = :{$key}";
+								if(in_array($key, $id)){ 
+									$id_check[] = "{$key} = :{$key}";
 								}else{
 									if(empty($val) && array_key_exists($key, $_POST['default'])){
 										$val = $stored["{$_POST['default']["{$key}"]}"];
@@ -49,12 +52,20 @@ if(checkToken('admin', $_POST["formToken"])){
 								}
 							}
 						}
-						if($vals["{$id}"] == ""){
+						$nvalues=0;
+						foreach ($id as $i){
+							if($vals["{$i}"] != ""){
+								$nvalues++; 
+							}
+						}
+						if(count($id) > $nvalues){ 
 							$sql = "INSERT INTO {$tbl} (".implode(',',$_insert_fields).") VALUES (".implode(',',$_insert_vals).")";
 							$insert_table=$tbl;
 						}else{ 
-							$_params["{$id}"] = $vals["{$id}"];
-							$sql = "UPDATE {$tbl} SET ".implode(',',$_update_vals)." WHERE {$id_check}";
+							foreach ($id as $i){
+								$_params["{$i}"] = $vals["{$i}"];
+							}
+							$sql = "UPDATE {$tbl} SET ".implode(',',$_update_vals)." WHERE ".implode(' AND ',$id_check);
 							$update_table=$tbl;
 						}
 	
@@ -68,12 +79,16 @@ if(checkToken('admin', $_POST["formToken"])){
 						}
 						if($insert_table != ''){
 							$o = $DBobject->wrappedSqlIdentity();
-							$key = "field[{$order}][{$tbl}][{$index}][{$id}]";
-							$returnIDs[$key] = $o;
-							$stored["{$id}"] = $o;
-							if($_POST['primary_id'] == $id){
-								$primaryID = $o;
+							foreach ($id as $i){
+								$key = "field[{$order}][{$tbl}][{$index}][{$i}]";
+								$returnIDs[$key] = $o;
+							
+								$stored["{$i}"] = $o;
+								if($_POST['primary_id'] == $i){
+									$primaryID = $o;
+								}
 							}
+							
 						}
 						
 					}

@@ -65,11 +65,11 @@ Class Record{
 				$article_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
 			} else {
 				$pre = str_replace ( "tbl_", "", $f->table );
-				$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+				$sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 					foreach ( $res as $key => $row ) {
 						$article_f ['options'] ["{$f->name}"] [] = array (
-								'id' => $row ["{$pre}_id"],
+								'id' => $row ["{$f->id}"],
 								'value' => $row ["{$f->reference}"]
 						);
 					}
@@ -84,14 +84,14 @@ Class Record{
 		$results = array();
 	
 		$pre = str_replace("tbl_","",$f->table);
-		$sql = "SELECT {$pre}_id, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+		$sql = "SELECT {$f->id}, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 	
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $row) {
 				$results[] = array (
-						'id' => $row ["{$pre}_id"],
+						'id' => $row ["{$f->id}"],
 						'value' => $row ["{$f->reference}"],
-						'subs' => $this->getOptionsCatTree($f, $row["{$pre}_id"])
+						'subs' => $this->getOptionsCatTree($f, $row["{$f->id}"])
 				);
 			}
 	
@@ -166,11 +166,11 @@ Class Record{
 				if ($f->attributes()->inlist) {
 					$options = array();
 					$pre = str_replace ( "tbl_", "", $f->table );
-					$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+					$sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 					if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 						foreach ( $res as $key => $row ) {
 							$options ["{$f->name}"] [] = array (
-									'id' => $row ["{$pre}_id"],
+									'id' => $row ["{$f->id}"],
 									'value' => $row ["{$f->reference}"]
 							);
 						}

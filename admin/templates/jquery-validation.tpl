@@ -9,6 +9,7 @@ if (jQuery.validator) {
 	
 	  jQuery.validator.setDefaults({
 	    debug: false,
+		async: false,
 	    errorClass: 'has-error',
 	    validClass: 'has-success',
 	    ignore: "",
@@ -52,10 +53,11 @@ if (jQuery.validator) {
     						$('#'+ notice).slideUp();
     			    	},10000);
 	    			    if(obj.primaryID != null){
-	    			    	setTimeout(function(){
+	    			    	/* setTimeout(function(){
 	    			    		window.location =document.URL+"/"+obj.primaryID;
 	    			    	},4000);
-		    			    return;
+		    			    return; 
+	    			    	window.history.pushState(null, null, );*/
 	    			    }else{
 	    					$.each(obj.IDs, function(k, v) {
 	    					    $('input[name="'+k+'"]').val(v);
@@ -86,7 +88,7 @@ if (jQuery.validator) {
   			    url: "/admin/includes/processes/urlencode.php",
   				cache: false,
   				async: false,
-  				data: "value="+encodeURIComponent(value)+"&id="+params.id+"&table="+params.table+"&field="+params.field,
+  				data: "value="+encodeURIComponent(value)+"&id="+params.id+"&table="+params.table+"&field="+params.field+"&field2="+params.field2+"&value2="+$('#'+params.value2).val(),
   				dataType: "json",
   			    success: function(res, textStatus) {
   			    	try{

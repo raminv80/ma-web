@@ -90,7 +90,8 @@ if(!empty($_POST)){
 								'Key' => 'Product',
 								'Value' => $_POST['Product']
 						)
-				)
+				),
+				"Resubscribe" => "true"
 		));
 	}catch(Exception $e){
 		$exceptions += var_dump($e,1);

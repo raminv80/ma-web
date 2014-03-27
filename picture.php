@@ -13,26 +13,26 @@ ini_set('error_reporting', E_ALL);
 
 /* CONFIG ----------------------------------------------------------------------------------------------------------- */
 
-$resolutions   = array("1"=>480,"2"=>768,"3"=>992,"4"=>1382); // the resolution break-points to use (screen widths, in pixels)
+$resolutions   = array("0"=>480,"1"=>768,"2"=>992,"3"=>1382); // the resolution break-points to use (screen widths, in pixels)
 $cache_path    = "picture-cache"; // where to store the generated re-sized images. Specify from your document root!
 $jpg_quality   = 75; // the quality of any generated JPGs on a scale of 0 to 100
 $sharpen       = TRUE; // Shrinking images can blur details, perform a sharpen on re-scaled images?
 $watch_cache   = TRUE; // check that the adapted image isn't stale (ensures updated source images are re-cached)
 $browser_cache = 60*60*24*7; // How long the BROWSER cache should last (seconds, minutes, hours, days. 7days by default)
-$uri_prefix_pattern    = "/(^|\s)(\/picture\/[0-9]{1,3})/";
+$uri_prefix_pattern    = "/(^|\s)\/picture\/([0-9]{1,3})/"; //uri pattern naming for different break points (/picture/1/image.png where /picture/1 determines the iamge break point to retrieve)
 
 /* END CONFIG ----------------------------------------------------------------------------------------------------------
  ------------------------ Don't edit anything after this line unless you know what you're doing -------------------------
 --------------------------------------------------------------------------------------------------------------------- */
 
 /* get all of the required data from the HTTP request */
-$document_root  = $_SERVER['DOCUMENT_ROOT'];
-$requested_array = array();
+$document_root    = $_SERVER['DOCUMENT_ROOT'];
+$requested_array  = array();
 $requested_array  = preg_split($uri_prefix_pattern, parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-$requested_uri  = preg_replace($uri_prefix_pattern, "", parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH), 1);
-$requested_file = basename($requested_uri);
-$source_file    = $document_root.$requested_uri;
-$resolution     = FALSE;
+$resolution = intval($requested_array[0]);
+$requested_uri    = preg_replace($uri_prefix_pattern, "", parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH), 1); // Strip uri pattern from the uri so that all that is left is the file location
+$requested_file   = basename($requested_uri);
+$source_file      = $document_root.$requested_uri; // Full path to source file
 
 // does the $cache_path directory exist already?
 if (!is_dir("$document_root/$cache_path")) { // no
@@ -59,6 +59,7 @@ if (!extension_loaded('gd')) { // it's not loaded
   }
 }
 
+$pixel_density = 1; // set a default, used for non-retina style JS snippet
 /* Check to see if a valid cookie exists */
 if (isset($_COOKIE['resolution'])) {
   $cookie_value = $_COOKIE['resolution'];
@@ -71,52 +72,10 @@ if (isset($_COOKIE['resolution'])) {
     $cookie_data   = explode(",", $_COOKIE['resolution']);
     $client_width  = (int) $cookie_data[0]; // the base resolution (CSS pixels)
     $total_width   = $client_width;
-    $pixel_density = 1; // set a default, used for non-retina style JS snippet
     if (@$cookie_data[1]) { // the device's pixel density factor (physical pixels per CSS pixel)
       $pixel_density = $cookie_data[1];
     }
-
-    rsort($resolutions); // make sure the supplied break-points are in reverse size order
-    $resolution = $resolutions[0]; // by default use the largest supported break-point
-
-    // if pixel density is not 1, then we need to be smart about adapting and fitting into the defined breakpoints
-    if($pixel_density != 1) {
-      $total_width = $client_width * $pixel_density; // required physical pixel width of the image
-
-      // the required image width is bigger than any existing value in $resolutions
-      if($total_width > $resolutions[0]){
-        // firstly, fit the CSS size into a break point ignoring the multiplier
-        foreach ($resolutions as $break_point) { // filter down
-          if ($total_width <= $break_point) {
-            $resolution = $break_point;
-          }
-        }
-        // now apply the multiplier
-        $resolution = $resolution * $pixel_density;
-      }
-      // the required image fits into the existing breakpoints in $resolutions
-      else {
-        foreach ($resolutions as $break_point) { // filter down
-          if ($total_width <= $break_point) {
-            $resolution = $break_point;
-          }
-        }
-      }
-    }
-    else { // pixel density is 1, just fit it into one of the breakpoints
-      foreach ($resolutions as $break_point) { // filter down
-        if ($total_width <= $break_point) {
-          $resolution = $break_point;
-        }
-      }
-    }
   }
-}
-
-/* No resolution was found (no cookie or invalid cookie) */
-if (!$resolution) {
-  // We send the lowest resolution for mobile-first approach, and highest otherwise
-  $resolution = $is_mobile ? min($resolutions) : max($resolutions);
 }
 
 /* if the requested URL starts with a slash, remove the slash */

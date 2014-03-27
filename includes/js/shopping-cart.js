@@ -15,31 +15,29 @@ if (jQuery.validator) {
 	      $(element).closest('.form-group').find('.help-block').text(error.text());
 	    },
 	    submitHandler: function (form) {
-	      if ($(form).valid()) {
-	    	  var formID = $(form).attr('id');
-	          switch ( formID ) {
-	          	
-	          	case 'product-form': 
-	          		addCart(formID);
-	          		break;
-	          		
-	          	case 'login-form':
-	        	case 'register-form':
-	        		userLogin(formID); 
-	        		break;
-	        		
-	        	case 'step1-form': 
-	        		getShippingMethods(formID); 
-	          		break;
-	          		
-	        	case 'reset-pass-form': 
-	        		resetPass(formID);
-	        		break;
-	        		
-	          	default:
-	          		form.submit();
-	          }
-	      }
+    	  var formID = $(form).attr('id');
+          switch ( formID ) {
+          	
+          	case 'product-form': 
+          		addCart(formID);
+          		break;
+          		
+          	case 'login-form':
+        	case 'register-form':
+        		userLogin(formID); 
+        		break;
+        		
+        	case 'step1-form': 
+        		getShippingMethods(formID); 
+          		break;
+          		
+        	case 'reset-pass-form': 
+        		resetPass(formID);
+        		break;
+        		
+          	default:
+          		form.submit();
+          }
 	    }
 	  });
 }
@@ -150,6 +148,9 @@ function addCart(form){
 	    success: function(data) {
 	    	try{
 	    		var obj = $.parseJSON(data);
+	    		if (obj.url && $(window).width() < 760){
+	    			window.location.href = obj.url;
+	    		}
 			 	$('.nav-itemNumber').html(obj.itemsCount);
 			 	$('.nav-subtotal').html('$'+obj.subtotal);
 			 	$('#shop-cart-btn').html( obj.popoverShopCart );

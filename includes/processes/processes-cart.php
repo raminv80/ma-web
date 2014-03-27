@@ -17,6 +17,7 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 		    				'message' => $response,
 		    				'itemsCount' => $itemsCount,
 		    				'subtotal' => $subtotal,
+		    				'url' => 'http://'.$_SERVER['HTTP_HOST'].'/store/shopping-cart',
 							'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
 	    				));
 		    exit;
@@ -205,9 +206,9 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    			$cart_obj->CreateCart($_SESSION['user']['public']['id']);
 
   					
-  					//UNPUBLISH ON-TIME USE DISCOUNT CODE 
+  					//UNPUBLISH ONE-TIME USE DISCOUNT CODE 
   					if ($order['cart_discount_code']) {
-  						$cart_obj->UnpublishOnTimeDiscountCode($order['cart_discount_code']);  
+  						$cart_obj->UnpublishOneTimeDiscountCode($order['cart_discount_code']);  
   					}
   					
   					unset ( $_SESSION['address'] );

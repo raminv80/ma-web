@@ -19,7 +19,7 @@ Class Product extends Record{
 		$records = array();
 		
 		// ------------- Products List ------------------
-		$order = " ORDER BY product_order ASC, product_name ASC";
+		$order = " ORDER BY product_order, product_name";
 		if (! empty ( $this->CONFIG->orderby )) {
 			$order = " ORDER BY " . $this->CONFIG->orderby;
 		}
@@ -33,9 +33,15 @@ Class Product extends Record{
 		
 		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
 			foreach ( $res as $key => $val ) {
+				$p_url = '/';
+				if($val['product_published'] == 0){
+					$p_url .= 'draft/';
+				}
 				$records ["p{$val['product_id']}"] = array (
 						"title" => $val ['product_name'],
 						"id" => $val ['product_id'],
+						"published" => $val ['product_published'],
+						"preview_url" => $p_url . $this->getCachedUrl($val['product_object_id']),
 						"url" => "/admin/edit/{$this->CONFIG->url}/{$val['product_id']}",
 						"url_delete" => "/admin/delete/{$this->CONFIG->url}/{$val['product_id']}"
 				);
@@ -60,7 +66,7 @@ Class Product extends Record{
 		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
 			foreach ( $res as $key => $val ) {
 					$subs = array ();
-					$subs = $this->getRecordList ( $val ['listing_id']);
+					$subs = $this->getRecordList ( $val ['listing_object_id']);
 					if ($val ['listing_type_id'] == $this->TYPE_ID) {
 						$records ["l{$val['listing_id']}"] = array (
 												"title" => $val ['listing_name'],
@@ -97,4 +103,14 @@ Class Product extends Record{
 		}
 		return  $records;
 	}
+	
+	function getCachedUrl($id) {
+		global $DBobject;
+		$sql = "SELECT cache_url FROM cache_tbl_product WHERE cache_record_id = :id";
+		if ($res = $DBobject->executeSQL ($sql,array(':id'=>$id))) {
+			return $res[0]['cache_url'];
+		}
+		return '';
+	}
+
 }

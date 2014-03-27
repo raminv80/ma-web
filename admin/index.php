@@ -120,12 +120,22 @@ while(true){
 	/******* Goes to login  *******/
 	if($arr[0] == 'edit' && $arr[1] != ""){
 		/****** Goes to individual script pages *******/
+		if(empty($arr[2])){
+			foreach($CONFIG->sequence as $sp){
+				$sql = "INSERT INTO {$sp->table} () VALUES ()";
+				$objID = '';
+				if($DBobject->wrappedSql($sql)){
+					$objID = $DBobject->wrappedSqlIdentity();
+				}
+			}
+		}
 		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
 				$SMARTY->assign("zone",$sp->title);
 				$SMARTY->assign ( "typeID", $sp->type_id );
 				$SMARTY->assign ( "parentID", $sp->parent_id );
 				$SMARTY->assign ( "rootParentID", $sp->root_parent_id );
+				$SMARTY->assign ( "objID", $objID );
 				if($sp->type == "LISTING"){
 					$record = new Listing($sp);
 					$tm = $record->getListing(intval($arr[2]));

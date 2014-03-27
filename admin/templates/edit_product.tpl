@@ -17,18 +17,38 @@
 						<legend>
 							{if $fields.product_id neq ""}Edit{else}New{/if} {$zone} 
 							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
-							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"> Save</a>
-							{if $fields.product_id neq ""} 
-								<!-- <a class="btn btn-success pull-right" href="./"> <i class="icon-plus icon-white"></i> Add New {$zone}</a>  -->
-							{/if}
+							<div class="published" {if $fields.product_published eq 0}style="display:none;"{/if}>
+								<!-- PUBLISHED -->
+								<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published">Save</a>
+								<a href="javascript:void(0);" onClick="unpublish('product_published');" class="btn btn-warning pull-right top-btn">Unpublish</a>
+								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-info pull-right top-btn published">Save Draft version</a>
+							</div>
+							<div class="drafts" {if $fields.product_published eq 1}style="display:none;"{/if}>
+								<!-- DRAFT -->
+								<a href="javascript:void(0);" onClick="publish('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-primary pull-right top-btn drafts">Save &amp; Publish</a>
+								<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();buildCache('product');" class="btn btn-info pull-right top-btn drafts">Save</a>
+							</div>
 						</legend>
 					</fieldset>
 					<input type="hidden" value="product_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="product_id" name="field[1][tbl_product][{$cnt}][id]" id="id"/> 
-					<input type="hidden" value="{$fields.product_id}" name="field[1][tbl_product][{$cnt}][product_id]" id="product_id"> 
+					<input type="hidden" value="{$fields.product_id}" name="field[1][tbl_product][{$cnt}][product_id]" id="product_id" class="key"> 
+					<input type="hidden" value="{if $fields.product_object_id}{$fields.product_object_id}{else}{$objID}{/if}" name="field[1][tbl_product][{$cnt}][product_object_id]" id="product_object_id"> 
+					<input type="hidden" value="{$fields.product_published}" name="field[1][tbl_product][{$cnt}][product_published]" id="product_published">
+					
 					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				</div>
 			</div>		
+			<div class="row published" {if $fields.product_published eq 0}style="display:none;"{/if}>
+				<div class="alert alert-success text-center">
+					<strong>PUBLISHED</strong> 
+				</div>
+			</div>
+			<div class="row drafts" {if $fields.product_published eq 1}style="display:none;"{/if}>
+				<div class="alert alert-info text-center">
+					<strong>DRAFT</strong>
+				</div>
+			</div>
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
 				<li><a href="#pricing" data-toggle="tab">Pricing</a></li>
@@ -102,14 +122,14 @@
 								<input class="form-control number" type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
 							</div>
 						</div>
-						<div class="row form-group">
+						<!-- <div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_published">Published</label>
 							<div class="col-sm-5 ">
 								<input type="hidden" value="{if $fields.product_published eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_published]" class="value"> 
 								<input class="chckbx" type="checkbox" {if $fields.product_published eq 1}checked="checked"{/if} 
 									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_published">
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 				<!--===+++===+++===+++===+++===+++ PRICING TAB +++===+++===+++===+++===+++====-->
@@ -241,9 +261,17 @@
 				</div>
 			</div>
 			
-			<div class="row form-group">
-				<div class="col-sm-offset-3 col-sm-9">
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
+			<div class="row form-group form-bottom-btns">
+				<div class="published" {if $fields.product_published eq 0}style="display:none;"{/if}>
+					<!-- PUBLISHED -->
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published">Save</a>
+					<a href="javascript:void(0);" onClick="unpublish('product_published');" class="btn btn-warning pull-right top-btn">Unpublish</a>
+					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-info pull-right top-btn published">Save Draft version</a>
+				</div>
+				<div class="drafts" {if $fields.product_published eq 1}style="display:none;"{/if}>
+					<!-- DRAFT -->
+					<a href="javascript:void(0);" onClick="publish('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-primary pull-right top-btn drafts">Save &amp; Publish</a>
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();buildCache('product');" class="btn btn-info pull-right top-btn drafts">Save</a>
 				</div>
 			</div>
 		</form>
@@ -261,9 +289,11 @@
 
 		$('#id_product_url').rules("add", {
 			uniqueURL : {
-				id : "{if $fields.product_id}{$fields.product_id}{else}0{/if}",
+				id : "{if $fields.product_object_id}{$fields.product_object_id}{else}0{/if}",
 	        	table : "tbl_product",
-	        	field : "product_url"
+	        	field : "product_url",
+	        	field2 : "product_listing_id",
+	        	value2 : "id_product_listing"
 			}
 		});
 
@@ -292,6 +322,82 @@
 		});
 	});
 
+
+	function saveDraft(id_name,objId_name,publish_name, field_name){
+		if ($('#Edit_Record').valid()) { 
+			$('body').css('cursor', 'wait');
+			$('#'+publish_name).val('0');
+			var id_key0 = encodeURIComponent(id_name+'[0]');
+			var id_key1 = encodeURIComponent(id_name+'[1]');
+			var objId_key = encodeURIComponent($('#'+objId_name).attr('name'));
+			var publish_key = encodeURIComponent($('#'+publish_name).attr('name'));
+			var field_key = encodeURIComponent(field_name);
+			var field_value = encodeURIComponent(mysql_now());
+			$.ajax({
+				type : "POST",
+				url : "/admin/includes/processes/processes-record.php",
+				cache: false,
+				data : id_key0+'='+objId_name+'&'+id_key1+'='+publish_name+'&'+objId_key+"="+$('#'+objId_name).val()+"&"+publish_key+"=0&"+field_key+"="+field_value+'&formToken='+$('#formToken').val(),
+				dataType: "html",
+				success : function(data, textStatus) {
+					try {
+						var obj = $.parseJSON(data);
+						if(obj.notice){ 
+							$('.key').val('');
+							$('#Edit_Record').submit();
+							$('.published').hide();
+							$('.drafts').show();
+							buildCache('product');
+						}
+					} catch (err) {}
+					$('body').css('cursor', 'default');
+				}
+			});
+			$('body').css('cursor', 'default');
+		} 
+	}
+
+	function publish(id_name,objId_name,publish_name,field_name){
+		if ($('#Edit_Record').valid()) { 
+			$('body').css('cursor', 'wait');
+			$('#'+publish_name).val('1');
+			var id_key0 = encodeURIComponent(id_name+'[0]');
+			var id_key1 = encodeURIComponent(id_name+'[1]');
+			var objId_key = encodeURIComponent($('#'+objId_name).attr('name'));
+			var publish_key = encodeURIComponent($('#'+publish_name).attr('name'));
+			var field_key = encodeURIComponent(field_name);
+			var field_value = encodeURIComponent(mysql_now());
+			$.ajax({
+				type : "POST",
+				url : "/admin/includes/processes/processes-record.php",
+				cache: false,
+				data : id_key0+'='+objId_name+'&'+id_key1+'='+publish_name+'&'+objId_key+"="+$('#'+objId_name).val()+"&"+publish_key+"=1&"+field_key+"="+field_value+'&formToken='+$('#formToken').val(),
+				dataType: "html",
+				success : function(data, textStatus) {
+					try {
+						var obj = $.parseJSON(data);
+						if(obj.notice){ 
+							$('#Edit_Record').submit();
+							$('.drafts').hide();
+							$('.published').show();
+							buildCache('product');
+						}
+					} catch (err) {}
+					$('body').css('cursor', 'default');
+				}
+			});
+			$('body').css('cursor', 'default');
+		} 
+	}
+
+	function unpublish(publish_name){
+		$('#'+publish_name).val('0');
+		$('#Edit_Record').submit();
+		$('.published').hide();
+		$('.drafts').show();
+		buildCache('product');
+	}
+		
 
 	function seturl(str) {
 		$.ajax({
@@ -359,27 +465,26 @@
 		no++;
 		$('#attr_valueno' + attribute).val(no);
 
-		$
-				.ajax({
-					type : "POST",
-					url : "/admin/includes/processes/load-template.php",
-					cache : false,
-					data : "template=form_value.tpl&attributeno="
-							+ attribute_no + "&attrvalueno=" + no,
-					dataType : "html",
-					success : function(data, textStatus) {
-						try {
-							$('#attr_value-wrapper' + attribute_no)
-									.append(data);
-							displayResults();
-							$('body').css('cursor', 'default');
-							scrolltodiv('#attr_value_wrapper' + attribute_no
-									+ '-' + no);
-						} catch (err) {
-							$('body').css('cursor', 'default');
-						}
-					}
-				});
+		$.ajax({
+			type : "POST",
+			url : "/admin/includes/processes/load-template.php",
+			cache : false,
+			data : "template=form_value.tpl&attributeno="
+					+ attribute_no + "&attrvalueno=" + no,
+			dataType : "html",
+			success : function(data, textStatus) {
+				try {
+					$('#attr_value-wrapper' + attribute_no)
+							.append(data);
+					displayResults();
+					$('body').css('cursor', 'default');
+					scrolltodiv('#attr_value_wrapper' + attribute_no
+							+ '-' + no);
+				} catch (err) {
+					$('body').css('cursor', 'default');
+				}
+			}
+		});
 	}
 	function deleteAttribute(rid) {
 		if (ConfirmDelete()) {
@@ -582,5 +687,30 @@
 	$('#myTab a[href="#attributes"]').click(function() {
 		displayResults();
 	})
+	
+	
+	function preview() {
+		if ($('#Edit_Record').valid()) { 
+			$('body').css('cursor', 'wait');
+			var datastring = $("#Edit_Record").serialize();
+			$.ajax({
+				type : "POST",
+				url : "/admin/includes/processes/processes-preview.php",
+				cache: false,
+				data: datastring,
+				dataType: "html",
+				success : function(data, textStatus) {
+					try {
+						
+					} catch (err) {
+						
+					}
+				}
+			});
+			$('body').css('cursor', 'default');
+		} else {
+			alert('has-error');
+		}
+	}
 </script>
 {/block}

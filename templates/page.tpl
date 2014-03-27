@@ -49,26 +49,9 @@
 		<div id="header1">
 			<div id="header1in" class="container">
 				{include file='mobilemenu.tpl'}
-				<div id="logo"><a href="/"><img src="/images/logo.png" alt="logo icon"/></a></div>
-				<div id="social">
-					<!-- <div id="newstop"><a class="btn btnblue" id="signup" href="javascript:void(0)" onclick="$('body, html').animate({ duration: 2000,scrollTop: $('#newsletter').position().top });" title="Sign up to our Newsletter">Sign up to our Newsletter</a></div> -->
-					<!-- <div id="socin">
-					Follow us on
-					<a target="_blank" href="https://www.twitter.com/" title="Follow us on Twitter" onclick="ga('send', 'event', 'socialmedia', 'click', 'follow us on twitter');"><img src="/images/twitter.png" alt="Twitter icon" /></a>
-					<a target="_blank" href="https://www.facebook.com/" title="Like us on Facebook" onclick="ga('send', 'event', 'socialmedia', 'click', 'like us on facebook');"><img src="/images/facebook.png" alt="Facebook icon" /></a>
-					<a target="_blank" href="https://www.youtube.com/" title="Our YouTube Channel" onclick="ga('send', 'event', 'socialmedia', 'click', 'our youtube channel');"><img src="/images/youtube.png" alt="YouTube icon" /></a>
-					</div> -->
-				</div>
 				{include file='desktopmenu.tpl'}
 			</div>
 		</div>
-		<div id="headbanner">
-			<div id="headbannerin" class="container">
-				<div class="row">
-		
-				</div>
-			</div>
-		</div>	 
 	</header>		 
 
 	{block name=body}{/block}

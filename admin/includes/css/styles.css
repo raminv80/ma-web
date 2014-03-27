@@ -23,6 +23,16 @@
 .form-help-text {
 	font-size:10px;
 }
+.top-btn{
+	margin-left: 38px;
+}
+.bottom-btn{
+	margin-top: 50px;
+}
+.form-bottom-btns{
+	margin-top: 50px;
+	padding-right: 15px;
+}
 .number {
     width: 60px !important;
 }
@@ -41,7 +51,9 @@
 	padding: 15px;
 	margin-bottom: 25px;
 }
-
+.draft > td  {
+    color: #5F8DFF;
+}
 
 .notification {
 	background: none repeat scroll 0 0 rgb(242, 250, 250);

@@ -30,7 +30,8 @@ class Listing {
 	function getListing($id) {
 		global $SMARTY, $DBobject;
 		$listing_f = array ();
-		$sql = "SELECT * FROM {$this->DBTABLE} WHERE listing_id = '{$id}' AND listing_deleted IS NULL " . ($this->WHERE != '' ? "AND {$this->WHERE} " : " ") . " ";
+//		$sql = "SELECT * FROM {$this->DBTABLE} WHERE listing_id = '{$id}' AND listing_deleted IS NULL " . ($this->WHERE != '' ? "AND {$this->WHERE} " : " ") . " ";
+		$sql = "SELECT * FROM {$this->DBTABLE} WHERE listing_id = '{$id}' " . ($this->WHERE != '' ? "AND {$this->WHERE} " : " ") . " ";
 		if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 			foreach ( $res as $row ) {
 				foreach ( $row as $key => $field ) {
@@ -75,11 +76,11 @@ class Listing {
 				$listing_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
 			} else {
 				$pre = str_replace ( "tbl_", "", $f->table );
-				$sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+				$sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 					foreach ( $res as $key => $row ) {
-						$listing_f ['options'] ["{$f->name}"] ["{$row ["{$pre}_id"]}"] = array (
-								'id' => $row ["{$pre}_id"],
+						$listing_f ['options'] ["{$f->name}"][] = array (
+								'id' => $row ["{$f->id}"],
 								'value' => $row ["{$f->reference}"]
 						);
 					}
@@ -93,14 +94,14 @@ class Listing {
 		$results = array();
 	
 		$pre = str_replace("tbl_","",$f->table);
-		$sql = "SELECT {$pre}_id, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+		$sql = "SELECT {$f->id}, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 		
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $row) {
 				$results[] = array (
-						'id' => $row ["{$pre}_id"],
+						'id' => $row ["{$f->id}"],
 						'value' => $row ["{$f->reference}"],
-						'subs' => $this->getOptionsCatTree($f, $row["{$pre}_id"])
+						'subs' => $this->getOptionsCatTree($f, $row["{$f->id}"])
 				);
 			}
 			
@@ -137,7 +138,7 @@ class Listing {
 		global $SMARTY, $DBobject;
 		$records = array ();
 		
-		$order = " ORDER BY tbl_listing.listing_order ASC";
+		$order = " ORDER BY listing_order, listing_name, listing_published DESC";
 		if (! empty ( $this->CONFIG_OBJ->orderby )) {
 			$order = " ORDER BY " . $this->CONFIG_OBJ->orderby;
 		}
@@ -153,11 +154,17 @@ class Listing {
 		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) { 
 			foreach ( $res as $key => $val ) {
 				$subs = array ();
-				$subs = $this->getListingList ( $val ['listing_id']);
+				$subs = $this->getListingList ($val['listing_object_id']);
 				if ($val ['listing_type_id'] == $this->TYPE_ID) {
+					$p_url = '/';
+					if($val['listing_published'] == 0){
+						$p_url .= 'draft/';
+					}
 					$records ["l{$val['listing_id']}"] = array (
 							"title" => $val ['listing_name'],
 							"id" => $val ['listing_id'],
+							"published" => $val ['listing_published'],
+							"preview_url" => $p_url . $this->getCachedUrl($val['listing_object_id']),
 							"url" => "/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
 							"url_delete" => "/admin/delete/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
 							"subs" => $subs 
@@ -183,4 +190,14 @@ class Listing {
 		}
 		return false;
 	}
+	
+	function getCachedUrl($id) {
+		global $DBobject;
+		$sql = "SELECT cache_url FROM cache_tbl_listing WHERE cache_record_id = :id";
+		if ($res = $DBobject->executeSQL ($sql,array(':id'=>$id))) {
+			return $res[0]['cache_url'];
+		}
+		return '';
+	}
+	
 }

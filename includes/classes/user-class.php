@@ -305,7 +305,7 @@ class UserClass {
     					address_postcode = :address_postcode AND 
     					address_deleted IS NULL";
     	
-    	if ( $res = $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
+    	if ( $res = $DBobject->wrappedSql ( $sql, $params ) ) {
     		return $res[0]['address_id'];
     	} else {
 	    	$sql = " INSERT INTO tbl_address (
@@ -319,7 +319,7 @@ class UserClass {
 	        						now()
 								)";
 	    
-	    	if ( $DBobject->wrappedSqlInsert ( $sql, $params ) ) {
+	    	if ( $DBobject->wrappedSql ( $sql, $params ) ) {
 	    		return $DBobject->wrappedSqlIdentity();
 	    	}
     	}
@@ -336,7 +336,7 @@ class UserClass {
     	global $DBobject;
     	 
     	$sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
-    	$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $addressId) );
+    	$res = $DBobject->wrappedSql ( $sql, array(':id' => $addressId) );
     	return $res[0];
     }
     
