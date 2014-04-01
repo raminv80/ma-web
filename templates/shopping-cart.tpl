@@ -24,11 +24,11 @@
 	{/if}
 	{if $productsOnCart }
 		<div class="row cart-table-header">
-			<div class="col-md-6">Product</div>
-			<div class="col-md-2 text-right">Unit Price</div>
-			<div class="col-md-1">Qty</div>
-			<div class="col-md-2 text-right">Subtotal</div>
-			<div class="col-md-1"></div>
+			<div class="col-sm-6 col-xs-6">Product</div>
+			<div class="col-sm-2 col-xs-2 text-right">Unit Price</div>
+			<div class="col-sm-1 col-xs-1 col-xs-1">Qty</div>
+			<div class="col-sm-2  col-xs-3 text-right">Subtotal</div>
+			<div class="col-sm-1"></div>
 		</div>
 		
 		<form class="form-horizontal" id="shopping-cart-form" accept-charset="UTF-8" action="" method="post">
@@ -36,7 +36,12 @@
 				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				{foreach from=$productsOnCart item=item}
 				<div class="row  product-item" id="{$item.cartitem_id}">
-					<div class="col-md-6">{$item.cartitem_product_name}
+					<div class="col-sm-1 col-xs-2">
+						<div class="image">
+							<img src="{$item.gallery.0.gallery_link}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
+						</div>
+					</div>
+					<div class="col-sm-5 col-xs-4"><a href="{$item.url}">{$item.cartitem_product_name}
 					{if $item.attributes } 
 						<small>
 						{foreach from=$item.attributes item=attr}
@@ -44,31 +49,32 @@
 						{/foreach}
 						</small>
 					{/if}
+						</a>
 					</div>
-					<div class="col-md-2 text-right">${$item.cartitem_product_price|number_format:2:".":","}</div>
-					<div class="col-md-1"><input type="text" value="{$item.cartitem_quantity}" name="qty[{$item.cartitem_id}]" id="quantity" class="unsigned-int gt-zero" style="width: 30px; text-align: right;"></div>
+					<div class="col-sm-2 col-xs-2 text-right">${$item.cartitem_product_price|number_format:2:".":","}</div>
+					<div class="col-sm-1 col-xs-1"><input type="text" value="{$item.cartitem_quantity}" name="qty[{$item.cartitem_id}]" id="quantity" class="unsigned-int gt-zero" style="width: 30px; text-align: right;"></div>
 					
-					<div class="col-md-2 text-right" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
-					<div class="col-md-1"><a href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');"><span class="label label-danger">Delete</span></a></div>
+					<div class="col-sm-2 col-xs-3 text-right" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
+					<div class="col-sm-1"><a href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');"><span class="label label-danger">Delete</span></a></div>
 				</div>		
 				{/foreach} 
 			</div>
 			<div class="row">
-				<div class="col-md-offset-8"><a class="btn-success btn btn-sm" onclick="updateCart();">Update</a></div>
+				<div class="col-sm-offset-8"><a class="btn-success btn btn-sm" onclick="updateCart();">Update</a></div>
 			</div>
 		</form>
 		
 		<div class="row totals">
-			<div class="col-md-10 text-right">Subtotal</div>
-			<div class="col-md-2 text-right" id="subtotal">${$totals.subtotal|number_format:2:".":","}</div>
+			<div class="col-sm-10 col-xs-10 text-right">Subtotal</div>
+			<div class="col-sm-2 col-xs-2 text-right" id="subtotal">${$totals.subtotal|number_format:2:".":","}</div>
 		</div>
 		<div class="row totals">
-			<div class="col-md-10 text-right">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
-			<div class="col-md-2 text-right" id="discount">-${$totals.discount|number_format:2:".":","}</div>
+			<div class="col-sm-10 col-xs-10 text-right">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
+			<div class="col-sm-2 col-xs-2 text-right" id="discount">-${$totals.discount|number_format:2:".":","}</div>
 		</div>
 		<div class="row totals">
-			<div class="col-md-10 text-right"><b>Total</b></div>
-			<div class="col-md-2 text-right" id="total"><b>${$totals.total|number_format:2:".":","}</b></div>
+			<div class="col-sm-10 col-xs-10 text-right"><b>Total</b></div>
+			<div class="col-sm-2 col-xs-2 text-right" id="total"><b>${$totals.total|number_format:2:".":","}</b></div>
 		</div>
 		<div class="row totals">
 			<div class="pull-right">

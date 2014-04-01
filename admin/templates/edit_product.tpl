@@ -21,13 +21,14 @@
 								<!-- PUBLISHED -->
 								<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published">Save</a>
 								<a href="javascript:void(0);" onClick="unpublish('product_published');" class="btn btn-warning pull-right top-btn">Unpublish</a>
-								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-info pull-right top-btn published">Save Draft version</a>
+								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', false);" class="btn btn-info pull-right top-btn published">Save Draft version</a>
 							</div>
 							<div class="drafts" {if $fields.product_published eq 1}style="display:none;"{/if}>
 								<!-- DRAFT -->
 								<a href="javascript:void(0);" onClick="publish('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-primary pull-right top-btn drafts">Save &amp; Publish</a>
-								<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();buildCache('product');" class="btn btn-info pull-right top-btn drafts">Save</a>
+								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', false);" class="btn btn-info pull-right top-btn drafts">Save</a>
 							</div>
+							<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', true);" class="btn btn-info pull-right top-btn">Preview</a>
 						</legend>
 					</fieldset>
 					<input type="hidden" value="product_id" name="primary_id" id="primary_id"/> 
@@ -210,6 +211,7 @@
 					
 					<div class="row form" id="images-wrapper">
 						{assign var='imageno' value=0}
+						{assign var='gTableName' value='product'}
 						{foreach $fields.gallery as $images}
 							{assign var='imageno' value=$imageno+1}
 							{include file='gallery.tpl'}
@@ -266,13 +268,14 @@
 					<!-- PUBLISHED -->
 					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published">Save</a>
 					<a href="javascript:void(0);" onClick="unpublish('product_published');" class="btn btn-warning pull-right top-btn">Unpublish</a>
-					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-info pull-right top-btn published">Save Draft version</a>
+					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', false);" class="btn btn-info pull-right top-btn published">Save Draft version</a>
 				</div>
 				<div class="drafts" {if $fields.product_published eq 1}style="display:none;"{/if}>
 					<!-- DRAFT -->
 					<a href="javascript:void(0);" onClick="publish('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-primary pull-right top-btn drafts">Save &amp; Publish</a>
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();buildCache('product');" class="btn btn-info pull-right top-btn drafts">Save</a>
+					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', false);" class="btn btn-info pull-right top-btn drafts">Save</a>
 				</div>
+				<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', true);" class="btn btn-info pull-right top-btn">Preview</a>
 			</div>
 		</form>
 	</div>
@@ -289,7 +292,7 @@
 
 		$('#id_product_url').rules("add", {
 			uniqueURL : {
-				id : "{if $fields.product_object_id}{$fields.product_object_id}{else}0{/if}",
+				id : $('#product_object_id').val(),
 	        	table : "tbl_product",
 	        	field : "product_url",
 	        	field2 : "product_listing_id",
@@ -323,7 +326,7 @@
 	});
 
 
-	function saveDraft(id_name,objId_name,publish_name, field_name){
+	function saveDraft(id_name,objId_name,publish_name, field_name, preview){
 		if ($('#Edit_Record').valid()) { 
 			$('body').css('cursor', 'wait');
 			$('#'+publish_name).val('0');
@@ -347,7 +350,7 @@
 							$('#Edit_Record').submit();
 							$('.published').hide();
 							$('.drafts').show();
-							buildCache('product');
+							buildCache('cache_tbl_product',objId_name, preview);
 						}
 					} catch (err) {}
 					$('body').css('cursor', 'default');
@@ -380,7 +383,6 @@
 							$('#Edit_Record').submit();
 							$('.drafts').hide();
 							$('.published').show();
-							buildCache('product');
 						}
 					} catch (err) {}
 					$('body').css('cursor', 'default');
@@ -395,7 +397,6 @@
 		$('#Edit_Record').submit();
 		$('.published').hide();
 		$('.drafts').show();
-		buildCache('product');
 	}
 		
 
@@ -559,7 +560,7 @@
 			type : "POST",
 			url : "/admin/includes/processes/load-template.php",
 			cache : false,
-			data : "template=gallery.tpl&imageno=" + no + "&table_name=product",
+			data : "template=gallery.tpl&imageno=" + no + "&gTableName=product",
 			dataType : "html",
 			success : function(data, textStatus) {
 				try {

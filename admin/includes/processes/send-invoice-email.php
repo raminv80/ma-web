@@ -3,20 +3,23 @@ set_include_path ( $_SERVER ['DOCUMENT_ROOT'] );
 include_once 'admin/includes/functions/admin-functions.php';
 global $DBobject, $SMARTY;
 
-if(checkToken('admin', $_POST["formToken"])){
+if(checkToken('admin', $_POST["formToken"]) && !empty($_POST['email']) && !empty($_POST['email_id'])){
 	
+	/* 
+	 * REBUILD THE INVOICE
+	 * 
 	$SMARTY->assign('user', $_POST["user"]);
 	
 	$sql = "SELECT * FROM tbl_payment WHERE payment_id = :id ";
-	$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $_POST["payment_id"]) );
+	$res = $DBobject->wrappedSql( $sql, array(':id' => $_POST["payment_id"]) );
 	$SMARTY->assign('payment',$res[0]);
 	
 	$sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
-	$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $_POST["bill_ID"]) );
+	$res = $DBobject->wrappedSql ( $sql, array(':id' => $_POST["bill_ID"]) );
 	$SMARTY->assign('billing',$res[0]);
 	
 	$sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
-	$res = $DBobject->wrappedSqlInsert ( $sql, array(':id' => $_POST["ship_ID"]) );
+	$res = $DBobject->wrappedSql ( $sql, array(':id' => $_POST["ship_ID"]) );
 	$SMARTY->assign('shipping',$res[0]);
 		
 	$sql = "SELECT * FROM tbl_cart WHERE cart_id = :id AND cart_deleted IS NULL AND cart_id <> '0'";
@@ -37,8 +40,8 @@ if(checkToken('admin', $_POST["formToken"])){
 	}
 	$SMARTY->assign('orderItems', $cart_arr);
 		
-	$buffer= $SMARTY->fetch('email-confirmation.tpl');
-		
+	$buffer= $SMARTY->fetch('email-confirmation.tpl'); 
+	
 	$to = $_POST['email'];
 	$from = 'eShop';
 	$fromEmail = 'noreply@cms.themserver.com';
@@ -49,6 +52,25 @@ if(checkToken('admin', $_POST["formToken"])){
 	echo json_encode(array(
 			"response" => $response
 	));
+	*
+	*/
+		
+	
+	$sql = "SELECT * FROM tbl_email_copy WHERE email_id = :id ";
+	if($res = $DBobject->wrappedSql( $sql, array(':id' => $_POST["email_id"]))){
+		$to = $_POST['email'];
+		$from = 'eShop';
+		$fromEmail = 'noreply@'. str_replace('www.', '', $_SERVER['HTTP_HOST']);
+		$subject = $res[0]['email_subject'];
+		$body = $res[0]['email_content'];
+		
+		$response = sendMail($to, $from, $fromEmail, $subject, $body);
+		echo json_encode(array(
+				"response" => $response
+		));
+	}
+	
+	
 }
 die ();
 

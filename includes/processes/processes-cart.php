@@ -189,7 +189,9 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    		    $fromEmail = 'noreply@cms.themserver.com';
 	    		    $subject = 'Confirmation of your order';
 	    		    $body = $buffer;
-	    		    $mailID = sendMail($to, $from, $fromEmail, $subject, $body);
+	    		    if($mailID = sendMail($to, $from, $fromEmail, $subject, $body)){
+	    		    	$pay_obj->SetInvoiceEmail($paymentId, $mailID);
+	    		    }
 	    		  }catch(Exception $e){}
 	    		  
 	    			// PAYMENT SUCCESS

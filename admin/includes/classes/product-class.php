@@ -41,7 +41,7 @@ Class Product extends Record{
 						"title" => $val ['product_name'],
 						"id" => $val ['product_id'],
 						"published" => $val ['product_published'],
-						"preview_url" => $p_url . $this->getCachedUrl($val['product_object_id']),
+						"preview_url" => $p_url . $this->getCachedUrl($val['product_object_id'],$val ['product_published']),
 						"url" => "/admin/edit/{$this->CONFIG->url}/{$val['product_id']}",
 						"url_delete" => "/admin/delete/{$this->CONFIG->url}/{$val['product_id']}"
 				);
@@ -71,6 +71,7 @@ Class Product extends Record{
 						$records ["l{$val['listing_id']}"] = array (
 												"title" => $val ['listing_name'],
 												"id" => $val ['listing_id'],
+												"published" => $val ['listing_published'],
 												"subs" => $subs
 						);
 					}
@@ -104,10 +105,10 @@ Class Product extends Record{
 		return  $records;
 	}
 	
-	function getCachedUrl($id) {
+	function getCachedUrl($id, $published = 1) {
 		global $DBobject;
-		$sql = "SELECT cache_url FROM cache_tbl_product WHERE cache_record_id = :id";
-		if ($res = $DBobject->executeSQL ($sql,array(':id'=>$id))) {
+		$sql = "SELECT cache_url FROM cache_tbl_product WHERE cache_record_id = :id AND cache_published = :published";
+		if ($res = $DBobject->executeSQL ($sql,array(':id'=>$id, ':published'=>$published))) {
 			return $res[0]['cache_url'];
 		}
 		return '';

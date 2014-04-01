@@ -270,7 +270,7 @@ class ListClass {
 			$id = $row ['id'];
 			$url = "";
 			$published = $row ['listing_published'];
-			if (! $this->BuildUrl ( $id, $url )) {
+			if (! $this->BuildUrl ( $id, $url, $published )) {
 				continue;
 			}
 			$sql [2] .= " ( :id{$n}, :published{$n}, :title{$n}, now() ) ,";
@@ -290,11 +290,12 @@ class ListClass {
 	
 	
 	// TODO: THIS NEEDS TO BE REVISED TO SUPPORT HAVING 2 URLS FOR THE SAME LISTING_OBJECT_ID IN THE EVENT THAT THE URL VALUE IS CHANGING. 
-	function BuildUrl($_id, &$url) {
+	function BuildUrl($_id, &$url, $_PUBLISHED = 1) {
 		global $DBobject;
-	  	$sql = "SELECT * FROM tbl_listing WHERE listing_object_id = :id AND listing_deleted IS NULL ORDER BY listing_modified DESC";
+	  	$sql = "SELECT * FROM tbl_listing WHERE listing_object_id = :id AND listing_published = :published AND listing_deleted IS NULL ORDER BY listing_modified DESC";
 		$params = array (
-			":id" => $_id
+			":id" => $_id,
+		    ":published" =>$_PUBLISHED 
 		);
 		if ($res = $DBobject->wrappedSql($sql,$params)) {
 			if (!empty($res[0]['listing_parent_id']) && $res[0]['listing_parent_id'] > 0 ) { // category_listing_id

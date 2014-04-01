@@ -20,13 +20,13 @@
 							<div class="published" {if $fields.listing_published eq 0}style="display:none;"{/if}>
 								<!-- PUBLISHED -->
 								<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published">Save</a>
-								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]');" class="btn btn-info pull-right top-btn published">Save Draft version</a>
+								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', false);" class="btn btn-info pull-right top-btn published">Save Draft version</a>
 								<a href="javascript:void(0);" onClick="unpublish('listing_published');" class="btn btn-warning pull-right top-btn">Unpublish</a>
 							</div>
 							<div class="drafts" {if $fields.listing_published eq 1}style="display:none;"{/if}>
 								<!-- DRAFT -->
 								<a href="javascript:void(0);" onClick="publish('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]');" class="btn btn-primary pull-right top-btn drafts">Save &amp; Publish</a>
-								<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-info pull-right top-btn drafts">Save</a>
+								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', false);" class="btn btn-info pull-right top-btn drafts">Save</a>
 							</div>
 							<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', true);" class="btn btn-info pull-right top-btn">Preview</a>
 						</legend>
@@ -150,13 +150,13 @@
 				<div class="published" {if $fields.listing_published eq 0}style="display:none;"{/if}>
 					<!-- PUBLISHED -->
 					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published">Save</a>
-					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]');" class="btn btn-info pull-right top-btn published">Save Draft version</a>
+					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', false);" class="btn btn-info pull-right top-btn published">Save Draft version</a>
 					<a href="javascript:void(0);" onClick="unpublish('listing_published');" class="btn btn-warning pull-right top-btn">Unpublish</a>
 				</div>
 				<div class="drafts" {if $fields.listing_published eq 1}style="display:none;"{/if}>
 					<!-- DRAFT -->
 					<a href="javascript:void(0);" onClick="publish('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]');" class="btn btn-primary pull-right top-btn drafts">Save &amp; Publish</a>
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-info pull-right top-btn drafts">Save</a>
+					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', false);" class="btn btn-info pull-right top-btn drafts">Save</a>
 				</div>
 				<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', true);" class="btn btn-info pull-right top-btn">Preview</a>
 			</div>
@@ -189,11 +189,11 @@ $(document).ready(function(){
 	
 	$('#id_listing_url').rules("add", {
 	  	  uniqueURL: { 
-	      	  	id: "{if $fields.listing_object_id}{$fields.listing_object_id}{else}0{/if}",
-		        	table : "tbl_listing",
-		        	field : "listing_url",
-		        	field2 : "listing_parent_id",
-		        	value2 : "id_listing_parent"
+		  		id: $('#listing_object_id').val(),
+	        	table : "tbl_listing",
+	        	field : "listing_url",
+	        	field2 : "listing_parent_id",
+	        	value2 : "id_listing_parent"
 			  }
 	});
 });

@@ -167,6 +167,7 @@
 				<field recursive="true"> 
 					<name>product_listing_id</name>
 					<table>tbl_listing</table>
+					<id>listing_object_id</id>
 					<reference>listing_name</reference> 
 					<where>listing_parent_flag = '1' AND listing_type_id = '2' AND listing_published = '1'</where> 
 				</field>  

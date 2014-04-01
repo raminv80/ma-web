@@ -171,7 +171,7 @@ function sendMail($to,$from,$fromEmail,$subject,$body){
 	      ":to"=>$to,
 	      ":header"=>$headers,
 	      ":subject"=>$subject,
-	      ":content"=>$body,
+	      ":content"=>utf8_encode($body),
 	      ":sent"=>$mailSent,
 	  );
 	  $DBobject->executeSQL($sql,$params);

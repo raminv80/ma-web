@@ -20,7 +20,7 @@
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="gallery_image">Image<br><small>Size: 480px Wide x 480px Tall</small></label>
 			<div class="col-sm-9">
-				<input type="hidden" value="{$table_name}_id" name="default[gallery_{$table_name}_id]" />
+				<input type="hidden" value="{$gTableName}_id" name="default[gallery_{$gTableName}_id]" />
 				<input type="hidden" value="gallery_id" name="field[10][tbl_gallery][{$imageno}][id]" id="id" />
 				<input type="hidden" value="{$images.gallery_id}" name="field[10][tbl_gallery][{$imageno}][gallery_id]" >
 				<input type="hidden" value="{$images.gallery_file}" name="field[10][tbl_gallery][{$imageno}][gallery_file]" id="gallery_image_{$imageno}" >

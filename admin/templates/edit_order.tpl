@@ -108,12 +108,13 @@
 </div>
 <div class="row">
 	<form class="well form-horizontal" id="send_invoice_email" accept-charset="UTF-8" method="post">
-		<input type="hidden" value="{$fields.payment.0.payment_id}" name="payment_id" /> 
-		<input type="hidden" value="{$fields.payment.0.billing_address.0.address_id}" name="bill_ID" /> 
+<!--		<input type="hidden" value="{$fields.payment.0.payment_id}" name="payment_id" /> 
+ 		<input type="hidden" value="{$fields.payment.0.billing_address.0.address_id}" name="bill_ID" /> 
 		<input type="hidden" value="{$fields.payment.0.shipping_address.0.address_id}" name="ship_ID" /> 
-		<input type="hidden" value="{$fields.user.0.user_gname}" name="user[gname]" /> 
+		<input type="hidden" value="{$fields.user.0.user_gname}" name="user[gname]" />
+		<input type="hidden" value="{$fields.cart_id}" name="cart_id" />   -->
 		<input type="hidden" value="{$fields.user.0.user_email}" name="email" /> 
-		<input type="hidden" value="{$fields.cart_id}" name="cart_id" /> 
+		<input type="hidden" value="{$fields.payment.0.payment_invoice_email_id}" name="email_id" /> 
 		<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 					
 		<div class="row">

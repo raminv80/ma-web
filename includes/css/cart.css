@@ -273,6 +273,24 @@ hr.or-separator:after {
     color: #C2C2C2;
 }
 
+#help-alert{
+	position:fixed;
+	bottom:0;
+	margin:0;
+	width:100%;
+	text-align: center;
+	border-radius: 4px;
+    padding: 10px;
+	background-color: #D9EDF7;
+    border-color: #BCE8F1;
+    color: #3A87AD;
+}
+#help-alert-bold {
+    display: inline;
+    font-weight: bold;
+    padding-right: 10px;
+}
+
 
 
 

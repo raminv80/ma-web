@@ -164,7 +164,7 @@ class Listing {
 							"title" => $val ['listing_name'],
 							"id" => $val ['listing_id'],
 							"published" => $val ['listing_published'],
-							"preview_url" => $p_url . $this->getCachedUrl($val['listing_object_id']),
+							"preview_url" => $p_url . $this->getCachedUrl($val['listing_object_id'],$val ['listing_published']),
 							"url" => "/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
 							"url_delete" => "/admin/delete/{$this->CONFIG_OBJ->url}/{$val['listing_id']}",
 							"subs" => $subs 
@@ -173,6 +173,7 @@ class Listing {
 					$records ["c{$val['listing_id']}"] = array (
 							"title" => $val ['listing_name'],
 							"id" => $val ['listing_id'],
+							"published" => $val ['listing_published'],
 							"subs" => $subs 
 					);
 				}
@@ -191,10 +192,10 @@ class Listing {
 		return false;
 	}
 	
-	function getCachedUrl($id) {
+	function getCachedUrl($id, $published = 1) {
 		global $DBobject;
-		$sql = "SELECT cache_url FROM cache_tbl_listing WHERE cache_record_id = :id";
-		if ($res = $DBobject->executeSQL ($sql,array(':id'=>$id))) {
+		$sql = "SELECT cache_url FROM cache_tbl_listing WHERE cache_record_id = :id AND cache_published = :published";
+		if ($res = $DBobject->executeSQL ($sql,array(':id'=>$id, ':published'=>$published))) {
 			return $res[0]['cache_url'];
 		}
 		return '';

@@ -344,6 +344,13 @@ class cart {
 		
 		foreach ( $res as $p ) {
 			$cart_arr [$p ['cartitem_id']] = $p;
+			// ---------------- BUILD URL -Part:1/2----------------
+			$url = '';
+			$sql = "SELECT cache_url FROM tbl_product LEFT JOIN cache_tbl_product ON product_object_id = cache_record_id WHERE product_id = :id AND cache_published = '1'";
+			if($res2 = $DBobject->wrappedSql ( $sql, array (":id" => $p ['cartitem_product_id']))){
+				$url = '/' . $res2[0]['cache_url'];
+			}
+			
 			// ---------------- ATTRIBUTES SAVED IN tbl_cartitem_attr ----------------
 			$sql = "SELECT 	cartitem_attr_id, cartitem_attr_cartitem_id, cartitem_attr_attribute_id, cartitem_attr_attr_value_id, cartitem_attr_attribute_name, cartitem_attr_attr_value_name
 					FROM tbl_cartitem_attr
@@ -353,6 +360,18 @@ class cart {
 					":id" => $p ['cartitem_id'] 
 			) );
 			$cart_arr [$p ['cartitem_id']] ['attributes'] = $res2;
+			
+			// ---------------- BUILD URL -Part:2/2----------------
+			if($res2 && !empty($url)){
+				foreach ($res2 as $k => $a){ 
+					if($k == 0){
+						$url .= '?' . strtolower($a['cartitem_attr_attribute_name']) . '=' . strtolower($a['cartitem_attr_attr_value_name']);
+					}else{
+						$url .= '&' . strtolower($a['cartitem_attr_attribute_name']) . '=' . strtolower($a['cartitem_attr_attr_value_name']);
+					} 
+				} 
+			}
+			$cart_arr [$p ['cartitem_id']] ['url'] = $url;
 			
 			// ---------------- PRODUCTS DETAILS FROM tbl_gallery ----------------
 			$sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery 
@@ -628,16 +647,14 @@ class cart {
 		
 		// --------------- GET PRODUCT INFO --------------------
 		
-		$params = array (
-				":id" => $product_id 
-		);
-		$sql = "SELECT product_name FROM tbl_product WHERE product_id = :id ";
-		$res = $DBobject->wrappedSql ( $sql, $params );
+		$sql = "SELECT product_name, product_object_id FROM tbl_product WHERE product_id = :id ";
+		$res = $DBobject->wrappedSql ( $sql, array (":id" => $product_id) );
 		$productName = $res[0]['product_name'];
+		$OBJID = $res[0]['product_object_id'];
 		
 		$sql = "SELECT product_id, product_name, product_price, product_specialprice, product_gst, product_weight, product_width, product_height, product_length FROM tbl_product
-				WHERE product_id = :id AND product_deleted is null AND product_instock = 1 AND product_published = 1";
-		$res = $DBobject->wrappedSql ( $sql, $params );
+				WHERE product_object_id = :oid AND product_deleted is null AND product_instock = 1 AND product_published = 1";
+		$res = $DBobject->wrappedSql ( $sql, array (":oid" => $OBJID) );
 		if ($res) {
 			$prod = $res [0];
 			if ($prod ['product_specialprice'] > 0) {
@@ -650,32 +667,43 @@ class cart {
 				// --------------- GET PRODUCT ATTRIBUTES INFO --------------------
 				$params = array (
 						":vid" => $attrValId,
-						":pid" => $product_id 
+						":pid" => $prod ['product_id'] 
 				);
 				$sql = "SELECT * FROM tbl_attr_value
 							LEFT JOIN tbl_attribute ON attr_value_attribute_id = attribute_id
     						WHERE attr_value_id = :vid AND attribute_product_id = :pid AND attribute_deleted is null AND attr_value_deleted is null";
-				$attr = $DBobject->wrappedSql ( $sql, $params );
-				if ($attr [0] ['attr_value_instock'] === 0) {
+				if($attr = $DBobject->wrappedSql ( $sql, $params )){
+					if ($attr [0] ['attr_value_instock'] === 0) {
+						return array (
+								"error" => true,
+								"error_message" => "'Sorry, {$prod ['product_name']}' is out of Stock" 
+						);
+					}
+					if ($prod ['product_specialprice'] > 0) {
+						$prod ['product_price'] = $prod ['product_price'] + $attr [0] ['attr_value_specialprice'];
+					} else {
+						$prod ['product_price'] = $prod ['product_price'] + $attr [0] ['attr_value_price'];
+					}
+					$prod ['product_weight'] = $prod ['product_weight'] + $attr [0] ['attr_value_weight'];
+					$prod ['product_width'] = $prod ['product_width'] + $attr [0] ['attr_value_width'];
+					$prod ['product_height'] = $prod ['product_height'] + $attr [0] ['attr_value_height'];
+					$prod ['product_length'] = $prod ['product_length'] + $attr [0] ['attr_value_length'];
+					
+					$productAttr [$attrValId] ['attribute_id'] = $attr [0] ['attribute_id'];
+					$productAttr [$attrValId] ['attr_value_id'] = $attr [0] ['attr_value_id'];
+					$productAttr [$attrValId] ['attribute_name'] = $attr [0] ['attribute_name'];
+					$productAttr [$attrValId] ['attr_value_name'] = $attr [0] ['attr_value_name'];
+				}else{
+					$sql = "SELECT * FROM tbl_attr_value LEFT JOIN tbl_attribute ON attr_value_attribute_id = attribute_id WHERE attr_value_id = :vid";
+					if($res = $DBobject->wrappedSql ( $sql, array (":vid" => $attrValId ))){
+						$attrName = ' - ' . $res[0]['attribute_name'] . ': ' . $res[0]['attr_value_name'];  
+					}
 					return array (
 							"error" => true,
-							"error_message" => "'Sorry, {$prod ['product_name']}' is out of Stock" 
+							"error_message" => "Sorry, '{$productName} {$attrName}' is no longer available."
 					);
 				}
-				if ($prod ['product_specialprice'] > 0) {
-					$prod ['product_price'] = $prod ['product_price'] + $attr [0] ['attr_value_specialprice'];
-				} else {
-					$prod ['product_price'] = $prod ['product_price'] + $attr [0] ['attr_value_price'];
-				}
-				$prod ['product_weight'] = $prod ['product_weight'] + $attr [0] ['attr_value_weight'];
-				$prod ['product_width'] = $prod ['product_width'] + $attr [0] ['attr_value_width'];
-				$prod ['product_height'] = $prod ['product_height'] + $attr [0] ['attr_value_height'];
-				$prod ['product_length'] = $prod ['product_length'] + $attr [0] ['attr_value_length'];
 				
-				$productAttr [$attrValId] ['attribute_id'] = $attr [0] ['attribute_id'];
-				$productAttr [$attrValId] ['attr_value_id'] = $attr [0] ['attr_value_id'];
-				$productAttr [$attrValId] ['attribute_name'] = $attr [0] ['attribute_name'];
-				$productAttr [$attrValId] ['attr_value_name'] = $attr [0] ['attr_value_name'];
 			}
 			
 			return ($product = array (
@@ -778,14 +806,22 @@ class cart {
 					$message[] = $DBproduct['error_message'];
 					$this->RemoveFromCart($item['cartitem_id']);
 				} else {
-					if ($DBproduct['product_price'] <> $item['cartitem_product_price'] ) {
-						$sql = "UPDATE tbl_cartitem SET cartitem_product_price = :price,  cartitem_subtotal = :subtotal  WHERE cartitem_id = :id";
+					if ($DBproduct['product_price'] <> $item['cartitem_product_price'] 
+							|| $DBproduct['product_id'] <> $item['cartitem_product_id']
+							|| $DBproduct['product_name'] <> $item['cartitem_product_name']
+							|| $DBproduct['product_gst'] <> $item['cartitem_product_gst']) {
+						$sql = "UPDATE tbl_cartitem SET cartitem_product_price = :price, cartitem_product_id = :product_id, cartitem_product_name = :product_name, cartitem_product_gst = :product_gst, cartitem_subtotal = :subtotal  WHERE cartitem_id = :id";
 						$DBobject->wrappedSql ( $sql, array ( 
 													":id" => $item['cartitem_id'],
 													":price" => $DBproduct['product_price'],
+													":product_id" => $DBproduct['product_id'],
+													":product_name" => $DBproduct['product_name'],
+													":product_gst" => $DBproduct['product_gst'],
 													":subtotal" => floatval($DBproduct['product_price']) * $item['cartitem_quantity'] 
 						));
-						$message[] = "The price of '{$DBproduct['product_name']}' has been updated. ";
+						if ($DBproduct['product_price'] <> $item['cartitem_product_price'] ) {
+							$message[] = "The price of '{$DBproduct['product_name']}' has been updated. ";
+						}
 					}
 				}
 			}

@@ -20,13 +20,13 @@
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="gallery_image">Image<br><small>Size: 480px Wide x 480px Tall</small></label>
 			<div class="col-sm-9">
-				<input type="hidden" value="{$table_name}_id" name="default[gallery_{$table_name}_id]" />
+				<input type="hidden" value="{$gTableName}_id" name="default[gallery_{$gTableName}_id]" />
 				<input type="hidden" value="gallery_id" name="field[10][tbl_gallery][{$imageno}][id]" id="id" />
-				<input type="hidden" value="{$images.gallery_id}" name="field[10][tbl_gallery][{$imageno}][gallery_id]" >
+				<input type="hidden" value="{$images.gallery_id}" name="field[10][tbl_gallery][{$imageno}][gallery_id]" class="key">
 				<input type="hidden" value="{$images.gallery_file}" name="field[10][tbl_gallery][{$imageno}][gallery_file]" id="gallery_image_{$imageno}" >
 				<input type="hidden" value="0" name="field[10][tbl_gallery][{$imageno}][gallery_ishero]" id="gallery_ishero_{$imageno}" class="ishero"> 
 				<input type="hidden" value="{$images.gallery_listing_id}" name="field[10][tbl_gallery][{$imageno}][gallery_listing_id]" id="gallery_listing_id" >
-				<input type="hidden" value="{$images.gallery_product_id}" name="field[10][tbl_gallery][{$imageno}][gallery_product_id]" id="gallery_product_id" >
+				<input type="hidden" value="{$images.gallery_product_id}" name="field[10][tbl_gallery][{$imageno}][gallery_product_id]" id="gallery_product_id" class="key">
 				<input type="hidden" value="{$images.gallery_link}" name="field[10][tbl_gallery][{$imageno}][gallery_link]" id="gallery_image_{$imageno}_link" class="fileinput"> 
 				<span class="file-view" id="gallery_image_{$imageno}_path">{if $images.gallery_link}<a href="{$images.gallery_link}" target="_blank" >View</a>{else}None{/if}</span> 
 				<a href="javascript:void(0);" class="btn btn-info marg-5r"

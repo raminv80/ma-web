@@ -35,7 +35,7 @@ table td {
 	</tr>
 	<tr>
 		<td>Thank you for buying with us. Your order will be processed by our team and you will receive another email once your package is shipped. Should you have any queries, please call
-			CALL 1800 (Mon - Fri, 9am – 5pm CST).<br>
+			CALL 1800 (Mon - Fri, 9am - 5pm CST).<br>
 		<br>
 		</td>
 	</tr>

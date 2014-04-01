@@ -11,14 +11,15 @@
 							<div class="published" {if $fields.listing_published eq 0}style="display:none;"{/if}>
 								<!-- PUBLISHED -->
 								<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published">Save</a>
+								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', false);" class="btn btn-info pull-right top-btn published">Save Draft version</a>
 								<a href="javascript:void(0);" onClick="unpublish('listing_published');" class="btn btn-warning pull-right top-btn">Unpublish</a>
-								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]');" class="btn btn-info pull-right top-btn published">Save Draft version</a>
 							</div>
 							<div class="drafts" {if $fields.listing_published eq 1}style="display:none;"{/if}>
 								<!-- DRAFT -->
 								<a href="javascript:void(0);" onClick="publish('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]');" class="btn btn-primary pull-right top-btn drafts">Save &amp; Publish</a>
-								<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();buildCache('listing');" class="btn btn-info pull-right top-btn drafts">Save</a>
+								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', false);" class="btn btn-info pull-right top-btn drafts">Save</a>
 							</div>
+							<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', true);" class="btn btn-info pull-right top-btn">Preview</a>
 						</legend>
 					</fieldset>
 					<input type="hidden" value="listing_id" name="primary_id" id="primary_id"/> 
@@ -181,14 +182,15 @@
 				<div class="published" {if $fields.listing_published eq 0}style="display:none;"{/if}>
 					<!-- PUBLISHED -->
 					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published">Save</a>
+					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', false);" class="btn btn-info pull-right top-btn published">Save Draft version</a>
 					<a href="javascript:void(0);" onClick="unpublish('listing_published');" class="btn btn-warning pull-right top-btn">Unpublish</a>
-					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]');" class="btn btn-info pull-right top-btn published">Save Draft version</a>
 				</div>
 				<div class="drafts" {if $fields.listing_published eq 1}style="display:none;"{/if}>
 					<!-- DRAFT -->
 					<a href="javascript:void(0);" onClick="publish('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]');" class="btn btn-primary pull-right top-btn drafts">Save &amp; Publish</a>
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();buildCache('listing');" class="btn btn-info pull-right top-btn drafts">Save</a>
+					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted], false');" class="btn btn-info pull-right top-btn drafts">Save</a>
 				</div>
+				<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', true);" class="btn btn-info pull-right top-btn">Preview</a>
 			</div>
 		</form>
 	</div>
@@ -221,14 +223,16 @@ $(document).ready(function(){
 	
 	$('#id_listing_url').rules("add", {
     	  uniqueURL: { 
-        	  	id: "{if $fields.listing_object_id}{$fields.listing_object_id}{else}0{/if}",
+    		  	id: $('#listing_object_id').val(),
 	        	table : "tbl_listing",
-	        	field : "listing_url"
+	        	field : "listing_url",
+	        	field2 : "listing_parent_id",
+	        	value2 : "id_listing_parent"
 		  }
 	 });
 });
 
-function saveDraft(id_name,objId_name,publish_name, field_name){
+function saveDraft(id_name,objId_name,publish_name, field_name, preview){
 	if ($('#Edit_Record').valid()) { 
 		$('body').css('cursor', 'wait');
 		$('#'+publish_name).val('0');
@@ -242,6 +246,7 @@ function saveDraft(id_name,objId_name,publish_name, field_name){
 			type : "POST",
 			url : "/admin/includes/processes/processes-record.php",
 			cache: false,
+			async: false,
 			data : id_key0+'='+objId_name+'&'+id_key1+'='+publish_name+'&'+objId_key+"="+$('#'+objId_name).val()+"&"+publish_key+"=0&"+field_key+"="+field_value+'&formToken='+$('#formToken').val(),
 			dataType: "html",
 			success : function(data, textStatus) {
@@ -252,7 +257,7 @@ function saveDraft(id_name,objId_name,publish_name, field_name){
 						$('#Edit_Record').submit();
 						$('.published').hide();
 						$('.drafts').show();
-						buildCache('listing');
+						buildCache('cache_tbl_listing',objId_name, preview);
 					}
 				} catch (err) {}
 				$('body').css('cursor', 'default');
@@ -285,7 +290,6 @@ function publish(id_name,objId_name,publish_name,field_name){
 						$('#Edit_Record').submit();
 						$('.drafts').hide();
 						$('.published').show();
-						buildCache('listing');
 					}
 				} catch (err) {}
 				$('body').css('cursor', 'default');
@@ -300,8 +304,9 @@ function unpublish(publish_name){
 	$('#Edit_Record').submit();
 	$('.published').hide();
 	$('.drafts').show();
-	buildCache('listing');
 }
+
+
 
 function newTag() {
 	if ( $('#new_tag').val() != '' ) { 

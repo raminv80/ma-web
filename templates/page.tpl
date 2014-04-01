@@ -70,7 +70,11 @@
 			</div>
 	  	</div>
 	</div>
-	
+	<div id="help-alert" style="display:none;" >
+		<button class="close" onclick="$('#help-alert').slideUp();" type="button">×</button>
+		<div id="help-alert-bold">Experiencing problems?</div>	
+		Give us a call on <a href="tel:+123456789">+123456789</a>
+	</div>
 	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
@@ -81,6 +85,10 @@
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>	
 	<script type="text/javascript">
 	$(document).ready(function(){
+		setTimeout(function(){
+			$('#help-alert').slideDown();
+    	},300000);
+    	
 		$('#searchbox').bind('keyup', function(event) {
 		    if(event.keyCode==13){
 		    	$('#search-form').submit();

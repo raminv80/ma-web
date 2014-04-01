@@ -346,7 +346,7 @@ class ProductClass extends ListClass {
 		$sql [3] = "TRUNCATE cache_tbl_product;";
 		$sql [2] = "INSERT INTO cache_tbl_product (cache_record_id,cache_published,cache_url,cache_modified) VALUES  ";
 		$params = array ();
-		$sql [1] = "SELECT product_object_id AS id, product_url AS url, product_listing_id, product_published, AS pid FROM tbl_product WHERE product_deleted IS NULL";
+		$sql [1] = "SELECT product_object_id AS id, product_url AS url, product_listing_id AS pid, product_published FROM tbl_product WHERE product_deleted IS NULL";
 		$res = $DBobject->wrappedSql ( $sql [1] );
 		$n = 1;
 	
@@ -358,7 +358,7 @@ class ProductClass extends ListClass {
 				continue;
 			}
 				
-			$sql [2] .= " ( :id{$n}, :title{$n}, now() ) ,";
+			$sql [2] .= " ( :id{$n}, :published{$n}, :title{$n}, now() ) ,";
 			$params = array_merge ( $params, array (
 					":id{$n}" => $id,
 					":published{$n}" => $published, 

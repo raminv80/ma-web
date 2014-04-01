@@ -130,6 +130,24 @@ class Bank {
 		return $DBobject->wrappedSql ( $sql, $params );
 	}
 	
+	/**
+	 * Save the sent-confirmation/invoice-email id in the payment table. 
+	 * 
+	 * @param int $paymentId
+	 * @param int $emailId
+	 * @return boolean
+	 */
+	function SetInvoiceEmail($paymentId, $emailId) {
+		global $DBobject;
+	
+		$sql = "UPDATE tbl_payment SET payment_invoice_email_id = :email WHERE payment_id = :pid ";
+		$params = array (
+				":pid" => $paymentId,
+				":email" => $emailId
+		);
+		return $DBobject->wrappedSql ( $sql, $params );
+	}
+	
 	
 	/**
 	 * Return payment record given the payment_id 
