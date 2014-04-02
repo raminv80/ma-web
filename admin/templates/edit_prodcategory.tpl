@@ -190,6 +190,7 @@ $(document).ready(function(){
 	$('#id_listing_url').rules("add", {
 	  	  uniqueURL: { 
 		  		id: $('#listing_object_id').val(),
+        	  	idfield: "listing_object_id",
 	        	table : "tbl_listing",
 	        	field : "listing_url",
 	        	field2 : "listing_parent_id",

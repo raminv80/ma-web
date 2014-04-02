@@ -293,6 +293,7 @@
 		$('#id_product_url').rules("add", {
 			uniqueURL : {
 				id : $('#product_object_id').val(),
+        	  	idfield: "product_object_id",
 	        	table : "tbl_product",
 	        	field : "product_url",
 	        	field2 : "product_listing_id",

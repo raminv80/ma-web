@@ -34,7 +34,7 @@
 										</div>
 										
 							  			<div class="resulttitle">{$item.product_name}</div>
-							  			<div class="resulttext">{trimwords data=$item.product_description maxwords=50}</div>
+							  			<div class="resulttext">{if $item.product_description}{trimwords data=$item.product_description maxwords=50}{/if}</div>
 										<a href="/{$item.cache_url}" class="button1">View details</a>
 										<div class="resulttags">Tags:
 								  			{foreach $item.tags as $tag}
@@ -67,7 +67,7 @@
 			  		</div>
 		  		</div>
 			</div>
-<!-- 			<div id="resultbox-page">
+ 			<div id="resultbox-page">
 		  		<div class="row">
 			  		<div class="col-sm-12">
 			  		<h3>Your search for <strong>'{$term}'</strong> returned {count($results.listing)} page results:</h3>
@@ -80,7 +80,7 @@
 									{assign var=count value=$count+1}
 									<div class="result">
 							  			<div class="resulttitle">{$item.listing_name}</div>
-							  			<div class="resulttext">{trimwords data=$item.listing_meta_description maxwords=50}</div>
+							  			<div class="resulttext">{if $item.listing_meta_description}{trimwords data=$item.listing_meta_description maxwords=50}{/if}</div>
 							  			<a href="/{$item.cache_url}" class="button1">View details</a>
 							  			<div class="resulttags">Tags:
 								  			{foreach $item.tags as $tag}
@@ -111,7 +111,7 @@
 				  		</div>
 			  		</div>
 		  		</div>
-			</div> -->
+			</div> 
 	  		
 	  	</div>
 

@@ -23,7 +23,7 @@ class ProductClass extends ListClass {
 		// Split the URL
 		$_url = ltrim ( rtrim ( $this->URL, '/' ), '/' );
 	
-		if ($arrChk = $this->ChkCache ( $_url )) {
+		if ($arrChk = $this->ChkCache ( $_url, $_PUBLISHED )) {
 			$this->ID = $arrChk['id'];
 			$this->IS_PRODUCT = $arrChk['isProduct'];
 			if (!$arrChk['isProduct']) {
@@ -262,25 +262,27 @@ class ProductClass extends ListClass {
 		return $data;
 	}
 	
-	function ChkCache($_url) {
+	function ChkCache($_url, $_PUBLISHED) {
 		global $SMARTY, $DBobject;
 		$args = explode ( '/', $_url );
 		$a = end ($args);
 		
-		$sql = "SELECT cache_record_id FROM cache_tbl_product WHERE cache_url = :url"; // Check for PRODUCTS
+		$sql = "SELECT cache_record_id FROM cache_tbl_product WHERE cache_url = :url AND cache_published = :published"; // Check for PRODUCTS
 		$params = array (
-				":url" => $_url
+				":url" => $_url,
+				":published" => $_PUBLISHED
 		);
         $isProduct = true;
 		try {
 			$row = $DBobject->wrappedSql ( $sql, $params );
             if (empty ( $row )) {
-				$sqlCat = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url"; // Check for CATEGORIES
+				$sqlCat = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url AND cache_published = :published"; // Check for CATEGORIES
 				$row = $DBobject->wrappedSql ( $sqlCat, $params );
 				if (empty ( $row )) {
-					$sqlp = "SELECT product_object_id FROM tbl_product WHERE CONCAT(product_url, '-', product_object_id) = :url";
+					$sqlp = "SELECT product_object_id FROM tbl_product WHERE CONCAT(product_url, '-', product_object_id) = :url  AND product_published = :published";
 					$params2 = array (
-							":url" => $a
+							":url" => $a,
+							":published" => $_PUBLISHED
 					);
 					if ($res = $DBobject->wrappedSql ( $sqlp, $params2 )) {// Build Product cache 
 						$this->BuildCache();
@@ -300,12 +302,13 @@ class ProductClass extends ListClass {
 				}
 			}
 		} catch ( Exception $e ) {
-			$sqlCat = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url"; // Check for CATEGORIES
+			$sqlCat = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url AND cache_published = :published"; // Check for CATEGORIES
                         $row = $DBobject->wrappedSql ( $sqlCat, $params );
                         if (empty ( $row )) {
-                                $sqlp = "SELECT product_object_id FROM tbl_product WHERE CONCAT(product_url, '-', product_object_id) = :url";
+                                $sqlp = "SELECT product_object_id FROM tbl_product WHERE CONCAT(product_url, '-', product_object_id) = :url  AND product_published = :published";
 								$params2 = array (
-                                                ":url" => $a
+                                                ":url" => $a,
+												":published" => $_PUBLISHED
                                 );
                                 if ($res = $DBobject->wrappedSql ( $sqlp, $params2 )) { // Build Product cache
                                         $this->BuildCache();
@@ -313,7 +316,7 @@ class ProductClass extends ListClass {
 
 
                                 } else {
-                                    $sqlc = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url";
+                                    $sqlc = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url AND listing_published = :published";
                                     if ($res = $DBobject->wrappedSql ( $sqlc, $params2 )) { // Build Cat - Listing cache
                                         parent::BuildCache();
                                         $row = $DBobject->wrappedSql ( $sqlCat, $params );

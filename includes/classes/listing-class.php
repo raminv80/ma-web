@@ -91,7 +91,7 @@ class ListClass {
 		if(!empty($_ID)){
 		  $this->ID = $_ID;
 		}else{
-		  $this->ID = $this->ChkCache ( $_url );
+		  $this->ID = $this->ChkCache ( $_url, $_PUBLISHED );
 		}
 
 		if(!empty($this->ID)) {	
@@ -211,20 +211,22 @@ class ListClass {
 		return $data;
 	}
 	
-	function ChkCache($_url) {
+	function ChkCache($_url, $_PUBLISHED) {
 		global $SMARTY, $DBobject;
 		$args = explode ( '/', $_url );
 		$a = end ( $args );
-		$sql = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url";
+		$sql = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url AND cache_published = :published";
 		$params = array (
-				":url" => $_url 
+				":url" => $_url,
+				":published" => $_PUBLISHED
 		);
 		try {
 			$row = $DBobject->wrappedSqlGetSingle ( $sql, $params );
 			if (empty ( $row )) {
-				$sql2 = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url";
+				$sql2 = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url AND cache_published = :published";
 				$params2 = array (
-						":url" => $a 
+						":url" => $a,
+						":published" => $_PUBLISHED 
 				);
 				if ($res = $DBobject->wrappedSqlGet ( $sql2, $params2 )) {
 					$this->BuildCache ();
@@ -232,9 +234,10 @@ class ListClass {
 				}
 			}
 		} catch ( Exception $e ) {
-			$sql2 = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url";
+			$sql2 = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url AND listing_published = :published";
 			$params2 = array (
-					":url" => $a 
+					":url" => $a,
+					":published" => $_PUBLISHED
 			);
 			if ($res = $DBobject->wrappedSqlGet ( $sql2, $params2 )) {
 				$this->BuildCache ();

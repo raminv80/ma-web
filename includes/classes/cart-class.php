@@ -869,6 +869,24 @@ class cart {
 		} 
 		return array();
 	}
+	
+	/**
+	 * Return the product object id from a given product_id
+	 *
+	 * @param int $productId
+	 * @param int $root
+	 * @return int
+	 */
+	private function getProductObjectId($productId) {
+		global $DBobject;
+	
+		$sql = "SELECT product_object_id FROM tbl_product WHERE product_id = :id";
+		if ($res = $DBobject->wrappedSql ( $sql, array( ":id" => $productId ) )) {
+			return $res[0]['product_object_id'];
+		}
+		return -1;
+	}
+	
 
 	/**
 	 * Validate the given discount code and calculate the amount according to items on current cart (or given cartId). 
@@ -928,7 +946,7 @@ class cart {
                                     	$listingMatchSubtotal += floatval($item['cartitem_subtotal']);
 									}
 								}
-							} elseif ($res[0]['discount_product_id'] == $item['cartitem_product_id']){
+							} elseif ($res[0]['discount_product_id'] == $this->getProductObjectId($item['cartitem_product_id'])){
 								// Special code for product only
                             	if ($res[0]['discount_amount_percentage']) {
                                 	$discount = floatval($item['cartitem_subtotal']) * floatval($res[0]['discount_amount']) / 100;

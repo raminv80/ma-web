@@ -25,8 +25,7 @@ function searchcms($str){
 	$results['faq']  = array_merge($tags['faq'],SearchFAQ($str));
 	$results['video']  = array_merge($tags['video'],SearchVideo($str));*/
 	
-	$sql = "SELECT * FROM tbl_tag WHERE tag_value = :value AND tag_deleted IS NULL AND tag_object_id > 0 AND (  tag_object_table = 'tbl_product' )" ;
-	// tag_object_table = 'tbl_listing' OR
+	$sql = "SELECT * FROM tbl_tag WHERE tag_value = :value AND tag_deleted IS NULL AND tag_object_id > 0 AND ( tag_object_table = 'tbl_listing' OR tag_object_table = 'tbl_product' )" ;
 	if($res = $DBobject->wrappedSql($sql, array(":value"=>$str))){
 		$no = 0;
 		foreach ( $res as $t) {
@@ -44,9 +43,9 @@ function searchcms($str){
 			}
 		}
 	}
-	/* if (count($results['listing']) == 0) {
+	if (count($results['listing']) == 0) {
 		$results['listing'] = SearchListing($str);
-	} */
+	}
 	if (count($results['product']) == 0) {
 		$results['product'] = SearchProduct($str);
 	}
@@ -66,8 +65,9 @@ function SearchListing($search){
 		tbl_listing.listing_seo_title,
 		tbl_listing.listing_meta_description,
 		tbl_listing.listing_meta_words) AGAINST (:search) AS Relevance
-		FROM tbl_listing LEFT JOIN cache_tbl_listing ON tbl_listing.listing_id = cache_tbl_listing.cache_record_id 
-		WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND 
+		FROM tbl_listing LEFT JOIN cache_tbl_listing ON tbl_listing.listing_object_id = cache_tbl_listing.cache_record_id 
+		WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 AND cache_tbl_listing.cache_published = 1
+			AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND 
 		MATCH(tbl_listing.listing_name,
 		tbl_listing.listing_content1,
 		tbl_listing.listing_seo_title,
@@ -100,10 +100,10 @@ function SearchProduct($search){
 			) AGAINST (:search) AS Relevance1,
 			MATCH(attr_value_name ) AGAINST (:search) AS Relevance2
 		FROM tbl_product 
-			LEFT JOIN cache_tbl_product ON product_id = cache_record_id
+			LEFT JOIN cache_tbl_product ON product_object_id = cache_record_id
 			LEFT JOIN tbl_attribute ON product_id = attribute_product_id
 			LEFT JOIN tbl_attr_value ON attribute_id = attr_value_attribute_id
-		WHERE product_published = 1 AND product_deleted IS NULL AND attribute_deleted IS NULL AND attr_value_deleted IS NULL AND
+		WHERE product_published = 1 AND product_deleted IS NULL AND attribute_deleted IS NULL AND attr_value_deleted IS NULL AND cache_published = 1 AND
 			( MATCH(product_name,
 				product_description,
 				product_seo_title,

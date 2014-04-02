@@ -7,11 +7,17 @@ global $DBobject;
 $url = urlSafeString( htmlspecialchars_decode($_POST ['value'], ENT_QUOTES));
 $duplicated = null;
 
-if (isset($_POST ['id']) && isset($_POST ['table']) && isset($_POST ['field']) && isset($_POST ['field2'])) {
+if (!empty($_POST ['id']) && !empty($_POST ['idfield']) && !empty($_POST ['table']) && !empty($_POST ['field'])) {
 	$duplicated = false;
 	$pre = str_replace ( "tbl_", "", $_POST ['table'] );
-	$sql = "SELECT {$pre}_object_id AS ID FROM {$_POST ['table']} WHERE {$_POST ['field']} = :url AND {$_POST ['field2']} = :pid AND {$pre}_deleted IS NULL";
-	if($res = $DBobject->wrappedSql($sql,array(':url'=>$url,':pid'=>$_POST ['value2']))){
+	$params = array(':url'=>$url);
+	$where = '';
+	if(!empty($_POST['field2']) && !empty($_POST['value2'])){
+		$where = "AND {$_POST['field2']} = :pid ";
+		$params = array_merge($params,array(':pid'=>$_POST ['value2']));
+	}
+	$sql = "SELECT {$_POST ['idfield']} AS ID FROM {$_POST ['table']} WHERE {$_POST ['field']} = :url {$where} AND {$pre}_deleted IS NULL";
+	if($res = $DBobject->wrappedSql($sql,$params)){
 		foreach ($res as $r){
 			if ($r['ID'] != $_POST ['id']){
 				echo json_encode ( array ("url" => $url, "duplicated" => true  ) );

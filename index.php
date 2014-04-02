@@ -224,7 +224,7 @@ while ( true ) {
 			$_nurl = $_request ["arg1"];
 			$class = ( string ) $lp->file;
 			$obj = new $class ( $_nurl, $lp );
-			$template = $obj->Load ();
+			$template = $obj->Load (null, $_PUBLISHED);
 			//$productsList = $obj->getProductList($lp->root_parent_id, true);
 			//$SMARTY->assign ( 'productsList', $productsList );
 			$obj->LoadAssociatedByTag($lp);

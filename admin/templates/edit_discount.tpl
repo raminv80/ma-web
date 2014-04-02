@@ -126,9 +126,12 @@ $(document).ready(function(){
 	
 	$('#id_discount_code').rules("add", {
     	  uniqueURL: { 
-        	  id: "{if $fields.discount_id}{$fields.discount_id}{else}0{/if}",
+        	  id: $('#discount_id').val(),
+        	  idfield: "discount_id",
         	  table : "tbl_discount",
-        	  field : "discount_code"
+        	  field : "discount_code",
+	          field2 : "",
+	          value2 : ""
           },
     	  messages: {
     	        equalTo: "Invalid CODE: It's currently being used or has non-alphanumeric characters."
