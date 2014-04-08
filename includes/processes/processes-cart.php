@@ -186,7 +186,7 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    		    $buffer= $SMARTY->fetch('templates/email-confirmation.tpl');
 	    		    $to = $_SESSION['address']['B']['email'];
 	    		    $from = 'eShop';
-	    		    $fromEmail = 'noreply@cms.themserver.com';
+	    		    $fromEmail = "noreply@" . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
 	    		    $subject = 'Confirmation of your order';
 	    		    $body = $buffer;
 	    		    if($mailID = sendMail($to, $from, $fromEmail, $subject, $body)){

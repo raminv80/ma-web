@@ -478,12 +478,41 @@ function in_array_r($needle, $haystack, $strict = false) {
 	return false;
 }
 
+/**
+ * Convert an associative array into csv string with header based on the keys
+ * 
+ * @param  $array
+ * @return string
+ */
+function AssociativeArrayToCSV($array){
+	$head = "";
+	$buf = "";
+	foreach($array as $key => $val){
+		if(is_array($val)){
+			foreach($val as $key => $field){
+				if( $val === reset($array)){
+					$head .= "$key,";
+				}
+				$buf.= '"'. $field . '",';
+			}
+		}
+		$buf.= "\r\n";
+	}
+	return $head."\r\n".$buf;
+}
+
+/**
+ * Convert an array into csv string (No header)
+ *
+ * @param  $array
+ * @return string
+ */
 function arrayToCSV($array){
 	$buf = "";
 	foreach($array as $key => $val){
 		if(is_array($val)){
 			foreach($val as $key => $field){
-				$buf.= "$field,";
+				$buf.= '"'. $field . '",';
 			}
 		}
 		$buf.= "\r\n";

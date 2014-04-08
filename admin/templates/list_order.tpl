@@ -10,6 +10,11 @@
 			<input type="text" class="form-control dates" value="{$smarty.now|date_format:"%Y-%m-%d"}" name="to" id="to" required>
 		</div>
 		<a href="javascript:void(0);" onClick="$('#filter-form').submit();" class="btn btn-info" style="margin-left: 10px;">Filter</a>
+		<a href="javascript:void(0);" onClick="getCSV();" class="btn btn-info" style="margin-left: 10px;">Get CSV file</a>
+	</form>
+	<form id="csv-form" action="/admin/includes/processes/get-orders-csv.php" method="post">
+		<input type="hidden" value="" name="from" id="csv-from">
+		<input type="hidden" value="" name="to" id="csv-to">
 	</form>
 </div> 
 <div class="row form">
@@ -53,9 +58,7 @@
 		      $(element).closest('.form-group').find('.help-block').text(error.text());
 		    },
 		    submitHandler: function (form) {
-		      if ($(form).valid()) {
 		    	  getOrdersFiltered();
-		      } 
 		    }
 		});
 
@@ -100,6 +103,13 @@
 		
 	});
 
+	function getCSV(){
+		$('#csv-from').val( $('#from').val() );
+		$('#csv-to').val( $('#to').val() );
+		$('#csv-form').submit();
+	}
+
+	
 	function getOrdersFiltered () {
 		$('body').css('cursor','wait');
 		var datastring = $("#filter-form").serialize();

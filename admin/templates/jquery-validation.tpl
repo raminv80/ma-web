@@ -58,7 +58,8 @@ if (jQuery.validator) {
 	    			    	},4000);
 		    			    return; 
 	    			    	window.history.pushState(null, null, );*/
-	    			    }else{
+	    			    }
+	    			    if(obj.IDs){
 	    					$.each(obj.IDs, function(k, v) {
 	    					    $('input[name="'+k+'"]').val(v);
 	    					});

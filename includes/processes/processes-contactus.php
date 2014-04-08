@@ -1,8 +1,6 @@
 <?php
-set_include_path($_SERVER['DOCUMENT_ROOT']);
-include "includes/functions/functions.php";
 
-//if($_POST["Action"]){
+if(checkToken('frontend',$_POST["formToken"], false)){
 	$banned=array('formToken');
 	$content=serialize($_POST);
 	$buf.='<h2>Website contact - Contact Us form</h2><br/><br/>';
@@ -13,9 +11,9 @@ include "includes/functions/functions.php";
 	}
 	$body = $buf;
 	$subject = 'Website contact - Contact Us form';
-	$fromEmail = 'noreply@cocolat.com.au';
-	$from = 'Cocolat - Website';
-	$to = 'nick@them.com.au';
+	$fromEmail = 'noreply@' . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
+	$from = 'Chemplus - Website';
+	$to = 'apolo@them.com.au';
 	$sql="INSERT INTO tbl_form (form_date,form_data,form_email,form_action,form_post,form_sender_ip) VALUES (NOW(),'".clean($body)."','".clean($to)."','ContactUs','".clean($content)."','".clean($_SERVER['REMOTE_ADDR'])."')";
 	$DBobject->executeSQL($sql);
 	if(sendMail($to, $from, $fromEmail, $subject, $body)){
@@ -27,3 +25,4 @@ include "includes/functions/functions.php";
 		header("Location: {$redirect}");
 		exit;
 	}
+}
