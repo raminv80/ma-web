@@ -5,7 +5,7 @@ register_shutdown_function( "fatal_handler" );
 function fatal_handler() {
   # Getting last error
   $errno = error_get_last();
-  if($errno['type'] === E_USER_ERROR || $errno['type'] === E_ERROR){
+  if($errno['type'] === E_ERROR){
     $to = "nick@them.com.au,apolo@them.com.au";
     $from = "noreply@" . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
     $fromEmail = "noreply@" . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );

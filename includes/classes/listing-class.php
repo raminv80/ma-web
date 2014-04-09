@@ -367,7 +367,7 @@ class ListClass {
 		$data = array ();
 		
 		// GET LISTINGS AND CATEGORIES FOR THIS SECTION
-		$sql = "SELECT tbl_listing.listing_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_listing.listing_name, tbl_listing.listing_parent_id, tbl_listing.listing_parent_flag FROM tbl_listing WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_published = :published AND tbl_listing.listing_display_menu = '1' AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
+		$sql = "SELECT tbl_listing.listing_object_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_listing.listing_name, tbl_listing.listing_parent_id, tbl_listing.listing_parent_flag FROM tbl_listing WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_published = :published AND tbl_listing.listing_display_menu = '1' AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
 		$params = array (
 				":cid" => $_cid,
 		    ":published" => $_PUBLISHED
@@ -376,7 +376,7 @@ class ListClass {
 			foreach ( $res as $row ) {
 				$t_array = array (
 						"category_name" => ucfirst ( unclean ( $row ['listing_name'] ) ),
-						"category_id" => $row ['listing_id'],
+						"category_id" => $row ['listing_object_id'],
 						"title" => ucfirst ( unclean ( $row ['listing_name'] ) ),
 						"url" => $row ['listing_url'],
 						"selected" => 0,
@@ -385,7 +385,7 @@ class ListClass {
 				
 				if (intval ( $row ['listing_parent_flag'] ) == 1) {
 					$t_array ["category"] = 1;
-					$subs = self::LoadMenu ( $_pid, $row ['listing_id'], $level + 1, $_PUBLISHED );
+					$subs = self::LoadMenu ( $_pid, $row ['listing_object_id'], $level + 1, $_PUBLISHED );
 					if ($subs ['selected'] == 1) {
 						$t_array ["selected"] = 1;
 						$data ['selected'] = 1;
@@ -401,7 +401,7 @@ class ListClass {
 					$data ['listings'] = 1;
 				}
 				
-				if ($row ['listing_id'] == $_pid) {
+				if ($row ['listing_object_id'] == $_pid) {
 					$data ['selected'] = 1;
 					$t_array ["selected"] = 1;
 				}
