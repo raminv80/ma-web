@@ -33,14 +33,15 @@
 						{$fields.payment.0.billing_address.0.address_country} 
 						{$fields.payment.0.billing_address.0.address_postcode}. 
 						{if $fields.payment.0.billing_address.0.address_telephone} {$fields.payment.0.billing_address.0.address_telephone}{/if}
-						{if $fields.payment.0.billing_address.0.address_telephone && $fields.payment.0.billing_address.0.address_telephone} / {/if} 
-						{if $fields.payment.0.billing_address.0.address_mobile} {$fields.payment.0.billing_address.0.address_mobile} {/if}
+						{if $fields.payment.0.billing_address.0.address_telephone && $fields.payment.0.billing_address.0.address_telephone}{/if} 
+						{if $fields.payment.0.billing_address.0.address_mobile} / {$fields.payment.0.billing_address.0.address_mobile} {/if}
 					</td>
 				</tr>
 				<tr>
 					<td><b>Shipping Address:</b></td>
-					<td class="text-center">{$fields.payment.0.shipping_address.0.address_name}</td>
+					<td class="text-center"><strong>{$fields.payment.0.shipping_address.0.address_name}</strong></td>
 					<td class="text-center" colspan="2">
+						<strong>
 						{$fields.payment.0.shipping_address.0.address_line1} 
 						{$fields.payment.0.shipping_address.0.address_line2} 
 						{$fields.payment.0.shipping_address.0.address_suburb}, 
@@ -48,8 +49,15 @@
 						{$fields.payment.0.shipping_address.0.address_country} 
 						{$fields.payment.0.shipping_address.0.address_postcode}. 
 						{if $fields.payment.0.shipping_address.0.address_telephone} {$fields.payment.0.shipping_address.0.address_telephone}{/if}
-						{if $fields.payment.0.shipping_address.0.address_telephone && $fields.payment.0.shipping_address.0.address_telephone} / {/if} 
-						{if $fields.payment.0.shipping_address.0.address_mobile} {$fields.payment.0.shipping_address.0.address_mobile} {/if}
+						{if $fields.payment.0.shipping_address.0.address_telephone && $fields.payment.0.shipping_address.0.address_telephone}{/if} 
+						{if $fields.payment.0.shipping_address.0.address_mobile} / {$fields.payment.0.shipping_address.0.address_mobile} {/if}
+						</strong>
+					</td>
+				</tr>
+				<tr>
+					<td><b>Comments:</b></td>
+					<td class="text-center" colspan="3">
+						{$fields.payment.0.payment_shipping_comments} 
 					</td>
 				</tr>
 			</tbody>

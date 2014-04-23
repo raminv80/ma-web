@@ -109,7 +109,7 @@ class ListClass {
 		}
 		$sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_object_id = :id AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_published = :published DESC "; 
 		$params = array (
-			":id" => $_ID,
+			":id" =>  $this->ID,
 			":published" => $_PUBLISHED
 		);
 		if($res = $DBobject->wrappedSqlGet( $sql, $params )) {

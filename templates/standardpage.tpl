@@ -31,7 +31,7 @@
 		
 		<div class="row">
 			<div id="maintext" class="col-sm-12">
-				<h2 class="title">{$listing_title}</h2>
+				<h2 class="title">{$listing_name}</h2>
 				{$listing_content1}
 			</div>
 		</div>

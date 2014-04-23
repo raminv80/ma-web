@@ -76,8 +76,6 @@ require 'includes/social/socialwall.class.php';
 
 include 'includes/processes/processes.php';
 
-include 'includes/functions/mobile-functions.php';
-
 session_start ();
 
 $_REQUEST = clean ( $_REQUEST );

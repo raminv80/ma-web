@@ -5,7 +5,10 @@ global $CONFIG, $SMARTY, $DBobject;
 
 foreach($CONFIG->section as $sp){
 	if ($sp->url == 'orders') {
-		$sp->table->where = "DATE(cart_closed_date) BETWEEN '{$_POST['from']}' AND '{$_POST['to']}'";
+		$fromDate = date("Y-m-d", strtotime( str_replace('/', '-', $_POST['from'])));
+		$toDate = date("Y-m-d", strtotime( str_replace('/', '-', $_POST['to'])));
+		
+		$sp->table->where = "DATE(cart_closed_date) BETWEEN '{$fromDate}' AND '{$toDate}'";
 		$record = new Record($sp);
 		$list = $record->getRecordList();
 		$SMARTY->assign("list",$list);

@@ -3,11 +3,11 @@
 	<form class="form-inline" role="form" id="filter-form">
 		<div class="form-group">
 			<label class="" for="from">From:</label> 
-			<input type="text" class="form-control dates" value="{'-1 month'|date_format:"%Y-%m-%d"}" name="from" id="from" required>
+			<input type="text" class="form-control dates" value="{'-1 month'|date_format:"%d/%m/%Y"}" name="from" id="from" required>
 		</div>
 		<div class="form-group">
 			<label class="" for="to">To:</label> 
-			<input type="text" class="form-control dates" value="{$smarty.now|date_format:"%Y-%m-%d"}" name="to" id="to" required>
+			<input type="text" class="form-control dates" value="{$smarty.now|date_format:"%d/%m/%Y"}" name="to" id="to" required>
 		</div>
 		<a href="javascript:void(0);" onClick="$('#filter-form').submit();" class="btn btn-info" style="margin-left: 10px;">Filter</a>
 		<a href="javascript:void(0);" onClick="getCSV();" class="btn btn-info" style="margin-left: 10px;">Get CSV file</a>
@@ -72,7 +72,7 @@
 		$("#to").datepicker({
 			changeMonth : true,
 			changeYear : true,
-			dateFormat : "yy-mm-dd",
+			dateFormat : "dd/mm/yy",
 			maxDate : new Date(),
 			onSelect : function(selectedDate) {
 				$("#from").datepicker("option", "maxDate", selectedDate);
@@ -82,7 +82,7 @@
 		$("#from").datepicker({
 			changeMonth : true,
 			changeYear : true,
-			dateFormat : "yy-mm-dd",
+			dateFormat : "dd/mm/yy",
 			maxDate : new Date(),
 			onSelect : function(selectedDate) {
 				$("#to").datepicker("option", "minDate", selectedDate);
