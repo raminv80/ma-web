@@ -46,6 +46,8 @@ unset ( $_SESSION ['login_referer']);
 
 // ASSIGN USER FOR TEMPLATES
 $SMARTY->assign ( 'user', $_SESSION['user']['public'] );
+$SMARTY->assign ( 'HTTP_REFERER', $_SERVER['HTTP_REFERER'] );
+$SMARTY->assign ( 'REQUEST_URI', $_SERVER['REQUEST_URI'] );
 
 
 $_SESSION ['error'] = "";
