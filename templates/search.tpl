@@ -24,7 +24,7 @@
 						  		{assign var=prodcount value=0}
 						  		{assign var=prodpage value=1}
 						  		{foreach $results.product as $item}
-							  		{if $prodcount eq 4}{assign var=prodcount value=0}{/if}
+							  		{if $prodcount eq 2}{assign var=prodcount value=0}{/if}
 									{assign var=prodcount value=$prodcount+1}
 									<div class="result">
 										<div id="img-mini-box">
@@ -43,18 +43,18 @@
 							  			</div>
 							  			
 							  		</div>
-							  		{if $prodcount eq 4}{assign var=prodpage value=$prodpage+1}</div><div class="prod-page" id="prod-page{$prodpage}">{/if}
+							  		{if $prodcount eq 2}{assign var=prodpage value=$prodpage+1}</div><div class="prod-page" id="prod-page{$prodpage}">{/if}
 								{/foreach}
 							{/if}
 				  		</div>
 				  		<div class="prod-resultpag">
 					  		<ul>
-					  			{if count($results.product) gt 4}
+					  			{if count($results.product) gt 2}
 						  			<li class="current"><a href="javascript:void(0);" onclick="$('.prod-resultpag').find('li').removeClass('current');$(this).parent('li').addClass('current');$('.prod-page').removeClass('current');$('#prod-page1').addClass('current');">1</a></li>
 							  		{assign var=prodcount value=0}
 							  		{assign var=prodpage value=1}
 							  		{foreach $results.product as $item}
-								  		{if $prodcount eq 4}
+								  		{if $prodcount eq 2}
 								  			{assign var=prodpage value=$prodpage+1}
 								  			<li><a href="javascript:void(0);" onclick="$('.prod-resultpag').find('li').removeClass('current');$(this).parent('li').addClass('current');$('.prod-page').removeClass('current');$('#prod-page{$prodpage}').addClass('current');">{$prodpage}</a></li>
 								  			{assign var=prodcount value=0}
