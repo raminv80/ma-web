@@ -287,7 +287,7 @@ class cart {
 					$feAttr [$v ['attribute_id']] = $v ['attr_value_id'];
 				}
 				if (count ( array_diff_assoc ( $feAttr, $dbAttr ) ) === 0) {
-					return $res [0]; // Item found
+					return $item; // Item found
 				}
 			}
 		}
