@@ -14,9 +14,9 @@
 	</div>
 	<div class="row attr_values" id="attr_value{$attributeno*20+$attrvalueno}">
 		<input type="hidden" value="attribute_id" name="default[attr_value_attribute_id]" />
-		<input type="hidden" value="{$attr_value.attr_value_id}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_id]" id="attr_value_id" /> 
+		<input type="hidden" value="{$attr_value.attr_value_id}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_id]" id="attr_value_id" class="key" /> 
 		<input type="hidden" value="attr_value_id" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][id]" id="id" />
-		<input type="hidden" value="{$attr_value.attr_value_attribute_id}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_attribute_id]" id="attr_value_attribute_id" />  
+		<input type="hidden" value="{$attr_value.attr_value_attribute_id}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_attribute_id]" id="attr_value_attribute_id" class="key" />  
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_name">Name</label>
 			<div class="col-sm-4">

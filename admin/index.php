@@ -80,36 +80,68 @@ while(true){
 		/****** Goes to individual script pages *******/
 		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
-				$SMARTY->assign("zone",$sp->title);
-				$SMARTY->assign ( "typeID", $sp->type_id );
-				$parentID = 0;
-				if ($sp->root_parent_id) {
-					$SMARTY->assign ( "rootParentID", $sp->root_parent_id );
-					$parentID = $sp->root_parent_id;
-				}
-				$template = "list.tpl";
-				if($sp->type == "LISTING"){
-					$record = new Listing($sp);
-					$list = $record->getListingList($parentID);
-					$SMARTY->assign("list",$list);
-					$SMARTY->assign("path",(string)$sp->url);
-					$template = $sp->list_template;
-					break 2;
-				}
-				if($sp->type == "PRODUCT"){
-					$record = new Product($sp);
-					$list = $record->getRecordList($parentID);
-					$SMARTY->assign("list",$list);
-					$SMARTY->assign("path",(string)$sp->url);
-					$template = $sp->list_template;
-					break 2;
-				}
-				if($sp->type == "TABLE"){
-					$record = new Record($sp);
-					$list = $record->getRecordList();
-					$SMARTY->assign("list",$list);
-					$SMARTY->assign("path",(string)$sp->url);
-					$template = $sp->list_template;
+				if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level'])){
+					//IF ADMIN HAS STORES
+					if(intval($_SESSION['user']['admin']['level']) == 2 && !empty($_SESSION['user']['admin']['stores'])){
+						// INJECT CONFIG FOR PROMOTIONS
+						$a = array();
+						foreach ($_SESSION['user']['admin']['stores'] as $strs){
+							$a[] = $sp->storefield . ' = ' . $strs['access_store_id'];
+						}
+						$where =  implode(' OR ', $a);
+						//CREATE WHERE CONFIG STRUCTURE WHICH INCLUDES ALL ADMIN STORES AGAINST STOREFIELD eg. (STORE_ID = 4 OR STORE_ID = 5)
+						//ADD WHERE CONFIG TO EXISTING WHERE IF ANY
+					}
+					
+					
+					$SMARTY->assign("zone",$sp->title);
+					$SMARTY->assign ( "typeID", $sp->type_id );
+					$parentID = 0;
+					if ($sp->root_parent_id) {
+						$SMARTY->assign ( "rootParentID", $sp->root_parent_id );
+						$parentID = $sp->root_parent_id;
+					}
+					$template = "list.tpl";
+					if($sp->type == "LISTING"){
+						if(!empty($where)){
+							if(empty($sp->where)){
+								$sp->addChild ( 'where', $where );
+							}else{
+								$sp->where = $sp->table->where . " AND ( ". $where ." )";
+							}
+						}
+						$record = new Listing($sp);
+						$list = $record->getListingList($parentID);
+						$SMARTY->assign("list",$list);
+						$SMARTY->assign("path",(string)$sp->url);
+						$template = $sp->list_template;
+						break 2;
+					}
+					if($sp->type == "PRODUCT"){
+						$record = new Product($sp);
+						$list = $record->getRecordList($parentID);
+						$SMARTY->assign("list",$list);
+						$SMARTY->assign("path",(string)$sp->url);
+						$template = $sp->list_template;
+						break 2;
+					}
+					if($sp->type == "TABLE"){
+						if(!empty($where)){
+							if(empty($sp->table->where)){
+								$sp->table->addChild ( 'where', $where );
+							}else{
+								$sp->table->where = $sp->table->where . " AND ( ". $where ." )";
+							}
+						}
+						$record = new Record($sp);
+						$list = $record->getRecordList();
+						$SMARTY->assign("list",$list);
+						$SMARTY->assign("path",(string)$sp->url);
+						$template = $sp->list_template;
+						break 2;
+					}
+				}else{
+					$template = "home.tpl";
 					break 2;
 				}
 			}
@@ -131,40 +163,74 @@ while(true){
 		}
 		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
-				$SMARTY->assign("zone",$sp->title);
-				$SMARTY->assign ( "typeID", $sp->type_id );
-				$SMARTY->assign ( "parentID", $sp->parent_id );
-				$SMARTY->assign ( "rootParentID", $sp->root_parent_id );
-				$SMARTY->assign ( "objID", $objID );
-				if($sp->type == "LISTING"){
-					$record = new Listing($sp);
-					$tm = $record->getListing(intval($arr[2]));
-					$SMARTY->assign("fields",$tm);
-					$template = $sp->edit_template;
-					foreach($sp->custom_template as $ct){
-						$f = $ct->attributes()->field;
-						$v = $ct->attributes()->value;
-						if($tm["{$f}"] == $v){
-							$template = $ct;
-							break;
+				if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) ){
+					$SMARTY->assign("zone",$sp->title);
+					$SMARTY->assign ( "typeID", $sp->type_id );
+					$SMARTY->assign ( "parentID", $sp->parent_id );
+					$SMARTY->assign ( "rootParentID", $sp->root_parent_id );
+					$SMARTY->assign ( "objID", $objID );
+					if($sp->type == "LISTING"){
+						$record = new Listing($sp);
+						$tm = $record->getListing(intval($arr[2]));
+						$SMARTY->assign("fields",$tm);
+						$template = $sp->edit_template;
+						foreach($sp->custom_template as $ct){
+							$f = $ct->attributes()->field;
+							$v = $ct->attributes()->value;
+							if($tm["{$f}"] == $v){
+								$template = $ct;
+								break;
+							}
 						}
-					}
-					break 2;
-				}
-				if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
-					$record = new Record($sp);
-					$tm = $record->getRecord(intval($arr[2]));
-					$SMARTY->assign("fields",$tm);
-					$SMARTY->assign("type",(string)$sp->slide);
-					$template = $sp->edit_template;
-					foreach($sp->custom_template as $ct){
-						$f = $ct->attributes()->field;
-						$v = $ct->attributes()->value;
-						if($tm["{$f}"] ===$v){
-							$template = $ct;
-							break;
+						foreach($sp->custom as $ct){
+						  $f = $ct->attributes()->field;
+						  $v = $ct->attributes()->value;
+						  if($tm["{$f}"] == $v){
+						    foreach($ct->associated as $a){
+						      $domdict = dom_import_simplexml($sp);
+						      $domcat  = dom_import_simplexml($a);
+						      $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
+						      $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
+						    }
+						    foreach($ct->options as $o){
+						      $domdict = dom_import_simplexml($sp);
+						      $domcat  = dom_import_simplexml($o);
+						      $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
+						      $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
+						    }
+						    foreach($ct->extends as $e){
+						      $domdict = dom_import_simplexml($sp);
+						      $domcat  = dom_import_simplexml($e);
+						      $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
+						      $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
+						    }
+						    $record = new Listing($sp);
+    						$tm = $record->getListing(intval($arr[2]));
+    						$SMARTY->assign("fields",$tm);
+    						$template = $ct->template;
+						    break;
+						  }
 						}
+						break 2;
 					}
+					if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
+						$record = new Record($sp);
+						$tm = $record->getRecord(intval($arr[2]));
+						$SMARTY->assign("fields",$tm);
+						$SMARTY->assign("type",(string)$sp->slide);
+						$template = $sp->edit_template;
+						foreach($sp->custom_template as $ct){
+							$f = $ct->attributes()->field;
+							$v = $ct->attributes()->value;
+							if($tm["{$f}"] ===$v){
+								$template = $ct;
+								break;
+							}
+						}
+						break 2;
+					}
+				}else{
+					$template = "home.tpl";
 					break 2;
 				}
 			}
@@ -175,16 +241,21 @@ while(true){
 	if($arr[0] == 'delete' && $arr[1] != ""){
 		foreach($CONFIG->section as $sp){
 			if($sp->url == $arr[1] ){
-				if($sp->type == "LISTING"){
-					$record = new Listing($sp);
-					$res = $record->deleteListing($arr[2]);
+				if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) ){
+					if($sp->type == "LISTING"){
+						$record = new Listing($sp);
+						$res = $record->deleteListing($arr[2]);
+					}
+					if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
+						$record = new Record($sp);
+						$res = $record->deleteRecord($arr[2]);
+					}
+					header("Location: {$_SERVER['HTTP_REFERER']}");
+					die();
+				}else{
+					$template = "home.tpl";
+					break 2;
 				}
-				if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
-					$record = new Record($sp);
-					$res = $record->deleteRecord($arr[2]);
-				}
-				header("Location: {$_SERVER['HTTP_REFERER']}");
-				die();
 			}
 		}
 		break 1;
@@ -197,17 +268,23 @@ while(true){
 $menu = array();
 
 foreach($CONFIG->section as $sp){
-	$list = array();
-	if($sp->type == "LISTING" && $sp->showlist != 'FALSE'){
-		$record = new Listing($sp);
-		$list = $record->getListingList();
+	if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) ){
+		$list = array();
+		if($sp->type == "LISTING" && $sp->showlist != 'FALSE'){
+			$record = new Listing($sp);
+			$list = $record->getListingList();
+		}
+	
+		if($sp->type == "TABLE" && $sp->showlist != 'FALSE'){
+			$record = new Record($sp);
+			$list = $record->getRecordList();
+		}
+		$addUrl = "/admin/edit/{$sp->url}";
+		if((string)$sp->attributes()->hideadd == 'true'){
+		  $addUrl = "";
+		}
+		$menu[] = array("title"=>$sp->title,"url"=>"/admin/list/{$sp->url}","list"=>$list,"addNewUrl"=>$addUrl);
 	}
-
-	if($sp->type == "TABLE" && $sp->showlist != 'FALSE'){
-		$record = new Record($sp);
-		$list = $record->getRecordList();
-	}
-	$menu[] = array("title"=>$sp->title,"url"=>"/admin/list/{$sp->url}","list"=>$list,"addNewUrl"=>"/admin/edit/{$sp->url}");
 }
 $SMARTY->assign("menu",$menu);
 $SMARTY->display("extends:page.tpl|$nav|$template");

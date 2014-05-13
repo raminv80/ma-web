@@ -54,7 +54,25 @@ Class Record{
 			foreach($this->CONFIG->table->associated as $a){
 				$article_f["{$a->name}"] = $this->getAssociated($a, $res[0]["{$a->linkfield}"]);
 			}
-
+			foreach($this->CONFIG->table->extends as $a){
+			  $pre = str_replace("tbl_","",$a->table);
+			  $sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '".$res[0]["{$a->linkfield}"]."' AND {$pre}_deleted IS NULL ";
+			  if($res = $DBobject->wrappedSqlGet($sql)){
+			    foreach($res[0] as $key=>$field){
+			      if(empty($listing_f["{$key}"])){
+              $article_f["{$key}"] = $field;
+            }else{
+              if(! is_array($listing_f["{$key}"])){
+                $temp = $listing_f["{$key}"];
+                $article_f["{$key}"] = array(
+                    $temp
+                );
+              }
+              $article_f["{$key}"][] = $field;
+            }
+			    }
+			  }
+			}
 		}
 		foreach ( $this->CONFIG->table->options->field as $f ) {
 			if ($f->attributes()->recursive) {
@@ -154,7 +172,7 @@ Class Record{
 					$title .= ($n>0?", ":"").$val["{$f}"];
 					$n++;
 				}
-				$records[$val["{$this->ID}"]] = array("title"=>$title,"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}");
+				$records[$val["{$this->ID}"]] = array("title"=>$title,"record"=>$val,"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}");
 				
 				foreach($this->CONFIG->table->associated as $a){
 					if ($a->attributes()->inlist) {

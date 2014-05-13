@@ -40,23 +40,23 @@ function deleteFileType(ID){
 }
 
 
-function buildCache(table_name,object_id,preview){
+function buildUrl(table_name,parent_fieldname,object_id,preview){
 	var str = '';
 	if(object_id != ''){
 		str = '&objid='+$('#'+object_id).val();
 	}
 	$.ajax({
 		type : "POST",
-		url : "/admin/includes/processes/processes-cache.php",
+		url : "/admin/includes/processes/processes-build-url.php",
 		cache: false,
 		async: false,
-		data : 'table='+table_name+str,
+		data : 'table='+table_name+'&parentfield='+parent_fieldname+str,
 		dataType: "html",
 		success : function(data, textStatus) {
 			try {
 				var obj = $.parseJSON(data);
-				if(preview){
-					window.open('http://'+(document.domain)+'/draft/'+obj.url,'_blank');
+				if(preview && obj.url){
+					window.open('http://'+(document.domain)+obj.url,'_blank');
 				}
 			} catch (err) {}
 		}

@@ -19,10 +19,10 @@ Class Product extends Record{
 		$records = array();
 		
 		// ------------- Products List ------------------
-		$order = " ORDER BY product_order, product_name";
-		if (! empty ( $this->CONFIG->orderby )) {
-			$order = " ORDER BY " . $this->CONFIG->orderby;
-		}
+		$order = " ORDER BY product_order ASC, product_name ASC";
+// 		if (! empty ( $this->CONFIG->orderby )) {
+// 			$order = " ORDER BY " . $this->CONFIG->orderby;
+// 		}
 		
 		$sql = "SELECT * FROM {$this->DBPRODTABLE}
 		WHERE product_listing_id = :pid AND product_listing_id IS NOT NULL AND	product_deleted IS NULL " . ($this->WHERE != '' ? "AND {$this->WHERE} " : " ") .$order;
@@ -33,15 +33,16 @@ Class Product extends Record{
 		
 		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
 			foreach ( $res as $key => $val ) {
-				$p_url = '/';
+				$p_url = '/diy';
 				if($val['product_published'] == 0){
-					$p_url .= 'draft/';
+					$p_url = '/draft/diy';
 				}
 				$records ["p{$val['product_id']}"] = array (
 						"title" => $val ['product_name'],
+				    "order" => $val ['product_order'],
 						"id" => $val ['product_id'],
 						"published" => $val ['product_published'],
-						"preview_url" => $p_url . $this->getCachedUrl($val['product_object_id'],$val ['product_published']),
+						"preview_url" => $p_url . self::getUrl($val['product_listing_id'],1,$val['product_url']),
 						"url" => "/admin/edit/{$this->CONFIG->url}/{$val['product_id']}",
 						"url_delete" => "/admin/delete/{$this->CONFIG->url}/{$val['product_id']}"
 				);
@@ -49,7 +50,7 @@ Class Product extends Record{
 		}
 		
 		// ------------- Product Categories List ------------------
-		$order = " ORDER BY tbl_listing.listing_order ASC";
+		$order = " ORDER BY listing_order ASC, listing_name ASC";
 		if (! empty ( $this->CONFIG->orderby )) {
 				$order = " ORDER BY " . $this->CONFIG->orderby;
 		}
@@ -70,6 +71,7 @@ Class Product extends Record{
 					if ($val ['listing_type_id'] == $this->TYPE_ID) {
 						$records ["l{$val['listing_id']}"] = array (
 												"title" => $val ['listing_name'],
+						            "order" => $val ['listing_order'],
 												"id" => $val ['listing_id'],
 												"published" => $val ['listing_published'],
 												"subs" => $subs
@@ -105,13 +107,21 @@ Class Product extends Record{
 		return  $records;
 	}
 	
-	function getCachedUrl($id, $published = 1) {
+	function getUrl($id, $published = 1, $url = '') {
 		global $DBobject;
-		$sql = "SELECT cache_url FROM cache_tbl_product WHERE cache_record_id = :id AND cache_published = :published";
-		if ($res = $DBobject->executeSQL ($sql,array(':id'=>$id, ':published'=>$published))) {
-			return $res[0]['cache_url'];
+	
+		$data = '';
+		$sql = "SELECT listing_url, listing_parent_id FROM tbl_listing WHERE listing_object_id = :id AND listing_deleted IS NULL ORDER BY listing_published = :published";
+		if($res = $DBobject->executeSQL($sql,array(
+				':id'=>$id,
+				':published'=>$published
+		))){
+			if(!empty($res[0]['listing_parent_id']) && intval($res[0]['listing_parent_id'])>0 && !empty($res[0]['listing_url'])){
+				$data = self::getUrl($res[0]['listing_parent_id'],1,$res[0]['listing_url']. '/' . $url);
+			}else{
+				$data = $res[0]['listing_url'] . '/' . $url;
+			}
 		}
-		return '';
+		return $data;
 	}
-
 }

@@ -16,9 +16,9 @@
 		<div class="row form-group">
 				<label class="col-sm-2 control-label" for="attribute_name">Name</label>
 				<input type="hidden" value="product_id" name="default[attribute_product_id]" />
-				<input type="hidden" value="{$attribute.attribute_id}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_id]" id="attribute_id" />
+				<input type="hidden" value="{$attribute.attribute_id}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_id]" id="attribute_id" class="key"/>
 				<input type="hidden" value="attribute_id" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][id]" id="id" /> 
-				<input type="hidden" value="{$attribute.attribute_product_id}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_product_id]" id="attribute_product_id" />  
+				<input type="hidden" value="{$attribute.attribute_product_id}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_product_id]" id="attribute_product_id" class="key"/>  
 			<div class="col-sm-5">
 				<input class="form-control" type="text" value="{$attribute.attribute_name}" name="field[{$attributeno*20}][tbl_attribute][{$attributeno}][attribute_name]" id="attribute_name" onchange="$('#attribute_name_{$attributeno}_preview').html(this.value);">
 			</div>

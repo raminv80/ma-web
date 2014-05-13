@@ -1,9 +1,16 @@
 <?php
+global $SMARTY;
 $referer = parse_url($_SERVER['HTTP_REFERER']);
 if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	switch ($_POST['action']) {
 		case 'ADDTOCART':
 			$cart_obj = new cart();
+			$storeId = $_SESSION['user']['public']['store_id'];
+			$sql = "SELECT listing_name, location_phone FROM tbl_listing LEFT JOIN tbl_location ON listing_id = location_listing_id WHERE listing_object_id = :id AND listing_deleted IS NULL AND listing_published = 1";
+			$params = array(":id"=>$storeId);
+			$res = $DBobject->wrappedSql($sql,$params);
+			$SMARTY->assign("storename",$res[0]['listing_name']);
+			
 			$response = $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['price']);
 			$itemsCount = $cart_obj->NumberOfProductsOnCart();
 			$subtotal = $cart_obj->GetSubtotal();
@@ -11,19 +18,26 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 			$SMARTY->assign('productsOnCart',$productsOnCart);
 			$SMARTY->assign('itemNumber',$itemsCount);
 			$SMARTY->assign('subtotal', $subtotal);
-			$popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+			$estimate= $SMARTY->fetch('viewestimate.tpl'); 
 			
 			echo json_encode(array(
 		    				'message' => $response,
 		    				'itemsCount' => $itemsCount,
 		    				'subtotal' => $subtotal,
-		    				'url' => 'http://'.$_SERVER['HTTP_HOST'].'/store/shopping-cart',
-							'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
+								'ID' => $_POST['product_object_id'],
+							  'myEstimate' => $estimate,
+								'storename' => $res[0]['listing_name']
 	    				));
 		    exit;
 		    
 	    case 'DeleteItem':
 	    	$cart_obj = new cart();
+	    	$storeId = $_SESSION['user']['public']['store_id'];
+	    	$sql = "SELECT listing_name, location_phone FROM tbl_listing LEFT JOIN tbl_location ON listing_id = location_listing_id WHERE listing_object_id = :id AND listing_deleted IS NULL AND listing_published = 1";
+	    	$params = array(":id"=>$storeId);
+	    	$res = $DBobject->wrappedSql($sql,$params);
+	    	$SMARTY->assign("storename",$res[0]['listing_name']);
+	    	
 	    	$response = $cart_obj->RemoveFromCart($_POST['cartitem_id']);
             $totals = $cart_obj->CalculateTotal();
             $itemsCount = $cart_obj->NumberOfProductsOnCart();
@@ -32,17 +46,23 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
             $SMARTY->assign('productsOnCart',$productsOnCart);
             $SMARTY->assign('itemNumber',$itemsCount);
             $SMARTY->assign('cart',$cart);
-            $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+            $estimate= $SMARTY->fetch('viewestimate.tpl'); 
 	    	echo json_encode(array(
 	    					'itemsCount' => $itemsCount,
                             'response'=> $response,
                             'totals'=>$totals,
-							'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
+							 'myEstimate' => $estimate 
             ));
 	    	exit;
 
     	case 'updateCart':
     		$cart_obj = new cart();
+    		$storeId = $_SESSION['user']['public']['store_id'];
+    		$sql = "SELECT listing_name, location_phone FROM tbl_listing LEFT JOIN tbl_location ON listing_id = location_listing_id WHERE listing_object_id = :id AND listing_deleted IS NULL AND listing_published = 1";
+    		$params = array(":id"=>$storeId);
+    		$res = $DBobject->wrappedSql($sql,$params);
+    		$SMARTY->assign("storename",$res[0]['listing_name']);
+    		
     		$subtotals = $cart_obj->UpdateQtyCart($_POST['qty']);
     		$totals = $cart_obj->CalculateTotal();
             $itemsCount = $cart_obj->NumberOfProductsOnCart();
@@ -51,14 +71,46 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
             $SMARTY->assign('productsOnCart',$productsOnCart);
             $SMARTY->assign('itemNumber',$itemsCount);
             $SMARTY->assign('cart',$cart);
-            $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+            $SMARTY->assign('',$cart);
+            $estimate= $SMARTY->fetch('viewestimate.tpl'); 
     		echo json_encode(array(
 		    		'itemsCount'=> $itemsCount,
     				'subtotals'=>$subtotals,
     				'totals'=>$totals,
-					'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
+					'myEstimate' => $estimate 
     		));
     		exit;
+    
+    case 'addFavourite':
+    		$logged = false;
+    		$success = false;
+    		if(!empty($_SESSION['user']['public']['id'])){
+    			$logged = true;
+	      	$cart_obj = new cart();
+	      	if($res = $cart_obj->AddFavourite($_SESSION['user']['public']['id'], $_POST['productObjId'])){
+	      		$success = true;
+	      	}
+    		}
+      	echo json_encode(array(
+      			'success'=>$success,
+      			'logged'=>$logged
+      	));
+      	exit();
+    
+    case 'deleteFavourite':
+    		$logged = false;
+    		if(!empty($_SESSION['user']['public']['id'])){
+    			$logged = true;
+	      	$cart_obj = new cart();
+	      	$res = $cart_obj->DeleteFavourite($_SESSION['user']['public']['id'], $_POST['productObjId']);
+    		}
+      	echo json_encode(array(
+      			'error'=>$res['error'],
+      			'success'=>$res['success'],
+      			'logged'=>$logged
+      	));
+      	exit();
+    		
     		
 		case 'applyDiscount':
 		    $cart_obj = new cart();
@@ -94,66 +146,32 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    	exit;
 		    	
 		case 'placeOrder':
-    		if (empty($_SESSION['user']['public']['id'])) { // ADD GUEST USER
-    			$user_obj = new UserClass();
-    			$values = array();
-    			$values['username'] = $_SESSION['address']['B']['email'] . '#' . strtotime("now");
-    			$values['email'] = $_SESSION['address']['B']['email'];
-    			$values['password'] = session_id ();
-    			$values['gname'] = 'Guest';
-    			$values['surname'] = '';
-    			$res = $user_obj->Create($values);
-    			
-    			if( $res['error'] ) {
-    				$_SESSION['error']= $res['error'];
-    				$_SESSION['post']= $_POST;
-    				header("Location: ".$_SERVER['HTTP_REFERER']."#error");
-    				exit;
-    				die();
-    			} else {
-    				$cart_obj = new cart();
-    				$cart_obj->SetUserCart($res['id']);
-    				$_SESSION['user']['public'] = $res;
-    				$_POST['address']['B']['address_user_id'] = $res['id']; 
-    				$_POST['address']['S']['address_user_id'] = $res['id']; 
-    			}
-    			
-    		} else {
-    			$user_obj = new UserClass();
-    		}
-    		
-    		$billID = $user_obj->InsertNewAddress(array_merge(array( 
-    									'address_user_id' => $_SESSION['user']['public']['id']
-    									),$_SESSION['address']['B'] ) );
-    		$shipID = $billID;
-    		if (is_null($_SESSION['address']['same_address'])) { 
-    			$shipID = $user_obj->InsertNewAddress(array_merge(array( 
-    									'address_user_id' => $_SESSION['user']['public']['id']
-    									),$_SESSION['address']['S'] ) );
-    		}
-    		
-    		if ($billID && $shipID) {
+			$logged = false;
+			if(!empty($_SESSION['user']['public']['id'])){
+				$logged = true;
+				$storeId = $_SESSION['user']['public']['store_id'];
+				$sql = "SELECT listing_name, location_phone, location_email, location_order_recipient, location_bcc_recipient FROM tbl_listing LEFT JOIN tbl_location ON listing_id = location_listing_id WHERE listing_object_id = :id AND listing_deleted IS NULL AND listing_published = 1";
+				$params = array(":id"=>$storeId);
+				$res = $DBobject->wrappedSql($sql,$params);
+				$storeName = $res[0]['listing_name'];
+				$storePhone = $res[0]['location_phone'];
+				$storeEmail = $res[0]['location_email'];
+				
+				$SMARTY->assign("storename",$storeName);
+				$SMARTY->assign("storephone",$storePhone);
+				
+				
     			$pay_obj = new PayWay();
-	    		//TODO: INITIALISE BANK PAYMENT
     			$response = false;
     			$error_msg = null;
-    			
-	    		try{
-	    			//TODO: SUBMIT PAYMENT
-	    			$reponse = $pay_obj->Submit();	
-	    			
-	    		}catch(Exception $e){
-	    			$error_msg = 'Payment failed: Connection Error. ';
-	    		}
 	    		
 	    		$cart_obj = new cart();
 	    		$order_cartId = $cart_obj->cart_id;
-	    		$shippingFee = $cart_obj->CalculateShippingFee($_POST['payment']['payment_shipping_method']);
+	    	
 	    		$totals = $cart_obj->CalculateTotal();
-	    		
-	    		$params = array_merge(array(
-	    				'payment_billing_address_id' => $billID,
-	    				'payment_shipping_address_id' => $shipID,
+	    		$shippingFee = 0;
+	    		$params = array(
+	    				'payment_store_id' => $storeId,
 	    				'payment_status' => 'P',
 	    				'payment_transaction_no' => $order_cartId . '-' .  strtotime("now"),
 	    				'payment_cart_id' => $order_cartId,
@@ -163,78 +181,85 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    				'payment_shipping_fee' => $shippingFee,
 	    				'payment_charged_amount' => $totals['total'] + $shippingFee,
 	    				'payment_gst' => ($totals['GST_Taxable'] + $shippingFee)/10
-	    				),
-	    				$_POST['payment']
 	    		);
 	    		$paymentId = $pay_obj->StorePaymentRecord($params);
 	    		
-	    		if ($reponse){
+	    		// PAYMENT SUCCESS
+	    		$cart_obj->CloseCart(null, $storeId);
+	    		$pay_obj->SetOrderStatus($paymentId);
+	    		
 	    		  try{
 	    		    // SEND CONFIRMATION EMAIL
-	    		    $user = $_SESSION['user']['public'];
-	    		    $SMARTY->assign('user',$user);
-	    		    $billing = $user_obj->GetAddress($billID);
-	    		    $SMARTY->assign('billing',$billing);
-	    		    $shipping = $user_obj->GetAddress($shipID);
-	    		    $SMARTY->assign('shipping',$shipping);
-	    		    $order = $cart_obj->GetDataCart($order_cartId);
-	    		    $SMARTY->assign('order',$order);
-	    		    $payment = $pay_obj->GetPaymentRecord($paymentId);
-	    		    $SMARTY->assign('payment',$payment);
-	    		    $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
-	    		    $SMARTY->assign('orderItems',$orderItems);
-	    		    $buffer= $SMARTY->fetch('templates/email-confirmation.tpl');
-	    		    $to = $_SESSION['address']['B']['email'];
-	    		    $from = 'eShop';
+	    		    $buffer= $SMARTY->fetch('confirmation-email.tpl');
+	    		    $to = $_SESSION['user']['public']['email'];
+	    		    
+	    		    $from = 'Steeline';
 	    		    $fromEmail = "noreply@" . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
-	    		    $subject = 'Confirmation of your order';
+	    		    $subject = 'Your quote has been submitted';
 	    		    $body = $buffer;
 	    		    if($mailID = sendMail($to, $from, $fromEmail, $subject, $body)){
 	    		    	$pay_obj->SetInvoiceEmail($paymentId, $mailID);
 	    		    }
-	    		  }catch(Exception $e){}
+	    		    
+	    		   
+	    		    
+	    		    // EMAIL TO THE STORE
+	    		    
+	    		    $SMARTY->assign("user",$_SESSION['user']['public']);
+	    		    
+	    		    $user_obj = new UserClass();
+	    		    $address = $user_obj->GetAddress($_SESSION['user']['public']['id']);
+	    		    $SMARTY->assign("address",$address);
+	    		    
+	    		    $order = $cart_obj->GetDataCart($order_cartId);
+	    		    $SMARTY->assign('order',$order);
+	    		    
+	    		    $payment = $pay_obj->GetPaymentRecord($paymentId);
+							$SMARTY->assign('payment',$payment);
+							
+							$orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
+							$SMARTY->assign('orderItems',$orderItems);
+
+							//COMMMENTED UNTIL GO LIVE TO PREVENT STORES GETTING TESTING EMAILS
+							/* $bcc = $res[0]['location_bcc_recipient'];
+							$to = empty($res[0]['location_order_recipient'])?"online@them.com.au":$res[0]['location_order_recipient'];
+							*/							
+	    		    $to = 'apolo@them.com.au';
+	    		    $bcc = '';
+	    		    $subject = 'An estimate request has been submitted';
+	    		    $body= $SMARTY->fetch('order-email.tpl');
+	    		    sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+	    		    
+	    		  }catch(Exception $e){
+	    		  	echo json_encode(array(
+	    		  			'response'=>false,
+	    		  			'logged'=>$logged,
+	    		  			'error'=>$e
+	    		  	));
+	    		  	exit;
+	    		  	
+	    		  }
 	    		  
-	    			// PAYMENT SUCCESS
-	    			$cart_obj->CloseCart();
-	    			$pay_obj->SetOrderStatus($paymentId);
 	    			
 	    			
-	    			// LOG OUT GUEST USER
-	    			if ($_SESSION['user']['public']['gname'] == 'Guest') {
-	    				unset ( $_SESSION['user']['public'] );
-	    				session_regenerate_id();
-	    			}
 	    			// OPEN NEW CART
 	    			$cart_obj->CreateCart($_SESSION['user']['public']['id']);
-
   					
-  					//UNPUBLISH ONE-TIME USE DISCOUNT CODE 
-  					if ($order['cart_discount_code']) {
-  						$cart_obj->UnpublishOneTimeDiscountCode($order['cart_discount_code']);  
-  					}
+  					//THANK YOU
   					
-  					unset ( $_SESSION['address'] );
-	    			// REDIRECT TO THANK YOU PAGE	
-	    			header('Location: /thank-you-for-buying');
-	    			exit;
-	    			
-	    		} else {
-	    			if ($error_msg) {
-	    				$_SESSION['error'] = $error_msg;
-	    			} else {
-	    				$_SESSION['error'] = 'Payment failed. Verify information and try again. ';
-	    			}
-	    		}
-    		} else {
-    			$_SESSION['error']= 'Database Connection Error. Please try again, otherwise contact us by phone.';
-    		}
-    		
-    		$_SESSION['post']= $_POST;
-    		header('Location: '.$_SERVER['HTTP_REFERER'].'#error');
-    		
-    		exit;
-
-	
+  					$template= $SMARTY->fetch('thanks.tpl');
+  					$estimate= $SMARTY->fetch('viewestimate.tpl');
+  					echo json_encode(array(
+  							'template'=>$template,
+  							'myEstimate'=>$estimate,
+  							'response'=>true,
+  							'logged'=>$logged,
+  							'storename' => $storeName
+  					));
+  					
+  				} else {
+  					echo json_encode(array('logged'=>$logged));
+  				}
 	}
 	die();
 }else{

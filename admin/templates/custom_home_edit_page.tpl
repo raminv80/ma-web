@@ -258,7 +258,7 @@ function saveDraft(id_name,objId_name,publish_name, field_name, preview){
 						$('#Edit_Record').submit();
 						$('.published').hide();
 						$('.drafts').show();
-						buildCache('cache_tbl_listing',objId_name, preview);
+						buildUrl('tbl_listing','listing_parent_id',objId_name, preview);
 					}
 				} catch (err) {}
 				$('body').css('cursor', 'default');

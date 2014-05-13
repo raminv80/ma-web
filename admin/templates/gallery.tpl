@@ -25,7 +25,7 @@
 				<input type="hidden" value="{$images.gallery_id}" name="field[10][tbl_gallery][{$imageno}][gallery_id]" class="key">
 				<input type="hidden" value="{$images.gallery_file}" name="field[10][tbl_gallery][{$imageno}][gallery_file]" id="gallery_image_{$imageno}" >
 				<input type="hidden" value="0" name="field[10][tbl_gallery][{$imageno}][gallery_ishero]" id="gallery_ishero_{$imageno}" class="ishero"> 
-				<input type="hidden" value="{$images.gallery_listing_id}" name="field[10][tbl_gallery][{$imageno}][gallery_listing_id]" id="gallery_listing_id" >
+				<input type="hidden" value="{$images.gallery_listing_id}" name="field[10][tbl_gallery][{$imageno}][gallery_listing_id]" id="gallery_listing_id" class="key" >
 				<input type="hidden" value="{$images.gallery_product_id}" name="field[10][tbl_gallery][{$imageno}][gallery_product_id]" id="gallery_product_id" class="key">
 				<input type="hidden" value="{$images.gallery_link}" name="field[10][tbl_gallery][{$imageno}][gallery_link]" id="gallery_image_{$imageno}_link" class="fileinput"> 
 				<span class="file-view" id="gallery_image_{$imageno}_path">{if $images.gallery_link}<a href="{$images.gallery_link}" target="_blank" >View</a>{else}None{/if}</span> 

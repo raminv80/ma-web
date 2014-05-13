@@ -9,7 +9,6 @@ if (jQuery.validator) {
 	
 	  jQuery.validator.setDefaults({
 	    debug: false,
-		async: false,
 	    errorClass: 'has-error',
 	    validClass: 'has-success',
 	    ignore: "",
@@ -42,6 +41,7 @@ if (jQuery.validator) {
     			type: "POST",
     		    url: "/admin/includes/processes/processes-record.php",
     			cache: false,
+    			async: false,
     			data: datastring,
     			dataType: "html",
     		    success: function(data) {

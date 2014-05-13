@@ -13,14 +13,14 @@ class UserClass {
      * @return array
      */
     function Create($user){
-    	global $DBobject;
+    	global $DBobject, $SITE;
     
     	if ($this->RetrieveByUsername($user['username'])) {
     		return array ('error' => "This email '{$user['username']}' has already been used.");
     	} else {
     		
     	
-	    	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($user['email'])))) . md5(stripslashes(strtoupper($user['password']))));
+	    	$temp_str = getPass($user['email'],$user['password']);
 	    	
 	    	$params = array (
 	    			":username" => $user['username'],
@@ -28,28 +28,31 @@ class UserClass {
 	    			":surname" => $user['surname'],
 	    			":email" => $user['email'],
 	    			":password" => $temp_str,
-	        		":ip" => $_SERVER['REMOTE_ADDR'],
-	        		":browser" => $_SERVER['HTTP_USER_AGENT']
+	    			":user_site" => $SITE,
+	        	":ip" => $_SERVER['REMOTE_ADDR'],
+	        	":browser" => $_SERVER['HTTP_USER_AGENT']
 	    	);
 	    	
 	    	$sql = "INSERT INTO tbl_user (
 										user_username,
-	    								user_gname,
+	    							user_gname,
 										user_surname,
 										user_email,
 										user_password,
+					    			user_site,
 										user_ip,
 										user_browser,
 										user_created
 									)
 									values(
-	    								:username,
+	    							:username,
 										:gname,
 										:surname,
 										:email,
 										:password,
-	    								:ip,
-	    								:browser,
+					    			:user_site,
+	    							:ip,
+	    							:browser,
 										now()
 										)";
 	    	if ( $DBobject->wrappedSql($sql, $params) ) {
@@ -86,7 +89,7 @@ class UserClass {
     		return array ('error' => 'Incorrect old password.');
     		
     	} else {
-	    	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($data['email'])))) . md5(stripslashes(strtoupper($data['password']))));
+	    	$temp_str = getPass($data['email'],$data['password']);
 	    	
 	    	$params = array (
 	    			":id" => $res['id'],
@@ -163,7 +166,7 @@ class UserClass {
     	global $DBobject;
     
     	$user_arr = array();
-    	$temp_str = sha1(md5(bin2hex(strrev(stripslashes($email)))) . md5(stripslashes(strtoupper($pass))));
+    	$temp_str = getPass($email,$pass);
     	
     	$sql = "SELECT * FROM tbl_user WHERE user_email = :email AND user_password = :password AND user_deleted IS NULL";
     	$params = array( 
@@ -182,6 +185,7 @@ class UserClass {
     	}
     	return $user_arr;
     }
+    
   
 	/**
 	 * NOT DEFINED YET
@@ -213,7 +217,7 @@ class UserClass {
     	}
     	return array( 'error' => "This email '{$data['email']}' does not exist in our database.");
     }
-    
+ 
     
     /**
      * Update the password field given the email in tbl_user and return associative array: ('success') 
@@ -229,7 +233,7 @@ class UserClass {
         if ($res = $this->RetrieveByUsername($email)){
             $newPass = genRandomString(10);
             
-            $temp_str = sha1(md5(bin2hex(strrev(stripslashes($email)))) . md5(stripslashes(strtoupper($newPass))));
+            $temp_str = getPass($email,$newPass);
             
             
             $params = array (
@@ -246,27 +250,31 @@ class UserClass {
                             WHERE user_id = :id ";
 
             if ( $DBobject->wrappedSql($sql, $params) ) {
-                
-                $buf ="<h2>{$_SERVER['HTTP_HOST']}</h2><br/><br/>";
-                $buf.='<br/> Your password has been reseted. <br/>';
-                $buf.='<br/>Your temporary password is: <br/> <b>'.$newPass.'</b><br/>';
+            		//$buf ='<p><img src="http://'.$_SERVER ['HTTP_HOST'].'/images/logo.png" alt="logo"><p>';
+            		$buf  ='Dear '.$res['user_gname'].',<br/>';
+            		$buf .='<p>You are receiving this email, because you or someone who needs access to your Account has submitted a Forgotten Password request on our website.</p>';
+            		$buf .='<p>Your Password is: <b>'.$newPass.'</b></p>';
+            		$buf .='<p>Please click here to come back to the website and login: '.$_SERVER['HTTP_HOST'].'</p>';
+            		$buf .='<p>We hope that this site provides you with all the product and service information needed to help you with your next project and we look forward to dealing with you in the future.</p>';
+            		$buf .='<p>Best Regards</p>';
+            		$buf .='<p>The @ Team</p>';
 
                 $body = $buf;
-                $subject = "Account Settings - {$_SERVER['HTTP_HOST']}";
-                $fromEmail = "noreply@{$_SERVER['HTTP_HOST']}";
-                $from = "{$_SERVER['HTTP_HOST']} - Website";
+                $subject = "Forgotten Password for @ Website";
+                $fromEmail = "noreply@" . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
+                $from = "Steeline";
                 $to = $email;
 
 
                 if(sendMail($to, $from, $fromEmail, $subject, $body)){
-                        return array ('success' => 'Password has been reseted and sent to your email.');
+                        return array ('success' => 'Your new password has been sent to the registered email address.');
                 }else{
                         return array ('error' => 'There was a connection problem. Please, try again!');
                 }
             } 
             return array ('error' => 'There was a connection problem. Please, try again!');
         }
-    	return array( 'error' => "This email '{$email}' does not exist in our database.");
+    	return array( 'error' => "Sorry, '{$email}' does not appear to be registered with this site. Can you please check your email address or please create an account.");
     }
     
     /**
@@ -302,7 +310,7 @@ class UserClass {
     					address_suburb = :address_suburb AND  
     					address_state = :address_state AND  
     					address_country = :address_country AND  
-    					address_postcode = :address_postcode AND 
+    					address_postcode = :address_postcode AND
     					address_deleted IS NULL";
     	
     	if ( $res = $DBobject->wrappedSql ( $sql, $params ) ) {
@@ -310,13 +318,11 @@ class UserClass {
     	} else {
 	    	$sql = " INSERT INTO tbl_address (
 	        						address_user_id, address_name, address_telephone, address_mobile, address_line1, address_line2,
-									address_suburb, address_state, address_country, address_postcode,
-	        						address_created
+									address_suburb, address_state, address_country, address_postcode,	address_created
 									)
 								VALUES (
 									:address_user_id, :address_name, :address_telephone, :address_mobile, :address_line1, :address_line2,
-									:address_suburb, :address_state, :address_country, :address_postcode,
-	        						now()
+									:address_suburb, :address_state, :address_country, :address_postcode,	now()
 								)";
 	    
 	    	if ( $DBobject->wrappedSql ( $sql, $params ) ) {
@@ -328,16 +334,34 @@ class UserClass {
     
     /**
      * Return array recordset given the address_id
-     * 
+     *
      * @param int $addressId
      * @return array
      */
     function GetAddress($addressId) {
     	global $DBobject;
-    	 
+    
     	$sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
     	$res = $DBobject->wrappedSql ( $sql, array(':id' => $addressId) );
     	return $res[0];
+    }
+    
+    /**
+     * Return array recordset given the field address_user_id
+     * 
+     * @param int $addressId
+     * @return array
+     */
+    function GetUsersAddresses($addressUserId, $orderby = '') {
+    	global $DBobject;
+
+    	if (!empty($orderby)){
+    		$orderby = 'ORDER BY ' . $orderby;
+    	}else{
+    		$orderby = 'ORDER BY address_modified DESC';
+    	}
+    	$sql = "SELECT * FROM tbl_address WHERE address_user_id = :id " . $orderby;
+    	return $DBobject->wrappedSql($sql, array(':id' => $addressUserId));
     }
     
     

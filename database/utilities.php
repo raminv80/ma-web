@@ -14,6 +14,55 @@ function checkEmail($usr){
 	return 'false';
 }
 
+/**
+ * Function accepts a string and appends a campaign string to the end.
+ * @param string $string
+ * @return mixed
+ */
+function AppendCampaignToString($string) {
+  $regex = '#(<a href=")([^"]*)("[^>]*?>)#i';
+  return preg_replace_callback($regex, '_appendCampaignToString', $string);
+}
+function _AppendCampaignToString($match) {
+  $url = $match[2];
+  if (strpos($url, '?') === false) {
+    $url .= '?';
+  }
+  $url .= '&utm_source=email&utm_medium=email&utm_campaign=product_notify';
+  return $match[1].$url.$match[3];
+}
+
+/**
+ * Function accepts a string and appends google event tracking to file links.
+ * @param string $string
+ * @return mixed
+ */
+function AppendEventTrackingToString($string) {
+  $regex = '#(<a href=")([^"]*.doc)("[^>]*?>)#i';
+  $string = preg_replace_callback($regex, '_appendEventTrackingToString', $string);
+  $regex = '#(<a href=")([^"]*.docx)("[^>]*?>)#i';
+  $string = preg_replace_callback($regex, '_appendEventTrackingToString', $string);
+  $regex = '#(<a href=")([^"]*.txt)("[^>]*?>)#i';
+  $string = preg_replace_callback($regex, '_appendEventTrackingToString', $string);
+  $regex = '#(<a href=")([^"]*.cad)("[^>]*?>)#i';
+  $string = preg_replace_callback($regex, '_appendEventTrackingToString', $string);
+  $regex = '#(<a href=")([^"]*.xls)("[^>]*?>)#i';
+  $string = preg_replace_callback($regex, '_appendEventTrackingToString', $string);
+  $regex = '#(<a href=")([^"]*.xlsx)("[^>]*?>)#i';
+  $string = preg_replace_callback($regex, '_appendEventTrackingToString', $string);
+  $regex = '#(<a href=")([^"]*.pdf)("[^>]*?>)#i';
+  $string = preg_replace_callback($regex, '_appendEventTrackingToString', $string);
+  return $string;
+}
+function _AppendEventTrackingToString($match) {
+  $url = $match[2];
+  if (strpos($url, '?') === false) {
+    $com = array_reverse(explode('/',$url));
+    $url .= "\" onClick=\"ga('send', { 'hitType': 'event','eventCategory': 'file','eventAction': 'click','eventLabel': '$com[0]','eventValue': 'download'});";
+  }
+  return $match[1].$url.$match[3];
+}
+
 function urlSafeString($str){
 	$str = str_replace('&','and',$str);
 	$str = preg_replace("/[\"\']/", "", $str);
@@ -33,7 +82,7 @@ function isValidInetAddress($data, $strict = false)
 {
 	$regex = $strict?
       '/^([.0-9a-z_-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,4})$/i' :
-       '/^([*+!.&#$¦\'\\%\/0-9a-z^_`{}=?~:-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,4})$/i'
+       '/^([*+!.&#$ï¿½\'\\%\/0-9a-z^_`{}=?~:-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,4})$/i'
        ;
        if (preg_match($regex, trim($data), $matches)) {
        	return true;
@@ -145,7 +194,7 @@ function logError($trace, $err, $sql = false) {
 	die();
 }
 
-function sendMail($to,$from,$fromEmail,$subject,$body){
+function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
 	global $DBobject;
 	require_once 'database/safemail.php';
 
@@ -155,7 +204,7 @@ function sendMail($to,$from,$fromEmail,$subject,$body){
 
 	/* additional headers */
 	$headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-	$headers .= "Bcc: cmsemails@them.com.au\r\n";
+	$headers .= "Bcc: cmsemails@them.com.au".(!empty($bcc)?",".$bcc:"")."\r\n";
 
 	$mailSent = 0;
 	try{
@@ -294,7 +343,7 @@ function clean( $str ){
 		case "string":
 		default:
 			$str = unclean($str); //Unclean the value first to make sure that we are not double cleaning. This needs to be done because add slashes is an unsafe function. It can cause multiple slashes.
-			$str = htmlentities(trim($str),ENT_QUOTES,'UTF-8',false);
+			$str = htmlspecialchars(trim($str),ENT_QUOTES,'UTF-8',false);
 			$str = str_replace("&lt;", "<", $str);
 			$str = str_replace("&gt;", ">", $str);
 			$str = str_replace("&nbsp;", " ", $str);
@@ -303,6 +352,32 @@ function clean( $str ){
 	}
 
 	return $str;
+}
+
+function htmlclean( $str ){
+  $type = strtolower(gettype($str));
+
+  switch($type){
+    case "string":
+      $str = unclean($str);
+      $str = strip_tags($str);
+      $str = htmlspecialchars(trim($str),ENT_QUOTES,'UTF-8',false);
+      $str = addslashes($str);
+      break;
+
+    case "array":
+      foreach($str as $key => $val){
+        $str[$key] = htmlclean($val);
+      }
+      break;
+    default:
+      $str = unclean($str);
+      $str = strip_tags($str);
+      $str = htmlspecialchars(trim($str),ENT_QUOTES,'UTF-8',false);
+      $str = addslashes($str);
+      break;
+  }
+  return $str;
 }
 
 function unclean( $str ){
@@ -519,7 +594,6 @@ function arrayToCSV($array){
 	}
 	return $buf;
 }
-
 
 /**
  * Tries to identify if user is on a mobile based on the USER_AGENT string

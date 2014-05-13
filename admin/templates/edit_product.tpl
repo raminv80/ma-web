@@ -341,6 +341,7 @@
 				type : "POST",
 				url : "/admin/includes/processes/processes-record.php",
 				cache: false,
+				async: false,
 				data : id_key0+'='+objId_name+'&'+id_key1+'='+publish_name+'&'+objId_key+"="+$('#'+objId_name).val()+"&"+publish_key+"=0&"+field_key+"="+field_value+'&formToken='+$('#formToken').val(),
 				dataType: "html",
 				success : function(data, textStatus) {
@@ -351,7 +352,7 @@
 							$('#Edit_Record').submit();
 							$('.published').hide();
 							$('.drafts').show();
-							buildCache('cache_tbl_product',objId_name, preview);
+							buildUrl('tbl_product','product_listing_id',objId_name, preview);
 						}
 					} catch (err) {}
 					$('body').css('cursor', 'default');
