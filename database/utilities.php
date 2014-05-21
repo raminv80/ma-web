@@ -188,10 +188,14 @@ function logError($trace, $err, $sql = false) {
 	if(!empty($sql)) {
 		$msg .= "<br/>$sql<br/>";
 	}
-	$msg .= "<br/>$trace";
-	sendMail("cmsemails@them.com.au", $CONFIG->attributes->company_name.'-Website', 'noreply@website.com.au', 'Error', $msg);
-	header('Location: /404');
-	die();
+	$debug = (string)$CONFIG->attributes()->debug;
+	if($debug == 'true'){
+		die("$msg<br/>$trace");
+	}else{
+		sendMail("cmsemails@them.com.au", $CONFIG->attributes->company_name.'-Website', 'noreply@website.com.au', 'Error', "$msg<br/>$trace");
+		header('Location: /404');
+		die();
+	}
 }
 
 function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
@@ -209,24 +213,89 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
 	$mailSent = 0;
 	try{
 	  if(function_exists("SafeMail")){
-	    $mailSent = SafeMail($to,$subject,$body,$headers);
+	  	$sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW() LIMIT 5";
+	  	$params = array(
+	  			":ip"=>$_SERVER['REMOTE_ADDR']
+	  	);
+	  	$res = $DBobject->executeSQL($sql,$params);
+	  	if(count($res) < 5 ){
+	    	$mailSent = SafeMail($to,$subject,$body,$headers);
+	  	}else{
+				$mailSent= -1;
+			}
 	  }
 	}catch(Exception $e){}
 	
 	try{
-	  $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_sent) VALUES 
-	      (:to,:header,:subject,:content,:sent)";
+	  $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent) VALUES 
+	      (:to,:header,:subject,:content,:ip,:sent)";
 	  $params = array(
 	      ":to"=>$to,
 	      ":header"=>$headers,
 	      ":subject"=>$subject,
 	      ":content"=>utf8_encode($body),
-	      ":sent"=>$mailSent,
+	      ":ip"=>$_SERVER['REMOTE_ADDR'],
+	  		":sent"=>$mailSent
 	  );
 	  $DBobject->executeSQL($sql,$params);
 	  return $DBobject->wrappedSqlIdentity();
 	}catch(Exception $e){}
 	
+	return false;
+}
+
+function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmentFile=null){
+	global $DBobject;
+	require_once 'database/Mail.php';
+	require_once 'database/AttachmentMail.php';
+	require_once 'database/Multipart.php';
+	
+	$mailSent = 0;
+	try{
+		if(!empty($to) && !empty($subject) && !empty($body) ){
+			$mail = new AttachmentMail($to, $subject, $from, $fromEmail);
+	
+			if(!empty($attachmentFile) && file_exists($attachmentFile)){
+				$mp1 = new Multipart($attachmentFile);
+				$mail->addAttachment($mp1);
+			}
+	
+			if(!empty($bcc)){
+				$mail->addBCC($bcc);
+			}
+	
+			$mail->setHtml($body);
+	
+			$sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW() LIMIT 5";
+			$params = array(
+					":ip"=>$_SERVER['REMOTE_ADDR']
+			);
+			$res = $DBobject->executeSQL($sql,$params);
+			if(count($res) < 5 ){
+				$mailSent = $mail->send();
+			}else{
+				$mailSent= -1;
+			}
+		}
+	}catch(Exception $e){}
+
+	try{
+		$headers = '';
+		$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_file,email_ip,email_sent) VALUES
+	      (:to,:header,:subject,:content,:file,:ip,:sent)";
+		$params = array(
+				":to"=>$to,
+				":header"=>$headers,
+				":subject"=>$subject,
+				":content"=>utf8_encode($body),
+				":ip"=>$_SERVER['REMOTE_ADDR'],
+				":file"=>$attachmentFile,
+				":sent"=>$mailSent
+		);
+		$DBobject->executeSQL($sql,$params);
+		return $DBobject->wrappedSqlIdentity();
+	}catch(Exception $e){}
+
 	return false;
 }
 
@@ -240,18 +309,28 @@ function sendMailV2($to,$from,$fromEmail,$subject,$body){
   $mailSent = 0;
   try{
     if(function_exists("SafeMail")){
-      $mailSent = SafeMail($to,$subject,$final_msg['headers'],$final_msg['multipart']);
+      $sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW() LIMIT 5";
+      $params = array(
+          ":ip"=>$_SERVER['REMOTE_ADDR']
+      );
+      $res = $DBobject->executeSQL($sql,$params);
+      if(count($res) < 5 ){
+        $mailSent = SafeMail($to,$subject,$final_msg['headers'],$final_msg['multipart']);
+      }else{
+        $mailSent= -1;
+      }
     }
   }catch(Exception $e){}
 
   try{
-    $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_sent) VALUES
-	      (:to,:header,:subject,:content,:sent)";
+    $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent) VALUES
+	      (:to,:header,:subject,:content,:ip,:sent)";
     $params = array(
         ":to"=>$to,
         ":header"=>$final_msg['headers'],
         ":subject"=>$subject,
         ":content"=>$final_msg['multipart'],
+				":ip"=>$_SERVER['REMOTE_ADDR'],
         ":sent"=>$mailSent,
     );
     $DBobject->executeSQL($sql,$params);

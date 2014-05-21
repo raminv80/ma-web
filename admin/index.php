@@ -155,10 +155,8 @@ while(true){
 		if(empty($arr[2])){
 			foreach($CONFIG->sequence as $sp){
 				$sql = "INSERT INTO {$sp->table} () VALUES ()";
-				$objID = '';
-				if($DBobject->wrappedSql($sql)){
-					$objID = $DBobject->wrappedSqlIdentity();
-				}
+				$DBobject->wrappedSql($sql);
+				$objID = $DBobject->wrappedSqlIdentity();
 			}
 		}
 		foreach($CONFIG->section as $sp){

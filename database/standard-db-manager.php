@@ -15,11 +15,13 @@ Class DBmanager{
 		$username_db = $CONFIG->database->user;
 		$password_db = $CONFIG->database->password;
 		$name_db = $CONFIG->database->dbname;
-		$dbConnString =  "mysql:host=" . $server_db . "; dbname=" .$name_db ;
-		$this->PDO = new PDO($dbConnString, $username_db , $password_db);
-		$error = $this->PDO->errorInfo();
-		if(!empty($error[0])) {
-			die(var_dump($error));
+		$link = @mysql_connect($server_db, $username_db, $password_db);
+		if(!$link) {
+		  echo mysql_error();
+		  die('Could not connect to server');
+		}
+		if(!@mysql_select_db($name_db))	{
+		  die("Could not select database");
 		}
 	}
 
@@ -32,57 +34,38 @@ Class DBmanager{
 		if(empty($MySQL)){
 			return false;
 		}
-		$this->queryresult = true;
-		$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		if($STH = $this->PDO->prepare($MySQL)){
-			foreach ($params as $key => &$val) {
-	   			$STH->bindParam(":{$key}", $val);
-			}
-			//echo $MySQL;
-			$execute_res = $STH->execute($params);
-			if($execute_res === false) {
-				$err = print_r($this->PDO->errorInfo(),1);
-				$trace = debug_backtrace();
-				$backtrace = parse_backtrace($trace);
-				$errMsg = logError($backtrace, $err, $MySQL);
-				$this->queryresult = false;
-				//die($MySQL);
-				header('Location: /404');
-				die();
-			} 
-			$this->LAST_INSERTED_ID =  $this->PDO->lastInsertId();
-			$this->lastquery = $MySQL;
-			
-			try{
-				$result = $STH->fetchAll(PDO::FETCH_ASSOC);
-				$this->lastresult = $result;
-			}catch(Exception $e){
-				$result = $execute_res;
-			}
-			
-			// ========== SAVE IN LOG TABLE ==============
-			/* $MySQL = trim($MySQL);
-			if ( preg_match ( "/^UPDATE/i", $MySQL ) || preg_match ( "/^INSERT/i", $MySQL ) || preg_match ( "/^DELETE/i", $MySQL ) ) {
-				$logSQL = " INSERT INTO tbl_log (log_user, log_sql, log_params, log_ip, log_browser)
-								VALUES (:user, :sql, :params, :ip, :browser)";
-				$logParams = array (
-						":user" => serialize($_SESSION['user']), ":sql" => $MySQL,
-						":params" => serialize($params), ":ip" => $_SERVER ['REMOTE_ADDR'],
-						":browser" => $_SERVER ['HTTP_USER_AGENT']
-				);
-				
-				$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				if($STH = $this->PDO->prepare($logSQL)){
-					foreach ($logParams as $key => &$val) {
-						$STH->bindParam(":{$key}", $val);
-					}
-					$STH->execute($logParams);
-				}
-			} */
-			// ==========================================
-			
-			return $result;
+		//Prepare SQL
+		foreach($params as $key => $val){
+		  $val = clean($val);
+		  if(preg_match("/^:/", $key)<1){$key = ":".$key;}
+		  $MySQL = str_replace($key, "'{$val}'", $MySQL); 
 		}
+		$res = mysql_query($MySQL);
+		if(mysql_error()) {
+		  $err = mysql_error();
+		  $trace = debug_backtrace();
+		  $backtrace = parse_backtrace($trace);
+		  $errMsg = logError($backtrace, $err, $MySQL);
+		  header("Location: /404");
+		  die();
+		}
+		$this->lastquery = $MySQL;
+		
+		$this->LAST_INSERTED_ID = mysql_insert_id();
+		$result = array();
+		while($row = mysql_fetch_assoc($res)){
+		   $result[] = $row;
+		}
+		
+// 	  $identity_res = mysql_query("SELECT @@IDENTITY AS id");
+// 	  if($_temp_id = mysql_fetch_array($identity_res)){
+// 	    $this->LAST_INSERTED_ID = $_temp_id;
+// 	  }
+
+		if($res === true){
+			$result = true;
+		} 
+		return $result;
 	}
 
 	/**

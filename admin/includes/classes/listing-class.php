@@ -158,10 +158,10 @@ class Listing {
         ":pid"=>$parent_id
     );
     
-    if($res = $DBobject->wrappedSqlGet($sql,$params)){
+    if($res = $DBobject->wrappedSqlGet($sql,$params)){ 
       foreach($res as $key=>$val){
         $subs = array();
-        if(intval($val['listing_published']) == 1){
+        if(intval($val['listing_published']) == 1 && $val['listing_object_id'] > 0){
           $subs = $this->getListingList($val['listing_object_id']);
         }
         if($val['listing_type_id'] == $this->TYPE_ID){

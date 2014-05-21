@@ -46,7 +46,7 @@ $_CONF_FILE = "/config/config.xml.php";
 $GLOBALS['CONFIG'] = LOADCONFIG($_CONF_FILE);
 $GLOBALS['SITE'] = "";
 
-include_once 'database/db-manager.php';
+include_once 'database/pdo-db-manager.php';
 include_once 'database/table-class.php';
 include_once 'database/utilities.php';
 include_once 'smarty/Smarty.class.php';

@@ -17,7 +17,7 @@
 	</sequence> 
 	
 	<!-- THIS SECTION IS USED TO MANAGE THE ADMINISTRATOR TABLE. ADMINISTRATORS AND USERS FOR THE CMS ARE MANAGED HERE. -->
-	<section>
+	<section level="1">
 		<showlist>FALSE</showlist>
 		<url>users</url>
 		<title>Administrators</title>
@@ -32,7 +32,7 @@
 		<edit_template>edit_admin.tpl</edit_template>
 	</section>
 	
-	<!-- THIS SECTION IS USED TO MANAGE THE LISTING TYPES TABLE. IT SHOULD NOT BE VISIBLE ON THE LIVE VERSION. --> <!-- <section>
+	<!-- THIS SECTION IS USED TO MANAGE THE LISTING TYPES TABLE. IT SHOULD NOT BE VISIBLE ON THE LIVE VERSION. --> <!-- <section level="1">
 			<staging>TRUE</staging>
 			<showlist>TRUE</showlist>
 			<url>type</url>
@@ -47,7 +47,7 @@
 			<list_template>list_type.tpl</list_template>
 			<edit_template>edit_type.tpl</edit_template>
 		</section> --> <!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE PAGE. THIS IS A LISTING AT IT'S BASIC FORM. -->
-	<section>
+	<section level="1">
 		<showlist>FALSE</showlist>
 		<url>page</url>
 		<title>Pages</title>
@@ -87,7 +87,7 @@
 	 INCLUDES THE GALLERY TABLE AS AN ASSOCIATE. THIS ALLOWS USERS TO SAVE CONTENT INTO
 	 THE GALLERY TABLE WITH THE CURRENT ID. IT ALSO INCLUDES AN EXTENDED TABLE WITH 
 	 ADDITIONAL FIELDS NEEDED FOR THIS CATEGORY.--> 
-	 <section>
+	 <section level="1">
 		<showlist>FALSE</showlist>
 		<url>prodcat</url>
 		<title>Product Categories</title>
@@ -115,7 +115,7 @@
 	</section>  
 	
 	<!-- THIS SECTION IS USED TO MANAGE THE "PRODUCT" TABLE. -->
-	<section>
+	<section level="1">
 		<showlist>FALSE</showlist>
 		<url>products</url>
 		<title>Products</title>
@@ -178,7 +178,7 @@
 	</section> 
 	
 	<!-- THIS SECTION IS USED TO MANAGE THE "CART/ORDERS" TABLE. -->
-	<section>
+	<section level="1">
 		<showlist>FALSE</showlist>
 		<url>orders</url>
 		<title>Orders</title>
@@ -257,7 +257,7 @@
 
 		
 	<!-- THIS SECTION IS USED TO MANAGE THE "DISCOUNT CODE" TABLE. -->
-	<section>
+	<section level="1">
 		<showlist>FALSE</showlist>
 		<url>discounts</url>
 		<title>Discount Codes</title>

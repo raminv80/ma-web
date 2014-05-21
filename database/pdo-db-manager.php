@@ -72,24 +72,24 @@ Class DBmanager{
 			}
 			
 			// ========== SAVE IN LOG TABLE ==============
-			$MySQL = trim($MySQL);
-			if ( preg_match ( "/^UPDATE/i", $MySQL ) || preg_match ( "/^INSERT/i", $MySQL ) || preg_match ( "/^DELETE/i", $MySQL ) ) {
-				$logSQL = " INSERT INTO tbl_log (log_user, log_sql, log_params, log_ip, log_browser)
-								VALUES (:user, :sql, :params, :ip, :browser)";
-				$logParams = array (
-						":user" => serialize($_SESSION['user']), ":sql" => $MySQL,
-						":params" => serialize($params), ":ip" => $_SERVER ['REMOTE_ADDR'],
-						":browser" => $_SERVER ['HTTP_USER_AGENT']
-				);
+// 			$MySQL = trim($MySQL);
+// 			if ( preg_match ( "/^UPDATE/i", $MySQL ) || preg_match ( "/^INSERT/i", $MySQL ) || preg_match ( "/^DELETE/i", $MySQL ) ) {
+// 				$logSQL = " INSERT INTO tbl_log (log_user, log_sql, log_params, log_ip, log_browser)
+// 								VALUES (:user, :sql, :params, :ip, :browser)";
+// 				$logParams = array (
+// 						":user" => serialize($_SESSION['user']), ":sql" => $MySQL,
+// 						":params" => serialize($params), ":ip" => $_SERVER ['REMOTE_ADDR'],
+// 						":browser" => $_SERVER ['HTTP_USER_AGENT']
+// 				);
 				
-				$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				if($STH = $this->PDO->prepare($logSQL)){
-					foreach ($logParams as $key => &$val) {
-						$STH->bindParam(":{$key}", $val);
-					}
-					$STH->execute($logParams);
-				}
-			}
+// 				$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// 				if($STH = $this->PDO->prepare($logSQL)){
+// 					foreach ($logParams as $key => &$val) {
+// 						$STH->bindParam(":{$key}", $val);
+// 					}
+// 					$STH->execute($logParams);
+// 				}
+// 			}
 			// ==========================================
 			
 			return $result;

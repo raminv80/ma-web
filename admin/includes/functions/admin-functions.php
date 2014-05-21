@@ -19,7 +19,7 @@ include_once 'admin/includes/classes/listing-class.php';
 include_once 'admin/includes/classes/record-class.php';
 include_once 'admin/includes/classes/product-class.php';
 
-include_once 'database/db-manager.php';
+include_once 'database/pdo-db-manager.php';
 include_once 'database/table-class.php';
 include_once 'database/utilities.php';
 include_once 'smarty/Smarty.class.php';
