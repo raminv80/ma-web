@@ -165,9 +165,9 @@ class Listing {
           $subs = $this->getListingList($val['listing_object_id']);
         }
         if($val['listing_type_id'] == $this->TYPE_ID){
-          $p_url = '/diy';
+          $p_url = '';
           if(intval($val['listing_published']) == 0){
-            $p_url = '/draft/diy';
+            $p_url = '/draft';
           }
           $val["title"] = $val['listing_name'];
           $val["order"] = $val['listing_order'];

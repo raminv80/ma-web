@@ -62,16 +62,29 @@
 					<span class="help-block"></span>
 				</div>
 			</div>
-			<div class="row form-group" style="display: none">
+			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="admin_level">Admin Level</label>
 				<div class="col-sm-5">
 					<select class="form-control" name="field[1][tbl_admin][{$cnt}][admin_level]" id="admin_level">
 						<option value="1" {if $fields.admin_level eq 1}selected="selected"{/if}>Admin</option>
-						<option value="2" {if $fields.admin_level eq 2}selected="selected"{/if}>Sudo-admin</option>
-						<option value="3" {if $fields.admin_level eq 3}selected="selected"{/if}>Member</option>
+<!-- 						<option value="2" {if $fields.admin_level eq 2}selected="selected"{/if}>Store</option> -->
 					</select>
 				</div>
 			</div>
+<!-- 			<div class="row form-group">
+				<label class="col-sm-3 control-label" for="store_id">Store</label>
+				<div class="col-sm-5">
+					<input type="hidden" value="admin_id" name="default[access_admin_id]" />
+					<input type="hidden" value="access_id" name="field[15][tbl_access][{$cnt}][id]" id="id" />
+					<input type="hidden" value="{$fields.accesses.0.access_admin_id}" name="field[15][tbl_access][{$cnt}][access_admin_id]" id="access_admin_id">
+					<input type="hidden" value="{$fields.accesses.0.access_id}" name="field[15][tbl_access][{$cnt}][access_id]" >
+					<select class="form-control" name="field[15][tbl_access][{$cnt}][access_store_id]" id="store_id">
+						<option value="0">Select one</option> {foreach $fields.options.store_id as $opt}
+						<option value="{$opt.id}" {if $fields.accesses.0.access_store_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option> {/foreach}
+					</select>
+				</div>
+			</div> -->
+					
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
 					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
@@ -130,6 +143,7 @@ function createPassword() {
 		$('#admin_password').val(init_pass);
 	} 
 }
+
 
 </script>
 

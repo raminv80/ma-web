@@ -33,9 +33,9 @@ Class Product extends Record{
 		
 		if ($res = $DBobject->wrappedSqlGet ( $sql, $params )) {
 			foreach ( $res as $key => $val ) {
-				$p_url = '/diy';
+				$p_url = '';
 				if($val['product_published'] == 0){
-					$p_url = '/draft/diy';
+					$p_url = '/draft';
 				}
 				$records ["p{$val['product_id']}"] = array (
 						"title" => $val ['product_name'],
