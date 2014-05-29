@@ -155,9 +155,9 @@ class ListClass {
       $SMARTY->assign("{$f->name}",$options);
     }
     
-    if(!empty($data)){
-      $template = $this->CONFIG_OBJ->template;
-    }else{
+    $template = $this->CONFIG_OBJ->template;
+    
+    if(empty($data) && !empty($this->CONFIG_OBJ->table->template)){
       $template = $this->CONFIG_OBJ->table->template;
     }
     

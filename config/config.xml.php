@@ -44,7 +44,11 @@
 		<template>contact-us.tpl</template>
 		<pageID>44</pageID>
 	</static_page>
-
+	<static_page>
+		<url>thank-you-for-buying</url>
+		<template>checkout-complete.tpl</template>
+		<pageID>21</pageID>
+	</static_page>
 
 	
  	<product_page name="store">

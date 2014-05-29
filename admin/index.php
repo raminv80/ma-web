@@ -62,6 +62,8 @@ while(true){
 	/******* Goes to login  *******/
 	if($_request['arg1'] == 'home' || $_request['arg1'] == ''){
 		$template = "home.tpl";
+		$SMARTY->assign('them_news_domain',$CONFIG->them_news->domain);
+		$SMARTY->assign('them_news_page',$CONFIG->them_news->page);
 		break 1;
 	}
 

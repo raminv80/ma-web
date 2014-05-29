@@ -24,6 +24,7 @@
 					<input type="hidden" value="discount_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="discount_id" name="field[1][tbl_discount][{$cnt}][id]" id="id"/> 
 					<input type="hidden" value="{$fields.discount_id}" name="field[1][tbl_discount][{$cnt}][discount_id]" id="discount_id">
+					<input type="hidden" value="{if $fields.discount_created}{$fields.discount_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_discount][{$cnt}][discount_created]" id="discount_created">
 					<input type="hidden" name="formToken" id="formToken" value="{$token}" /> 
 				</div>
 			</div>

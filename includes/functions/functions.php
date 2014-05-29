@@ -24,15 +24,7 @@ function fatal_handler() {
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
     /* additional headers */
-    $headers .= "From: " . $from . " <" . $fromEmail . ">\r\n";
-    // $headers .= "Bcc: cmsemails@them.com.au\r\n";
-    ini_set('sendmail_from',$fromEmail);
     die($body);
-    try{
-      $mailSent = mail($to,$subject,$body,$headers);
-    }catch(Exception $e){
-    }
-    ini_restore('sendmail_from');
     $_SESSION['error'] = 'We had trouble saving your entry. Please review your entry and try again. If this continues please contact us.';
     header('location: /503');
     die('@ 503 Service Temporarily Unavailable');
@@ -113,6 +105,7 @@ include_once 'includes/classes/product-class.php';
 include_once 'includes/classes/user-class.php';
 include_once 'includes/classes/cart-class.php';
 include_once 'includes/classes/PayWay.php';
+include_once 'includes/classes/shipping-class.php';
 include_once 'includes/functions/functions-search.php';
 include_once 'includes/processes/processes.php';
 

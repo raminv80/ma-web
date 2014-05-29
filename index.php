@@ -30,6 +30,9 @@ $SMARTY->assign('user',$_SESSION['user']['public']); // ASSIGN USER FOR TEMPLATE
 $SMARTY->assign ( 'HTTP_REFERER', rtrim($_SERVER['HTTP_REFERER'],'/') );
 $SMARTY->assign ( 'REQUEST_URI', rtrim($_SERVER['REQUEST_URI'],'/') );
 $_request = htmlclean($_REQUEST);
+$SMARTY->assign ( 'orderNumber', $_SESSION['orderNumber'] );
+$SMARTY->assign ( 'ga_ecommerce', $_SESSION['ga_ecommerce'] );// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
+unset ( $_SESSION ['ga_ecommerce'] );
 
 $token = getToken('frontend');
 $SMARTY->assign('token',$token);
@@ -155,7 +158,6 @@ while(true){
     }
   }
   
-  
   /**
    * ***** Listing pages here ******
    */
@@ -182,17 +184,14 @@ while(true){
     $class = (string)$struct->file;
     $obj = new $class('',$struct);
     $id = $obj->ChkCache($_request["arg1"],$_PUBLISHED);
-    
     if(! empty($id)){
       $template = $obj->Load($id,$_PUBLISHED);
-      if(!empty($template)){
-        $template = $struct->template;
-        $menu = $obj->LoadMenu($id);
-        $SMARTY->assign('menuitems',$menu);
-      }
+			$menu = $obj->LoadMenu($id);
+      $SMARTY->assign('menuitems',$menu);
       break 1;
     }
   }
+  
   
   $template = loadPage($CONFIG->error404);
   break 1;

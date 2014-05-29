@@ -14,7 +14,11 @@
 	</resource>
 	<sequence> 
 		<table>tbl_sequence</table> 
-	</sequence> 
+	</sequence>
+	<them_news> 
+		<domain>http://www.cms.themserver.com</domain>
+		<page>http://www.cms.themserver.com/them-promo</page> 
+	</them_news> 
 	
 	<!-- THIS SECTION IS USED TO MANAGE THE ADMINISTRATOR TABLE. ADMINISTRATORS AND USERS FOR THE CMS ARE MANAGED HERE. -->
 	<section level="1">

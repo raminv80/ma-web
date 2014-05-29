@@ -44,6 +44,25 @@
 			</div>
 		</div> 
 		{/if}
+		
+		<button onclick="ga('send', 'event', 'External', 'Click', $('#parent-site').html());alert($('#parent-site').html());" class="btn btn-default"> Current domain </button>
+		<div id="parent-site"></div>
+		
+		<script type="text/javascript">
+			function listener(event){
+  			  if ( event.origin !== "http://edge.sharethis.com" ) {
+			    	$("#parent-site").html(event.origin);
+  			  }
+  			  return true;
+			}
+			
+			if (window.addEventListener){
+			  addEventListener("message", listener, false)
+			} else {
+			  attachEvent("onmessage", listener)
+			}
+		</script>
+		
 	</div>
 </div>
 
