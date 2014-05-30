@@ -254,10 +254,11 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 	    		  
     		    
     		    // SET GOOGLE ANALYTICS - ECOMMERCE
+	    		  $affiliation = str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
     		    $analytics = "ga('require', 'ecommerce', 'ecommerce.js'); ";
     		    $analytics .= "ga('ecommerce:addTransaction', {
 										    		    'id': '{$orderNumber}',
-										    		    'affiliation': 'Licener',
+										    		    'affiliation': '{$affiliation}',
 										    		    'revenue': '{$chargedAmount}',
 										    		    'shipping': '{$shippingFee}',
 										    		    'tax': '{$gst}',
@@ -266,7 +267,7 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
     		    foreach($orderItems as $item){
     		    	$productFullName = $item['cartitem_product_name'];
 	    		    foreach($item['attributes'] as $attr){
-	    		  	  $productFullName .=	"/ {$attr['cartitem_attr_attribute_name']}: {$attr['cartitem_attr_attr_value_name']}";
+	    		  	  $productFullName .=	" / {$attr['cartitem_attr_attribute_name']}: {$attr['cartitem_attr_attr_value_name']}";
 	    		    }
 	    		    $analytics .= "ga('ecommerce:addItem', {
 	    		    										'id': '{$orderNumber}',
@@ -274,7 +275,8 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 								    		    			'sku': '{$item['cartitem_product_id']}',
 								    		    			'category': '',
 								    		    			'price': '{$item['cartitem_product_price']}',
-								    		    			'quantity': '{$item['cartitem_quantity']}'
+								    		    			'quantity': '{$item['cartitem_quantity']}',
+															  	'currency': 'AUD'
 	    		   								 }); ";
     		    }
     		    $analytics .= "ga('ecommerce:send'); ";

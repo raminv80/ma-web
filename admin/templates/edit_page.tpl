@@ -3,10 +3,8 @@
 	<div class="col-sm-12">
 		<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
 			<div class="row">
-				<div class="col-sm-12">
-					<fieldset>
-						<legend>
-							{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone} 
+				<div class="col-sm-12 edit-page-header">
+							<span class="edit-page-title">{if $fields.listing_id neq ""}Edit{else}New{/if} {$zone}</span>
 							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
 							<div class="published" {if $fields.listing_published eq 0}style="display:none;"{/if}>
 								<!-- PUBLISHED -->
@@ -20,8 +18,6 @@
 								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]',false);" class="btn btn-info pull-right top-btn drafts">Save</a>
 							</div>
 							<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', true);" class="btn btn-info pull-right top-btn">Preview</a>
-						</legend>
-					</fieldset>
 					<input type="hidden" value="listing_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="listing_id" name="field[1][tbl_listing][{$cnt}][id]" id="id" /> 
 					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_id" class="key"> 
@@ -84,7 +80,8 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
 							<div class="col-sm-5">
-								<input class="form-control" type="text" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" >
+								<input class="form-control" type="hidden" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" >
+                <span id="id_listing_url_text" class="form-control">{$fields.listing_url}</span>
 								<span class="help-block"></span>
 							</div>
 						</div>
@@ -211,6 +208,7 @@ function seturl(str){
 	    success: function(res, textStatus) {
 	    	try{
 	    		$('#id_listing_url').val(res.url);
+	    		$('#id_listing_url_text').html(res.url);
 	    	}catch(err){ }
 	    }
 	});
