@@ -27,6 +27,6 @@
 	<script src="/includes/js/jquery-1.9.1.min.js"></script>
 </head>
 <body class="mindtrick">
-	<div class="col-xs-12 error404">404 - This is not the page you are looking for.</div>
+	<div class="col-xs-12 error404">Error 404 - Sorry, we were unable to locate that resource.</div>
 </body>
 </html>

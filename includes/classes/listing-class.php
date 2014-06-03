@@ -425,6 +425,12 @@ class ListClass {
       $this->CONFIG_OBJ->limit = 0;
     }
     
+    $typeIdSQL = "";
+    if(! empty($this->CONFIG_OBJ->type)){
+    	$typeIdSQL = "AND tbl_listing.listing_type_id = :type";
+    	$typeId_params = array(":type"=> $this->CONFIG_OBJ->type);
+    }
+    
     $order = " ORDER BY tbl_listing.listing_order ASC";
     if(! empty($this->CONFIG_OBJ->orderby)){
       $order = " ORDER BY " . $this->CONFIG_OBJ->orderby;
@@ -434,13 +440,15 @@ class ListClass {
       $pre = str_replace("tbl_","",$a->table);
       $extends = " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}"; // AND article_deleted IS NULL";
     }
-    $sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_type_id = :type AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = :published" . $filter . $order;
+    $sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_parent_id = :cid {$typeIdSQL} AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = :published" . $filter . $order;
     $params = array(
         ":cid"=>$_cid,
-        ":type"=>$this->CONFIG_OBJ->type,
         ":published"=>$_PUBLISHED
     );
     $params = array_merge($params,$filter_params);
+    if(!empty($typeIdSQL)){
+    	$params = array_merge($params,$typeId_params);
+    }
     if($res = $DBobject->wrappedSql($sql,$params)){
       foreach($res as $row){
         if($this->CONFIG_OBJ->limit && $count >= intval($this->CONFIG_OBJ->limit)){
