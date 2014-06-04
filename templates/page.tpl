@@ -17,6 +17,22 @@
 <title>{$product_name|ucfirst} {$listing_seo_title}</title>
 <link href="/images/favicon.ico" type="image/x-icon" rel="shortcut icon">
 
+<!-- for Facebook -->
+<meta property="og:title" content="{$listing_seo_title}" />
+<meta property="og:type" content="article" />
+<meta property="og:image" content="{$DOMAIN}" />
+<meta property="og:url" content="{$DOMAIN}{$REQUEST_URI}" />
+<meta property="og:description" content="{$listing_meta_description}" />
+
+<!-- for Twitter -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="">
+<meta name="twitter:title" content="{$listing_seo_title}">
+<meta name="twitter:description" content="{$listing_meta_description}">
+<meta name="twitter:creator" content="@THEMAdvertising">
+<meta name="twitter:image:src" content="{$DOMAIN}{$REQUEST_URI}">
+<meta name="twitter:domain" content="{$DOMAIN}">
+
 <!-- Bootstrap -->
 <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
