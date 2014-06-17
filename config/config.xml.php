@@ -10,6 +10,7 @@
 	</database>
 	<page_strut>
 		<type>1</type>
+		<depth>2</depth>
 		<file>ListClass</file>
 		<table><!-- This table will be the details table -->
 			<name>tbl_listing</name>

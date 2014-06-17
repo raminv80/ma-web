@@ -6,7 +6,7 @@ global $DBobject;
 $usr = $_POST['username'];
 $duplicated = false;
 
-$sql = "SELECT admin_id AS ID from tbl_admin WHERE admin_username = :user AND admin_deleted IS NULL";
+$sql = "SELECT {$_POST['table']}_id AS ID from tbl_{$_POST['table']} WHERE {$_POST['table']}_username = :user AND {$_POST['table']}_deleted IS NULL";
 $res = $DBobject->wrappedSqlGet($sql,array("user" => $usr));
 
 if ($res[0]['ID'] != $_POST ['id'] && $res){

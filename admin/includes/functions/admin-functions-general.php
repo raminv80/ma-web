@@ -13,11 +13,11 @@ function AdminLogIn($email,$password){
 		$_SESSION['user']['admin']["email"]=$res[0]["admin_email"];
 		$_SESSION['user']['admin']["level"]=$res[0]["admin_level"];
 		
-		$sql = "SELECT access_store_id FROM tbl_access WHERE access_admin_id = :id AND access_deleted IS NULL";
+		/* $sql = "SELECT access_store_id FROM tbl_access WHERE access_admin_id = :id AND access_deleted IS NULL";
 		$params = array( "id" => $res[0]["admin_id"]);
 		if($res2 = $DBobject->executeSQL($sql , $params)){
 			$_SESSION['user']['admin']["stores"]=$res2;
-		}
+		} */
 		SaveAdminLogIn($res[0]['admin_id']);
 		return true;
 	}else{

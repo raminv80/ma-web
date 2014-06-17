@@ -3,12 +3,9 @@
 	<div class="col-sm-12">
 		<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
 			<div class="row">
-				<div class="col-sm-12">
-					<fieldset>
-						<legend> {if $fields.admin_id neq ""}Edit{else}New{/if} Admin {if $cnt eq ""}{assign var=cnt value=0}{/if} 
-							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;">Save</a>
-						</legend>
-					</fieldset>
+				<div class="col-sm-12 edit-page-header">
+					<span class="edit-page-title">{if $fields.admin_id neq ""}Edit{else}New{/if} Admin {if $cnt eq ""}{assign var=cnt value=0}{/if}</span> 
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;">Save</a>
 					<input type="hidden" value="admin_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="{$fields.admin_id}" name="field[1][tbl_admin][{$cnt}][admin_id]" id="admin_id" /> 
 					<input type="hidden" value="admin_id" name="field[1][tbl_admin][{$cnt}][id]" id="id" /> 
@@ -17,7 +14,6 @@
 					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 					
 					<input type="hidden" id="error" name="error" value="0" />
-					
 				</div>
 			</div>
 			<div class="row form-group">
@@ -113,9 +109,9 @@ $(document).ready(function(){
 	 });
 	 
 	$('#admin_email').rules("add", {
-		uniqueEmail: { id: "{if $fields.admin_id}{$fields.admin_id}{else}0{/if}" }
+		uniqueEmail: { id: "{if $fields.admin_id}{$fields.admin_id}{else}0{/if}", table:"admin" }
 	 });
-
+	 
 	$('#admin_reemail').rules("add", {
 	      equalTo: '#admin_email',
 	      messages: {

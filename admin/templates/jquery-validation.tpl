@@ -117,7 +117,7 @@ if (jQuery.validator) {
   			    url: "/admin/includes/processes/checkEmail.php",
   				cache: false,
   				async: false,
-  				data: "username="+value+"&id="+params.id,
+  				data: "username="+value+"&id="+params.id+"&table="+params.table,
   				dataType: "json",
   			    success: function(res, textStatus) {
   			    	try{

@@ -12,15 +12,9 @@
 	<div class="col-sm-12">
 		<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
 			<div class="row">
-				<div class="col-sm-12">
-					<fieldset>
-						<legend>
-							{if $fields.discount_id neq ""}Edit{else}New{/if} {$zone} 
-							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
-							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
-							
-						</legend>
-					</fieldset>
+				<div class="col-sm-12 edit-page-header">
+					<span class="edit-page-title">{if $fields.discount_id neq ""}Edit{else}New{/if} {$zone} {if $cnt eq ""}{assign var=cnt value=0}{/if}</span> 
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
 					<input type="hidden" value="discount_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="discount_id" name="field[1][tbl_discount][{$cnt}][id]" id="id"/> 
 					<input type="hidden" value="{$fields.discount_id}" name="field[1][tbl_discount][{$cnt}][discount_id]" id="discount_id">

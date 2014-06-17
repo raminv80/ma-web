@@ -246,9 +246,9 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
 
 function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmentFile=null){
 	global $DBobject;
-	require_once 'database/Mail.php';
-	require_once 'database/AttachmentMail.php';
-	require_once 'database/Multipart.php';
+	require_once 'database/mail/Mail.php';
+	require_once 'database/mail/AttachmentMail.php';
+	require_once 'database/mail/Multipart.php';
 	
 	$mailSent = 0;
 	try{

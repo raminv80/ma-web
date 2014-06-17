@@ -82,8 +82,8 @@
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_page.tpl</edit_template>
 		
-		<custom_template field="listing_id" value="12">custom_home_edit_page.tpl</custom_template>	<!-- Home -->
-		<custom_template field="listing_id" value="888">redirect_edit_page.tpl</custom_template> <!-- New to Wagering  -->
+		<custom_template field="listing_object_id" value="12">custom_home_edit_page.tpl</custom_template>	<!-- Home -->
+		<custom_template field="listing_object_id" value="888">redirect_edit_page.tpl</custom_template> <!-- New to Wagering  -->
 		
 	</section>
 
@@ -295,6 +295,52 @@
 		<edit_template>edit_discount.tpl</edit_template>
 	</section> 
 	
+		<!-- THIS SECTION IS USED TO MANAGE THE MEMBERS/USERS TABLE. -->
+	<section level="1">
+		<showlist>FALSE</showlist>
+		<url>members</url>
+		<title>Members</title>
+		<type>TABLE</type>
+		<table>
+			<name>tbl_user</name>
+			<id>user_id</id>
+			<field>user_username</field>
+			<deleted>user_deleted</deleted>
+		</table>
+		<list_template>list.tpl</list_template>
+		<edit_template>edit_members.tpl</edit_template>
+	</section>
+	
+		 <!-- THIS SECTION IS USED TO MANAGE THE "STORES" LISTINGS. -->
+	 <section level="2">
+		<showlist>FALSE</showlist>
+		<url>stores</url>
+		<title>Stores</title>
+		<type>LISTING</type>
+		<type_id>5</type_id>
+		<root_parent_id>11</root_parent_id>
+		<storefield>listing_object_id</storefield>
+		<associated>
+			<name>files</name>
+			<table>tbl_files</table>
+			<linkfield>listing_id</linkfield>
+			<field>files_listing_id</field>
+		</associated>
+		<associated>
+			<name>tags</name>
+			<table>tbl_tag</table>
+			<linkfield>listing_id</linkfield>
+			<field>tag_object_id</field>
+			<where>tag_object_table = 'tbl_listing'</where> 
+		</associated>
+		<extends>
+			<table>tbl_location</table>
+			<linkfield>listing_id</linkfield>
+			<field>location_listing_id</field>
+		</extends>
+		<list_template>list.tpl</list_template>
+		<edit_template>edit_store.tpl</edit_template>
+	</section> 
 	
 	<smartytemplate_config><!-- This element contains the smarty template values -->
 		<templates>/templates</templates>

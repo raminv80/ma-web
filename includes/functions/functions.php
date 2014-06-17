@@ -32,8 +32,8 @@ function fatal_handler() {
 }
 
 set_include_path($_SERVER['DOCUMENT_ROOT']);  //SET THE INCLUDE PATH TO DOCUMENT ROOT SO THAT ALL INCLUDES ARE DONE RELATIVE TO WEB FOLDER
-ini_set('display_errors',1);
-error_reporting(1);
+ini_set('display_errors',0); ini_set('error_reporting',0 );error_reporting(0);
+
 $_CONF_FILE = "/config/config.xml.php";
 $GLOBALS['CONFIG'] = LOADCONFIG($_CONF_FILE);
 $GLOBALS['SITE'] = "";

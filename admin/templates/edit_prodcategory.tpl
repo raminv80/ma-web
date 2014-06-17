@@ -69,8 +69,9 @@
 							<label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
 							<div class="col-sm-5">
 								<input class="form-control" type="hidden" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" >
-                <span id="id_listing_url_text" class="form-control">{$fields.listing_url}</span>
-                <span class="help-block"></span>
+                <span id="id_listing_url_text" class="form-control url-text edit-url">{$fields.listing_url}&nbsp;</span>
+                <a href="javascript:void(0);" class="btn btn-info btn-sm marg-5r edit-url" onclick="$('.edit-url').removeClass('url-text').hide();$('#id_listing_url').get(0).type='text';">Edit URL</a> 
+								<span class="help-block"></span>
 							</div>
 						</div>
 						<div class="row form-group">
@@ -172,8 +173,10 @@ function seturl(str){
 		dataType: "json",
 	    success: function(res, textStatus) {
 	    	try{
+	    		if($('#listing_id').val() == ""){
 	    		$('#id_listing_url').val(res.url);
 	    		$('#id_listing_url_text').html(res.url);
+	    		}
 	    	}catch(err){ }
 	    }
 	});

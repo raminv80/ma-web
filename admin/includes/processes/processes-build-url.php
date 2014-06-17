@@ -10,7 +10,7 @@ if (!empty($_POST['table']) && !empty($_POST['objid']) && !empty($_POST['parentf
 	$sql = "SELECT * FROM {$_POST['table']} WHERE {$pre}_object_id = :id AND {$pre}_published = '0' AND {$pre}_deleted IS NULL";
 	if($res = $DBobject->wrappedSql($sql,array(':id'=>$_POST['objid']))){
 		$response = true;
-		$url = '/draft/diy' . getUrl($res[0]["{$_POST['parentfield']}"],1, $res[0]["{$pre}_url"]) ;
+		$url = '/draft' . getUrl($res[0]["{$_POST['parentfield']}"],1, $res[0]["{$pre}_url"]) ;
 	}
 }
 

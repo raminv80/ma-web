@@ -200,17 +200,6 @@ hr.or-separator:after {
 	display:inline; 
 }
 
-#searchbox{
-	background: #eeeeee url(../../images/mag.png) no-repeat 150px 5px;
-	border-radius: 15px;
-	border: 1px solid #6d655e;
-	color: #354568;
-	height:32px;
-	width:182px;
-	padding: 8px;
-	margin: 10px;
-}
-
 .result {
   padding: 10px;
 }

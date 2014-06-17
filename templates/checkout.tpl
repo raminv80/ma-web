@@ -423,6 +423,20 @@
 									}
 								});
 
+								$('#cccsv').rules("add", {
+									digits: true,
+									minlength: 3
+								});
+
+								$('#postcode').rules("add", {
+									digits: true,
+									minlength: 3
+								});
+								$('#postcodesh').rules("add", {
+									digits: true,
+									minlength: 3
+								});
+
 								$('#credit-subform').hide();
 
 								$('.pay_opt').change(function() {
