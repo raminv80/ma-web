@@ -21,7 +21,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
         
         try{
         	// SEND CONFIRMATION EMAIL
-        	$SMARTY->assign("domainName",'http://'.$_SERVER['HTTP_HOST']);
+        	$SMARTY->assign("domainName",'http://'.$GLOBALS['HTTP_HOST']);
         	$SMARTY->assign("username",$_POST['email']);
         	$SMARTY->assign("password",$_POST['password']);
         	

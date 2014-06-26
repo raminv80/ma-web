@@ -7,8 +7,8 @@ function fatal_handler() {
   $errno = error_get_last();
   if($errno['type'] === E_ERROR){
     $to = "nick@them.com.au";
-    $from = "noreply@" . str_replace("www.","",$_SERVER['HTTP_HOST']);
-    $fromEmail = "noreply@" . str_replace("www.","",$_SERVER['HTTP_HOST']);
+    $from = "noreply@" . str_replace("www.","",$GLOBALS['HTTP_HOST']);
+    $fromEmail = "noreply@" . str_replace("www.","",$GLOBALS['HTTP_HOST']);
     $subject = "Fatal Error Occured ";
     $body = "<table><thead bgcolor='#c8c8c8'><th>Item</th><th>Description</th></thead><tbody>";
     $body .= "<tr valign='top'><td><b>Error</b></td><td><pre>{$errno['message']}</pre></td></tr>";
@@ -37,6 +37,7 @@ ini_set('display_errors',0); ini_set('error_reporting',0 );error_reporting(0);
 $_CONF_FILE = "/config/config.xml.php";
 $GLOBALS['CONFIG'] = LOADCONFIG($_CONF_FILE);
 $GLOBALS['SITE'] = "";
+$GLOBALS['HTTP_HOST'] = (!empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:"");
 
 include_once 'database/pdo-db-manager.php';
 include_once 'database/table-class.php';
@@ -94,7 +95,7 @@ foreach($CONFIG->subsite as $sub){
   }
 }
 if(!empty($_COOKIE["sub_site"]) && !$_match_subsite){
-  $lowercase_file_url = strtolower(isset($_SERVER['HTTPS'])?"https://":"http://" . $_SERVER['HTTP_HOST'] .'/'.$_COOKIE["sub_site"] . $_SERVER['REQUEST_URI']);
+  $lowercase_file_url = strtolower(isset($_SERVER['HTTPS'])?"https://":"http://" . $GLOBALS['HTTP_HOST'] .'/'.$_COOKIE["sub_site"] . $_SERVER['REQUEST_URI']);
   header("Location: $lowercase_file_url");
   exit();
 }

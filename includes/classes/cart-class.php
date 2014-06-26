@@ -489,16 +489,19 @@ class cart {
     $subtotal = $this->GetSubtotal();
     $gst_taxable = $this->GetGSTSubtotal();
     $discount = 0;
+    $discount_error = '';
     
     $cart = $this->GetDataCart();
     if($cart['cart_discount_code']){
       $discArr = $this->ApplyDiscountCode($cart['cart_discount_code']);
       $discount = $discArr['discount'];
+      $discount_error = $discArr['error'];
     }
     
     return array(
         'subtotal'=>$subtotal,
         'discount'=>$discount,
+    		'discount_error'=>$discount_error,
         'GST_Taxable'=>$gst_taxable - $discount,
         'total'=>$subtotal - $discount
     );
@@ -949,141 +952,168 @@ class cart {
     return - 1;
   }
 
-  /**
-   * Validate the given discount code and calculate the amount according to items on current cart (or given cartId).
-   *
-   * Limit the discount amount to subtotal value.
-   * Returns array['discount']:float or array['error']:string
-   *
-   * @param string $code          
-   * @param string $cartId          
-   * @return array
-   */
-  function ApplyDiscountCode($code, $cartId = null) {
-    global $DBobject;
-    
-    if(is_null($cartId)){
-      $cartId = $this->cart_id;
-    }
-    $result = array();
-    
-    $subtotal = floatval($this->GetSubtotal());
-    
-    $discount = 0;
-    
-    $sql = "SELECT *  FROM tbl_discount
-	    			WHERE discount_code = :id AND discount_published = 1 AND discount_deleted IS NULL";
-    
-    if($res = $DBobject->wrappedSql($sql,array(
-        ":id"=>$code
-    ))){
-      $today = strtotime(date("Y-m-d"));
-      if((strtotime($res[0]['discount_start_date']) <= $today && $today <= strtotime($res[0]['discount_end_date'])) || (strtotime($res[0]['discount_start_date']) <= $today && $res[0]['discount_end_date'] == '0000-00-00')){
-        
-        // Valid code by date
-        if($res[0]['discount_listing_id'] == 0 && $res[0]['discount_product_id'] == 0){
-          // No filter or special code for particular category/product
-          if($res[0]['discount_amount_percentage']){
-            $discount = $subtotal * floatval($res[0]['discount_amount']) / 100;
-          }else{
-            // Discount must not be higher than subtotal
-            if(floatval($res[0]['discount_amount']) > $subtotal){
-              $discount = $subtotal;
-            }else{
-              $discount = $res[0]['discount_amount'];
-            }
-          }
-        }else{ // With filter or special code for a category/product
-          $sql = "SELECT 	cartitem_product_id, cartitem_subtotal FROM tbl_cartitem
-                    		WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
-          if($cartItems = $DBobject->wrappedSql($sql,array(
-              ":id"=>$cartId
-          ))){
-            $listingMatchSubtotal = 0;
-            foreach($cartItems as $item){
-              if($res[0]['discount_listing_id']){
-                // Special code for category only
-                $listingArr = $this->getProductCatParentList($item['cartitem_product_id']);
-                if(in_array_r($res[0]['discount_listing_id'],$listingArr)){
-                  if($res[0]['discount_amount_percentage']){
-                    $discount += floatval($item['cartitem_subtotal']) * floatval($res[0]['discount_amount']) / 100;
-                  }else{
-                    $listingMatchSubtotal += floatval($item['cartitem_subtotal']);
-                  }
-                }
-              }elseif($res[0]['discount_product_id'] == $this->getProductObjectId($item['cartitem_product_id'])){
-                // Special code for product only
-                if($res[0]['discount_amount_percentage']){
-                  $discount = floatval($item['cartitem_subtotal']) * floatval($res[0]['discount_amount']) / 100;
-                }else{
-                  // Discount must not be higher than subtotal
-                  if($res[0]['discount_amount'] > $item['cartitem_subtotal']){
-                    $discount = $item['cartitem_subtotal'];
-                  }else{
-                    $discount = $res[0]['discount_amount'];
-                  }
-                }
-              }
-            }
-            if($listingMatchSubtotal > 0){
-              if($res[0]['discount_amount'] > $listingMatchSubtotal){
-                $discount = $listingMatchSubtotal;
-              }else{
-                $discount = $res[0]['discount_amount'];
-              }
-            }
-          }
-        }
-      }else{
-        $result['error'] = 'This code has expired';
-        $code = null;
-      }
-    }else{
-      $result['error'] = 'Invalid Code';
-      $code = null;
-    }
-    
-    $result['discount'] = $discount;
-    
-    $params = array(
-        ":id"=>$cartId,
-        ":discount_code"=>$code
-    );
-    $sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_modified = now() WHERE cart_id = :id";
-    if($res = $DBobject->wrappedSql($sql,$params)){
-      return $result;
-    }
-    
-    return array(
-        'error'=>'Undefined error'
-    );
-  }
 
-  /**
-   * Unpublish a given discount code when it is 'on-time use'
-   * Return true if the update was made, otherwise false.
-   *
-   * @param string $code          
-   * @return boolean
-   */
-  function UnpublishOneTimeDiscountCode($code) {
-    global $DBobject;
-    
-    $sql = "SELECT * FROM tbl_discount
+	/**
+	 * Validate the given discount code and calculate the amount according to items on current cart (or given cartId). 
+	 * Limit the discount amount to subtotal value. 
+	 * Returns array['discount']:float or array['error']:string
+	 * 
+	 * @param string $code
+	 * @param string $cartId
+	 * @return array
+	 */
+function ApplyDiscountCode($code, $cartId = null) { 
+		global $DBobject;
+	
+		if (is_null($cartId)) {
+			$cartId = $this->cart_id;
+		}
+		$result = array();
+		$code = strtoupper($code);
+		$denyHigherSubtotal = true;		//CHANGE THIS ACCORDINGLY
+		
+		$subtotal = floatval( $this->GetSubtotal() );
+		
+		$discount = 0;
+		
+		$res = $this->GetDiscountData($code);
+	
+		if ($res) {
+			$useValid = true;
+			if($res['discount_unlimited_use'] == '0' && $res['discount_used'] >= $res['discount_fixed_time']){
+				$useValid = false;
+			}
+			
+			$today = strtotime ( date ( "Y-m-d" ) );
+			if ($useValid && $res['discount_published'] == '1' && ((strtotime($res['discount_start_date']) <= $today && $today <= strtotime($res['discount_end_date']) ) 
+					|| ( strtotime($res['discount_start_date']) <= $today && $res['discount_end_date'] == '0000-00-00' )) ) {
+				
+				// Valid code by date
+				if ( $res['discount_listing_id'] == 0 && $res['discount_product_id'] == 0 ){
+					// No filter or special code for particular category/product 
+                	if ($res['discount_amount_percentage']) {
+                    	$discount = $subtotal * floatval($res['discount_amount']) / 100;
+                    } else {
+                    	// Discount must not be higher than subtotal
+                    	if (floatval($res['discount_amount']) > $subtotal && $denyHigherSubtotal){
+                    		$discount = $subtotal;
+                    	} else {
+                    		$discount = $res['discount_amount'];
+                    	}
+                    }
+				} else { // With filter or special code for a category/product
+                	$sql = "SELECT 	cartitem_product_id, cartitem_subtotal FROM tbl_cartitem
+                    		WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
+					if ( $cartItems = $DBobject->wrappedSql ( $sql, array ( ":id" => $cartId ) )) {
+                    	$listingMatchSubtotal = 0;
+                        foreach ($cartItems as $item){
+                        	if ($res['discount_listing_id']){
+                        		// Special code for category only
+                            	$listingArr = $this->getProductCatParentList($item['cartitem_product_id']);
+                                if (in_array_r($res['discount_listing_id'], $listingArr)){
+                                	if ($res['discount_amount_percentage']) {
+                                    	$discount += floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
+                                    } else {
+                                    	$listingMatchSubtotal += floatval($item['cartitem_subtotal']);
+									}
+								}
+							} elseif ($res['discount_product_id'] == $this->getProductObjectId($item['cartitem_product_id'])){
+								// Special code for product only
+                            	if ($res['discount_amount_percentage']) {
+                                	$discount = floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
+								} else {
+									// Discount must not be higher than subtotal
+                                	if ($res['discount_amount'] > $item['cartitem_subtotal']){
+                                    	$discount = $item['cartitem_subtotal']; 
+									} else {
+                                    	$discount = $res['discount_amount'];
+                                    }
+								}
+							}
+						}
+						if ($listingMatchSubtotal > 0) {
+							if ($res['discount_amount'] > $listingMatchSubtotal){
+                            	$discount = $listingMatchSubtotal; 
+							} else {
+                            	$discount = $res['discount_amount'];
+							}
+						} 
+					}
+				}
+			} else {
+				$result ['error'] = "Sorry, this code '".$code. "' is no longer valid. " . ($useValid?'':'Maximum claims reached.');
+				$code = null;
+			}
+		} else {
+			$result ['error'] = 'Invalid Code';
+			$code = null;
+		}
+		
+		$result ['discount'] = $discount;
+		
+		
+		$params = array (
+				":id" => $cartId,
+				":discount_code" => $code,
+		);
+		$sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_modified = now() WHERE cart_id = :id";
+		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
+			return $result;
+		}
+		
+		return array( 'error' => 'Undefined error');
+	}							
+	
+	/**
+	 * Update 'discount_used' field (and unpublish the discount when 'discount_used' value is greater or equal than 'discount_fixed_time' value) 
+	 * given a discount code with 'discount_unlimited_use' equal zero
+	 * Return true if the update was made, otherwise false.
+	 * 
+	 * @param string $code
+	 * @return boolean
+	 */
+	function SetUsedDiscountCode($code) {
+		global $DBobject;
+	
+		$sql = "SELECT * FROM tbl_discount
 	    			WHERE discount_code = :id AND discount_published = 1 AND discount_deleted IS NULL";
-    $params = array(
-        ":id"=>$code
-    );
-    if($res = $DBobject->wrappedSql($sql,$params)){
-      if($res[0]['discount_onetime']){
-        $sql = "UPDATE tbl_discount SET discount_published = 0, discount_modified = now() WHERE discount_code = :id";
-        if($res = $DBobject->wrappedSql($sql,$params)){
-          return true;
-        }
-      }
-    }
-    return false;
-  }
+		$params = array ( ":id" => strtoupper($code) );
+		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
+			if ($res[0]['discount_unlimited_use'] == '0' && $res[0]['discount_used'] >= $res[0]['discount_fixed_time']) {
+				$sql = "UPDATE tbl_discount SET discount_published = 0, discount_modified = now() WHERE discount_code = :id";
+			}else{
+				$newUsed = $res[0]['discount_used'] + 1;
+				$unpublish = "";
+				if($res[0]['discount_unlimited_use'] == '0' && $newUsed >= $res[0]['discount_fixed_time']){
+					$unpublish = ", discount_published = 0";
+				}
+				$sql = "UPDATE tbl_discount SET discount_used = :used, discount_modified = now(){$unpublish} WHERE discount_code = :id";
+				$params = array_merge($params,array(':used'=> $newUsed ));
+			}
+			if ($res = $DBobject->wrappedSql ( $sql, $params )) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
+	/**
+	 * Return a record give a code.
+	 * @return array
+	 */
+	function GetDiscountData($code) {
+		global $DBobject;
+	
+		$sql = "SELECT *  FROM tbl_discount
+	    			WHERE discount_code = :id AND discount_deleted IS NULL";
+	
+		$res = $DBobject->wrappedSql ( $sql, array (
+				":id" => $code
+		) );
+	
+		return $res[0];
+	}
 
   /**
    * Calculate and return shipping fee

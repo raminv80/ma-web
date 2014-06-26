@@ -52,7 +52,7 @@
 </ul>
 
 <div id="search" class="pull-right">
-	<form accept-charset="UTF-8" action="/search" method="get" id="search-form" > 
+	<form accept-charset="UTF-8" action="/search" method="get" onsubmit="nonAplha('#search')" id="search-form" > 
 		<input id="searchbox" type="text" name="q" placeholder="Search Product" value="">
 	</form>
 </div>

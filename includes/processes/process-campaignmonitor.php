@@ -108,7 +108,7 @@ if(!empty($_POST)){
 
 		$to = "apolo@them.com.au";
 		$from = 'eShop';
-		$fromEmail = "noreply@".str_replace("www.","",$_SERVER['HTTP_HOST']);
+		$fromEmail = "noreply@".str_replace("www.","",$GLOBALS['HTTP_HOST']);
 		$subject = 'e-newsletter Subscription';
 		$body = $buf;
 		
@@ -133,9 +133,9 @@ if(!empty($_POST)){
 			$buf.="<br><br>CreateSend Response<br>{$response}";
 				
 			$to = "nick@them.com.au,apolo@them.com.au";
-			$subject = $_SERVER['HTTP_HOST'].' - Exceptions';
+			$subject = $GLOBALS['HTTP_HOST'].' - Exceptions';
 			$from = " Card";
-			$fromEmail = "noreply@".str_replace("www.","",$_SERVER['HTTP_HOST']);
+			$fromEmail = "noreply@".str_replace("www.","",$GLOBALS['HTTP_HOST']);
 			$body = $buf;
 			sendMail($to, $from, $fromEmail, $subject, $body);
 		}catch(Exception $e){}

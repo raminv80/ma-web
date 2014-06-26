@@ -70,7 +70,7 @@
 						<div class="row form-group">
 								<label class="col-sm-3 control-label" for="id_product_url">URL *</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="hidden" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" required>
+								<input class="form-control" type="hidden" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" onchange="seturl(this.value, true);" required>
                 <span id="id_product_url_text" class="form-control url-text edit-url">{$fields.product_url}&nbsp;</span>
                 <a href="javascript:void(0);" class="btn btn-info btn-sm marg-5r edit-url" onclick="$('.edit-url').removeClass('url-text').hide();$('#id_product_url').get(0).type='text';">Edit URL</a> 
 								
@@ -401,8 +401,10 @@
 		$('.drafts').show();
 	}
 		
-
-	function seturl(str) {
+	function seturl(str){
+		seturl(str,false);
+	}
+	function seturl(str,editexisting) {
 		$.ajax({
 			type : "POST",
 			url : "/admin/includes/processes/urlencode.php",
@@ -411,7 +413,7 @@
 			dataType : "json",
 			success : function(res, textStatus) {
 				try {
-					if($('#product_id').val() == ""){
+					if($('#product_id').val() == "" || editexisting == true){
 					$('#id_product_url').val(res.url);
 					$('#id_product_url_text').html(res.url);
 					}

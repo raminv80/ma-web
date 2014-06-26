@@ -35,7 +35,7 @@ if(checkToken('frontend',$_POST["formToken"], false)){
         $buf='<h2>Website contact - Contact Us form</h2><br/><br/>';
         foreach ($_POST as $name => $var){
            if(!in_array($name, $banned)){
-            $buf.='<br/><b>'.$name.': </b> <br/> '.$var.'<br/>';
+            $buf.='<br/><b>'.ucwords($name).': </b> <br/> '.$var.'<br/>';
           }
         }
       

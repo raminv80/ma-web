@@ -22,6 +22,12 @@
 			</div>
 		{/foreach}
 	{/if}
+	{if $totals.discount_error}
+		<div class="alert alert-danger fade in">
+				<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
+				<strong>{$totals.discount_error}</strong>
+			</div>
+	{/if}
 	{if $productsOnCart }
 		<div class="row cart-table-header">
 			<div class="col-sm-6 col-xs-6">Product</div>

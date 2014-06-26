@@ -106,7 +106,7 @@ class ListClass {
     $extends = "";
     foreach($this->CONFIG_OBJ->table->extends as $a){
       $pre = str_replace("tbl_","",$a->table);
-      $extends = " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}";
+      $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}";
     }
     $where = "";
     if(!empty($this->CONFIG_OBJ->table->where)){
@@ -438,7 +438,7 @@ class ListClass {
     $extends = "";
     foreach($this->CONFIG_OBJ->table->extends as $a){
       $pre = str_replace("tbl_","",$a->table);
-      $extends = " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}"; // AND article_deleted IS NULL";
+      $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}"; // AND article_deleted IS NULL";
     }
     $sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_parent_id = :cid {$typeIdSQL} AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = :published" . $filter . $order;
     $params = array(
@@ -498,7 +498,7 @@ class ListClass {
     if($res2 = $DBobject->wrappedSqlGet($sql,$params)){
       foreach($res2 as $row2){
         foreach($a->associated as $asc){
-          if(! empty($a->id)){
+          if(! empty($a->linkfield)){
             $row2["{$asc->name}"] = self::LoadAssociated($asc,$row2["{$asc->linkfield}"]);
           }
         }

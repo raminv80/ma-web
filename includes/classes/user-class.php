@@ -264,7 +264,7 @@ class UserClass {
             		$buf  ='Dear '.$res['user_gname'].',<br/>';
             		$buf .='<p>You are receiving this email, because you or someone who needs access to your Account has submitted a Forgotten Password request on our website.</p>';
             		$buf .='<p>Your Password is: <b>'.$newPass.'</b></p>';
-            		$buf .='<p>Please click here to come back to the website and login: '.$_SERVER['HTTP_HOST'].'</p>';
+            		$buf .='<p>Please click here to come back to the website and login: '.$GLOBALS['HTTP_HOST'].'</p>';
             		$buf .='<p>We hope that this site provides you with all the product and service information needed to help you with your next project and we look forward to dealing with you in the future.</p>';
             		$buf .='<p>Best Regards</p>';
             		$buf .='<p>The @ Team</p>';

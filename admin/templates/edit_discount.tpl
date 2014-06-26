@@ -12,13 +12,18 @@
 	<div class="col-sm-12">
 		<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
 			<div class="row">
-				<div class="col-sm-12 edit-page-header">
-					<span class="edit-page-title">{if $fields.discount_id neq ""}Edit{else}New{/if} {$zone} {if $cnt eq ""}{assign var=cnt value=0}{/if}</span> 
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
+				<div class="col-sm-12">
+					<fieldset>
+						<legend>
+							{if $fields.discount_id neq ""}Edit{else}New{/if} {$zone} 
+							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
+							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
+							
+						</legend>
+					</fieldset>
 					<input type="hidden" value="discount_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="discount_id" name="field[1][tbl_discount][{$cnt}][id]" id="id"/> 
 					<input type="hidden" value="{$fields.discount_id}" name="field[1][tbl_discount][{$cnt}][discount_id]" id="discount_id">
-					<input type="hidden" value="{if $fields.discount_created}{$fields.discount_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_discount][{$cnt}][discount_created]" id="discount_created">
 					<input type="hidden" name="formToken" id="formToken" value="{$token}" /> 
 				</div>
 			</div>
@@ -32,7 +37,7 @@
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_discount_code">Code *</label>
 				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.discount_code}" name="field[1][tbl_discount][{$cnt}][discount_code]" id="id_discount_code" required>
+					<input class="form-control" type="text" onblur="this.value = this.value.toUpperCase();" value="{$fields.discount_code}" name="field[1][tbl_discount][{$cnt}][discount_code]" id="id_discount_code" required>
 					<span class="help-block"></span>
 				</div>
 			</div>
@@ -49,7 +54,7 @@
 					<span class="help-block"></span>
 				</div>
 			</div>
-			<div class="row form-group">
+<!-- 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_discount_listing_id">Category</label>
 				<div class="col-sm-5">
 					<select class="form-control" name="field[1][tbl_discount][{$cnt}][discount_listing_id]" id="id_discount_listing_id">
@@ -57,7 +62,7 @@
 						{call name=options_list opts=$fields.options.categories selected=$fields.discount_listing_id}
 					</select>
 				</div>
-			</div>
+			</div> -->
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_discount_product_id">Product</label>
 				<div class="col-sm-5">
@@ -81,26 +86,34 @@
 				</div>
 			</div>
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_discount_onetime">Lifespan</label>
+				<label class="col-sm-3 control-label" for="id_discount_unlimited_use">Lifespan</label>
 				<div class="col-sm-9">
 					<div class="radio">
-						<input type="radio" name="field[1][tbl_discount][{$cnt}][discount_onetime]" id="id_discount_onetime1" value="0" {if $fields.discount_onetime eq 0}checked{/if}> Multiple time use 
+						<input type="radio" name="field[1][tbl_discount][{$cnt}][discount_unlimited_use]" onclick="$('#id_discount_fixed_time').hide();" id="id_discount_unlimited_use1" value="1" {if $fields.discount_unlimited_use eq 1}checked{/if}> Unlimited use
 					</div>
 					<div class="radio">
-						<input type="radio" name="field[1][tbl_discount][{$cnt}][discount_onetime]" id="id_discount_onetime2" value="1" {if $fields.discount_onetime eq 1}checked{/if}> One-time use
+						<input type="radio" name="field[1][tbl_discount][{$cnt}][discount_unlimited_use]" onclick="$('#id_discount_fixed_time').show();" id="id_discount_unlimited_use2" value="0" {if $fields.discount_unlimited_use eq 0}checked{/if}> Fixed time use
+						<input {if $fields.discount_unlimited_use eq 1}style="display:none;"{/if} class="form-control number" type="text" value="{if $fields.discount_fixed_time}{$fields.discount_fixed_time}{else}1{/if}" name="field[1][tbl_discount][{$cnt}][discount_fixed_time]" id="id_discount_fixed_time"> 
 					</div>
 				</div>
 			</div>
+			{if $fields.discount_used}
+				<div class="row form-group">
+					<label class="col-sm-3 control-label" for="id_discount_used">Used</label>
+					<div class="col-sm-5">
+						<span class="form-control number">{$fields.discount_used}</span>
+					</div>
+				</div>
+			{/if}
 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="id_discount_published">Published</label>
+				<label class="col-sm-3 control-label" for="id_discount_published">Active</label>
 				<div class="col-sm-5">
 					<input type="hidden" value="{if $fields.discount_published eq 1}1{else}0{/if}" name="field[1][tbl_discount][{$cnt}][discount_published]" class="value"> 
 					<input class="chckbx" type="checkbox" {if $fields.discount_published eq 1}checked="checked" {/if} 
 					onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_discount_published">
 				</div>
 			</div>
-
-
+			
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
 					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>

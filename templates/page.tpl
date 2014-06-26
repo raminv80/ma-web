@@ -119,6 +119,7 @@ ga('send', 'pageview');
 		    	$('#search-form').submit();
 		    }
 		});
+
 		
 		$('.dropdown.navbar-right ').hover(function() { 
 		  $(this).find('.dropdown-menu:hidden').fadeIn(200);
@@ -132,6 +133,11 @@ ga('send', 'pageview');
 		{/if}
 	});
 
+	function nonAplha(ID){
+		var str = $(ID).val();
+	   t = str.replace(/[^a-z0-9]/gi,'');
+	   $(ID).val(t); 
+	}
 
 	if (typeof jQuery != 'undefined') {
 	    jQuery(document).ready(function($) {

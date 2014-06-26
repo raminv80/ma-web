@@ -2,7 +2,7 @@
 $request = explode("?",$_SERVER['REQUEST_URI'],2);
 if (preg_match('/[A-Z]/', $request[0])){
 	$request[0] = strtolower($request[0]);
-	$lowercase_file_url = ((($_SERVER['SERVER_PORT'] == 443 || !empty($_SERVER['HTTPS']))?"https://":"http://") . $_SERVER['HTTP_HOST'] . implode("?",$request));
+	$lowercase_file_url = ((($_SERVER['SERVER_PORT'] == 443 || !empty($_SERVER['HTTPS']))?"https://":"http://") . $GLOBALS['HTTP_HOST'] . implode("?",$request));
   header("HTTP/1.1 301 Moved Permanently");
   header("Location: $lowercase_file_url");
   exit();
@@ -17,7 +17,7 @@ global $CONFIG,$SMARTY,$DBobject;
 foreach($_SESSION['smarty'] as $key=>$val){
   $SMARTY->assign($key,$val);
 }
-$SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
+$SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
 unset($_SESSION['smarty']);
 $SMARTY->assign('error',$_SESSION['error']);
 unset($_SESSION['error']); // ASSIGN ERROR MESSAGES FOR TEMPLATES
@@ -68,7 +68,7 @@ while(true){
    */
   if($_request['arg1'] == 'my-account'){
     if($CONFIG->account->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])){
-      $_SESSION['login_referer'] = "http://" . $_SERVER['HTTP_HOST'] . "/my-account";
+      $_SESSION['login_referer'] = "http://" . $GLOBALS['HTTP_HOST'] . "/my-account";
       header("Location: /");
       exit();
     }
@@ -93,7 +93,7 @@ while(true){
    */
   if($_request['arg1'] == 'store/checkout'){
     if($CONFIG->checkout->attributes()->guest != 'true' && empty($_SESSION['user']['public']['id'])){
-      $_SESSION['login_referer'] = "http://" . $_SERVER['HTTP_HOST'] . "/store/checkout";
+      $_SESSION['login_referer'] = "http://" . $GLOBALS['HTTP_HOST'] . "/store/checkout";
       header("Location: /store/shopping-cart");
       exit();
     }
@@ -217,6 +217,10 @@ $itemNumber = $cart_obj->NumberOfProductsOnCart();
 $SMARTY->assign('itemNumber',$itemNumber);
 $cart = $cart_obj->GetDataCart();
 $SMARTY->assign('cart',$cart);
+if(!empty($cart['cart_discount_code'])){
+	$discountData = $cart_obj->GetDiscountData($cart['cart_discount_code']);
+	$SMARTY->assign ( 'discount_name', $discountData['discount_name'] );
+}
 $subtotal = $cart_obj->GetSubtotal();
 $SMARTY->assign('subtotal',$subtotal);
 $productsOnCart = $cart_obj->GetDataProductsOnCart();

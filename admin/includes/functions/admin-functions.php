@@ -28,6 +28,7 @@ $GLOBALS['EDITED'] = 'edited';
 $GLOBALS['DELETED'] = 'deleted';
 $GLOBALS['WARNING'] = 'warning';
 $GLOBALS['ERROR'] = 'error';
+$GLOBALS['HTTP_HOST'] = (!empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:"");
 
 session_start();
 $_REQUEST	=	clean($_REQUEST);

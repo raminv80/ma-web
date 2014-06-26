@@ -167,7 +167,7 @@ table td {
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
-		<td><strong>Discount</strong></td>
+		<td><strong>Discount {if $cart.cart_discount_code}({$cart.cart_discount_code}){/if}</strong></td>
 		<td style="text-align: right"><strong>$ -{$payment.payment_discount|number_format:2:".":","}</strong></td>
 	</tr>
 	<tr valign="top">

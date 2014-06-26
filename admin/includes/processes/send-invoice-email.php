@@ -60,7 +60,7 @@ if(checkToken('admin', $_POST["formToken"]) && !empty($_POST['email']) && !empty
 	if($res = $DBobject->wrappedSql( $sql, array(':id' => $_POST["email_id"]))){
 		$to = $_POST['email'];
 		$from = 'eShop';
-		$fromEmail = 'noreply@'. str_replace('www.', '', $_SERVER['HTTP_HOST']);
+		$fromEmail = 'noreply@'. str_replace('www.', '', $GLOBALS['HTTP_HOST']);
 		$subject = $res[0]['email_subject'];
 		$body = $res[0]['email_content'];
 		

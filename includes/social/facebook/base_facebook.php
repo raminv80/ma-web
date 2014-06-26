@@ -1143,7 +1143,7 @@ abstract class BaseFacebook
     if ($this->trustForwarded && isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
       return $_SERVER['HTTP_X_FORWARDED_HOST'];
     }
-    return $_SERVER['HTTP_HOST'];
+    return $GLOBALS['HTTP_HOST'];
   }
 
   protected function getHttpProtocol() {

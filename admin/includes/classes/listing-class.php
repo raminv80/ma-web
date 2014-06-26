@@ -55,8 +55,8 @@ class Listing {
       foreach($this->CONFIG_OBJ->extends as $a){
         $pre = str_replace("tbl_","",$a->table);
         $sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '".$res[0]["{$a->linkfield}"]."' AND {$pre}_deleted IS NULL ";
-        if($res = $DBobject->wrappedSqlGet($sql)){
-          foreach($res[0] as $key=>$field){
+        if($res2 = $DBobject->wrappedSqlGet($sql)){
+          foreach($res2[0] as $key=>$field){
             if(empty($listing_f["{$key}"])){
               $listing_f["{$key}"] = $field;
             }else{

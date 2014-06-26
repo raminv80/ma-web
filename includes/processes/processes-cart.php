@@ -1,7 +1,7 @@
 <?php
 global $SMARTY;
 $referer = parse_url($_SERVER['HTTP_REFERER']);
-if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
+if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	switch ($_POST['action']) {
 		case 'ADDTOCART':
 			$cart_obj = new cart();			
@@ -18,7 +18,7 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 		    				'message' => $response,
 		    				'itemsCount' => $itemsCount,
 		    				'subtotal' => $subtotal,
-								'url' => 'http://'.$_SERVER['HTTP_HOST'].'/shop/shopping-cart',
+								'url' => 'http://'.$GLOBALS['HTTP_HOST'].'/shop/shopping-cart',
 								'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
 	    				));
 		    exit;
@@ -236,7 +236,9 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
 							$SMARTY->assign('payment',$payment);
 							$orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
 							$SMARTY->assign('orderItems',$orderItems);
-
+							$cartData = $cart_obj->GetDataCart();
+							$SMARTY->assign('cart',$cartData);
+							
 							//COMMMENTED UNTIL GO LIVE TO PREVENT STORES GETTING TESTING EMAILS
 							/* $bcc = $res[0]['location_bcc_recipient'];
 							$to = empty($res[0]['location_order_recipient'])?"online@them.com.au":$res[0]['location_order_recipient'];
@@ -293,7 +295,7 @@ if( $referer['host'] == $_SERVER['HTTP_HOST'] ){
     		    	
     		    //UNPUBLISH ONE-TIME USE DISCOUNT CODE
     		    if ($order['cart_discount_code']) {
-    		    	$cart_obj->UnpublishOneTimeDiscountCode($order['cart_discount_code']);
+    		    	$cart_obj->SetUsedDiscountCode($order['cart_discount_code']);
     		    }
     		    unset ( $_SESSION['address'] );
     		    

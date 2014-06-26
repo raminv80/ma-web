@@ -1,80 +1,71 @@
 {block name=footer}
 {* Define the function *}
 {function name=render_footer_list level=0 parenturl="" menu=0}
-	{assign var='count' value=0}
 	{foreach $items as $item}
-		<li ><a title="{$item.title}" href="{$parenturl}/{$item.url}" >{$item.title}</a></li>
+		{if $level lt 1 && $item.url eq ''}
+			<li><a title="{$item.title}" href="/">{$item.title}</a>
+			{call name=render_footer_list items=$item.subs level=$level+1 menu=$menu}
+		{else}
+			<li><a title="{$item.title}" {if $item.url|strstr:"http://"}target="_blank"{/if} href="{if $item.url|strstr:"http://"}{$item.url}{else}{$parenturl}/{$item.url}{/if}" >{$item.title}</a>
+			{if count($item.subs) > 0}
+				<ul>   
+					{if $level lt 1}                             
+        		{call name=render_footer_list items=$item.subs level=$level+1 parenturl=$parenturl|cat:"/"|cat:$item.url menu=$menu}
+        	{/if}
+				</ul>
+			{/if}
+			</li>
+		{/if}
 	{/foreach}	
 {/function}
+
 <footer>
-	<div id="footout">
-		<div id="footin" class="container">
-			<div class="row" id="newsletter" >
-				<div class="visible-xs col-xs-12">
-					<div class="row">
-					<div class="col-sm-12">
-						<h3>Sign up to our E-news</h3>
-					</div>
-					</div>
-	
-					<form id="enewsletter-m" action="http://themdigital.createsend.com/t/r/s/tyjiujk/" method="post" onsubmit="return validateForm('#enewsletter-m')">
-					<div class="row">
-						<div class="col-sm-4"><label for="fieldName">Name*</label></div>
-						<div class="col-sm-8"><input type="text" name="cm-name" id="fieldName" class="req"></div>
-					</div>
-					<div class="row">
-						<div class="col-sm-4"><label for="fieldEmail">Email*</label></div>
-						<div class="col-sm-8"><input type="email" name="cm-tyjiujk-tyjiujk" id="fieldEmail" class="req email"></div>
-					</div>
-					<div class="row">
-						<div class="col-sm-8 col-sm-offset-4"><input type="submit" value="Submit" title="Submit Newsletter Signup" ></div>
-					</div>
-					</form>
-				</div>
-				<div class="col-sm-3">
-					<ul>
-						{call name=render_list items=$menuitems}
-						<li><a href="https://tatts.com/tattsbet" title="Bet Now" target="_blank">Bet Now</a></li>
-					</ul>
-				</div>
-				<!-- <div class="hidden-xs col-sm-4 col-sm-offset-2 newsl">
-					<div class="row">
-					<div class="col-sm-12">
-						<h3 class="hidden-sm">Sign up to our E-newsletter</h3>
-						<h3 class="visible-sm">Sign up to our E-news</h3>
-					</div>
-					</div>
-	
-					<form id="enewsletter" action="http://themdigital.createsend.com/t/r/s/tyjiujk/" method="post" onsubmit="return validateForm('#enewsletter')">
-					<div class="row">
-						<div class="col-sm-3"><label for="fieldName">Name*</label></div>
-						<div class="col-sm-9"><input type="text" name="cm-name" id="fieldName" class="req"></div>
-					</div>
-					<div class="row">
-						<div class="col-sm-3"><label for="fieldEmail">Email*</label></div>
-						<div class="col-sm-9"><input type="email" name="cm-tyjiujk-tyjiujk" id="fieldEmail" class="req email"></div>
-					</div>
-					<div class="row">
-						<div class="col-sm-9 col-sm-offset-3"><input type="submit" value="Submit" title="Submit Newsletter Signup" ></div>
-					</div>
-					</form>
-				</div> -->
-				
-				<div class="col-sm-3 share">
-					<a target="_blank" href="http://www.saharnessracing.com/" title="SA Harness Racing's Website"></a>
-					<div><a target="_blank" href="http://www.saharnessracing.com/" title="SA Harness Racing's Website">VISIT SA HARNESS RACING</a></div>
-					<div>SHARE THIS <span class='st_sharethis_large' displayText='ShareThis'></span></div>
-				</div>
+
+<div id="foot1">
+	<div class="container">
+		<div class="col-sm-3">
+			<ul>
+				{call name=render_footer_list items=$menuitems}
+			</ul>
+		</div>
+		<div class="col-sm-3">
+			<ul>
+				<li><a href="/members" title="Member{if $user.id}'s area{else} Login{/if}">Member{if $user.id}'s area{else} Login{/if}</a></li>
+				<li><a href="/media" title="Media {if !$media_user}Login{/if}">Media {if !$media_user}Login{/if}</a></li>
+				<li><a href="/privacy-policy" title="Privacy Policy">Privacy Policy</a></li>
+				<li><a href="#">Follow us on Facebook <img src="/images/fb1.png" alt="Facebook icon" title="Follow us on Facebook" /></a></li>
+			</ul>
+		</div>
+		<div class="col-sm-4 col-sm-offset-2 col-md-3 col-md-offset-3">
+			<div class="row" id="share">
+			<div class="col-sm-12">
+				<div class="share">Share</div> <a target="_blank" href="http://www.facebook.com/sharer.php?u={$DOMAIN}{$REQUEST_URI}"><img src="/images/fb.png" alt="Facebook icon" title="Share this on Facebook"/></a>
+				<a target="_blank" href="http://twitter.com/home?status=Visit Daytrippa. {$DOMAIN}{$REQUEST_URI}"><img src="/images/twitter.png" alt="Twitter icon" title="Share this on Twitter" /></a>
+				<a href="mailto:?subject=Visit Australian Home Heating Association Website&body=Have a look on our website {$DOMAIN}{$REQUEST_URI}"><img src="/images/mail.png" alt="Mail icon" title="Share by email" /></a> 
 			</div>
-			<div id="foot2" class="row">
-				<div class="col-sm-6">
-				COPYRIGHT {'Y'|date} SA HARNESS | <a href="/privacy-policy" title="Privacy policy">Privacy policy</a> | <a href="/disclaimer" title="Disclaimer">Disclaimer</a>
-				</div>
-				<div id="them" class="col-sm-4 col-sm-offset-2">
-					made by <a target="_blank" href="http://www.them.com.au" title="Them Advertising">Them Advertising</a>
-				</div>
+			</div>
+			<div class="row" id="landcare">
+			<div class="col-sm-12">
+				<div id="landin"><img src="/images/landcare.png" alt="" /></div>
+				Proudly supporting the activities of Landcare Australia
+			</div>
 			</div>
 		</div>
 	</div>
+</div>
+
+<div id="foot2">
+	<div class="container">
+		<div class="col-sm-7 col-md-6 text-left">
+		Copyright {'Y'|date} Australian Home Heating Association Inc.
+		</div>
+		<div class="col-sm-5 col-md-6 text-right">
+		Made by <a href="http://www.them.com.au" target="_blank" title="Them Advertising">Them Advertising</a>
+		</div>
+	</div>
+</div>
+
+<a href="#" id="totop" style="display: inline;">Back to top</a>
+
 </footer>
 {/block}
