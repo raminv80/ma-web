@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
 <head>
-<meta name="description" content="{$listing_meta_description}" />
-<meta name="keywords" content="{$listing_meta_words}" />
+<meta name="description" content="{$product_meta_description} {$listing_meta_description}" />
+<meta name="keywords" content="{$product_meta_words} {$listing_meta_words}" />
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="distribution" content="Global" />
@@ -18,20 +18,25 @@
 <link href="/images/favicon.ico" type="image/x-icon" rel="shortcut icon">
 
 <!-- for Facebook -->
-<meta property="og:title" content="{$listing_seo_title}" />
+<meta property="og:title" content="{$product_name|ucfirst} {$listing_seo_title}" />
 <meta property="og:type" content="article" />
 <meta property="og:image" content="{$DOMAIN}" />
 <meta property="og:url" content="{$DOMAIN}{$REQUEST_URI}" />
-<meta property="og:description" content="{$listing_meta_description}" />
+<meta property="og:description" content="{$product_meta_description} {$listing_meta_description}" />
 
 <!-- for Twitter -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="">
-<meta name="twitter:title" content="{$listing_seo_title}">
-<meta name="twitter:description" content="{$listing_meta_description}">
+<meta name="twitter:title" content="{$product_name|ucfirst} {$listing_seo_title}">
+<meta name="twitter:description" content="{$product_meta_description} {$listing_meta_description}">
 <meta name="twitter:creator" content="@THEMAdvertising">
 <meta name="twitter:image:src" content="{$DOMAIN}{$REQUEST_URI}">
 <meta name="twitter:domain" content="{$DOMAIN}">
+
+<!-- Schema.org -->
+<meta itemprop="name" content="{$product_name|ucfirst} {$listing_seo_title}">
+<meta itemprop="description" content="{$product_meta_description} {$listing_meta_description}">
+<meta itemprop="image" content="{$DOMAIN}/images/logo.png">
 
 <!-- Bootstrap -->
 <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
@@ -135,7 +140,7 @@ ga('send', 'pageview');
 
 	function nonAplha(ID){
 		var str = $(ID).val();
-	   t = str.replace(/[^a-z0-9]/gi,'');
+	   t = str.replace(/[^a-zA-Z0-9-_+]/gi,'');
 	   $(ID).val(t); 
 	}
 
