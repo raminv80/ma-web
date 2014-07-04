@@ -213,7 +213,7 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
 	$mailSent = 0;
 	try{
 	  if(function_exists("SafeMail")){
-	  	$sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 10 MINUTE) AND NOW() LIMIT 5";
+	  	$sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND NOW() LIMIT 5";
 	  	$params = array(
 	  			":ip"=>$_SERVER['REMOTE_ADDR']
 	  	);
@@ -266,7 +266,7 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 	
 			$mail->setHtml($body);
 	
-			$sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW() LIMIT 5";
+			$sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND NOW() LIMIT 5";
 			$params = array(
 					":ip"=>$_SERVER['REMOTE_ADDR']
 			);

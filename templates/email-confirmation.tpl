@@ -26,7 +26,7 @@ table td {
 	text-align: left;
 }
 </style>
-
+<img src="{$DOMAIN}/images/logo.png" alt="Logo">
 <br>
 <br>
 <table>

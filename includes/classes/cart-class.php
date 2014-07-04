@@ -371,6 +371,15 @@ class cart {
     ));
     
     foreach($res as $p){
+	  $sql = "SELECT * FROM tbl_productqty WHERE productqty_product_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";
+      $params = array(
+          ":qty"=>$p['cartitem_quantity'],
+          ":pid"=>$p['cartitem_product_id']
+      );
+      if($mod = $DBobject->wrappedSql($sql,$params)){
+        $p['productqty_modifier'] = $mod[0];
+      }
+      
       $cart_arr[$p['cartitem_id']] = $p;
       // ---------------- BUILD URL -Part:1/2----------------
       $url = '';
@@ -572,7 +581,7 @@ class cart {
     $price = floatval($price);
     $message = '';
     
-    $product = $this->GetProductCalculation($productId,$AttributesArr);
+    $product = $this->GetProductCalculation($productId,$AttributesArr,$quantity);
     
     if($product['error']){
       return $product['error_message'];
@@ -686,7 +695,7 @@ class cart {
    * @param array $attributesArray          
    * @return array
    */
-  function GetProductCalculation($product_id, $attributesArray = array()) {
+  function GetProductCalculation($product_id, $attributesArray = array(), $qty=0) {
     global $DBobject;
     $cnt = 1;
     
@@ -764,6 +773,21 @@ class cart {
         }
       }
       
+      $sql = "SELECT * FROM tbl_productqty WHERE productqty_product_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";
+      $params = array(
+          ":qty"=>$qty,
+          ":pid"=>$prod['product_id']
+      );
+      if($mod = $DBobject->wrappedSql($sql,$params)){
+        
+        if(intval($mod[0]['productqty_percentmodifier']) == 1){
+          $prod['product_price'] = $prod['product_price'] - ($prod['product_price']*($mod[0]['productqty_modifier']/100));
+        }else{
+          $prod['product_price'] = $prod['product_price'] - ($mod[0]['productqty_modifier']);
+        }
+      }
+      $prod['product_price'] = round($prod['product_price'],2);
+      
       return ($product = array(
           "error"=>false,
           "product_id"=>$prod['product_id'],
@@ -819,23 +843,42 @@ class cart {
     
     $result = array();
     foreach($qtys as $id=>$qty){
-      $sql = "SELECT cartitem_quantity, cartitem_product_price FROM tbl_cartitem WHERE cartitem_id = :id AND cartitem_deleted IS NULL";
+      $sql = "SELECT cartitem_quantity, cartitem_product_price,cartitem_product_id FROM tbl_cartitem WHERE cartitem_id = :id AND cartitem_deleted IS NULL";
       
       if($res = $DBobject->wrappedSql($sql,array(
           ":id"=>$id
       ))){
         
         if($qty != $res[0]['cartitem_quantity']){
-          $subtotal = $res[0]['cartitem_product_price'] * $qty;
+          $attrs = $this->GetAttributesIdsOnCartitem($id);
+          $DBproduct = $this->GetProductCalculation($res[0]['cartitem_product_id'],$attrs,$qty);
+          $subtotal = $DBproduct['product_price'] * $qty;
+          $pricemodifier = "";
+          $sql = "SELECT * FROM tbl_productqty WHERE productqty_product_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";
+          $params = array(
+              ":qty"=>$qty,
+              ":pid"=>$res[0]['cartitem_product_id']
+          );
+          if($mod = $DBobject->wrappedSql($sql,$params)){
+            if(intval($mod[0]['productqty_percentmodifier']) == 1){
+              $pricemodifier = intval($mod[0]['productqty_modifier'])."%";
+            }else{
+              $pricemodifier = "$".intval($mod[0]['productqty_modifier']);
+            }
+          }
+		  
           $params = array(
               ":id"=>$id,
               ":qty"=>$qty,
-              ":subtotal"=>$subtotal
+              ":subtotal"=>$subtotal,
+              ":price"=>$DBproduct['product_price']
           );
-          $sql = "UPDATE tbl_cartitem SET cartitem_quantity = :qty, cartitem_subtotal = :subtotal, cartitem_modified = now()
+          $sql = "UPDATE tbl_cartitem SET cartitem_quantity = :qty, cartitem_subtotal = :subtotal, cartitem_modified = now(), cartitem_product_price = :price
 	                		WHERE cartitem_id = :id";
           if($DBobject->wrappedSql($sql,$params)){
-            $result[$id] = $subtotal;
+            $result['subtotals'][$id] = $subtotal;
+            $result['pricemodifier'][$id] = $pricemodifier;
+            $result['priceunits'][$id] = $DBproduct['product_price'];
           }
         }
       }
@@ -859,7 +902,7 @@ class cart {
     ))){
       foreach($res as $item){
         $attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
-        $DBproduct = $this->GetProductCalculation($item['cartitem_product_id'],$attrs);
+        $DBproduct = $this->GetProductCalculation($item['cartitem_product_id'],$attrs,$item['cartitem_quantity']);
         
         if($DBproduct['error']){
           $message[] = $DBproduct['error_message'];
@@ -1055,8 +1098,9 @@ function ApplyDiscountCode($code, $cartId = null) {
 		$params = array (
 				":id" => $cartId,
 				":discount_code" => $code,
+				":description"=>$res[0]['discount_description']
 		);
-		$sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_modified = now() WHERE cart_id = :id";
+		$sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount_description = :description, cart_modified = now() WHERE cart_id = :id";
 		if ($res = $DBobject->wrappedSql ( $sql, $params )) {
 			return $result;
 		}

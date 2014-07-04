@@ -86,3 +86,12 @@ $('input[type=text][class=tool-tip]').tooltip({
 function ConfirmDelete(){
 	 return confirm("Do you want to remove this item ?");
 }
+
+function convert_to_mysql_date_format(str){
+	var dateArr = str.split("/");
+	return dateArr[2]+'-'+dateArr[1]+'-'+dateArr[0]; 
+}
+	
+function setDateValue(id,date){
+	$("#"+id).val( convert_to_mysql_date_format(date) );
+}

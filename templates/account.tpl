@@ -74,8 +74,8 @@
 												<tr align="left">
 													<th>Items</th>
 													<th class="text-right">Qty</th>
-													<th class="text-right">Unit Price</th>
-													<th class="text-right">Total Price</th>
+													<th style="min-width:65px;" class="text-right">Unit Price</th>
+													<th style="min-width:70px;" class="text-right">Total Price</th>
 												</tr>
 												{foreach $order.items  as $item}
 												<tr valign="top" aling="left">{assign var=free value=0}
@@ -95,26 +95,20 @@
 													<td colspan="4"><hr></td>
 												</tr>
 												<tr valign="top" align="left">
-													<td>&nbsp;</td>
-													<td>&nbsp;</td>
-													<td class="text-right"><strong>Sub Total</strong></td>
+													<td colspan="3" class="text-right"><strong>Sub Total</strong></td>
 													<td style="text-align: right">$ {$order.payment_subtotal|number_format:2:".":","}</td>
 												</tr>
 												<tr valign="top" align="left">
-													<td>&nbsp;</td>
-													<td>&nbsp;</td>
-													<td class="text-right"><strong>Discount</strong></td>
+													<td colspan="3" class="text-right"><strong>Discount</strong></td>
 													<td class="text-right">$ -{$order.payment_discount|number_format:2:".":","}</td>
 												</tr>
 												<tr valign="top" align="left">
-													<td>&nbsp;</td>
-													<td colspan="2" class="text-right"><strong>Postage & Handling</strong></td>
+													<td colspan="3" class="text-right"><strong>Postage & Handling</strong></td>
 													<td style="text-align: right">$ {$order.payment_shipping_fee|number_format:2:".":","}</td>
 												</tr>
 												<tr valign="top" align="left">
 													<td>{if $free}(*)GST free item.{/if}</td>
-													<td>&nbsp;</td>
-													<td class="text-right"><strong>Incl. GST</strong></td>
+													<td colspan="2" class="text-right"><strong>Incl. GST</strong></td>
 													<td style="text-align: right">($ {$order.payment_gst|number_format:2:".":","})</td>
 												</tr>
 												<tr valign="top" align="left">

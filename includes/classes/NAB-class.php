@@ -109,7 +109,7 @@ class PaymentNAB extends Bank {
 	
 		if($this->response['code'] == "00" || $this->response['code'] == "08"){
 			// Payment successful
-			$this->response['payment_status'] = 'P';
+			$this->response['payment_status'] = 'A';
 			$this->payment_success = true;
 		}else{
 			// Payment failed

@@ -18,8 +18,8 @@ class UserClass {
     	if ($res = $this->RetrieveByUsername($user['username'])) {
     		//return array ('error' => "This email '{$user['username']}' has already been used.");
     		if($res['user_gname'] != $user['gname']){
-	    		$sql = "UPDATE tbl_user SET user_gname = :gname, user_modified = now() WHERE user_id = :id ";
-	    		$DBobject->wrappedSql($sql, array(':id'=>$res['user_id'],':gname'=>$user['gname']));
+	    		$sql = "UPDATE tbl_user SET user_gname = :gname, user_want_promo = :promo, user_modified = now() WHERE user_id = :id ";
+	    		$DBobject->wrappedSql($sql, array(':id'=>$res['user_id'],':gname'=>$user['gname'],':promo'=>$user['wantpromo']));
     		}
     		return $result = array (
     				"id" => $res['user_id'],

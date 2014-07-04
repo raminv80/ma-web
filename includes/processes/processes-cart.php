@@ -224,6 +224,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    		
 	    		  try{
 	    		    // SEND CONFIRMATION EMAIL
+	    		  	$SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
 	    		    $SMARTY->assign("user",$_SESSION['user']['public']);
 	    		    $user_obj = new UserClass();
 	    		    $billing = $user_obj->GetAddress($billID);
