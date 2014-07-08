@@ -334,7 +334,7 @@
                 <div id="chk-tickbox" class="col-sm-1 col-sm-offset-2 text-right">
                   <input type="checkbox" id="accept" name="accept" required/>
                 </div>
-                <label class="col-sm-8" class="chklab form-control txt-left" for="checkbox">
+                <label class="col-sm-8 chklab" for="checkbox">
                   I have read the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and I understand and agree to the <a href="/shipping-and-delivery" target="_blank">Shipping & Delivery Policy</a>, <a href="/returns-policy" target="_blank">Return Policy</a>, <a href="/warranty-and-support" target="_blank">Warranty & Support Policy</a> and the web site <a href="/terms-and-conditions" target="_blank">Terms and Conditions</a>.
                 </label>
               </div>

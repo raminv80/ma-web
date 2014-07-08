@@ -1,4 +1,27 @@
 {block name=body}
+{function name=additional_list data=$data level=0} 
+  {foreach $data as $opt}
+  {if $count eq ""}{assign var=count value=1}{else}{assign var=count value=$count+1}{/if} 
+  <div class="row form-group">
+     <input type="hidden" value="additional_category_id" name="field[3][tbl_additional_category][{$level*10}{$count}][id]" />
+     <input type="hidden" value="{call name=additional_category_id id=$opt.id}" name="field[3][tbl_additional_category][{$level*10}{$count}][additional_category_id]" />
+     <input type="hidden" value="{$fields.product_id}" name="field[3][tbl_additional_category][{$level*10}{$count}][additional_category_product_id]" id="additional_category_product_id" class="key">
+     <input type="hidden" value="{$opt.id}" name="field[3][tbl_additional_category][{$level*10}{$count}][additional_category_listing_id]" id="additional_category_listing_id" class="key">
+     <div class="col-sm-{$level+1}">
+       <input type="hidden" value="{call name=additional_category_value id=$opt.id}" name="field[3][tbl_additional_category][{$level*10}{$count}][additional_category_flag]" class="value">
+       <input style="float:right;" class="chckbx" type="checkbox" {call name=additional_category_selected id=$opt.id} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_location{$opt.id}">
+     </div>
+     <label style="text-align:left;" class="col-sm-3 control-label" for="id_additional_cat{$opt.id}">{$opt.value}</label>
+   </div>
+   {if count($opt.subs) > 0}
+   {call name=additional_list data=$opt.subs level=$level+1 } 
+   {/if}
+   {/foreach} 
+{/function}
+{function name=additional_category_value id=""}{assign var=val value=0}{if $id neq ""}{foreach $fields.additional_category as $add}{if $id eq $add.additional_category_listing_id}{assign var=val value=$add.additional_category_flag}{break}{/if}{if $id eq $fields.product_listing_id}{assign var=val value=1}{break}{/if}{/foreach}{/if}{$val}{/function}
+{function name=additional_category_selected id=""}{if $id neq ""}{foreach $fields.additional_category as $add}{if $id eq $add.additional_category_listing_id}{if $add.additional_category_flag eq 1}checked="checked"{/if}{break}{/if}{if $id eq $fields.product_listing_id}checked="checked"{break}{/if}{/foreach}{/if}{/function}
+{function name=additional_category_id id=""}{if $id neq ""}{foreach $fields.additional_category as $add}{if $id eq $add.additional_category_listing_id}{$add.additional_category_id}{break}{/if}{/foreach}{/if}{/function}
+
 {* Define the function *} {function name=options_list level=0} 
 	{foreach $opts as $opt}
 		{if $fields.listing_id neq $opt.id}
@@ -49,6 +72,7 @@
 			</div>
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+				<li><a href="#additional" data-toggle="tab">Categories</a></li>
 				<li><a href="#pricing" data-toggle="tab">Pricing</a></li>
 				<li><a href="#images" data-toggle="tab">Images</a></li>
 				<li><a href="#attributes" data-toggle="tab">Attributes</a></li>
@@ -68,21 +92,27 @@
 							</div>
 						</div>
 						<div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_uid">Code (ISDN,Product code,etc)</label>
+              <div class="col-sm-5">
+                <input class="form-control" type="text" value="{$fields.product_uid}" name="field[1][tbl_product][{$cnt}][product_uid]" id="id_product_uid" >
+                <span class="help-block"></span>
+              </div>
+            </div>
+						<div class="row form-group">
 								<label class="col-sm-3 control-label" for="id_product_url">URL *</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="hidden" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" onchange="seturl(this.value, true);" required>
-                <span id="id_product_url_text" class="form-control url-text edit-url">{$fields.product_url}&nbsp;</span>
+								<input class="form-control" type="hidden" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" required>
+                <span style="display:inline-block;width:74%;" id="id_product_url_text" class="form-control url-text edit-url">{$fields.product_url}&nbsp;</span>
                 <a href="javascript:void(0);" class="btn btn-info btn-sm marg-5r edit-url" onclick="$('.edit-url').removeClass('url-text').hide();$('#id_product_url').get(0).type='text';">Edit URL</a> 
-								
                 <span class="help-block"></span>
 							</div>
-						</div>		
+						</div>
 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_product_listing">Category</label>
+							<label class="col-sm-3 control-label" for="id_product_listing">Brand</label>
 							<div class="col-sm-5 ">
 								<select  class="form-control" name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing">
 									<option value="{$rootParentID}">Select one</option> 
-									{call name=options_list opts=$fields.options.product_listing_id}
+									{call name=options_list opts=$fields.options.product_brand}
 								</select>
 							</div>
 						</div>			
@@ -106,33 +136,57 @@
 							</div>
 						</div>
 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_product_description">Description</label><br />
-							<div class="col-sm-5 ">
-								<textarea name="field[1][tbl_product][{$cnt}][product_description]" id="id_product_description" class="tinymce">{$fields.product_description}</textarea>
-							</div>
-						</div>					
+              <label class="col-sm-3 control-label" for="id_product_order">Order(#position)</label>
+              <div class="col-sm-5 ">
+                <input class="form-control number" type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_flag1">Featured Product</label>
+              <div class="col-sm-5 ">
+                <input type="hidden" value="{if $fields.product_flag1 eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_flag1]" class="value"> 
+                <input class="chckbx" type="checkbox" {if $fields.product_flag1 eq 1}checked="checked"{/if} 
+                  onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_flag1">
+              </div>
+            </div>
 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_product_group">Associated Group</label>
+							<label class="col-sm-3 control-label" for="id_product_content1">Description</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_group}" name="field[1][tbl_product][{$cnt}][product_group]" id="id_product_group">
+								<textarea name="field[1][tbl_product][{$cnt}][product_content1]" id="id_product_content1" class="tinymce">{$fields.product_content1}</textarea>
 							</div>
-						</div>
+						</div>	
 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_product_order">Order</label>
-							<div class="col-sm-5 ">
-								<input class="form-control number" type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
-							</div>
-						</div>
-						<!-- <div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_product_published">Published</label>
-							<div class="col-sm-5 ">
-								<input type="hidden" value="{if $fields.product_published eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_published]" class="value"> 
-								<input class="chckbx" type="checkbox" {if $fields.product_published eq 1}checked="checked"{/if} 
-									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_published">
-							</div>
-						</div> -->
+              <label class="col-sm-3 control-label" for="id_product_content2">Features</label>
+              <div class="col-sm-5 ">
+                <textarea name="field[1][tbl_product][{$cnt}][product_content2]" id="id_product_content2" class="tinymce">{$fields.product_content2}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_content3">Specifications</label>
+              <div class="col-sm-5 ">
+                <textarea name="field[1][tbl_product][{$cnt}][product_content3]" id="id_product_content3" class="tinymce">{$fields.product_content3}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_content4">Video</label>
+              <div class="col-sm-5 ">
+                <input class="form-control" type="text" name="field[1][tbl_product][{$cnt}][product_content4]" id="id_product_content4" value="{$fields.product_content4}" />
+                <div>Input just the VIDEO ID:</div>
+                <div>https://www.youtube.com/watch?v=<b>[VIDEO_ID]</b></div>
+              </div>
+            </div>				
 					</div>
 				</div>
+				<!--===+++===+++===+++===+++===+++ ADDITIONAL TAB +++===+++===+++===+++===+++====-->
+        <div class="tab-pane" id="additional">
+          <div class="row form" data-error="Error found on <b>Additional tab</b>. View <b>Additional tab</b> to see specific error notices.">
+            <div class="row form-group">
+              <label class="col-sm-5 control-label">Categories to appear under</label>
+            </div>
+            <input type="hidden" value="product_object_id" name="default[additional_category_product_id]" />
+            {call name=additional_list data=$fields.options.product_listing_id} 
+          </div>
+        </div>
 				<!--===+++===+++===+++===+++===+++ PRICING TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="pricing">
 					<div class="row form" data-error="Error found on <b>Pricing tab</b>. View <b>Pricing tab</b> to see specific error notices.">
@@ -188,6 +242,45 @@
 									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_instock">
 							</div>
 						</div>
+						<div class="row form-group">
+						  <div class="col-sm-3"></div>
+              <label class="col-sm-2 control-label" for="id_product_instock">Quantity(>)</label>
+              <div class="col-sm-2"></div>
+              <label class="col-sm-2 control-label" for="id_product_instock">Modifier(%)</label>
+            </div>
+						{assign var=count value=0}
+						{foreach $fields.qty_modifier as $mod}
+            {assign var=count value=$count+1}
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_instock">Quantity/Price Modifier ({$count})</label>
+              <div class="col-sm-4">
+	              <input type="hidden" value="product_id" name="default[productqty_product_id]" />
+				        <input type="hidden" value="{$mod.productqty_id}" name="field[20][tbl_productqty][{$count}][productqty_id]" id="productqty_id" class="key"/>
+				        <input type="hidden" value="productqty_id" name="field[{20}][tbl_productqty][{$count}][id]" id="id" /> 
+				        <input type="hidden" value="{$mod.productqty_product_id}" name="field[20][tbl_productqty][{$count}][productqty_product_id]" id="productqty_product_id" class="key"/>
+	              <input class="form-control double" type="text" value="{$mod.productqty_qty}" name="field[20][tbl_productqty][{$count}][productqty_qty]" id="id_productqty_qty">
+              </div> 
+              <div class="col-sm-4">
+               <input class="form-control double" type="text" value="{$mod.productqty_modifier}" name="field[20][tbl_productqty][{$count}][productqty_modifier]" id="id_productqty_modifier">
+              </div>
+            </div>
+						{/foreach}
+						{while $count < 4}
+						  {assign var=count value=$count+1}
+						 <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_instock">Quantity/Price Modifier ({$count})</label>
+              <div class="col-sm-4">
+                <input type="hidden" value="product_id" name="default[productqty_product_id]" />
+                <input type="hidden" value="" name="field[20][tbl_productqty][{$count}][productqty_id]" id="productqty_id" class="key"/>
+                <input type="hidden" value="productqty_id" name="field[{20}][tbl_productqty][{$count}][id]" id="id" /> 
+                <input type="hidden" value="{$fields.product_id}" name="field[20][tbl_productqty][{$count}][productqty_product_id]" id="productqty_product_id" class="key"/>
+                <input class="form-control double" type="text" value="" name="field[20][tbl_productqty][{$count}][productqty_qty]" id="id_productqty_qty">
+              </div> 
+              <div class="col-sm-4">
+                <input class="form-control double" type="text" value="" name="field[20][tbl_productqty][{$count}][productqty_modifier]" id="id_productqty_modifier">
+              </div>
+            </div>
+						{/while}
 					</div>
 				</div>
 				
@@ -401,10 +494,8 @@
 		$('.drafts').show();
 	}
 		
-	function seturl(str){
-		seturl(str,false);
-	}
-	function seturl(str,editexisting) {
+
+	function seturl(str) {
 		$.ajax({
 			type : "POST",
 			url : "/admin/includes/processes/urlencode.php",
@@ -413,7 +504,7 @@
 			dataType : "json",
 			success : function(res, textStatus) {
 				try {
-					if($('#product_id').val() == "" || editexisting == true){
+					if($('#product_id').val() == ""){
 					$('#id_product_url').val(res.url);
 					$('#id_product_url_text').html(res.url);
 					}

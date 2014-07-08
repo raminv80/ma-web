@@ -204,7 +204,7 @@
 		</div>
 	</div>
 </div>
-{include file='quicklinks.tpl'} {/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
+{/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
 <script type="text/javascript">
 	$(document)
 			.ready(

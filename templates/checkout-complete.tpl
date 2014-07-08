@@ -24,7 +24,6 @@
     </div>
   </div>
 </div>
-{include file='quicklinks.tpl'} 
 {/block}
 
 {* Place additional javascript here so that it runs after General JS includes *}

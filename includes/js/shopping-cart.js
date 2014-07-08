@@ -5,7 +5,7 @@ if (jQuery.validator) {
 	    ignore: "",
 	    highlight: function (element, errorClass, validClass) {
 	      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-	      $('.error-textbox').html('Error, please check the red highlighted fields.').show();
+	      $('.error-textbox').html('Error, please check the highlighted fields.').show();
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
 	      $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
