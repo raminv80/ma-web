@@ -29,7 +29,7 @@
 <ul id="menu" class="nav navbar-nav">
  {call name=render_list items=$menuitems}
 	<li class="dropdown navbar-right">
-	 	<a href="/store/shopping-cart" class="dropdown-toggle">
+	 	<a href="/shopping-cart" class="dropdown-toggle">
 	        <span class="glyphicon glyphicon-shopping-cart"></span>
 	 		<div style="display:inline;" class="nav-itemNumber">{$itemNumber}</div>
 	 		
@@ -46,7 +46,7 @@
 	
 {else}
 	<!-- <li><a title="Log In" href="/login">Log In</a></li> -->
-	<li><a title="Log In" href="javascript:void(0)" data-toggle="modal" data-target="#login-modal">Log In</a></li>
+	<li><a title="Log In" href="/login-register">Log In</a></li>
 {/if}
 
 </ul>

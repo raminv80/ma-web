@@ -1,548 +1,453 @@
 {block name=body}
-	<header>
-		<div id="headout" class="headerbg">
-				<div id="videobox">
-					<div class="container">
-						<div class="row-fluid">
-							<div class="span7">
-					  			{include file='breadcrumbs.tpl'}
-					  			<h3 class="toptitle">{$product_name}</h3>
-				  			</div>
-						</div>
-					</div>
-				</div>
-			</div>
-	</header>
-	<div class="container">
-	{if $validation}
-		{foreach $validation as $val_msg}
-			<div class="alert alert-danger fade in">
-				<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
-				<strong>{$val_msg}</strong>
-			</div>
-		{/foreach}
-	{/if}
-	{if $productsOnCart }
-		{if $error}
-		<div class="row error-msg">{$error}</div>
-        {/if}
-        <div class="col-sm-8">	
-			<div class="row cart-table-header">
-				<div class="col-md-6">Item</div>
-				<div class="col-md-2 text-right">Unit Price</div>
-				<div class="col-md-1">Qty</div>
-				<div class="col-md-2 text-right">Subtotal</div>
-				<div class="col-md-1"></div>
-			</div>
-			
-			<div class="row" id="products-container"> 
-				{foreach from=$productsOnCart item=item}
-				<div class="row product-item" id="{$item.cartitem_id}">
-					<div class="col-md-6">{if $item.cartitem_product_gst eq '0'}*{/if} {$item.cartitem_product_name}
-					{if $item.attributes } 
-						<small>
-						{foreach from=$item.attributes item=attr}
-							- {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name} 
-						{/foreach}
-						</small>
-					{/if}
-					</div>
-					<div class="col-md-2 text-right">${$item.cartitem_product_price|number_format:2:".":","}</div>
-					<div class="col-md-1 text-right">{$item.cartitem_quantity}</div>
-					<div class="col-md-2 text-right">${$item.cartitem_subtotal|number_format:2:".":","}</div>
-				</div>		
-				{/foreach} 
-			</div>
-				
-			<div class="row totals">
-				<div class="col-md-9 text-right">Subtotal</div>
-				<div class="col-md-2 text-right" id="subtotal">${$totals.subtotal|number_format:2:".":","}</div>
-			</div>
-			<div class="row totals">
-				<div class="col-md-9 text-right">Discount {if $cart.cart_discount_code}<small>[Code: {$cart.cart_discount_code}]</small>{/if}</div>
-				<div class="col-md-2 text-right" id="discount">-${$totals.discount|number_format:2:".":","}</div>
-			</div>
-			<div class="row totals shipping-fee">
-				<div class="col-md-9 text-right">Postage & Handling</div>
-				<div class="col-md-2 text-right" id="shipping-fee-value">$0.00</div>
-			</div>
-			<div class="row totals">
-				<div class="col-md-9 text-right gst">Incl. GST</div> {assign var=gst value=$totals.GST_Taxable/10}
-				<div class="col-md-2 text-right gst" id="gst" amount="{$totals.GST_Taxable}">(${$gst|number_format:2:".":","})</div>
-			</div>
-			<div class="row totals">
-				<div class="col-md-9 text-right"><b>Total</b></div>
-				<div class="col-md-2 text-right total-amount" id="total" amount="{$totals.total}">${$totals.total|number_format:2:".":","}</div>
-			</div>
-			{if $totals.GST_Taxable neq $totals.total}
-				<div class="row gst">(*) GST Free item.</div>
-			{/if}
-		</div>
-		<div class="col-sm-8 checkout-collapse">
 
-		<div class="panel-group" id="accordion">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<div class="panel-title">Billing and Shipping Address</div>
-				</div>
-				<div id="collapseOne" class="panel-collapse collapse in">
-					<div class="panel-body">
+ <div id="maincont">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12" id="breadcrumbs">
+          <div class="breadcrumbs">
+          <a href="/">Home</a> / Checkout
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <h1>Checkout</h1>
+          <div class="checkout2">
+            <div class="hidden-xs">
+              <a href="/shopping-cart">Step 1: Cart review</a> / <span class="bold">Step 2: Personal details</span> / Step 3: Payment
+            </div>
+            <div class="visible-xs">
+              <span class="bold">Step 2 of 3</span>
+            </div>
+          </div>
+          <div class="checkout3" style="display:none;">
+            <div class="hidden-xs">
+              <a href="/shopping-cart">Step 1: Cart review</a> / Step 2: Personal details / <span class="bold tots">Step 3: Payment</span>
+            </div>
+            <div class="visible-xs">
+              <span class="bold">Step 3 of 3</span>
+            </div>
+          </div>  
+          <br />
+          <br />
+          
+          <div class="row tallbox">
+              {foreach from=$productsOnCart item=item}
+                <div class="row cartitem">
+                  <div class="hidden-xs col-sm-1">
+                    <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}{else}/images/no-image-available.jpg{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
+                  </div>
+                  <div class="col-xs-12 col-sm-6 bluetext">
+                    <a href="{$item.url}">{$item.cartitem_product_name}</a>
+                    {if $item.attributes } 
+                    <small>
+                    {foreach from=$item.attributes item=attr}
+                      - {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name} 
+                    {/foreach}
+                    </small>
+                  {/if}
+                  </div>
+                  <div class="col-xs-3 col-sm-2 centre">
+                    <div id="qty-{$item.cartitem_id}">{$item.cartitem_quantity}</div>
+                    <div id="qty-discount-{$item.cartitem_id}">{if $item.productqty_modifier.productqty_modifier neq 0}(-{$item.productqty_modifier.productqty_modifier|number_format:0:".":','}%){/if}</div>
+                  </div>
+                  <div class="col-xs-3 col-sm-1 centre" id="priceunit-{$item.cartitem_id}">
+                  <div id="price-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
+                  </div>
+                  <div class="col-xs-3 col-sm-1 centre" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
+                  <div class="col-xs-3 col-sm-1">
+                    <a href="/shopping-cart">Edit</a>
+                  </div>  
+                </div>
+              {/foreach}
+              <div class="row">
+              <div class="col-sm-6 col-sm-offset-6">
+                <div class="row"><div class="col-xs-4 col-sm-9 text-right">Discount</div>
+                <div class="col-xs-8 col-sm-3 num text-right" id="discount">${if $totals.discount gt 0}-{/if}{$totals.discount|number_format:2:".":","}</div></div>
+                <div class="row"><div class="col-xs-4 col-sm-9 text-right">Subtotal</div><!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
+                <div class="col-xs-8 col-sm-3 num text-right" id="subtotal" data-value="{$totals.total}">${$totals.total|number_format:2:".":","}</div></div>    
+                <div class="row"><div class="col-xs-4 col-sm-9 text-right">Shipping</div>
+                <div class="col-xs-8 col-sm-3 num text-right" data-value="{$selectedShippingFee}" id="shipping-fee">{if $selectedShippingFee}${$selectedShippingFee|number_format:2:".":","}{else}$0.00{/if} </div></div>
+                <div class="row tots">
+	                <div class="col-xs-4 col-sm-2 col-sm-offset-7 bold text-right">
+	                  Total
+	                </div>
+                <div class="col-xs-8 col-sm-3 bold num text-right" id="total">{assign var='newTotal' value=$selectedShippingFee + $totals.total}<div class="bold tots" id="total">${$newTotal|number_format:2:".":","}</div> <div class="small">AUD (inc. GST)</div></div>         
+                </div>
+             </div>
+            </div>
+            <div class="row topborder checkout3" style="display:none;">
+            <div class="col-sm-6" id="bill3">
+              <span class="bold tots">Billing address</span><br />
+              <div id="billing-summary">
+              {if $address.B}
+                {$address.B.address_name}<br >
+                {$address.B.address_line1}<br >
+                {$address.B.address_suburb} {$address.B.address_state} {$address.B.address_postcode}<br >
+                {$address.B.email}<br >
+                {$address.B.address_telephone}<br >
+              {/if}
+              </div>
+              <a href="javascript:void(0);" onclick="goCheckout2('#billing');"><span class="small">Edit</span></a>
+            </div>
+            <div class="col-sm-6" id="ship3">
+              <span class="bold tots">Shipping address</span><br />
+              <div id="shipping-summary">
+              {if $address.same_address}
+                <span class="small">Shipping address same as billing address</span><br />
+                {if $comments}Shipping instructions: {$comments}{else}No shipping instructions <br />{/if}
+              {else}
+                {if $address.S}
+                  {$address.S.address_name}<br >
+                  {$address.S.address_line1}<br >
+                  {$address.S.address_suburb} {$address.B.address_state} {$address.B.address_postcode}<br >
+                  {$address.S.address_telephone}<br >
+                  {if $comments}Shipping instructions: {$comments}{else}No shipping instructions <br />{/if}
+                {/if}
+              {/if}
+              </div>
+              <a href="javascript:void(0);" onclick="goCheckout2('#shipping');"><span class="small">Edit</span></a>
+            </div>
+            </div>
+          </div>
+          
+          <div class="checkout2">
+            <form class="form-horizontal" id="checkout2-form" role="form" accept-charset="UTF-8" action="" method="post">
+              <input type="hidden" value="checkout2" name="action" />
+              <input type="hidden" value="{$selectedShippingFee}" name="shipFee" id="shippingMethod"/>  
+	            <input type="hidden" value="{$selectedShipping}" name="shipMethod" id="shipMethod"/> 
+	            <input type="hidden" value="{$postageID}" name="postageID" id="postageID"/> 
+              <br />
+              <div class="row checkform">
+                <div class="col-sm-6" id="billing">
+                <h4 class="bold tots">Billing details</h4>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="name1">Name*:</label>
+                    <div class="col-sm-8">
+                      <input id="name1" value="{if $address}{$address.B.address_name}{else}{$user.gname} {$user.surname}{/if}" name="address[B][address_name]" type="text" class="billing-req form-control" required="required" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="street">Street address*:</label>
+                    <div class="col-sm-8">
+                      <input id="street" value="{if $address}{$address.B.address_line1}{/if}" name="address[B][address_line1]" type="text" class="billing-req form-control" required="required"  />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="suburb">Suburb*:</label>
+                    <div class="col-sm-8">
+                      <input id="suburb" value="{if $address}{$address.B.address_suburb}{else}{$selectedShippingSuburb}{/if}" name="address[B][address_suburb]" type="text" class="billing-req form-control" required="required"  />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="suburb">State*:</label>
+                    <div class="col-sm-8">
+                      <select id="state" name="address[B][address_state]" class="required form-control">
+                        <option value="">Please select</option>
+                        {foreach $options_state as $value }
+                        <option value="{$value.postcode_state}" {if $address.B.address_state eq $value.postcode_state OR $selectedShippingState eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option> 
+                      {/foreach}              
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="suburb">Postcode*:</label>
+                    <div class="col-sm-8">
+                      <input id="postcode-field" value="{if $address}{$address.B.address_postcode}{else}{$selectedShippingPostcode}{/if}" name="address[B][address_postcode]" pattern="[0-9]" type="text" class="postcode billing-req form-control" required="required" onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="suburb">Email*:</label>
+                    <div class="col-sm-8">
+                      <input id="email" value="{if $address}{$address.B.email}{else}{$user.email}{/if}" name="address[B][email]" type="email" class="billing-req form-control" required="required"  />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="suburb">Confirm email*:</label>
+                    <div class="col-sm-8">
+                      <input id="emailconf" value="{if $address}{$address.B.emailconf}{else}{$user.email}{/if}" name="address[B][emailconf]" type="email" class="billing-req form-control" required="required"  />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="suburb">Phone*:</label>
+                    <div class="col-sm-8">
+                      <input id="phone" value="{if $address}{$address.B.address_telephone}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required"  />
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="cbout">
+                      <input type="checkbox" id="chksame" name="address[same_address]" {if $address}{if $address.same_address}checked="checked"{/if}{else}checked="checked"{/if} onclick="sameAddress();updateShipping();">
+                      <label class="chklab">Ship items to the above billing address.</label>
+                    </div>
+                    <div class="cbout"><small>Please note we cannot ship to PO boxes.</small></div>
+                    <div class="shipbill">
+                      <span class="small italic">Item(s) will be shipped to your billing address.</span>
+                    </div>
+                    <div class="cbout">
+                      <input id="promo1" name="address[wantpromo]" type="checkbox" checked="checked" />
+                      <label class="chklab">Please send me future promotional material.</label>             
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6" id="shipping">
+                  <div class="row">
+                    <div id="shipping-subform">
+                     <h4 class="bold tots">Shipping details</h4>
+                      <div class="form-group">
+                        <label class="col-sm-4 control-label" for="namesh1">Name*:</label>
+                        <div class="col-sm-8">
+                          <input id="namesh1" value="{if $address}{$address.S.address_name}{/if}" name="address[S][address_name]" type="text" class="shipping-req form-control" required="required"/>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-4 control-label" for="streetsh">Street address*:</label>
+                        <div class="col-sm-8">
+                          <input id="streetsh" value="{if $address}{$address.S.address_line1}{/if}" name="address[S][address_line1]" type="text" class="shipping-req form-control" required="required" />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                         <label class="col-sm-4 control-label" for="suburbsh">Suburb*:</label>
+                        <div class="col-sm-8">
+                          <input id="suburbsh" value="{if $address}{$address.S.address_suburb}{/if}" name="address[S][address_suburb]" type="text" class="shipping-req form-control" required="required" />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                         <label class="col-sm-4 control-label" for="statesh">State*:</label>
+                        <div class="col-sm-8">
+                          <select id="statesh" name="address[S][address_state]" class="shipping-select-req required form-control">
+                            <option value="">Please select</option>
+                            {foreach $options_state as $value }
+                            <option value="{$value.postcode_state}" {if $address.S.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option> 
+                          {/foreach}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                         <label class="col-sm-4 control-label" for="postcodesh">Postcode*:</label>
+                        <div class="col-sm-8">
+                          <input id="postcodesh" value="{if $address}{$address.S.address_postcode}{/if}" name="address[S][address_postcode]" pattern="[0-9]" type="text" class="postcode shipping-req form-control" required="required"  onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-4 control-label" for="phonesh">Phone*:</label>
+                        <div class="col-sm-8">
+                          <input id="phonesh" value="{if $address}{$address.S.address_telephone}{/if}" name="address[S][address_telephone]" type="text" class="phone shipping-req form-control" required="required" />
+                        </div>  
+                      </div>    
+                    </div>          
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-sm-12">
+                      Shipping instructions <small>(max. 128 characters)</small>:
+                    </div>
+                    <div class="col-sm-12">
+                      <textarea id="text" name="comments" id="text" maxlength="128" class="form-control">{if $comments}{$comments}{/if}</textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </form>
+          <div class="row">
+            <div class="error-textbox" id="error-text1"></div>
+          </div>
+            <div class="row">
+            <div class="col-sm-2 col-sm-offset-10 text-right"><a class="red btn" onclick="$('#checkout2-form').submit();">Next</a></div>         
+            </div>
+          </div>
+          <div class="checkout3" style="display:none;">
+          
+            <form class="form-horizontal" id="checkout3-form" role="form" accept-charset="UTF-8" action="/process/cart" method="post">
+              <div class="row">
+              <input type="hidden" value="placeOrder" name="action" />
+              {if $newTotal gt 0.01 } 
+                <div class="col-sm-12 dark">
+                  All transactions are secure and encrypted, and we never store your credit card information. To learn more, please view our <a href="/privacy-policy" target="_blank">privacy policy</a>.
+                </div>
+              {if $error}
+                <div class="row" id="payment-error">{$error}</div>
+              {/if}
+              <div class="col-sm-12">
+                <img src="images/mastercard.png" alt="mastercard-icon" />
+                <img src="images/visa.png" alt="visa-icon" />
+              </div>
+               <div class="col-sm-7 margintop15">
+                   <div class="form-group">
+                     <label class="col-sm-4 control-label" for="ccno">Credit card number*:</label>
+                     <div class="col-sm-8">
+                       <input type="text" id="ccno" class="cc-req form-control" name="cc[number]" autocomplete="off" />
+                     </div>
+                   </div>
+                   <div class="form-group">
+                     <label class="col-sm-4 control-label" for="ccname">Name on card*:</label>
+                     <div class="col-sm-8">
+                       <input type="text" id="ccname" class="cc-req form-control" name="cc[name]" autocomplete="off" />
+                     </div>
+                   </div>
+                   <div class="form-group">
+                    <label class="col-sm-4 control-label" for="ccmonth">Expiration date*:</label>
+		                <div class="col-sm-4">
+                      <select id="ccmonth" name="cc[month]" class="cc-select-req form-control">
+                        <option value="">Month</option>
+                        <option value="01">1 - Jan</option>
+                        <option value="02">2 - Feb</option>
+                        <option value="03">3 - Mar</option>
+                        <option value="04">4 - Apr</option>
+                        <option value="05">5 - May</option>
+                        <option value="06">6 - Jun</option>
+                        <option value="07">7 - Jul</option>
+                        <option value="08">8 - Aug</option>
+                        <option value="09">9 - Sep</option>
+                        <option value="10">10 - Oct</option>
+                        <option value="11">11 - Nov</option>
+                        <option value="12">12 - Dec</option>
+                      </select>
+                    </div>
+	                  <div class="col-sm-4">
+	                    <select id="ccyear" name="cc[year]" class="cc-select-req form-control" >
+                       {assign var=thisyear value=$smarty.now|date_format:"%Y"} 
+                       {assign var=numyears value=$thisyear+20}
+                       <option value="">Year</option>
+                       {for $year=$thisyear to $numyears}
+                         <option value="{$year}">{$year}</option> 
+                       {/for}
+	                    </select>
+	                  </div>
+                   </div>
+                   <div class="form-group">
+                     <label class="col-sm-4 control-label" for="cccsv">CSV*:<br/><span class="small"><a href="/help-with-checkout#csv" target="_blank">What is this?</a></span></label>
+                     <div class="col-sm-8">
+                       <input type="text" id="cccsv" name="cc[csv]" class="cc-req form-control" autocomplete="off" />
+                     </div>
+                   </div>
+               </div>
+              {else}
+                <div class="col-sm-12">
+                  No payment details are required.
+                </div>
+                {if $error}
+                  <div class="row" id="payment-error">{$error}</div>
+                {/if}
+              {/if}
+              </div>
+              <div class="row form-group">
+                <div id="chk-tickbox" class="col-sm-1 col-sm-offset-2 text-right">
+                  <input type="checkbox" id="accept" name="accept" required/>
+                </div>
+                <label class="col-sm-8" class="chklab form-control txt-left" for="checkbox">
+                  I have read the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and I understand and agree to the <a href="/shipping-and-delivery" target="_blank">Shipping & Delivery Policy</a>, <a href="/returns-policy" target="_blank">Return Policy</a>, <a href="/warranty-and-support" target="_blank">Warranty & Support Policy</a> and the web site <a href="/terms-and-conditions" target="_blank">Terms and Conditions</a>.
+                </label>
+              </div>
+              <div class="error-textbox" id="error-text2"></div>
+              <div class="row">
+				        <div class="col-sm-4 col-sm-offset-8 text-right"><a class="red btn" onclick="$('#checkout3-form').submit();">Complete Checkout</a></div>
+				        <div class="col-sm-4 col-sm-offset-8 num text-right">
+                  <span class="small">Your payment will be processed.</span>
+                </div> 
+				      </div>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+{/block}
 
-						<div class="col-sm-offset-1 col-sm-8" id="step1">
-							<form class="form-horizontal" id="step1-form" role="form" accept-charset="UTF-8" action="" method="post">
-								<input type="hidden" value="getShippingFees" name="action" /> <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+{* Place additional javascript here so that it runs after General JS includes *}
+{block name=tail}
+<script type="text/javascript">
+  $(document).ready(function(){
+    
+    $('#checkout2-form').validate();
+    $('#checkout3-form').validate(); 
+    
+    sameAddress();
+      
+    $('#emailconf').rules("add", {
+          required: true,
+          equalTo: '#email',
+          messages: {
+            equalTo: "The emails you have entered do not match. Please check them."
+          }
+    }); 
 
-								<!-- BILLING SECTION - Hidden by default -->
-								<div class="row" id="billing-subform">
-									<div class="row">
-										<h3>Billing Details</h3>
-									</div>
-									{if $addresses}
-									<div class="form-group">
-										<label for="previous-address-1" class="col-sm-3 control-label"></label>
-										<div class="col-sm-9">
-											<select id="previous-address-1" name="previous-address-1" class="form-control">
-												<option value="0">Previously used addresses</option> {foreach $addresses as $add }
-												<option value="{$add.address_id}" {if $post.previous-address-1 eq $add.address_id}selected="selected" {/if}
-												name="{$add.address_name}" line1="{$add.address_line1}" line2="{$add.address_line2}" suburb="{$add.address_suburb}" state="{$add.address_state}"
-													country="{$add.address_country}" postcode="{$add.address_postcode}" telephone="{$add.address_telephone}" mobile="{$add.address_mobile}">{$add.address_name}, {$add.address_line1} {$add.address_line2}, {$add.address_suburb}, {$add.address_state}, {$add.address_country},
-													{$add.address_postcode}. {$add.address_telephone}{if $add.address_mobile} / {$add.address_mobile}{/if}</option> {/foreach}
-											</select>
-										</div>
-									</div>
-									{/if}
-									<div class="row" id="billing-subform-content">
-										<div class="form-group">
-											<label for="address_name_1" class="col-sm-3 control-label">Name *</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.B.address_name}{else}{if $user.gname}{$user.gname}{$user.surname}{/if}{/if}" class="form-control biling-req" id="address_name_1" name="address[B][address_name]" required>
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="email" class="col-sm-3 control-label">Email *</label>
-											<div class="col-sm-9">
-												<input type="email" value="{if $address}{$address.B.email}{else}{if $user.email}{$user.email}{/if}{/if}" class="form-control" id="email" name="address[B][email]" required>
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_line1_1" class="col-sm-3 control-label">Address *</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.B.address_line1}{/if}" class="form-control biling-req" id="address_line1_1" name="address[B][address_line1]" required>
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_line2_1" class="col-sm-3 control-label"></label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.B.address_line2}{/if}" class="form-control" id="address_line2_1" name="address[B][address_line2]">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_suburb_1" class="col-sm-3 control-label">Suburb *</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.B.address_suburb}{/if}" class="form-control biling-req" id="address_suburb_1" name="address[B][address_suburb]" required>
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_state_1" class="col-sm-3 control-label">State *</label>
-											<div class="col-sm-9">
-												<select id="address_state_1" name="address[B][address_state]" class="form-control required">
-													<option value="">Select a state</option> {foreach $options_state as $value }
-													<option value="{$value.postcode_state}" {if $address.B.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option> {/foreach}
-												</select>
-											</div>
-										</div>
-										<!-- <div class="form-group">
-							    <label for="address_country_1" class="col-sm-3 control-label">Country</label>
-							    <div class="col-sm-9">
-							      	<select id="address_country_1" name="address[B][address_country]" class="form-control" >
-										<option value="Australia">Australia</option>
-									</select>
-								</div>
-							</div> -->
-										<input type="hidden" value="Australia" name="address[B][address_country]" />
+    {if $newTotal gt 0.01 } 
 
-										<div class="form-group">
-											<label for="address_postcode_1" class="col-sm-3 control-label">Postcode *</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.B.address_postcode}{/if}" class="form-control" id="address_postcode_1" name="address[B][address_postcode]" required>
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_telephone_1" class="col-sm-3 control-label">Phone</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.B.address_telephone}{/if}" class="form-control" id="address_telephone_1" name="address[B][address_telephone]">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_mobile_1" class="col-sm-3 control-label">Mobile</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.B.address_mobile}{/if}" class="form-control biling-req" id="address_mobile_1" name="address[B][address_mobile]">
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-sm-offset-2 col-sm-10">
-											<div class="checkbox">
-												<label> <input type="checkbox" name="address[same_address]" {if $address}{if $address.same_address}checked="checked" {else}{/if}{else}checked="checked" {/if} onclick="sameAddress();"> Shipping same as Billing details
-												</label>
-											</div>
-										</div>
-									</div>
-								</div>
+    $('#ccno').rules("add", {
+      creditcard : true,
+      messages : {
+        equalTo : "Number not valid."
+      }
+    });
+    
+    $('#cccsv').rules("add", {
+      digits: true,
+      minlength: 3
+    });
+    
+    {/if}
+    
+    $('#postcode-field').rules("add", {
+      digits: true,
+      minlength: 3
+    });
+    $('#postcodesh').rules("add", {
+      digits: true,
+      minlength: 3
+    });
 
-								<div class="row" id="shipping-subform" {if $address}{if $address.same_address}style="display: none;" {else}{/if}{else}style="display:none;"{/if} >
-									<!-- SHIPPING SECTION - Hidden by default -->
-									<div class="row">
-										<h3>Shipping Details</h3>
-									</div>
-									{if $addresses}
-									<div class="form-group">
-										<label for="previous-address-2" class="col-sm-3 control-label"></label>
-										<div class="col-sm-9">
-											<select id="previous-address-2" name="previous-address-2" class="form-control">
-												<option value="0">Previously used addresses</option> {foreach $addresses as $add }
-												<option value="{$add.address_id}" {if $post.previous-address-2 eq $add.address_id}selected="selected" {/if}
-												name="{$add.address_name}" line1="{$add.address_line1}" line2="{$add.address_line2}" suburb="{$add.address_suburb}" state="{$add.address_state}"
-													country="{$add.address_country}" postcode="{$add.address_postcode}" telephone="{$add.address_telephone}" mobile="{$add.address_mobile}">{$add.address_name}, {$add.address_line1} {$add.address_line2}, {$add.address_suburb}, {$add.address_state}, {$add.address_country},
-													{$add.address_postcode}. {$add.address_telephone}{if $add.address_mobile} / {$add.address_mobile}{/if}</option> {/foreach}
-											</select>
-										</div>
-									</div>
-									{/if}
-
-									<div class="row" id="shipping-subform-content">
-										<div class="form-group">
-											<label for="address_name_2" class="col-sm-3 control-label">Name *</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.S.address_name}{/if}" class="form-control shipping-req" id="address_name_2" name="address[S][address_name]">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_line1_2" class="col-sm-3 control-label">Address *</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.S.address_line1}{/if}" class="form-control shipping-req" id="address_line1_2" name="address[S][address_line1]">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_line1_2" class="col-sm-3 control-label"></label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.S.address_line2}{/if}" class="form-control" id="address_line2_2" name="address[S][address_line2]">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_suburb_2" class="col-sm-3 control-label">Suburb *</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.S.address_suburb}{/if}" class="form-control shipping-req" id="address_suburb_2" name="address[S][address_suburb]">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_state_2" class="col-sm-3 control-label">State *</label>
-											<div class="col-sm-9">
-												<select id="address_state_2" name="address[S][address_state]" class="form-control shipping-select-req">
-													<option value="">Select a state</option> {foreach $options_state as $value }
-													<option value="{$value.postcode_state}" {if $address.S.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option> {/foreach}
-												</select>
-											</div>
-										</div>
-										<!-- <div class="form-group">
-							    <label for="address_country_2" class="col-sm-3 control-label">Country</label>
-							    <div class="col-sm-9">
-									<select id="address_country_2" name="address[S][address_country]" class="form-control" >
-										<option value="Australia">Australia</option>
-									</select>
-								</div>
-							</div> -->
-										<input type="hidden" value="Australia" name="address[S][address_country]" />
-
-										<div class="form-group">
-											<label for="address_postcode_2" class="col-sm-3 control-label">Postcode *</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.S.address_postcode}{/if}" class="form-control shipping-req" id="address_postcode_2" name="address[S][address_postcode]" pattern="[0-9]">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_telephone_2" class="col-sm-3 control-label">Phone</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.S.address_telephone}{/if}" class="form-control" id="address_telephone_2" name="address[S][address_telephone]">
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="address_mobile_2" class="col-sm-3 control-label">Mobile</label>
-											<div class="col-sm-9">
-												<input type="text" value="{if $address}{$address.S.address_mobile}{/if}" class="form-control" id="address_mobile_2" name="address[S][address_mobile]">
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="pull-right">
-										<button type="submit" class="btn btn-primary">Next</button>
-									</div>
-								</div>
-							</form>
-						</div>
-
-						<div id="review-step1" style="display:none;">
-							<div class="row">
-								<div class="col-sm-offset-2 col-sm-5" id="billing-address-step2"></div>
-								<div class="col-sm-5" id="shipping-address-step2"></div>
-							</div>
-							<div class="form-group">
-								<div class="pull-right">
-									<button onclick="$('#step1').show();$('#collapseTwo').collapse('hide');$('#review-step1').hide();scrolltodiv('#step1');" class="btn btn-warning">Edit</button>
-								</div>
-							</div>
-						</div>
+    {if $error}
+      goCheckout3();
+    {/if}
+  });
 
 
-					</div>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<div class="panel-title">Shipping and Payment Methods</div>
-				</div>
-				<div id="collapseTwo" class="panel-collapse collapse">
-					<div class="panel-body">
+  function sameAddress() {
+    if($("#chksame").is(':checked')){
+      $('.shipping-req').removeAttr('required');
+      $('.shipping-select-req').removeClass('required');
+      $('#shipping-subform').hide();
+      $(".shipbill").show();
+    }else{
+      $('.shipping-req').attr('required', 'required');
+      $('.shipping-select-req').addClass('required');
+      $(".shipbill").hide();
+      $('#shipping-subform').show();
+    }
+    
+  }
 
+  function setCCRequired(CONDITION) {
+    if(CONDITION){
+      $('.cc-req').attr('required', 'required');
+      $('.cc-select-req').addClass('required');
+    }else{
+      $('.cc-req').removeAttr('required');
+      $('.cc-select-req').removeClass('required');
+    }
+    
+  }
 
-						<div class="col-sm-offset-1 col-sm-11" id="step2">
+  function goCheckout2(OBJ){
+    location.reload(); 
+  }
 
+  function goCheckout3(){
+    $('.checkout2').hide();
+    $('.checkout3').show();
+    scrolltodiv('#checkout3-form');
+    setCCRequired(true);
+  }
+  
+  function maxLength(el) {    
+      if (!('maxLength' in el)) {
+          var max = el.attributes.maxLength.value;
+          el.onkeypress = function () {
+              if (this.value.length >= max) return false;
+          };
+      }
+  }
 
-							<form class="form-horizontal" id="step2-form" role="form" accept-charset="UTF-8" action="/process/cart" method="post">
-								<input type="hidden" value="placeOrder" name="action" /> <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-								<div class="row" id="shipping-method-subform">
-									<div class="row">
-										<h3>Shipping Method</h3>
-									</div>
-									<div class="form-group col-sm-8">
-										<div id="shipping_methods">
-										</div>
-									</div>
-									<div class="col-sm-4">
-										<div class="text-right"><b>Total Amount</b></div>
-										<div class="text-right total-amount">${$totals.total|number_format:2:".":","}</div>
-									</div>
-								</div>
-
-								<div class="row" id="payment-subform">
-									<!-- PAYMENT SECTION - Hidden by default -->
-									<div class="row">
-										<h3>Payment</h3>
-									</div>
-									<div class="radio">
-										<label> <input type="radio" class="pay_opt" name="payment[payment_option]" id="payment_option1" value="transfer" checked> Bank Transfer
-										</label>
-									</div>
-									<div class="radio">
-										<label> <input type="radio" class="pay_opt" name="payment[payment_option]" id="payment_option2" value="credit"> Credit Card
-										</label>
-									</div>
-
-									<div class="row" id="credit-subform" style="margin: 20px;">
-
-										<div class="row">
-											<div class="col-sm-offset-3" style="margin-bottom: 10px;">
-												<img src="/images/MasterCard.png" alt="MasterCard icon"> <img src="/images/VisaCard.png" alt="VisaCard icon">
-											</div>
-
-											<div class="form-group">
-												<label for="cc-number" class="col-sm-3 control-label">Credit card number</label>
-												<div class="col-sm-5">
-													<input type="number" value="" class="form-control " autocomplete="off" id="cc-number" name="cc-number" pattern="[0-9]">
-												</div>
-											</div>
-											<div class="form-group">
-												<label for="cc-name" class="col-sm-3 control-label">Name on credit card</label>
-												<div class="col-sm-5">
-													<input type="text" value="" class="form-control " autocomplete="off" id="cc-name" name="cc-name">
-												</div>
-											</div>
-											<div class="form-group">
-												<label for="cc-name" class="col-sm-3 control-label">Expiry date</label>
-												<div class="col-sm-9">
-													<select name="cc-month">
-														<option selected="selected" value="">Month</option>
-														<option value="01">01 - January</option>
-														<option value="02">02 - February</option>
-														<option value="03">03 - March</option>
-														<option value="04">04 - April</option>
-														<option value="05">05 - May</option>
-														<option value="06">06 - June</option>
-														<option value="07">07 - July</option>
-														<option value="08">08 - August</option>
-														<option value="09">09 - September</option>
-														<option value="10">10 - October</option>
-														<option value="11">11 - November</option>
-														<option value="12">12 - December</option>
-													</select> <select name="cc-year"> {assign var=thisyear value=$smarty.now|date_format:"%Y"} {assign var=tenyears value=$thisyear+10}
-														<option selected="selected" value="">Year</option> {for $year=$thisyear to $tenyears}
-														<option value="{$year}">{$year}</option> {/for}
-													</select>
-												</div>
-											</div>
-											<div class="form-group">
-												<label for="cc-cvc" class="col-sm-3 control-label">CVC</label>
-												<div class="col-sm-2">
-													<input type="text" value="" class="form-control " autocomplete="off" id="cc-cvc" name="cc-cvc" pattern="[0-9]">
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="pull-right">
-										<button type="submit" class="btn btn-primary">Place Order</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-					{else}
-					<div class="row" style="margin: 60px; background-color: rgb(238, 238, 238);">
-						<div style="display: inline;">Your shopping cart is empty.</div>
-					</div>
-					{/if}
-				</div>
-
-				<script type="text/javascript">
-					$(document).ready(
-							function() {
-
-								$('#step1-form').validate();
-								$('#step2-form').validate();
-
-								$('#cc-number').rules("add", {
-									creditcard : true,
-									messages : {
-										equalTo : "Number not valid."
-									}
-								});
-
-								$('#cccsv').rules("add", {
-									digits: true,
-									minlength: 3
-								});
-
-								$('#postcode').rules("add", {
-									digits: true,
-									minlength: 3
-								});
-								$('#postcodesh').rules("add", {
-									digits: true,
-									minlength: 3
-								});
-
-								$('#credit-subform').hide();
-
-								$('.pay_opt').change(function() {
-									if (this.value == 'credit') {
-										$('#credit-subform').show();
-									} else if (this.value == 'transfer') {
-										$('#credit-subform').hide();
-									}
-								});
-
-								$('#previous-address-1').change(
-										function() {
-											if ($(this).val() > 0) {
-												$('#address_name_1').val(
-														$('option:selected',
-																this).attr(
-																'name'));
-												$('#address_line1_1').val(
-														$('option:selected',
-																this).attr(
-																'line1'));
-												$('#address_line2_1').val(
-														$('option:selected',
-																this).attr(
-																'line2'));
-												$('#address_suburb_1').val(
-														$('option:selected',
-																this).attr(
-																'suburb'));
-												$('#address_state_1').val(
-														$('option:selected',
-																this).attr(
-																'state'));
-												$('#address_country_1').val(
-														$('option:selected',
-																this).attr(
-																'country'));
-												$('#address_postcode_1').val(
-														$('option:selected',
-																this).attr(
-																'postcode'));
-												$('#address_telephone_1').val(
-														$('option:selected',
-																this).attr(
-																'telephone'));
-												$('#address_mobile_1').val(
-														$('option:selected',
-																this).attr(
-																'mobile'));
-											}
-										});
-
-								$('#previous-address-2').change(
-										function() {
-											if ($(this).val() > 0) {
-												$('#address_name_2').val(
-														$('option:selected',
-																this).attr(
-																'name'));
-												$('#address_line1_2').val(
-														$('option:selected',
-																this).attr(
-																'line1'));
-												$('#address_line2_2').val(
-														$('option:selected',
-																this).attr(
-																'line2'));
-												$('#address_suburb_2').val(
-														$('option:selected',
-																this).attr(
-																'suburb'));
-												$('#address_state_2').val(
-														$('option:selected',
-																this).attr(
-																'state'));
-												$('#address_country_2').val(
-														$('option:selected',
-																this).attr(
-																'country'));
-												$('#address_postcode_2').val(
-														$('option:selected',
-																this).attr(
-																'postcode'));
-												$('#address_telephone_2').val(
-														$('option:selected',
-																this).attr(
-																'telephone'));
-												$('#address_mobile_2').val(
-														$('option:selected',
-																this).attr(
-																'mobile'));
-											}
-										});
-
-							})
-
-					function sameAddress() {
-						$('#shipping-subform').toggle();
-						if ($('#shipping-subform:visible').length > 0) {
-							$('.shipping-req').attr('required', 'required');
-							$('.shipping-select-req').addClass('required');
-						} else {
-							$('.shipping-req').removeAttr('required');
-							$('.shipping-select-req').removeClass('required');
-						}
-					}
-				</script>
-
-				{/block}
+  maxLength(document.getElementById("text"));
+</script>
+{/block}

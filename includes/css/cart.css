@@ -174,6 +174,9 @@ hr.or-separator:after {
 .cart-total-price-2 strong {
     font-size: 24px;
 }
+.cont-shopping {
+    margin-top: 10px;
+}
 .modal-header {
 	background-color: #eeeeee!important;
 }
@@ -181,7 +184,44 @@ hr.or-separator:after {
 .form-control {
 	border: 1px solid #bbb !important;
 }
-
+.tallbox {
+    border-bottom: 1px solid #a9afb8;
+    border-top: 1px solid #a9afb8;
+    line-height: 20px;
+    padding: 20px;
+}
+.btn.grey, #maincont .btn.grey {
+    background: none repeat scroll 0 0 #6e6e6e;
+    border: medium none;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 14px;
+    margin: 5px 0;
+    min-width: 180px;
+    padding: 10px;
+    text-transform: uppercase;
+    width: 70%;
+}
+#maincont .btn {
+    background: none repeat scroll 0 0 #0971ce;
+    border: medium none;
+    border-radius: 2px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 10px 0;
+    text-transform: uppercase;
+    width: 100%;
+}
+.error-textbox {
+    background-color: #f4e7e8;
+    border: 2px solid #ff4040;
+    color: #ff2020;
+    font-size: 15px;
+    margin: 20px;
+    padding: 6px;
+    text-align: center;
+}
 .clear{clear:both;}
 
 

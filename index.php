@@ -25,9 +25,10 @@ $SMARTY->assign('notice',$_SESSION['notice']);
 unset($_SESSION['notice']); // ASSIGN NOTICE MESSAGES FOR TEMPLATES
 $SMARTY->assign('post',$_SESSION['post']);
 unset($_SESSION['post']); // ASSIGN POST FOR FORM VARIABLES
-$SMARTY->assign('address',$_SESSION['address']); // ASSIGN POST FOR FORM VARIABLES
-$SMARTY->assign('login_referer',$_SESSION['login_referer']);
-unset($_SESSION['login_referer']); // ASSIGN REDIRECT URL VALUE AFTER LOGIN AND SHOW LOGIN MODAL
+$SMARTY->assign('address',$_SESSION['address']); // ASSIGN ADDRESS FOR FORM VARIABLES
+$SMARTY->assign('comments',$_SESSION['comments']); // ASSIGN COMMENTS FOR FORM VARIABLES
+$SMARTY->assign('redirect',!empty($_SESSION['redirect'])?$_SESSION['redirect']:(!empty($_SESSION['post']['redirect'])?$_SESSION['post']['redirect']:$_SERVER['HTTP_REFERER']));
+unset($_SESSION['redirect']); // ASSIGN REDIRECT URL VALUE AFTER LOGIN AND SHOW LOGIN MODAL
 $SMARTY->assign('user',$_SESSION['user']['public']); // ASSIGN USER FOR TEMPLATES
 $SMARTY->assign ( 'HTTP_REFERER', rtrim($_SERVER['HTTP_REFERER'],'/') );
 $SMARTY->assign ( 'REQUEST_URI', rtrim($_SERVER['REQUEST_URI'],'/') );
@@ -67,16 +68,16 @@ while(true){
    * **** Goes to my-account ******
    */
   if($_request['arg1'] == 'my-account'){
-    if($CONFIG->account->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])){
-      $_SESSION['login_referer'] = "http://" . $GLOBALS['HTTP_HOST'] . "/my-account";
-      header("Location: /");
-      exit();
-    }
-    $template = loadPage($CONFIG->account);
-    $cart_obj = new cart();
-		$orders = $cart_obj->GetOrderHistoryByUser($_SESSION['user']['public']['id']);
-		$SMARTY->assign ( 'orders', $orders );
-    break 1;
+  	if($CONFIG->account->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])){
+  		$_SESSION['redirect'] = "/my-account";
+  		header("Location: /");
+  		exit();
+  	}
+  	$template = loadPage($CONFIG->account);
+  	$cart_obj = new cart();
+  	$orders = $cart_obj->GetOrderHistoryByUser($_SESSION['user']['public']['id']);
+  	$SMARTY->assign ( 'orders', $orders );
+  	break 1;
   }
   
   /**
@@ -91,14 +92,17 @@ while(true){
   /**
    * ***** Goes to CHECKOUT ******
    */
-  if($_request['arg1'] == 'store/checkout'){
-    if($CONFIG->checkout->attributes()->guest != 'true' && empty($_SESSION['user']['public']['id'])){
-      $_SESSION['login_referer'] = "http://" . $GLOBALS['HTTP_HOST'] . "/store/checkout";
-      header("Location: /store/shopping-cart");
+  if($_request['arg1'] == 'checkout'){
+    if(empty($_SESSION['user']['public']['id'])){
+      $_SESSION['redirect'] = "/checkout";
+      header("Location: /login-register");
       exit();
     }
     $template = loadPage($CONFIG->checkout);
     $cart_obj = new cart();
+//     $ship_obj = new ShippingClass();
+//     $methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
+//     $SMARTY->assign ( 'shippingMethods', $methods );
     $validation = $cart_obj->ValidateCart();
     $SMARTY->assign('validation',$validation);
     $totals = $cart_obj->CalculateTotal();
@@ -117,7 +121,7 @@ while(true){
   /**
    * ***** Goes to SHOPPING CART ******
    */
-  if($_request['arg1'] == 'store/shopping-cart'){
+  if($_request['arg1'] == 'shopping-cart'){
     $template = loadPage($CONFIG->cart);
     $cart_obj = new cart();
     //$ship_obj = new ShippingClass();

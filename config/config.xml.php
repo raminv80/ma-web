@@ -50,6 +50,11 @@
 		<template>checkout-complete.tpl</template>
 		<pageID>21</pageID>
 	</static_page>
+	<static_page>
+		<url>login-register</url>
+		<template>login-register.tpl</template>
+		<pageID>78</pageID>
+	</static_page>
 
 	
  	<product_page name="store">
@@ -128,7 +133,7 @@
 		<pageID>22</pageID>
 	</account>
  	<cart> 
-		<url>store/shopping-cart</url> 
+		<url>shopping-cart</url> 
 		<pageID>13</pageID> 
 		<type>1</type> 
 		<file>ListClass</file>
@@ -140,7 +145,7 @@
 		<!-- The template used if the field is matched --> 
 	</cart>
 	<checkout guest="true"> 
-		<url>store/checkout</url> 
+		<url>checkout</url> 
 		<pageID>15</pageID> 
 		<type>1</type> 
 		<file>ListClass</file>

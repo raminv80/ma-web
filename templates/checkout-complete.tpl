@@ -1,39 +1,34 @@
 {block name=head}
 <style type="text/css">
-#headbanner {
-    background: url("{if $listing_image}{$listing_image}{else}/images/header3.jpg{/if}") no-repeat scroll center top / cover rgba(0, 0, 0, 0);
-    height: 345px;
-    margin-bottom: 15px;
-}
 </style>
-{/block}
-
-{block name=body}
 <script type="text/javascript">
 {$ga_ecommerce}
 </script>
+{/block}
 
-<div id="main">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				{include file='breadcrumbs.tpl'}
-			</div>
-		</div>
-		
-		
-		<div class="row">
-			<div id="maintext" class="col-sm-12">
-				<h2 class="title">{$listing_name}</h2>
-		  	Thank you. Your order <span class="bold">{$orderNumber}</span> is being processed.<br />
-				Please check your email for confirmation and receipt.
-				<br /><br />
-			</div>
-		</div>
+{block name=body}
+<div id="maincont">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12" id="breadcrumbs">
+        {include file='breadcrumbs.tpl'} 
+      </div>
+      <div class="col-sm-12">
+        <h3>{$listing_name}</h3>
+        <p>Order number <span class="bold">{$orderNumber}</span> is being processed. An email confirmation and reciept has been gereated and sent to your nominated email address.</p>
+      </div>
+      <div class="col-sm-12">
+      {$listing_content1}
+      </div>
 
-
-				
-	</div>
+    </div>
+  </div>
 </div>
+{include file='quicklinks.tpl'} 
+{/block}
+
+{* Place additional javascript here so that it runs after General JS includes *}
+{block name=tail}
 
 {/block}
+

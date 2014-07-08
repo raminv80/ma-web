@@ -87,19 +87,6 @@ ga('send', 'pageview');
 	{block name=body}{/block}
 	{include file='footer.tpl'}
 	
-	<div class="modal fade bs-modal-lg" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-	    	<div class="modal-content">
-	    		<div class="modal-header">
-	    			&nbsp;
-					<button class="close" aria-hidden="true" data-dismiss="modal" type="button">&times;</button>
-				</div>
-	      		<div class="modal-body">
-	      			{include file='login.tpl'}
-	      		</div>
-			</div>
-	  	</div>
-	</div>
 	<div id="help-alert" style="display:none;" >
 		<button class="close" onclick="$('#help-alert').slideUp();" type="button">×</button>
 		<div id="help-alert-bold">Experiencing problems?</div>	
@@ -195,5 +182,6 @@ ga('send', 'pageview');
 	    });
 	}
 	</script>
+	{block name=tail}{/block}
 </body>
 </html>
