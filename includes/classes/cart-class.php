@@ -1027,9 +1027,29 @@ function ApplyDiscountCode($code, $cartId = null) {
 				$useValid = false;
 			}
 			
+			//Check discount restriction per user or usergroup
+			$userRestricted = false;
+			$reApplyAfterLogin = false;
+			if( $res['discount_user_id'] > 0 || $res['discount_usergroup_id'] > 0 ){
+				$userRestricted = true;
+				$cartInfo = $this->GetDataCart();
+				if(empty($cartInfo['cart_user_id']) || $cartInfo['cart_user_id'] == 0){
+					$userRestrictionError = "You must be logged in to use this code '".$code. "'. <a href='/login-register' title='Click here to log in'>Click here to log in.</a>";
+					$reApplyAfterLogin = true;
+				}else{
+					$sql = "SELECT user_group FROM tbl_user WHERE user_id = :id AND user_deleted IS NULL";
+					$userInfo  = $DBobject->wrappedSql($sql, array( ":id" => $cartInfo['cart_user_id'] ));
+					if($res['discount_user_id'] == $cartInfo['cart_user_id'] || $res['discount_usergroup_id'] == $userInfo[0]['user_group']){
+						$userRestricted = false;
+					}
+					$userRestrictionError = "This code '".$code. "' does not match user's details.";
+						
+				}
+			}
+			
 			$today = strtotime ( date ( "Y-m-d" ) );
-			if ($useValid && $res['discount_published'] == '1' && ((strtotime($res['discount_start_date']) <= $today && $today <= strtotime($res['discount_end_date']) ) 
-					|| ( strtotime($res['discount_start_date']) <= $today && $res['discount_end_date'] == '0000-00-00' )) ) {
+			if ($useValid && !$userRestricted && $res['discount_published'] == '1' && ((strtotime($res['discount_start_date']) <= $today && $today <= strtotime($res['discount_end_date']) ) 
+					|| ( strtotime($res['discount_start_date']) <= $today && ($res['discount_end_date'] == '0000-00-00' || empty($res['discount_end_date']) ))) ) {
 				
 				// Valid code by date
 				if ( $res['discount_listing_id'] == 0 && $res['discount_product_id'] == 0 ){
@@ -1085,6 +1105,10 @@ function ApplyDiscountCode($code, $cartId = null) {
 				}
 			} else {
 				$result ['error'] = "Sorry, this code '".$code. "' is no longer valid. " . ($useValid?'':'Maximum claims reached.');
+				$result ['error'] = ($userRestricted)?$userRestrictionError:'';
+				if($reApplyAfterLogin){
+					$result ['reApplyAfterLogin'] = true;
+				}
 				$code = null;
 			}
 		} else {
@@ -1098,7 +1122,7 @@ function ApplyDiscountCode($code, $cartId = null) {
 		$params = array (
 				":id" => $cartId,
 				":discount_code" => $code,
-				":description"=>$res[0]['discount_description']
+				":description"=>(empty($code))?'':$res['discount_description']
 		);
 		$sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount_description = :description, cart_modified = now() WHERE cart_id = :id";
 		if ($res = $DBobject->wrappedSql ( $sql, $params )) {

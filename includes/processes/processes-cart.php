@@ -1,5 +1,5 @@
 <?php
-global $SMARTY;
+global $SMARTY,$DBobject;
 $referer = parse_url($_SERVER['HTTP_REFERER']);
 if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	switch ($_POST['action']) {
@@ -12,13 +12,12 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 			$SMARTY->assign('productsOnCart',$productsOnCart);
 			$SMARTY->assign('itemNumber',$itemsCount);
 			$SMARTY->assign('subtotal', $subtotal);
-			$estimate= $SMARTY->fetch('popover-shopping-cart.tpl'); 
-			
+			$popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 			echo json_encode(array(
 		    				'message' => $response,
 		    				'itemsCount' => $itemsCount,
 		    				'subtotal' => $subtotal,
-								'url' => 'http://'.$GLOBALS['HTTP_HOST'].'/shop/shopping-cart',
+								'url' => 'http://'.$GLOBALS['HTTP_HOST'].'/shopping-cart',
 								'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
 	    				));
 		    exit;
@@ -44,7 +43,10 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 
     	case 'updateCart':
     		$cart_obj = new cart();
-    		$subtotals = $cart_obj->UpdateQtyCart($_POST['qty']);
+    		$updated_products = $cart_obj->UpdateQtyCart($_POST['qty']);
+    		$subtotals = $updated_products['subtotals'];
+    		$priceunits = $updated_products['priceunits'];
+    		$pricemodifier = $updated_products['pricemodifier'];
     		$totals = $cart_obj->CalculateTotal();
             $itemsCount = $cart_obj->NumberOfProductsOnCart();
             $cart = $cart_obj->GetDataCart();
@@ -56,11 +58,19 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     		echo json_encode(array(
 		    		'itemsCount'=> $itemsCount,
     				'subtotals'=>$subtotals,
+    		    'pricemodifier'=>$pricemodifier,
+    		    'priceunits'=>$priceunits,
     				'totals'=>$totals,
 					'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
     		));
     		exit;
-    
+    case 'updatePostage':
+    	$ship_obj = new ShippingClass();
+      echo json_encode(array(
+          'postagefee'=> $ship_obj->getPostageByPostcode($_POST['postcode'])
+      ));
+      exit;
+    	  
     case 'addFavourite':
     		$logged = false;
     		$success = false;
@@ -98,12 +108,71 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 		    if ($res['error']) {
 		    	$_SESSION['error']= $res['error'];
 		    	$_SESSION['post']= $_POST;
+		    	$_SESSION['reApplydiscount']= ($res['reApplyAfterLogin'])?$_POST['discount_code']:'';
 		    	header('Location: '.$_SERVER['HTTP_REFERER'].'#error');
 		    } else {
 		    	header('Location: '.$_SERVER['HTTP_REFERER']);
 		    }
 		    exit;
-		
+		    
+		    case 'checkout1':
+		      $_SESSION['smarty']['selectedShippingPostcode'] = $_POST['postcodefield'];
+		      $_SESSION['smarty']['selectedShippingFee'] = $_POST['shipFee'];
+		      $_SESSION['smarty']['selectedShipping'] = $_POST['shipMethod'];
+		      $_SESSION['smarty']['postageID'] = $_POST['postageID'];
+		      
+		      $sql = "SELECT * FROM tbl_postcode WHERE postcode_postcode = :postcode";
+		      $params = array(":postcode"=>$_POST['postcodefield']);
+		      $res = $DBobject->wrappedSql($sql,$params);
+		      if(!empty($res[0])){
+		        $_SESSION['smarty']['selectedShippingState'] = $res[0]['postcode_state'];
+		        if(count($res) == 1){
+		          $_SESSION['smarty']['selectedShippingSuburb'] = $res[0]['postcode_suburb'];
+		        }
+		      }
+		      
+		      if($CONFIG->checkout->attributes()->guest != 'true' && empty($_SESSION['user']['public']['id'])){
+		        $_SESSION['redirect'] = "/checkout";
+		        header("Location: /login-register");
+		        exit();
+		      }
+		      header('Location: /checkout');
+		      exit;
+		    
+		    case 'checkout2':
+		      $_SESSION['postageID'] = $_POST['postageID'];
+		      $_SESSION['address'] = $_POST['address'];
+		      $bsum = $_POST['address']['B']['address_name'] .'<br />';
+		      $bsum .= $_POST['address']['B']['address_line1'] .'<br />';
+		      $bsum .= $_POST['address']['B']['address_suburb'] .' ';
+		      $bsum .= $_POST['address']['B']['address_state'] .' ';
+		      $bsum .= $_POST['address']['B']['address_postcode'] .'<br />';
+		      $bsum .= $_POST['address']['B']['email'] .'<br />';
+		      $bsum .= $_POST['address']['B']['address_telephone'] .'<br />';
+		      if ($_POST['address']['same_address']){
+		        $ssum = '<span class="small">Shipping address same as billing address<br />';
+		      }else{
+		        $ssum = $_POST['address']['S']['address_name'] .'<br />';
+		        $ssum .= $_POST['address']['S']['address_line1'] .'<br />';
+		        $ssum .= $_POST['address']['S']['address_suburb'] .' ';
+		        $ssum .= $_POST['address']['S']['address_state'] .' ';
+		        $ssum .= $_POST['address']['S']['address_postcode'] .'<br />';
+		        $ssum .= $_POST['address']['S']['address_telephone'] .'<br />';
+		      }
+		      $_SESSION['comments'] = $_POST['comments'];
+		      if($_POST['comments']){
+		        $ssum .= 'Shipping instructions: ' . $_POST['comments'] . '<br />';
+		      }else{
+		        $ssum .= 'No shipping instructions <br />';
+		      }
+		    
+		      echo json_encode(array(
+		          'response'=> true,
+		          'billing'=> $bsum,
+		          'shipping'=> $ssum,
+		          'comments'=> $_POST['comments']
+		      ));
+		      exit;
 
 	    case 'getShippingFees':
 	    	$_SESSION['address'] = $_POST['address'];
@@ -133,6 +202,21 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 						$values['password'] = session_id ();
 						$values['gname'] = $_SESSION['address']['B']['address_name'];
 						$values['surname'] = '';
+						$promo = 0;
+						if($_SESSION['address']['wantpromo']){
+							$promo = 1;
+							try{
+								require_once 'includes/createsend/csrest_subscribers.php';
+								$wrap = new CS_REST_Subscribers('', '060d24d9003a77b06b95e7c47691975b'); //!!!! UPDATE CREATESEND LIST CODE !!!!! 
+								$cs_result = $wrap->add(array(
+										'EmailAddress' => $values['email'],
+										'Name' => $values['gname'],
+										'CustomFields' => array(),
+										"Resubscribe" => "true"
+								));
+							}catch(Exception $e){}
+						}
+						$values['wantpromo'] = $promo;
 						$res = $user_obj->Create($values);
 						 
 						if( $res['error'] ) {
@@ -170,16 +254,17 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    			die();
 	    		}
 	    		
-    			$pay_obj = new PayWay();
-    			$response = false;
-	    		
 	    		$cart_obj = new cart();
 	    		$order_cartId = $cart_obj->cart_id;
 	    		$orderNumber = $order_cartId.'-'.date("is");
 	    	
 	    		$ship_obj = new ShippingClass();
-	    		$methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
-	    		$shippingFee = floatval($methods["{$_POST['payment']['payment_shipping_method']}"]); 
+	    		
+	    		$postage = $ship_obj->getPostageByAddressId($shipID);
+	    		$methods = $postage['postage_name'];
+	    		$shippingFee = floatval($postage['postage_price']);
+// 	    		$methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
+// 	    		$shippingFee = floatval($methods["{$_POST['payment']['payment_shipping_method']}"]); 
 
 	    		$totals = $cart_obj->CalculateTotal();
 	    		$chargedAmount = $totals['total'] + $shippingFee;
@@ -187,22 +272,29 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    		$params = array(
 	    				'payment_billing_address_id' => $billID,
 	    				'payment_shipping_address_id' => $shipID,
-	    				'payment_status' => 'P',
+	    				'payment_status' => 'A',
 	    				'payment_transaction_no' => $orderNumber,
 	    				'payment_cart_id' => $order_cartId,
 	    				'payment_user_id' => $_SESSION['user']['public']['id'],
 	    				'payment_subtotal' => $totals['subtotal'],
 	    				'payment_discount' => $totals['discount'],
 	    				'payment_shipping_fee' => $shippingFee,
-    					'payment_shipping_method' => '',
-    					'payment_shipping_comments' => '',
+    					'payment_shipping_method' => $methods,
+    					'payment_shipping_comments' =>  $_SESSION['comments'],
     					'payment_payee_name' => $_POST['cc']['name'],
 	    				'payment_charged_amount' => $chargedAmount,
 	    				'payment_gst' => $gst
 	    		);
+	    		$pay_obj = new PayWay();
+	    		$response = false;
+	    		
 	    		$paymentId = $pay_obj->StorePaymentRecord($params);
 	    		
-	    		/* $pay_obj->PreparePayment(array_merge($_POST['cc'], array('amount'=>$chargedAmount)));
+	    		/* $CCdata =  array('amount'=>$chargedAmount);
+    			if(!empty($_POST['cc'])){
+    				$CCdata = array_merge($CCdata, $_POST['cc']);
+    			}
+    			$pay_obj->PreparePayment($CCdata);
 	    		
 	    		try{
 	    			$reponse = $pay_obj->Submit();
@@ -224,7 +316,6 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    		
 	    		  try{
 	    		    // SEND CONFIRMATION EMAIL
-	    		  	$SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
 	    		    $SMARTY->assign("user",$_SESSION['user']['public']);
 	    		    $user_obj = new UserClass();
 	    		    $billing = $user_obj->GetAddress($billID);
@@ -237,17 +328,16 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 							$SMARTY->assign('payment',$payment);
 							$orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
 							$SMARTY->assign('orderItems',$orderItems);
-							$cartData = $cart_obj->GetDataCart();
-							$SMARTY->assign('cart',$cartData);
-							
+							$SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+
 							//COMMMENTED UNTIL GO LIVE TO PREVENT STORES GETTING TESTING EMAILS
 							/* $bcc = $res[0]['location_bcc_recipient'];
 							$to = empty($res[0]['location_order_recipient'])?"online@them.com.au":$res[0]['location_order_recipient'];
 							*/							
-	    		    $to = 'apolo@them.com.au'; //$_SESSION['user']['public']['email'];
-	    		    $bcc = '';
-	    		    $from = 'Website';
-	    		    $fromEmail = 'noreply@' . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
+	    		    $to = $_SESSION['user']['public']['email'];
+	    		    $bcc = 'nick@them.com.au';
+	    		    $from = 'Retail Cloud';
+	    		    $fromEmail = 'noreply@' . str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
 	    		    $subject = 'Confirmation of your order';
 	    		    $body= $SMARTY->fetch('email-confirmation.tpl');
 	    		  	if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
@@ -257,7 +347,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    		  
     		    
     		    // SET GOOGLE ANALYTICS - ECOMMERCE
-	    		  $affiliation = str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
+	    		  $affiliation = str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
     		    $analytics = "ga('require', 'ecommerce', 'ecommerce.js'); ";
     		    $analytics .= "ga('ecommerce:addTransaction', {
 										    		    'id': '{$orderNumber}',
@@ -285,6 +375,27 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     		    $analytics .= "ga('ecommerce:send'); ";
     		    $_SESSION ['ga_ecommerce'] = $analytics;
     		    
+    		    //SET USED DISCOUNT CODE
+    		    if ($order['cart_discount_code']) {
+    		    	$cart_obj->SetUsedDiscountCode($order['cart_discount_code']);
+    		    	$discountData = $cart_obj->GetDiscountData($order['cart_discount_code']);
+    		    	if($discountData['discount_unlimited_use'] == '0'){
+    		    		try{
+    		    			// SEND NOTIFICATION EMAIL
+    		    			$SMARTY->assign('user',$_SESSION['user']['public']);
+    		    			$SMARTY->assign('discount',$discountData);
+    		    			$buffer= $SMARTY->fetch('email-discount.tpl');
+    		    			$to = "apolo@them.com.au";
+    		    			$bcc = "";
+    		    			$from = str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
+    		    			$fromEmail = 'noreply@' . str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
+    		    			$subject = 'A discount code has been used.';
+    		    			$body = $buffer;
+    		    			$mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+    		    		}catch(Exception $e){}
+    		    	}
+    		    }
+    		    
     		    // LOG OUT GUEST USER
     		    if($isGuest){
 	    		    unset ( $_SESSION['user']['public'] );
@@ -292,13 +403,10 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     		    }
     		    
     		    // OPEN NEW CART
-    		    $cart_obj->CreateCart();
+    		    $cart_obj->CreateCart($_SESSION['user']['id']);
     		    	
-    		    //UNPUBLISH ONE-TIME USE DISCOUNT CODE
-    		    if ($order['cart_discount_code']) {
-    		    	$cart_obj->SetUsedDiscountCode($order['cart_discount_code']);
-    		    }
     		    unset ( $_SESSION['address'] );
+    		    unset ( $_SESSION['comments'] );
     		    
     		    // REDIRECT TO THANK YOU PAGE
     		    header('Location: /thank-you-for-buying');
@@ -319,8 +427,8 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 				header('Location: '.$_SERVER['HTTP_REFERER'].'#error');
 				exit;
 	}
-	die();
+	die('@');
 }else{
 	header('Location: /404');
-    die();
+  die();
 }

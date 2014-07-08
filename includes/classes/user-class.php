@@ -12,21 +12,24 @@ class UserClass {
      * @param array $user
      * @return array
      */
-    function Create($user){
+    function Create($user, $overWriteExisting = false){
     	global $DBobject, $SITE;
     
     	if ($res = $this->RetrieveByUsername($user['username'])) {
-    		//return array ('error' => "This email '{$user['username']}' has already been used.");
-    		if($res['user_gname'] != $user['gname']){
-	    		$sql = "UPDATE tbl_user SET user_gname = :gname, user_want_promo = :promo, user_modified = now() WHERE user_id = :id ";
-	    		$DBobject->wrappedSql($sql, array(':id'=>$res['user_id'],':gname'=>$user['gname'],':promo'=>$user['wantpromo']));
+    		if($overWriteExisting){
+    			if($res['user_gname'] != $user['gname']){
+    				$sql = "UPDATE tbl_user SET user_gname = :gname, user_want_promo = :promo, user_modified = now() WHERE user_id = :id ";
+    				$DBobject->wrappedSql($sql, array(':id'=>$res['user_id'],':gname'=>$user['gname'],':promo'=>$user['wantpromo']));
+    			}
+    			return $result = array (
+    					"id" => $res['user_id'],
+    					"gname" => $user['gname'],
+    					"surname" => $user['surname'],
+    					"email" => $res['user_email']
+    			);
+    		}else{
+    			return array ('error' => "This email '{$user['username']}' has already been used.");
     		}
-    		return $result = array (
-    				"id" => $res['user_id'],
-    				"gname" => $user['gname'],
-    				"surname" => $user['surname'],
-    				"email" => $res['user_email']
-    		);
     	} else {
     		
     	
@@ -411,30 +414,8 @@ class UserClass {
     					":browser" => $_SERVER['HTTP_USER_AGENT']
     			);
     			
-    			$sql = "INSERT INTO tbl_user (
-										user_username,
-										user_gname,
-										user_surname,
-										user_email,
-										user_social_name,
-										user_social_id,
-										user_social_info,
-										user_ip,
-										user_browser,
-										user_created
-									)
-									values(
-										:social_id,
-										:gname,
-										:surname,
-										:email,
-				    					:social_name,
-				    					:social_id,
-				    					:social_info,
-	    								:ip,
-	    								:browser,
-										now()
-										)";
+    			$sql = "INSERT INTO tbl_user ( user_username, user_gname, user_surname, user_email, user_social_name, user_social_id, user_social_info, user_ip, user_browser, user_created )
+									values( :social_id, :gname, :surname, :email, :social_name, :social_id, :social_info, :ip, :browser, now() )";
     			if ( $DBobject->wrappedSql($sql, $params) ) {
     				$userId =  $DBobject->wrappedSqlIdentity();
     				$user_arr = array (
@@ -446,6 +427,28 @@ class UserClass {
     						"social_id" => $user['id']
     				);
     			}
+    			
+    			// STORE DATA IN FACEBOOK TABLE
+    			if(!empty($user['birthday'])){
+    				$bd = explode('/', $user['birthday']);
+    				$bday = $bd[2] . '-' . $bd[0] . '-' . $bd[1];
+    			}
+    			$params = array (
+    					":facebook_id" => $user['id'],
+    					":facebook_name" => $user['name'],
+    					":facebook_first_name" => $user['first_name'],
+    					":facebook_last_name" => $user['last_name'],
+    					":facebook_email" => $user['email'],
+    					":facebook_username" => $user['username'],
+    					":facebook_birthday" => $bday,
+    					":facebook_gender" => $user['gender'],
+    					":facebook_location_id" => $user['location']['id'],
+    					":facebook_location_name" => $user['location']['name'],
+    			);
+    			$sql = "INSERT INTO tbl_facebook ( facebook_id, facebook_name, facebook_first_name, facebook_last_name, facebook_email, facebook_username, facebook_birthday, facebook_gender, facebook_location_id, facebook_location_name, facebook_created )
+									values( :facebook_id, :facebook_name, :facebook_first_name, :facebook_last_name, :facebook_email, :facebook_username, :facebook_birthday, :facebook_gender, :facebook_location_id, :facebook_location_name, now() )";
+    			$DBobject->wrappedSql($sql, $params);  
+    			
     		}
     		return $user_arr;
 		}

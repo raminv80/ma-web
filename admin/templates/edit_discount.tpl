@@ -24,6 +24,7 @@
 					<input type="hidden" value="discount_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="discount_id" name="field[1][tbl_discount][{$cnt}][id]" id="id"/> 
 					<input type="hidden" value="{$fields.discount_id}" name="field[1][tbl_discount][{$cnt}][discount_id]" id="discount_id">
+					<input type="hidden" value="{if $fields.discount_created}{$fields.discount_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_discount][{$cnt}][discount_created]" id="discount_created">
 					<input type="hidden" name="formToken" id="formToken" value="{$token}" /> 
 				</div>
 			</div>
@@ -37,10 +38,16 @@
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_discount_code">Code *</label>
 				<div class="col-sm-5">
-					<input class="form-control" type="text" onblur="this.value = this.value.toUpperCase();" value="{$fields.discount_code}" name="field[1][tbl_discount][{$cnt}][discount_code]" id="id_discount_code" required>
+					<input class="form-control" type="text" value="{$fields.discount_code}" name="field[1][tbl_discount][{$cnt}][discount_code]" id="id_discount_code" required>
 					<span class="help-block"></span>
 				</div>
 			</div>
+			<div class="row form-group">
+        <label class="col-sm-3 control-label" for="id_discount_description">Description</label><br />
+        <div class="col-sm-5">
+          <textarea name="field[1][tbl_discount][{$cnt}][discount_description]" id="id_discount_description" class="tinymce">{$fields.discount_description}</textarea>
+        </div>
+      </div>
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_discount_amount">Amount *</label>
 				<div class="col-sm-9">
@@ -54,7 +61,7 @@
 					<span class="help-block"></span>
 				</div>
 			</div>
-<!-- 			<div class="row form-group">
+			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_discount_listing_id">Category</label>
 				<div class="col-sm-5">
 					<select class="form-control" name="field[1][tbl_discount][{$cnt}][discount_listing_id]" id="id_discount_listing_id">
@@ -62,7 +69,7 @@
 						{call name=options_list opts=$fields.options.categories selected=$fields.discount_listing_id}
 					</select>
 				</div>
-			</div> -->
+			</div>
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_discount_product_id">Product</label>
 				<div class="col-sm-5">
@@ -72,6 +79,24 @@
 					</select>
 				</div>
 			</div>
+			<div class="row form-group">
+        <label class="col-sm-3 control-label" for="id_discount_usergroup_id">User Group</label>
+        <div class="col-sm-5">
+          <select class="form-control" name="field[1][tbl_discount][{$cnt}][discount_usergroup_id]" id="id_discount_usergroup_id">
+            <option value="0">ALL</option> 
+            {call name=options_list opts=$fields.options.usergroups selected=$fields.discount_usergroup_id}
+          </select>
+        </div>
+      </div>
+      <div class="row form-group">
+        <label class="col-sm-3 control-label" for="id_discount_user_id">User</label>
+        <div class="col-sm-5">
+          <select class="form-control" name="field[1][tbl_discount][{$cnt}][discount_user_id]" id="id_discount_user_id">
+            <option value="0">ALL</option> 
+            {call name=options_list opts=$fields.options.users selected=$fields.discount_user_id}
+          </select>
+        </div>
+      </div>
 			<div class="row form-group">
 				<label class="col-sm-3 control-label" for="id_discount_start_date">Start Date * <br><small>(yyyy-mm-dd)</small></label>
 				<div class="col-sm-5">
@@ -113,7 +138,8 @@
 					onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_discount_published">
 				</div>
 			</div>
-			
+
+
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
 					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>

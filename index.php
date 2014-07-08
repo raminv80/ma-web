@@ -120,6 +120,20 @@ while(true){
   if($_request['arg1'] == 'store/shopping-cart'){
     $template = loadPage($CONFIG->cart);
     $cart_obj = new cart();
+    //$ship_obj = new ShippingClass();
+    //$methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
+    //$SMARTY->assign ( 'shippingMethods', $methods );
+    if(!empty($_SESSION['reApplydiscount']) && !empty($_SESSION['user']['public']['id'])){		//RE-APPLY DISCOUNT CODE
+    	$res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
+    	if ($res['error']) {
+    		$_SESSION['error']= $res['error'];
+    		$_SESSION['post']= $_POST;
+    	}
+    	$_SESSION['reApplydiscount'] = '';
+    	unset($_SESSION['reApplydiscount']);
+    	header('Location: /shopping-cart');
+    	die();
+    }
     $validation = $cart_obj->ValidateCart();
     $SMARTY->assign('validation',$validation);
     $totals = $cart_obj->CalculateTotal();
@@ -212,15 +226,11 @@ if(!empty($_SESSION['user']['public']['store_id'])){
 	$params = array(":id"=>$storeId);
 	$res = $DBobject->wrappedSql($sql,$params);
 	$SMARTY->assign("storename",$res[0]['listing_name']);
-}
+} 
 $itemNumber = $cart_obj->NumberOfProductsOnCart();
 $SMARTY->assign('itemNumber',$itemNumber);
 $cart = $cart_obj->GetDataCart();
 $SMARTY->assign('cart',$cart);
-if(!empty($cart['cart_discount_code'])){
-	$discountData = $cart_obj->GetDiscountData($cart['cart_discount_code']);
-	$SMARTY->assign ( 'discount_name', $discountData['discount_name'] );
-}
 $subtotal = $cart_obj->GetSubtotal();
 $SMARTY->assign('subtotal',$subtotal);
 $productsOnCart = $cart_obj->GetDataProductsOnCart();
