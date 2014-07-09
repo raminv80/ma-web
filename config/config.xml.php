@@ -144,7 +144,7 @@
 		<template>shopping-cart.tpl</template> 
 		<!-- The template used if the field is matched --> 
 	</cart>
-	<checkout guest="true"> 
+	<checkout guest="false"> 
 		<url>checkout</url> 
 		<pageID>15</pageID> 
 		<type>1</type> 

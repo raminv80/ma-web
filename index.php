@@ -142,9 +142,6 @@ while(true){
     $SMARTY->assign('validation',$validation);
     $totals = $cart_obj->CalculateTotal();
     $SMARTY->assign('totals',$totals);
-    if($CONFIG->checkout->attributes()->guest == 'true' && $totals['subtotal'] > 0){
-      $allowGuest = true;
-    }
     break 1;
   }
   
@@ -217,7 +214,7 @@ while(true){
   break 1;
 }
 
-$SMARTY->assign('allowGuest',$allowGuest);
+
 /**
  * ***************************************
  * Load Data Shopping Cart for all pages *
@@ -239,6 +236,9 @@ $subtotal = $cart_obj->GetSubtotal();
 $SMARTY->assign('subtotal',$subtotal);
 $productsOnCart = $cart_obj->GetDataProductsOnCart();
 $SMARTY->assign('productsOnCart',$productsOnCart);
+if($CONFIG->checkout->attributes()->guest == 'true'){
+	$SMARTY->assign('allowGuest',true);
+}
 
 if(empty($template)){
   $template = loadPage($CONFIG->error404);

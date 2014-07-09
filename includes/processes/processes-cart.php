@@ -362,11 +362,12 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    		    foreach($item['attributes'] as $attr){
 	    		  	  $productFullName .=	" / {$attr['cartitem_attr_attribute_name']}: {$attr['cartitem_attr_attr_value_name']}";
 	    		    }
+	    		    $category = str_replace('/store/', '', $item['url']); // CHANGE ROOT PARENT OR NON-CATEGORY ACCORDINGLY !!!!!!!!!!!
 	    		    $analytics .= "ga('ecommerce:addItem', {
 	    		    										'id': '{$orderNumber}',
 									    		    		'name': '{$productFullName}',
 								    		    			'sku': '{$item['cartitem_product_id']}',
-								    		    			'category': '',
+								    		    			'category': '{$category}',
 								    		    			'price': '{$item['cartitem_product_price']}',
 								    		    			'quantity': '{$item['cartitem_quantity']}',
 															  	'currency': 'AUD'

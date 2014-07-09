@@ -291,7 +291,7 @@
 				</field> 
 			</options>
 		</table>
-		<list_template>list.tpl</list_template>
+		<list_template>list_discount.tpl</list_template>
 		<edit_template>edit_discount.tpl</edit_template>
 	</section> 
 	
