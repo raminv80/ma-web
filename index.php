@@ -65,12 +65,23 @@ while(true){
   }
   
   /**
+   * ***** Goes to Login-register ******
+   */
+  if($_request['arg1'] == 'login-register'){
+  	if(!empty($_SESSION['user']['public']['id'])){
+  		header("Location: /" . $CONFIG->login->fallback_redirect);
+  		exit();
+  	}
+  	$template = loadPage($CONFIG->login);
+  	break 1;
+  }
+  /**
    * **** Goes to my-account ******
    */
   if($_request['arg1'] == 'my-account'){
   	if($CONFIG->account->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])){
   		$_SESSION['redirect'] = "/my-account";
-  		header("Location: /");
+  		header("Location: /" . $CONFIG->account->fallback_redirect);
   		exit();
   	}
   	$template = loadPage($CONFIG->account);

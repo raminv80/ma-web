@@ -50,11 +50,6 @@
 		<template>checkout-complete.tpl</template>
 		<pageID>21</pageID>
 	</static_page>
-	<static_page>
-		<url>login-register</url>
-		<template>login-register.tpl</template>
-		<pageID>78</pageID>
-	</static_page>
 
 	
  	<product_page name="store">
@@ -127,10 +122,17 @@
 		</producttable>
  	</product_page>
 
+ 	<login>
+		<url>login-register</url>
+		<template>login-register.tpl</template>
+		<pageID>78</pageID>
+		<fallback_redirect>my-account</fallback_redirect>
+	</login>
 	<account restricted="true">
 		<url>my-account</url>
 		<template>account.tpl</template>
 		<pageID>22</pageID>
+		<fallback_redirect>login-register</fallback_redirect>
 	</account>
  	<cart> 
 		<url>shopping-cart</url> 

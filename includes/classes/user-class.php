@@ -42,6 +42,7 @@ class UserClass {
 	    			":email" => $user['email'],
 	    			":password" => $temp_str,
 	    			":user_site" => $SITE,
+    				":want_promo" => $user['want_promo'],
 	        	":ip" => $_SERVER['REMOTE_ADDR'],
 	        	":browser" => $_SERVER['HTTP_USER_AGENT']
 	    	);
@@ -53,6 +54,7 @@ class UserClass {
 										user_email,
 										user_password,
 					    			user_site,
+	    							user_want_promo,
 										user_ip,
 										user_browser,
 										user_created
@@ -64,6 +66,7 @@ class UserClass {
 										:email,
 										:password,
 					    			:user_site,
+	    							:want_promo,
 	    							:ip,
 	    							:browser,
 										now()
@@ -212,15 +215,11 @@ class UserClass {
     				":id" => $res['user_id'],
     				":gname" => $data['gname'],
 	    			":surname" => $data['surname'],
+    				":want_promo" => $data['want_promo'],
     				":ip" => $_SERVER['REMOTE_ADDR'],
     				":browser" => $_SERVER['HTTP_USER_AGENT']
     		);
-    		$sql = "UPDATE tbl_user SET
-                                        user_gname = :gname,
-										user_surname = :surname,
-                                        user_ip = :ip,
-                                        user_browser = :browser,
-                                        user_modified = now()
+    		$sql = "UPDATE tbl_user SET user_gname = :gname, user_surname = :surname, user_ip = :ip, user_want_promo = :want_promo, user_browser = :browser, user_modified = now()
                             WHERE user_id = :id ";
     	
     		if ( $DBobject->wrappedSql($sql, $params) ) {
@@ -241,7 +240,7 @@ class UserClass {
      * @return array
      */
     function ResetPassword($email){
-    	global $DBobject;
+    	global $DBobject,$SMARTY;
     
         if ($res = $this->RetrieveByUsername($email)){
             $newPass = genRandomString(10);
@@ -263,26 +262,22 @@ class UserClass {
                             WHERE user_id = :id ";
 
             if ( $DBobject->wrappedSql($sql, $params) ) {
-            		//$buf ='<p><img src="http://'.$_SERVER ['HTTP_HOST'].'/images/logo.png" alt="logo"><p>';
-            		$buf  ='Dear '.$res['user_gname'].',<br/>';
-            		$buf .='<p>You are receiving this email, because you or someone who needs access to your Account has submitted a Forgotten Password request on our website.</p>';
-            		$buf .='<p>Your Password is: <b>'.$newPass.'</b></p>';
-            		$buf .='<p>Please click here to come back to the website and login: '.$GLOBALS['HTTP_HOST'].'</p>';
-            		$buf .='<p>We hope that this site provides you with all the product and service information needed to help you with your next project and we look forward to dealing with you in the future.</p>';
-            		$buf .='<p>Best Regards</p>';
-            		$buf .='<p>The @ Team</p>';
-
-                $body = $buf;
-                $subject = "Forgotten Password for @ Website";
-                $fromEmail = "noreply@" . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
-                $from = "Steeline";
-                $to = $email;
-
-
-                if(sendMail($to, $from, $fromEmail, $subject, $body)){
-                        return array ('success' => 'Your new password has been sent to the registered email address.');
-                }else{
-                        return array ('error' => 'There was a connection problem. Please, try again!');
+                try{
+                  // SEND CONFIRMATION EMAIL
+                  $SMARTY->assign("user_gname",$res['user_gname']);
+                  $SMARTY->assign("newPass",$newPass);
+                  $body= $SMARTY->fetch('reset-password-email.tpl');
+                  $to = $email;
+                  $from = "Retail Cloud";
+                  $fromEmail = "noreply@" . str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
+                  $subject = 'Forgotten Password for Retail Cloud';
+                  if(sendMail($to, $from, $fromEmail, $subject, $body)){
+                    return array ('success' => 'Your new password has been sent to the registered email address.');
+                  }else{
+                    return array ('error' => 'There was a connection problem. Please, try again!');
+                  }
+                }catch(Exception $e){
+                  return array ('error' => 'There was a connection problem. Please, try again!');
                 }
             } 
             return array ('error' => 'There was a connection problem. Please, try again!');
@@ -392,7 +387,6 @@ class UserClass {
     	global $DBobject;
     	
 		if ($user['id']) {
-    
 			if ($res = $this->RetrieveByUsername($user['id'])) { // ALREADY REGISTERED
     			$user_arr["id"]=$res["user_id"];
     			$user_arr["gname"]=$res["user_gname"];
@@ -414,8 +408,30 @@ class UserClass {
     					":browser" => $_SERVER['HTTP_USER_AGENT']
     			);
     			
-    			$sql = "INSERT INTO tbl_user ( user_username, user_gname, user_surname, user_email, user_social_name, user_social_id, user_social_info, user_ip, user_browser, user_created )
-									values( :social_id, :gname, :surname, :email, :social_name, :social_id, :social_info, :ip, :browser, now() )";
+    			$sql = "INSERT INTO tbl_user (
+										user_username,
+										user_gname,
+										user_surname,
+										user_email,
+										user_social_name,
+										user_social_id,
+										user_social_info,
+										user_ip,
+										user_browser,
+										user_created
+									)
+									values(
+										:social_id,
+										:gname,
+										:surname,
+										:email,
+				    					:social_name,
+				    					:social_id,
+				    					:social_info,
+	    								:ip,
+	    								:browser,
+										now()
+										)";
     			if ( $DBobject->wrappedSql($sql, $params) ) {
     				$userId =  $DBobject->wrappedSqlIdentity();
     				$user_arr = array (
@@ -427,28 +443,6 @@ class UserClass {
     						"social_id" => $user['id']
     				);
     			}
-    			
-    			// STORE DATA IN FACEBOOK TABLE
-    			if(!empty($user['birthday'])){
-    				$bd = explode('/', $user['birthday']);
-    				$bday = $bd[2] . '-' . $bd[0] . '-' . $bd[1];
-    			}
-    			$params = array (
-    					":facebook_id" => $user['id'],
-    					":facebook_name" => $user['name'],
-    					":facebook_first_name" => $user['first_name'],
-    					":facebook_last_name" => $user['last_name'],
-    					":facebook_email" => $user['email'],
-    					":facebook_username" => $user['username'],
-    					":facebook_birthday" => $bday,
-    					":facebook_gender" => $user['gender'],
-    					":facebook_location_id" => $user['location']['id'],
-    					":facebook_location_name" => $user['location']['name'],
-    			);
-    			$sql = "INSERT INTO tbl_facebook ( facebook_id, facebook_name, facebook_first_name, facebook_last_name, facebook_email, facebook_username, facebook_birthday, facebook_gender, facebook_location_id, facebook_location_name, facebook_created )
-									values( :facebook_id, :facebook_name, :facebook_first_name, :facebook_last_name, :facebook_email, :facebook_username, :facebook_birthday, :facebook_gender, :facebook_location_id, :facebook_location_name, now() )";
-    			$DBobject->wrappedSql($sql, $params);  
-    			
     		}
     		return $user_arr;
 		}

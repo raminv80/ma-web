@@ -33,9 +33,6 @@ ul.nav li.dropdown:hover > ul.dropdown-menu {
 .sign-in {
 	font-weight:bold;	
 }
-#social-login {
-	margin:10px;	
-}
 .total-amount{
 	font-weight:bold;	
 }
@@ -453,4 +450,23 @@ hr.or-separator:after {
 }
 .btn.buy img, #maincont .btn.buy img {
   min-height: 0 !important;
+}
+#social-login {
+	margin:10px;
+	text-align: center;	
+}
+.fb-btn img {
+    margin-right: 8px;
+}
+.fb-btn {
+    background-color: #3b55a0 !important;
+    border: medium none!important;
+    color: #fff!important;
+    font-family: arial!important;
+    font-size: 13px!important;
+    font-weight: bold !important;
+    width: 100%;
+		border-radius: 2px;
+		text-transform: none !important;
+		max-width: 300px;
 }

@@ -6,7 +6,7 @@
       <!-- LOGIN SECTION  -->
       <div class="col-sm-5" id="login">
         <h3>Existing Customer</h3>
-        <div id="login" class="row">
+        <div id="login">
 	        <form class="form-horizontal" id="login-form" data-attr-id="login-form" role="form" accept-charset="UTF-8" action="" method="post">
 	          <input type="hidden" value="login" name="action" id="action" /> 
 	          <input type="hidden" value="{$redirect}" name="redirect" class="redirect" /> 
@@ -57,27 +57,8 @@
             <div class="row success-msg" id="reset-pass-form-success"></div>
 	        </form>
 	      </div>
-	      
-	      {if $allowGuest}
-					<hr class="or-separator">
-					<div class="row">	<!-- CONTINUE AS GUEST SECTION -->
-						<a href="/store/checkout" class="btn btn-info" >Continue as Guest</a>
-					</div>
-				{/if}
-				<hr class="or-separator">
-				<div class="row" id="social-login">	<!-- FACEBOOK LOGIN SECTION -->
-					 <form id="facebook-form" action="/process/user" method="post">
-						<input type="hidden" value="FBlogin" name="action" id="action" /> <!--  onclick="$('#facebook-form').submit();" -->
-						<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-						<input type="hidden" value="{$redirect}" name="redirect" class="redirect" /> 
-						<a href='javascript:void(0)' onclick="FBlogin();"><img src="/images/loginFB.gif" alt="login with facebook"></a>
-					</form> 
-					<!--<fb:login-button autologoutlink="true" data-scope="email, user_birthday, user_location" >Log In with Facebook</fb:login-button>
-					-->
-				</div>
       </div>
                   
-      
       
       <!-- REGISTER SECTION - Hidden by default -->
       <div class="col-sm-5 col-sm-offset-1" id="register">
@@ -89,7 +70,7 @@
           <input type="hidden" value="create" name="action" id="action" /> 
           <input type="hidden" value="{$redirect}" name="redirect" class="redirect" /> 
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-          <div class="form-group">
+          <!-- <div class="form-group">
               <label for="gname" class="col-sm-4 control-label">First Name</label>
               <div class="col-sm-8">
                   <input type="text" value="{if $post}{$post.gname}{/if}" class="form-control" id="gname" name="gname" required>
@@ -102,7 +83,7 @@
                   <input type="text" value="{if $post}{$post.surname}{/if}" class="form-control" id="surname" name="surname" required>
               <span class="help-block"></span>
             </div>
-          </div>
+          </div> -->
           <div class="form-group">
               <label for="email" class="col-sm-4 control-label">Email</label>
               <div class="col-sm-8">
@@ -110,13 +91,13 @@
               <span class="help-block"></span>
             </div>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
               <label for="confirm_email" class="col-sm-4 control-label">Re-enter Email</label>
               <div class="col-sm-8">
                   <input type="text" value="{if $post}{$post.confirm_email}{/if}" class="form-control" id="confirm_email" name="confirm_email" required>
               <span class="help-block"></span>
             </div>
-          </div>
+          </div> -->
           <div class="form-group">
               <label for="password" class="col-sm-4 control-label">Password</label>
               <div class="col-sm-8">
@@ -125,14 +106,14 @@
                 <span class="help-block"></span>
               </div>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
               <label for="confirm_password" class="col-sm-4 control-label">Re-enter Password</label>
               <div class="col-sm-8">
                 <input type="password" value="" class="form-control" id="confirm_password" name="confirm_password" autocomplete="off" required>
                 <a class="showhide" style="line-height: 34px;position: absolute;right: 20px;top: 0;" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[name=confirm_password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[name=confirm_password]').get(0).type='password';$(this).html('Show'); }">Show</a>
               <span class="help-block"></span>
             </div>
-          </div>
+          </div> -->
           <div class="form-group">
               <div class="col-sm-offset-4 col-sm-8">
                   <button type="submit" class="btn btn-primary">Sign Up</button>
@@ -141,6 +122,22 @@
         </form>
       </div>
     </div>
+    
+    {if $allowGuest}
+			<hr class="or-separator">
+			<div class="row">	<!-- CONTINUE AS GUEST SECTION -->
+				<a href="/store/checkout" class="btn btn-info" >Continue as Guest</a>
+			</div>
+		{/if}
+		<hr class="or-separator">
+		<div class="row" id="social-login">	<!-- FACEBOOK LOGIN SECTION -->
+			 <form id="facebook-form" action="/process/user" method="post">
+				<input type="hidden" value="FBlogin" name="action" id="action" /> <!--  onclick="$('#facebook-form').submit();" -->
+				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
+				<input type="hidden" value="{$redirect}" name="redirect" class="redirect" /> 
+				<a href='javascript:void(0)' onclick="FBlogin();" class="btn fb-btn"><img alt="facebook" src="/images/facebook-logo-btn.png"> Log in with Facebook</a>
+			</form> 
+		</div>
   </div>
   
   
@@ -161,7 +158,7 @@
         onclick: false
       });
       
-      $('#confirm_password').rules("add", {
+/*       $('#confirm_password').rules("add", {
             required: true,
             equalTo: '#password',
             messages: {
@@ -175,7 +172,7 @@
             messages: {
               equalTo: "The emails you have entered do not match. Please check them."
             }
-       }); 
+       });  */
     });
 
     function FBlogin(){

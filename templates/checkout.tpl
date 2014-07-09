@@ -79,7 +79,7 @@
               <span class="bold tots">Billing address</span><br />
               <div id="billing-summary">
               {if $address.B}
-                {$address.B.address_name}<br >
+                {$address.B.address_name} {$address.B.address_surname}<br >
                 {$address.B.address_line1}<br >
                 {$address.B.address_suburb} {$address.B.address_state} {$address.B.address_postcode}<br >
                 {$address.B.email}<br >
@@ -96,7 +96,7 @@
                 {if $comments}Shipping instructions: {$comments}{else}No shipping instructions <br />{/if}
               {else}
                 {if $address.S}
-                  {$address.S.address_name}<br >
+                  {$address.S.address_name} {$address.S.address_surname}<br >
                   {$address.S.address_line1}<br >
                   {$address.S.address_suburb} {$address.B.address_state} {$address.B.address_postcode}<br >
                   {$address.S.address_telephone}<br >
@@ -120,9 +120,15 @@
                 <div class="col-sm-6" id="billing">
                 <h4 class="bold tots">Billing details</h4>
                   <div class="form-group">
-                    <label class="col-sm-4 control-label" for="name1">Name*:</label>
+                    <label class="col-sm-4 control-label" for="name1">First Name*:</label>
                     <div class="col-sm-8">
                       <input id="name1" value="{if $address}{$address.B.address_name}{else}{$user.gname} {$user.surname}{/if}" name="address[B][address_name]" type="text" class="billing-req form-control" required="required" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="surname1">Surname*:</label>
+                    <div class="col-sm-8">
+                      <input id="surname1" value="{if $address}{$address.B.address_surname}{else}{$user.surname}{/if}" name="address[B][address_surname]" type="text" class="billing-req form-control" required="required" />
                     </div>
                   </div>
                   <div class="form-group">
@@ -194,9 +200,15 @@
                     <div id="shipping-subform">
                      <h4 class="bold tots">Shipping details</h4>
                       <div class="form-group">
-                        <label class="col-sm-4 control-label" for="namesh1">Name*:</label>
+                        <label class="col-sm-4 control-label" for="namesh1">First Name*:</label>
                         <div class="col-sm-8">
                           <input id="namesh1" value="{if $address}{$address.S.address_name}{/if}" name="address[S][address_name]" type="text" class="shipping-req form-control" required="required"/>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-4 control-label" for="surnamesh1">Surname*:</label>
+                        <div class="col-sm-8">
+                          <input id="surnamesh1" value="{if $address}{$address.S.address_surname}{/if}" name="address[S][address_surname]" type="text" class="shipping-req form-control" required="required"/>
                         </div>
                       </div>
                       <div class="form-group">
@@ -360,6 +372,7 @@
     
     $('#checkout2-form').validate();
     $('#checkout3-form').validate(); 
+    updateShipping();
     
     sameAddress();
       

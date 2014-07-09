@@ -107,8 +107,8 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 		    $res = $cart_obj->ApplyDiscountCode($_POST['discount_code']);
 		    if ($res['error']) {
 		    	$_SESSION['error']= $res['error'];
-		    	$_SESSION['post']= $_POST;
 		    	$_SESSION['reApplydiscount']= ($res['reApplyAfterLogin'])?$_POST['discount_code']:'';
+		    	$_SESSION['post']= $_POST;
 		    	header('Location: '.$_SERVER['HTTP_REFERER'].'#error');
 		    } else {
 		    	header('Location: '.$_SERVER['HTTP_REFERER']);
@@ -143,6 +143,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 		      $_SESSION['postageID'] = $_POST['postageID'];
 		      $_SESSION['address'] = $_POST['address'];
 		      $bsum = $_POST['address']['B']['address_name'] .'<br />';
+		      $bsum = $_POST['address']['B']['address_surname'] .'<br />';
 		      $bsum .= $_POST['address']['B']['address_line1'] .'<br />';
 		      $bsum .= $_POST['address']['B']['address_suburb'] .' ';
 		      $bsum .= $_POST['address']['B']['address_state'] .' ';
@@ -153,6 +154,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 		        $ssum = '<span class="small">Shipping address same as billing address<br />';
 		      }else{
 		        $ssum = $_POST['address']['S']['address_name'] .'<br />';
+		        $ssum = $_POST['address']['S']['address_surname'] .'<br />';
 		        $ssum .= $_POST['address']['S']['address_line1'] .'<br />';
 		        $ssum .= $_POST['address']['S']['address_suburb'] .' ';
 		        $ssum .= $_POST['address']['S']['address_state'] .' ';
@@ -193,30 +195,31 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 		case 'placeOrder':
 				if(!empty($_SESSION['address']['B'])){
 					$isGuest = false;
+					$user_obj = new UserClass();
+					$values = array();
+					$values['email'] = $_SESSION['address']['B']['email'];
+					$values['gname'] = $_SESSION['address']['B']['address_name'];
+					$values['surname'] = $_SESSION['address']['B']['address_surname'];
+					$promo = 0;
+					if($_SESSION['address']['wantpromo']){
+						 $promo = 1;
+						 try{
+						 	require_once 'includes/createsend/csrest_subscribers.php';
+						 	$wrap = new CS_REST_Subscribers('', '060d24d9003a77b06b95e7c47691975b'); //!!!! UPDATE CREATESEND LIST CODE !!!!!
+						 	$cs_result = $wrap->add(array(
+						 			'EmailAddress' => $values['email'],
+						 			'Name' => $values['gname'] . ' ' . $values['surname'],
+						 			'CustomFields' => array(),
+						 			"Resubscribe" => "true"
+						 	));
+						 }catch(Exception $e){}
+					}
+					$values['want_promo'] = $promo;
 					if(empty($_SESSION['user']['public']['id'])){ // ADD GUEST USER
 						$isGuest = true;
-						$user_obj = new UserClass();
-						$values = array();
 						$values['username'] = $_SESSION['address']['B']['email'] ;
-						$values['email'] = $_SESSION['address']['B']['email'];
 						$values['password'] = session_id ();
-						$values['gname'] = $_SESSION['address']['B']['address_name'];
-						$values['surname'] = '';
-						$promo = 0;
-						if($_SESSION['address']['wantpromo']){
-							$promo = 1;
-							try{
-								require_once 'includes/createsend/csrest_subscribers.php';
-								$wrap = new CS_REST_Subscribers('', '060d24d9003a77b06b95e7c47691975b'); //!!!! UPDATE CREATESEND LIST CODE !!!!! 
-								$cs_result = $wrap->add(array(
-										'EmailAddress' => $values['email'],
-										'Name' => $values['gname'],
-										'CustomFields' => array(),
-										"Resubscribe" => "true"
-								));
-							}catch(Exception $e){}
-						}
-						$values['wantpromo'] = $promo;
+						
 						$res = $user_obj->Create($values);
 						 
 						if( $res['error'] ) {
@@ -232,7 +235,9 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 							$_POST['address']['S']['address_user_id'] = $res['id'];
 						}
 					} else {
-	    			$user_obj = new UserClass();
+	    			$user_obj->UpdateDetails($values);
+	    			$_SESSION['user']['public']['gname'] = $values['gname'];
+	    			$_SESSION['user']['public']['surname'] = $values['surname'];
 	    		}
 	    		
 	    		// SAVE BILLING AND SHIPPING ADDRESS
