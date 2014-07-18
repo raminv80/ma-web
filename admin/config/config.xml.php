@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true" staging="true"> 
+<config debug="false" staging="true"> 
 	<company></company> 
 	<database> 
 		<host>m4-mysql1-1.ilisys.com.au</host> 
@@ -16,8 +16,8 @@
 		<table>tbl_sequence</table> 
 	</sequence>
 	<them_news> 
-		<domain>http://www.cms.themserver.com</domain>
-		<page>http://www.cms.themserver.com/them-promo</page> 
+		<domain>http://www.them.com.au</domain>
+		<page></page> 
 	</them_news> 
 	
 	<!-- THIS SECTION IS USED TO MANAGE THE ADMINISTRATOR TABLE. ADMINISTRATORS AND USERS FOR THE CMS ARE MANAGED HERE. -->
@@ -159,6 +159,19 @@
 				<linkfield>product_id</linkfield>
 				<field>tag_object_id</field>
 				<where>tag_object_table = 'tbl_product'</where> 
+			</associated>
+			<associated>
+				<name>additional_category</name>
+				<table>tbl_additional_category</table>
+				<linkfield>product_id</linkfield>
+				<field>additional_category_product_id</field>
+			</associated>
+			<associated> 
+				<name>qty_modifier</name>
+				<table>tbl_productqty</table>
+				<linkfield>product_id</linkfield>
+				<field>productqty_product_id</field> 
+				<orderby>productqty_qty ASC</orderby>
 			</associated>
 			<options> 
 				<field> 

@@ -6,7 +6,7 @@
 				<div class="col-sm-12">
 					<fieldset>
 						<legend> {if $fields.user_id neq ""}Edit{else}New{/if} Admin {if $cnt eq ""}{assign var=cnt value=0}{/if} 
-							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;">Save</a>
+							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 						</legend>
 					</fieldset>
 					<input type="hidden" value="user_id" name="primary_id" id="primary_id"/> 
@@ -74,7 +74,7 @@
 			</div> -->
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 				</div>
 			</div>
 		</form>

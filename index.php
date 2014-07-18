@@ -31,7 +31,8 @@ $SMARTY->assign('redirect',!empty($_SESSION['redirect'])?$_SESSION['redirect']:(
 unset($_SESSION['redirect']); // ASSIGN REDIRECT URL VALUE AFTER LOGIN AND SHOW LOGIN MODAL
 $SMARTY->assign('user',$_SESSION['user']['public']); // ASSIGN USER FOR TEMPLATES
 $SMARTY->assign ( 'HTTP_REFERER', rtrim($_SERVER['HTTP_REFERER'],'/') );
-$SMARTY->assign ( 'REQUEST_URI', rtrim($_SERVER['REQUEST_URI'],'/') );
+$_URI = explode("?",$_SERVER['REQUEST_URI']);
+$SMARTY->assign ( 'REQUEST_URI', rtrim($_URI[0],'/') );
 $_request = htmlclean($_REQUEST);
 $SMARTY->assign ( 'orderNumber', $_SESSION['orderNumber'] );
 $SMARTY->assign ( 'ga_ecommerce', $_SESSION['ga_ecommerce'] );// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)

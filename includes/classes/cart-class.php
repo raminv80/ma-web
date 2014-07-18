@@ -780,7 +780,7 @@ class cart {
       );
       if($mod = $DBobject->wrappedSql($sql,$params)){
         
-        if(intval($mod[0]['productqty_percentmodifier']) == 1){
+        if(intval($mod[0]['productqty_percentmodifier']) == 1){
           $prod['product_price'] = $prod['product_price'] - ($prod['product_price']*($mod[0]['productqty_modifier']/100));
         }else{
           $prod['product_price'] = $prod['product_price'] - ($mod[0]['productqty_modifier']);
@@ -860,7 +860,7 @@ class cart {
               ":pid"=>$res[0]['cartitem_product_id']
           );
           if($mod = $DBobject->wrappedSql($sql,$params)){
-            if(intval($mod[0]['productqty_percentmodifier']) == 1){
+            if(intval($mod[0]['productqty_percentmodifier']) == 1){
               $pricemodifier = intval($mod[0]['productqty_modifier'])."%";
             }else{
               $pricemodifier = "$".intval($mod[0]['productqty_modifier']);

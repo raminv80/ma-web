@@ -4,12 +4,9 @@
 register_shutdown_function("fatal_handler");
 function fatal_handler() {
   // Getting last error
+	global $CONFIG;
   $errno = error_get_last();
   if($errno['type'] === E_ERROR){
-    $to = "nick@them.com.au";
-    $from = "noreply@" . str_replace("www.","",$GLOBALS['HTTP_HOST']);
-    $fromEmail = "noreply@" . str_replace("www.","",$GLOBALS['HTTP_HOST']);
-    $subject = "Fatal Error Occured ";
     $body = "<table><thead bgcolor='#c8c8c8'><th>Item</th><th>Description</th></thead><tbody>";
     $body .= "<tr valign='top'><td><b>Error</b></td><td><pre>{$errno['message']}</pre></td></tr>";
     $body .= "<tr valign='top'><td><b>Errno</b></td><td><pre>{$errno['type']}</pre></td></tr>";
@@ -20,13 +17,11 @@ function fatal_handler() {
     $body .= print_r($_POST,true);
     $body .= '<br />$_SERVER<br/>';
     $body .= print_r($_SERVER,true);
-    /* To send HTML mail, you can set the Content-type header. */
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-    /* additional headers */
-    die($body);
+    if($CONFIG->attributes()->staging == 'true'){
+    	die($body);
+    }
     $_SESSION['error'] = 'We had trouble saving your entry. Please review your entry and try again. If this continues please contact us.';
-    header('location: /503');
+    header('location: /503.html');
     die('@ 503 Service Temporarily Unavailable');
   }
 }

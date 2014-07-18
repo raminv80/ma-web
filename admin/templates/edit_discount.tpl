@@ -17,7 +17,7 @@
 						<legend>
 							{if $fields.discount_id neq ""}Edit{else}New{/if} {$zone} 
 							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
-							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><i class="icon-ok icon-white"></i> Save</a>
+							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 							
 						</legend>
 					</fieldset>
@@ -142,7 +142,7 @@
 
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 				</div>
 			</div>
 		</form>

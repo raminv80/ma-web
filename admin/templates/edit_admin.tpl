@@ -5,7 +5,7 @@
 			<div class="row">
 				<div class="col-sm-12 edit-page-header">
 					<span class="edit-page-title">{if $fields.admin_id neq ""}Edit{else}New{/if} Admin {if $cnt eq ""}{assign var=cnt value=0}{/if}</span> 
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;">Save</a>
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-left: 38px;"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 					<input type="hidden" value="admin_id" name="primary_id" id="primary_id"/> 
 					<input type="hidden" value="{$fields.admin_id}" name="field[1][tbl_admin][{$cnt}][admin_id]" id="admin_id" /> 
 					<input type="hidden" value="admin_id" name="field[1][tbl_admin][{$cnt}][id]" id="id" /> 
@@ -83,7 +83,7 @@
 					
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"> Save</a>
+					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 				</div>
 			</div>
 		</form>

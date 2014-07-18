@@ -70,5 +70,7 @@
 
 {* Place additional javascript here so that it runs after General JS includes *}
 {block name=tail}
+<script type="text/javascript">
 
+</script>
 {/block}

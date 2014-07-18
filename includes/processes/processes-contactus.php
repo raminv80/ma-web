@@ -12,7 +12,8 @@ if(checkToken('frontend',$_POST["formToken"], false)){
         if(!empty($_FILES["file"]["name"])){
           if($_FILES["file"]["error"] == 0){
             if(($_FILES["file"]["type"] == "application/pdf") || strtolower(substr($_FILES["file"]["name"],- 3)) == 'pdf' || strtolower(substr($_FILES["file"]["name"],- 3)) == 'jpg' || strtolower(substr($_FILES["file"]["name"],- 3)) == 'png' || strtolower(substr($_FILES["file"]["name"],- 3)) == 'gif'){
-              $path = getcwd() . '/';
+              //$path = getcwd() . '/';
+            	$path =  $_SERVER['DOCUMENT_ROOT'];
               $file_short = time() . '_' . str_replace(" ",'',$_FILES["file"]["name"]);
               $_POST['filename'] = $file_short;
               $file_name = $path . "uploads_contact/" . $file_short;

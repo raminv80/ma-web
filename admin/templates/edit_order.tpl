@@ -153,7 +153,7 @@
 		</div>
 		<div class="row form-group">
 			<div class="col-sm-offset-3 col-sm-9">
-				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right"> Save</a>
+				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 			</div>
 		</div>
 	</form>

@@ -5,7 +5,7 @@
 			<td><b>{$item.user.0.user_gname} {$item.user.0.user_surname}</b></td>
 			<td><b>{$item.title|date_format:"%e %b %Y - %H:%M:%S"}</b></td>
 			<td><b>{getvaluename id=$item.payment.0.order.0.order_status_id options=$options.status}</b></td>
-			<td>{if $item.url} <a href='{$item.url}' class='btn btn-small btn-warning pull-right'>Edit</a> {/if}
+			<td>{if $item.url} <a href='{$item.url}' class='btn btn-small btn-warning pull-right'><span class="glyphicon glyphicon-pencil"></span> Edit</a> {/if}
 			</td>
 		</tr>
 	{/foreach}
