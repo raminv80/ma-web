@@ -65,7 +65,7 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-51356141-1', 'themserver.com');
+ga('create', 'UA-51356141-1', 'themserver.com', {'siteSpeedSampleRate': 50}); //siteSpeedSampleRate defaults to 1% Max 10k for day. For low traffic sites this does not give enough stats. 
 ga('require', 'displayfeatures');
 ga('send', 'pageview');
 

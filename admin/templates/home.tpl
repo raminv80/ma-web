@@ -8,12 +8,8 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
-<div class="row">
-	<div class="col-sm-12">
-		<p>Use menu on the left</p>
-	</div>
-</div>
-<div class="row">
+
+<div class="row form">
 	{if $them_news_page neq ''}
 	<div class="col-sm-12">
  		<iframe id="them-iframe" class="them-promotion-frame" src="{$them_news_page}" width="100%" height="1000px" border="0">
