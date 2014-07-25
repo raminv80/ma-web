@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true"> 
+<config debug="true" staging="true"> 
 	<company></company> 
 	<database> 
 		<host>m4-mysql1-1.ilisys.com.au</host> 

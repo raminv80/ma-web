@@ -209,42 +209,6 @@ Class DBmanager{
 		return $newdate;
 	}
 
-	/**
-	 * Enter description here ...
-	 * @param unknown_type $sql
-	 * @return boolean
-	 */
-	function StoreSql($sql){
-		$lower_sql = strtolower($sql);
-		if(strstr($lower_sql, 'insert')		||		strstr($lower_sql, 'update')){
-			$log_user_id =$_SESSION["admin"]["id"]!=''?$_SESSION["admin"]["id"]:$_SESSION["user"]["id"];
-			if($log_user_id ==''){$log_user_id=0;}
-			$sql ="	INSERT INTO tbl_log
-	            (
-	            log_user_id,
-	            log_user_type,
-	            log_user_sql,
-	            log_user_ip
-	            )
-				VALUES (
-				'".$log_user_id."',
-				'".($_SESSION["admin"]["id"]!=''?"ADMIN":"USER")."',
-				'".addslashes($lower_sql)."',
-				'".$_SERVER['REMOTE_ADDR']."') ";
-
-			$result = mysql_query($sql);
-			if(mysql_error()) {
-				$err = mysql_error();
-				$trace = debug_backtrace();
-				$backtrace = parse_backtrace($trace);
-				$errMsg = logError($backtrace, $err, $MySQL);
-				die($errMsg);
-
-			}
-		}
-		return true;
-	}
-	
 	
 
 }

@@ -2,6 +2,8 @@
 set_include_path($_SERVER['DOCUMENT_ROOT']);
 include 'admin/includes/functions/admin-functions.php';
 if(checkToken('admin', $_POST["formToken"])){
+	$isInsert = false;
+	$additional = array();
 	$tables = $DBobject->ShowTables();
 	if($tables){
 		$returnIDs = array();
@@ -20,27 +22,14 @@ if(checkToken('admin', $_POST["formToken"])){
 						$_insert_vals = array();
 						$_insert_fields = array();
 						$_params = array();
+						$additionalAction = 'Edit';
+						$additionalIDs = array();
 						if(is_array($vals)){
-/* 							if($tbl == 'tbl_link'){
-								if(!empty($vals['link_type_id']) && !empty($vals['link_list_id'])){
-									$slq_link = 'UPDATE tbl_link SET link_deleted = NOW() WHERE link_type_id = :link_type_id AND link_list_id = :link_list_id';
-									$result = $DBobject->executeSQL($slq_link ,array('link_type_id' => $vals['link_type_id'], 'link_list_id'=>$vals['link_list_id'] ));
-								}
-								if(is_array($vals['link_parent_id'])){
-									foreach ($vals['link_parent_id'] as $cat){
-										$slq_link = "INSERT INTO tbl_link ( link_type_id,link_list_id,link_parent_id ) VALUES ( :link_type_id,:link_list_id,:link_parent_id)";
-										$result = $DBobject->executeSQL($slq_link ,array('link_type_id'=>$vals['link_type_id'],'link_list_id'=>$vals['link_list_id'],'link_parent_id'=>$cat));
-									}
-								}else{
-									$slq_link = "INSERT INTO tbl_link ( link_type_id,link_list_id,link_parent_id ) VALUES ( :link_type_id,:link_list_id,:link_parent_id)";
-									$result = $DBobject->executeSQL($slq_link ,array('link_type_id'=>$vals['link_type_id'],'link_list_id'=>$vals['link_list_id'],'link_parent_id'=>$vals['link_parent_id']));
-								}
-								continue;
-							} */
 							foreach($vals as $key => $val){
 								if($key == 'id'){ continue; }
 								if(in_array($key, $id)){ 
 									$id_check[] = "{$key} = :{$key}";
+									$additionalIDs[] = $val;
 								}else{
 									if(empty($val) && array_key_exists($key, $_POST['default'])){
 										$val = $stored["{$_POST['default']["{$key}"]}"];
@@ -49,6 +38,9 @@ if(checkToken('admin', $_POST["formToken"])){
 									$_insert_vals[] = ":{$key} ";
 									$_insert_fields[] = "{$key}";
 									$_params["{$key}"] = $val;
+									if(preg_match("/deleted/", $key)){
+										$additionalAction = 'Delete';
+									}
 								}
 							}
 						}
@@ -64,9 +56,18 @@ if(checkToken('admin', $_POST["formToken"])){
 						}else{ 
 							foreach ($id as $i){
 								$_params["{$i}"] = $vals["{$i}"];
+								if($_POST['primary_id'] == $i){
+									$primaryID = $vals["{$i}"];
+									$primaryTable = $tbl;
+									$primaryAction = $additionalAction;
+								}
 							}
 							$sql = "UPDATE {$tbl} SET ".implode(',',$_update_vals)." WHERE ".implode(' AND ',$id_check);
 							$update_table=$tbl;
+							
+							if($primaryTable != $tbl){
+								$additional[] = "$additionalAction|$tbl|". implode(':',$additionalIDs);
+							}
 						}
 	
 						$result = $DBobject->executeSQL($sql , $_params );
@@ -77,6 +78,7 @@ if(checkToken('admin', $_POST["formToken"])){
 								$stored = array_merge($stored,$_params);
 							}
 						}
+						
 						if($insert_table != ''){
 							$o = $DBobject->wrappedSqlIdentity();
 							foreach ($id as $i){
@@ -85,10 +87,14 @@ if(checkToken('admin', $_POST["formToken"])){
 							
 								$stored["{$i}"] = $o;
 								if($_POST['primary_id'] == $i){
+									$isInsert = true;
 									$primaryID = $o;
+									$primaryTable = $tbl;
+									$primaryAction = 'Add';
+								}else{
+									$additional[] = "Add|$tbl|$o";
 								}
 							}
-							
 						}
 						
 					}
@@ -101,16 +107,19 @@ if(checkToken('admin', $_POST["formToken"])){
 
 global $EDITED;
 
-if(!empty($primaryID)){
+if($isInsert){
+	saveInLog($primaryAction, $primaryTable, $primaryID, implode(',',$additional));
 	echo json_encode(array(
 			"notice" => $EDITED,
 			"IDs" => $returnIDs,
 			"primaryID" => $primaryID
 	));
 }else{
+	saveInLog($primaryAction, $primaryTable, $primaryID, implode(',',$additional));
 	echo json_encode(array(
 			"notice" => $EDITED,
 			"IDs" => $returnIDs
 	));
 }
+
 die();

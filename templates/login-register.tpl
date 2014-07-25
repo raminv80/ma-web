@@ -131,7 +131,7 @@
 		{/if}
 		<hr class="or-separator">
 		<div class="row" id="social-login">	<!-- FACEBOOK LOGIN SECTION -->
-			 <form id="facebook-form" action="/process/user" method="post">
+			 <form id="facebook-form" action="" method="post">
 				<input type="hidden" value="FBlogin" name="action" id="action" /> <!--  onclick="$('#facebook-form').submit();" -->
 				<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				<input type="hidden" value="{$redirect}" name="redirect" class="redirect" /> 
@@ -179,7 +179,7 @@
 		var datastring = $("#facebook-form").serialize();
 		$.ajax({
 			type: "POST",
-		    url: "/process/user",
+		    url: "/includes/processes/processes-facebook.php",
 			cache: false,
 			data: datastring,
 			dataType: "html",

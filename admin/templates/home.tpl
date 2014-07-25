@@ -18,6 +18,7 @@
 	</div> 
 	{else}
 	<div class="col-sm-offset-1 col-sm-11">
+		<h3>Stay up to date with Them Advertising</h3>
 		<div class="fb-like-box" data-href="https://www.facebook.com/ThemAdvertising" data-width="640" data-height="1000" data-colorscheme="light" data-show-faces="false" data-header="true" data-stream="true" data-show-border="false"></div>
 	</div>
 	{/if}

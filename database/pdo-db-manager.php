@@ -70,28 +70,6 @@ Class DBmanager{
 			}catch(Exception $e){
 				$result = $execute_res;
 			}
-			
-			// ========== SAVE IN LOG TABLE ==============
-// 			$MySQL = trim($MySQL);
-// 			if ( preg_match ( "/^UPDATE/i", $MySQL ) || preg_match ( "/^INSERT/i", $MySQL ) || preg_match ( "/^DELETE/i", $MySQL ) ) {
-// 				$logSQL = " INSERT INTO tbl_log (log_user, log_sql, log_params, log_ip, log_browser)
-// 								VALUES (:user, :sql, :params, :ip, :browser)";
-// 				$logParams = array (
-// 						":user" => serialize($_SESSION['user']), ":sql" => $MySQL,
-// 						":params" => serialize($params), ":ip" => $_SERVER ['REMOTE_ADDR'],
-// 						":browser" => $_SERVER ['HTTP_USER_AGENT']
-// 				);
-				
-// 				$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-// 				if($STH = $this->PDO->prepare($logSQL)){
-// 					foreach ($logParams as $key => &$val) {
-// 						$STH->bindParam(":{$key}", $val);
-// 					}
-// 					$STH->execute($logParams);
-// 				}
-// 			}
-			// ==========================================
-			
 			return $result;
 		}
 	}
@@ -237,42 +215,6 @@ Class DBmanager{
 		return $newdate;
 	}
 
-	/**
-	 * Enter description here ...
-	 * @param unknown_type $sql
-	 * @return boolean
-	 */
-	function StoreSql($sql){
-		$lower_sql = strtolower($sql);
-		if(strstr($lower_sql, 'insert')		||		strstr($lower_sql, 'update')){
-			$log_user_id =$_SESSION["admin"]["id"]!=''?$_SESSION["admin"]["id"]:$_SESSION["user"]["id"];
-			if($log_user_id ==''){$log_user_id=0;}
-			$sql ="	INSERT INTO tbl_log
-	            (
-	            log_user_id,
-	            log_user_type,
-	            log_user_sql,
-	            log_user_ip
-	            )
-				VALUES (
-				'".$log_user_id."',
-				'".($_SESSION["admin"]["id"]!=''?"ADMIN":"USER")."',
-				'".addslashes($lower_sql)."',
-				'".$_SERVER['REMOTE_ADDR']."') ";
-
-			$result = mysql_query($sql);
-			if(mysql_error()) {
-				$err = mysql_error();
-				$trace = debug_backtrace();
-				$backtrace = parse_backtrace($trace);
-				$errMsg = logError($backtrace, $err, $MySQL);
-				die($errMsg);
-
-			}
-		}
-		return true;
-	}
-	
 	
 
 }

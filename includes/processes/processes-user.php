@@ -1,63 +1,5 @@
 <?php
 
-if($_GET["code"]){ // FACEBOOK AUTH 2ND PART  -- NOTE: DUE TO A FACEBOOK USER LOGIN ISSUE, THIS SECTION BYPASSED INDEX.PHP FILE
-	set_include_path($_SERVER['DOCUMENT_ROOT']);
-	include "includes/functions/functions.php";
-	include_once 'includes/social/facebook/facebook.php';
-	
-	$facebook = new Facebook(array(
-			'appId'=>'208591239336752',
-			'secret'=>'21ffc84783a7275f8cb9a43c49e00d78',
-			'allowSignedRequest'=>false
-	));
-	$user_id = $facebook->getUser();
-
-	if(isMobile()){
-		$redirectThis = true;
-	}else{
-		$redirectThis = false;
-	}
-	if($user_id){
-		try{
-			$profile = $facebook->api('/me','GET');
-			$user_obj = new UserClass();
-			$res = $user_obj->AuthenticateFacebook($profile);
-			if($res['error']){
-				$_SESSION['error'] = $res['error'];
-				if($redirectThis){
-					header("Location: {$_SESSION['fb_referer']}#error");
-				}else{
-					echo "<script> window.opener.redirectWin('{$_SESSION['fb_referer']}#error');  window.close();</script> ";
-				}
-			}else{
-				$cart_obj = new cart();
-				$cart_obj->SetUserCart($res['id']);
-				$_SESSION['user']['public'] = $res;
-				if($redirectThis){
-					header("Location: " . $_SESSION['fb_referer']);
-				}else{
-					echo "<script> window.opener.redirectWin('{$_SESSION['fb_referer']}');  window.close();</script> ";
-				}
-			}
-		}catch(FacebookApiException $e){
-			$_SESSION['error'] = "Error({$e->getType()}): {$e->getMessage()}";
-			if($redirectThis){
-				header("Location: {$_SESSION['fb_referer']}#error");
-			}else{
-				echo "<script> window.opener.redirectWin('{$_SESSION['fb_referer']}#error');  window.close();</script> ";
-			}
-		}
-  }else{
-  	$_SESSION['error'] = "Connection to Facebook failed.";
-		if($redirectThis){
-			header("Location: {$_SESSION['fb_referer']}#error");
-		}else{
-			echo "<script> window.opener.redirectWin('{$_SESSION['fb_referer']}#error');  window.close();</script> ";
-		}
-	}
-	die();
-}
-
 if(checkToken('frontend',$_POST["formToken"],false)){
   switch($_POST["action"]){
     case 'create':
@@ -170,96 +112,13 @@ if(checkToken('frontend',$_POST["formToken"],false)){
     		}
     		die();
 
-    case 'FBlogin':
-    	include_once 'includes/social/facebook/facebook.php';
-      $facebook = new Facebook(array(
-          'appId'=>'208591239336752',
-          'secret'=>'21ffc84783a7275f8cb9a43c49e00d78',
-      		'allowSignedRequest'=>false
-      ));
-      $user_id = $facebook->getUser();
-      if($user_id){
-        try{
-          $profile = $facebook->api('/me','GET');
-          
-          $user_obj = new UserClass();
-          $res = $user_obj->AuthenticateFacebook($profile);
-          if($res['error']){
-            $_SESSION['error'] = $res['error'];
-            header("Location: /login#error");
-          }else{
-            $cart_obj = new cart();
-            $cart_obj->SetUserCart($res['id']);
-            $_SESSION['user']['public'] = $res;
-            echo json_encode(array(
-                "error"=>false,
-                "login_url"=>null,
-                'new_window'=>null,
-                "message"=>$_SESSION['error']
-            ));
-          }
-        }catch(FacebookApiException $e){
-          echo json_encode(array(
-              "error"=>true,
-              "login_url"=>null,
-              'new_window'=>null,
-              "message"=>"Error({$e->getType()}): {$e->getMessage()}"
-          ));
-        }
-      }else{
-        if(isMobile()){
-          $optionsFB = array(
-              'scope'=>'email, user_birthday, user_location',
-          		'redirect_uri' => 'http://'.$GLOBALS['HTTP_HOST'].'/includes/processes/processes-user.php'
-          );
-          $newWindow = false;
-        }else{
-          $optionsFB = array(
-              'display'=>'popup',
-              'scope'=>'email, user_birthday, user_location',
-          		'redirect_uri' => 'http://'.$GLOBALS['HTTP_HOST'].'/includes/processes/processes-user.php'
-          );
-          $newWindow = true;
-        }
-        $login_url = $facebook->getLoginUrl($optionsFB);
-        echo json_encode(array(
-            "error"=>false,
-            "login_url"=>$login_url,
-            'new_window'=>$newWindow,
-            "message"=>null
-        ));
-      }
-      $_SESSION['fb_referer'] = $_SERVER['HTTP_REFERER'];
-      if($_POST['redirect']){
-        $_SESSION['fb_referer'] = $_POST['redirect'];
-      }
-      die();
   }
 }elseif($_GET["logout"]){
-	include_once 'includes/social/facebook/facebook.php';
-  if($_SESSION['user']['public']['social_id']){
-    $facebook = new Facebook(array(
-        'appId'=>'208591239336752',
-        'secret'=>'21ffc84783a7275f8cb9a43c49e00d78'
-    ));
-    $user_id = $facebook->getUser();
-    
-    $logout_url = $facebook->getLogoutUrl(array(
-        'next'=>$_SERVER['HTTP_REFERER']
-    ));
-    unset($_SESSION['fb_208591239336752_code']);
-    unset($_SESSION['fb_208591239336752_access_token']);
-    unset($_SESSION['fb_208591239336752_user_id']);
-  }else{
-    $logout_url = $_SERVER['HTTP_REFERER'];
-  }
-  
-  unset($_SESSION['user']['public']);
+	unset($_SESSION['user']['public']);
   unset($_SESSION['address']);
   session_regenerate_id();
-  header('Location: ' . $logout_url);
+  header('Location: ' . $_SERVER['HTTP_REFERER']);
   die();
-  
 }
 	
 header("Location: /404");

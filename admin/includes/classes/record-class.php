@@ -207,6 +207,7 @@ Class Record{
 		if($DBobject->executeSQL($sql)){
 			global $DELETED;
 			$_SESSION['notice']= $DELETED;
+			saveInLog('Delete', $this->TABLE, $id);
 			return true;
 		}
 		return false;

@@ -197,6 +197,7 @@ class Listing {
     if($DBobject->executeSQL($sql)){
       global $DELETED;
       $_SESSION['notice'] = $DELETED;
+      saveInLog('Delete', 'tbl_listing', $id);
       return true;
     }
     return false;
@@ -219,4 +220,5 @@ class Listing {
     }
     return $data;
   }
+  
 }
