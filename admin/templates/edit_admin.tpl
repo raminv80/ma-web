@@ -16,71 +16,111 @@
 					<input type="hidden" id="error" name="error" value="0" />
 				</div>
 			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="admin_name">Name *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.admin_name}" name="field[1][tbl_admin][{$cnt}][admin_name]" id="admin_name" required>
-					<span class="help-block"></span>
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+				<li><a href="#log" data-toggle="tab">Log</a></li>
+			</ul>
+			<div class="tab-content">
+				<!--===+++===+++===+++===+++===+++ DETAILS TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane active" id="details">
+					<div class="row form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
+						
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="admin_name">Name *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.admin_name}" name="field[1][tbl_admin][{$cnt}][admin_name]" id="admin_name" required>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="admin_surname">Surname</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.admin_surname}" name="field[1][tbl_admin][{$cnt}][admin_surname]" id="admin_surname">
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="admin_email">Email *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="email" value="{$fields.admin_email}" name="field[1][tbl_admin][{$cnt}][admin_email]" id="admin_email" onchange="$('#admin_username').val(this.value);createPassword();" required>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="admin_reemail">Retype Email *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.admin_email}" id="admin_reemail" required>
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="password">Password *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="password" value="" name="field1" id="password" onchange="createPassword();">
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="re_password">Retype Password *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="password" value="" name="field2" id="re_password" >
+								<span class="help-block"></span>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="admin_level">Admin Level</label>
+							<div class="col-sm-5">
+								<select class="form-control" name="field[1][tbl_admin][{$cnt}][admin_level]" id="admin_level">
+									<option value="1" {if $fields.admin_level eq 1}selected="selected"{/if}>Admin</option>
+			<!-- 						<option value="2" {if $fields.admin_level eq 2}selected="selected"{/if}>Store</option> -->
+								</select>
+							</div>
+						</div>
+			<!-- 			<div class="row form-group">
+							<label class="col-sm-3 control-label" for="store_id">Store</label>
+							<div class="col-sm-5">
+								<input type="hidden" value="admin_id" name="default[access_admin_id]" />
+								<input type="hidden" value="access_id" name="field[15][tbl_access][{$cnt}][id]" id="id" />
+								<input type="hidden" value="{$fields.accesses.0.access_admin_id}" name="field[15][tbl_access][{$cnt}][access_admin_id]" id="access_admin_id">
+								<input type="hidden" value="{$fields.accesses.0.access_id}" name="field[15][tbl_access][{$cnt}][access_id]" >
+								<select class="form-control" name="field[15][tbl_access][{$cnt}][access_store_id]" id="store_id">
+									<option value="0">Select one</option> {foreach $fields.options.store_id as $opt}
+									<option value="{$opt.id}" {if $fields.accesses.0.access_store_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option> {/foreach}
+								</select>
+							</div>
+						</div> -->
+					</div>
+				</div>
+				<!--===+++===+++===+++===+++===+++ LOG TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane" id="log">
+					<div class="row form" id="tags-wrapper">
+						<div class="col-sm-12">
+							{if $fields.logs}
+								<table class="table table-bordered table-striped table-hover">
+									<thead>
+										<tr>
+											<th>Date-Time</td>
+											<th>Action</td>
+											<th>User</td>
+										</tr>
+									</thead>
+									<tbody>
+									{foreach $fields.logs as $log}
+										<tr>
+											<td>{$log.log_created|date_format:"%d/%b/%Y %r"}</td>
+											<td>{$log.log_action}</td>
+											<td>{$log.admin_name}</td>
+										</tr>
+									{/foreach}
+									</tbody>
+								</table>
+							{else}
+								Log empty.
+							{/if}
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="admin_surname">Surname</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.admin_surname}" name="field[1][tbl_admin][{$cnt}][admin_surname]" id="admin_surname">
-					<span class="help-block"></span>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="admin_email">Email *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="email" value="{$fields.admin_email}" name="field[1][tbl_admin][{$cnt}][admin_email]" id="admin_email" onchange="$('#admin_username').val(this.value);createPassword();" required>
-					<span class="help-block"></span>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="admin_reemail">Retype Email *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="text" value="{$fields.admin_email}" id="admin_reemail" required>
-					<span class="help-block"></span>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="password">Password *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="password" value="" name="field1" id="password" onchange="createPassword();">
-					<span class="help-block"></span>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="re_password">Retype Password *</label>
-				<div class="col-sm-5">
-					<input class="form-control" type="password" value="" name="field2" id="re_password" >
-					<span class="help-block"></span>
-				</div>
-			</div>
-			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="admin_level">Admin Level</label>
-				<div class="col-sm-5">
-					<select class="form-control" name="field[1][tbl_admin][{$cnt}][admin_level]" id="admin_level">
-						<option value="1" {if $fields.admin_level eq 1}selected="selected"{/if}>Admin</option>
-<!-- 						<option value="2" {if $fields.admin_level eq 2}selected="selected"{/if}>Store</option> -->
-					</select>
-				</div>
-			</div>
-<!-- 			<div class="row form-group">
-				<label class="col-sm-3 control-label" for="store_id">Store</label>
-				<div class="col-sm-5">
-					<input type="hidden" value="admin_id" name="default[access_admin_id]" />
-					<input type="hidden" value="access_id" name="field[15][tbl_access][{$cnt}][id]" id="id" />
-					<input type="hidden" value="{$fields.accesses.0.access_admin_id}" name="field[15][tbl_access][{$cnt}][access_admin_id]" id="access_admin_id">
-					<input type="hidden" value="{$fields.accesses.0.access_id}" name="field[15][tbl_access][{$cnt}][access_id]" >
-					<select class="form-control" name="field[15][tbl_access][{$cnt}][access_store_id]" id="store_id">
-						<option value="0">Select one</option> {foreach $fields.options.store_id as $opt}
-						<option value="{$opt.id}" {if $fields.accesses.0.access_store_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option> {/foreach}
-					</select>
-				</div>
-			</div> -->
-					
 			<div class="row form-group">
 				<div class="col-sm-offset-3 col-sm-9">
 					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right" style="margin-top: 50px;"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>

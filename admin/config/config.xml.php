@@ -31,6 +31,11 @@
 			<id>admin_id</id>
 			<field>admin_name</field>
 			<deleted>admin_deleted</deleted>
+			<log>
+				<table>tbl_admin</table>
+				<id>admin_id</id>
+				<field>admin_id</field>
+			</log>
 		</table>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_admin.tpl</edit_template>
@@ -79,6 +84,11 @@
 			<field>tag_object_id</field>
 			<where>tag_object_table = 'tbl_listing'</where> 
 		</associated>
+		<log>
+			<table>tbl_listing</table>
+			<id>listing_id</id>
+			<field>listing_object_id</field>
+		</log>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_page.tpl</edit_template>
 		
@@ -114,6 +124,11 @@
 			<field>tag_object_id</field>
 			<where>tag_object_table = 'tbl_listing'</where> 
 		</associated>
+		<log>
+			<table>tbl_listing</table>
+			<id>listing_id</id>
+			<field>listing_object_id</field>
+		</log>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_prodcategory.tpl</edit_template>
 	</section>  
@@ -189,6 +204,11 @@
 					<where>listing_parent_flag = '1' AND listing_type_id = '2' AND listing_published = '1'</where> 
 				</field>  
 			</options>
+			<log>
+				<table>tbl_product</table>
+				<id>product_id</id>
+				<field>product_object_id</field>
+			</log>
 		</table>
 		<list_template>listall.tpl</list_template>
 		<edit_template>edit_product.tpl</edit_template>
@@ -303,6 +323,11 @@
 					<orderby>product_name AND product_published = '1'</orderby>
 				</field> 
 			</options>
+			<log>
+				<table>tbl_discount</table>
+				<id>discount_id</id>
+				<field>discount_id</field>
+			</log>
 		</table>
 		<list_template>list_discount.tpl</list_template>
 		<edit_template>edit_discount.tpl</edit_template>
@@ -319,6 +344,11 @@
 			<id>user_id</id>
 			<field>user_username</field>
 			<deleted>user_deleted</deleted>
+			<log>
+				<table>tbl_user</table>
+				<id>user_id</id>
+				<field>user_id</field>
+			</log>
 		</table>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_members.tpl</edit_template>
@@ -351,6 +381,11 @@
 			<linkfield>listing_id</linkfield>
 			<field>location_listing_id</field>
 		</extends>
+		<log>
+			<table>tbl_listing</table>
+			<id>listing_id</id>
+			<field>listing_object_id</field>
+		</log>
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_store.tpl</edit_template>
 	</section> 

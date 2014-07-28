@@ -4,7 +4,9 @@
 	{foreach $items as $item}
 		{if $item.url}
 		<tr {if $item.published eq '0'}class="draft"{/if}>
-			<td>{for $var=1 to $level}- {/for}<b>{$item.title} </b>{if $item.published eq '0'}<small>| draft</small>{/if}</td>
+			<td>{for $var=1 to $level}- {/for}{$item.title} {if $item.published eq '0'}<small>| draft</small>{/if}</td>
+			<td>{if $item.record.discount_code}{$item.record.discount_code}{/if}
+			</td>
 			<td class="text-center">{if $item.record.discount_used}{$item.record.discount_used}{/if}
 			</td>
 			<td>{if $item.url} <a href='{$item.url}' class='btn btn-small btn-warning pull-right'><span class="glyphicon glyphicon-pencil"></span> Edit</a> {/if}
@@ -21,10 +23,11 @@
 	<table class="table table-bordered table-striped table-hover">
 		<thead>
 			<tr>
-				<th colspan="4">{$zone|upper} <a href="/admin/edit/{$path}" class='btn btn-small btn-success pull-right'><span class="glyphicon glyphicon-plus"></span> Add New</a></th>
+				<th colspan="5">{$zone|upper} <a href="/admin/edit/{$path}" class='btn btn-small btn-success pull-right'><span class="glyphicon glyphicon-plus"></span> Add New</a></th>
 			</tr>
 			<tr>
 				<th>Name</th>
+				<th>Code</th>
 				<th class="text-center">Used</th>
 				<th colspan="2"></th>
 			</tr>

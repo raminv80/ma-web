@@ -52,6 +52,9 @@ class Listing {
       foreach($this->CONFIG_OBJ->associated as $a){
         $listing_f["{$a->name}"] = $this->getAssociated($a,$res[0]["{$a->linkfield}"]);
       }
+      foreach($this->CONFIG_OBJ->log as $a){
+      	$listing_f["logs"] = $this->getLog($a,$res[0]["{$a->id}"]);
+      }
       foreach($this->CONFIG_OBJ->extends as $a){
         $pre = str_replace("tbl_","",$a->table);
         $sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '".$res[0]["{$a->linkfield}"]."' AND {$pre}_deleted IS NULL ";
@@ -206,7 +209,7 @@ class Listing {
   function getUrl($id, $published = 1, $url = '') {
     global $DBobject;
     
-    $data = '';
+    $data = '/'.$url;
     $sql = "SELECT listing_url, listing_parent_id FROM tbl_listing WHERE listing_object_id = :id AND listing_deleted IS NULL ORDER BY listing_published = :published";
     if($res = $DBobject->executeSQL($sql,array(
         ':id'=>$id,
@@ -214,11 +217,29 @@ class Listing {
     ))){
     	if(!empty($res[0]['listing_parent_id']) && intval($res[0]['listing_parent_id'])>0 && !empty($res[0]['listing_url'])){
     		$data = self::getUrl($res[0]['listing_parent_id'],1,$res[0]['listing_url']. '/' . $url);
-    	}else{
+    	}else{ 
       	$data = $res[0]['listing_url'] . '/' . $url;
     	}
     }
     return $data;
+  }
+  
+  function getLog($a, $id) {
+  	global $SMARTY,$DBobject;
+  	$results = array();
+  
+  	if((string) $a->id != (string) $a->field){
+  		$sql = "SELECT {$a->field} FROM {$a->table} WHERE {$a->id} = :id" ;
+  		$parent = $DBobject->wrappedSqlGet($sql, array(':id'=> $id));
+  		 
+  		$sql = "SELECT tbl_log.*, {$a->id}, admin_name FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id LEFT JOIN {$a->table} ON {$a->id} = log_record_id WHERE log_record_table = :table AND log_deleted IS NULL AND {$a->field} = :fid ORDER BY log_created DESC";
+  		$results = $DBobject->wrappedSqlGet($sql, array(':table'=> $a->table, ':fid'=> $parent[0]["{$a->field}"]));
+  	
+  	}else{
+  		$sql = "SELECT tbl_log.*, tbl_admin.admin_name FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id WHERE log_record_table = :table AND log_record_id = :id AND log_deleted IS NULL ORDER BY log_created DESC";
+	  	$results = $DBobject->wrappedSqlGet($sql, array(':table'=> $a->table, ':id'=> $id) );
+  	}
+  	return $results;
   }
   
 }

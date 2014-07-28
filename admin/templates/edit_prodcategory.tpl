@@ -52,6 +52,7 @@
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
 				<li><a href="#tags" data-toggle="tab">Tags</a></li>
+				<li><a href="#log" data-toggle="tab">Log</a></li>
 			</ul>
 		
 			<div class="tab-content">
@@ -142,6 +143,35 @@
 					{/foreach}
 					</div>
 					<input type="hidden" value="{$tagno}" id="tagno">
+				</div>
+				<!--===+++===+++===+++===+++===+++ LOG TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane" id="log">
+					<div class="row form" id="tags-wrapper">
+						<div class="col-sm-12">
+							{if $fields.logs}
+								<table class="table table-bordered table-striped table-hover">
+									<thead>
+										<tr>
+											<th>Date-Time</td>
+											<th>Action</td>
+											<th>User</td>
+										</tr>
+									</thead>
+									<tbody>
+									{foreach $fields.logs as $log}
+										<tr {if $log.listing_id eq $fields.listing_id}class="info"{/if}>
+											<td>{$log.log_created|date_format:"%d/%b/%Y %r"}</td>
+											<td>{$log.log_action}{if $log.log_action eq 'Add' || $log.log_action eq 'Delete'} draft{/if}</td>
+											<td>{$log.admin_name}</td>
+										</tr>
+									{/foreach}
+									</tbody>
+								</table>
+							{else}
+								Log empty.
+							{/if}
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="row form-group form-bottom-btns">
