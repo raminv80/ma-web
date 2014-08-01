@@ -362,8 +362,7 @@ class cart {
     
     $cart_arr = array();
     
-    $sql = "SELECT 	cartitem_id, cartitem_cart_id, cartitem_product_id, cartitem_product_name, cartitem_product_price, cartitem_quantity, cartitem_subtotal, cartitem_product_gst 
-				FROM tbl_cartitem
+    $sql = "SELECT * FROM tbl_cartitem
     			WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
     
     $res = $DBobject->wrappedSql($sql,array(
@@ -411,6 +410,10 @@ class cart {
         }
       }
       $cart_arr[$p['cartitem_id']]['url'] = $url;
+      
+      // ---------------- PRODUCT CATEGORY ----------------
+      $cart_arr[$p['cartitem_id']]['category'] = $this->getFullCategoryName($p['cartitem_listing_id']);
+      
       
       // ---------------- PRODUCTS DETAILS FROM tbl_gallery ----------------
       $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery 
@@ -563,10 +566,11 @@ class cart {
    * @param array $AttributesArr          
    * @param int $quantity          
    * @param float $price          
-   * @param int $cartId          
+   * @param int $cartId  
+   * @param int $category          
    * @return string
    */
-  function AddToCart($productId, $AttributesArr, $quantity, $price, $cartId = null) {
+  function AddToCart($productId, $AttributesArr, $quantity, $price, $cartId = null, $category = 0) {
     global $DBobject;
     
     if($this->cart_id == '' || $this->cart_id == '0'){
@@ -591,13 +595,14 @@ class cart {
       $message = "The price of '{$product['product_name']}' has been updated. ";
     }
     
-    $cartItem = $this->ProductOnCart($product['product_id'],$product['attributes']);
+    $cartItem = $this->ProductOnCart($product['product_object_id'],$product['attributes']);
     
     if($cartItem['cartitem_id'] == 0){
       $subtotal = floatval($quantity) * floatval($product['product_price']);
       $params = array(
           ":cid"=>$cartId,
-          ":product_id"=>$product['product_id'],
+          ":product_id"=>$productId,
+          ":listing_id"=>$category,
           ":product_name"=>$product['product_name'],
           ":product_price"=>$product['product_price'],
           ":qty"=>$quantity,
@@ -609,6 +614,7 @@ class cart {
       $sql = "INSERT INTO tbl_cartitem (
 									cartitem_cart_id,
 									cartitem_product_id,
+									cartitem_listing_id,
 									cartitem_product_name,
 									cartitem_product_price,
 									cartitem_quantity,
@@ -621,6 +627,7 @@ class cart {
 								values(
 									:cid,
 									:product_id,
+      						:listing_id,
 									:product_name,
 									:product_price,
 									:qty,
@@ -675,9 +682,10 @@ class cart {
           ":id"=>$cartItem['cartitem_id'],
           ":qty"=>$quantity,
           ":price"=>$product['product_price'],
-          ":subtotal"=>$quantity * $product['product_price']
+          ":subtotal"=>$quantity * $product['product_price'],
+      		":listing_id"=>$category
       );
-      $sql = "UPDATE tbl_cartitem SET cartitem_quantity = :qty, cartitem_product_price = :price, cartitem_subtotal = :subtotal, cartitem_modified = now()  
+      $sql = "UPDATE tbl_cartitem SET cartitem_quantity = :qty, cartitem_product_price = :price, cartitem_subtotal = :subtotal, cartitem_listing_id = :listing_id, cartitem_modified = now()  
 	                WHERE cartitem_id = :id";
       
       if($DBobject->wrappedSql($sql,$params)){
@@ -700,18 +708,17 @@ class cart {
     $cnt = 1;
     
     // --------------- GET PRODUCT INFO --------------------
-    
-    $sql = "SELECT product_name, product_object_id FROM tbl_product WHERE product_id = :id ";
+    $sql = "SELECT product_name FROM tbl_product
+				WHERE product_object_id = :oid ORDER BY product_modified DESC, product_published = 1, product_instock = 1";
     $res = $DBobject->wrappedSql($sql,array(
-        ":id"=>$product_id
+    		":oid"=>$product_id
     ));
     $productName = $res[0]['product_name'];
-    $OBJID = $res[0]['product_object_id'];
     
-    $sql = "SELECT product_id, product_name, product_price, product_specialprice, product_gst, product_weight, product_width, product_height, product_length FROM tbl_product
+    $sql = "SELECT * FROM tbl_product
 				WHERE product_object_id = :oid AND product_deleted is null AND product_instock = 1 AND product_published = 1";
     $res = $DBobject->wrappedSql($sql,array(
-        ":oid"=>$OBJID
+        ":oid"=>$product_id
     ));
     if($res){
       $prod = $res[0];
@@ -791,7 +798,9 @@ class cart {
       return ($product = array(
           "error"=>false,
           "product_id"=>$prod['product_id'],
+      		"product_object_id"=>$prod['product_object_id'],
           "product_name"=>$prod['product_name'],
+      		"product_brand"=>$prod['product_brand'],
           "product_price"=>$prod['product_price'],
           "product_gst"=>$prod['product_gst'],
           "product_weight"=>$prod['product_weight'],
@@ -909,11 +918,10 @@ class cart {
           $this->RemoveFromCart($item['cartitem_id']);
         }else{
           if($DBproduct['product_price'] != $item['cartitem_product_price'] || $DBproduct['product_id'] != $item['cartitem_product_id'] || $DBproduct['product_name'] != $item['cartitem_product_name'] || $DBproduct['product_gst'] != $item['cartitem_product_gst']){
-            $sql = "UPDATE tbl_cartitem SET cartitem_product_price = :price, cartitem_product_id = :product_id, cartitem_product_name = :product_name, cartitem_product_gst = :product_gst, cartitem_subtotal = :subtotal  WHERE cartitem_id = :id";
+            $sql = "UPDATE tbl_cartitem SET cartitem_product_price = :price, cartitem_product_name = :product_name, cartitem_product_gst = :product_gst, cartitem_subtotal = :subtotal  WHERE cartitem_id = :id";
             $DBobject->wrappedSql($sql,array(
                 ":id"=>$item['cartitem_id'],
                 ":price"=>$DBproduct['product_price'],
-                ":product_id"=>$DBproduct['product_id'],
                 ":product_name"=>$DBproduct['product_name'],
                 ":product_gst"=>$DBproduct['product_gst'],
                 ":subtotal"=>floatval($DBproduct['product_price']) * $item['cartitem_quantity']
@@ -940,7 +948,11 @@ class cart {
   private function getParentList($parentId, $root = 0, $list = array()) {
     global $DBobject;
     
-    $sql = "SELECT listing_parent_id FROM tbl_listing WHERE listing_id = :id";
+    if(empty($parentId)){
+    	return array();
+    }
+    
+    $sql = "SELECT listing_parent_id FROM tbl_listing WHERE listing_type_id = 2 AND listing_deleted IS NULL AND listing_published = 1 AND listing_object_id = :id";
     if($res = $DBobject->wrappedSql($sql,array(
         ":id"=>$parentId
     ))){
@@ -954,11 +966,11 @@ class cart {
         ),$list));
       }
     }
-    return array();
+    return $list;
   }
 
   /**
-   * Return a multidimensional array with the product parents' id from a given product_id
+   * Return an array with the product parents' id from a given product_id
    *
    * @param int $productId          
    * @param int $root          
@@ -967,32 +979,21 @@ class cart {
   private function getProductCatParentList($productId, $root = 0) {
     global $DBobject;
     
+    $catArr =  array();
+    $params = array(":id"=>$productId);
     $sql = "SELECT product_listing_id FROM tbl_product WHERE product_id = :id";
-    if($res = $DBobject->wrappedSql($sql,array(
-        ":id"=>$productId
-    ))){
-      return $this->getParentList($res[0]['product_listing_id'],$root);
+    if($res = $DBobject->wrappedSql($sql,$params)){
+      $catArr = $this->getParentList($res[0]['product_listing_id'],$root);
     }
-    return array();
-  }
-
-  /**
-   * Return the product object id from a given product_id
-   *
-   * @param int $productId          
-   * @param int $root          
-   * @return int
-   */
-  private function getProductObjectId($productId) {
-    global $DBobject;
     
-    $sql = "SELECT product_object_id FROM tbl_product WHERE product_id = :id";
-    if($res = $DBobject->wrappedSql($sql,array(
-        ":id"=>$productId
-    ))){
-      return $res[0]['product_object_id'];
+    $sql = "SELECT additional_category_listing_id FROM tbl_additional_category WHERE additional_category_flag = 1 AND additional_category_product_id = :id";
+    if($res = $DBobject->wrappedSql($sql,$params)){
+    	foreach($res as $r){
+    		$catArr = array_merge($catArr,$this->getParentList($r['additional_category_listing_id'],$root));
+    	}
     }
-    return - 1;
+    
+    return $catArr;
   }
 
 
@@ -1080,7 +1081,7 @@ function ApplyDiscountCode($code, $cartId = null) {
                                     	$listingMatchSubtotal += floatval($item['cartitem_subtotal']);
 									}
 								}
-							} elseif ($res['discount_product_id'] == $this->getProductObjectId($item['cartitem_product_id'])){
+							} elseif ($res['discount_product_id'] == $item['cartitem_product_id']){
 								// Special code for product only
                             	if ($res['discount_amount_percentage']) {
                                 	$discount = floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
@@ -1198,6 +1199,113 @@ function ApplyDiscountCode($code, $cartId = null) {
   }
 
 
+  /**
+   * Return a string with listings(categories) parents' name from a given listing_id
+   *
+   * @param int $parentId
+   * @return string
+   */
+  private function getFullCategoryName($parentId) {
+  	global $DBobject;
+  
+  	$parentList = $this->getParentList($parentId);
+  	$result = array();
+  	foreach($parentList as $pl){
+  		$sql = "SELECT listing_name FROM tbl_listing WHERE listing_type_id = 2 AND listing_deleted IS NULL AND listing_published = 1 AND listing_object_id = :id";
+  		if($res = $DBobject->wrappedSql($sql,array(
+  				":id"=>$pl
+  		))){
+  				$result[] = $res[0]['listing_name'];
+  		}
+  	}
+  	if(empty($result)){
+  		return null;
+  	}
+  	return implode('/', $result);
+  }
+  
+   /**
+   * Return array with product details for Google Analytics - Enhanced ecommerce.
+   * Required: $product_id and $AttributesArr
+   *
+   * @param int $product_id          
+   * @param array $AttributesArr
+   * @param int $quantity  
+   * @param int $parentId  
+   * @param string $coupon 
+   * @param int $position          
+   * @return array
+   */
+  function getProductInfo_GA($productId, $AttributesArr, $quantity = 0, $parentId = 0, $coupon = null, $position = 0) {
+  	global $DBobject;
+  
+  	$result = array();
+  	$product = $this->GetProductCalculation($productId,$AttributesArr,$quantity);
+  	
+  	if(!$product['error']){
+  		
+  		$variant = array();
+  		foreach ($product['attributes'] as $a){
+  			$variant[] = $a['attr_value_name'] ;
+  		}
+  		
+  		$result = array(
+  				'id' => $product['product_object_id'],
+  				'name' => $product['product_name'],
+  				'category' => $this->getFullCategoryName($parentId),
+  				'brand' => $product['product_brand'],
+  				'variant' => implode('/', $variant),
+  				'price' => $product['product_price'],
+  				'quantity' => $quantity,
+  				'coupon' => $coupon,
+  				'position' => $position
+  		);
+  		
+  	}
+  	
+  	return $result;
+  }
+  
+  /**
+   * Return array with product details given a cartitem_id for Google Analytics - Enhanced ecommerce.
+   * @param int $cartItemId          
+   * @return array
+   */
+  function getProductInfoByCartItem_GA($cartItemId) {
+  	global $DBobject;
+  
+  	$result = array();
+  	$param = array(":id"=>$cartItemId);
+  	$sql = "SELECT * FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id 
+  			WHERE product_deleted IS NULL AND product_published = 1 AND cartitem_id = :id";
+  	if($res = $DBobject->wrappedSql($sql,$param)){
+  		
+  		$variant = array();
+  		$sql = "SELECT cartitem_attr_attr_value_name FROM tbl_cartitem_attr
+					WHERE cartitem_attr_cartitem_id	= :id AND cartitem_attr_deleted IS NULL";
+  		
+  		if($res2 = $DBobject->wrappedSql($sql,$param)){
+  			foreach($res2 as $a){
+  				$variant[] = $a['cartitem_attr_attr_value_name'];
+  			}
+  		}
+  		
+  		$result = array(
+  				'id' => $res[0]['product_object_id'],
+  				'name' => $res[0]['cartitem_product_name'],
+  				'category' => $this->getFullCategoryName($res[0]['cartitem_listing_id']),
+  				'brand' => $res[0]['product_brand'],
+  				'variant' => implode('/', $variant),
+  				'price' => $res[0]['cartitem_product_price'],
+  				'quantity' => $res[0]['cartitem_quantity'],
+  				'coupon' => '',
+  				'position' => ''
+  		);
+  	}
+  
+  	return $result;
+  }
+  
 //   /**
 //    * Return array with Favourite products given the user_id
 //    *

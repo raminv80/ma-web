@@ -3,6 +3,7 @@
 </style>
 {/block}
 
+
 {block name=body}
 {* Define the function *}
 {function name=render_product_list level=0 parenturl="" menu=0}

@@ -470,3 +470,7 @@ hr.or-separator:after {
 		text-transform: none !important;
 		max-width: 300px;
 }
+.out-stock {
+	color: #cc2020;
+	font-weight: bold;
+}

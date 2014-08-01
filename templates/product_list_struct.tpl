@@ -13,8 +13,12 @@
 <a href="{$parenturl}/{$item.product_url}" class="grey btn">View Product Details</a>
 <br />
 <form class="form-horizontal product-form" id="product-form{$count}" data-attr-id="product-form" role="form" accept-charset="UTF-8" action="" method="post">
-	<input type="hidden" value="ADDTOCART" name="action" id="action" /> <input type="hidden" name="formToken" id="formToken" value="{$token}" /> <input type="hidden" value="{$item.product_id}" name="product_id" id="product_id" /> <input type="hidden" id="quantity" name="quantity" value="1" /> <a
-		href="javascript:void(0)" class="buy btn" onclick="addCart('product-form{$count++}');"><img src="/images/add.png" alt="add button" /> Add to cart</a>
+	<input type="hidden" value="ADDTOCART" name="action" id="action" /> <input type="hidden" name="formToken" id="formToken" value="{$token}" /> <input type="hidden" value="{$item.product_object_id}" name="product_id" id="product_id" /><input type="hidden" value="{$listing_object_id}" name="listing_id" id="listing_id" /> <input type="hidden" id="quantity" name="quantity" value="1" /> 
+	{if $item.product_instock eq 1}
+	<a href="javascript:void(0)" class="buy btn" onclick="addCart('product-form{$count++}');"><img src="/images/add.png" alt="add button" /> Add to cart</a>
+	{else}
+		<div class="out-stock" data-form="{$count++}">Out of stock</div>
+	{/if}
 </form>
 </div>
 {/block}

@@ -5,7 +5,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	switch ($_POST['action']) {
 		case 'ADDTOCART':
 			$cart_obj = new cart();			
-			$response = $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['price']);
+			$response = $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['price'], null, $_POST['listing_id']);
 			$itemsCount = $cart_obj->NumberOfProductsOnCart();
 			$subtotal = $cart_obj->GetSubtotal();
 			$productsOnCart = $cart_obj->GetDataProductsOnCart();
@@ -13,8 +13,10 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 			$SMARTY->assign('itemNumber',$itemsCount);
 			$SMARTY->assign('subtotal', $subtotal);
 			$popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+			$productGA = $cart_obj->getProductInfo_GA($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['listing_id']);
 			echo json_encode(array(
-		    				'message' => $response,
+								'product' => $productGA,
+								'message' => $response,
 		    				'itemsCount' => $itemsCount,
 		    				'subtotal' => $subtotal,
 								'url' => 'http://'.$GLOBALS['HTTP_HOST'].'/shopping-cart',
@@ -25,7 +27,8 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    case 'DeleteItem':
 	    	$cart_obj = new cart();
 	    	$response = $cart_obj->RemoveFromCart($_POST['cartitem_id']);
-            $totals = $cart_obj->CalculateTotal();
+	    			$productGA = $cart_obj->getProductInfoByCartItem_GA($_POST['cartitem_id']);
+	    			$totals = $cart_obj->CalculateTotal();
             $itemsCount = $cart_obj->NumberOfProductsOnCart();
             $cart = $cart_obj->GetDataCart();
             $productsOnCart = $cart_obj->GetDataProductsOnCart();
@@ -34,10 +37,11 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
             $SMARTY->assign('cart',$cart);
             $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 	    	echo json_encode(array(
+	    					'product' => $productGA,
 	    					'itemsCount' => $itemsCount,
-                            'response'=> $response,
-                            'totals'=>$totals,
-							'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
+                'response'=> $response,
+                'totals'=>$totals,
+								'popoverShopCart' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $popoverShopCart)
             ));
 	    	exit;
 

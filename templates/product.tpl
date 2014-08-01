@@ -30,7 +30,8 @@
 			
 			<input type="hidden" value="ADDTOCART" name="action" id="action" /> 
 			<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-			<input type="hidden" value="{$product_id}" name="product_id" id="product_id" /> 
+			<input type="hidden" value="{$product_object_id}" name="product_id" id="product_id" /> 
+			<input type="hidden" value="{$listing_parent.listing_object_id}" name="listing_id" id="listing_id" /> 
 						
 				{foreach $attribute as $attr }
 					{if $attr.attr_value}

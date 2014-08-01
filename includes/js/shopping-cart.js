@@ -162,6 +162,21 @@ function addCart(form){
 			 	setTimeout(function() {
 			 		$('#shop-cart-btn').fadeOut(200);
 			    }, 4000);
+			 	ga('ec:addProduct', {
+			 	    'id': obj.product.id,
+			 	    'name': obj.product.name,
+			 	    'category': obj.product.category,
+			 	    'brand': obj.product.brand,
+			 	    'variant': obj.product.variant,
+			 	    'price': obj.product.price,
+			 	    'quantity': obj.product.quantity
+			 	  });
+			 	  ga('ec:setAction', 'add');
+			 	  var fullname = obj.product.name;
+			 	  if(obj.product.variant){
+			 		 fullname += ' | ' +  obj.product.variant
+			 	  }
+			 	  ga('send', 'event', 'Add to Cart', 'click', fullname); 
 			 	
 			}catch(err){
 				console.log('TRY-CATCH error');
@@ -256,6 +271,23 @@ function deleteItem(ID){
                 $('.nav-subtotal').html('$'+obj.totals['subtotal']);
 			 	$('#shop-cart-btn').html( obj.popoverShopCart );
 			 	if (response) {
+			 		ga('ec:addProduct', {
+				 	    'id': obj.product.id,
+				 	    'name': obj.product.name,
+				 	    'category': obj.product.category,
+				 	    'brand': obj.product.brand,
+				 	    'variant': obj.product.variant,
+				 	    'price': obj.product.price,
+				 	    'quantity': obj.product.quantity
+			 		});
+			 		ga('ec:setAction', 'remove');
+
+			 		var fullname = obj.product.name;
+			 		if(obj.product.variant){
+			 			fullname += ' | ' +  obj.product.variant
+			 		}
+			 	  	ga('send', 'event', 'Remove from Cart', 'click', fullname); 
+				 	  
 			 		if ( parseInt(obj.itemsCount) > 0 ){
                         $( '#'+ ID ).hide('slow');
                         $.each(totals, function(id, value){

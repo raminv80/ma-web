@@ -49,6 +49,8 @@
 		<div id="parent-site"></div>
 		
 		<script type="text/javascript">
+		
+		
 			function listener(event){
   			  if ( event.origin !== "http://edge.sharethis.com" ) {
 			    	$("#parent-site").html(event.origin);

@@ -67,6 +67,7 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
 ga('create', 'UA-51356141-1', 'themserver.com', {'siteSpeedSampleRate': 50}); //siteSpeedSampleRate defaults to 1% Max 10k for day. For low traffic sites this does not give enough stats. 
 ga('require', 'displayfeatures');
+ga('require', 'ec');
 ga('send', 'pageview');
 
 </script>
@@ -102,6 +103,7 @@ ga('send', 'pageview');
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>	
 	<script type="text/javascript">
 	$(document).ready(function(){
+
 		setTimeout(function(){
 			$('#help-alert').slideDown();
     	},300000);

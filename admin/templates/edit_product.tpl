@@ -109,14 +109,12 @@
 							</div>
 						</div>
 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_product_listing">Brand</label>
+							<label class="col-sm-3 control-label" for="id_product_brand">Brand</label>
 							<div class="col-sm-5 ">
-								<select  class="form-control" name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing">
-									<option value="{$rootParentID}">Select one</option> 
-									{call name=options_list opts=$fields.options.product_brand}
-								</select>
+								<input class="form-control" type="text" value="{$fields.product_brand}" name="field[1][tbl_product][{$cnt}][product_brand]" id="id_product_brand" >
+								<span class="help-block"></span>
 							</div>
-						</div>			
+						</div>		
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_seo_title">SEO Title *</label>
 							<div class="col-sm-5 ">
@@ -182,7 +180,19 @@
         <div class="tab-pane" id="additional">
           <div class="row form" data-error="Error found on <b>Additional tab</b>. View <b>Additional tab</b> to see specific error notices.">
             <div class="row form-group">
-              <label class="col-sm-5 control-label">Categories to appear under</label>
+							<label class="col-sm-3 control-label" for="id_product_listing">Main Category</label>
+							<div class="col-sm-5 ">
+								<select  class="form-control" name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing">
+									<option value="{$rootParentID}">Select one</option> 
+									{call name=options_list opts=$fields.options.product_listing_id}
+								</select>
+							</div>
+						</div>
+						<hr>
+            <div class="row">
+            	<div class="col-sm-offset-1">
+              	<h3>Categories to appear under</h3>
+              </div>
             </div>
             <input type="hidden" value="product_object_id" name="default[additional_category_product_id]" />
             {call name=additional_list data=$fields.options.product_listing_id} 
