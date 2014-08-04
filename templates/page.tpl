@@ -57,9 +57,9 @@
 
 {block name=head}{/block}
 
-{literal}
-<script>
 
+<script>
+{literal}
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -68,10 +68,16 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-51356141-1', 'themserver.com', {'siteSpeedSampleRate': 50}); //siteSpeedSampleRate defaults to 1% Max 10k for day. For low traffic sites this does not give enough stats. 
 ga('require', 'displayfeatures');
 ga('require', 'ec');
+ga('set', '&cu', 'AUD');
+{/literal}
+
+{$ga_ec}
+{block name=enhanced_ecommerce}{/block}
+	
 ga('send', 'pageview');
 
 </script>
-{/literal}
+
 
 </head>
 <body>
@@ -97,9 +103,6 @@ ga('send', 'pageview');
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-	<script type="text/javascript">var switchTo5x=true;</script>
-	<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-	<script type="text/javascript">stLight.options({ publisher: "ur-fe757e87-3393-e43b-6170-ceee5d67e29", doNotHash: false, doNotCopy: false, hashAddressBar: false });</script>
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>	
 	<script type="text/javascript">
 	$(document).ready(function(){

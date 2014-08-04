@@ -35,8 +35,8 @@ $_URI = explode("?",$_SERVER['REQUEST_URI']);
 $SMARTY->assign ( 'REQUEST_URI', rtrim($_URI[0],'/') );
 $_request = htmlclean($_REQUEST);
 $SMARTY->assign ( 'orderNumber', $_SESSION['orderNumber'] );
-$SMARTY->assign ( 'ga_ecommerce', $_SESSION['ga_ecommerce'] );// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
-unset ( $_SESSION ['ga_ecommerce'] );
+$SMARTY->assign ( 'ga_ec', $_SESSION['ga_ec'] );// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
+unset ( $_SESSION ['ga_ec'] );
 
 $token = getToken('frontend');
 $SMARTY->assign('token',$token);
@@ -127,6 +127,9 @@ while(true){
     $sql = "SELECT DISTINCT postcode_state FROM tbl_postcode WHERE postcode_state != 'OTHE' ORDER BY postcode_state";
     $states = $DBobject->wrappedSql($sql);
     $SMARTY->assign('options_state',$states);
+    // ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ENHANCED ECOMMERCE
+    $SMARTY->assign ( 'ga_ec', $cart_obj->getJSCartitemsByCartId_GA() . "ga('ec:setAction','checkout', { 'step': 1 });" );
+    
     break 1;
   }
   
@@ -183,6 +186,11 @@ while(true){
       $obj->LoadAssociatedProducts();
       $menu = $obj->LoadMenu($lp->pageID);
       $SMARTY->assign('menuitems',$menu);
+      if($template == 'product.tpl'){
+      	$cart_obj = new cart();
+      	$listingParent = $SMARTY->getTemplateVars('listing_parent');
+      	$SMARTY->assign('product_FullCategoryName', $cart_obj->getFullCategoryName($listingParent['listing_id']));
+      }
       break 2;
     }
   }

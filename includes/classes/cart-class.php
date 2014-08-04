@@ -1205,7 +1205,7 @@ function ApplyDiscountCode($code, $cartId = null) {
    * @param int $parentId
    * @return string
    */
-  private function getFullCategoryName($parentId) {
+  function getFullCategoryName($parentId) {
   	global $DBobject;
   
   	$parentList = $this->getParentList($parentId);
@@ -1301,6 +1301,40 @@ function ApplyDiscountCode($code, $cartId = null) {
   				'coupon' => '',
   				'position' => ''
   		);
+  	}
+  
+  	return $result;
+  }
+  
+  
+  /**
+   * Return javascript string with products details given a cart_id for Google Analytics - Enhanced ecommerce.
+   * @param int $cartId
+   * @return string
+   */
+  function getJSCartitemsByCartId_GA($cartId = null) {
+  	global $DBobject;
+  
+  	if(is_null($cartId)){
+  		$cartId = $this->cart_id;
+  	}
+  	$result = '';
+  	$param = array(":id"=>$cartId);
+  	$sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id = :id";
+  	if($res = $DBobject->wrappedSql($sql,$param)){
+  		foreach( $res as $r){
+  			$product = $this->getProductInfoByCartItem_GA($r['cartitem_id']);
+  			$result .= "ga('ec:addProduct', {
+  			'id': '{$product['id']}',
+  			'name': '{$product['name']}',
+  			'category': '{$product['category']}',
+  			'brand': '{$product['brand']}',
+  			'variant': '{$product['variant']}',
+  			'price': '{$product['price']}',
+  			'quantity': {$product['quantity']}
+  			}); 
+  			";
+  		}
   	}
   
   	return $result;

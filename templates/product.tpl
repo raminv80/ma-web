@@ -181,13 +181,24 @@
 			});
 			
 			{if $attribute}
+				var attributes = [];
 				{foreach $attribute as $attr }
 					var {urlencode data=$attr.attribute_name} = getParameterByName('{urlencode data=$attr.attribute_name}');
-	
+					attributes.push( getParameterByName('{urlencode data=$attr.attribute_name}') );
+					
 					$("#{urlencode data=$attr.attribute_name} option[name*='"+ {urlencode data=$attr.attribute_name} +"']").attr("selected", "selected"); 
 				{/foreach}
 			{/if}
 			calculatePrice();
+
+			ga('ec:addProduct', {
+	 	    'id': '{$product_object_id}',
+	 	    'name': '{$product_name}',
+	 	    'category': '{$product_FullCategoryName}',
+	 	    'brand': '{$product_brand}',
+	 	    'variant': attributes.join('/')
+	 	  });
+	 	  ga('ec:setAction', 'detail');
 			
 		});
 	

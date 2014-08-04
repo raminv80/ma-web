@@ -33,6 +33,18 @@ if (jQuery.validator) {
         		checkout2(formID); 
           		break;
           		
+        	case 'checkout3-form': 
+        		var paymentOption = 'Credit Card';
+        		ga('ec:setAction', 'checkout_option', {
+		 	        'step': 2,
+		 	        'option': paymentOption
+		 	      });
+		 	    ga('send', 'event', 'Checkout', 'Payment', paymentOption{
+		 	       hitCallback: function() {
+		 	    	  form.submit();
+		 	    });
+          		break;
+          		
         	case 'reset-pass-form': 
         		resetPass(formID);
         		break;
@@ -335,6 +347,17 @@ function checkout2(form) {
 			 		$('#shipping-summary').html(obj.shipping);
 			 		setCCRequired(true);
 			 		scrolltodiv('#checkout3-form');
+			 		
+			 		var shippingOption = 'Standard';
+			 	    ga('ec:setAction', 'checkout_option', {
+			 	        'step': 1,
+			 	        'option': shippingOption
+			 	      });
+			 	    ga('send', 'event', 'Checkout', 'Shipping', shippingOption);
+			 	    ga('ec:setAction','checkout', {
+			 		   'step': 2
+			 		  });
+			 	    ga('send', 'pageview');
 			 	}
 			}catch(err){
 				console.log('TRY-CATCH error');

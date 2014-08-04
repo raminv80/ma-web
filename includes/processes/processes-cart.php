@@ -277,7 +277,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 
 	    		$totals = $cart_obj->CalculateTotal();
 	    		$chargedAmount = $totals['total'] + $shippingFee;
-	    		$gst = ($totals['GST_Taxable'] + $shippingFee)/11;
+	    		$gst = round(($totals['GST_Taxable'] + $shippingFee)/11, 2);
 	    		$params = array(
 	    				'payment_billing_address_id' => $billID,
 	    				'payment_shipping_address_id' => $shipID,
@@ -344,8 +344,8 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 							$to = empty($res[0]['location_order_recipient'])?"online@them.com.au":$res[0]['location_order_recipient'];
 							*/							
 	    		    $to = $_SESSION['user']['public']['email'];
-	    		    $bcc = 'nick@them.com.au';
-	    		    $from = 'Retail Cloud';
+	    		    //$bcc = 'apolo@them.com.au';
+	    		    $from = 'eShop';
 	    		    $fromEmail = 'noreply@' . str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
 	    		    $subject = 'Confirmation of your order';
 	    		    $body= $SMARTY->fetch('email-confirmation.tpl');
@@ -357,33 +357,17 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     		    
     		    // SET GOOGLE ANALYTICS - ECOMMERCE
 	    		  $affiliation = str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
-    		    $analytics = "ga('require', 'ecommerce', 'ecommerce.js'); ";
-    		    $analytics .= "ga('ecommerce:addTransaction', {
-										    		    'id': '{$orderNumber}',
-										    		    'affiliation': '{$affiliation}',
-										    		    'revenue': '{$chargedAmount}',
-										    		    'shipping': '{$shippingFee}',
-										    		    'tax': '{$gst}',
-										    		    'currency': 'AUD'
-									    		  }); ";
-    		    foreach($orderItems as $item){
-    		    	$productFullName = $item['cartitem_product_name'];
-	    		    foreach($item['attributes'] as $attr){
-	    		  	  $productFullName .=	" / {$attr['cartitem_attr_attribute_name']}: {$attr['cartitem_attr_attr_value_name']}";
-	    		    }
-	    		    $category = str_replace('/store/', '', $item['url']); // CHANGE ROOT PARENT OR NON-CATEGORY ACCORDINGLY !!!!!!!!!!!
-	    		    $analytics .= "ga('ecommerce:addItem', {
-	    		    										'id': '{$orderNumber}',
-									    		    		'name': '{$productFullName}',
-								    		    			'sku': '{$item['cartitem_product_id']}',
-								    		    			'category': '{$category}',
-								    		    			'price': '{$item['cartitem_product_price']}',
-								    		    			'quantity': '{$item['cartitem_quantity']}',
-															  	'currency': 'AUD'
-	    		   								 }); ";
-    		    }
-    		    $analytics .= "ga('ecommerce:send'); ";
-    		    $_SESSION ['ga_ecommerce'] = $analytics;
+    		    $analytics = $cart_obj->getJSCartitemsByCartId_GA($order_cartId);
+    		    $analytics .= "ga('ec:setAction', 'purchase', {
+														  'id': '{$orderNumber}',
+														  'affiliation': '{$affiliation}',
+														  'revenue': '{$chargedAmount}',
+														  'tax': '{$gst}',
+														  'shipping': '{$shippingFee}',
+														  'coupon': '{$order['cart_discount_code']}'  
+														});
+														";
+    		    $_SESSION ['ga_ec'] = $analytics;
     		    
     		    //SET USED DISCOUNT CODE
     		    if ($order['cart_discount_code']) {
