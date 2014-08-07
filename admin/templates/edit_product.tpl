@@ -1,20 +1,20 @@
 {block name=body}
-{function name=additional_list data=$data level=0} 
+{function name=additional_list data=$data level=0 levelcount=0} 
   {foreach $data as $opt}
   {if $count eq ""}{assign var=count value=1}{else}{assign var=count value=$count+1}{/if} 
   <div class="row form-group">
-     <input type="hidden" value="additional_category_id" name="field[3][tbl_additional_category][{$level*10}{$count}][id]" />
-     <input type="hidden" value="{call name=additional_category_id id=$opt.id}" name="field[3][tbl_additional_category][{$level*10}{$count}][additional_category_id]" />
-     <input type="hidden" value="{$fields.product_id}" name="field[3][tbl_additional_category][{$level*10}{$count}][additional_category_product_id]" id="additional_category_product_id" class="key">
-     <input type="hidden" value="{$opt.id}" name="field[3][tbl_additional_category][{$level*10}{$count}][additional_category_listing_id]" id="additional_category_listing_id" class="key">
+     <input type="hidden" value="additional_category_id" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][id]" />
+     <input type="hidden" value="{call name=additional_category_id id=$opt.id}" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][additional_category_id]" class="key"/>
+     <input type="hidden" value="{$fields.product_id}" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][additional_category_product_id]" id="additional_category_product_id" class="key">
+     <input type="hidden" value="{$opt.id}" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][additional_category_listing_id]" id="additional_category_listing_id">
      <div class="col-sm-{$level+1}">
-       <input type="hidden" value="{call name=additional_category_value id=$opt.id}" name="field[3][tbl_additional_category][{$level*10}{$count}][additional_category_flag]" class="value">
+       <input type="hidden" value="{call name=additional_category_value id=$opt.id}" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][additional_category_flag]" class="value">
        <input style="float:right;" class="chckbx" type="checkbox" {call name=additional_category_selected id=$opt.id} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_location{$opt.id}">
      </div>
      <label style="text-align:left;" class="col-sm-3 control-label" for="id_additional_cat{$opt.id}">{$opt.value}</label>
    </div>
    {if count($opt.subs) > 0}
-   {call name=additional_list data=$opt.subs level=$level+1 } 
+   {call name=additional_list data=$opt.subs level=$level+1 levelcount=$levelcount+{$count} } 
    {/if}
    {/foreach} 
 {/function}
@@ -38,16 +38,15 @@
 				<div class="col-sm-12 edit-page-header">
 							<span class="edit-page-title">{if $fields.product_id neq ""}Edit{else}New{/if} {$zone}</span>
 							{if $cnt eq ""}{assign var=cnt value=0}{/if} 
+							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 							<div class="published" {if $fields.product_published eq 0}style="display:none;"{/if}>
 								<!-- PUBLISHED -->
-								<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 								<a href="javascript:void(0);" onClick="unpublish('product_published');" class="btn btn-warning pull-right top-btn"><span class="glyphicon glyphicon-thumbs-down"></span> Unpublish</a>
 								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', false);" class="btn btn-info pull-right top-btn published"><span class="glyphicon glyphicon-floppy-disk"></span> Save Draft Version</a>
 							</div>
 							<div class="drafts" {if $fields.product_published eq 1}style="display:none;"{/if}>
 								<!-- DRAFT -->
 								<a href="javascript:void(0);" onClick="publish('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-primary pull-right top-btn drafts"><span class="glyphicon glyphicon-thumbs-up"></span> Save &amp; Publish</a>
-								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', false);" class="btn btn-info pull-right top-btn drafts"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 							</div>
 							<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', true);" class="btn btn-info pull-right top-btn"><span class="glyphicon glyphicon-eye-open"></span> Preview</a>
 					<input type="hidden" value="product_id" name="primary_id" id="primary_id"/> 
@@ -397,16 +396,15 @@
 			</div>
 			
 			<div class="row form-group form-bottom-btns">
+				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 				<div class="published" {if $fields.product_published eq 0}style="display:none;"{/if}>
 					<!-- PUBLISHED -->
-					<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn published"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 					<a href="javascript:void(0);" onClick="unpublish('product_published');" class="btn btn-warning pull-right top-btn"><span class="glyphicon glyphicon-thumbs-down"></span> Unpublish</a>
 					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', false);" class="btn btn-info pull-right top-btn published"><span class="glyphicon glyphicon-floppy-disk"></span> Save Draft Version</a>
 				</div>
 				<div class="drafts" {if $fields.product_published eq 1}style="display:none;"{/if}>
 					<!-- DRAFT -->
 					<a href="javascript:void(0);" onClick="publish('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]');" class="btn btn-primary pull-right top-btn drafts"><span class="glyphicon glyphicon-thumbs-up"></span> Save &amp; Publish</a>
-					<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', false);" class="btn btn-info pull-right top-btn drafts"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 				</div>
 				<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_product][{$cnt}][id]','product_object_id','product_published','field[1][tbl_product][{$cnt}][product_deleted]', true);" class="btn btn-info pull-right top-btn"><span class="glyphicon glyphicon-eye-open"></span> Preview</a>
 			</div>

@@ -195,7 +195,6 @@ class UserClass {
     		$user_arr["gname"]=$res[0]["user_gname"];
     		$user_arr["surname"]=$res[0]["user_surname"];
     		$user_arr["email"]=$res[0]["user_email"];
-    		//SaveAdminLogIn($row['admin_id']);		//<<<<<<<<<======= Login log????
     	} else {
     		$user_arr["error"] = "Wrong email or password";
     	}
@@ -394,7 +393,6 @@ class UserClass {
     			$user_arr["email"]=$res["user_email"];
     			$user_arr["social_name"]=$res["user_social_name"];
     			$user_arr["social_id"]=$res["user_social_id"];
-    			//SaveAdminLogIn($row['admin_id']);		//<<<<<<<<<======= Login log????
     		
     		} else {			//REGISTER WITH FACEBOOK DETAILS
     			$params = array (

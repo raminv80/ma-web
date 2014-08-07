@@ -18,21 +18,11 @@ function AdminLogIn($email,$password){
 		if($res2 = $DBobject->executeSQL($sql , $params)){
 			$_SESSION['user']['admin']["stores"]=$res2;
 		} */
-		SaveAdminLogIn($res[0]['admin_id']);
+		saveInLog('Login', 'tbl_admin', $res[0]["admin_id"]);
 		return true;
 	}else{
 		return false;
 	}
-}
-function SaveAdminLogIn($admin_id){
-	$fields = array('login_admin_id','login_ip');
-	$values = array($admin_id,$_SERVER['REMOTE_ADDR']);
-	$DBobject = new DBmanager();
-	$params = array('login_admin_id' => $admin_id,'login_ip' => $_SERVER['REMOTE_ADDR']);
-	$sql = "INSERT INTO tbl_login ( login_admin_id , login_ip ) VALUES ( :login_admin_id , :login_ip) ";
-	$result = $DBobject->executeSQL($sql , $params );
-	return true;
-
 }
 
 function showVars(){
