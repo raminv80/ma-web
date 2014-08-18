@@ -14,8 +14,8 @@ RewriteRule ^(.*)$ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 ##### ATTEMPT TO SEE IF I CAN MAP page=XX TO THE CORRENT FRIENDLY URL
 RewriteRule ^([^.]+)?$ index.php?arg1=$1 [QSA]
 
-#RewriteRule ^picture/[0-9]{1,3}/(.*)\.(?:jpe?g|gif|png)$ picture.php
-RewriteRule \.(?:jpeg|jpg|gif|png)$ convertProgressive.php
+#RewriteRule ^picture/[0-9]{1,3}/(.*)\.(?:jpe?g|gif|png)$ picture.php [nc]
+RewriteRule \.(?:jpeg|jpg|gif|png)$ convertProgressive.php [nc]
 
 
 #Block out any script trying to base64_encode crap to send via URL

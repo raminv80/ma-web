@@ -33,6 +33,7 @@ Class Record{
 		$this->GROUPBY = $_config->table->groupby?$_config->table->groupby:'';
 		$this->LIMIT = $_config->table->limit?$_config->table->limit:'';
 		$this->DELETED = $_config->table->deleted;
+		$this->PUBLISHED = $_config->table->published;
 		$this->CONFIG = $_config;
 	}
 
@@ -86,12 +87,20 @@ Class Record{
 				$article_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
 			} else {
 				$pre = str_replace ( "tbl_", "", $f->table );
-				$sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+				$ref = array();
+				foreach ($f->reference as $r){
+					$ref[] = $r;
+				}
+				$sql = "SELECT {$f->id},". implode(',', $ref)." FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 					foreach ( $res as $key => $row ) {
+						$value = array();
+						foreach ($ref as $r){
+							$value[] = $row ["{$r}"];
+						}
 						$article_f ['options'] ["{$f->name}"] [] = array (
 								'id' => $row ["{$f->id}"],
-								'value' => $row ["{$f->reference}"]
+								'value' => implode(' ', $value)
 						);
 					}
 					}
@@ -175,7 +184,14 @@ Class Record{
 					$title .= ($n>0?", ":"").$val["{$f}"];
 					$n++;
 				}
-				$records[$val["{$this->ID}"]] = array("title"=>$title,"record"=>$val,"id"=>$val["{$this->ID}"],"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}","url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}");
+				$records[$val["{$this->ID}"]] = array(
+						"title"=>$title,
+						"record"=>$val,
+						"id"=>$val["{$this->ID}"],
+						"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}",
+						"url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}",
+						"published"=>$val["{$this->PUBLISHED}"],
+				);
 				
 				foreach($this->CONFIG->table->associated as $a){
 					if ($a->attributes()->inlist) {

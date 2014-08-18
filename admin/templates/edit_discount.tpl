@@ -104,16 +104,17 @@
 			        </div>
 			      </div>
 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_discount_start_date">Start Date * <br><small>(yyyy-mm-dd)</small></label>
+							<label class="col-sm-3 control-label" for="id_discount_start_date">Start Date *</label>
 							<div class="col-sm-5">
-								<input class="form-control dates" type="text" value="{$fields.discount_start_date}" name="field[1][tbl_discount][{$cnt}][discount_start_date]" id="id_discount_start_date" required>
-								<span class="help-block"></span>
+								<input class="form-control dates" type="text" value="{if $fields.discount_start_date}{$fields.discount_start_date|date_format:"%d/%m/%Y"}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}"  name="from" id="from" onchange="setDateValue('id_discount_start_date',this.value);" required>
+								<input type="hidden" value="{if $fields.discount_start_date}{$fields.discount_start_date}{else}{$smarty.now|date_format:"%Y-%m-%d"}{/if}" name="field[1][tbl_discount][{$cnt}][discount_start_date]" id="id_discount_start_date">
 							</div>
 						</div>
 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_discount_end_date">End Date <br><small>(yyyy-mm-dd)</small></label>
+							<label class="col-sm-3 control-label" for="id_discount_end_date">End Date</label>
 							<div class="col-sm-5">
-								<input class="form-control dates" type="text" value="{$fields.discount_end_date}" name="field[1][tbl_discount][{$cnt}][discount_end_date]" id="id_discount_end_date">
+								<input class="form-control dates" type="text" value="{if $fields.discount_end_date}{$fields.discount_end_date|date_format:"%d/%m/%Y"}{/if}"  name="to" id="to" onchange="setDateValue('id_discount_end_date',this.value);" >
+								<input type="hidden" value="{if $fields.discount_end_date}{$fields.discount_end_date}{/if}" name="field[1][tbl_discount][{$cnt}][discount_end_date]" id="id_discount_end_date">
 							</div>
 						</div>
 						<div class="row form-group">
@@ -209,24 +210,26 @@ $(document).ready(function(){
     	  }
 	 });
 
-
-	$("#id_discount_end_date").datepicker({
+	$("#from").datepicker({
 		changeMonth : true,
 		changeYear : true,
-		dateFormat : "yy-mm-dd",
+		dateFormat : "dd/mm/yy",
 		onSelect : function(selectedDate) {
-			$("#id_discount_start_date").datepicker("option", "maxDate", selectedDate);
+			$("#id_discount_start_date").val( convert_to_mysql_date_format(selectedDate) );
+			$("#to").datepicker("option", "minDate", selectedDate);
 		}
 	});
 
-	$("#id_discount_start_date").datepicker({
+	$("#to").datepicker({
 		changeMonth : true,
 		changeYear : true,
-		dateFormat : "yy-mm-dd",
+		dateFormat : "dd/mm/yy",
 		onSelect : function(selectedDate) {
-			$("#id_discount_end_date").datepicker("option", "minDate", selectedDate);
+			$("#id_discount_end_date").val( convert_to_mysql_date_format(selectedDate) );
+			$("#from").datepicker("option", "maxDate", selectedDate);
 		}
 	});
+
 });
 </script>
 {/block}

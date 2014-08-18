@@ -70,6 +70,7 @@ function urlSafeString($str){
 	$str = preg_replace('/[^A-Za-z0-9\-]/', '', $str);
 	//$str = preg_replace("/[^\s^\d^\w]+/", "", $str);
 	$str = strtolower($str);
+	$str = preg_replace('/--+/', '-', $str);
 	return $str;
 }
 

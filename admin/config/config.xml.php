@@ -95,6 +95,10 @@
 		<custom_template field="listing_object_id" value="12">custom_home_edit_page.tpl</custom_template>	<!-- Home -->
 		<custom_template field="listing_object_id" value="888">redirect_edit_page.tpl</custom_template> <!-- New to Wagering  -->
 		
+		<custom field="listing_object_id" value="88">
+			<template>custom_home_edit_page.tpl</template>
+		</custom>
+		
 	</section>
 
 	 <!-- THIS SECTION IS USED TO MANAGE THE LISTINGS OF TYPE "PRODUCT CATEGORY". THIS IS A LISTING
@@ -307,6 +311,7 @@
 			<field>discount_name</field>
 			<deleted>discount_deleted</deleted>
 			<orderby>discount_id DESC</orderby>
+			<published>discount_published</published>
 			<options> 
 				<field recursive="true"> 
 					<name>categories</name>
