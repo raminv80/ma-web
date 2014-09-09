@@ -158,7 +158,7 @@ class cart {
       if($orig_items){
         foreach($orig_items as $item){
           $attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
-          $message[] = $this->AddToCart($item['cartitem_product_id'],$attrs,$item['cartitem_quantity'],$item['cartitem_product_price'],$destination);
+          $message[] = $this->AddToCart($item['cartitem_product_id'],$attrs,$item['cartitem_quantity'],$item['cartitem_product_price'],$destination, $item['cartitem_listing_id']);
         }
       }
       
@@ -362,8 +362,8 @@ class cart {
     
     $cart_arr = array();
     
-    $sql = "SELECT * FROM tbl_cartitem
-    			WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
+    $sql = "SELECT * FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id
+    			WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND product_published = '1' AND product_deleted IS NULL";
     
     $res = $DBobject->wrappedSql($sql,array(
         ":id"=>$cartId
@@ -382,7 +382,7 @@ class cart {
       $cart_arr[$p['cartitem_id']] = $p;
       // ---------------- BUILD URL -Part:1/2----------------
       $url = '';
-      $sql = "SELECT cache_url FROM tbl_product LEFT JOIN cache_tbl_product ON product_object_id = cache_record_id WHERE product_id = :id AND cache_published = '1'";
+      $sql = "SELECT cache_url FROM tbl_product LEFT JOIN cache_tbl_product ON product_object_id = cache_record_id WHERE product_object_id = :id AND cache_published = '1'";
       if($res2 = $DBobject->wrappedSql($sql,array(
           ":id"=>$p['cartitem_product_id']
       ))){
@@ -420,7 +420,7 @@ class cart {
 					WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_ishero DESC";
       
       $res2 = $DBobject->wrappedSql($sql,array(
-          ":id"=>$p['cartitem_product_id']
+          ":id"=>$p['product_id']
       ));
       $cart_arr[$p['cartitem_id']]['gallery'] = $res2;
       

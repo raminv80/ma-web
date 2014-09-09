@@ -8,7 +8,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="Distribution" content="Global" />
 <meta name="Robots" content="noindex,nofollow" />
-<title>{$page_seo_title}</title>
+<title>Website administration</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon">
 
@@ -38,7 +38,7 @@
 				animated: 'bounceslide'});
 		});
 	</script>
-<title>Website administration</title>
+
 <!--[if lte IE 8]>
 	  <script src="/admin/includes/js/respond.min.js"></script>
       <script src="/admin/includes/js/html5shiv.js"></script>
@@ -48,16 +48,20 @@
 <body>
 
 	<div class='container'>
+	
+		{block name=nav}{/block}
+		<div class="row">
+		<div class="col-sm-12">
 		<div class="masthead">
 			<div id="logo">
-				<h1>CMS Administration Area</h1>
 			</div>
 			<!-- end of logo -->
 		</div>
+		</div>
+		</div>
 		<!-- end ofcontainer_16 -->
 		<div class="row">
-			<div class="col-sm-3">{block name=nav}{/block}</div>
-			<div class="col-sm-9">
+			<div class="col-sm-12">
 				
 				
 				<!--  block body start -->

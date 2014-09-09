@@ -13,59 +13,52 @@
 	<div id="mainin" class="container">
 		<div class="row">
 			<div class="col-sm-6">
+			<h1>{$listing_name}</h1>
 				<div class="row" id="upcoming">
 					<div class="col-sm-12">
 						<div class="row">
 							<div class="col-sm-12">
-								<div class="uphead">Upcoming Meetings</div>
+								
 								<div class="right"><a href="/punters-corner/meetings" title="See More">See More</a></div>
 							</div>
 						</div>
-						{foreach $meetings as $m}{if $m.meeting_id}
-						<div class="row meet">
-							<div class="col-sm-12">
-								<div class="row">
-									<div class="date col-xs-4 col-sm-3 col-md-3">
-										<div class="top">{$m.meeting_date|date_format:"%a"}</div>
-										<div class="bot">{$m.meeting_date|date_format:"%e %b"}</div>
-									</div>
-									<div class="col-xs-7 col-sm-4 col-md-5 meettext">
-										<h5>{$m.meeting_title}</h5>
-										First Race, {$m.race_start_time|date_format:"%l:%M %P"}<br/>
-										<a href="/punters-corner/meetings/id{$m.meeting_id}">View Form</a>
-										<a class="tip" data-toggle="tooltip" title="The form gives you all the information you need to know about planned races and projected outcomes"><img src="/images/question.png" alt="Question mark" /></a>
-									</div>
-									<div class="hidden-xs col-sm-5 col-md-4">
-										{if $m.meeting_bet_now_url}
-											<a target="_blank" href="{$m.meeting_bet_now_url}" title="Bet Now"><button class="btn btnblue betnow-btn">Bet now</button></a>
-										{/if}
-									</div>
-								</div>
-								<div class="row visible-xs">
-									<div class="col-xs-12">
-										{if $m.meeting_bet_now_url}
-											<a target="_blank" href="{$m.meeting_bet_now_url}" title="Bet Now"><button class="btn btnblue betnow-btn">Bet now</button></a>
-										{/if}
-									</div>
-								</div>
-							</div>
+						<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+						  <!-- Indicators -->
+						  <ol class="carousel-indicators">
+						    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+						    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+						    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+						  </ol>
+						
+						  <!-- Wrapper for slides -->
+						  <div class="carousel-inner">
+						    <div class="item active">
+						      <div>
+						        item1
+						      </div>
+						    </div>
+						    <div class="item">
+						      <div>
+						        item2
+						      </div>
+						    </div>
+						    ...
+						  </div>
+						
+						  <!-- Controls -->
+						  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+						    <span class="glyphicon glyphicon-chevron-left"></span>
+						  </a>
+						  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+						    <span class="glyphicon glyphicon-chevron-right"></span>
+						  </a>
 						</div>
-						{/if}{/foreach}
 						
 					</div>
 				</div>
 			</div>
 			<div class="col-sm-6">
-				{if $listing_content2}
-					<iframe class="hidden-xs" id="video" width="507" height="380" src="{$listing_content2}" frameborder="0" allowfullscreen></iframe>
-				{/if}
-				{if $listing_content3}
-					{if $listing_content5}
-						<a target="_blank" href="{$listing_content5}"><img id="topimg" src="{$listing_content3}" class="img-responsive ad-banner" alt="Top ad-banner" /></a>
-					{else}
-						<img id="topimg" src="{$listing_content3}" class="img-responsive ad-banner" alt="Top ad-banner" />
-					{/if}
-				{/if}
+				
 			</div>
 		</div>
 		
@@ -87,27 +80,7 @@
 			</div>
 			</a>
 		</div>
-		{if count($blog) > 0}
-		<div class="row" id="latest">
-			<div class="col-sm-12">
-				<div class="row">
-					<div class="col-sm-12">
-						<div class="uphead">Latest Blog Entries</div>
-						<div class="right"><a href="/blog" title="See More">See More</a></div>	
-					</div>
-				</div>
-				<div class="row entries">
-					{foreach $blog as $b}
-					<div class="col-sm-3">
-						{if $b.listing_image}<img src="{$b.listing_image}" class="img-responsive" alt="{$b.listing_title} image" />{/if}
-						<p class="bold">{$b.listing_title}</p>
-						<p>{trimwords data=$b.listing_content1|strip_tags maxwords=25 maxchars=70}<a href="/blog/{$b.listing_url}" title="Read full story"> Read full story</a></p>
-					</div>
-					{/foreach}
-				</div>		
-			</div>
-		</div>
-		{/if}
+
 		
 		<div class="row">
 			<div class="col-sm-8 col-sm-offset-2">

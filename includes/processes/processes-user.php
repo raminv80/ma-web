@@ -12,8 +12,8 @@ if(checkToken('frontend',$_POST["formToken"],false)){
             'url'=>null
         ));
       }else{
-        $cart_obj = new cart();
-        $cart_obj->SetUserCart($res['id']);
+        $cart_obj = new Enrolment();
+        $message = $cart_obj->SetUserCart($res['id']);
         $_SESSION['user']['public'] = $res;
         $url = $_SERVER['HTTP_REFERER'];
         if($_POST['redirect']){
@@ -45,7 +45,8 @@ if(checkToken('frontend',$_POST["formToken"],false)){
         echo json_encode(array(
             'error'=>null,
             'url'=>$url,
-            'username'=>$_SESSION['user']['public']['email']
+            'username'=>$_SESSION['user']['public']['email'],
+						'message'=> $message
         ));
       }
       die();
@@ -59,8 +60,8 @@ if(checkToken('frontend',$_POST["formToken"],false)){
 	    	 			'url'=> null
 	    	 	));
 	    	} else {
-	    		$cart_obj = new cart();
-	    		$cart_obj->SetUserCart($res['id']);
+	    		$cart_obj = new Enrolment();
+	    		$message = $cart_obj->SetUserCart($res['id']);
 	    		$_SESSION['user']['public'] = $res;
 	    		$url = $_SERVER['HTTP_REFERER'];
 	    		if ($_POST['redirect']) {
@@ -68,7 +69,8 @@ if(checkToken('frontend',$_POST["formToken"],false)){
                 }
 				echo json_encode(array(
 						'error' => null,
-						'url'=> $url
+						'url'=> $url,
+						'message'=> $message
 				));
 	    	}
 	    	die();

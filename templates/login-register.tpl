@@ -27,10 +27,15 @@
 	            </div>
 	            <span class="form-help-block col-sm-offset-3 col-sm-9"><a href="javascript:void(0)" onclick="$('#reset-pass').show('slow');">Forgot your password?</a></span>
 	          </div>
-	          <div class="row error-msg" id="login-form-error"></div>
+	          <div class=" col-sm-offset-3 error-alert" style="display:none;">
+	          	<div class="alert alert-danger fade in ">
+								<button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.error-alert').fadeOut('slow');">&times;</button>
+								<strong></strong>
+							</div>
+	          </div>
 	          <div class="form-group">
 	              <div class="col-sm-offset-3 col-sm-9">
-	                  <button type="submit" class="btn btn-primary">Log In</button>
+	                  <button onclick="('#login-form').submit();" class="btn btn-primary">Log In</button>
 	              </div>
 	            </div>
 	        </form>
@@ -48,13 +53,23 @@
 	              <span class="help-block"></span>
 	            </div>
 	          </div>
+	          <div class="col-sm-offset-3 error-alert" style="display:none;">
+	          	<div class="alert alert-danger fade in ">
+								<button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.error-alert').fadeOut('slow');">&times;</button>
+								<strong></strong>
+							</div>
+	          </div>
+            <div class="col-sm-offset-3 success-alert" style="display:none;">
+            	<div class="alert alert-success fade in ">
+								<button class="close" aria-hidden="true" type="button"  onclick="$(this).closest('.success-alert-alert').fadeOut('slow');">&times;</button>
+								<strong></strong>
+							</div>
+            </div>
 	          <div class="form-group">
 		          <div class="col-sm-offset-4 col-sm-8" >
 		              <button type="submit" class="btn btn-primary">Reset Password</button>
 		          </div>
 	          </div>
-	          <div class="row error-msg" id="reset-pass-form-error"></div>
-            <div class="row success-msg" id="reset-pass-form-success"></div>
 	        </form>
 	      </div>
       </div>
@@ -114,9 +129,15 @@
               <span class="help-block"></span>
             </div>
           </div> -->
+          <div class=" col-sm-offset-4 error-alert" style="display:none;">
+          	<div class="alert alert-danger fade in ">
+							<button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.error-alert').fadeOut('slow');">&times;</button>
+							<strong></strong>
+						</div>
+          </div>
           <div class="form-group">
               <div class="col-sm-offset-4 col-sm-8">
-                  <button type="submit" class="btn btn-primary">Sign Up</button>
+                  <button onclick="('#register-form').submit();" class="btn btn-primary">Sign Up</button>
               </div>
             </div>
         </form>

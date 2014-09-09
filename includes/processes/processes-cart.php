@@ -34,6 +34,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
             $productsOnCart = $cart_obj->GetDataProductsOnCart();
             $SMARTY->assign('productsOnCart',$productsOnCart);
             $SMARTY->assign('itemNumber',$itemsCount);
+            $SMARTY->assign('subtotal',$totals['subtotal']);
             $SMARTY->assign('cart',$cart);
             $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 	    	echo json_encode(array(
@@ -57,6 +58,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
             $productsOnCart = $cart_obj->GetDataProductsOnCart();
             $SMARTY->assign('productsOnCart',$productsOnCart);
             $SMARTY->assign('itemNumber',$itemsCount);
+            $SMARTY->assign('subtotal',$totals['subtotal']);
             $SMARTY->assign('cart',$cart);
             $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
     		echo json_encode(array(

@@ -39,9 +39,10 @@ if (jQuery.validator) {
 		 	        'step': 2,
 		 	        'option': paymentOption
 		 	      });
-		 	    ga('send', 'event', 'Checkout', 'Payment', paymentOption{
+		 	    ga('send', 'event', 'Checkout', 'Payment', paymentOption, {
 		 	       hitCallback: function() {
 		 	    	  form.submit();
+		 	       }
 		 	    });
           		break;
           		
@@ -100,7 +101,8 @@ function userLogin(form){
 	    	try{
 	    		var obj = $.parseJSON(data);
 			 	if (obj.error) {
-			 		$('#'+form+'-error').html(obj.error).show();
+			 		$('#'+form).find('.error-alert').find('strong').html(obj.error);
+			 		$('#'+form).find('.error-alert').fadeIn('slow');
 			 	} else {
 			 		window.location.href = obj.url;
 			 	}
@@ -129,12 +131,14 @@ function resetPass(form){
 	    success: function(data) {
 	    	try{
 	    		var obj = $.parseJSON(data);
-			 	if (obj.error) {
-			 		$('#'+form+'-error').html(obj.error).show();
-			 		$('#'+form+'-success').hide();
+	    		if (obj.error) {
+			 		$('#'+form).find('.success-alert').hide();
+			 		$('#'+form).find('.error-alert').find('strong').html(obj.error);
+			 		$('#'+form).find('.error-alert').fadeIn('slow');
 			 	} else {
-			 		$('#'+form+'-success').html(obj.success).show();
-			 		$('#'+form+'-error').hide();
+			 		$('#'+form).find('.error-alert').hide();
+			 		$('#'+form).find('.success-alert').find('strong').html(obj.success);
+			 		$('#'+form).find('.success-alert').fadeIn('slow');
 			 	}
 			 	
 			}catch(err){
@@ -221,6 +225,7 @@ function updateCart(){
 	    		var subtotals = obj.subtotals;
 	    		var totals = obj.totals;
                 $('.nav-itemNumber').html(obj.itemsCount);
+			 	$('#shop-cart-btn').html( obj.popoverShopCart );
 			 	/*$('.nav-subtotal').html('$'+obj.totals['subtotal']);*/
 			 	if (subtotals) {
 			 		$.each(pricemodifier, function(id, value){

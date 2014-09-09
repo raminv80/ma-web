@@ -305,7 +305,7 @@ class ListClass {
         ":published"=>$_PUBLISHED
     );
     if($res = $DBobject->wrappedSql($sql,$params)){
-      if(! empty($res[0]['listing_parent_id']) && $res[0]['listing_parent_id'] > 0){ // category_listing_id
+      if(! empty($res[0]['listing_parent_id']) && $res[0]['listing_parent_id'] > 0 && $res[0]['listing_parent_id'] <> $_id){ // category_listing_id
         $url = $res[0]['listing_url'] . '/' . $url;
         return self::BuildUrl($res[0]['listing_parent_id'],$url); // category_listing_id
       }else{

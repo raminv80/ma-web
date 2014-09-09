@@ -112,6 +112,10 @@ while(true){
     }
     $template = loadPage($CONFIG->checkout);
     $cart_obj = new cart();
+    if($cart_obj->NumberOfProductsOnCart() < 1){
+    	header("Location: /");
+    	exit();
+    }
 //     $ship_obj = new ShippingClass();
 //     $methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
 //     $SMARTY->assign ( 'shippingMethods', $methods );

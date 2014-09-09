@@ -41,7 +41,6 @@ if((!isset($_SESSION['user']['admin']) || empty($_SESSION['user']['admin']) ) &&
 }
 
 if(!empty($_SESSION['user']['admin']) && $_request['arg1']  == 'login'){
-	die('here');
 	header("Location:/admin");
 	die();
 }

@@ -25,7 +25,7 @@
 		<template>standardpage.tpl</template><!-- The template used if the field is matched -->
 	</page_strut>
 	<index_page>
-		<template>standardpage.tpl</template>
+		<template>home.tpl</template>
 		<pageID>12</pageID>
 	</index_page>
 	<!-- <error404 standalone="true">
