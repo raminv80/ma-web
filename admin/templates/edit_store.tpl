@@ -214,9 +214,12 @@
 						<div class="col-sm-7">
 							<input class="form-control location-input" type="text" value="" id="search">&nbsp;<a href="javascript:void(0);" class="btn btn-info" onclick="searchAddress($('#search').val());$('#search').val('')">Search</a>
 							<div id="search-warning"></div>
-							<input type="hidden" value="location_id" name="field[2][tbl_location][{$cnt}][id]" id="id" /> <input type="hidden" value="listing_id" name="default[location_listing_id]" /> <input type="hidden" value="{$fields.location_id}" name="field[2][tbl_location][{$cnt}][location_id]" class="key"> <input
-								type="hidden" value="{$fields.listing_id}" name="field[2][tbl_location][{$cnt}][location_listing_id]" id="location_listing_id" class="key"/> <input type="hidden" value="{$fields.location_latitude}" name="field[2][tbl_location][{$cnt}][location_latitude]" id="location_latitude"> <input
-								type="hidden" value="{$fields.location_longitude}" name="field[2][tbl_location][{$cnt}][location_longitude]" id="location_longitude">
+							<input type="hidden" value="location_id" name="field[2][tbl_location][{$cnt}][id]" id="id" /> 
+							<input type="hidden" value="listing_id" name="default[location_listing_id]" /> 
+							<input type="hidden" value="{$fields.location_id}" name="field[2][tbl_location][{$cnt}][location_id]" class="key"> 
+							<input type="hidden" value="{$fields.listing_id}" name="field[2][tbl_location][{$cnt}][location_listing_id]" id="location_listing_id" class="key"/>
+							<input type="hidden" value="{$fields.location_latitude}" name="field[2][tbl_location][{$cnt}][location_latitude]" id="location_latitude">
+							<input type="hidden" value="{$fields.location_longitude}" name="field[2][tbl_location][{$cnt}][location_longitude]" id="location_longitude">
 							<div id="GmlMap" class="GmlMap">Loading Map....</div>
 							<script type="text/javascript">
 						          jQuery(document).ready(function() {

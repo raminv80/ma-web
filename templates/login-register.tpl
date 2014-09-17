@@ -61,7 +61,7 @@
 	          </div>
             <div class="col-sm-offset-3 success-alert" style="display:none;">
             	<div class="alert alert-success fade in ">
-								<button class="close" aria-hidden="true" type="button"  onclick="$(this).closest('.success-alert-alert').fadeOut('slow');">&times;</button>
+								<button class="close" aria-hidden="true" type="button"  onclick="$(this).closest('.success-alert').fadeOut('slow');">&times;</button>
 								<strong></strong>
 							</div>
             </div>

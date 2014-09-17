@@ -1,7 +1,7 @@
 {block name=body}
 {* Define the function *} {function name=options_list level=0} 
 	{foreach $opts as $opt}
-		{if $fields.listing_id neq $opt.id}
+		{if $fields.listing_object_id neq $opt.id}
 			<option value="{$opt.id}" {if  $selected eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
 			{if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1 selected=$selected} {/if} 
 		{/if}

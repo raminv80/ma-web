@@ -956,7 +956,7 @@ class cart {
     if($res = $DBobject->wrappedSql($sql,array(
         ":id"=>$parentId
     ))){
-      if($res[0]['listing_parent_id'] == $root){
+      if($res[0]['listing_parent_id'] == $root || $res[0]['listing_parent_id'] == $parentId){
         return array_merge(array(
             $parentId
         ),$list);
@@ -1101,6 +1101,10 @@ function ApplyDiscountCode($code, $cartId = null) {
 							} else {
                             	$discount = $res['discount_amount'];
 							}
+						}
+						if(empty($discount)){
+							$result['error'] = "This code '".$code. "' doesn't apply for the item(s) on your cart";
+							$code = null;
 						} 
 					}
 				}
@@ -1337,6 +1341,35 @@ function ApplyDiscountCode($code, $cartId = null) {
   		}
   	}
   
+  	return $result;
+  }
+  
+  
+  
+  /**
+   * Return the total weight of products on cart
+   *
+   * @param int $cartId
+   * @return float
+   */
+  function GetCartWeight($cartId = null) {
+  	global $DBobject;
+  
+  	if(empty($cartId)){
+  		$cartId = $this->cart_id;
+  	}
+  	$result = 0;
+  	$sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted is null AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id";
+  	$params = array(":id"=>$cartId);
+  	if($res = $DBobject->wrappedSql($sql, $params)){
+  		foreach($res as $item){
+  			$attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
+  			$DBproduct = $this->GetProductCalculation($item['cartitem_product_id'],$attrs,$item['cartitem_quantity']);
+  			if(!empty($DBproduct['product_weight'])){
+  				$result +=  floatval($DBproduct['product_weight']) * $item['cartitem_quantity'];
+  			}
+  		}
+  	}
   	return $result;
   }
   
