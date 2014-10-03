@@ -80,7 +80,7 @@
 				  			{if $error || $totals.discount_error}
 	                <div class="col-sm-12 error-txt">{$error} {$totals.discount_error}</div>
 	              {else}
-	              	<div class="col-sm-12" id="cart_discount_description">{$cart.cart_discount_description}</div>
+	              	<div class="col-sm-12" id="cart_discount_description">{if $cart.cart_discount_code}{if $cart.cart_discount_description}{$cart.cart_discount_description}{else}<b>DISCOUNT CODE APPLIED</b>{/if}{/if}</div>
 	              {/if}
 	               </div>
 				  		</div>

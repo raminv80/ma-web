@@ -12,7 +12,6 @@ table {
 }
 
 table th,table td {
-	padding: 3px;
 	text-align: left;
 }
 
@@ -34,15 +33,14 @@ table td {
 		<td>Dear {$user.gname}</td>
 	</tr>
 	<tr>
-		<td>Thank you for buying with us. Your order will be processed by our team and you will receive another email once your package is shipped. Should you have any queries, please call
-			CALL 1800 (Mon - Fri, 9am - 5pm CST).<br>
+		<td>Thank you for buying with us. Your order will be processed by our team and you will receive another email once your package is shipped. Should you have any queries, please call contact us.<br>
 		<br>
 		</td>
 	</tr>
 </table>
-<table cellspacing="0" cellpadding="0" border="0">
-	<tr>
-		<th colspan="2">Invoice Details</th>
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+	<tr bgcolor="#f3f3f3">
+		<th colspan="2" align="left">Invoice Details</th>
 	</tr>
 	<tr>
 		<td width="50%">Order Number:</td>
@@ -56,9 +54,9 @@ table td {
 <br />
 &nbsp;
 <br />
-<table cellpadding="0" cellspacing="0" border="0">
-	<tr>
-		<th colspan="2">Your Shipping Details</th>
+<table cellpadding="0" cellspacing="0" border="0"  width="100%">
+	<tr bgcolor="#f3f3f3">
+		<th colspan="2" align="left">Your Shipping Details</th>
 	</tr>
 	<tr>
 		<td width="50%">Name:</td>
@@ -77,10 +75,6 @@ table td {
 		<td>{$shipping.address_state}</td>
 	</tr>
 	<tr>
-		<td>Country:</td>
-		<td>{$shipping.address_country}</td>
-	</tr>
-	<tr>
 		<td>Postcode:</td>
 		<td>{$shipping.address_postcode}</td>
 	</tr>
@@ -88,17 +82,13 @@ table td {
 		<td>Phone:</td>
 		<td>{$shipping.address_telephone}</td>
 	</tr>
-	<tr>
-		<td>Mobile:</td>
-		<td>{$shipping.address_mobile}</td>
-	</tr>
 </table>
 <br />
 &nbsp;
 <br />
-<table cellpadding="0" cellspacing="0" border="0">
-	<tr>
-		<th colspan="2">Your Billing Details</th>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tr bgcolor="#f3f3f3">
+		<th colspan="2" align="left">Your Billing Details</th>
 	</tr>
 	<tr>
 		<td width="50%">Name:</td>
@@ -117,10 +107,6 @@ table td {
 		<td>{$billing.address_state}</td>
 	</tr>
 	<tr>
-		<td>Country:</td>
-		<td>{$billing.address_country}</td>
-	</tr>
-	<tr>
 		<td>Postcode:</td>
 		<td>{$billing.address_postcode}</td>
 	</tr>
@@ -128,20 +114,16 @@ table td {
 		<td>Phone:</td>
 		<td>{$billing.address_telephone}</td>
 	</tr>
-	<tr>
-		<td>Mobile:</td>
-		<td>{$billing.address_mobile}</td>
-	</tr>
 </table>
 <br />
 &nbsp;
 <br />
-<table cellspacing="0" cellpadding="0" border="0">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
 
-	<tr>
-		<th>Items</th>
-		<th>Qty</th>
-		<th>Unit Price</th>
+	<tr bgcolor="#f3f3f3">
+		<th align="left">Items</th>
+		<th align="left">Qty</th>
+		<th align="left">Unit Price</th>
 		<th style="text-align: right">Total Price</th>
 	</tr>
 	{foreach $orderItems as $item}
@@ -164,27 +146,36 @@ table td {
 		<td><strong>Sub Total</strong></td>
 		<td style="text-align: right"><strong>$ {$payment.payment_subtotal|number_format:2:".":","}</strong></td>
 	</tr>
+	{if $order.payment_discount neq '0.00'}
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
-		<td><strong>Discount {if $cart.cart_discount_code}({$cart.cart_discount_code}){/if}</strong></td>
+		<td><strong>Discount</strong></td>
 		<td style="text-align: right"><strong>$ -{$payment.payment_discount|number_format:2:".":","}</strong></td>
 	</tr>
+	{/if}
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
-		<td><strong>Postage & Handling</strong></td>
-		<td style="text-align: right"><strong>$ {$payment.payment_shipping_fee|number_format:2:".":","}</strong></td>
-	</tr>
-	<tr valign="top">
-		<td>{if $free}(*)GST free item.{/if}</td>
-		<td>&nbsp;</td>
-		<td>Incl. GST</td>
-		<td style="text-align: right">($ {$payment.payment_gst|number_format:2:".":","})</td>
+		<td><strong>Shipping</strong></td>
+		<td style="text-align: right"><strong>{if $payment.payment_shipping_fee eq '0.00'}FREE{else}$ {$payment.payment_shipping_fee|number_format:2:".":","}{/if}</strong></td>
 	</tr>
 	<tr valign="top">
 		<td colspan="4"><hr></td>
 	</tr>
+	<tr valign="top">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Total (excl. GST)</td>
+    {assign var='totalExclGST' value=$payment.payment_charged_amount - $payment.payment_gst}
+    <td style="text-align: right">(${$totalExclGST|number_format:2:".":","})</td>
+  </tr>
+	<tr valign="top">
+    <td>{if $free}(*)GST free item.{/if}</td>
+    <td>&nbsp;</td>
+    <td>GST</td>
+    <td style="text-align: right">(${$payment.payment_gst|number_format:2:".":","})</td>
+  </tr>
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
@@ -201,8 +192,10 @@ table td {
 <table>
 	<tr>
 		<td>Best regards<br>
-		<br> The Team @ <br>
-		<br> COMPANY <br> Road<br> SA 5063<br> CALL: 1800 <br> FAX: 1800 <br>
+		<br><b>Company</b>
+		<br> 5023 
+		<br>Ph: <a href="tel:1300 ">1300 </a> 
+		<br>Fax: 08 <br>
 		</td>
 	</tr>
 </table>

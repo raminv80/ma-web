@@ -3,6 +3,9 @@ body,input, button, select, textarea {
 	font-weight: 400;
 }
 
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
 
 .carousel-indicators li {
 	cursor: pointer;

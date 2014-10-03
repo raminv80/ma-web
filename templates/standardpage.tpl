@@ -1,10 +1,6 @@
 {block name=head}
 <style type="text/css">
-#headbanner {
-    background: url("{if $listing_image}{$listing_image}{else}/images/header3.jpg{/if}") no-repeat scroll center top / cover rgba(0, 0, 0, 0);
-    height: 345px;
-    margin-bottom: 15px;
-}
+
 </style>
 {/block}
 
@@ -36,34 +32,13 @@
 			</div>
 		</div>
 
- 		{if $listing_content2}
 		<div class="row">
 			<div class="col-sm-12">				
-				<h2 class="title">Watch our video</h2>
-				<iframe id="video" width="507" height="380" src="{$listing_content2}" frameborder="0" allowfullscreen></iframe>
+				<h2 class="title">STANDARD PAGE</h2>
 			</div>
 		</div> 
-		{/if}
 		
-		<button onclick="ga('send', 'event', 'External', 'Click', $('#parent-site').html());alert($('#parent-site').html());" class="btn btn-default"> Current domain </button>
-		<div id="parent-site"></div>
-		
-		<script type="text/javascript">
-		
-		
-			function listener(event){
-  			  if ( event.origin !== "http://edge.sharethis.com" ) {
-			    	$("#parent-site").html(event.origin);
-  			  }
-  			  return true;
-			}
-			
-			if (window.addEventListener){
-			  addEventListener("message", listener, false)
-			} else {
-			  attachEvent("onmessage", listener)
-			}
-		</script>
+
 		
 	</div>
 </div>

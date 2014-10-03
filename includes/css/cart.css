@@ -289,6 +289,7 @@ hr.or-separator:after {
 .page.current, .prod-page.current {
     display: block;
 }
+
 .resultpag ul, .prod-resultpag ul {
     list-style: none outside none;
     margin: 0;
