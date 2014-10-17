@@ -1,7 +1,17 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
 <config debug="true" staging="true">
-	<company></company>
+	<company>
+		<name>Them</name>
+		<address>
+			<street>1/26 The Parade West</street>
+			<suburb>Kent Town</suburb>
+			<state>SA</state>
+			<postcode>5067</postcode>
+		</address>
+		<phone>08 8363 2717</phone>
+		<email>hello@them.com.au</email>
+	</company> 
 	<database>
 		<host>m4-mysql1-1.ilisys.com.au</host>
 		<user>themso</user>

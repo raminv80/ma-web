@@ -25,6 +25,13 @@ $extension = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
 // $optim_source_file      = $document_root.$optim.str_replace($extension, "jpg", $requested_file); // Full path to optimised source file
 $optim_source_file      = $document_root.$optim.$requested_uri; // Full path to optimised source file
 
+if((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0) || (!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)){
+  $requested_directory  = urlencode(dirname($requested_uri));
+  $_f_arr = explode('.', $requested_file,2);
+  $requested_file = $_f_arr[0].((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").'.'.$_f_arr[1];
+  //$requested_file       = str_replace(".".$extension, ((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").".".$extension, $requested_file);
+  $optim_source_file      = $document_root.$optim.parse_url(urldecode($requested_directory)."/".($requested_file),PHP_URL_PATH);
+}
 //CHECK FILE EXISTS
 if(!file_exists($source_file)){
   //   header("HTTP/1.0 404 Not Found"); //PHP ErrorDocument
@@ -33,12 +40,14 @@ if(!file_exists($source_file)){
   die();
 }
 
-
 if(!file_exists($optim_source_file) || filemtime($source_file) > filemtime($optim_source_file)){
   //BUILD OPTIMISED IMAGE
   /* It exists as a source file, and it doesn't exist cached - lets make one: */
-  $file = generateImage($source_file, $optim_source_file);
+  $width = ((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?intval($_REQUEST['width']):null);
+  $height = ((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?intval($_REQUEST['height']):null);
+  $file = generateImage($source_file, $optim_source_file,$width, $height);
 }
+
 sendImage($optim_source_file, $browser_cache);
 
 
@@ -58,40 +67,60 @@ function sendImage($filename, $browser_cache) {
 }
 
 /* generates the given cache file for the given source file with the given resolution */
-function generateImage($source_file, $cache_file) {
+function generateImage($source_file, $cache_file,$_width,$_height) {
   global $sharpen, $jpg_quality,$quality;
 
   make_path($cache_file);
   
   $extension = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
-
   switch ($extension) {
     case 'png':
       $src = @ImageCreateFromPng($source_file); // original image
-      ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
-      imagealphablending($src, false);
-      imagesavealpha($src,true);
-      $transparent = imagecolorallocatealpha($src, 255, 255, 255, 127);
       break;
     case 'gif':
       $src = @ImageCreateFromGif($source_file); // original image
-      ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
       break;
     default:
       $src = @ImageCreateFromJpeg($source_file); // original image
-      ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
       break;
+  }
+  
+  $maxwidth = intval($_width);
+  $maxheight = intval($_height);
+  
+  if(($maxwidth > 0 || $maxheight > 0) && (imagesx($src) > $maxwidth || imagesy($src) > $maxheight) ){
+    $scalex = $maxwidth / imagesx($src); //original scale image size //If the TAG size changes this will need to be scaled.
+    $scaley = $maxheight / imagesy($src); //original scale image size //If the TAG size changes this will need to be scaled.
+    if(($scalex < $scaley && $maxwidth != 0) || $maxheight == 0){
+      $width = imagesx($src);
+      $height = imagesy($src);
+      $nWidth = $width * $scalex;
+      $nHeight = $height * $scalex;
+      $src = resizeimage($src, $width, $height, $nWidth, $nHeight);
+    }else{
+      $width = imagesx($src);
+      $height = imagesy($src);
+      $nWidth = $width * $scaley;
+      $nHeight = $height * $scaley;
+      $src = resizeimage($src, $width, $height, $nWidth, $nHeight);
+    }
   }
 
   // save the new file in the appropriate path, and send a version to the browser
   switch ($extension) {
     case 'png':
+      ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
+      imagealphablending($src, false);
+      imagesavealpha($src,true);
+      $transparent = imagecolorallocatealpha($src, 255, 255, 255, 127);
       $gotSaved = ImagePng($src, $cache_file, $quality);
       break;
     case 'gif':
+      ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
       $gotSaved = ImageGif($src, $cache_file);
       break;
     default:
+      ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
       $gotSaved = ImageJpeg($src, $cache_file, $jpg_quality);
       break;
   } 
@@ -121,3 +150,12 @@ function make_path($path) {
   return false;
 }
 
+function resizeimage($image, $width, $height, $nWidth, $nHeight){
+  $newImg = imagecreatetruecolor($nWidth, $nHeight);
+  imagealphablending($newImg, false);
+  imagesavealpha($newImg,true);
+  $transparent = imagecolorallocatealpha($newImg, 255, 255, 255, 127);
+  imagefilledrectangle($newImg, 0, 0, $nWidth, $nHeight, $transparent);
+  imagecopyresampled($newImg, $image, 0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
+  return $newImg;
+}

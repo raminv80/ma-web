@@ -22,7 +22,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
         
         try{
         	// SEND CONFIRMATION EMAIL
-        	$SMARTY->assign("domainName",'http://'.$GLOBALS['HTTP_HOST']);
+        	$SMARTY->assign("DOMAIN",'http://'.$GLOBALS['HTTP_HOST']);
         	$SMARTY->assign("username",$_POST['email']);
         	$SMARTY->assign("password",$_POST['password']);
         	

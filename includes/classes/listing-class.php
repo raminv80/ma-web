@@ -141,17 +141,21 @@ class ListClass {
     
     // ------------- LOAD OPTIONS FOR SELECT INPUTS --------------
     foreach($this->CONFIG_OBJ->table->options->field as $f){
-      $pre = str_replace("tbl_","",$f->table);
-      $sql = "SELECT {$f->reference}, {$pre}_id FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
-      if($res = $DBobject->wrappedSqlGet($sql)){
-        $options = array();
-        foreach($res as $key=>$row){
-          $options[] = array(
-              'id'=>$row["{$pre}_id"],
-              'value'=>$row["{$f->reference}"]
-          );
-        }
-      }
+    	if($f->attributes()->recursive){
+    		$options = $this->getOptionsCatTree($f, $f->attributes()->parent_root);
+    	}else{
+    		$pre = str_replace("tbl_","",$f->table);
+    		$sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+    		if($res = $DBobject->wrappedSqlGet($sql)){
+    			$options = array();
+    			foreach($res as $key=>$row){
+    				$options[] = array(
+    						'id'=>$row["{$f->id}"],
+    						'value'=>$row["{$f->reference}"]
+    				);
+    			}
+    		}
+    	}
       $SMARTY->assign("{$f->name}",$options);
     }
     
@@ -470,6 +474,26 @@ class ListClass {
     return $data;
   }
 
+  function getOptionsCatTree($f, $pid) {
+  	global $SMARTY,$DBobject;
+  	$results = array();
+  
+  	$pid  = empty($pid)?0:$pid;
+  	$pre = str_replace("tbl_","",$f->table);
+  	$sql = "SELECT {$f->id}, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''?"AND {$f->where} ":"") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+  
+  	if($res = $DBobject->wrappedSqlGet($sql)){
+  		foreach($res as $row){
+  			$results[] = array(
+  					'id'=>$row["{$f->id}"],
+  					'value'=>$row["{$f->reference}"],
+  					'subs'=>self::getOptionsCatTree($f,$row["{$f->id}"])
+  			);
+  		}
+  	}
+  	return $results;
+  }
+  
   function LoadAssociated($a, $id) {
     global $CONFIG,$SMARTY,$DBobject;
     $t_data = array();
@@ -489,9 +513,14 @@ class ListClass {
     if(! empty($a->where)){
       $where = " AND " . $a->where;
     }
+    $extends = "";
+    foreach($a->extends as $e){
+    	$pre = str_replace("tbl_","",$e->table);
+    	$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
+    }
     $t_data = array();
     $pre = str_replace("tbl_","",$a->table);
-    $sql = "SELECT * FROM {$a->table} WHERE {$a->field} = :id AND {$pre}_deleted IS NULL " . $where . " " . $group . " " . $order . " " . $limit;
+    $sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = :id AND {$pre}_deleted IS NULL " . $where . " " . $group . " " . $order . " " . $limit;
     $params = array(
         ':id'=>$id
     );

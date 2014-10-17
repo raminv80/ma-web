@@ -83,29 +83,85 @@ if(checkToken('frontend',$_POST["formToken"], false)){
 
 
 /* // standard contact process without attachment
-if(checkToken('frontend',$_POST["formToken"], false)){
-	$banned=array('formToken','action');
-	$content=serialize($_POST);
-	$buf.='<h2>'. str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] ) . ' | Contact Us form</h2><br/>';
-	foreach ($_POST as $name => $var){
-		if(!in_array($name, $banned)){
-			$buf.='<br/><b>'.$name.': </b> <br/> '.$var.'<br/>';
-		}
+
+$error = 'Missing required info. Please try again.';
+if(checkToken('frontend',$_POST["formToken"], false) && !empty($_POST['product_id']) && !empty($_POST['email']) && !empty($_POST['postcode']) && empty($_POST['additional'])){
+	require_once 'includes/createsend/csrest_subscribers.php';
+	global $DBobject,$SMARTY,$SITE;
+	
+	$error = '';
+	$sent = 0;
+	//============= ADD IN CREATE-SEND
+	if($_POST['wantpromo']){
+		try{
+			$wrap = new CS_REST_Subscribers('067b9df15ecf7032eef9eb328942e410', '060d24d9003a77b06b95e7c47691975b');
+			$cs_result = $wrap->add(array(
+					'EmailAddress' => $_POST['email'],
+					'Name' => $_POST['gname'],
+					'CustomFields' => array(
+							array(
+									'Key' => 'Surname ',
+									'Value' => $_POST['surname '],
+							),
+							array(
+									'Key' => 'Phone',
+									'Value' => $_POST['phone'],
+							),
+							array(
+									'Key' => 'Postcode',
+									'Value' => $_POST['postcode'],
+							)
+					),
+					"Resubscribe" => "true"
+			));
+		}catch(Exception $e){}
 	}
-	$body = $buf;
-	$subject = 'Website contact - Contact Us form';
-	$fromEmail = 'noreply@' . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
-	$from = str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] ) .' - Website';
-	$to = 'apolo@them.com.au';
-	$sql="INSERT INTO tbl_form (form_date,form_data,form_email,form_action,form_post,form_sender_ip) VALUES (NOW(),'".clean($body)."','".clean($to)."','ContactUs','".clean($content)."','".clean($_SERVER['REMOTE_ADDR'])."')";
-	$DBobject->executeSQL($sql);
-	if(sendMail($to, $from, $fromEmail, $subject, $body)){
+	try{
+		$banned=array('formToken','action', 'additional', 'wantpromo', 'enqsub');
+		$content=serialize($_POST);
+		$buf.='<h2>Product enquiry</h2><br/>';
+		foreach ($_POST as $name => $var){
+			if(!in_array($name, $banned)){
+				$buf.='<br/><b>'.ucwords($name).': </b> <br/> '.$var.'<br/>';
+			}
+		}
+		$body = $buf;
+		$subject = 'Website contact - Product enquiry';
+		$fromEmail = 'noreply@' . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
+		$from = 'Toro Certified Pre-Owned Equipment';
+		$to = 'apolo@them.com.au';
+		
+		$sent = sendMail($to, $from, $fromEmail, $subject, $body);
+	}catch (Exception $e){
+		$error = 'There was an error sending the contact email.';
+	}
+	
+	//============= INSERT RECORD IN DB
+	try{
+		$sql = "INSERT INTO tbl_contact (contact_gname,contact_surname,contact_email,contact_phone,contact_postcode,contact_product_object_id,contact_enquiry,contact_ip,contact_sent)
+            VALUES (:contact_gname,:contact_surname,:contact_email,:contact_phone,:contact_postcode,:contact_product_object_id,:contact_enquiry,:contact_ip,:contact_sent)";
+		$params = array(":contact_gname"=>$_POST['gname'],
+				":contact_surname"=>$_POST['surname'],
+				":contact_email"=>$_POST['email'],
+				":contact_phone"=>$_POST['phone'],
+				":contact_postcode"=>$_POST['postcode'],
+				":contact_product_object_id"=>$_POST['product_id'],
+				":contact_enquiry"=>$_POST['enquiry'],
+				":contact_ip"=>$_SERVER['REMOTE_ADDR'],
+				":contact_sent"=>$sent);
+		$DBobject->wrappedSql($sql,$params);	
+	}catch(Exception $e){
+		$error = 'There was an unexpected error saving your enquiry.';
+	}
+	
+	if(empty($error)){
 		header("Location: /thank-you");
 		exit;
-	}else{
-		$_SESSION['error']='There is an error with your request. please try again later.';
-		$redirect=$_SERVER['HTTP_REFERER'];
-		header("Location: {$redirect}");
-		exit;
 	}
-} */
+	$error = 'There is an unknown error with your request. Please try again later.';
+} 
+$_SESSION['error'] = $error;
+$redirect = $_SERVER['HTTP_REFERER'];
+header("Location: {$redirect}#error");
+exit;
+*/

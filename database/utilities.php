@@ -340,6 +340,73 @@ function sendMailV2($to,$from,$fromEmail,$subject,$body){
   return $mailSent;
 }
 
+/**
+ * Create bulk emails in the database. It does NOT send them
+ *
+ * @param array $to_Array
+ * @param string $from
+ * @param string $fromEmail
+ * @param string $subject
+ * @param string $body
+ * @return boolean
+ */
+function createBulkMail($to_Array,$from,$fromEmail,$subject,$body){
+	global $DBobject;
+	require_once 'database/safemail.php';
+
+	/* To send HTML mail, you can set the Content-type header. */
+	$headers  = "MIME-Version: 1.0\r\n";
+	$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+
+	/* additional headers */
+	$headers .= "From: ". $from . " <".$fromEmail.">\r\n";
+	try{
+		foreach ($to_Array as $to){
+			$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent) VALUES
+		      (:to,:header,:subject,:content,:ip,:sent)";
+			$params = array(
+					":to"=>$to,
+					":header"=>$headers,
+					":subject"=>$subject,
+					":content"=>utf8_encode($body),
+					":ip"=>$_SERVER['REMOTE_ADDR'],
+					":sent"=>-2
+			);
+			$DBobject->executeSQL($sql,$params);
+		}
+		return true;
+	}catch(Exception $e){}
+	return false;
+}
+
+/**
+ * Send bulk emails in the queue. By default it is limited to 100 emails.
+ *
+ * @param number $_limit
+ * @return boolean
+ */
+function sendBulkMail($_limit = 100){
+	global $DBobject;
+	require_once 'database/safemail.php';
+
+	try{
+		if(function_exists("SafeMail")){
+			$sql = "SELECT * FROM tbl_email_copy WHERE email_sent = '-2' OR email_sent = '0' ORDER BY email_created LIMIT $_limit";
+			if($res = $DBobject->executeSQL($sql)){
+				foreach ($res as $r){
+					if(SafeMail($r['email_to'],$r['email_subject'],$r['email_content'],$r['email_header'])){
+						$sql = "UPDATE tbl_email_copy SET email_sent = '1' WHERE email_id = :email_id";
+						$DBobject->executeSQL($sql, array(":email_id"=>$r['email_id']));
+					}
+				}
+			}
+			return true;
+		}
+	}catch(Exception $e){ die("Error: $e"); }
+	return false;
+}
+
+
 function preparehtmlmail($html) {
 
   preg_match_all('~<img.*?src=.([\/.a-z0-9:_-]+).*?>~si',$html,$matches);
@@ -685,4 +752,56 @@ function isMobile(){
     return true;
   }
   return false;
+}
+
+
+/**
+ * Return associative array with parents info (admin_level and admin_id)  
+ * 
+ * @param int $parentId
+ * @param int $root
+ * @param array $list
+ * @return array
+ */
+function getAdminParents($parentId, $root = 0, $list = array()) {
+	global $DBobject;
+
+	$sql = "SELECT admin_parent_id, admin_level FROM tbl_admin WHERE admin_deleted IS NULL AND admin_id = :id";
+	if($res = $DBobject->wrappedSql($sql,array(
+			":id"=>$parentId
+	))){
+		$list["{$res[0]['admin_level']}"] = $parentId;
+		if($res[0]['admin_parent_id'] > $root && $res[0]['admin_parent_id'] != $parentId){
+			return getAdminParents($res[0]['admin_parent_id'], $root, $list);
+		}
+	}
+	return $list;
+}
+
+
+/**
+ * Return array with all children given the admin_id
+ * 
+ * @param int $parentId
+ * @param int $root
+ * @param array $list
+ * @return array
+ */
+function getAdminChildren($parentId, $root = 0, $list = array()) {
+	global $DBobject;
+
+	if(!in_array($parentId,$list)){
+		$list[] = $parentId;
+	}
+	$sql = "SELECT admin_id FROM tbl_admin WHERE admin_deleted IS NULL AND admin_parent_id = :id";
+	if($res = $DBobject->wrappedSql($sql,array(
+			":id"=>$parentId
+	))){
+		foreach ($res as $r){
+			if(!in_array($r['admin_id'],$list) && $r['admin_id'] > 0 && $r['admin_id'] != $root){
+				return getAdminChildren($r['admin_id'], $root, $list);
+			}
+		}
+	}
+	return $list;
 }

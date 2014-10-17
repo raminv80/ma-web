@@ -36,6 +36,7 @@ if (jQuery.validator) {
 	    submitHandler: function (form) {
     	  	$('body').css('cursor','wait');
     	  	$('.btn-primary').addClass('disabled');
+    	  	var callbackFn = $(form).attr('data-callback');
     		var datastring = $("#Edit_Record").serialize();
     		$.ajax({
     			type: "POST",
@@ -64,6 +65,10 @@ if (jQuery.validator) {
 	    					    $('input[name="'+k+'"]').val(v);
 	    					});
 	    			    } 
+	    			    if(callbackFn){
+									var fn = window[callbackFn];
+				    			if (typeof fn === "function") fn();
+								}
     				}catch(err){
     					console.log('TRY-CATCH error');
     				}

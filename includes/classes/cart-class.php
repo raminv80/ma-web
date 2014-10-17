@@ -1409,6 +1409,27 @@ function ApplyDiscountCode($code, $cartId = null) {
 //   }
 
 //   /**
+//    * Return array with product_object_id associated to an user_id
+//    *
+//    * @param int $userId
+//    * @return array
+//    */
+//   function GetFavouritesObjIdsByUser($userId) {
+//   	global $DBobject;
+  
+//   	$cart_arr = array();
+//  	if(!empty($userId)){
+//   	$sql ="SELECT favourite_product_object_id FROM tbl_favourite WHERE favourite_deleted IS NULL AND favourite_user_id = :favourite_user_id";
+//   	if($res = $DBobject->wrappedSql($sql, array(':favourite_user_id'=>$userId))){
+//   		foreach($res as $r){
+//   			$cart_arr[] = $r['favourite_product_object_id'];
+//   		}
+//   	}
+//		}
+//   	return $cart_arr;
+//   }
+  
+//   /**
 //    * Add Favourite products for user, given the user_id and product_object_id
 //    *
 //    * @param int $userId          

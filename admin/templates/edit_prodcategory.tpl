@@ -151,9 +151,9 @@
 								<table class="table table-bordered table-striped table-hover">
 									<thead>
 										<tr>
-											<th>Date-Time</td>
-											<th>Action</td>
-											<th>User</td>
+											<th>Date-Time</th>
+											<th>Action</th>
+											<th>User</th>
 										</tr>
 									</thead>
 									<tbody>

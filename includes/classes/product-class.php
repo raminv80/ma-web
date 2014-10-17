@@ -89,8 +89,6 @@ class ProductClass extends ListClass {
         
       }
       
-      
-      
     }else{
       return null;
     }
@@ -98,15 +96,15 @@ class ProductClass extends ListClass {
     // ------------- LOAD OPTIONS FOR SELECT INPUTS --------------
     foreach($LOCALCONF->options->field as $f){
       if($f->attributes()->recursive){
-        $options = $this->getOptionsCatTree($f,$this->ROOT_PARENT_ID);
+        $options = $this->getOptionsCatTree($f, $f->attributes()->parent_root);
       }else{
         $pre = str_replace("tbl_","",$f->table);
-        $sql = "SELECT {$pre}_id,{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+        $sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
         if($res = $DBobject->wrappedSqlGet($sql)){
           $options = array();
           foreach($res as $key=>$row){
             $options[] = array(
-                'id'=>$row["{$pre}_id"],
+                'id'=>$row["{$f->id}"],
                 'value'=>$row["{$f->reference}"]
             );
           }
@@ -155,24 +153,7 @@ class ProductClass extends ListClass {
     return $data;
   }
 
-  function getOptionsCatTree($f, $pid) {
-    global $SMARTY,$DBobject;
-    $results = array();
-    
-    $pre = str_replace("tbl_","",$f->table);
-    $sql = "SELECT {$pre}_id, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''?"AND {$f->where} ":"") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
-    
-    if($res = $DBobject->wrappedSqlGet($sql)){
-      foreach($res as $row){
-        $results[] = array(
-            'id'=>$row["{$pre}_id"],
-            'value'=>$row["{$f->reference}"],
-            'subs'=>self::getOptionsCatTree($f,$row["{$pre}_id"])
-        );
-      }
-    }
-    return $results;
-  }
+  
 
  function LoadTree($_cid = 0, $level = 0, $count = 0, $_PUBLISHED = 1) {
     global $CONFIG,$SMARTY,$DBobject;
@@ -221,7 +202,12 @@ class ProductClass extends ListClass {
       $prod_order = " ORDER BY " . $this->CONFIG_OBJ->producttable->orderby;
     }
     
-    $sql = "SELECT * FROM tbl_product {$prod_extends} WHERE product_listing_id = :cid AND product_deleted IS NULL AND product_published = :published" . $prod_order;
+    $prod_where = "";
+    if(! empty($this->CONFIG_OBJ->producttable->where)){
+    	$prod_where = " AND " . $this->CONFIG_OBJ->producttable->where;
+    }
+    
+    $sql = "SELECT * FROM tbl_product {$prod_extends} WHERE product_listing_id = :cid AND product_deleted IS NULL AND product_published = :published" . $prod_where . $prod_order;
     //$sql = "SELECT * FROM tbl_product {$prod_extends} LEFT JOIN tbl_additional_category ON tbl_product.product_id = tbl_additional_category.additional_category_product_id  WHERE (product_listing_id = :cid OR (tbl_additional_category.additional_category_listing_id = :cid AND tbl_additional_category.additional_category_flag = 1) ) AND product_deleted IS NULL AND product_published = :published". $prod_order;
     $params = array(
         ":cid"=>$_cid,

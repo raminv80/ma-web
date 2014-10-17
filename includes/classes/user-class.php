@@ -184,7 +184,7 @@ class UserClass {
     	$user_arr = array();
     	$temp_str = getPass($email,$pass);
     	
-    	$sql = "SELECT * FROM tbl_user WHERE user_email = :email AND user_password = :password AND user_deleted IS NULL";
+    	$sql = "SELECT * FROM tbl_user WHERE user_username = :email AND user_password = :password AND user_deleted IS NULL";
     	$params = array( 
     				"email" => $email , 
     				"password" => $temp_str 
