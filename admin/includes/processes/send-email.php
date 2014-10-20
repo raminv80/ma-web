@@ -64,6 +64,8 @@ if(checkToken('admin', $_POST["formToken"]) && !empty($_POST['action']) && !empt
 					$res2 = $DBobject->wrappedSql ( $sql, array (":id" => $p ['cartitem_id']) );
 					$cart_arr [$p ['cartitem_id']] ['attributes'] = $res2;
 				}
+				$COMP = json_encode($CONFIG->company);
+				$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
 				$SMARTY->assign('orderItems', $cart_arr);
 				$SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
 				$body = $SMARTY->fetch($template);

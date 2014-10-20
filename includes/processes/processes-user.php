@@ -23,6 +23,8 @@ if(checkToken('frontend',$_POST["formToken"],false)){
         try{
         	// SEND CONFIRMATION EMAIL
         	$SMARTY->assign("DOMAIN",'http://'.$GLOBALS['HTTP_HOST']);
+        	$COMP = json_encode($CONFIG->company);
+        	$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
         	$SMARTY->assign("username",$_POST['email']);
         	$SMARTY->assign("password",$_POST['password']);
         	

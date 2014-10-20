@@ -14,7 +14,9 @@
 					<td><b>User's Detail:</b></td>
 					<td class="text-center">{$fields.user.0.user_gname} {$fields.user.0.user_surname} / {$fields.user.0.user_email}</td>
 					<td><b>Payment Status:</b></td>
-					<td class="text-center"> <b>{if $fields.payment.0.payment_status eq 'P'}PAID{else}{$fields.payment.0.payment_status}{/if}</b></td>
+					<td class="text-center {if $fields.payment.0.payment_status eq 'A'}text-success{else}text-danger{/if}"> 
+						<b>{if $fields.payment.0.payment_status eq 'P'}PENDING{elseif $fields.payment.0.payment_status eq 'A'}APPROVED{elseif $fields.payment.0.payment_status eq 'R'}REFUNDED{elseif $fields.payment.0.payment_status eq 'C'}CANCELLED{else}{$fields.payment.0.payment_status}{/if}</b>
+					</td>
 				</tr>
 				<tr>
 					<td><b>Shipping Method:</b></td>
@@ -121,7 +123,7 @@
 		<input type="hidden" value="{$fields.payment.0.shipping_address.0.address_id}" name="ship_ID" /> 
 		<input type="hidden" value="{$fields.user.0.user_gname}" name="user[gname]" />
 		<input type="hidden" value="{$fields.cart_id}" name="cart_id" />   -->
-		<input type="hidden" value="{$fields.user.0.user_email}" name="email" /> 
+		<input type="hidden" value="{$fields.user.0.user_email}" name="email" id="email" /> 
 		<input type="hidden" value="{$fields.payment.0.payment_invoice_email_id}" name="email_id" /> 
 		<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 					
@@ -139,8 +141,29 @@
 		<input type="hidden" value="order_id" name="field[1][tbl_order][{$cnt}][id]" id="id" /> 
 		<input type="hidden" value="{$fields.payment.0.order.0.order_payment_id}" name="field[1][tbl_order][{$cnt}][order_payment_id]" id="order_payment_id">
 		<input type="hidden" value="{$admin.id}" name="field[1][tbl_order][{$cnt}][order_admin_id]" id="order_admin_id">
+		
+		<input type="hidden" value="payment_id" name="field[2][tbl_payment][{$cnt}][id]" id="id_payment" /> 
+		<input type="hidden" value="{$fields.payment.0.order.0.order_payment_id}" name="field[2][tbl_payment][{$cnt}][payment_id]" id="payment_id">
+		
 		<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-					
+		
+<!-- 		<div class="row form-group">
+			<label class="col-sm-3 control-label" for="payment_status">Payment Status</label>
+			<div class="col-sm-5">
+				<select class="form-control" name="field[2][tbl_payment][{$cnt}][payment_status]" id="payment_status">
+						<option value="P" {if $fields.payment.0.payment_status eq 'P'}selected="selected"{/if}>Pending</option>
+						<option value="A" {if $fields.payment.0.payment_status eq 'A'}selected="selected"{/if}>Approved</option>
+						<option value="C" {if $fields.payment.0.payment_status eq 'C'}selected="selected"{/if}>Cancelled</option>
+						<option value="R" {if $fields.payment.0.payment_status eq 'R'}selected="selected"{/if}>Refunded</option>
+				</select>
+			</div>
+		</div>	 -->		
+		<div class="row form-group">
+			<label class="col-sm-3 control-label" for="payment_shipping_tracking">Shipping Tracking</label>
+			<div class="col-sm-5">
+				<input class="form-control" value="{$fields.payment.0.payment_shipping_tracking}" name="field[2][tbl_payment][{$cnt}][payment_shipping_tracking]" id="payment_shipping_tracking">
+			</div>
+		</div>
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="id_cart_order_status">Order Status</label>
 			<div class="col-sm-5">
@@ -153,7 +176,8 @@
 		</div>
 		<div class="row form-group">
 			<div class="col-sm-offset-3 col-sm-9">
-				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
+				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn"> Save</a>
+				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();sendStatusEmail('email', 'order_payment_id', 'order_status_id');" class="btn btn-primary pull-right top-btn"> Save and Notify</a>
 			</div>
 		</div>
 	</form>
@@ -184,9 +208,9 @@ function sendInvoiceEmail(){
 	    	try{
 	    		var obj = $.parseJSON(data);
 			 	if (obj.response) {
-			 		$('#sent').slideDown();
+			 		$('#email-sent').slideDown();
 					setTimeout(function(){
-						$('#sent').slideUp();
+						$('#email-sent').slideUp();
 			    	},10000);
 				} else {
 					$('#error').slideDown();
@@ -208,6 +232,50 @@ function sendInvoiceEmail(){
       	}
 	});
 	
+}
+
+function sendStatusEmail(TO, PAYMENTID, STATUS){
+	var email_to = encodeURIComponent( $('#'+ TO).val() );
+	var content = encodeURIComponent( $('#'+ PAYMENTID).val() );
+	var subject = encodeURIComponent( $('#'+ STATUS).val() );
+	var datastring = 'action=OrderStatus&email='+email_to+'&payment_id='+content+'&status='+subject+'&formToken='+$('#formToken').val();
+	$('body').css('cursor','wait');
+	$('#send-btn').addClass('disabled');
+	$.ajax({
+		type: "POST",
+	    url: "/admin/includes/processes/send-email.php",
+		cache: false,
+		async: false,
+		data: datastring,
+		dataType: "html",
+	    success: function(data) {
+	    	try{
+	    		var obj = $.parseJSON(data);
+			 	if (obj.response) {
+				 	$('.notification').hide();
+			 		$('#email-sent').slideDown();
+					setTimeout(function(){
+						$('#email-sent').slideUp();
+			    	},10000);
+				} else {
+					$('#error').slideDown();
+					setTimeout(function(){
+						$('#error').slideUp();
+			    	},10000);
+				}
+			 	
+			}catch(err){
+				console.log('TRY-CATCH error');
+			}
+			$('body').css('cursor','default');
+			$('#send-btn').removeClass('disabled');
+	    },
+		error: function(){
+			$('body').css('cursor','default');
+			$('#send-btn').removeClass('disabled');
+			console.log('AJAX error');
+      	}
+	});
 }
 
 </script>

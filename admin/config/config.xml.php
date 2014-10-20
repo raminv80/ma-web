@@ -240,7 +240,7 @@
 			<id>cart_id</id>
 			<field>cart_closed_date</field>
 			<deleted>cart_deleted</deleted>
-			<where>DATE(cart_closed_date) BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND CURDATE() </where> 
+			<where notedit="true">DATE(cart_closed_date) BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND CURDATE() </where> 
 			<orderby>cart_closed_date DESC</orderby>
 			<associated> 
 				<id>cartitem_id</id>

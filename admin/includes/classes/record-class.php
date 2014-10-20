@@ -44,6 +44,10 @@ Class Record{
 	function getRecord($id){
 		global $SMARTY,$DBobject;
 		$article_f = array();
+		
+		if ($this->CONFIG->table->where->attributes()->notedit) {
+			$this->WHERE = null;
+		}
 		$sql = "SELECT * FROM {$this->TABLE} WHERE {$this->ID} = '{$id}' AND {$this->DELETED} IS NULL".($this->WHERE!=""?" AND {$this->WHERE}":"");// AND article_deleted IS NULL";
 		//echo $sql.'<br/>';
 		if($res = $DBobject->wrappedSqlGet($sql)){

@@ -152,6 +152,7 @@ if (jQuery.validator) {
 			"Invalid value. Must be numeric."
 	);
 
+	
 	jQuery.validator.addClassRules({
 		double: {
 			double: true
@@ -163,6 +164,20 @@ if (jQuery.validator) {
 		},
 	});
 
+
+	jQuery.validator.addMethod(
+	  		"mindate", 
+	  		function(value, element, params) {
+		  		var mdate = new Date(params.date);
+		  		var vdate =  new Date( convert_to_mysql_date_format(value) );
+	  			if (mdate <= vdate) {
+	  				return true;
+	  			} 
+	  			return false;
+			}, 
+			"Invalid date."
+	);
+	
 }
 
 

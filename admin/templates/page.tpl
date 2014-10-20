@@ -153,6 +153,10 @@
 		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>The invoice was successfully sent.</b>
 		<button type="button" class="close pull-right" onclick="$('#sent').slideUp();">x</button>
 	</div>
+	<div class="notification" id="email-sent" style="display:none;">
+		<img alt="success" src="/admin/images/success.png" width="28" height="28" /><b>Order status updated and notification email sent.</b>
+		<button type="button" class="close pull-right" onclick="$('#email-sent').slideUp();">x</button>
+	</div>
 	{if $notice neq ''}
 		<script>
 			$('#{$notice}').slideDown();

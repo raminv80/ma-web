@@ -1,5 +1,5 @@
 <?php
-global $SMARTY,$DBobject;
+global $SMARTY,$DBobject,$CONFIG;
 $referer = parse_url($_SERVER['HTTP_REFERER']);
 if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	switch ($_POST['action']) {
@@ -340,6 +340,8 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 							$orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
 							$SMARTY->assign('orderItems',$orderItems);
 							$SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+							$COMP = json_encode($CONFIG->company);
+							$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
 
 							//COMMMENTED UNTIL GO LIVE TO PREVENT STORES GETTING TESTING EMAILS
 							/* $bcc = $res[0]['location_bcc_recipient'];
