@@ -113,11 +113,7 @@ class UserClass {
 	        		":ip" => $_SERVER['REMOTE_ADDR'],
 	        		":browser" => $_SERVER['HTTP_USER_AGENT']
 	    	);
-	    	$sql = "UPDATE tbl_user SET 
-                                            user_password = :password, 
-                                            user_ip = :ip,
-                                            user_browser = :browser,
-                                            user_modified = now()
+	    	$sql = "UPDATE tbl_user SET user_password = :password, user_ip = :ip, user_browser = :browser, user_modified = now()
 				WHERE user_id = :id ";
 	    	
 	    	if ( $DBobject->wrappedSql($sql, $params) ) {
@@ -253,31 +249,13 @@ class UserClass {
                             ":ip" => $_SERVER['REMOTE_ADDR'],
                             ":browser" => $_SERVER['HTTP_USER_AGENT']
             );
-            $sql = "UPDATE tbl_user SET 
-                                        user_password = :password, 
-                                        user_ip = :ip,
-                                        user_browser = :browser,
-                                        user_modified = now()
-                            WHERE user_id = :id ";
+            $sql = "UPDATE tbl_user SET user_password = :password, user_ip = :ip, user_browser = :browser, user_modified = now()
+                   WHERE user_id = :id ";
 
             if ( $DBobject->wrappedSql($sql, $params) ) {
-                try{
-                  // SEND CONFIRMATION EMAIL
-                  $SMARTY->assign("user_gname",$res['user_gname']);
-                  $SMARTY->assign("newPass",$newPass);
-                  $body= $SMARTY->fetch('reset-password-email.tpl');
-                  $to = $email;
-                  $from = "Retail Cloud";
-                  $fromEmail = "noreply@" . str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
-                  $subject = 'Forgotten Password for Retail Cloud';
-                  if(sendMail($to, $from, $fromEmail, $subject, $body)){
-                    return array ('success' => 'Your new password has been sent to the registered email address.');
-                  }else{
-                    return array ('error' => 'There was a connection problem. Please, try again!');
-                  }
-                }catch(Exception $e){
-                  return array ('error' => 'There was a connection problem. Please, try again!');
-                }
+            	return array ('success' => 'Your new password has been sent to the registered email address.', 
+            							'temp_pass' =>$newPass,
+            							'user_gname' =>$res['user_gname']);
             } 
             return array ('error' => 'There was a connection problem. Please, try again!');
         }

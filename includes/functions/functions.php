@@ -32,7 +32,8 @@ ini_set('display_errors',0); ini_set('error_reporting',0 );error_reporting(0);
 $_CONF_FILE = "/config/config.xml.php";
 $GLOBALS['CONFIG'] = LOADCONFIG($_CONF_FILE);
 $GLOBALS['SITE'] = "";
-$GLOBALS['HTTP_HOST'] = (!empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:"");
+$cfg_host = (string)$CONFIG->domain;
+$GLOBALS['HTTP_HOST'] = (!empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$cfg_host);
 
 include_once 'database/pdo-db-manager.php';
 include_once 'database/table-class.php';

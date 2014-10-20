@@ -25,8 +25,6 @@ table td {
 	text-align: left;
 }
 </style>
-<img src="{$DOMAIN}/images/logo.png" alt="Logo">
-<br>
 <br>
 <table>
 	<tr>
@@ -189,13 +187,14 @@ table td {
 <br />
 &nbsp;
 <br />
-<table>
+<hr>
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>
-		<td>Best regards<br>
-		<br><b>Company</b>
-		<br> 5023 
-		<br>Ph: <a href="tel:1300 ">1300 </a> 
-		<br>Fax: 08 <br>
+		<td width="30%"><img src="{$DOMAIN}/images/logo.png" alt="logo"></td>
+		<td width="70%"><b>{$COMPANY.name}</b>
+			<br>{$COMPANY.address.street} {$COMPANY.address.suburb} {$COMPANY.address.state} {$COMPANY.address.postcode}
+			{if $COMPANY.phone}<br>Ph: <a href="tel:{$COMPANY.phone}">{$COMPANY.phone}</a>{/if}
+			{if $COMPANY.fax}<br>Fax: {$COMPANY.fax}{/if}
 		</td>
 	</tr>
 </table>

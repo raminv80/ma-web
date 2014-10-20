@@ -1,6 +1,7 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
 <config debug="true" staging="true">
+	<domain></domain>
 	<company>
 		<name>Them</name>
 		<address>

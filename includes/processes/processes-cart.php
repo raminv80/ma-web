@@ -349,7 +349,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 							*/							
 	    		    $to = $_SESSION['user']['public']['email'];
 	    		    //$bcc = 'apolo@them.com.au';
-	    		    $from = 'eShop';
+	    		    $from = (string) $CONFIG->company->name;
 	    		    $fromEmail = 'noreply@' . str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
 	    		    $subject = 'Confirmation of your order';
 	    		    $body= $SMARTY->fetch('email-confirmation.tpl');

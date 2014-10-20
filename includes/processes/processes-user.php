@@ -22,7 +22,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
         
         try{
         	// SEND CONFIRMATION EMAIL
-        	$SMARTY->assign("DOMAIN",'http://'.$GLOBALS['HTTP_HOST']);
+        	$SMARTY->assign("DOMAIN",'http://'.$HTTP_HOST);
         	$COMP = json_encode($CONFIG->company);
         	$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
         	$SMARTY->assign("username",$_POST['email']);
@@ -30,8 +30,8 @@ if(checkToken('frontend',$_POST["formToken"],false)){
         	
         	$buffer= $SMARTY->fetch('newmember-email.tpl');
         	$to = $_SESSION['user']['public']['email'];
-        	$from = 'Website';
-        	$fromEmail = "noreply@" . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
+        	$from = $COMP['name'];
+        	$fromEmail = "noreply@" . str_replace ( "www.", "", $HTTP_HOST );
         	$subject = 'Your new account details';
         	$body = $buffer;
         	$mailID = sendMail($to, $from, $fromEmail, $subject, $body);
@@ -80,9 +80,34 @@ if(checkToken('frontend',$_POST["formToken"],false)){
     case 'resetPassword':
       $user_obj = new UserClass();
       $res = $user_obj->resetPassword($_POST["email"]);
+      if($res['success']){
+      	try{
+      		// SEND CONFIRMATION EMAIL
+      		$SMARTY->assign("user_gname",$res['user_gname']);
+      		$SMARTY->assign("newPass",$res['temp_pass']);
+      		$SMARTY->assign('DOMAIN', "http://" . $HTTP_HOST);
+      		$COMP = json_encode($CONFIG->company);
+      		$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
+      		$body= $SMARTY->fetch('email-reset-password.tpl');
+      		$to = $_POST["email"];
+      		$from = (string) $CONFIG->company->name;
+      		$fromEmail = "noreply@" . str_replace ( "www.", "", $HTTP_HOST );
+      		$subject = 'Forgotten Password for '. $from;
+      		if(sendMail($to, $from, $fromEmail, $subject, $body)){
+      			$success = $res['success'];
+      		}else{
+      			$error = 'Error while sending email. Please, try again later!';
+      		}
+      	}catch(Exception $e){
+      		$error = $e;
+      	}
+      }else{
+      	$error = $res['error'];
+      }
+      
       echo json_encode(array(
-          'error'=>$res['error'],
-          'success'=>$res['success']
+          'error'=>$error,
+          'success'=>$success
       ));
       die();
     

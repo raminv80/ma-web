@@ -37,7 +37,7 @@ table{
 		<td width="70%"><b>{$COMPANY.name}</b>
 			<br>{$COMPANY.address.street} {$COMPANY.address.suburb} {$COMPANY.address.state} {$COMPANY.address.postcode}
 			{if $COMPANY.phone}<br>Ph: <a href="tel:{$COMPANY.phone}">{$COMPANY.phone}</a>{/if}
-			{if $COMPANY.phone}<br>Fax: {$COMPANY.fax}{/if}
+			{if $COMPANY.fax}<br>Fax: {$COMPANY.fax}{/if}
 		</td>
 	</tr>
 </table>
