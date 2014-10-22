@@ -31,6 +31,7 @@
 		<page></page> 
 	</them_news> 
 	
+	<group name="General">
 	<!-- THIS SECTION IS USED TO MANAGE THE ADMINISTRATOR TABLE. ADMINISTRATORS AND USERS FOR THE CMS ARE MANAGED HERE. -->
 	<section level="1">
 		<showlist>FALSE</showlist>
@@ -405,6 +406,7 @@
 		<list_template>list.tpl</list_template>
 		<edit_template>edit_store.tpl</edit_template>
 	</section> 
+	</group>
 	
 	<smartytemplate_config><!-- This element contains the smarty template values -->
 		<templates>/templates</templates>

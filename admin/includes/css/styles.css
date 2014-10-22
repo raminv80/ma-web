@@ -1,5 +1,5 @@
 @CHARSET "ISO-8859-1";
-
+/*.navbar-nav {width:100%;}*/
 .fileinput{ width: 0px!important; height: 0px!important; padding: 0px!important; border: 0px!important; }
 /* .btn-info{ margin-bottom: 5px!important;} */
 .mceEditor{ margin-bottom: 5px!important;}
@@ -29,32 +29,63 @@ border-bottom: 1px solid #e5e5e5;
 padding-top: 8px;
 display: inline-block;
 }
+.text-deleted{
+  text-decoration: line-through;
+}
+.bg-red {
+  background-color: #d40000 !important;
+  color: #fff;
+}
+li.bg-red{
+  background-color: #fff!important;
+}
+#found-members ul{
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+#found-members li {
+  list-style: none outside none;
+  padding: 4px 0;
+}
+.no-members {
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  font-weight: bold;
+  padding: 10px 40px;
+}
+.nav-tabs > li.active.bg-red > a , .nav-tabs > li.active.bg-red > a:focus, .nav-tabs > li.active.bg-red > a:hover {
+  background-color: #d40000 !important;
+  color: #fff;
+}
+
 .url-text{
    display: inline-block !important;
    width: 74% !important;
 }
 
 .form-tab {
-	border-bottom: 1px solid #DDDDDD;
+  border-bottom: 1px solid #DDDDDD;
     border-top: 1px solid #DDDDDD;
     margin: 20px;
 }
 .form-help-value {
-	font-size:10px;
-	font-weight:bold;
+  font-size:10px;
+  font-weight:bold;
 }
 .form-help-text {
-	font-size:10px;
+  font-size:10px;
 }
 .top-btn{
-	margin-left: 30px;
+  margin-left: 30px;
 }
 .bottom-btn{
-	margin-top: 50px;
+  margin-top: 50px;
 }
 .form-bottom-btns{
-	margin-top: 50px;
-	padding-right: 15px;
+  margin-top: 50px;
+  padding-right: 15px;
 }
 .number {
     width: 60px !important;
@@ -62,7 +93,7 @@ display: inline-block;
 
 .double {
     width: 140px !important;
-	text-align: right;
+  text-align: right;
 }
 
 .dates {
@@ -70,26 +101,32 @@ display: inline-block;
 }
 
 .sub-form {
-	background-color: rgb(238, 238, 238); 
-	padding: 15px;
-	margin-bottom: 25px;
+  background-color: rgb(238, 238, 238); 
+  padding: 15px;
+  margin-bottom: 25px;
 }
 .draft > td  {
     color: #5F8DFF;
 }
 
+.member-tab-content {
+    background-color: #f0f0f0;
+    margin: 10px 0;
+    padding: 10px;
+}
+
 .notification {
-	background: none repeat scroll 0 0 rgb(242, 250, 250);
+  background: none repeat scroll 0 0 rgb(242, 250, 250);
     border-top: 15px solid #78A1CA  !important;
     position: fixed !important;
     bottom: 0;
-	padding: 25px;
-	z-index: 9999;
+  padding: 25px;
+  z-index: 9999;
     width: 100%;
-	margin: 0 !important;
-	text-align: center;
-	text-size: center;
-	font-size: 3vh;
+  margin: 0 !important;
+  text-align: center;
+  text-size: center;
+  font-size: 3vh;
 }
 
 .notification > img {
@@ -97,75 +134,52 @@ display: inline-block;
 }
 
 .btn-add-new {
-	margin-top: 15px;
+  margin-top: 15px;
 }
 
 .btn-inform {
-	margin-left: 30px !important;
+  margin-left: 30px !important;
 }
 
-.form {
-	margin-top: 25px;
+.form, .top-margin {
+  margin-top: 25px;
 }
 .chckbx {
-	margin-top: 10px !important;
-}
-
-.navbar-default{
-	background-color: transparent !important;
-	border-color: transparent !important;
-}
-
-.navbar-header{
-	width: 100%;
-}
-
-.navbar-header img{
-	margin: 10px 0;
+  margin-top: 10px !important;
 }
 
 .container-fluid{
-	padding: 0;
-}
-
-.navbar-toggle{
-	margin: 20px auto !important;
-	float: none !important;
+  padding: 0;
 }
 
 .logotxt{
-	margin-left: 15px;
-	font-weight: bold;
-}
-
-.navbar-collapse{
-	background: #dedede;
-	padding: 10px !important;
+  margin-left: 15px;
+  font-weight: bold;
 }
 
 ul.nav h3{
-	font-size: 18px;
-	font-weight: bold;
-	margin-top: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 5px;
 }
 
 ul.nav ul{
-	padding-left: 0;
+  padding-left: 0;
 }
 
 ul.nav li{
-	list-style: none;
-	padding-left: 0;
-	margin-right: 15px;
+  list-style: none;
+  padding-left: 0;
+  margin-right: 15px;
 }
 
 #loginlogo{
-	display: inline !important;
-	margin-top: 150px;
+  display: inline !important;
+  margin-top: 150px;
 }
 
 #loginbox{
-	position: relative;
+  position: relative;
 margin-top: 20px;
 margin-bottom: 50px;
 background-color: #fbfbfb;
@@ -198,7 +212,199 @@ border:px solid #FFFFFF; -webkit-border-radius: px; -moz-border-radius: px;borde
 }
 
 .login_button:hover{
-	color: #fff !important;
+  color: #fff !important;
+}
+
+#selector{
+  margin-bottom: 20px;
+}
+
+.btn-grey{
+  color: #000;
+  background-color: #f5f5f5;
+  border-color: #ddd !important;
+}
+
+.btn-grey:hover{
+  background-color: #555;
+  color: #fff !important;
+}
+
+.btn-grey:focus, .btn-grey:active, .btn-grey.active{
+  color: #fff !important;
+  background-color: #000;
+  border-color: #000; 
+}
+
+.btn-black{
+  color: #fff;
+  background-color: #000;
+  border-color: #000;
+}
+
+.btn-black:hover{
+  background-color: #555;
+  color: #fff !important;
+}
+
+#infobox h1, #infobox .h1, #infobox h2, #infobox .h2, #infobox h3, #infobox .h3{
+  margin-top: 0 !important;
+  line-height: 33px !important
+}
+
+#history{
+  margin-bottom: 30px;
+}
+
+.tab-content>.tab-pane{
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.nav-tabs>li>a{
+  color: #555 !important;
+  background-color: #fff !important;
+  border: 1px solid #ddd !important;
+  border-bottom-color: transparent !important;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{
+  color: #fff !important;
+  background-color: #000 !important;
+}
+
+.panel-title>a{
+  width: 100%;
+  display: block;
+}
+
+.navbar-default{
+  background-color: #fff !important; 
+  border: none !important;
+}
+
+.navbar-nav>li>.dropdown-menu{
+  padding: 10px 20px;
+}
+
+.navbar-nav>li>.dropdown-menu {
+    margin-top:20px;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
+}
+.navbar-default .navbar-nav>li>a {
+    font-weight:bold;
+    margin-top: 15px;
+}
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
+  background-color: #fff !important;
+}
+
+.mega-dropdown {
+  position: static !important;
+  width:100%;
+}
+.mega-dropdown-menu {
+    padding: 20px 0px;
+    width: 100%;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+.mega-dropdown-menu:before {
+    content: "";
+    border-bottom: 15px solid #fff;
+    border-right: 17px solid transparent;
+    border-left: 17px solid transparent;
+    position: absolute;
+    top: -15px;
+    left: 160px;
+    z-index: 10;
+}
+.mega-dropdown-menu:after {
+    content: "";
+    border-bottom: 17px solid #ccc;
+    border-right: 19px solid transparent;
+    border-left: 19px solid transparent;
+    position: absolute;
+    top: -17px;
+    left: 158px;
+    z-index: 8;
+}
+.mega-dropdown-menu > li > ul {
+  padding: 0;
+  margin: 0;
+}
+.mega-dropdown-menu > li > ul > li {
+  list-style: none;
+}
+.mega-dropdown-menu > li > ul > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.428571429;
+  color: #999;
+  white-space: normal;
+}
+.mega-dropdown-menu > li ul > li > a:hover,
+.mega-dropdown-menu > li ul > li > a:focus {
+  text-decoration: none;
+  color: #444;
+  background-color: #f5f5f5;
+}
+.mega-dropdown-menu .dropdown-header {
+  color: #428bca;
+  font-size: 18px;
+  font-weight:bold;
+}
+.mega-dropdown-menu form {
+    margin:3px 20px;
+}
+.mega-dropdown-menu .form-group {
+    margin-bottom: 3px;
+}
+.cart-product-summary-price {
+    text-align: right;
+}
+.form-text-element{
+  padding-top:7px;
+}
+.side-padding{
+  padding-left: 7%!important;
+  padding-right: 7%!important;
+}
+#logo{
+  width: 140px;
+  padding: 10px;
+}
+
+#searchbox{
+  margin-top: 20px;
+}
+
+#pin{
+  position: absolute;
+  top:20px;
+  right: 0;
+  cursor: pointer;
+}
+
+.glyphicon-pushpin:before{
+  padding: 10px;
+}
+
+.dropdown-menu.pinned{
+  position: relative !important;
+  display: block !important;
+}
+
+.dropdown-menu.pinned:before, .dropdown-menu.pinned:after{
+  display: none;
+}
+
+.pinned .glyphicon-pushpin:before{
+  background: #999;
+  color: #fff;
 }
 
 @media (min-width: 768px) {
@@ -218,6 +424,13 @@ border:px solid #FFFFFF; -webkit-border-radius: px; -moz-border-radius: px;borde
 
 @media (max-width: 768px){
   #loginlogo{
-  	margin-top: 50px;
+    margin-top: 50px;
   }
+  #pin{
+    display:none;
+  }
+  .navbar-nav .dropdown-toggle { display:none; }
+  .dropdown-menu { position: relative !important;display: block !important; }
+  .dropdown-menu:before, .dropdown-menu:after { display: none !important; }
 }
+

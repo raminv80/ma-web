@@ -89,6 +89,12 @@ ga('send', 'pageview');
 				{include file='desktopmenu.tpl'}
 			</div>
 		</div>
+		<div class="info-alert-wrapper" {if !$notice}style="display:none;"{/if}>
+      <div class="alert alert-info fade in info-alert">
+				<button class="close" aria-hidden="true" type="button"  onclick="$(this).closest('.info-alert-wrapper').fadeOut('slow');">&times;</button>
+				<strong>{$notice}</strong>
+			</div>
+    </div>
 	</header>		 
 
 	{block name=body}{/block}

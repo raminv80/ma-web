@@ -12,7 +12,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
             'url'=>null
         ));
       }else{
-        $cart_obj = new Enrolment();
+        $cart_obj = new cart();
         $message = $cart_obj->SetUserCart($res['id']);
         $_SESSION['user']['public'] = $res;
         $url = $_SERVER['HTTP_REFERER'];
@@ -30,7 +30,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
         	
         	$buffer= $SMARTY->fetch('newmember-email.tpl');
         	$to = $_SESSION['user']['public']['email'];
-        	$from = $COMP['name'];
+        	$from = (string) $CONFIG->company->name;
         	$fromEmail = "noreply@" . str_replace ( "www.", "", $HTTP_HOST );
         	$subject = 'Your new account details';
         	$body = $buffer;
@@ -43,7 +43,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
         	));
         
         }
-        
+        $_SESSION['notice'] = 'Your account has been successfully created';
         echo json_encode(array(
             'error'=>null,
             'url'=>$url,
@@ -62,7 +62,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
 	    	 			'url'=> null
 	    	 	));
 	    	} else {
-	    		$cart_obj = new Enrolment();
+	    		$cart_obj = new cart();
 	    		$message = $cart_obj->SetUserCart($res['id']);
 	    		$_SESSION['user']['public'] = $res;
 	    		$url = $_SERVER['HTTP_REFERER'];

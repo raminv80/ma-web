@@ -25,7 +25,7 @@
                   <a class="showhide" style="line-height: 34px;position: absolute;right: 20px;top: 0;" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[name=pass]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[name=pass]').get(0).type='password';$(this).html('Show'); }">Show</a>
 	                <span class="help-block"></span>
 	            </div>
-	            <span class="form-help-block col-sm-offset-3 col-sm-9"><a href="javascript:void(0)" onclick="$('#reset-pass').show('slow');">Forgot your password?</a></span>
+	            <span class="form-help-block col-sm-offset-3 col-sm-9"><a href="javascript:void(0)" onclick="$('#reset-email').val($('#email').val());$('#reset-pass').show('slow');">Forgot your password?</a></span>
 	          </div>
 	          <div class=" col-sm-offset-3 error-alert" style="display:none;">
 	          	<div class="alert alert-danger fade in ">
@@ -49,7 +49,7 @@
 	          <div class="form-group">
 	              <label for="email" class="col-sm-4 control-label">Email</label>
 	              <div class="col-sm-8">
-	                  <input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="email" name="email" required>
+	                  <input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="reset-email" name="email" required>
 	              <span class="help-block"></span>
 	            </div>
 	          </div>
