@@ -100,8 +100,13 @@
 					<td class="text-right">-${$fields.payment.0.payment_discount|number_format:2:".":","}</td>
 				</tr>
 				<tr>
-					<td class="text-right" colspan="3">Postage & Handling</td>
+					<td class="text-right" colspan="3">Shipping</td>
 					<td class="text-right">${$fields.payment.0.payment_shipping_fee|number_format:2:".":","}</td>
+				</tr>
+				<tr>
+					<td class="text-right" colspan="3">Total (excl. GST)</td>
+					{assign var='totalExclGST' value=$fields.payment.0.payment_charged_amount - $fields.payment.0.payment_gst}
+					<td class="text-right">(${$totalExclGST|number_format:2:".":","})</td>
 				</tr>
 				<tr>
 					<td colspan="2"><small>(*) GST Free item.</small></td>
@@ -129,7 +134,7 @@
 					
 		<div class="row">
 			<div class="col-sm-offset-3 col-sm-9">
-				<a href="javascript:void(0);" onClick="sendInvoiceEmail();" id="send-btn" class="btn btn-info pull-right">Re-send Invoice</a>
+				<a href="javascript:void(0);" onClick="sendInvoiceEmail();" id="send-btn" class="btn btn-info pull-right"><span class="glyphicon glyphicon-envelope"></span> Re-send Invoice</a>
 			</div>
 		</div>
 	</form>
@@ -176,8 +181,8 @@
 		</div>
 		<div class="row form-group">
 			<div class="col-sm-offset-3 col-sm-9">
-				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn"> Save</a>
-				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();sendStatusEmail('email', 'order_payment_id', 'order_status_id');" class="btn btn-primary pull-right top-btn"> Save and Notify</a>
+				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
+				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();sendStatusEmail('email', 'order_payment_id', 'order_status_id');" class="btn btn-primary pull-right top-btn"><span class="glyphicon glyphicon-envelope"></span> Save and Notify</a>
 			</div>
 		</div>
 	</form>

@@ -132,7 +132,7 @@ if(isMobile()){
 function LOADCONFIG($_CONF_FILE){
   if($CONFIG = simplexml_load_file($_SERVER['DOCUMENT_ROOT'] . $_CONF_FILE)){
     $debug = (string)$CONFIG->attributes()->debug;
-    if($debug == 'true'){ ini_set('display_errors',1); ini_set('error_reporting',E_ALL ^ E_NOTICE ^ E_WARNING); } //ENABLE ERRORS IF DEBUG ON
+    if($debug == 'true'){ ini_set('display_errors',1); ini_set('error_reporting',E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT); } //ENABLE ERRORS IF DEBUG ON
   }else{
     ini_set('display_errors',1);  echo "configuration file not loaded";  die(); //CONFIG DOES NOT EXIST. DIE AND TELL USER
   }

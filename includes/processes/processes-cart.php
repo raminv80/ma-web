@@ -401,7 +401,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     		    }
     		    
     		    // OPEN NEW CART
-    		    $cart_obj->CreateCart($_SESSION['user']['id']);
+    		    $cart_obj->CreateCart($_SESSION['user']['public']['id']);
     		    	
     		    unset ( $_SESSION['address'] );
     		    unset ( $_SESSION['comments'] );

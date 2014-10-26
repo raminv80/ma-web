@@ -76,16 +76,21 @@
 															<td class="text-right">$ -{$order.payment_discount|number_format:2:".":","}</td>
 														</tr>
 														<tr valign="top" align="left">
-															<td colspan="3" class="text-right"><strong>Postage & Handling</strong></td>
+															<td>{if $free}(*)GST free item.{/if}</td>
+															<td colspan="2" class="text-right"><strong>Shipping</strong></td>
 															<td style="text-align: right">$ {$order.payment_shipping_fee|number_format:2:".":","}</td>
 														</tr>
 														<tr valign="top" align="left">
-															<td>{if $free}(*)GST free item.{/if}</td>
-															<td colspan="2" class="text-right"><strong>Incl. GST</strong></td>
-															<td style="text-align: right">($ {$order.payment_gst|number_format:2:".":","})</td>
+															<td colspan="4"><hr></td>
 														</tr>
 														<tr valign="top" align="left">
-															<td colspan="4"><hr></td>
+															<td colspan="3" class="text-right">Total (excl. GST)</td>
+															{assign var='totalExclGST' value=$order.payment_charged_amount - $order.payment_gst}
+															<td style="text-align: right">($ {$totalExclGST|number_format:2:".":","})</td>
+														</tr>
+														<tr valign="top" align="left">
+															<td colspan="3" class="text-right">GST</td>
+															<td style="text-align: right">($ {$order.payment_gst|number_format:2:".":","})</td>
 														</tr>
 														<tr valign="top" align="left">
 															<td colspan="3" class="text-right"><strong>TOTAL</strong></td>
@@ -98,7 +103,7 @@
 													<div class="col-sm-12">
 														<div class="col-sm-6">
 															<div>
-																<h4>Billing Address</h4>
+																<strong>Billing Address</strong>
 															</div>
 															<div>{$order.billing.address_name}</div>
 															<div>{$order.billing.address_line1} {$order.billing.address_line2}</div>
@@ -109,7 +114,7 @@
 														</div>
 														<div class="col-sm-6">
 															<div>
-																<h4>Shipping Address</h4>
+																<strong>Shipping Address</strong>
 															</div>
 															<div>{$order.shipping.address_name}</div>
 															<div>{$order.shipping.address_line1} {$order.shipping.address_line2}</div>
@@ -168,7 +173,7 @@
 								<form class="form-horizontal" id="update-pass-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
 									<input type="hidden" value="updatePassword" name="action" id="action" /> <input type="hidden" name="formToken" id="formToken" value="{$token}" />
 									<div class="form-group">
-										<label for="password" class="col-sm-3 control-label">Old Password</label>
+										<label for="password" class="col-sm-3 control-label">Current Password</label>
 										<div class="col-sm-4">
 											<input type="password" value="" class="form-control" id="old_password" name="old_password" autocomplete="off" required> <a class="showhide" style="line-height: 34px; position: absolute; right: 20px; top: 0;" href="javascript:void(0);"
 												onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[name=old_password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[name=old_password]').get(0).type='password';$(this).html('Show'); }">Show</a> <span class="help-block"></span>

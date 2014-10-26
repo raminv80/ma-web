@@ -9,14 +9,14 @@
     </button>
     <a href="/admin"><img src="/admin/images/themlogo.jpg" alt="them advertising logo" class="img-responsive" id="logo" /></a>
   </div>
-  <div id="pin" title="Pin menu"><span class="glyphicon glyphicon-pushpin"></span></div>
 
   <div class="collapse navbar-collapse js-navbar-collapse">
     <ul class="nav navbar-nav wide">
       <li class="dropdown mega-dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> Menu</a>
         
-        <ul class="dropdown-menu mega-dropdown-menu row">
+        <div class="dropdown-menu mega-dropdown-menu container"><div id="pin" title="Pin menu"><span class="glyphicon glyphicon-pushpin"></span></div>
+        <ul>
           <li class="col-sm-3">
             <ul>
               <li class="dropdown-header">News from Them </li>                            
@@ -60,17 +60,15 @@
             </ul>
             </li>
           {/foreach}
-            <li class="col-sm-8" id="searchbox">
-              <ul>
-                            <form class="form" role="form">
-                              <div class="form-group">
-                                <input type="text" class="form-control" id="search" placeholder="email, name or student">                                                              
-                              </div>
-                              <button type="submit" class="btn btn-primary btn-block">Search</button>
-                            </form>                                                       
-              </ul>
+            <li class="col-sm-8 pull-right" id="searchbox">
+                <form class="form" role="form">
+                     <div class="form-group">
+                       <input type="text" class="form-control" id="search" placeholder="email, name or student">                                                              
+                     </div>
+                     <button type="submit" class="btn btn-primary btn-block">Search</button>
+                </form>                                                       
             </li>
-        </ul>
+        </ul></div>
         
       </li>
     </ul>
@@ -80,14 +78,48 @@
 
 <script>
 jQuery(document).ready(function($){
+  function createCookie(name,value,days) {
+      if (days) {
+          var date = new Date();
+          date.setTime(date.getTime()+(days*24*60*60*1000));
+          var expires = "; expires="+date.toGMTString();
+      }
+      else var expires = "";
+      document.cookie = name+"="+value+expires+"; path=/";
+  }
+
+  function readCookie(name) {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for(var i=0;i < ca.length;i++) {
+          var c = ca[i];
+          while (c.charAt(0)==' ') c = c.substring(1,c.length);
+          if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+      }
+      return null;
+  }
+
+  function eraseCookie(name) {
+      createCookie(name,"",-1);
+  }
+  var x = readCookie('pinnedmenu');
+  if (x) {
+     $("#pin").addClass("pinned");
+     $(".dropdown-menu").addClass("pinned");
+     $(".dropdown-toggle").hide();
+     $("#pin").attr("title","Unpin menu");
+  }
+  
   $("#pin").click(function(){
     if($(this).hasClass("pinned")){
+      eraseCookie('pinnedmenu');
       $(this).removeClass("pinned");  
       $(".dropdown-menu").removeClass("pinned");
       $(".dropdown-toggle").show();
       $(this).attr("title","Pin menu");
     }
     else{
+      createCookie('pinnedmenu','1',7);
       $(this).addClass("pinned");
       $(".dropdown-menu").addClass("pinned");
       $(".dropdown-toggle").hide();

@@ -1121,7 +1121,7 @@ function ApplyDiscountCode($code, $cartId = null) {
 			$code = null;
 		}
 		
-		$result ['discount'] = $discount;
+		$result ['discount'] = round($discount, 2);
 		
 		
 		$params = array (

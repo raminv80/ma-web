@@ -149,7 +149,7 @@
                       <select id="state" name="address[B][address_state]" class="required form-control">
                         <option value="">Please select</option>
                         {foreach $options_state as $value }
-                        <option value="{$value.postcode_state}" {if $address.B.address_state eq $value.postcode_state OR $selectedShippingState eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option> 
+                        <option value="{$value.postcode_state}" {if ($address && $address.B.address_state eq $value.postcode_state) OR $selectedShippingState eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option> 
                       {/foreach}              
                       </select>
                     </div>
@@ -229,7 +229,7 @@
                           <select id="statesh" name="address[S][address_state]" class="shipping-select-req required form-control">
                             <option value="">Please select</option>
                             {foreach $options_state as $value }
-                            <option value="{$value.postcode_state}" {if $address.S.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option> 
+                            <option value="{$value.postcode_state}" {if $address && $address.S.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option> 
                           {/foreach}
                           </select>
                         </div>

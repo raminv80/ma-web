@@ -33,21 +33,13 @@ if (jQuery.validator) {
         		checkout2(formID); 
           		break;
           		
-        	case 'checkout3-form': 
-        		var paymentOption = 'Credit Card';
-        		ga('ec:setAction', 'checkout_option', {
-		 	        'step': 2,
-		 	        'option': paymentOption
-		 	      });
-		 	    ga('send', 'event', 'Checkout', 'Payment', paymentOption, {
-		 	       hitCallback: function() {
-		 	    	  form.submit();
-		 	       }
-		 	    });
-          		break;
-          		
         	case 'reset-pass-form': 
         		resetPass(formID);
+        		break;
+        		
+        	case 'checkout3-form':
+        		$('#payment-btn').attr('disabled','disabled');
+        		form.submit();
         		break;
         		
           	default:
@@ -83,8 +75,8 @@ function calculatePrice(){
 			price = price + parseFloat($('option:selected', this).attr('price'));
 			
 		});
-	$('#cal-price').html(price.toFixed(2)); 
-	$('#price').val(price.toFixed(2)); 
+	$('#cal-price').html(price.formatMoney(2, '.', ',')); 
+	$('#price').val(price.formatMoney(2, '.', ',')); 
 }
 
 
@@ -131,7 +123,7 @@ function resetPass(form){
 	    success: function(data) {
 	    	try{
 	    		var obj = $.parseJSON(data);
-	    		if (obj.error) {
+			 	if (obj.error) {
 			 		$('#'+form).find('.success-alert').hide();
 			 		$('#'+form).find('.error-alert').find('strong').html(obj.error);
 			 		$('#'+form).find('.error-alert').fadeIn('slow');
@@ -178,21 +170,6 @@ function addCart(form){
 			 	setTimeout(function() {
 			 		$('#shop-cart-btn').fadeOut(200);
 			    }, 4000);
-			 	ga('ec:addProduct', {
-			 	    'id': obj.product.id,
-			 	    'name': obj.product.name,
-			 	    'category': obj.product.category,
-			 	    'brand': obj.product.brand,
-			 	    'variant': obj.product.variant,
-			 	    'price': obj.product.price,
-			 	    'quantity': obj.product.quantity
-			 	  });
-			 	  ga('ec:setAction', 'add');
-			 	  var fullname = obj.product.name;
-			 	  if(obj.product.variant){
-			 		 fullname += ' | ' +  obj.product.variant
-			 	  }
-			 	  ga('send', 'event', 'Add to Cart', 'click', fullname); 
 			 	
 			}catch(err){
 				console.log('TRY-CATCH error');
@@ -225,7 +202,7 @@ function updateCart(){
 	    		var subtotals = obj.subtotals;
 	    		var totals = obj.totals;
                 $('.nav-itemNumber').html(obj.itemsCount);
-			 	$('#shop-cart-btn').html( obj.popoverShopCart );
+                $('#shop-cart-btn').html( obj.popoverShopCart );
 			 	/*$('.nav-subtotal').html('$'+obj.totals['subtotal']);*/
 			 	if (subtotals) {
 			 		$.each(pricemodifier, function(id, value){
@@ -237,22 +214,23 @@ function updateCart(){
 			 		});
 			 		$.each(priceunits, function(id, value){
 			 			amount = parseFloat(value);
-			 			$('#priceunit-'+id).html('$'+amount.toFixed(2));
+			 			$('#priceunit-'+id).html('$'+amount.formatMoney(2, '.', ','));
 			 		});
 			 		$.each(subtotals, function(id, value){
 			 			amount = parseFloat(value);
-			 			$('#subtotal-'+id).html('$'+amount.toFixed(2));
+			 			$('#subtotal-'+id).html('$'+amount.formatMoney(2, '.', ','));
 			 		});
 			 		$.each(totals, function(id, value){
 			 			amount = parseFloat(value);
 			 			if(id == 'total'){
 			 				$('#subtotal').attr('data-value', amount);
-			 				$('#subtotal').html('$'+amount.toFixed(2));
+			 				$('#subtotal').html('$'+amount.formatMoney(2, '.', ','));
 			 			}else if(id == 'discount'){
-			 				$('#'+id).html('$'+amount.toFixed(2));
+			 				$('#'+id).html('$'+amount.formatMoney(2, '.', ','));
 			 			}
 			 		});
 			 		//renderShippingMethods(obj.shippingMethods);
+			 		updateShipping();
 			 		calculateTotal();
 				} else {
 					alert('Error: Cannot be updated');
@@ -288,28 +266,11 @@ function deleteItem(ID){
                 $('.nav-subtotal').html('$'+obj.totals['subtotal']);
 			 	$('#shop-cart-btn').html( obj.popoverShopCart );
 			 	if (response) {
-			 		ga('ec:addProduct', {
-				 	    'id': obj.product.id,
-				 	    'name': obj.product.name,
-				 	    'category': obj.product.category,
-				 	    'brand': obj.product.brand,
-				 	    'variant': obj.product.variant,
-				 	    'price': obj.product.price,
-				 	    'quantity': obj.product.quantity
-			 		});
-			 		ga('ec:setAction', 'remove');
-
-			 		var fullname = obj.product.name;
-			 		if(obj.product.variant){
-			 			fullname += ' | ' +  obj.product.variant
-			 		}
-			 	  	ga('send', 'event', 'Remove from Cart', 'click', fullname); 
-				 	  
 			 		if ( parseInt(obj.itemsCount) > 0 ){
                         $( '#'+ ID ).hide('slow');
                         $.each(totals, function(id, value){
                         	amount = parseFloat(value);
-                        	$('#'+id).html('$'+amount.toFixed(2));
+                        	$('#'+id).html('$'+amount.formatMoney(2, '.', ','));
 				 		});
                     } else {
                         location.reload();
@@ -352,17 +313,6 @@ function checkout2(form) {
 			 		$('#shipping-summary').html(obj.shipping);
 			 		setCCRequired(true);
 			 		scrolltodiv('#checkout3-form');
-			 		
-			 		var shippingOption = 'Standard';
-			 	    ga('ec:setAction', 'checkout_option', {
-			 	        'step': 1,
-			 	        'option': shippingOption
-			 	      });
-			 	    ga('send', 'event', 'Checkout', 'Shipping', shippingOption);
-			 	    ga('ec:setAction','checkout', {
-			 		   'step': 2
-			 		  });
-			 	    ga('send', 'pageview');
 			 	}
 			}catch(err){
 				console.log('TRY-CATCH error');
@@ -379,11 +329,11 @@ function checkout2(form) {
 
 //function calculateTotal(str) {
 //	var value = parseFloat(str);
-//	$('#shipping-fee-value').html('$'+ value.toFixed(2));
+//	$('#shipping-fee-value').html('$'+ value.formatMoney(2, '.', ','));
 //	var total = parseFloat($('#total').attr('amount')) + value ;
-//	$('.total-amount').html('$'+ total.toFixed(2));
+//	$('.total-amount').html('$'+ total.formatMoney(2, '.', ','));
 //	var gst = (parseFloat($('#gst').attr('amount')) + value ) /10 ;
-//	$('#gst').html('$'+ gst.toFixed(2));
+//	$('#gst').html('$'+ gst.formatMoney(2, '.', ','));
 //}
 
 function addProductCart(ID, QTY, PRICE){
@@ -431,59 +381,69 @@ function renderShippingMethods(OPT){
 
 $('#shippingMethod').change(function() {
 	var price = parseFloat($(this).val());
-	$('#shipping-fee').html('$'+ price.toFixed(2));
+	$('#shipping-fee').html('$'+ price.formatMoney(2, '.', ','));
 	calculateTotal(); 
 });
 
 function updateShipping(){
-	$('body').css('cursor','wait');
+	var element =  "#postcodesh";
 	var postcode = $("#postcodesh").val();
 	if($("#chksame:checked").length ==1 || postcode == undefined){
 		postcode = $("#postcode-field").val();
+		element =  "#postcode-field";
 	}
-	var datastring = postcode;
-	$.ajax({
-		type: "POST",
-	    url: "/process/cart",
-		cache: false,
-		data: 'action=updatePostage&postcode=' + datastring,
-		dataType: "html",
-	    success: function(data) {
-	    	try{
-	    		var obj = $.parseJSON(data);
-	    		var postagefee = obj.postagefee;
-	    		if(isArray(postagefee)) {
-	    			// Iterate the array and do stuff
-//	    			if (postagefee.length == 1) {
-    			 		var amount = parseFloat(postagefee[0].postage_price);
-    			 		$('#shippingMethod').val(amount);
-    			 		$('#shipMethod').val(postagefee[0].postage_name);
-    			 		$('#postageID').val(postagefee[0].postage_id);
-    			 		calculateTotal();
-//    				} else {
-    					//alert('Error: Cannot be updated');
-//    				}
-    		    } else {
-    		    	if (postagefee) {
-    			 		var amount = parseFloat(postagefee.postage_price);
-    			 		$('#shippingMethod').val(amount);
-    			 		$('#shipMethod').val(postagefee.postage_name);
-    			 		$('#postageID').val(postagefee.postage_id);
-    			 		calculateTotal();
-    				} else {
-    					alert('Error: Cannot be updated');
-    				}
-    		    }
-			}catch(err){
-				console.log('TRY-CATCH error - '+err);
-			}
-			$('body').css('cursor','default'); 
-	    },
-		error: function(){
-			$('body').css('cursor','default'); 
-			console.log('AJAX error');
-      	}
-	});
+	if(postcode.length >= 4){
+		$('body').css('cursor','wait');
+		
+		var datastring = postcode;
+		$.ajax({
+			type: "POST",
+		    url: "/process/cart",
+			cache: false,
+			data: 'action=updatePostage&postcode=' + datastring,
+			dataType: "html",
+		    success: function(data) {
+		    	try{
+		    		var obj = $.parseJSON(data);
+		    		var postagefee = obj.postagefee;
+		    		if(isArray(postagefee)) {
+		    			// Iterate the array and do stuff
+	//	    			if (postagefee.length == 1) {
+	    			 		var amount = parseFloat(postagefee[0].postage_price);
+	    			 		$('#shippingMethod').val(amount);
+	    			 		$('#shipMethod').val(postagefee[0].postage_name);
+	    			 		$('#postageID').val(postagefee[0].postage_id);
+	    			 		calculateTotal();
+	    			 		$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+	    			 		$(element).closest('.form-group').find('.help-block').html('');
+	//    				} else {
+	    					//alert('Error: Cannot be updated');
+	//    				}
+	    		    } else {
+	    		    	if (postagefee) {
+	    			 		var amount = parseFloat(postagefee.postage_price);
+	    			 		$('#shippingMethod').val(amount);
+	    			 		$('#shipMethod').val(postagefee.postage_name);
+	    			 		$('#postageID').val(postagefee.postage_id);
+	    			 		calculateTotal();
+	    			 		$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+	    			 		$(element).closest('.form-group').find('.help-block').html('');
+	    				} else {
+	    					$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+	    					$(element).closest('.form-group').find('.help-block').html('Invalid postcode');
+	    				}
+	    		    }
+				}catch(err){
+					console.log('TRY-CATCH error - '+err);
+				}
+				$('body').css('cursor','default'); 
+		    },
+			error: function(){
+				$('body').css('cursor','default'); 
+				console.log('AJAX error');
+	      	}
+		});
+	}
 }
 
 function calculateTotal() {
@@ -491,14 +451,14 @@ function calculateTotal() {
 	var fee = $('#shippingMethod').val();
 	if(fee){
 		fee = parseFloat(fee);
-		$('#shipping-fee').html('$'+ fee.toFixed(2));
+		$('#shipping-fee').html('$'+ fee.formatMoney(2, '.', ','));
 	}else{
 		fee = parseFloat(0);
-		$('#shipping-fee').html('$0.00');
+		$('#shipping-fee').html('$'+ fee.formatMoney(2, '.', ','));
 	}
 	var total = subtotal + fee; 
 	$('#total').html('$'+ total.formatMoney(2, '.', ',') +' <div class="small notbold">AUD (inc. GST)</div>');
-	$('#shipMethod').val($('#shippingMethod option:selected').text());
+	/*$('#shipMethod').val($('#shippingMethod option:selected').text());*/
 };
 
 function scrolltodiv(id) {
