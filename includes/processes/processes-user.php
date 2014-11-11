@@ -127,19 +127,46 @@ if(checkToken('frontend',$_POST["formToken"],false)){
       die();
     
     case 'updateDetails':
-    		$user_obj = new UserClass();
-    		$data = array_merge($_POST, array('email'=>$_SESSION['user']['public']['email']));
-    		$res = $user_obj->UpdateDetails($data);
-    		if ( $res['error'] ) {
-    			$_SESSION['error']= $res['error'];
-    			header("Location: ".$_SERVER['HTTP_REFERER']."#error");
-    		} else {
-    			$_SESSION['user']['public']['gname']= $_POST["gname"];
-    			$_SESSION['user']['public']['surname']= $_POST["surname"];
-    			$_SESSION['notice']= $res['success'];  
-    			header("Location: ".$_SERVER['HTTP_REFERER']."#notice");
-    		}
-    		die();
+    	require_once 'includes/createsend/csrest_subscribers.php';
+    	$user_obj = new UserClass();
+    	/* if($_POST['want_promo']){
+    		$_POST['want_promo'] = 1;
+    		//============= ADD - CREATE-SEND
+    		try{
+    			$wrap = new CS_REST_Subscribers('', '060d24d9003a77b06b95e7c47691975b');
+    			$cs_result = $wrap->add(array(
+    					'EmailAddress' => $_SESSION['user']['public']['email'],
+    					'Name' => $_POST['gname'],
+    					'CustomFields' => array(
+    							array(
+    									'Key' => 'Surname ',
+    									'Value' => $_POST['surname '],
+    							)
+    					),
+    					"Resubscribe" => "true"
+    			));
+    		}catch(Exception $e){}
+    	}else{
+    		//============= REMOVE - CREATE-SEND
+    		try{
+    			$wrap = new CS_REST_Subscribers('', '060d24d9003a77b06b95e7c47691975b');
+    			$cs_result = $wrap->unsubscribe($_SESSION['user']['public']['email']);
+    		}catch(Exception $e){}
+    		 
+    	} */
+    	
+    	$data = array_merge($_POST, array('email'=>$_SESSION['user']['public']['email']));
+    	$res = $user_obj->UpdateDetails($data);
+    	if ( $res['error'] ) {
+    		$_SESSION['error']= $res['error'];
+    		header("Location: ".$_SERVER['HTTP_REFERER']."#error");
+    	} else {
+    		$_SESSION['user']['public']['gname']= $_POST["gname"];
+    		$_SESSION['user']['public']['surname']= $_POST["surname"];
+    		$_SESSION['notice']= $res['success'];
+    		header("Location: ".$_SERVER['HTTP_REFERER']."#notice");
+    	}
+    	die();
 
   }
 }elseif($_GET["logout"]){

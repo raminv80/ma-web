@@ -53,31 +53,28 @@
       <script type="text/javascript" src="/includes/js/respond.min.js"></script>
  	<![endif]-->
  	
-<script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
 
 {block name=head}{/block}
 
 
-<script>
-{literal}
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-51356141-1', 'themserver.com', {'siteSpeedSampleRate': 50}); //siteSpeedSampleRate defaults to 1% Max 10k for day. For low traffic sites this does not give enough stats. 
-ga('require', 'displayfeatures');
-ga('require', 'ec');
-ga('set', '&cu', 'AUD');
-{/literal}
-
-{$ga_ec}
-{block name=enhanced_ecommerce}{/block}
+{if $ga_id}
+	<script>
+	(function(i,s,o,g,r,a,m){ i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 	
-ga('send', 'pageview');
-
-</script>
-
+	ga('create', '{$ga_id}', 'auto', { 'siteSpeedSampleRate': 50 });  
+	ga('require', 'displayfeatures');
+	ga('require', 'ec');
+	ga('set', '&cu', 'AUD');
+	
+	{$ga_ec}
+	{block name=enhanced_ecommerce}{/block}
+		
+	ga('send', 'pageview');
+	</script>
+{/if}
 
 </head>
 <body>
@@ -105,6 +102,7 @@ ga('send', 'pageview');
 		<div id="help-alert-bold">Experiencing problems?</div>	
 		Give us a call on <a href="tel:+123456789">+123456789</a>
 	</div>
+	<script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>

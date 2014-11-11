@@ -121,6 +121,8 @@ if($staging === "true" || $_PUBLISHED == 0 ){
   $SMARTY->assign("staging",true);
 }else{
   $SMARTY->assign("staging",false);
+  $ga_id = (string) $CONFIG->google_analytics->id;
+  $SMARTY->assign("ga_id", $ga_id);
 }
 
 if(isMobile()){

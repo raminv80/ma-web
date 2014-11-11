@@ -62,6 +62,9 @@ while(true){
   /******* Goes to home *******/
   if($_request['arg1'] == ''){
     $template = loadPage($CONFIG->index_page); 
+    /* $prodObj = new ProductClass(null, $CONFIG);
+    $prodObj->LoadProductSet("featured", "product_flag1 = '1' AND product_instock = '1'");
+    $prodObj->LoadProductSet("special", "product_specialprice != 0.0"); */
     break 1; 
   }
   
@@ -314,23 +317,42 @@ function loadPage($_conf){
         $menu = $obj->LoadMenu($_conf->pageID);
         $SMARTY->assign('menuitems',$menu);
         $SMARTY->assign('requested_page',$_SERVER['HTTP_REFERER']);
+        loadPageAdditional($struct->table);
       }
     }
   }
-  foreach($_conf->additional as $ad){
-    $tag = (string)$ad->tag;
-    $name = (string)$ad->name;
-    $data = (string)$ad->data;
-    foreach($CONFIG->$tag as $lp){
-      if($lp->attributes()->name == $name){
-        $class = (string)$lp->file;
-        $obj = new $class('',$lp);
-        $data2 = $obj->LoadTree($lp->root_parent_id);
-        $SMARTY->assign($data,unclean($data2));
-        break 1;
-      }
-    }
-  }
- 
+  loadPageAdditional($_conf);
   return $template;
+}
+
+
+function loadPageAdditional($_conf){
+	global $CONFIG,$_PUBLISHED,$SMARTY;
+	if(!empty($_conf)){
+		foreach($_conf->additional as $ad){
+			$tag = (string)$ad->tag;
+			$name = (string)$ad->name;
+			$data = (string)$ad->data;
+			foreach($CONFIG->$tag as $lp){
+				if($lp->attributes()->name == $name){
+					foreach($ad->update as $up){
+						$child = (string)$up->child;
+						$parent = (string)$up->parent;
+						$path = $parent .'->'. $child;
+						$value = (string)$up->value;
+						if(!empty($lp->$path)){
+							$lp->$path = $value;
+						}else{
+							$lp->$parent->addChild($child, $value);
+						}
+					}
+					$class = (string)$lp->file;
+					$obj = new $class('',$lp);
+					$data2 = $obj->LoadTree($lp->root_parent_id);
+					$SMARTY->assign($data,unclean($data2));
+					break 1;
+				}
+			}
+		}
+	}
 }

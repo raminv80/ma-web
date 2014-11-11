@@ -5,9 +5,9 @@
 		<title>elFinder 2.0</title>
 
 		<!-- jQuery and jQuery UI (REQUIRED) -->
-		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-		<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
-		<script src="http://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
+		<script src="/admin/includes/fileManager/js/jquery-1.9.1.min.js"></script>
+		<script src="/admin/includes/fileManager/js/jquery-migrate-1.1.1.min.js"></script>
+		<script src="/admin/includes/fileManager/js/jquery-ui.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="/admin/includes/css/jqui.css" />
 
 		<!-- TinyMCE (REQUIRED) -->

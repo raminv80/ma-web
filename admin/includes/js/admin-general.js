@@ -9,10 +9,10 @@ function getFileType(ID,parent,listing_id){
 			getFileCallback : function(file) {
 		   	    
 				$('#'+ID).val(file.name);
-				$('#'+ID+'_link').val('/'+file.path);
+				$('#'+ID+'_link').val(''+file.url);
 				$('#'+ID+'_file').html(file.name);
-		        $('#'+ID+'_path').html('<a href="/'+file.path+'" target="_blank" >View</a>');
-		        $('#'+ID+'_preview').html('<img src="/'+file.path+'" alt="preview-image" height="50px" width="50px">');
+		        $('#'+ID+'_path').html('<a href="'+file.url+'" target="_blank" >View</a>');
+		        $('#'+ID+'_preview').html('<img src="'+file.url+'" alt="preview-image" height="50px" width="50px">');
 				
 				elf = '';
 				$('#elfinder').elfinder('close').elfinder('destroy');

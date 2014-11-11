@@ -33,7 +33,7 @@ if(checkToken('frontend',$_POST["formToken"], false)){
       try{
         $banned=array('formToken','action','redirect');
         //Send email
-        $buf='<h2>Website contact - Contact Us form</h2><br/><br/>';
+        $buf='<h2>Website contact - Contact Us form</h2>';
         foreach ($_POST as $name => $var){
            if(!in_array($name, $banned)){
             $buf.='<br/><b>'.ucwords($name).': </b> <br/> '.$var.'<br/>';
@@ -119,7 +119,7 @@ if(checkToken('frontend',$_POST["formToken"], false) && !empty($_POST['product_i
 	try{
 		$banned=array('formToken','action', 'additional', 'wantpromo', 'enqsub');
 		$content=serialize($_POST);
-		$buf.='<h2>Product enquiry</h2><br/>';
+		$buf.='<h2>Product enquiry</h2>';
 		foreach ($_POST as $name => $var){
 			if(!in_array($name, $banned)){
 				$buf.='<br/><b>'.ucwords($name).': </b> <br/> '.$var.'<br/>';

@@ -226,7 +226,7 @@ function updateCart(){
 			 				$('#subtotal').attr('data-value', amount);
 			 				$('#subtotal').html('$'+amount.formatMoney(2, '.', ','));
 			 			}else if(id == 'discount'){
-			 				$('#'+id).html('$'+amount.formatMoney(2, '.', ','));
+			 				$('#'+id).html('$-'+amount.formatMoney(2, '.', ','));
 			 			}
 			 		});
 			 		//renderShippingMethods(obj.shippingMethods);

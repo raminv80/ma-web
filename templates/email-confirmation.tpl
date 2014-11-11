@@ -31,7 +31,7 @@ table td {
 		<td>Dear {$user.gname}</td>
 	</tr>
 	<tr>
-		<td>Thank you for buying with us. Your order will be processed by our team and you will receive another email once your package is shipped. Should you have any queries, please call contact us.<br>
+		<td>Thank you for buying with us. Your order will be processed by our team and you will receive another email once your package is shipped. Should you have any queries, please call to contact us.<br>
 		<br>
 		</td>
 	</tr>

@@ -22,11 +22,12 @@
 {function name=additional_category_selected id=""}{if $id neq ""}{foreach $fields.additional_category as $add}{if $id eq $add.additional_category_listing_id}{if $add.additional_category_flag eq 1}checked="checked"{/if}{break}{/if}{if $id eq $fields.product_listing_id}checked="checked"{break}{/if}{/foreach}{/if}{/function}
 {function name=additional_category_id id=""}{if $id neq ""}{foreach $fields.additional_category as $add}{if $id eq $add.additional_category_listing_id}{$add.additional_category_id}{break}{/if}{/foreach}{/if}{/function}
 
+
 {* Define the function *} {function name=options_list level=0} 
 	{foreach $opts as $opt}
-		{if $fields.listing_id neq $opt.id}
-			<option value="{$opt.id}" {if $fields.product_listing_id eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
-			{if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1} {/if} 
+		{if $ignore neq $opt.id}
+			<option value="{$opt.id}" {if  $selected eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
+			{if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1 selected=$selected} {/if} 
 		{/if}
 	{/foreach} 
 {/function}
@@ -183,7 +184,7 @@
 							<div class="col-sm-5 ">
 								<select  class="form-control" name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing">
 									<option value="{$rootParentID}">Select one</option> 
-									{call name=options_list opts=$fields.options.product_listing_id}
+									{call name=options_list opts=$fields.options.product_listing_id selected=$fields.product_listing_id ignore=$fields.product_object_id}
 								</select>
 							</div>
 						</div>
@@ -312,7 +313,7 @@
 					</div>	 -->
 					
 					
-					<div class="row form" id="images-wrapper">
+					<div class="form" id="images-wrapper">
 						{assign var='imageno' value=0}
 						{assign var='gTableName' value='product'}
 						{foreach $fields.gallery as $images}

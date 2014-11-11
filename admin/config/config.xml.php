@@ -35,7 +35,7 @@
 	<!-- THIS SECTION IS USED TO MANAGE THE ADMINISTRATOR TABLE. ADMINISTRATORS AND USERS FOR THE CMS ARE MANAGED HERE. -->
 	<section level="1">
 		<showlist>FALSE</showlist>
-		<url>users</url>
+		<url>adminusers</url>
 		<title>Administrators</title>
 		<type>TABLE</type>
 		<table>
@@ -162,6 +162,11 @@
 			<id>product_id</id>
 			<field>product_name</field>
 			<deleted>product_deleted</deleted>
+			<extends>
+  			<table>tbl_productspec</table>
+  			<linkfield>product_id</linkfield>
+  			<field>productspec_product_id</field>
+  		</extends>
 			<associated> 
 				<id>attribute_id</id>
 				<name>attribute</name>
@@ -205,13 +210,20 @@
 				<orderby>productqty_qty ASC</orderby>
 			</associated>
 			<options> 
-				<field> 
+				<!-- <field> 
 					<name>products_list</name>
 					<table>tbl_product</table>
 					<id>product_object_id</id>
 					<reference>product_group</reference> 
 					<where>product_group IS NOT NULL AND product_group != '' AND product_published = '1'</where> 
 				</field>
+				<field> 
+					<name>product_object_id</name>
+					<table>tbl_product</table>
+					<id>product_object_id</id>
+					<reference>product_name</reference> 
+					<orderby>product_name</orderby>
+				</field> -->
 				<field recursive="true"> 
 					<name>product_listing_id</name>
 					<table>tbl_listing</table>

@@ -105,7 +105,7 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_listing_order">Order</label>
 							<div class="col-sm-5">
-								<input class="form-control" type="text" value="{$fields.listing_order}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
+								<input class="form-control number" type="text" value="{$fields.listing_order}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
 							</div>
 						</div>
 						<div class="row form-group">

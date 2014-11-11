@@ -2,6 +2,9 @@
 <!-- THEM CMS configuration file -->
 <config debug="true" staging="true">
 	<domain></domain>
+	<google_analytics>
+		<id>UA-51356141-1</id>
+	</google_analytics>
 	<company>
 		<name>Them</name>
 		<address>
@@ -32,6 +35,16 @@
 				<linkfield>listing_id</linkfield>
 				<field>gallery_listing_id</field>
 			</associated>
+<!-- 			<additional>
+				<tag>product_page</tag>
+				<name>store</name>
+				<data>products_menu</data>
+				<update>
+					<parent>producttable</parent>
+					<child>where</child>
+					<value>product_flag1 = '1'</value>
+				</update>
+			</additional> -->
 		</table>
 		<template>standardpage.tpl</template><!-- The template used if the field is matched -->
 	</page_strut>
@@ -93,6 +106,11 @@
 			<linkfield>listing_id</linkfield>
 			<field>product_listing_id</field>
 			<orderby>product_order ASC</orderby>
+			<extends>
+  			<table>tbl_productspec</table>
+  			<linkfield>product_id</linkfield>
+  			<field>productspec_product_id</field>
+  		</extends>
 			<associated> 
 				<id>attribute_id</id>
 				<name>attribute</name>

@@ -20,6 +20,39 @@ include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderVolumeLocalFileSyste
 
 //SETS UP THE CONFIG WHICH CAN BE USED
 $GLOBALS['CONFIG']=simplexml_load_file($_SERVER['DOCUMENT_ROOT']."/admin/config/config.xml.php");
+session_start();
+$_paths = array();
+
+if(!empty($_SESSION['user']['admin']["stores"]) && $_SESSION['user']['admin']["level"] > 1){
+	foreach($_SESSION['user']['admin']["stores"] as $id){
+		$dir = "/sudofiles/id".$id['access_store_id'];
+		if(!file_exists($_SERVER['DOCUMENT_ROOT'].$dir)){
+			$chk = fileManager_make_path($_SERVER['DOCUMENT_ROOT'].$dir);
+		}
+		if(file_exists($_SERVER['DOCUMENT_ROOT'].$dir)){
+				$_paths[] = array(
+						'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
+						'path'          => $_SERVER['DOCUMENT_ROOT'].$dir,         // path to files (REQUIRED)
+						'URL'           => $dir, // URL to files (REQUIRED)
+						'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
+				);
+		}
+	}
+}else{
+	$_paths[] = array(
+			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
+			'path'          => $_SERVER['DOCUMENT_ROOT'] .'/uploads/',         // path to files (REQUIRED)
+			'URL'           => '/uploads/', // URL to files (REQUIRED)
+			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
+		);
+	$_paths[] = array(
+			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
+			'path'          => $_SERVER['DOCUMENT_ROOT'] .'/sudofiles/',         // path to files (REQUIRED)
+			'URL'           => '/storefiles/', // URL to files (REQUIRED)
+			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
+	);
+}
+
 
 /**
  * Simple function to demonstrate how to control file access using "accessControl" callback.
@@ -37,32 +70,56 @@ function access($attr, $path, $data, $volume) {
 
 $opts = array(
 	 'debug' => true,
-	'roots' => array(
-		array(
-			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
-			'path'          => $_SERVER['DOCUMENT_ROOT'] .'/uploads/',         // path to files (REQUIRED)
-			'URL'           => '/uploads/', // URL to files (REQUIRED)
-			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
-		),
-		/*array(
-            'driver' => 'MySQL',
-            'host'   => $CONFIG->database->host,
-            'user'   => $CONFIG->database->user,
-            'pass'   => $CONFIG->database->password,
-            'db'     => $CONFIG->database->dbname,
-            'path'   => 1,
-        ),
-        array(
-            'driver' => 'FTP',
-            'host'   => 'uploads.ilisys.com.au',
-            'user'   => 'themserver.com',
-            'pass'   => 'c@^^3L5tRu7s!n53CR*7',
-            'path'   => '/public/cms/uploads/'
-        )*/
-	)
+	'roots' => $_paths
 );
+
+/* ORIGINAL EXAMPLE OF PATHS */
+/* $opts = array(
+	 'debug' => true,
+		'roots' => array(
+	   array(
+	   		'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
+	   		'path'          => $_SERVER['DOCUMENT_ROOT'] .$_path,         // path to files (REQUIRED)
+	   		'URL'           => $_path, // URL to files (REQUIRED)
+	   		'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
+	   ),
+			array(
+				 'driver' => 'MySQL',
+						'host'   => $CONFIG->database->host,
+						'user'   => $CONFIG->database->user,
+						'pass'   => $CONFIG->database->password,
+						'db'     => $CONFIG->database->dbname,
+						'path'   => 1,
+				),
+			array(
+					'driver' => 'FTP',
+					'host'   => 'uploads.ilisys.com.au',
+					'user'   => 'themserver.com',
+					'pass'   => 'c@^^3L5tRu7s!n53CR*7',
+					'path'   => '/public/cms/uploads/'
+			)
+		)
+); */
 
 // run elFinder
 $connector = new elFinderConnector(new elFinder($opts));
 $connector->run();
 
+/**
+ Make a nested path , creating directories down the path
+ Recursion !!
+ */
+function fileManager_make_path($path) {
+	if(is_dir($path)){
+		return true;
+	}else{
+		$dir = pathinfo($path,PATHINFO_DIRNAME);
+		if(fileManager_make_path($dir)){
+			if(mkdir($path)){
+				chmod($dir,0777);
+				return true;
+			}
+		}
+	}
+	return false;
+}

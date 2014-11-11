@@ -529,4 +529,32 @@ class ProductClass extends ListClass {
   	}
   	return false;
   }
+  
+  
+  function LoadProductSet($NAME, $WHERE = '') {
+  	global $SMARTY,$DBobject;
+  
+  	if(!empty($WHERE)){
+  		$WHERE = " AND " . $WHERE;
+  	}
+  	$data = array();
+  	$sql = "SELECT * FROM tbl_product WHERE product_published = 1 AND `product_deleted` IS NULL $WHERE";
+  	if($res = $DBobject->wrappedSql($sql)){
+  		foreach ($res as $r){
+  			$data["{$r['product_object_id']}"] = $r;
+  			$sql ="SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_ishero DESC";
+  			$params = array(':id'=>$r['product_id']);
+  			$data["{$r['product_object_id']}"]['gallery']= $DBobject->wrappedSql($sql,$params);
+  				
+  			$sql ="SELECT cache_url FROM cache_tbl_product WHERE cache_record_id = :id AND cache_deleted IS NULL AND cache_published = 1 LIMIT 1 ";
+  			$params = array(':id'=>$r['product_object_id']);
+  			if($res2 = $DBobject->wrappedSql($sql,$params)){
+  				$data["{$r['product_object_id']}"]['cache_url']= $res2[0]['cache_url'];
+  			}
+  		}
+  		$SMARTY->assign($NAME,unclean($data));
+  		return true;
+  	}
+  	return false;
+  }
 }

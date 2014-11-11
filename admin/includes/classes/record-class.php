@@ -104,7 +104,8 @@ Class Record{
 						}
 						$article_f ['options'] ["{$f->name}"] [] = array (
 								'id' => $row ["{$f->id}"],
-								'value' => implode(' ', $value)
+								'value' => implode(' ', $value),
+								'record'=> $row
 						);
 					}
 					}

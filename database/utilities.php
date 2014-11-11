@@ -754,6 +754,24 @@ function isMobile(){
   return false;
 }
 
+/**
+ * Date difference between two dates
+ * Optional:
+ * $differenceFormat - Dateformat. Default number of days.
+ *
+ * @param string $_date1
+ * @param string $_date2
+ * @param string $differenceFormat
+ */
+function dateDifference($_date1 , $_date2 , $differenceFormat = '%R%a' )
+{
+	$datetime1 = date_create($_date1);
+	$datetime2 = date_create($_date2);
+
+	$interval = date_diff($datetime1, $datetime2);
+
+	return $interval->format($differenceFormat);
+}
 
 /**
  * Return associative array with parents info (admin_level and admin_id)  
