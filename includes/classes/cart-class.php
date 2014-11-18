@@ -373,7 +373,7 @@ class cart {
 	  $sql = "SELECT * FROM tbl_productqty WHERE productqty_product_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";
       $params = array(
           ":qty"=>$p['cartitem_quantity'],
-          ":pid"=>$p['cartitem_product_id']
+          ":pid"=>$p['product_id']
       );
       if($mod = $DBobject->wrappedSql($sql,$params)){
         $p['productqty_modifier'] = $mod[0];
@@ -852,7 +852,9 @@ class cart {
     
     $result = array();
     foreach($qtys as $id=>$qty){
-      $sql = "SELECT cartitem_quantity, cartitem_product_price,cartitem_product_id FROM tbl_cartitem WHERE cartitem_id = :id AND cartitem_deleted IS NULL";
+      $sql = "SELECT cartitem_quantity, cartitem_product_price,cartitem_product_id, product_id
+      		FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id 
+      		WHERE cartitem_id = :id AND cartitem_deleted IS NULL AND product_deleted IS NULL AND product_published = '1' ";
       
       if($res = $DBobject->wrappedSql($sql,array(
           ":id"=>$id
@@ -866,7 +868,7 @@ class cart {
           $sql = "SELECT * FROM tbl_productqty WHERE productqty_product_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";
           $params = array(
               ":qty"=>$qty,
-              ":pid"=>$res[0]['cartitem_product_id']
+              ":pid"=>$res[0]['product_id']
           );
           if($mod = $DBobject->wrappedSql($sql,$params)){
             if(intval($mod[0]['productqty_percentmodifier']) == 1){
@@ -875,7 +877,6 @@ class cart {
               $pricemodifier = "$".intval($mod[0]['productqty_modifier']);
             }
           }
-		  
           $params = array(
               ":id"=>$id,
               ":qty"=>$qty,

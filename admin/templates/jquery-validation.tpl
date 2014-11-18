@@ -49,6 +49,7 @@ if (jQuery.validator) {
     		    	try{
     		    		var obj = $.parseJSON(data);
     				 	var notice = obj.notice;
+    				 	$('.notification'+ ).hide();
     				 	$('#'+ notice).slideDown();
     					setTimeout(function(){
     						$('#'+ notice).slideUp();

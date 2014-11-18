@@ -113,9 +113,9 @@
 <div id="orangebox" class="visible-xs">
 
 </div>
-      
-<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="/includes/js/validation.js"></script>
+{/block}
+
+{block name=tail}        
 <script type="text/javascript">
 $(document).ready(function(){
 	

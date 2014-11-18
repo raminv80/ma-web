@@ -11,11 +11,10 @@ table{
 }</style>
 </head>
 <body>
-<p>Dear {$user_gname},</p>
+<p>Dear {$user_gname}</p>
 <p>You are receiving this email, because you or someone who needs access to your account has submitted a Forgotten Password request on our website.</p>
 <p>Your new password is: <b>{$newPass}</b></p>
-<p>Please click the following link to come back to the website and login: <a href="{$DOMAIN}">{$DOMAIN}</a></p>
-<p>Best regards</p>
+<p>Kind regards,</p>
 <br>
 <hr>
 <table cellspacing="0" cellpadding="0" border="0" width="100%">

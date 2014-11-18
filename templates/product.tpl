@@ -169,7 +169,9 @@
 			</div>
 		{/if}
 	</div>
+{/block}
 
+{block name=tail}  
 	<script type="text/javascript">
 
 

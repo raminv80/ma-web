@@ -506,8 +506,9 @@ class ProductClass extends ListClass {
   	global $CONFIG,$SMARTY,$DBobject;
   	
   	$ID = empty($ID)?$this->ID:$ID;
-  	$sql ="SELECT * FROM tbl_product WHERE product_deleted IS NULL AND product_object_id = :id";
+  	$sql ="SELECT * FROM tbl_product LEFT JOIN tbl_productspec ON productspec_product_id = product_id WHERE product_deleted IS NULL AND productspec_deleted IS NULL AND product_object_id = :id";
   	$params = array(':id'=>$ID);
+  	$associated_products = array();
   	if($res = $DBobject->wrappedSql($sql,$params)){
   		$SMARTY->assign('product_name',unclean($res[0]['product_name']));
   		$sql ="SELECT * FROM tbl_product LEFT JOIN tbl_gallery ON gallery_product_id = product_id
@@ -515,16 +516,17 @@ class ProductClass extends ListClass {
       					 WHERE product_deleted IS NULL AND product_object_id = :id ORDER BY gallery_ishero DESC, cache_published DESC";
   		$params = array(':id'=>$res[0]['productspec_associate1']);
   		if($res2 = $DBobject->wrappedSql($sql,$params)){
-  			$SMARTY->assign('associate1',unclean($res2[0]));
+  			$associated_products[1] = unclean($res2[0]);
   		}
   		$params = array(':id'=>$res[0]['productspec_associate2']);
   		if($res2 = $DBobject->wrappedSql($sql,$params)){
-  			$SMARTY->assign('associate2',unclean($res2[0]));
+  			$associated_products[2] = unclean($res2[0]);
   		}
   		$params = array(':id'=>$res[0]['productspec_associate3']);
   		if($res2 = $DBobject->wrappedSql($sql,$params)){
-  			$SMARTY->assign('associate3',unclean($res2[0]));
+  			$associated_products[3] = unclean($res2[0]);
   		}
+  		$SMARTY->assign('associated_products',$associated_products);
   		return true;
   	}
   	return false;

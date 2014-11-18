@@ -4,7 +4,7 @@
 			<tbody>
 			{foreach from=$productsOnCart item=item}
 				<tr>
-					<td><img src='{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}{else}/images/no-image-available.jpg{/if}' alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" class='cart-overview-image'></td>
+					<td><img src='{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}{else}/images/no-image-available.jpg{/if}?height=60' alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" class='cart-overview-image'></td>
 					<td class='cart-product-summary-details'>
 						<a href="{$item.url}"><strong>{$item.cartitem_product_name}</strong>
 							{if $item.attributes}
@@ -33,7 +33,7 @@
 	</div>
 	<div class='cont-shopping'>
 		<a href='/' class='btn btn-primary pull-left'>Continue shopping</a>
-		<a href='/shopping-cart' class='btn btn-success pull-right'>Shopping Cart</a>
+		<a href='/shopping-cart' class='btn btn-success pull-right'>Checkout</a>
 		<div class='clear'></div>
 	</div>
 </div>

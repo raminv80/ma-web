@@ -15,6 +15,8 @@
 		</address>
 		<phone>08 8363 2717</phone>
 		<email>hello@them.com.au</email>
+		<contact_email>hello@them.com.au</contact_email>
+		<orders_email>hello@them.com.au</orders_email>
 	</company> 
 	<database>
 		<host>m4-mysql1-1.ilisys.com.au</host>
@@ -57,9 +59,18 @@
 		<pageID>2</pageID>
 	</error404> -->
 	<error404>
+		<header>HTTP/1.0 404 Not Found</header>
 		<template>standardpage.tpl</template>
 		<pageID>11</pageID>
 	</error404>
+	<error403>
+	  <header>HTTP/1.0 403 Forbidden</header>
+		<template>403.tpl</template>
+	</error403>
+	<error503>
+	  <header>HTTP/1.0 503 Service Temporarily Unavailable</header>
+		<template>503.tpl</template>
+	</error503>
 	<search>
 		<template>search.tpl</template>
 		<pageID>28</pageID>
