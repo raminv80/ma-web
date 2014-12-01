@@ -38,6 +38,9 @@ display: inline-block;
 .text-deleted{
   text-decoration: line-through;
 }
+.has-error .defaultSkin table.mceLayout {
+    border: 2px solid #a94442;
+}
 .bg-red {
   background-color: #d40000 !important;
   color: #fff;

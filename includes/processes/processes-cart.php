@@ -309,6 +309,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    		
 	    		try{
 	    			$reponse = $pay_obj->Submit();
+	    			$paymentId = $paypalObj->GetPaymentId();
 	    		}catch(Exception $e){
 	    			if ($error_msg = $pay_obj->GetErrorMessage()) {
 	    				$_SESSION['error'] = $error_msg;

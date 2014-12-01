@@ -28,17 +28,17 @@ table td {
 <br>
 <table>
 	<tr>
-		<td>Dear {$user.gname}</td>
+		<td>Hi {$user.gname}</td>
 	</tr>
 	<tr>
-		<td>Thank you for buying with us. Your order will be processed by our team and you will receive another email once your package is shipped. Should you have any queries, please call to contact us.<br>
+		<td>Thank you for buying with us. Your order will be processed by our team and you will receive another email once your package is shipped. Should you have any queries, please call contact us.<br>
 		<br>
 		</td>
 	</tr>
 </table>
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr bgcolor="#f3f3f3">
-		<th colspan="2" align="left">Invoice Details</th>
+		<th colspan="2" align="left">Invoice details</th>
 	</tr>
 	<tr>
 		<td width="50%">Order Number:</td>
@@ -54,7 +54,7 @@ table td {
 <br />
 <table cellpadding="0" cellspacing="0" border="0"  width="100%">
 	<tr bgcolor="#f3f3f3">
-		<th colspan="2" align="left">Your Shipping Details</th>
+		<th colspan="2" align="left">Your shipping details</th>
 	</tr>
 	<tr>
 		<td width="50%">Name:</td>
@@ -86,7 +86,7 @@ table td {
 <br />
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 	<tr bgcolor="#f3f3f3">
-		<th colspan="2" align="left">Your Billing Details</th>
+		<th colspan="2" align="left">Your billing details</th>
 	</tr>
 	<tr>
 		<td width="50%">Name:</td>
@@ -121,8 +121,8 @@ table td {
 	<tr bgcolor="#f3f3f3">
 		<th align="left">Items</th>
 		<th align="left">Qty</th>
-		<th align="left">Unit Price</th>
-		<th style="text-align: right">Total Price</th>
+		<th align="left">Unit price</th>
+		<th style="text-align: right">Total price</th>
 	</tr>
 	{foreach $orderItems as $item}
 	<tr valign="top" aling="left">
@@ -132,6 +132,7 @@ table td {
 					<small>/ {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</small>
 				{/foreach}
 			{/if}
+			<br>{$item.cartitem_product_uid}
 		</td>
 		<td width="10%">{$item.cartitem_quantity}</td>
 		<td width="20%">$ {$item.cartitem_product_price|number_format:2:".":","}</td>
@@ -144,7 +145,7 @@ table td {
 		<td><strong>Sub Total</strong></td>
 		<td style="text-align: right"><strong>$ {$payment.payment_subtotal|number_format:2:".":","}</strong></td>
 	</tr>
-	{if $order.payment_discount neq '0.00'}
+	{if $payment.payment_discount neq '0.00'}
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
@@ -190,7 +191,7 @@ table td {
 <hr>
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>
-		<td width="30%"><img src="{$DOMAIN}/images/logo.png" alt="logo"></td>
+		<td width="30%"><img src="{$DOMAIN}/images/{$COMPANY.logo}" alt="logo"></td>
 		<td width="70%"><b>{$COMPANY.name}</b>
 			<br>{$COMPANY.address.street} {$COMPANY.address.suburb} {$COMPANY.address.state} {$COMPANY.address.postcode}
 			{if $COMPANY.phone}<br>Ph: <a href="tel:{$COMPANY.phone}">{$COMPANY.phone}</a>{/if}

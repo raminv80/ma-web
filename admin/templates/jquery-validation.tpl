@@ -63,6 +63,7 @@ if (jQuery.validator) {
 	    			    }
 	    			    if(obj.IDs){
 	    					$.each(obj.IDs, function(k, v) {
+	    						if(v > 0)
 	    					    $('input[name="'+k+'"]').val(v);
 	    					});
 	    			    } 

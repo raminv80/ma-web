@@ -2,16 +2,21 @@
 	{* Define the function *} 
 	{function name=breadcrumbs level=0 parenturl=""} 
 		{foreach $items as $item} 
-			{if count($item.subs) > 0} >
-				<a href="{$parenturl}/{$item.url}" title="{$item.title}">{$item.title}</a>
-				{call name=breadcrumbs items=$item.subs level=$level+1 parenturl=$parenturl|cat:"/"|cat:$item.url}
+			{if $level eq 0}
+				<a href="/" title="{$item.title}">{$item.title}</a>&nbsp;|&nbsp;
+				{call name=breadcrumbs items=$item.subs level=$level+1 parenturl=""}
 			{else} 
-				> {$item.title}
+				{if count($item.subs) > 0}
+					<a href="{$parenturl}/{$item.url}" title="{$item.title}">{$item.title}</a>&nbsp;|&nbsp;
+					{call name=breadcrumbs items=$item.subs level=$level+1 parenturl=$parenturl|cat:"/"|cat:$item.url}
+				{else} 
+					{$item.title}
+				{/if} 
 			{/if} 
 		{/foreach} 
 	{/function}
 	
 <div class="breadcrumbs">
-	<a href="/" title="Home">Home</a>{call name=breadcrumbs items=$breadcrumbs}
+	{call name=breadcrumbs items=$breadcrumbs}
 </div>
 {/block}

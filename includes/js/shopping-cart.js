@@ -54,7 +54,11 @@ $('.modifier').change(function() {
 	calculatePrice();
 });
 
-
+$('#promo').bind('keyup', function(event) {
+    if(event.keyCode==13){
+    	$('#promo').closest('form').submit();
+    }
+});
 
 $('.gt-zero').change(function() {
 	if(parseInt($(this).val()) < 1 || $(this).val() == '') {
@@ -131,6 +135,8 @@ function resetPass(form){
 			 		$('#'+form).find('.error-alert').hide();
 			 		$('#'+form).find('.success-alert').find('strong').html(obj.success);
 			 		$('#'+form).find('.success-alert').fadeIn('slow');
+			 		$('#'+form).find('.form-group').hide();
+			 		$('#reset-pass-title').hide();
 			 	}
 			 	
 			}catch(err){

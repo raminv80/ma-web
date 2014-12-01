@@ -8,7 +8,7 @@ if(checkToken('admin', $_POST["formToken"]) && !empty($_POST['action']) && !empt
 	
 	$to = $_POST['email'];
 	$from = (string) $CONFIG->company->name;
-	$fromEmail = 'noreply@'. str_replace('www.', '', $GLOBALS['HTTP_HOST']);
+	$fromEmail = (string) $CONFIG->company->email_from;
 
 	switch ($_POST['action']){
 		case 'UserPassword':
@@ -33,7 +33,7 @@ if(checkToken('admin', $_POST["formToken"]) && !empty($_POST['action']) && !empt
 			if(!empty($template)){
 				$sql = "SELECT * FROM tbl_status WHERE status_id = :id ";
 				$res = $DBobject->wrappedSql ( $sql, array(':id' => $_POST["status"]) );
-				$subject = 'You order has been ' . strtoupper($res[0]['status_name']) . '.';
+				$subject = 'You order has been ' . strtolower($res[0]['status_name']) . '.';
 				$SMARTY->assign('message',"<p>$subject</p><p>$message</p>");
 					
 				$sql = "SELECT * FROM tbl_payment

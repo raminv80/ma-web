@@ -113,7 +113,7 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_discount_end_date">End Date</label>
 							<div class="col-sm-5">
-								<input class="form-control dates" type="text" value="{if $fields.discount_end_date}{$fields.discount_end_date|date_format:"%d/%m/%Y"}{/if}"  name="to" id="to" onchange="setDateValue('id_discount_end_date',this.value);" >
+								<input class="form-control dates" type="text" value="{if $fields.discount_end_date neq '0000-00-00'}{$fields.discount_end_date|date_format:"%d/%m/%Y"}{/if}"  name="to" id="to" onchange="setDateValue('id_discount_end_date',this.value);" >
 								<input type="hidden" value="{if $fields.discount_end_date}{$fields.discount_end_date}{/if}" name="field[1][tbl_discount][{$cnt}][discount_end_date]" id="id_discount_end_date">
 							</div>
 						</div>

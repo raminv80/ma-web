@@ -15,7 +15,7 @@
       </div>
       <div class="col-sm-12">
         <h3>{$listing_name}</h3>
-        <p>Order number <span class="bold">{$orderNumber}</span> is being processed. An email confirmation and receipt has been generated and sent to your nominated email address.</p>
+        <p>You're all done! Order number <span class="bold">{$orderNumber}</span> is being processed. An email confirmation and receipt has been generated and sent to your nominated email address.</p>
       </div>
       <div class="col-sm-12">
       {$listing_content1}

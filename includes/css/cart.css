@@ -488,3 +488,17 @@ hr.or-separator:after {
 	font-size: 20px;
 	padding: 20px;
 }
+
+.showpassword {
+  padding-right: 55px;
+}
+.showhide{
+	line-height: 34px; 
+	position: absolute; 
+	right: 20px; 
+	top: 2px;
+	padding: 0 2px;
+}
+.showhide:hover, .showhide:active, .showhide:focus {
+	text-decoration:none;	
+} 

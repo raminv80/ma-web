@@ -11,21 +11,21 @@
 					<td class="text-center">{$fields.cart_closed_date|date_format:"%e %B %Y"}</td>
 				</tr>
 				<tr>
-					<td><b>User's Detail:</b></td>
+					<td><b>User's detail:</b></td>
 					<td class="text-center">{$fields.user.0.user_gname} {$fields.user.0.user_surname} / {$fields.user.0.user_email}</td>
-					<td><b>Payment Status:</b></td>
+					<td><b>Payment status:</b></td>
 					<td class="text-center {if $fields.payment.0.payment_status eq 'A'}text-success{else}text-danger{/if}"> 
 						<b>{if $fields.payment.0.payment_status eq 'P'}PENDING{elseif $fields.payment.0.payment_status eq 'A'}APPROVED{elseif $fields.payment.0.payment_status eq 'R'}REFUNDED{elseif $fields.payment.0.payment_status eq 'C'}CANCELLED{else}{$fields.payment.0.payment_status}{/if}</b>
 					</td>
 				</tr>
 				<tr>
-					<td><b>Shipping Method:</b></td>
+					<td><b>Shipping method:</b></td>
 					<td class="text-center">{$fields.payment.0.payment_shipping_method}</td>
 					<td><b>Card:</b></td>
 					<td class="text-center">{$fields.payment.0.payment_response_cardscheme}</td>
 				</tr>
 				<tr>
-					<td><b>Billing Address:</b></td>
+					<td><b>Billing address:</b></td>
 					<td class="text-center">{$fields.payment.0.billing_address.0.address_name}</td>
 					<td class="text-center" colspan="2">
 						{$fields.payment.0.billing_address.0.address_line1} 
@@ -40,7 +40,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><b>Shipping Address:</b></td>
+					<td><b>Shipping address:</b></td>
 					<td class="text-center"><strong>{$fields.payment.0.shipping_address.0.address_name}</strong></td>
 					<td class="text-center" colspan="2">
 						<strong>
@@ -72,7 +72,7 @@
 				<tr>
 					<th>Item</th>
 					<th class="text-right">Qty</th>
-					<th class="text-right">Unit Price</th>
+					<th class="text-right">Unit price</th>
 					<th class="text-right">Subtotal</th>
 				</tr>
 			</thead>
@@ -182,7 +182,7 @@
 		<div class="row form-group">
 			<div class="col-sm-offset-3 col-sm-9">
 				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
-				<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();sendStatusEmail('email', 'order_payment_id', 'order_status_id');" class="btn btn-primary pull-right top-btn"><span class="glyphicon glyphicon-envelope"></span> Save and Notify</a>
+				<a href="javascript:void(0);" onClick="RunCallback()" class="btn btn-primary pull-right top-btn"><span class="glyphicon glyphicon-envelope"></span> Save and Notify</a>
 			</div>
 		</div>
 	</form>
@@ -199,6 +199,14 @@ $(document).ready(function(){
 	
 });
 
+function RunCallback(){
+	if($('#Edit_Record').valid()){
+		$('#Edit_Record').attr('data-callback','sendStatusEmail').submit();
+	}else{
+		alert('You need to fill out the form.');
+	}
+}
+
 function sendInvoiceEmail(){
 	var datastring = $("#send_invoice_email").serialize();
 	$('body').css('cursor','wait');
@@ -212,6 +220,7 @@ function sendInvoiceEmail(){
 	    success: function(data) {
 	    	try{
 	    		var obj = $.parseJSON(data);
+	    		$('.notification').hide();
 			 	if (obj.response) {
 			 		$('#email-sent').slideDown();
 					setTimeout(function(){
@@ -240,6 +249,10 @@ function sendInvoiceEmail(){
 }
 
 function sendStatusEmail(TO, PAYMENTID, STATUS){
+	if(!TO) TO = 'email';
+	if(!PAYMENTID) PAYMENTID = 'order_payment_id';
+	if(!STATUS) STATUS = 'order_status_id';
+
 	var email_to = encodeURIComponent( $('#'+ TO).val() );
 	var content = encodeURIComponent( $('#'+ PAYMENTID).val() );
 	var subject = encodeURIComponent( $('#'+ STATUS).val() );

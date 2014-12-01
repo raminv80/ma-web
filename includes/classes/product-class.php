@@ -513,7 +513,7 @@ class ProductClass extends ListClass {
   		$SMARTY->assign('product_name',unclean($res[0]['product_name']));
   		$sql ="SELECT * FROM tbl_product LEFT JOIN tbl_gallery ON gallery_product_id = product_id
       					LEFT JOIN cache_tbl_product ON cache_record_id = product_object_id
-      					 WHERE product_deleted IS NULL AND product_object_id = :id ORDER BY gallery_ishero DESC, cache_published DESC";
+      					 WHERE product_deleted IS NULL AND gallery_deleted IS NULL AND product_object_id = :id ORDER BY gallery_ishero DESC, cache_published DESC";
   		$params = array(':id'=>$res[0]['productspec_associate1']);
   		if($res2 = $DBobject->wrappedSql($sql,$params)){
   			$associated_products[1] = unclean($res2[0]);

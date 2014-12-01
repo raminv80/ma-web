@@ -28,7 +28,7 @@ table td {
 <br>
 <table>
 	<tr>
-		<td>Dear {$order.user_gname}</td>
+		<td>Hi {$order.user_gname}</td>
 	</tr>
 	<tr>
 		<td><br>{$message}<br>
@@ -37,9 +37,9 @@ table td {
 		</td>
 	</tr>
 </table>
-<table cellspacing="0" cellpadding="0" border="0">
-	<tr>
-		<th colspan="2">Invoice Details</th>
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+	<tr bgcolor="#f3f3f3">
+		<th colspan="2" align="left">Invoice Details</th>
 	</tr>
 	<tr>
 		<td width="50%">Order Number:</td>
@@ -53,9 +53,9 @@ table td {
 <br />
 &nbsp;
 <br />
-<table cellpadding="0" cellspacing="0" border="0">
-	<tr>
-		<th colspan="2">Your Shipping Details</th>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tr bgcolor="#f3f3f3">
+		<th colspan="2" align="left">Your shipping details</th>
 	</tr>
 	<tr>
 		<td width="50%">Name:</td>
@@ -85,9 +85,9 @@ table td {
 <br />
 &nbsp;
 <br />
-<table cellpadding="0" cellspacing="0" border="0">
-	<tr>
-		<th colspan="2">Your Billing Details</th>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tr bgcolor="#f3f3f3">
+		<th colspan="2" align="left">Your billing details</th>
 	</tr>
 	<tr>
 		<td width="50%">Name:</td>
@@ -117,13 +117,13 @@ table td {
 <br />
 &nbsp;
 <br />
-<table cellspacing="0" cellpadding="0" border="0">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
 
-	<tr>
-		<th>Items</th>
-		<th>Qty</th>
-		<th>Unit Price</th>
-		<th style="text-align: right">Total Price</th>
+	<tr bgcolor="#f3f3f3">
+		<th align="left">Items</th>
+		<th align="left">Qty</th>
+		<th align="left">Unit price</th>
+		<th style="text-align: right">Total price</th>
 	</tr>
 	{foreach $orderItems as $item}
 	<tr valign="top" aling="left">
@@ -142,15 +142,17 @@ table td {
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
-		<td><strong>Sub Total</strong></td>
+		<td><strong>Sub total</strong></td>
 		<td style="text-align: right"><strong>$ {$order.payment_subtotal|number_format:2:".":","}</strong></td>
 	</tr>
+	{if $order.payment_discount neq '0.00'}
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td><strong>Discount</strong></td>
 		<td style="text-align: right"><strong>$ -{$order.payment_discount|number_format:2:".":","}</strong></td>
 	</tr>
+	{/if}
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
@@ -158,14 +160,21 @@ table td {
 		<td style="text-align: right"><strong>{if $order.payment_shipping_fee eq '0.00'}FREE{else}$ {$order.payment_shipping_fee|number_format:2:".":","}{/if}</strong></td>
 	</tr>
 	<tr valign="top">
-		<td>{if $free}(*)GST free item.{/if}</td>
-		<td>&nbsp;</td>
-		<td>Incl. GST</td>
-		<td style="text-align: right">($ {$order.payment_gst|number_format:2:".":","})</td>
-	</tr>
-	<tr valign="top">
 		<td colspan="4"><hr></td>
 	</tr>
+	<tr valign="top">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Total (excl. GST)</td>
+    {assign var='totalExclGST' value=$order.payment_charged_amount - $order.payment_gst}
+    <td style="text-align: right">(${$totalExclGST|number_format:2:".":","})</td>
+  </tr>
+	<tr valign="top">
+    <td>{if $free}(*)GST free item.{/if}</td>
+    <td>&nbsp;</td>
+    <td>GST</td>
+    <td style="text-align: right">(${$order.payment_gst|number_format:2:".":","})</td>
+  </tr>
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
@@ -183,7 +192,7 @@ table td {
 <hr>
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>
-		<td width="30%"><img src="{$DOMAIN}/images/logo.png" alt="logo"></td>
+		<td width="30%"><img src="{$DOMAIN}/images/{$COMPANY.logo}" alt="logo"></td>
 		<td width="70%"><b>{$COMPANY.name}</b>
 			<br>{$COMPANY.address.street} {$COMPANY.address.suburb} {$COMPANY.address.state} {$COMPANY.address.postcode}
 			{if $COMPANY.phone}<br>Ph: <a href="tel:{$COMPANY.phone}">{$COMPANY.phone}</a>{/if}

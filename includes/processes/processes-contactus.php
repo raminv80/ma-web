@@ -1,6 +1,6 @@
 <?php
 
-if(checkToken('frontend',$_POST["formToken"], false)){
+/* if(checkToken('frontend',$_POST["formToken"], false)){
   switch($_POST["action"]){
     case 'question':
       global $DBobject,$SITE;
@@ -51,7 +51,7 @@ if(checkToken('frontend',$_POST["formToken"], false)){
       }catch(Exception $e){
         $error .= 'There was an error sending the contact email.';
       }
-/*       
+      
       try{
         $sql = "INSERT INTO tbl_contact (contact_name,contact_site,contact_email,contact_phone,contact_method,contact_postcode,contact_store_id,contact_file,contact_details,contact_ip,contact_sent)
             VALUES (:contact_name,:contact_site,:contact_email,:contact_phone,:contact_method,:contact_postcode,:contact_store_id,:contact_file,:contact_details,:contact_ip,:contact_sent)";
@@ -69,7 +69,7 @@ if(checkToken('frontend',$_POST["formToken"], false)){
         $DBobject->wrappedSql($sql,$params);
       }catch(Exception $e){
         $error = 'There was an unexpected error saving your question.';
-      } */
+      } 
       if(!empty($error)){
       	$_SESSION['error'] = $error;
       	header("Location: {$_SERVER['HTTP_REFERER']}#error");
@@ -80,9 +80,8 @@ if(checkToken('frontend',$_POST["formToken"], false)){
       exit;
   }
 }
+ */
 
-
-/* // standard contact process without attachment
 
 $error = 'Missing required info. Please try again.';
 if(checkToken('frontend',$_POST["formToken"], false) && !empty($_POST['product_id']) && !empty($_POST['email']) && !empty($_POST['postcode']) && empty($_POST['additional'])){
@@ -128,8 +127,12 @@ if(checkToken('frontend',$_POST["formToken"], false) && !empty($_POST['product_i
 		$body = $buf;
 		$subject = 'Website contact - Product enquiry';
 		$fromEmail = 'noreply@' . str_replace ( "www.", "", $_SERVER ['HTTP_HOST'] );
-		$from = 'Toro Certified Pre-Owned Equipment';
-		$to = 'apolo@them.com.au';
+		
+		$to = (string) $CONFIG->company->email_contact;
+		
+		$COMP = json_encode($CONFIG->company);
+		$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
+		$from = (string) $CONFIG->company->name;
 		
 		$sent = sendMail($to, $from, $fromEmail, $subject, $body);
 	}catch (Exception $e){
@@ -158,10 +161,8 @@ if(checkToken('frontend',$_POST["formToken"], false) && !empty($_POST['product_i
 		header("Location: /thank-you");
 		exit;
 	}
-	$error = 'There is an unknown error with your request. Please try again later.';
 } 
 $_SESSION['error'] = $error;
 $redirect = $_SERVER['HTTP_REFERER'];
 header("Location: {$redirect}#error");
 exit;
-*/

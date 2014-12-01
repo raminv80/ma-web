@@ -15,8 +15,10 @@
 		</address>
 		<phone>08 8363 2717</phone>
 		<email>hello@them.com.au</email>
-		<contact_email>hello@them.com.au</contact_email>
-		<orders_email>hello@them.com.au</orders_email>
+		<email_from>noreply@themserver.com.au</email_from>
+		<email_contact>apolo@them.com.au</email_contact>
+		<email_orders>apolo@them.com.au</email_orders>
+		<logo>themlogo.png</logo>
 	</company> 
 	<database>
 		<host>m4-mysql1-1.ilisys.com.au</host>

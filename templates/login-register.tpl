@@ -21,8 +21,8 @@
 	          <div class="form-group">
 	              <label for="password" class="col-sm-3 control-label">Password</label>
 	              <div class="col-sm-9">
-	                <input class="form-control" type="password" id="password1" name="pass" autocomplete="off" required/>
-                  <a class="showhide" style="line-height: 34px;position: absolute;right: 20px;top: 0;" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[name=pass]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[name=pass]').get(0).type='password';$(this).html('Show'); }">Show</a>
+	                <input class="form-control showpassword" type="password" id="password1" name="pass" autocomplete="off" required/>
+	                <a class="showhide" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[type=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[type=text]').get(0).type='password';$(this).html('Show'); }">Show</a> 
 	                <span class="help-block"></span>
 	            </div>
 	            <span class="form-help-block col-sm-offset-3 col-sm-9"><a href="javascript:void(0)" onclick="$('#reset-email').val($('#email').val());$('#reset-pass').show('slow');">Forgot your password?</a></span>
@@ -42,7 +42,7 @@
 	      </div>
         <div id="reset-pass" style="display:none;"><!-- RESET PASSWORD SECTION - Hidden by default -->
 	        
-	        <h3>Reset password</h3>
+	        <h3 id="reset-pass-title">Reset password</h3>
 	        <form class="form-horizontal" id="reset-pass-form" data-attr-id="reset-pass-form" role="form" accept-charset="UTF-8" action="" method="post">
 	          <input type="hidden" value="resetPassword" name="action" id="action" /> 
 	          <input type="hidden" name="formToken" id="formToken" value="{$token}" />
@@ -116,19 +116,11 @@
           <div class="form-group">
               <label for="password" class="col-sm-4 control-label">Password</label>
               <div class="col-sm-8">
-                <input type="password" value="" class="form-control" id="password" name="password" autocomplete="off" required>
-                <a class="showhide" style="line-height: 34px;position: absolute;right: 20px;top: 0;" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[name=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[name=password]').get(0).type='password';$(this).html('Show'); }">Show</a>
+                <input type="password" value="" class="form-control showpassword" id="password" name="password" autocomplete="off" required>
+                <a class="showhide" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[type=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[type=text]').get(0).type='password';$(this).html('Show'); }">Show</a>
                 <span class="help-block"></span>
               </div>
           </div>
-          <!-- <div class="form-group">
-              <label for="confirm_password" class="col-sm-4 control-label">Re-enter Password</label>
-              <div class="col-sm-8">
-                <input type="password" value="" class="form-control" id="confirm_password" name="confirm_password" autocomplete="off" required>
-                <a class="showhide" style="line-height: 34px;position: absolute;right: 20px;top: 0;" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[name=confirm_password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[name=confirm_password]').get(0).type='password';$(this).html('Show'); }">Show</a>
-              <span class="help-block"></span>
-            </div>
-          </div> -->
           <div class=" col-sm-offset-4 error-alert" style="display:none;">
           	<div class="alert alert-danger fade in ">
 							<button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.error-alert').fadeOut('slow');">&times;</button>
@@ -179,14 +171,7 @@
         onclick: false
       });
       
-/*       $('#confirm_password').rules("add", {
-            required: true,
-            equalTo: '#password',
-            messages: {
-              equalTo: "The passwords you have entered do not match. Please check them."
-            }
-       });
-
+/*       
       $('#confirm_email').rules("add", {
             required: true,
             equalTo: '#reg-email',

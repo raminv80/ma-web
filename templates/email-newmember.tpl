@@ -12,10 +12,10 @@ table{
 </head>
 <body>
 <p>Hi {$user_gname}</p>
-<p>You are receiving this email, because you or someone who has requested access to your account has submitted a Forgotten Password request on <a href="{$DOMAIN}">{$DOMAIN}</a>.</p>
-<p>Your new password is: <b>{$newPass}</b></p>
+<p>Thank you for registering with <a href="{$DOMAIN}">{$DOMAIN}</a>.</p>
+<p>Your new password is: <b>{$password}</b></p>
 
-<p>If you have any questions about your account or did not submit this request please contact us.</p>
+<p>If you have any questions about your account or did not submit this request please contact Customer Service on <a href="tel:{$COMPANY.phone}">{$COMPANY.phone}</a>.</p>
 <p>Kind regards</p>
 <br>
 <hr>

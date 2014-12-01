@@ -206,8 +206,12 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
 	/* To send HTML mail, you can set the Content-type header. */
 	$headers  = "MIME-Version: 1.0\r\n";
 	$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+	$headers .= "X-Priority: 3\r\n";
+	$headers .= "X-Mailer: PHP". phpversion() ."\r\n";
 
 	/* additional headers */
+	$headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
+	$headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
 	$headers .= "From: ". $from . " <".$fromEmail.">\r\n";
 	$headers .= "Bcc: cmsemails@them.com.au".(!empty($bcc)?",".$bcc:"")."\r\n";
 
@@ -220,7 +224,7 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
 	  	);
 	  	$res = $DBobject->executeSQL($sql,$params);
 	  	if(count($res) < 5 ){
-	    	$mailSent = SafeMail($to,$subject,$body,$headers);
+	    	$mailSent = SafeMail($to,$subject,$body,$headers, "-f $fromEmail");
 	  	}else{
 				$mailSent= -1;
 			}
