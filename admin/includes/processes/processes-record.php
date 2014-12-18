@@ -50,6 +50,7 @@ if(checkToken('admin', $_POST["formToken"])){
 								$nvalues++; 
 							}
 						}
+						$insert_table = "";
 						if(count($id) > $nvalues){ 
 							$sql = "INSERT INTO {$tbl} (".implode(',',$_insert_fields).") VALUES (".implode(',',$_insert_vals).")";
 							$insert_table=$tbl;

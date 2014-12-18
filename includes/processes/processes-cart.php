@@ -149,7 +149,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 		      $_SESSION['postageID'] = $_POST['postageID'];
 		      $_SESSION['address'] = $_POST['address'];
 		      $bsum = $_POST['address']['B']['address_name'] .'<br />';
-		      $bsum = $_POST['address']['B']['address_surname'] .'<br />';
+		      $bsum .= $_POST['address']['B']['address_surname'] .'<br />';
 		      $bsum .= $_POST['address']['B']['address_line1'] .'<br />';
 		      $bsum .= $_POST['address']['B']['address_suburb'] .' ';
 		      $bsum .= $_POST['address']['B']['address_state'] .' ';
@@ -160,7 +160,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 		        $ssum = '<span class="small">Shipping address same as billing address<br />';
 		      }else{
 		        $ssum = $_POST['address']['S']['address_name'] .'<br />';
-		        $ssum = $_POST['address']['S']['address_surname'] .'<br />';
+		        $ssum .= $_POST['address']['S']['address_surname'] .'<br />';
 		        $ssum .= $_POST['address']['S']['address_line1'] .'<br />';
 		        $ssum .= $_POST['address']['S']['address_suburb'] .' ';
 		        $ssum .= $_POST['address']['S']['address_state'] .' ';
@@ -294,13 +294,18 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     					'payment_shipping_comments' =>  $_SESSION['comments'],
     					'payment_payee_name' => $_POST['cc']['name'],
 	    				'payment_charged_amount' => $chargedAmount,
-	    				'payment_gst' => $gst
+	    				'payment_gst' => $gst,
+	    				'payment_method' => 'Bank Transfer'
 	    		);
 	    		$pay_obj = new PayWay();
 	    		$response = false;
 	    		
 	    		$paymentId = $pay_obj->StorePaymentRecord($params);
 	    		
+	    		$bankTransfer = 0;
+	    		if($_POST['paymentmethod'] == 'bank_transfer'){
+	    			$bankTransfer = 1;
+	    		}
 	    		/* $CCdata =  array('amount'=>$chargedAmount);
     			if(!empty($_POST['cc'])){
     				$CCdata = array_merge($CCdata, $_POST['cc']);
@@ -340,6 +345,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 							$SMARTY->assign('payment',$payment);
 							$orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
 							$SMARTY->assign('orderItems',$orderItems);
+							$SMARTY->assign('bankTransfer',$bankTransfer);
 							$SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
 							$COMP = json_encode($CONFIG->company);
 							$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
@@ -398,7 +404,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     		    // LOG OUT GUEST USER
     		    if($isGuest){
 	    		    unset ( $_SESSION['user']['public'] );
-	    		    session_regenerate_id();
+	    		    //session_regenerate_id();
     		    }
     		    
     		    // OPEN NEW CART

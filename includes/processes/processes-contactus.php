@@ -93,7 +93,7 @@ if(checkToken('frontend',$_POST["formToken"], false) && !empty($_POST['product_i
 	//============= ADD IN CREATE-SEND
 	if($_POST['wantpromo']){
 		try{
-			$wrap = new CS_REST_Subscribers('067b9df15ecf7032eef9eb328942e410', '060d24d9003a77b06b95e7c47691975b');
+			$wrap = new CS_REST_Subscribers('', '060d24d9003a77b06b95e7c47691975b');
 			$cs_result = $wrap->add(array(
 					'EmailAddress' => $_POST['email'],
 					'Name' => $_POST['gname'],
@@ -141,15 +141,20 @@ if(checkToken('frontend',$_POST["formToken"], false) && !empty($_POST['product_i
 	
 	//============= INSERT RECORD IN DB
 	try{
-		$sql = "INSERT INTO tbl_contact (contact_gname,contact_surname,contact_email,contact_phone,contact_postcode,contact_product_object_id,contact_enquiry,contact_ip,contact_sent)
-            VALUES (:contact_gname,:contact_surname,:contact_email,:contact_phone,:contact_postcode,:contact_product_object_id,:contact_enquiry,:contact_ip,:contact_sent)";
-		$params = array(":contact_gname"=>$_POST['gname'],
-				":contact_surname"=>$_POST['surname'],
+		$sql = "INSERT INTO tbl_contact (contact_reference_id, contact_reference_name, contact_name, contact_email, contact_phone, contact_postcode, contact_file, contact_enquiry, contact_content1, contact_content2, contact_flag1, contact_flag2, contact_ip, contact_sent)
+            VALUES (:contact_reference_id, :contact_reference_name, :contact_name, :contact_email, :contact_phone, :contact_postcode, :contact_file, :contact_enquiry, :contact_content1, :contact_content2, :contact_flag1, :contact_flag2, :contact_ip, :contact_sent)";
+		$params = array(":contact_reference_id"=>$_POST['reference_id'],
+				":contact_reference_name"=>$_POST['reference_name'],
+				":contact_name"=>$_POST['name'],
 				":contact_email"=>$_POST['email'],
 				":contact_phone"=>$_POST['phone'],
 				":contact_postcode"=>$_POST['postcode'],
-				":contact_product_object_id"=>$_POST['product_id'],
 				":contact_enquiry"=>$_POST['enquiry'],
+				":contact_file"=>$_POST['file'],
+				":contact_content1"=>$_POST['content1'],
+				":contact_content2"=>$_POST['content2'],
+				":contact_flag1"=>$_POST['flag1'],
+				":contact_flag2"=>$_POST['flag2'],
 				":contact_ip"=>$_SERVER['REMOTE_ADDR'],
 				":contact_sent"=>$sent);
 		$DBobject->wrappedSql($sql,$params);	
@@ -163,6 +168,7 @@ if(checkToken('frontend',$_POST["formToken"], false) && !empty($_POST['product_i
 	}
 } 
 $_SESSION['error'] = $error;
+$_SESSION['post'] = $_POST;
 $redirect = $_SERVER['HTTP_REFERER'];
 header("Location: {$redirect}#error");
 exit;

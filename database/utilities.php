@@ -361,9 +361,14 @@ function createBulkMail($to_Array,$from,$fromEmail,$subject,$body){
 	/* To send HTML mail, you can set the Content-type header. */
 	$headers  = "MIME-Version: 1.0\r\n";
 	$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+	$headers .= "X-Priority: 3\r\n";
+	$headers .= "X-Mailer: PHP". phpversion() ."\r\n";
 
 	/* additional headers */
+	$headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
+	$headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
 	$headers .= "From: ". $from . " <".$fromEmail.">\r\n";
+	
 	try{
 		foreach ($to_Array as $to){
 			$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent) VALUES

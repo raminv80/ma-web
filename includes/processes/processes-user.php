@@ -68,7 +68,11 @@ if(checkToken('frontend',$_POST["formToken"],false)){
 	    		$url = $_SERVER['HTTP_REFERER'];
 	    		if ($_POST['redirect']) {
                 	$url = $_POST['redirect'];
-                }
+          }
+          if(empty($_SESSION['address'])){
+          	$addressArr = $user_obj->GetUsersAddresses($res['id']);
+          	$_SESSION['address'] =  array("S"=> $addressArr[0], "same_address" => true);
+          }
 				echo json_encode(array(
 						'error' => null,
 						'url'=> $url,

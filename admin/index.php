@@ -165,7 +165,11 @@ while(true){
 		foreach($CONFIG->group as $gp){
 			foreach($gp->section as $sp){
 				if($sp->url == $arr[1] ){
-					if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) ){
+					$ignoreLevelOnly = true;
+					if(!empty($sp->attributes()->levelonly) && intval($sp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level'])){
+						$ignoreLevelOnly = false;
+					}
+					if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) && $ignoreLevelOnly){
 						$SMARTY->assign("zone",$sp->title);
 						$SMARTY->assign ( "typeID", $sp->type_id );
 						$SMARTY->assign ( "parentID", $sp->parent_id );
@@ -426,7 +430,11 @@ while(true){
 $menu = array();
 foreach($CONFIG->group as $gp){
 	foreach($gp->section as $sp){
-		if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) ){
+		$ignoreLevelOnly = true;
+		if(!empty($sp->attributes()->levelonly) && intval($sp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level'])){
+			$ignoreLevelOnly = false;
+		}
+		if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) && $ignoreLevelOnly){
 			$list = array();
 			if($sp->type == "LISTING" && $sp->showlist != 'FALSE'){
 				$record = new Listing($sp);
