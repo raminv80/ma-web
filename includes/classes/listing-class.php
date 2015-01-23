@@ -95,7 +95,7 @@ class ListClass {
     }else{
       $this->ID = $this->ChkCache($_url,$_PUBLISHED);
     }
-    
+     
     if(! empty($this->ID)){
       $data = $this->LoadTree($this->ID,0,0,1);
       $SMARTY->assign('data',unclean($data));
@@ -117,6 +117,7 @@ class ListClass {
         ":id"=>$this->ID,
         ":published"=>$_PUBLISHED
     );
+
     if($res = $DBobject->wrappedSqlGet($sql,$params)){
       foreach($res[0] as $key=>$val){
         $SMARTY->assign($key,unclean($val));
@@ -439,16 +440,22 @@ class ListClass {
     if(! empty($this->CONFIG_OBJ->orderby)){
       $order = " ORDER BY " . $this->CONFIG_OBJ->orderby;
     }
+    $where = "";
+    if(!empty($this->CONFIG_OBJ->where)){
+      $where = " AND " . $this->CONFIG_OBJ->where;
+    }
     $extends = "";
     foreach($this->CONFIG_OBJ->table->extends as $a){
       $pre = str_replace("tbl_","",$a->table);
       $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}"; // AND article_deleted IS NULL";
     }
-    $sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_parent_id = :cid {$typeIdSQL} AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = :published" . $filter . $order;
+    $sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_parent_id = :cid {$typeIdSQL} AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = :published" .$where. $filter . $order;
     $params = array(
         ":cid"=>$_cid,
         ":published"=>$_PUBLISHED
     );
+
+    
     $params = array_merge($params,$filter_params);
     if(!empty($typeIdSQL)){
     	$params = array_merge($params,$typeId_params);

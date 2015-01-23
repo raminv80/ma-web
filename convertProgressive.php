@@ -28,7 +28,7 @@ $optim_source_file      = $document_root.$optim.$requested_uri; // Full path to 
 if((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0) || (!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)){
   $requested_directory  = urlencode(dirname($requested_uri));
   $_f_arr = explode('.', $requested_file,2);
-  $requested_file = $_f_arr[0].((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").'.'.$_f_arr[1];
+  $requested_file = $_f_arr[0].((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").(!empty($_REQUEST['crop'])?"cropped":"").'.'.$_f_arr[1];
   //$requested_file       = str_replace(".".$extension, ((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").".".$extension, $requested_file);
   $optim_source_file      = $document_root.$optim.parse_url(urldecode($requested_directory)."/".($requested_file),PHP_URL_PATH);
 }
@@ -45,7 +45,8 @@ if(!file_exists($optim_source_file) || filemtime($source_file) > filemtime($opti
   /* It exists as a source file, and it doesn't exist cached - lets make one: */
   $width = ((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?intval($_REQUEST['width']):null);
   $height = ((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?intval($_REQUEST['height']):null);
-  $file = generateImage($source_file, $optim_source_file,$width, $height);
+  $crop = (!empty($_REQUEST['crop'])?true:false);
+  $file = generateImage($source_file, $optim_source_file,$width, $height, $crop);
 }
 
 sendImage($optim_source_file, $browser_cache);
@@ -67,7 +68,7 @@ function sendImage($filename, $browser_cache) {
 }
 
 /* generates the given cache file for the given source file with the given resolution */
-function generateImage($source_file, $cache_file,$_width,$_height) {
+function generateImage($source_file, $cache_file,$_width,$_height,$_crop=false) {
   global $sharpen, $jpg_quality,$quality;
 
   make_path($cache_file);

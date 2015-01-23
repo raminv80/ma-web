@@ -22,7 +22,7 @@
 					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_id" class="key"> 
 					<input type="hidden" value="{if $fields.listing_object_id}{$fields.listing_object_id}{else}{$objID}{/if}" name="field[1][tbl_listing][{$cnt}][listing_object_id]" id="listing_object_id"> 
 					<input type="hidden" value="{if $fields.listing_created}{$fields.listing_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_listing][{$cnt}][listing_created]" id="listing_created">
-					<input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
+					<input type="hidden" value="{if $typeID}{$typeID}{else}1{/if}" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 					<input type="hidden" value="{$fields.listing_published}" name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published">
 					<input type="hidden" name="formToken" id="formToken" value="{$token}"/>
 				</div>
@@ -90,8 +90,8 @@
 							<label class="col-sm-3 control-label" for="id_listing_parent">Parent</label>
 							<div class="col-sm-5">
 								<select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
-									<option value="0">Select one</option> {foreach $fields.options.listing_parent_id as $opt}
-									<option value="{$opt.id}" {if $fields.listing_parent_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option> {/foreach}
+									<option value="0">Select one</option> {foreach $fields.options.listing_parent_id as $opt}{if $fields.listing_object_id neq $opt.id}
+									<option value="{$opt.id}" {if $fields.listing_parent_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option>{/if} {/foreach}
 								</select>
 							</div>
 						</div>

@@ -31,10 +31,6 @@
 	<sequence> 
 		<table>tbl_sequence</table> 
 	</sequence>
-	<them_news> 
-		<domain>http://www.them.com.au</domain>
-		<page></page> 
-	</them_news> 
 	
 	<group name="General">
 	<!-- THIS SECTION IS USED TO MANAGE THE ADMINISTRATOR TABLE. ADMINISTRATORS AND USERS FOR THE CMS ARE MANAGED HERE. -->

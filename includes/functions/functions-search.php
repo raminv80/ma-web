@@ -41,12 +41,12 @@ function SearchListing($search){
 	
   //SEARCH TAGS
 	$sql = "SELECT * FROM tbl_tag WHERE tag_value = :value AND tag_deleted IS NULL AND tag_object_id > 0 AND tag_object_table = 'tbl_listing'" ;
-	if($res = $DBobject->wrappedSql($sql, array(":value"=>$str))){
+	if($res = $DBobject->wrappedSql($sql, array(":value"=>$search))){
 	  $no = 0;
 	  foreach ( $res as $t) {
 	    $no++;
 	    $pre = str_replace ( "tbl_", "", $t['tag_object_table'] );
-	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS ULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = 1";
+	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS NULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = 1";
 	    if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$t['tag_object_id']))){
 	      $data ["{$res2[0]['cache_url']}"] = $res2[0];
 	      $data["{$res2[0]['cache_url']}"]['tags'] = getTags('tbl_listing',$t['tag_object_id']);
@@ -101,12 +101,12 @@ function SearchCategories($search){
 
   //SEARCH TAGS
 	$sql = "SELECT * FROM tbl_tag WHERE tag_value = :value AND tag_deleted IS NULL AND tag_object_id > 0 AND tag_object_table = 'tbl_listing'" ;
-	if($res = $DBobject->wrappedSql($sql, array(":value"=>$str))){
+	if($res = $DBobject->wrappedSql($sql, array(":value"=>$search))){
 	  $no = 0;
 	  foreach ( $res as $t) {
 	    $no++;
 	    $pre = str_replace ( "tbl_", "", $t['tag_object_table'] );
-	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS ULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = 2";
+	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS NULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = 2";
 	    if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$t['tag_object_id']))){
 	      $data ["{$res2[0]['cache_url']}"] = $res2[0];
 	      $data["{$res2[0]['cache_url']}"]['tags'] = getTags('tbl_listing',$t['tag_object_id']);
@@ -160,12 +160,12 @@ function SearchStores($search){
 
   //SEARCH TAGS
 	$sql = "SELECT * FROM tbl_tag WHERE tag_value = :value AND tag_deleted IS NULL AND tag_object_id > 0 AND tag_object_table = 'tbl_listing'" ;
-	if($res = $DBobject->wrappedSql($sql, array(":value"=>$str))){
+	if($res = $DBobject->wrappedSql($sql, array(":value"=>$search))){
 	  $no = 0;
 	  foreach ( $res as $t) {
 	    $no++;
 	    $pre = str_replace ( "tbl_", "", $t['tag_object_table'] );
-	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS ULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = 5";
+	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS NULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = 5";
 	    if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$t['tag_object_id']))){
 	      $data ["{$res2[0]['cache_url']}"] = $res2[0];
 	      $data["{$res2[0]['cache_url']}"]['tags'] = getTags('tbl_listing',$t['tag_object_id']);
@@ -221,12 +221,12 @@ function SearchProduct($search){
 
 	//SEARCH TAGS
 	$sql = "SELECT * FROM tbl_tag WHERE tag_value = :value AND tag_deleted IS NULL AND tag_object_id > 0 AND tag_object_table = 'tbl_product'" ;
-	if($res = $DBobject->wrappedSql($sql, array(":value"=>$str))){
+	if($res = $DBobject->wrappedSql($sql, array(":value"=>$search))){
 	  $no = 0;
 	  foreach ( $res as $t) {
 	    $no++;
 	    $pre = str_replace ( "tbl_", "", $t['tag_object_table'] );
-	    $sql = "SELECT cache_url,tbl_product.* FROM tbl_product LEFT JOIN cache_tbl_product ON product_object_id = cache_record_id WHERE product_id = :id AND product_deleted IS ULL AND product_published = 1 AND cache_published = 1";
+	    $sql = "SELECT cache_url,tbl_product.* FROM tbl_product LEFT JOIN cache_tbl_product ON product_object_id = cache_record_id WHERE product_id = :id AND product_deleted IS NULL AND product_published = 1 AND cache_published = 1";
 	    if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$t['tag_object_id']))){
 	      $data ["{$res2[0]['cache_url']}"] = $res2[0];
 	      $data["{$res2[0]['cache_url']}"]['tags'] = getTags('tbl_product',$t['tag_object_id']);

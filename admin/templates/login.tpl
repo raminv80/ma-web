@@ -1,5 +1,6 @@
 {block name=body}
 <form id="login-form" accept-charset="UTF-8" method="post">
+	<input type="hidden" value="{$redirect}" name="redirect" class="redirect" /> 
 	<div class="row form-group">
 		<div class="col-sm-6 col-sm-offset-3 text-center">
 			<img src="/admin/images/themlogo.jpg" alt="" class="img-responsive" id="loginlogo" />
@@ -84,7 +85,7 @@ function Login(formID){
 			 		$('#'+formID).find('.error-alert').find('strong').html(obj.error);
 			 		$('#'+formID).find('.error-alert').fadeIn('slow'); 
 			 	} else if (obj.success){
-				 		location.reload();
+			 		location.assign(obj.redirect);
 			 	}
 			} catch (err) {
 			}

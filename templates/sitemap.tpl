@@ -1,7 +1,7 @@
 {function name=render_site_url level=0 parenturl=''}{foreach from=$items key=k item=it}
 <url>
   <loc>{$it.cache_url}</loc>
-  <lastmod>{$it.cache_modified|date_format:"%Y-%m-%dT%H:%M:%S-9:30"}</lastmod>
+  <lastmod>{$it.cache_modified|date_format:"%Y-%m-%dT%H:%M:%S+09:30"}</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.5</priority>
 </url>

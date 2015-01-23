@@ -1,8 +1,15 @@
 <?php
 $request = explode("?",$_SERVER['REQUEST_URI'],2);
+if(preg_match("/media-centre/",  $request[0]) && count($uri_parts = explode("/",trim($request[0],"/"))) == 2){
+  $request[0] = strtolower("/".$uri_parts[0]."#".$uri_parts[1]);
+  $lowercase_file_url = ((($_SERVER['SERVER_PORT'] == 443 || !empty($_SERVER['HTTPS']))?"https://":"http://") . $_SERVER['SERVER_NAME'] . implode("?",$request));
+  header("HTTP/1.1 301 Moved Permanently");
+  header("Location: $lowercase_file_url");
+  exit();
+}
 if (preg_match('/[A-Z]/', $request[0])){
 	$request[0] = strtolower($request[0]);
-	$lowercase_file_url = ((($_SERVER['SERVER_PORT'] == 443 || !empty($_SERVER['HTTPS']))?"https://":"http://") . $GLOBALS['HTTP_HOST'] . implode("?",$request));
+	$lowercase_file_url = ((($_SERVER['SERVER_PORT'] == 443 || !empty($_SERVER['HTTPS']))?"https://":"http://") . $_SERVER['SERVER_NAME'] . implode("?",$request));
   header("HTTP/1.1 301 Moved Permanently");
   header("Location: $lowercase_file_url");
   exit();
@@ -62,109 +69,7 @@ while(true){
   /******* Goes to home *******/
   if($_request['arg1'] == ''){
     $template = loadPage($CONFIG->index_page); 
-    /* $prodObj = new ProductClass(null, $CONFIG);
-    $prodObj->LoadProductSet("featured", "product_flag1 = '1' AND product_instock = '1'");
-    $prodObj->LoadProductSet("special", "product_specialprice != 0.0"); */
     break 1; 
-  }
-  
-  /**
-   * ***** Goes to Login-register ******
-   */
-  if($_request['arg1'] == 'login-register'){
-  	if(!empty($_SESSION['user']['public']['id'])){
-  		header("Location: /" . $CONFIG->login->fallback_redirect);
-  		exit();
-  	}
-  	$template = loadPage($CONFIG->login);
-  	break 1;
-  }
-  /**
-   * **** Goes to my-account ******
-   */
-  if($_request['arg1'] == 'my-account'){
-  	if($CONFIG->account->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])){
-  		$_SESSION['redirect'] = "/my-account";
-  		header("Location: /" . $CONFIG->account->fallback_redirect);
-  		exit();
-  	}
-  	$template = loadPage($CONFIG->account);
-  	$cart_obj = new cart();
-  	$orders = $cart_obj->GetOrderHistoryByUser($_SESSION['user']['public']['id']);
-  	$SMARTY->assign ( 'orders', $orders );
-  	break 1;
-  }
-  
-  /**
-   * ***** Goes to search ******
-   */
-  if($_request['arg1'] == 'search'){
-    $template = loadPage($CONFIG->search);
-    searchcms($_GET['q']);
-    break 1;
-  }
-  
-  /**
-   * ***** Goes to CHECKOUT ******
-   */
-  if($_request['arg1'] == 'checkout'){
-    if(empty($_SESSION['user']['public']['id'])){
-      $_SESSION['redirect'] = "/checkout";
-      header("Location: /login-register");
-      exit();
-    }
-    $template = loadPage($CONFIG->checkout);
-    $cart_obj = new cart();
-    if($cart_obj->NumberOfProductsOnCart() < 1){
-    	header("Location: /");
-    	exit();
-    }
-//     $ship_obj = new ShippingClass();
-//     $methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
-//     $SMARTY->assign ( 'shippingMethods', $methods );
-    $validation = $cart_obj->ValidateCart();
-    $SMARTY->assign('validation',$validation);
-    $totals = $cart_obj->CalculateTotal();
-    $SMARTY->assign('totals',$totals);
-    $sql = "SELECT * FROM tbl_address WHERE address_user_id = :uid ORDER BY address_id";
-    $addresses = $DBobject->wrappedSql($sql,array(
-        ':uid'=>$_SESSION['user']['public']['id']
-    ));
-    $SMARTY->assign('addresses',$addresses);
-    $sql = "SELECT DISTINCT postcode_state FROM tbl_postcode WHERE postcode_state != 'OTHE' ORDER BY postcode_state";
-    $states = $DBobject->wrappedSql($sql);
-    $SMARTY->assign('options_state',$states);
-    // ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ENHANCED ECOMMERCE
-    $SMARTY->assign ( 'ga_ec', $cart_obj->getJSCartitemsByCartId_GA() . "ga('ec:setAction','checkout', { 'step': 1 });" );
-    
-    break 1;
-  }
-  
-  /**
-   * ***** Goes to SHOPPING CART ******
-   */
-  if($_request['arg1'] == 'shopping-cart'){
-    $template = loadPage($CONFIG->cart);
-    $cart_obj = new cart();
-    //$ship_obj = new ShippingClass();
-    //$methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
-    //$SMARTY->assign ( 'shippingMethods', $methods );
-    if(!empty($_SESSION['reApplydiscount']) && !empty($_SESSION['user']['public']['id'])){		//RE-APPLY DISCOUNT CODE
-    	$res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
-    	if ($res['error']) {
-    		$_SESSION['error']= $res['error'];
-    		$_SESSION['post']= $_POST;
-    	}
-    	$_SESSION['reApplydiscount'] = '';
-    	unset($_SESSION['reApplydiscount']);
-    	header('Location: /shopping-cart');
-    	die();
-    }
-    $validation = $cart_obj->ValidateCart();
-    $SMARTY->assign('validation',$validation);
-    $totals = $cart_obj->CalculateTotal();
-    $SMARTY->assign('totals',$totals);
-    break 1;
   }
   
   /**
@@ -176,30 +81,14 @@ while(true){
       break 2;
     }
   }
-  
+   
   /**
-   * ***** Product pages here ******
+   * ***** Goes to search ******
    */
-  $arr = explode("/",$_request["arg1"]);
-  foreach($CONFIG->product_page as $lp){
-    if(empty($lp->url)){continue;}
-    $needle = str_replace("/","\/",$lp->url);
-    $haystack = $_request["arg1"];
-    if(preg_match("/^{$needle}/",$haystack)){
-      $_nurl = $_request["arg1"];
-      $class = (string)$lp->file;
-      $obj = new $class($_nurl,$lp);
-      $template = $obj->Load(null,$_PUBLISHED);
-      $obj->LoadAssociatedProducts();
-      $menu = $obj->LoadMenu($lp->pageID);
-      $SMARTY->assign('menuitems',$menu);
-      if($template == 'product.tpl'){
-      	$cart_obj = new cart();
-      	$listingParent = $SMARTY->getTemplateVars('listing_parent');
-      	$SMARTY->assign('product_FullCategoryName', $cart_obj->getFullCategoryName($listingParent['listing_id']));
-      }
-      break 2;
-    }
+  if($_request['arg1'] == 'search'){
+    $template = loadPage($CONFIG->search);
+    searchcms($_GET['q']);
+    break 1;
   }
   
   /**
@@ -214,7 +103,7 @@ while(true){
       $_nurl = $_request["arg1"];
       $class = (string)$lp->file;
       $obj = new $class($_nurl,$lp);
-      $template = $obj->Load(null,$_PUBLISHED);
+      $template = $obj->Load((!empty($lp->root_parent_id)?$lp->root_parent_id:null),$_PUBLISHED);
       $menu = $obj->LoadMenu($lp->pageID);
       $SMARTY->assign('menuitems',$menu);
       break 2;
@@ -236,35 +125,8 @@ while(true){
     }
   }
   
-  
   $template = loadPage($CONFIG->error404);
   break 1;
-}
-
-
-/**
- * ***************************************
- * Load Data Shopping Cart for all pages *
- * ***************************************
- */
-$cart_obj = new cart();
-if(!empty($_SESSION['user']['public']['store_id'])){
-	$storeId = $_SESSION['user']['public']['store_id'];
-	$sql = "SELECT listing_name, location_phone FROM tbl_listing LEFT JOIN tbl_location ON listing_id = location_listing_id WHERE listing_object_id = :id AND listing_deleted IS NULL AND listing_published = 1";
-	$params = array(":id"=>$storeId);
-	$res = $DBobject->wrappedSql($sql,$params);
-	$SMARTY->assign("storename",$res[0]['listing_name']);
-} 
-$itemNumber = $cart_obj->NumberOfProductsOnCart();
-$SMARTY->assign('itemNumber',$itemNumber);
-$cart = $cart_obj->GetDataCart();
-$SMARTY->assign('cart',$cart);
-$subtotal = $cart_obj->GetSubtotal();
-$SMARTY->assign('subtotal',$subtotal);
-$productsOnCart = $cart_obj->GetDataProductsOnCart();
-$SMARTY->assign('productsOnCart',$productsOnCart);
-if($CONFIG->checkout->attributes()->guest == 'true'){
-	$SMARTY->assign('allowGuest',true);
 }
 
 if(empty($template)){

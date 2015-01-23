@@ -871,10 +871,10 @@ class cart {
               ":pid"=>$res[0]['product_id']
           );
           if($mod = $DBobject->wrappedSql($sql,$params)){
-            if(intval($mod[0]['productqty_percentmodifier']) == 1){
-              $pricemodifier = intval($mod[0]['productqty_modifier'])."%";
+            if(floatval($mod[0]['productqty_percentmodifier']) == 1){
+              $pricemodifier = floatval($mod[0]['productqty_modifier'])."%";
             }else{
-              $pricemodifier = "$".intval($mod[0]['productqty_modifier']);
+              $pricemodifier = "$".floatval($mod[0]['productqty_modifier']);
             }
           }
           $params = array(

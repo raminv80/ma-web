@@ -192,7 +192,7 @@ class UserClass {
     		$user_arr["surname"]=$res[0]["user_surname"];
     		$user_arr["email"]=$res[0]["user_email"];
     	} else {
-    		$user_arr["error"] = "Wrong email or password";
+    		$user_arr["error"] = "Wrong email or password.";
     	}
     	return $user_arr;
     }

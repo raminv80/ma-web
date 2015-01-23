@@ -832,3 +832,46 @@ function getAdminChildren($parentId, $root = 0, $list = array()) {
 	}
 	return $list;
 }
+
+
+/**
+ * 
+ * @param array $recipients
+ * @param string $message
+ * @return boolean
+ */
+function sendSMS($recipients = array(), $message){
+	global $CONFIG, $HTTP_HOST;
+	require_once('includes/plugins/mmsoap/MMSoap.php');
+
+	// Set up account details
+	$username 	= 	(string) $CONFIG->sms->username;
+	$password 	= 	(string) $CONFIG->sms->password;
+	$origin   	=   (string) $CONFIG->sms->origin;
+
+	// Create new MMSoap class
+	$soap = new MMSoap($username, $password);
+	$response = $soap->sendMessages($recipients, $message, null, $origin);
+	$result   = $response->getResult();
+
+
+	#if failed, send email to THEM
+	if(!empty($result->failed)){
+		$from = (string) $CONFIG->company->name;
+		$domain = preg_match('/themserver/', $HTTP_HOST)?'themserver.com':$HTTP_HOST;
+		$fromEmail = 'noreply@'. str_replace('www.', '', $domain);
+		/* To send HTML mail, you can set the Content-type header. */
+		$headers  = "MIME-Version: 1.0\r\n";
+		$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+		$headers .= "X-Priority: 3\r\n";
+		$headers .= "X-Mailer: PHP". phpversion() ."\r\n";
+		/* additional headers */
+		$headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
+		$headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
+		$headers .= "From: ". $from . " <".$fromEmail.">\r\n";
+		$headers .= "Bcc: cmsemails@them.com.au\r\n";
+		$body = $result->failed;
+		$mailSent = SafeMail("online@them.com.au","SMS Error",$body,$headers, "-f $fromEmail");
+	}
+	return true;
+}

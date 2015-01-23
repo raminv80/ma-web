@@ -17,7 +17,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
         $_SESSION['user']['public'] = $res;
         $url = $_SERVER['HTTP_REFERER'];
         if($_POST['redirect']){
-          $url = $_POST['redirect'];
+          $url = unclean($_POST['redirect']);
         }
         
         try{
@@ -67,7 +67,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
 	    		$_SESSION['user']['public'] = $res;
 	    		$url = $_SERVER['HTTP_REFERER'];
 	    		if ($_POST['redirect']) {
-                	$url = $_POST['redirect'];
+                	$url = unclean($_POST['redirect']);
           }
           if(empty($_SESSION['address'])){
           	$addressArr = $user_obj->GetUsersAddresses($res['id']);
