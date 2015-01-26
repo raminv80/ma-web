@@ -115,7 +115,7 @@ while(true){
   if(!empty($CONFIG->page_strut)){
     $struct = $CONFIG->page_strut;
     $class = (string)$struct->file;
-    $obj = new $class('',$struct);
+    $obj = new $class(null,$struct);
     $id = $obj->ChkCache($_request["arg1"],$_PUBLISHED);
     if(! empty($id)){
       $template = $obj->Load($id,$_PUBLISHED);
@@ -172,7 +172,7 @@ function loadPage($_conf){
       }
       
       $class = (string)$struct->file;
-      $obj = new $class('',$struct);
+      $obj = new $class(null,$struct);
       $template = $obj->Load($_conf->pageID,$_PUBLISHED);
       if(!empty($template)){
         $template = $_conf->template;
@@ -209,7 +209,7 @@ function loadPageAdditional($_conf){
 						}
 					}
 					$class = (string)$lp->file;
-					$obj = new $class('',$lp);
+					$obj = new $class(null,$lp);
 					$data2 = $obj->LoadTree($lp->root_parent_id);
 					$SMARTY->assign($data,unclean($data2));
 					break 1;

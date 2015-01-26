@@ -90,13 +90,14 @@ class ListClass {
     // Split the URL
     $_url = ltrim(rtrim($this->URL,'/'),'/');
     
-    if(! empty($_ID)){
-      $this->ID = $_ID;
-    }else{
+    if($this->URL != null){
       $this->ID = $this->ChkCache($_url,$_PUBLISHED);
     }
+    if(empty($this->ID)){
+      $this->ID = $_ID;
+    }
      
-    if(! empty($this->ID)){
+    if(!empty($this->ID)){
       $data = $this->LoadTree($this->ID,0,0,1);
       $SMARTY->assign('data',unclean($data));
     }else{
@@ -444,18 +445,22 @@ class ListClass {
     if(!empty($this->CONFIG_OBJ->where)){
       $where = " AND " . $this->CONFIG_OBJ->where;
     }
+    if(!empty($this->CONFIG_OBJ->limit)){
+      $limit = " LIMIT " . $this->CONFIG_OBJ->limit;
+    }
     $extends = "";
     foreach($this->CONFIG_OBJ->table->extends as $a){
       $pre = str_replace("tbl_","",$a->table);
       $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}"; // AND article_deleted IS NULL";
     }
-    $sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_parent_id = :cid {$typeIdSQL} AND tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = :published" .$where. $filter . $order;
-    $params = array(
-        ":cid"=>$_cid,
-        ":published"=>$_PUBLISHED
-    );
+    $params = array(":published"=>$_PUBLISHED);
+    if($this->CONFIG_OBJ->attributes()->ignoreparent == 1 && $_cid == 0){
+    }else{
+      $catsql = " AND tbl_listing.listing_parent_id = :cid ";
+      $params[":cid"] =$_cid;
+    }
+    $sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_deleted IS NULL {$catsql}{$typeIdSQL} AND tbl_listing.listing_published = :published" .$where. $filter . $order. $limit;
 
-    
     $params = array_merge($params,$filter_params);
     if(!empty($typeIdSQL)){
     	$params = array_merge($params,$typeId_params);
