@@ -313,7 +313,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     			$pay_obj->PreparePayment($CCdata);
 	    		
 	    		try{
-	    			$reponse = $pay_obj->Submit();
+	    			$response = $pay_obj->Submit();
 	    			$paymentId = $paypalObj->GetPaymentId();
 	    		}catch(Exception $e){
 	    			if ($error_msg = $pay_obj->GetErrorMessage()) {
@@ -324,8 +324,8 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    			header('Location: '.$_SERVER['HTTP_REFERER'].'#error');
 	    			exit;
 	    		} */
-	    		$reponse = true;
-	    		if ($reponse){
+	    		$response = true;
+	    		if ($response){
 		    		// PAYMENT SUCCESS
 		    		$cart_obj->CloseCart();
 		    		$pay_obj->SetOrderStatus($paymentId);

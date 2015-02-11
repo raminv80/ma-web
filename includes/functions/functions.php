@@ -4,7 +4,7 @@
 register_shutdown_function("fatal_handler");
 function fatal_handler() {
   // Getting last error
-	global $CONFIG;
+	global $CONFIG, $HTTP_HOST;
   $errno = error_get_last();
   if($errno['type'] === E_ERROR){
     $body = "<table><thead bgcolor='#c8c8c8'><th>Item</th><th>Description</th></thead><tbody>";
@@ -20,6 +20,29 @@ function fatal_handler() {
     if($CONFIG->attributes()->staging == 'true'){
     	die($body);
     }
+    $subject = "Fatal error";
+    $to = "nick@them.com.au,apolo@them.com.au";
+    $from = (string) $CONFIG->company->name;
+    $from = empty($from)?"website":$from;
+		$fromEmail = 'noreply@' . str_replace ( "www.", "", $HTTP_HOST );
+    /* To send HTML mail, you can set the Content-type header. */
+		$headers  = "MIME-Version: 1.0\r\n";
+		$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+		$headers .= "X-Priority: 3\r\n";
+		$headers .= "X-Mailer: PHP". phpversion() ."\r\n";
+		/* additional headers */
+		$headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
+		$headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
+		$headers .= "From: ". $from . " <".$fromEmail.">\r\n";
+		$headers .= "Bcc: cmsemails@them.com.au\r\n";
+		try{
+			$filename = $_SERVER['DOCUMENT_ROOT'].'fatalerror.txt';
+			if(function_exists("SafeMail") && !file_exists($filename)){
+				file_put_contents($filename, date("Y-m-d H:i:s"));
+				if(file_exists($filename)) SafeMail($to,$subject,$body,$headers, "-f $fromEmail");
+			}
+		}catch(Exception $e){}
+		
     $_SESSION['error'] = 'We had trouble saving your entry. Please review your entry and try again. If this continues please contact us.';
     header('location: /503.html');
     die('@ 503 Service Temporarily Unavailable');

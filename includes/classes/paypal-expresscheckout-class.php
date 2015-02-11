@@ -147,6 +147,7 @@ class PayPal extends Bank {
 		$STR .= "&PAYMENTREQUEST_0_SHIPPINGAMT=$shipping";
 		$STR .= "&PAYMENTREQUEST_0_AMT=$total";
 		$STR .= "&PAYMENTREQUEST_0_CURRENCYCODE=". $this->currencyCodeType;
+		$STR .= "&PAYMENTREQUEST_0_INVNUM=". $this->payment_transactionno;
 		$STR .= "&ALLOWNOTE=1";
 		return $STR;
 	}
