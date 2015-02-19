@@ -44,14 +44,13 @@ class Bank {
 		global  $CONFIG;
 		$this->live_url 			= $CONFIG->payment_gateway->live_url;
 		$this->test_url				= $CONFIG->payment_gateway->test_url;
-		$this->url_to_use 			= ((string) $CONFIG->payment_gateway->live == 'true') ? $this->live_url : $this->test_url;
+		$this->url_to_use 			= ($CONFIG->payment_gateway->live == true) ? $this->live_url : $this->test_url;
 		$this->merchant_id			= $CONFIG->payment_gateway->merchant_id;
 		$this->merchant_password	= $CONFIG->payment_gateway->merchant_password;
 		$this->messageTimestamp 	= date("YdmHis").substr(microtime(), 2, 3).sprintf("%+d", (date('Z') / 60));
 		$this->messageID 			= sha1($this->messageTimestamp . mt_rand());
 		$this->payment_transactionno = $data['payment_transaction_no'];
 		$this->order_info			= $data;
-		$this->amount          		= $data['payment_charged_amount'];
 	}	
 	
 	function PreparePayment($data){
@@ -67,6 +66,7 @@ class Bank {
 	
 	
 	function GetResponseCode(){}
+	
 	
 	
 	function GetErrorMessage(){
@@ -91,7 +91,9 @@ class Bank {
 		if(empty($this->amount) && (empty($this->cc_number) || empty($this->cc_expiry_month) || empty($this->cc_expiry_year) || empty($this->cc_cvc) || empty($this->cc_name))){
 			$this->errors = true;
 			$this->errorMsg = 'PAYMENT ERROR: Missing payment details.';
-		}elseif(!empty($this->amount) && empty($this->cc_number) ){
+		}elseif(!empty($this->amount) && floatval($this->amount) < 0.009  && empty($this->cc_number) && empty($this->cc_expiry_month) && empty($this->cc_expiry_year) && empty($this->cc_cvc) && empty($this->cc_name)){
+			$this->response['msg'] = 'FREE SAMPLE';
+			$this->response['payment_status'] = 'A';
 			$this->payment_success = true;
 			$this->StorePaymentRecord();
 		}else{
@@ -125,11 +127,10 @@ class Bank {
 		if(empty($payment)){
 			$payment = $this->order_info;
 		}
-		if(empty($this->response['payment_status']) && $this->payment_success){
+		if(empty($this->response['payment_status']) && empty($this->payment_transactionno)){
 			$this->response['payment_status'] = $payment['payment_status'];
 			$this->payment_transactionno = $payment['payment_transaction_no'];
 			$this->amount = $payment['payment_charged_amount'];
-			$this->response['cardscheme'] = empty($this->response['cardscheme'])?$payment['payment_method']:$this->response['cardscheme'];
 		}
 		
 		$sql="INSERT INTO tbl_payment (payment_cart_id,payment_user_id,payment_billing_address_id,payment_shipping_address_id,payment_status,payment_subtotal,payment_discount,payment_shipping_fee,payment_charged_amount,payment_gst,payment_shipping_method,payment_shipping_comments,payment_payee_name,payment_transaction_no,payment_response_summary_code,payment_response_code,payment_response_msg,payment_response_receipt_no,payment_response_settlementdate,payment_response_transactiondate,payment_response_cardscheme,payment_response,payment_user_ip,payment_created)

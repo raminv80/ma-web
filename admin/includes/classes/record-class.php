@@ -91,33 +91,21 @@ Class Record{
 				$article_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
 			} else {
 				$pre = str_replace ( "tbl_", "", $f->table );
-				$extends = "";
-				foreach($a->extends as $e){
-					$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
-				}
 				$ref = array();
-				$ext = array();
 				foreach ($f->reference as $r){
 					$ref[] = $r;
 				}
-				foreach ($f->extra as $r){
-					$ext[] = $r;
-				}
-				$sql = "SELECT {$f->id},". implode(',', $ref). (empty($ext) ? '' : ','.implode(',', $ext))." FROM {$f->table} {$extends} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+				$sql = "SELECT {$f->id},". implode(',', $ref)." FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 					foreach ( $res as $key => $row ) {
 						$value = array();
 						foreach ($ref as $r){
 							$value[] = $row ["{$r}"];
 						}
-						$extra = array();
-						foreach ($ext as $r){
-							$extra["{$r}"] = $row ["{$r}"];
-						}
 						$article_f ['options'] ["{$f->name}"] [] = array (
 								'id' => $row ["{$f->id}"],
 								'value' => implode(' ', $value),
-								'extra' => $extra
+								'record'=> $row
 						);
 					}
 					}
@@ -131,34 +119,13 @@ Class Record{
 		$results = array();
 	
 		$pre = str_replace("tbl_","",$f->table);
-		$extends = "";
-		foreach($f->extends as $e){
-			$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
-		}
-		$ref = array();
-		$ext = array();
-		foreach ($f->reference as $r){
-			$ref[] = $r;
-		}
-		foreach ($f->extra as $r){
-			$ext[] = $r;
-		}
-		$sql = "SELECT {$f->id},". implode(',', $ref). (empty($ext) ? '' : ','.implode(',', $ext))." FROM {$f->table} {$extends} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+		$sql = "SELECT {$f->id}, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 	
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $row) {
-				$value = array();
-				foreach ($ref as $r){
-					$value[] = $row ["{$r}"];
-				}
-				$extra = array();
-				foreach ($ext as $r){
-					$extra["{$r}"] = $row ["{$r}"];
-				}
 				$results[] = array (
 						'id' => $row ["{$f->id}"],
-						'value' => implode(' ', $value),
-						'extra' => $extra,
+						'value' => $row ["{$f->reference}"],
 						'subs' => $this->getOptionsCatTree($f, $row["{$f->id}"])
 				);
 			}
@@ -170,18 +137,13 @@ Class Record{
 		global $SMARTY,$DBobject;
 		$results = array();
 		
-		$extends = "";
-		foreach($a->extends as $e){
-			$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
-		}
-		
 		$order = "";
 		if (! empty ( $a->orderby )) {
 			$order = " ORDER BY " . $a->orderby;
 		}
 		
 		$pre = str_replace("tbl_","",$a->table);
-		$sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . ($a->where != '' ? "AND {$a->where} " : "") . $order;
+		$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . ($a->where != '' ? "AND {$a->where} " : "") . $order;
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $row) {
 				$r_array = array();

@@ -23,12 +23,19 @@
 				<input type="hidden" value="files_id" name="field[10][tbl_files][{$filesno}][id]" id="id"/>
 				<input type="hidden" value="{$files.files_id}" name="field[10][tbl_files][{$filesno}][files_id]" class="key" >
 				<input type="hidden" value="{$files.files_listing_id}" name="field[10][tbl_files][{$filesno}][files_listing_id]" id="files_listing_id" class="key" >
+				<input type="hidden" value="{$files.files_product_id}" name="field[10][tbl_files][{$filesno}][files_product_id]" id="files_product_id" class="key" >
 				
 				<input class="form-control" type="text" value="{$files.files_friendly_name}" name="field[10][tbl_files][{$filesno}][files_friendly_name]" id="files_title_{$filesno}" onchange="$('#files_title_{$filesno}').html(this.value);">
 			</div>
 		</div>
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="files_filename_{$filesno}">Short Description</label>
+			<div class="col-sm-5">
+				<textarea class="form-control" maxlength="255" name="field[10][tbl_files][{$filesno}][files_filename]" id="files_filename_{$filesno}" >{$files.files_filename}</textarea>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-sm-3 control-label" for="files_filename_{$filesno}">Description</label>
 			<div class="col-sm-5">
 				<textarea class="tinymce" name="field[10][tbl_files][{$filesno}][files_filename]" id="files_filename_{$filesno}" >{$files.files_filename}</textarea>
 			</div>
@@ -66,6 +73,14 @@
 				>Remove File</a>
 			</div>
 		</div>	
+		<div class="row form-group">
+			<label class="col-sm-3 control-label" for="files_flag_{$filesno}">Flag</label>
+			<div class="col-sm-5">
+				<input type="hidden" value="{if $fields.files_flag eq 1}1{else}0{/if}" name="field[10][tbl_files][{$filesno}][files_flag]" class="value">
+				<input class="chckbx" type="checkbox" {if $fields.files_flag eq 1} checked="checked" {/if}
+						 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="files_flag_{$filesno}">
+			</div>
+		</div>
 	</div>
 </div>
 {/block}

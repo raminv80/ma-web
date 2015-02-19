@@ -2,12 +2,11 @@
 
 require_once 'includes/createsend/csrest_subscribers.php';
 if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 10 ){
-
+  $token = getToken('frontend');
 	$exceptions = "";
 	foreach($_POST as $key => $p){
 		$_SESSION["{$key}"] = $p;
 	}
-	
 	try{
 		//store on API
 		$wrap = new CS_REST_Subscribers('1ad04e1c384a79cacd9ca47e8c3b8f5c', '7d6ddc2467944f2a174afd5eb05040b4');
@@ -83,17 +82,17 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
 			sendMail($to, $from, $fromEmail, $subject, $body);
 		}catch(Exception $e){}
 		
-		$_SESSION['error']='There is an error with your request. please try again later.';
-		header("Location: {$_SERVER['HTTP_REFERER']}#error");
-		exit;
+		
+		echo json_encode(array("error"=>"There is an error with your request. please try again later.","status"=>false,"message"=>"","formtoken"=>$token));
+		die;
 	}
-
-	header("Location: /thank-you");
-	exit;
+  
+	echo json_encode(array("error"=>"","status"=>true,"message"=>"<div id='subthankyou'>Thank you for subscribing. Look out for the next edition of our e-newsletter.</div>","formtoken"=>$token));
+	die;
 }else{
-  $_SESSION['error']='You do not have permission to submit this form. Please refresh the page and try again.';
-  header("Location: {$_SERVER['HTTP_REFERER']}#error");
-  die();
+  $token = getToken('frontend');
+  echo json_encode(array("error"=>"You do not have permission to submit this form. Please refresh the page and try again.","status"=>false,"message"=>"","formtoken"=>$token));
+	die;
 }
 
 

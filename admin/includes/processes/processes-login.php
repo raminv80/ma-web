@@ -1,18 +1,34 @@
 <?php
 set_include_path($_SERVER['DOCUMENT_ROOT']);
 include 'admin/includes/functions/admin-functions.php';
-$error = "Session expired!";
+global $DBobject;
+
+$error = "Permission Denied!";
 if(checkToken('admin', $_POST["formToken"])){
-	$error = "Wrong email or password";
-	$result = AdminLogIn($_POST['email'],$_POST['password']);
-	$error = ($result)?'':$error;
-	$redirect = empty($_POST['redirect'])?'/admin/home':$_POST['redirect'];
-	$_SESSION['redirect'] = '';
+ 
+  $sql = "SELECT COUNT(id) AS cnt FROM login_blocked WHERE created > DATE_SUB(NOW(), INTERVAL 1 DAY) AND deleted IS NULL AND ip = :ip";
+  $res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
+  if($res[0]['cnt'] == 0){
+  	if($result = AdminLogIn($_POST['email'],$_POST['password'])){	
+  	   $error = '';
+  	}else{
+  	  $error = "Wrong email or password";
+  	}
+  	$sql = "INSERT INTO login_log (username,ip,success) VALUES (:uname,:ip,:success)";
+  	$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR'],"uname"=>$_POST['email'],"success"=>$result));
+  	
+  	$sql = "SELECT COUNT(id) AS cnt FROM login_log WHERE created > DATE_SUB(NOW(), INTERVAL 30 MINUTE) AND ip = :ip AND success = 0";
+  	$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
+  	if($res[0]['cnt'] >= 3){
+  	 $sql = "INSERT INTO login_blocked (ip) VALUES (:ip)";
+  	 $res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
+  	}
+  }else{
+    $result=false; $error = "You have been blocked for to many incorrect attempts.";
+  }
+  
+  echo json_encode(array(
+  		'error'=>$error,
+  		'success'=>$result
+  ));
 }
-
-echo json_encode(array(
-		'error'=>$error,
-		'success'=>$result,
-		'redirect'=>$redirect
-));
-

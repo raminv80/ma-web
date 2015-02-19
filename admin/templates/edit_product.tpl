@@ -1,4 +1,36 @@
 {block name=body}
+{function name=linking_list data=$data level=0 levelcount=0 order='5' table='tbl_additional_category' dfield='additional_category_product_id' dvalue='product_id' 
+						dvalue_val= $fields.product_id pkey='additional_category_id' skey='additional_category_listing_id' flag='additional_category_flag' 
+						preselectedArr = $preselectedArr existingArr= $fields.additional_category} 
+  {foreach $data as $opt}
+  {if $count eq ""}
+  	{if $level eq 0}<input type="hidden" value="{$dvalue}" name="default[{$dfield}]" />{/if}
+  	{assign var=count value=1}
+  {else}
+  	{assign var=count value=$count+1}
+  {/if} 
+  <div class="row form-group">
+     <input type="hidden" value="{$pkey}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][id]" />
+     <input type="hidden" value="{call name=fn_pkey id=$opt.id existingArr=$existingArr}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$pkey}]" class="key"/>
+     <input type="hidden" value="{$dvalue_val}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$dfield}]" class="key">
+     <input type="hidden" value="{$opt.id}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$skey}]">
+     <div class="col-sm-{$level+1}">
+       <input type="hidden" value="{call name=fn_value id=$opt.id existingArr=$existingArr preselectedArr=$preselectedArr}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$flag}]" class="value">
+       <input style="float:right;" class="chckbx" type="checkbox" {call name=fn_selection id=$opt.id existingArr=$existingArr preselectedArr=$preselectedArr} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_checkbox{$opt.id}">
+     </div>
+     <label style="text-align:left;" class="col-sm-3 control-label" for="id_checkbox{$opt.id}">{$opt.value}</label>
+   </div>
+   {if count($opt.subs) > 0}
+   {call name=linking_list data=$opt.subs level=$level+1 levelcount=$levelcount+{$count} } 
+   {/if}
+   {/foreach} 
+{/function}
+{function name=fn_value id="" existingArr="" preselectedArr = ""}{assign var=val value=0}{if $id neq ""}{foreach $existingArr as $add}{if $id eq $add.$skey}{assign var=val value=$add.$flag}{break}{/if}{if $id|in_array:$preselectedArr}{assign var=val value=1}{break}{/if}{/foreach}{/if}{$val}{/function}
+{function name=fn_selection id="" existingArr="" preselectedArr = ""}{if $id neq ""}{foreach $existingArr as $add}{if $id eq $add.$skey}{if $add.$flag eq 1}checked="checked"{/if}{break}{/if}{if $id|in_array:$preselectedArr}checked="checked"{break}{/if}{/foreach}{/if}{/function}
+{function name=fn_pkey id="" existingArr=""}{if $id neq ""}{foreach $existingArr as $add}{if $id eq $add.$skey}{$add.$pkey}{break}{/if}{/foreach}{/if}{/function}
+
+
+
 {function name=additional_list data=$data level=0 levelcount=0} 
   {foreach $data as $opt}
   {if $count eq ""}{assign var=count value=1}{else}{assign var=count value=$count+1}{/if} 

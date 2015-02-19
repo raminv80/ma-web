@@ -11,9 +11,9 @@ function searchcms($str){
 		return;
 	}
 	
-	$_str = unclean($str);
-	$_str = str_replace(" ", "%", $_str);
-	$str = htmlclean($_str);
+// 	$_str = unclean($str);
+// 	$_str = str_replace(" ", "%", $_str);
+// 	$str = htmlclean($_str);
 	
 	/*$tags['pages']  = SearchPagesTags($str);
 	$tags['news']  = SearchNewsTags($str);
@@ -26,16 +26,16 @@ function searchcms($str){
 	$results['video']  = array_merge($tags['video'],SearchVideo($str));*/
 	
 	
-	$results['listing'] = SearchListing($str);
-	$results['product'] = SearchProduct($str);
-  $results['categories'] = SearchCategories($str);
-  $results['stores'] = SearchStores($str);
+	$results['Pages'] = SearchListing($str);
+	$results['Issues'] = SearchListing($str,2);
+	$results['Campaigns & Petitions'] = SearchListing($str,3);
+	$results['Media Centre'] = SearchListing($str,4);
 	
 	$SMARTY->assign('count',$count);
 	$SMARTY->assign('results',$results);
 }
 
-function SearchListing($search){
+function SearchListing($search,$type=1){
 	global  $CONFIG,$SMARTY,$DBobject;
 	$data = array();
 	
@@ -46,8 +46,8 @@ function SearchListing($search){
 	  foreach ( $res as $t) {
 	    $no++;
 	    $pre = str_replace ( "tbl_", "", $t['tag_object_table'] );
-	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS NULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = 1";
-	    if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$t['tag_object_id']))){
+	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS NULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = :type";
+	    if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$t['tag_object_id'],"type"=>$type))){
 	      $data ["{$res2[0]['cache_url']}"] = $res2[0];
 	      $data["{$res2[0]['cache_url']}"]['tags'] = getTags('tbl_listing',$t['tag_object_id']);
         $sql = "SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
@@ -56,15 +56,18 @@ function SearchListing($search){
 	    }
 	  }
 	}
-	
+
 	if(count($data) > 0){
 	  return $data;
 	}
 	
+	$search = unclean($search);
+	$search = str_replace(" ", "%", $search);
+	$search = htmlclean($search);
 	
 	//IF TAG RESULTS = 0
 	
-	$sql= "SELECT tbl_listing.listing_object_id,tbl_listing.listing_name,tbl_listing.listing_meta_description,cache_tbl_listing.cache_url,
+	$sql= "SELECT tbl_listing.listing_object_id,tbl_listing.listing_name,tbl_listing.listing_meta_description,cache_tbl_listing.cache_url,tbl_listing.listing_content2,
 		MATCH(tbl_listing.listing_name,
 		tbl_listing.listing_content1,
 		tbl_listing.listing_seo_title,
@@ -72,7 +75,7 @@ function SearchListing($search){
 		tbl_listing.listing_meta_words) AGAINST (:search) AS Relevance
 		FROM tbl_listing LEFT JOIN cache_tbl_listing ON tbl_listing.listing_object_id = cache_tbl_listing.cache_record_id 
 		WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 AND cache_tbl_listing.cache_published = 1
-			AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND tbl_listing.listing_type_id = 1 AND 
+			AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND tbl_listing.listing_type_id = :type AND 
 		MATCH(tbl_listing.listing_name,
 		tbl_listing.listing_content1,
 		tbl_listing.listing_seo_title,
@@ -80,7 +83,7 @@ function SearchListing($search){
 		tbl_listing.listing_meta_words) AGAINST(:search IN
 		BOOLEAN MODE) HAVING Relevance > 0.2 ORDER
 		BY Relevance DESC";
-	$params = array(":search"=>$search);
+	$params = array(":search"=>$search,"type"=>$type);
 	if ($res = $DBobject->wrappedSql($sql,$params) ) {
 		foreach ($res as $r){
 			$data ["{$r['cache_url']}"] = $r;
@@ -88,195 +91,6 @@ function SearchListing($search){
 			$sql = "SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
 			$gallery = $DBobject->wrappedSql($sql, array(":id"=>$r['product_id']));
 		  if(!empty($gallery)){
-			$data ["{$r['cache_url']}"]['gallery'] = $gallery;
-			}
-		}
-	}
-	return $data;
-}
-
-function SearchCategories($search){
-  global  $CONFIG,$SMARTY,$DBobject;
-  $data = array();
-
-  //SEARCH TAGS
-	$sql = "SELECT * FROM tbl_tag WHERE tag_value = :value AND tag_deleted IS NULL AND tag_object_id > 0 AND tag_object_table = 'tbl_listing'" ;
-	if($res = $DBobject->wrappedSql($sql, array(":value"=>$search))){
-	  $no = 0;
-	  foreach ( $res as $t) {
-	    $no++;
-	    $pre = str_replace ( "tbl_", "", $t['tag_object_table'] );
-	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS NULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = 2";
-	    if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$t['tag_object_id']))){
-	      $data ["{$res2[0]['cache_url']}"] = $res2[0];
-	      $data["{$res2[0]['cache_url']}"]['tags'] = getTags('tbl_listing',$t['tag_object_id']);
-        $sql = "SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
-        $gallery = $DBobject->wrappedSql($sql, array(":id"=>$res2[0]['product_id']));
-        $data["{$res2[0]['cache_url']}"]['gallery'] = $gallery;
-	    }
-	  }
-	}
-	
-	if(count($data) > 0){
-	  return $data;
-	}
-  
-  //IF TAG RESULTS = 0
-  
-  $sql= "SELECT tbl_listing.listing_object_id,tbl_listing.listing_name,tbl_listing.listing_content1,cache_tbl_listing.cache_url,tbl_listing.listing_image,
-		MATCH(tbl_listing.listing_name,
-		tbl_listing.listing_content1,
-		tbl_listing.listing_seo_title,
-		tbl_listing.listing_meta_description,
-		tbl_listing.listing_meta_words) AGAINST (:search) AS Relevance
-		FROM tbl_listing LEFT JOIN cache_tbl_listing ON tbl_listing.listing_object_id = cache_tbl_listing.cache_record_id
-		WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 AND cache_tbl_listing.cache_published = 1
-			AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND tbl_listing.listing_type_id = 2 AND
-		MATCH(tbl_listing.listing_name,
-		tbl_listing.listing_content1,
-		tbl_listing.listing_seo_title,
-		tbl_listing.listing_meta_description,
-		tbl_listing.listing_meta_words) AGAINST(:search IN
-		BOOLEAN MODE) HAVING Relevance > 0.2 ORDER
-		BY Relevance DESC";
-  $params = array(":search"=>$search);
-  if ($res = $DBobject->wrappedSql($sql,$params) ) {
-    foreach ($res as $r){
-      $data ["{$r['cache_url']}"] = $r;
-      $data ["{$r['cache_url']}"]['tags'] = getTags('tbl_listing',$r['listing_id']);
-      $sql = "SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
-      $gallery = $DBobject->wrappedSql($sql, array(":id"=>$r['product_id']));
-      if(!empty($gallery)){
-			$data ["{$r['cache_url']}"]['gallery'] = $gallery;
-			}
-    }
-  }
-  return $data;
-}
-
-function SearchStores($search){
-  global  $CONFIG,$SMARTY,$DBobject;
-  $data = array();
-
-  //SEARCH TAGS
-	$sql = "SELECT * FROM tbl_tag WHERE tag_value = :value AND tag_deleted IS NULL AND tag_object_id > 0 AND tag_object_table = 'tbl_listing'" ;
-	if($res = $DBobject->wrappedSql($sql, array(":value"=>$search))){
-	  $no = 0;
-	  foreach ( $res as $t) {
-	    $no++;
-	    $pre = str_replace ( "tbl_", "", $t['tag_object_table'] );
-	    $sql = "SELECT cache_url,tbl_listing.* FROM tbl_listing LEFT JOIN cache_tbl_listing ON listing_object_id = cache_record_id WHERE listing_id = :id AND listing_deleted IS NULL AND listing_published = 1 AND cache_published = 1 AND listing_type_id = 5";
-	    if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$t['tag_object_id']))){
-	      $data ["{$res2[0]['cache_url']}"] = $res2[0];
-	      $data["{$res2[0]['cache_url']}"]['tags'] = getTags('tbl_listing',$t['tag_object_id']);
-        $sql = "SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
-        $gallery = $DBobject->wrappedSql($sql, array(":id"=>$res2[0]['product_id']));
-        $data["{$res2[0]['cache_url']}"]['gallery'] = $gallery;
-	    }
-	  }
-	}
-	
-	if(count($data) > 0){
-	  return $data;
-	}
-  
-  
-  //IF TAG RESULTS = 0
-  
-  $sql= "SELECT tbl_listing.listing_object_id,tbl_listing.listing_name,tbl_listing.listing_meta_description,cache_tbl_listing.cache_url,
-		MATCH(tbl_listing.listing_name,
-		tbl_listing.listing_content1,
-		tbl_listing.listing_seo_title,
-		tbl_listing.listing_meta_description,
-		tbl_listing.listing_meta_words) AGAINST (:search) AS Relevance
-		FROM tbl_listing LEFT JOIN cache_tbl_listing ON tbl_listing.listing_object_id = cache_tbl_listing.cache_record_id
-		WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 AND cache_tbl_listing.cache_published = 1
-			AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND tbl_listing.listing_type_id = 5 AND
-		MATCH(tbl_listing.listing_name,
-		tbl_listing.listing_content1,
-		tbl_listing.listing_seo_title,
-		tbl_listing.listing_meta_description,
-		tbl_listing.listing_meta_words) AGAINST(:search IN
-		BOOLEAN MODE) HAVING Relevance > 0.2 ORDER
-		BY Relevance DESC";
-  $params = array(":search"=>$search);
-  if ($res = $DBobject->wrappedSql($sql,$params) ) {
-    foreach ($res as $r){
-      $data ["{$r['cache_url']}"] = $r;
-      $data ["{$r['cache_url']}"]['tags'] = getTags('tbl_listing',$r['listing_id']);
-      $sql = "SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
-      $gallery = $DBobject->wrappedSql($sql, array(":id"=>$r['product_id']));
-      if(!empty($gallery)){
-			$data ["{$r['cache_url']}"]['gallery'] = $gallery;
-			}
-    }
-  }
-  return $data;
-}
-
-
-function SearchProduct($search){
-	global  $CONFIG,$SMARTY,$DBobject;
-	$data = array();
-
-	//SEARCH TAGS
-	$sql = "SELECT * FROM tbl_tag WHERE tag_value = :value AND tag_deleted IS NULL AND tag_object_id > 0 AND tag_object_table = 'tbl_product'" ;
-	if($res = $DBobject->wrappedSql($sql, array(":value"=>$search))){
-	  $no = 0;
-	  foreach ( $res as $t) {
-	    $no++;
-	    $pre = str_replace ( "tbl_", "", $t['tag_object_table'] );
-	    $sql = "SELECT cache_url,tbl_product.* FROM tbl_product LEFT JOIN cache_tbl_product ON product_object_id = cache_record_id WHERE product_id = :id AND product_deleted IS NULL AND product_published = 1 AND cache_published = 1";
-	    if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$t['tag_object_id']))){
-	      $data ["{$res2[0]['cache_url']}"] = $res2[0];
-	      $data["{$res2[0]['cache_url']}"]['tags'] = getTags('tbl_product',$t['tag_object_id']);
-        $sql = "SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
-        $gallery = $DBobject->wrappedSql($sql, array(":id"=>$res2[0]['product_id']));
-        $data["{$res2[0]['cache_url']}"]['gallery'] = $gallery;
-	    }
-	  }
-	}
-	
-	if(count($data) > 0){
-	  return $data;
-	}
-	
-	
-	//IF TAG RESULTS = 0
-	$sql= "SELECT DISTINCT(cache_url), stbl.* FROM (
-			SELECT cache_url, tbl_product.*, 
-			MATCH(product_name,
-				product_description,
-				product_seo_title,
-				product_meta_description,
-				product_meta_words,
-				product_group
-			) AGAINST (:search) AS Relevance1,
-			MATCH(attr_value_name ) AGAINST (:search) AS Relevance2
-		FROM tbl_product 
-			LEFT JOIN cache_tbl_product ON product_object_id = cache_record_id
-			LEFT JOIN tbl_attribute ON product_id = attribute_product_id
-			LEFT JOIN tbl_attr_value ON attribute_id = attr_value_attribute_id
-		WHERE product_published = 1 AND product_deleted IS NULL AND attribute_deleted IS NULL AND attr_value_deleted IS NULL AND cache_published = 1 AND
-			( MATCH(product_name,
-				product_description,
-				product_seo_title,
-				product_meta_description,
-				product_meta_words,
-				product_group
-			) AGAINST(:search IN BOOLEAN MODE) OR
-			MATCH(attr_value_name ) AGAINST (:search IN BOOLEAN MODE) )
-			HAVING Relevance1 > 0.2 OR Relevance2 > 0.2
-			ORDER BY (Relevance1+Relevance2) DESC ) AS stbl";
-	$params = array(":search"=>$search);
-	
-	if ($res = $DBobject->wrappedSql($sql,$params) ) {
-		foreach ($res as $r){
-			$data ["{$r['cache_url']}"] = $r;
-			$data ["{$r['cache_url']}"]['tags'] = getTags('tbl_product',$r['product_id']);
-			$sql = "SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
-			$gallery = $DBobject->wrappedSql($sql, array(":id"=>$r['product_id']));
-			if(!empty($gallery)){
 			$data ["{$r['cache_url']}"]['gallery'] = $gallery;
 			}
 		}

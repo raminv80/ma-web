@@ -121,18 +121,13 @@ class Listing {
     global $SMARTY,$DBobject;
     $results = array();
     
-    $extends = "";
-    foreach($a->extends as $e){
-    	$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
-    }
-    
     $order = "";
     if(! empty($a->orderby)){
       $order = " ORDER BY " . $a->orderby;
     }
     
     $pre = str_replace("tbl_","",$a->table);
-    $sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . $order;
+    $sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . $order;
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
         $r_array = array();

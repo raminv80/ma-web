@@ -90,19 +90,22 @@ class ListClass {
     // Split the URL
     $_url = ltrim(rtrim($this->URL,'/'),'/');
     
-    if($this->URL != null){
-      $this->ID = $this->ChkCache($_url,$_PUBLISHED);
-    }
+    $this->ID = $this->ChkCache($_url,$_PUBLISHED);
     if(empty($this->ID)){
       $this->ID = $_ID;
     }
-     
-    if(!empty($this->ID)){
-      $data = $this->LoadTree($this->ID,0,0,1);
+    $tree_ID = $this->ID;
+    if(!empty($this->CONFIG_OBJ->pageID) && $this->CONFIG_OBJ->pageID == $this->ID ){
+      $tree_ID = $_ID;
+    }
+            
+    if(!empty($tree_ID)){
+      $data = $this->LoadTree($tree_ID,0,0,1);
       $SMARTY->assign('data',unclean($data));
     }else{
       return null;
     }
+
     
     $extends = "";
     foreach($this->CONFIG_OBJ->table->extends as $a){
@@ -128,11 +131,11 @@ class ListClass {
       $SMARTY->assign("breadcrumbs",$bdata);
       
       $p_data = $this->LoadParents($res[0]['listing_parent_id'],1);
-      $SMARTY->assign("listing_parent",$p_data);
+      $SMARTY->assign("listing_parent",unclean($p_data));
       
       foreach($this->CONFIG_OBJ->table->associated as $a){
         $t_data = $this->LoadAssociated($a,$res[0]["{$a->linkfield}"]);
-        $SMARTY->assign("{$a->name}",$t_data);
+        $SMARTY->assign("{$a->name}",unclean($t_data));
       }
       foreach($this->CONFIG_OBJ->table->additional as $a){
         $this->LoadAdditional($a,$res[0]["{$a->linkfield}"]);
@@ -163,7 +166,7 @@ class ListClass {
     
     $template = $this->CONFIG_OBJ->template;
     
-    if(empty($data) && !empty($this->CONFIG_OBJ->table->template)){
+    if(empty($data) && !empty($this->CONFIG_OBJ->table->template) && ($tree_ID == $this->ID)){
       $template = $this->CONFIG_OBJ->table->template;
     }
     
@@ -445,7 +448,7 @@ class ListClass {
     if(!empty($this->CONFIG_OBJ->where)){
       $where = " AND " . $this->CONFIG_OBJ->where;
     }
-    if(!empty($this->CONFIG_OBJ->limit)){
+    if(!empty($this->CONFIG_OBJ->limit) && (empty($this->CONFIG_OBJ->limit->attributes()->level) || intval($this->CONFIG_OBJ->limit->attributes()->level)<=$level) )  {
       $limit = " LIMIT " . $this->CONFIG_OBJ->limit;
     }
     $extends = "";
@@ -465,12 +468,13 @@ class ListClass {
     if(!empty($typeIdSQL)){
     	$params = array_merge($params,$typeId_params);
     }
+
     if($res = $DBobject->wrappedSql($sql,$params)){
       foreach($res as $row){
-        if($this->CONFIG_OBJ->limit && $count >= intval($this->CONFIG_OBJ->limit)){
+        /* if($this->CONFIG_OBJ->limit && $count >= intval($this->CONFIG_OBJ->limit)){
           return $data;
         }
-        $count += 1;
+        $count += 1; */
         
         $data["{$row['listing_object_id']}"] = unclean($row);
         foreach($this->CONFIG_OBJ->table->associated as $a){
@@ -617,7 +621,7 @@ class ListClass {
             }
           }
         }
-        $SMARTY->assign("{$a->name}",$data);
+        $SMARTY->assign("{$a->name}",unclean($data));
       }
     }
   }

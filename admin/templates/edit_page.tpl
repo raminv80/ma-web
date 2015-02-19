@@ -39,6 +39,8 @@
 			</div>
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+				<li><a href="#images" data-toggle="tab">Images</a></li>
+				<li><a href="#files" data-toggle="tab">Files</a></li>
 				<li><a href="#tags" data-toggle="tab">Tags</a></li>
 				<li><a href="#log" data-toggle="tab">Log</a></li>
 			</ul>
@@ -152,6 +154,29 @@
             </div>
 					</div>
 				</div>
+				<!--===+++===+++===+++===+++===+++ IMAGES TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane" id="images">
+					<div class="form" id="images-wrapper">
+						{assign var='imageno' value=0}
+						{assign var='gTableName' value='listing'}
+						{foreach $fields.gallery as $images}
+							{assign var='imageno' value=$imageno+1}
+							{include file='gallery.tpl'}
+						{/foreach}
+					</div>
+					<div class="row btn-inform">
+						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.images').slideUp();newImage();"> Add New Image</a>
+					</div>
+					<input type="hidden" value="{$imageno}" id="imageno">
+				</div>
+				<!--===+++===+++===+++===+++===+++ FILES TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane" id="files">
+					<div class="row form" id="files-wrapper">{assign var='filesno' value=0} {assign var='gTableName' value='listing'} {foreach $fields.files as $files} {assign var='filesno' value=$filesno+1} {include file='files.tpl'} {/foreach}</div>
+					<div class="row btn-inform">
+						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.files').slideUp();newFile();"> Add New File</a>
+					</div>
+					<input type="hidden" value="{$filesno}" id="filesno">
+				</div>
 				<!--===+++===+++===+++===+++===+++ TAGS TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="tags">
 					<div class="form">
@@ -253,6 +278,8 @@ $(document).ready(function(){
 	$('#Edit_Record').validate({
 		onkeyup: false
 	});
+	$('.images').hide();
+	$('.files').hide();
 	
 	$('#id_listing_url').rules("add", {
     	  uniqueURL: { 
@@ -340,7 +367,100 @@ function unpublish(publish_name){
 	$('.drafts').show();
 }
 
+function newImage() {
+	$('body').css('cursor', 'wait');
+	var no = $('#imageno').val();
+	no++;
+	$('#imageno').val(no);
+	$.ajax({
+		type : "POST",
+		url : "/admin/includes/processes/load-template.php",
+		cache : false,
+		data : "template=gallery.tpl&imageno=" + no + "&gTableName=listing",
+		dataType : "html",
+		success : function(data, textStatus) {
+			try {
+				$('#images-wrapper').append(data);
+				$('body').css('cursor', 'default');
+				scrolltodiv('#image_wrapper' + no);
+				if (no == 1) {
+					$('#gallery_ishero_1').val('1');
+				}
+			} catch (err) {
+				$('body').css('cursor', 'default');
+			}
+		}
+	});
+}
 
+function toggleImage(ID) {
+	if ($('#image' + ID).is(':visible')) {
+		$('.images').slideUp();
+	} else {
+		$('.images').slideUp();
+		$('#image' + ID).slideDown();
+	}
+}
+
+function deleteImage(ID) {
+	if (ConfirmDelete()) {
+		var count = $('#' + ID).attr('rel');
+		var today = mysql_now();
+
+		html = '<input type="hidden" value="'+today+'" name="field[10][tbl_gallery]['+count+'][gallery_deleted]" />';
+		$('#' + ID).append(html);
+		$('#' + ID).css('display', 'none');
+		$('#' + ID).removeClass('images');
+	} else {
+		return false;
+	}
+}
+
+function newFile() {
+	$('body').css('cursor', 'wait');
+	var no = $('#filesno').val();
+	no++;
+	$('#filesno').val(no);
+	$.ajax({
+		type : "POST",
+		url : "/admin/includes/processes/load-template.php",
+		cache : false,
+		data : "template=files.tpl&filesno=" + no + "&gTableName=listing",
+		dataType : "html",
+		success : function(data, textStatus) {
+			try {
+				$('#files-wrapper').append(data);
+				$('body').css('cursor', 'default');
+				scrolltodiv('#file_wrapper' + no);
+			} catch (err) {
+				$('body').css('cursor', 'default');
+			}
+		}
+	});
+}
+
+function toggleFile(ID) {
+	if ($('#file' + ID).is(':visible')) {
+		$('.files').slideUp();
+	} else {
+		$('.files').slideUp();
+		$('#file' + ID).slideDown();
+	}
+}
+
+function deleteFile(ID) {
+	if (ConfirmDelete()) {
+		var count = $('#' + ID).attr('rel');
+		var today = mysql_now();
+
+		html = '<input type="hidden" value="'+today+'" name="field[10][tbl_files]['+count+'][files_deleted]" />';
+		$('#' + ID).append(html);
+		$('#' + ID).css('display', 'none');
+		$('#' + ID).removeClass('files');
+	} else {
+		return false;
+	}
+}
 
 function newTag() {
 	if ( $('#new_tag').val() != '' ) { 

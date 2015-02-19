@@ -17,7 +17,7 @@
         
         <div class="dropdown-menu mega-dropdown-menu container"><div id="pin" title="Pin menu"><span class="glyphicon glyphicon-pushpin"></span></div>
         <ul>
-          <li class="col-sm-3">
+          <!-- <li class="col-sm-3">
             <ul>
               <li class="dropdown-header">News from Them </li>                            
                             <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -26,21 +26,21 @@
                                     <a href="#"><img src="http://placehold.it/254x150/3498db/f5f5f5/&text=New+Collection" class="img-responsive" alt="product 1"></a>
                                     <h4><small>Summer dress floral prints</small></h4>                                        
                                     <button class="btn btn-primary" type="button">49,99 €</button> <button href="#" class="btn btn-default" type="button"><span class="glyphicon glyphicon-heart"></span> Add to Wishlist</button>       
-                                </div><!-- End Item -->
+                                </div>End Item
                                 <div class="item">
                                     <a href="#"><img src="http://placehold.it/254x150/ef5e55/f5f5f5/&text=New+Collection" class="img-responsive" alt="product 2"></a>
                                     <h4><small>Gold sandals with shiny touch</small></h4>                                        
                                     <button class="btn btn-primary" type="button">9,99 €</button> <button href="#" class="btn btn-default" type="button"><span class="glyphicon glyphicon-heart"></span> Add to Wishlist</button>        
-                                </div><!-- End Item -->
+                                </div>End Item
                                 <div class="item">
                                     <a href="#"><img src="http://placehold.it/254x150/2ecc71/f5f5f5/&text=New+Collection" class="img-responsive" alt="product 3"></a>
                                     <h4><small>Denin jacket stamped</small></h4>                                        
                                     <button class="btn btn-primary" type="button">49,99 €</button> <button href="#" class="btn btn-default" type="button"><span class="glyphicon glyphicon-heart"></span> Add to Wishlist</button>      
-                                </div><!-- End Item -->                                
-                              </div><!-- End Carousel Inner -->
-                            </div><!-- /.carousel -->
+                                </div>End Item                                
+                              </div>End Carousel Inner
+                            </div>/.carousel
             </ul>
-          </li>
+          </li> -->
           {foreach item=cat key=name from=$menu name=foo}
               <li class="col-sm-2"><h3>{$name}</h3>
             <ul>
@@ -60,15 +60,7 @@
             </ul>
             </li>
           {/foreach}
-            <li class="col-sm-8 pull-right" id="searchbox">
-                <form class="form" role="form">
-                     <div class="form-group">
-                       <input type="text" class="form-control" id="search" placeholder="email, name or student">                                                              
-                     </div>
-                     <button type="submit" class="btn btn-primary btn-block">Search</button>
-                </form>                                                       
-            </li>
-        </ul></div>
+        </ul><a href="/admin/logout" class="btn btn-default" style="position: absolute;bottom: 5px;right: 5px;cursor: pointer;">Logout</a></div>
         
       </li>
     </ul>

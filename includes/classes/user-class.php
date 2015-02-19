@@ -192,7 +192,7 @@ class UserClass {
     		$user_arr["surname"]=$res[0]["user_surname"];
     		$user_arr["email"]=$res[0]["user_email"];
     	} else {
-    		$user_arr["error"] = "Wrong email or password.";
+    		$user_arr["error"] = "Wrong email or password";
     	}
     	return $user_arr;
     }
@@ -259,7 +259,7 @@ class UserClass {
             } 
             return array ('error' => 'There was a connection problem. Please, try again!');
         }
-    	return array( 'error' => "Sorry, '{$email}' does not appear to be registered with this site. Check your email or please create an account.");
+    	return array( 'error' => "Sorry, '{$email}' does not appear to be registered with this site. Can you please check your email address or please create an account.");
     }
     
     /**
@@ -350,7 +350,7 @@ class UserClass {
     }
     
     
-     /**
+    /**
      * Authenticate the user using Facebook account.
      * First time, Insert a new record in tbl_user with additional Facebook info and return associative array: ('id', 'gname', 'surname', 'email', 'social_name', 'social_id') 
      * On existing, just return associative array: ('id', 'gname', 'surname', 'email', 'social_name', 'social_id') 
@@ -364,7 +364,6 @@ class UserClass {
     	global $DBobject;
     	
 		if ($user['id']) {
-    
 			if ($res = $this->RetrieveByUsername($user['id'])) { // ALREADY REGISTERED
     			$user_arr["id"]=$res["user_id"];
     			$user_arr["gname"]=$res["user_gname"];
@@ -372,7 +371,6 @@ class UserClass {
     			$user_arr["email"]=$res["user_email"];
     			$user_arr["social_name"]=$res["user_social_name"];
     			$user_arr["social_id"]=$res["user_social_id"];
-    			//SaveAdminLogIn($row['admin_id']);		//<<<<<<<<<======= Login log????
     		
     		} else {			//REGISTER WITH FACEBOOK DETAILS
     			$params = array (
@@ -386,8 +384,30 @@ class UserClass {
     					":browser" => $_SERVER['HTTP_USER_AGENT']
     			);
     			
-    			$sql = "INSERT INTO tbl_user ( user_username, user_gname, user_surname, user_email, user_social_name, user_social_id, user_social_info, user_ip, user_browser, user_created )
-									values( :social_id, :gname, :surname, :email, :social_name, :social_id, :social_info, :ip, :browser, now() )";
+    			$sql = "INSERT INTO tbl_user (
+										user_username,
+										user_gname,
+										user_surname,
+										user_email,
+										user_social_name,
+										user_social_id,
+										user_social_info,
+										user_ip,
+										user_browser,
+										user_created
+									)
+									values(
+										:social_id,
+										:gname,
+										:surname,
+										:email,
+				    					:social_name,
+				    					:social_id,
+				    					:social_info,
+	    								:ip,
+	    								:browser,
+										now()
+										)";
     			if ( $DBobject->wrappedSql($sql, $params) ) {
     				$userId =  $DBobject->wrappedSqlIdentity();
     				$user_arr = array (
@@ -399,28 +419,6 @@ class UserClass {
     						"social_id" => $user['id']
     				);
     			}
-    			
-    			// STORE DATA IN FACEBOOK TABLE
-    			if(!empty($user['birthday'])){
-    				$bd = explode('/', $user['birthday']);
-    				$bday = $bd[2] . '-' . $bd[0] . '-' . $bd[1];
-    			}
-    			$params = array (
-    					":facebook_id" => $user['id'],
-    					":facebook_name" => $user['name'],
-    					":facebook_first_name" => $user['first_name'],
-    					":facebook_last_name" => $user['last_name'],
-    					":facebook_email" => $user['email'],
-    					":facebook_username" => $user['username'],
-    					":facebook_birthday" => $bday,
-    					":facebook_gender" => $user['gender'],
-    					":facebook_location_id" => $user['location']['id'],
-    					":facebook_location_name" => $user['location']['name'],
-    			);
-    			$sql = "INSERT INTO tbl_facebook ( facebook_id, facebook_name, facebook_first_name, facebook_last_name, facebook_email, facebook_username, facebook_birthday, facebook_gender, facebook_location_id, facebook_location_name, facebook_created )
-									values( :facebook_id, :facebook_name, :facebook_first_name, :facebook_last_name, :facebook_email, :facebook_username, :facebook_birthday, :facebook_gender, :facebook_location_id, :facebook_location_name, now() )";
-    			$DBobject->wrappedSql($sql, $params);  
-    			
     		}
     		return $user_arr;
 		}

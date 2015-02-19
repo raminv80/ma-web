@@ -89,23 +89,46 @@ function generateImage($source_file, $cache_file,$_width,$_height,$_crop=false) 
   $maxwidth = intval($_width);
   $maxheight = intval($_height);
   
-  if(($maxwidth > 0 || $maxheight > 0) && (imagesx($src) > $maxwidth || imagesy($src) > $maxheight) ){
-    $scalex = $maxwidth / imagesx($src); //original scale image size //If the TAG size changes this will need to be scaled.
-    $scaley = $maxheight / imagesy($src); //original scale image size //If the TAG size changes this will need to be scaled.
-    if(($scalex < $scaley && $maxwidth != 0) || $maxheight == 0){
-      $width = imagesx($src);
-      $height = imagesy($src);
-      $nWidth = $width * $scalex;
-      $nHeight = $height * $scalex;
-      $src = resizeimage($src, $width, $height, $nWidth, $nHeight);
-    }else{
-      $width = imagesx($src);
-      $height = imagesy($src);
-      $nWidth = $width * $scaley;
-      $nHeight = $height * $scaley;
-      $src = resizeimage($src, $width, $height, $nWidth, $nHeight);
+  if($_crop && $maxwidth > 0 && $maxheight > 0){
+    if(($maxwidth > 0 || $maxheight > 0) && (imagesx($src) > $maxwidth || imagesy($src) > $maxheight) ){
+      $scalex = $maxwidth / imagesx($src); //original scale image size //If the TAG size changes this will need to be scaled.
+      $scaley = $maxheight / imagesy($src); //original scale image size //If the TAG size changes this will need to be scaled.
+      if(($scaley < $scalex && $maxwidth != 0) || $maxheight == 0){
+        $width = imagesx($src);
+        $height = imagesy($src);
+        $nWidth = $width * $scalex;
+        $nHeight = $height * $scalex;
+        $src = resizeimage($src, $width, $height, $nWidth, $nHeight);
+        $src = cropimage($src, $maxwidth, $maxheight);
+      }else{
+        $width = imagesx($src);
+        $height = imagesy($src);
+        $nWidth = $width * $scaley;
+        $nHeight = $height * $scaley;
+        $src = resizeimage($src, $width, $height, $nWidth, $nHeight);
+        $src = cropimage($src, $maxwidth, $maxheight);
+      }
+    }
+  }else{
+    if(($maxwidth > 0 || $maxheight > 0) && (imagesx($src) > $maxwidth || imagesy($src) > $maxheight) ){
+      $scalex = $maxwidth / imagesx($src); //original scale image size //If the TAG size changes this will need to be scaled.
+      $scaley = $maxheight / imagesy($src); //original scale image size //If the TAG size changes this will need to be scaled.
+      if(($scalex < $scaley && $maxwidth != 0) || $maxheight == 0){
+        $width = imagesx($src);
+        $height = imagesy($src);
+        $nWidth = $width * $scalex;
+        $nHeight = $height * $scalex;
+        $src = resizeimage($src, $width, $height, $nWidth, $nHeight);
+      }else{
+        $width = imagesx($src);
+        $height = imagesy($src);
+        $nWidth = $width * $scaley;
+        $nHeight = $height * $scaley;
+        $src = resizeimage($src, $width, $height, $nWidth, $nHeight);
+      }
     }
   }
+  
 
   // save the new file in the appropriate path, and send a version to the browser
   switch ($extension) {
@@ -159,4 +182,19 @@ function resizeimage($image, $width, $height, $nWidth, $nHeight){
   imagefilledrectangle($newImg, 0, 0, $nWidth, $nHeight, $transparent);
   imagecopyresampled($newImg, $image, 0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
   return $newImg;
+}
+
+function cropimage($image,$width, $height, $focus="center"){
+  // Coordinates calculator
+//   if($focus == 'center')
+//   {
+    $x_pos = (imagesx($image) - $width) / 2;
+    $x_pos = ceil($x_pos);
+    $y_pos = (imagesy($image) - $height) / 2;
+    $y_pos = ceil($y_pos);
+//   }
+  $new_image = ImageCreateTrueColor($width, $height);
+  // Crop to Square using the given dimensions
+  ImageCopy($new_image, $image, 0, 0, $x_pos, $y_pos, $width, $height);
+  return $new_image;
 }

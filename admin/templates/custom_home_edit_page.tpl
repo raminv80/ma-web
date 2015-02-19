@@ -9,7 +9,7 @@
 							<a href="javascript:void(0);" onClick="$('#Edit_Record').submit();" class="btn btn-primary pull-right top-btn"><span class="glyphicon glyphicon-floppy-saved"></span> Save</a>
 							<div class="published" {if $fields.listing_published eq 0}style="display:none;"{/if}>
 								<!-- PUBLISHED -->
-								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]', false);" class="btn btn-info pull-right top-btn published"><span class="glyphicon glyphicon-floppy-disk"></span> Save Draft Version</a>
+								<a href="javascript:void(0);" onClick="saveDraft('field[1][tbl_listing][{$cnt}][id]','listing_object_id','listing_published','field[1][tbl_listing][{$cnt}][listing_deleted]',false);" class="btn btn-info pull-right top-btn published"><span class="glyphicon glyphicon-floppy-disk"></span> Save Draft Version</a>
 								<a href="javascript:void(0);" onClick="unpublish('listing_published');" class="btn btn-warning pull-right top-btn"><span class="glyphicon glyphicon-thumbs-down"></span> Unpublish</a>
 							</div>
 							<div class="drafts" {if $fields.listing_published eq 1}style="display:none;"{/if}>
@@ -22,7 +22,7 @@
 					<input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_id" class="key"> 
 					<input type="hidden" value="{if $fields.listing_object_id}{$fields.listing_object_id}{else}{$objID}{/if}" name="field[1][tbl_listing][{$cnt}][listing_object_id]" id="listing_object_id"> 
 					<input type="hidden" value="{if $fields.listing_created}{$fields.listing_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_listing][{$cnt}][listing_created]" id="listing_created">
-					<input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
+					<input type="hidden" value="{if $typeID}{$typeID}{else}1{/if}" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
 					<input type="hidden" value="{$fields.listing_published}" name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published">
 					<input type="hidden" name="formToken" id="formToken" value="{$token}"/>
 				</div>
@@ -40,6 +40,7 @@
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
 				<li><a href="#tags" data-toggle="tab">Tags</a></li>
+				<li><a href="#log" data-toggle="tab">Log</a></li>
 			</ul>
 		
 			<div class="tab-content">
@@ -79,7 +80,7 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
 							<div class="col-sm-5">
-								<input class="form-control" type="hidden" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url"  onchange="seturl(this.value,true);">
+								<input class="form-control" type="hidden" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" onchange="seturl(this.value, true);" >
                 <span id="id_listing_url_text" class="form-control url-text edit-url">{$fields.listing_url}&nbsp;</span>
                 <a href="javascript:void(0);" class="btn btn-info btn-sm marg-5r edit-url" onclick="$('.edit-url').removeClass('url-text').hide();$('#id_listing_url').get(0).type='text';">Edit URL</a> 
 								<span class="help-block"></span>
@@ -89,8 +90,8 @@
 							<label class="col-sm-3 control-label" for="id_listing_parent">Parent</label>
 							<div class="col-sm-5">
 								<select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
-									<option value="0">Select one</option> {foreach $fields.options.listing_parent_id as $opt}
-									<option value="{$opt.id}" {if $fields.listing_parent_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option> {/foreach}
+									<option value="0">Select one</option> {foreach $fields.options.listing_parent_id as $opt}{if $fields.listing_object_id neq $opt.id}
+									<option value="{$opt.id}" {if $fields.listing_parent_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option>{/if} {/foreach}
 								</select>
 							</div>
 						</div>
@@ -138,17 +139,17 @@
 							</div>
 						</div>
 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_listing_content5">Ad-Banner Link</label>
-							<div class="col-sm-5">
-								<input class="form-control" type="text" value="{$fields.listing_content5}" name="field[1][tbl_listing][{$cnt}][listing_content5]" id="id_listing_content5">
-							</div>
-						</div>
-						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_listing_content1">Content</label><br />
+							<label class="col-sm-3 control-label" for="id_listing_content1">Content</label>
 							<div class="col-sm-5">
 								<textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
 							</div>
 						</div>
+						<div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_content2">Content 2</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea>
+              </div>
+            </div>
 					</div>
 				</div>
 				<!--===+++===+++===+++===+++===+++ TAGS TAB +++===+++===+++===+++===+++====-->
@@ -174,6 +175,35 @@
 					{/foreach}
 					</div>
 					<input type="hidden" value="{$tagno}" id="tagno">
+				</div>
+				<!--===+++===+++===+++===+++===+++ LOG TAB +++===+++===+++===+++===+++====-->
+				<div class="tab-pane" id="log">
+					<div class="row form" id="tags-wrapper">
+						<div class="col-sm-12">
+							{if $fields.logs}
+								<table class="table table-bordered table-striped table-hover">
+									<thead>
+										<tr>
+											<th>Date-Time</th>
+											<th>Action</th>
+											<th>User</th>
+										</tr>
+									</thead>
+									<tbody>
+									{foreach $fields.logs as $log}
+										<tr {if $log.listing_id eq $fields.listing_id}class="info"{/if}>
+											<td>{$log.log_created|date_format:"%d/%b/%Y %r"}</td>
+											<td>{$log.log_action}{if $log.log_action eq 'Add' || $log.log_action eq 'Delete'} draft{/if}</td>
+											<td>{$log.admin_name}</td>
+										</tr>
+									{/foreach}
+									</tbody>
+								</table>
+							{else}
+								Log empty.
+							{/if}
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="row form-group form-bottom-btns">
@@ -226,7 +256,7 @@ $(document).ready(function(){
 	
 	$('#id_listing_url').rules("add", {
     	  uniqueURL: { 
-    		  	id: $('#listing_object_id').val(),
+        	  	id: $('#listing_object_id').val(),
         	  	idfield: "listing_object_id",
 	        	table : "tbl_listing",
 	        	field : "listing_url",

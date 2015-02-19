@@ -47,6 +47,7 @@ unset ( $_SESSION ['ga_ec'] );
 
 $token = getToken('frontend');
 $SMARTY->assign('token',$token);
+$SMARTY->assign('timestamp',time());
 while(true){
   
   /******* Processes *******/
@@ -104,7 +105,7 @@ while(true){
       $class = (string)$lp->file;
       $obj = new $class($_nurl,$lp);
       $template = $obj->Load((!empty($lp->root_parent_id)?$lp->root_parent_id:null),$_PUBLISHED);
-      $menu = $obj->LoadMenu($lp->pageID);
+      $menu = $obj->LoadMenu($lp->root_parent_id);
       $SMARTY->assign('menuitems',$menu);
       break 2;
     }
@@ -115,7 +116,7 @@ while(true){
   if(!empty($CONFIG->page_strut)){
     $struct = $CONFIG->page_strut;
     $class = (string)$struct->file;
-    $obj = new $class(null,$struct);
+    $obj = new $class($_request["arg1"],$struct);
     $id = $obj->ChkCache($_request["arg1"],$_PUBLISHED);
     if(! empty($id)){
       $template = $obj->Load($id,$_PUBLISHED);
@@ -139,7 +140,7 @@ die();
 
 
 function loadPage($_conf){
-  global $CONFIG,$_PUBLISHED,$SMARTY;
+  global $CONFIG,$_PUBLISHED,$SMARTY,$_request;
   if(!empty($_conf->header)){
      header($_conf->header);
   }else{
@@ -172,7 +173,7 @@ function loadPage($_conf){
       }
       
       $class = (string)$struct->file;
-      $obj = new $class(null,$struct);
+      $obj = new $class($_request["arg1"],$struct);
       $template = $obj->Load($_conf->pageID,$_PUBLISHED);
       if(!empty($template)){
         $template = $_conf->template;
@@ -189,7 +190,7 @@ function loadPage($_conf){
 
 
 function loadPageAdditional($_conf){
-	global $CONFIG,$_PUBLISHED,$SMARTY;
+	global $CONFIG,$_PUBLISHED,$SMARTY,$_request;
 	if(!empty($_conf)){
 		foreach($_conf->additional as $ad){
 			$tag = (string)$ad->tag;
@@ -209,7 +210,7 @@ function loadPageAdditional($_conf){
 						}
 					}
 					$class = (string)$lp->file;
-					$obj = new $class(null,$lp);
+					$obj = new $class($_request["arg1"],$lp);
 					$data2 = $obj->LoadTree($lp->root_parent_id);
 					$SMARTY->assign($data,unclean($data2));
 					break 1;

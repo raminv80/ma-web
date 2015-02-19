@@ -28,6 +28,7 @@ if( true ){
 			
 			$order_cartId = $cart_obj->cart_id;
 			$orderNumber = $order_cartId.'-'.date("is");
+			$_SESSION['orderNumber'] = $orderNumber;
 			
 			$ship_obj = new ShippingClass();
 			$methods = $ship_obj->getShippingMethods( $itemNumber );
@@ -53,7 +54,7 @@ if( true ){
 			$CartTotals["chargedAmount"] = $chargedAmount;
 
 			$params = array(
-					'payment_transaction_no' => $orderNumber,
+					'payment_transaction_no' => $_SESSION['orderNumber'],
 					'payment_cart_id' => $order_cartId
 			);
 			//die(var_dump($cartItems).var_dump($CartTotals));
@@ -149,7 +150,6 @@ if( true ){
 					 
 					$cart_obj = new cart();
 					$order_cartId = $cart_obj->cart_id;
-					$orderNumber = $order_cartId.'-'.date("is");
 				
 					$ship_obj = new ShippingClass();
 					
@@ -161,7 +161,7 @@ if( true ){
 					$params = array(
 							'payment_billing_address_id' => $billID,
 							'payment_shipping_address_id' => $shipID,
-							'payment_transaction_no' => $orderNumber,
+							'payment_transaction_no' => $_SESSION['orderNumber'],
 							'payment_cart_id' => $order_cartId,
 							'payment_user_id' => $_SESSION['user']['public']['id'],
 							'payment_subtotal' => $totals['subtotal'],
@@ -181,7 +181,6 @@ if( true ){
 						// PAYMENT SUCCESS
 						$cart_obj->CloseCart($order_cartId);
 						$pay_obj->SetOrderStatus($paymentId);
-						$_SESSION['orderNumber'] = $orderNumber;
 						 
 						try{
 							// SEND CONFIRMATION EMAIL
@@ -217,7 +216,7 @@ if( true ){
 						$affiliation = str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
 						$analytics = $cart_obj->getJSCartitemsByCartId_GA($order_cartId);
 						$analytics .= "ga('ec:setAction', 'purchase', {
-						'id': '{$orderNumber}',
+						'id': '{$_SESSION['orderNumber']}',
 						'affiliation': '{$affiliation}',
 						'revenue': '{$chargedAmount}',
 						'tax': '{$gst}',
@@ -232,7 +231,7 @@ if( true ){
                                               _mTrack.push(['addTrans', {
                                                   currency :'AUD',
                                                   items : [{
-                                                      orderId : '{$orderNumber}',
+                                                      orderId : '{$_SESSION['orderNumber']}',
                                                       convType : 'transaction',
                                                       price :    '{$chargedAmount}'
                                                   }]

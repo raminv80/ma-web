@@ -46,13 +46,13 @@
 								<span class="help-block"></span>
 							</div>
 						</div>
-						<div class="row form-group">
+<!-- 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="admin_reemail">Retype Email *</label>
 							<div class="col-sm-5">
 								<input class="form-control" type="text" value="{$fields.admin_email}" id="admin_reemail" required>
 								<span class="help-block"></span>
 							</div>
-						</div>
+						</div> -->
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="password">Password *</label>
 							<div class="col-sm-5">
@@ -60,13 +60,13 @@
 								<span class="help-block"></span>
 							</div>
 						</div>
-						<div class="row form-group">
+ 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="re_password">Retype Password *</label>
 							<div class="col-sm-5">
 								<input class="form-control" type="password" value="" name="field2" id="re_password" >
 								<span class="help-block"></span>
 							</div>
-						</div>
+						</div> 
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="admin_level">Admin Level</label>
 							<div class="col-sm-5">
@@ -141,23 +141,23 @@ $(document).ready(function(){
 		onkeyup: false
 	});
 	
-	$('#re_password').rules("add", {
+ 	$('#re_password').rules("add", {
 	      equalTo: '#password',
 	      messages: {
 	        equalTo: "The passwords you have entered do not match. Please check them."
 	      }
 	 });
-	 
+	  
 	$('#admin_email').rules("add", {
-		uniqueEmail: { id: "{if $fields.admin_id}{$fields.admin_id}{else}0{/if}", table:"admin" }
+		uniqueEmail: { id: "{if $fields.admin_id}{$fields.admin_id}{else}0{/if}", table:"admin", field:"#admin_id" }
 	 });
 	 
-	$('#admin_reemail').rules("add", {
+/* 	$('#admin_reemail').rules("add", {
 	      equalTo: '#admin_email',
 	      messages: {
 	        equalTo: "The emails you have entered do not match. Please check them."
 	      }
-	 });
+	 }); */
 });
 
 function createPassword() {

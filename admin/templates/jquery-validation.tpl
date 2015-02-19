@@ -119,12 +119,15 @@ if (jQuery.validator) {
   		"uniqueEmail", 
   		function(value, element, params) {
   			var response = false;
+  			var idVal = params.id;  	
+  	  	if(params.field) idVal = $(params.field).val();
+  	  	
   			$.ajax({
   				type: "POST",
   			    url: "/admin/includes/processes/checkEmail.php",
   				cache: false,
   				async: false,
-  				data: "username="+value+"&id="+params.id+"&table="+params.table,
+  				data: "username="+value+"&id="+idVal+"&table="+params.table,
   				dataType: "json",
   			    success: function(res, textStatus) {
   			    	try{

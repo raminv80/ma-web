@@ -1105,6 +1105,11 @@ class elFinder {
 	 * @author Dmitry (dio) Levashov
 	 **/
 	protected function upload($args) {
+	  //Return error if not authorised admin
+	  if((!isset($_SESSION['user']['admin']) || empty($_SESSION['user']['admin']) )){
+	    return array('error' => $this->error(self::ERROR_UPLOAD, self::ERROR_TRGDIR_NOT_FOUND, '#'.$target), 'header' => $header);
+	  }
+	  
 		$target = $args['target'];
 		$volume = $this->volume($target);
 		$files  = isset($args['FILES']['upload']) && is_array($args['FILES']['upload']) ? $args['FILES']['upload'] : array();
