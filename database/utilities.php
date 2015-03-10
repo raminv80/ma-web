@@ -827,3 +827,102 @@ function getAdminChildren($parentId, $root = 0, $list = array()) {
 	}
 	return $list;
 }
+
+
+/**
+ * Set user authentication cookie.
+ * $userId: default 0 (if null/zero or value does not match with any record then will unset the cookie).
+ * $name: default 'usrauth'
+ *
+ * @param string $name
+ * @param int $userId
+ * @return boolean
+ */
+function SetUserAuthCookie($name ='usrauth', $userId = 0) {
+	global $DBobject;
+
+	// Get user unique-hash (user_password)
+	$userStr = '';
+	if(!empty($userId)){
+		$sql = "SELECT user_password FROM tbl_user WHERE user_deleted IS NULL AND user_id = :id";
+		if($res = $DBobject->wrappedSql($sql,array(":id"=>$userId))){
+			$userStr = $res[0]['user_password']; // string (40 char)
+		}
+	}
+
+	$value = '';
+	$expTime = time() - (60*60*24*14); // past 14 days
+	if(!empty($userStr)){
+		$browser = md5($_SERVER['HTTP_USER_AGENT']); // string (32 char)
+		$expTime = time()+(60*60*24*14); // next 14 days
+		$expTimeStr = dechex($expTime); // string (+8 char)
+
+		// Build cookie string value
+		$value = $userStr . $browser . $expTimeStr;
+	}
+
+	//SET COOKIE
+	$_SECURE_COOKIE = false;
+	if($_SERVER['SERVER_PORT'] == 443 || !empty($_SERVER['HTTPS'])){
+		$_SECURE_COOKIE = true; /*IF HTTPs TURN THIS ON */
+	}
+
+	$currentCookieParams = session_get_cookie_params();
+
+	setcookie($name,//name
+	$value,//value
+	$expTime,//expires at end of session
+	$currentCookieParams['path'],//path
+	$currentCookieParams['domain'],//domain
+	$_SECURE_COOKIE, //secure
+	true  //httponly: Only accessible via http. Not accessible to javascript
+	);
+
+	if(empty($value)){
+		unset($_COOKIE[$name]);
+		return false;
+	}
+	return true;
+}
+
+
+/**
+ * Check user authentication cookie.
+ * $name: default 'usrauth'
+ *
+ * @param string $name
+ * @return array
+ */
+function checkUserAuthCookie($name ='usrauth') {
+	global $DBobject;
+
+	if(!empty($_COOKIE[$name]) && strlen($_COOKIE[$name]) > 79 && strlen($_COOKIE[$name]) < 82 ){
+
+		// Get variables
+		$userStr = substr($_COOKIE[$name], 0, 40);
+		$browser = substr($_COOKIE[$name], 40, 32);
+		$expTime = hexdec(substr($_COOKIE[$name], 72));
+
+		// Validate expiration date
+		if($expTime > time() && $expTime <= (time()+(60*60*24*14)) ){
+			// validate browser
+			if($browser == md5($_SERVER['HTTP_USER_AGENT'])){
+				// Validate user hash (user_password)
+				$sql = "SELECT * FROM tbl_user WHERE user_deleted IS NULL AND user_password = :user_password";
+				if($res = $DBobject->wrappedSql($sql,array(":user_password"=>$userStr))){
+					return array(
+							"id"=>$res[0]["user_id"],
+							"gname"=>$res[0]["user_gname"],
+							"surname"=>$res[0]["user_surname"],
+							"email"=>$res[0]["user_email"],
+							"loggedInByCookie"=>true
+					);
+				}
+			}
+		}
+	}
+	// Clear user authentication cookie
+	SetUserAuthCookie($name);
+	return false;
+}
+
