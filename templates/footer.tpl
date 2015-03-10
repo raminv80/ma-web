@@ -41,7 +41,7 @@
 			<div class="col-sm-12">
 				<div class="share">Share</div> <a target="_blank" href="http://www.facebook.com/sharer.php?u={$DOMAIN}{$REQUEST_URI}"><img src="/images/fb.png" alt="Facebook icon" title="Share this on Facebook"/></a>
 				<a target="_blank" href="http://twitter.com/home?status=Visit Daytrippa. {$DOMAIN}{$REQUEST_URI}"><img src="/images/twitter.png" alt="Twitter icon" title="Share this on Twitter" /></a>
-				<a href="mailto:?subject=Visit Australian Home Heating Association Website&body=Have a look on our website {$DOMAIN}{$REQUEST_URI}"><img src="/images/mail.png" alt="Mail icon" title="Share by email" /></a> 
+				<a href="mailto:?subject=Visit Australian Home Heating Association Website&body=Have a look at our website {$DOMAIN}{$REQUEST_URI}"><img src="/images/mail.png" alt="Mail icon" title="Share by email" /></a> 
 			</div>
 			</div>
 			<div class="row" id="landcare">

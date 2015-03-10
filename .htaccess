@@ -1,3 +1,12 @@
+#AuthType Basic
+#AuthName "Login required"
+#AuthUserFile /home/6-web/68/10/themserver.com/public/ready/.htpasswd
+#require valid-user
+#Order Deny,Allow
+#Deny from all
+#Allow from 150.101.230.130
+#Satisfy Any
+
 ## EXPIRES CACHING ##
 #<IfModule mod_expires.c>
 #ExpiresActive On

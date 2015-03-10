@@ -37,7 +37,7 @@
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="files_filename_{$filesno}">Description</label>
 			<div class="col-sm-5">
-				<textarea class="tinymce" name="field[10][tbl_files][{$filesno}][files_filename]" id="files_filename_{$filesno}" >{$files.files_filename}</textarea>
+				<textarea class="tinymce" name="field[10][tbl_files][{$filesno}][files_description]" id="files_description_{$filesno}" >{$files.files_description}</textarea>
 			</div>
 		</div>
 		<div class="row form-group">

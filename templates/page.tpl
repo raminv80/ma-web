@@ -66,6 +66,7 @@
 	
 	ga('create', '{$ga_id}', 'auto', { 'siteSpeedSampleRate': 50 });  
 	ga('require', 'displayfeatures');
+	ga('require', 'linkid', 'linkid.js');
 	ga('require', 'ec');
 	ga('set', '&cu', 'AUD');
 	

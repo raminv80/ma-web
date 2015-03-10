@@ -232,15 +232,17 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
 	}catch(Exception $e){}
 	
 	try{
-	  $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent) VALUES 
-	      (:to,:header,:subject,:content,:ip,:sent)";
+	  $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_sender_useragent,email_time) VALUES 
+	      (:to,:header,:subject,:content,:ip,:sent,:useragent,:time)";
 	  $params = array(
 	      ":to"=>$to,
 	      ":header"=>$headers,
 	      ":subject"=>$subject,
 	      ":content"=>utf8_encode($body),
 	      ":ip"=>$_SERVER['REMOTE_ADDR'],
-	  		":sent"=>$mailSent
+  		  ":sent"=>$mailSent,
+  		  ":useragent"=>$_SERVER['HTTP_USER_AGENT'],
+  		  ":time"=>date("d/m/Y H:i:s T(P)"),
 	  );
 	  $DBobject->executeSQL($sql,$params);
 	  return $DBobject->wrappedSqlIdentity();
@@ -286,17 +288,19 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 
 	try{
 		$headers = '';
-		$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_file,email_ip,email_sent) VALUES
-	      (:to,:header,:subject,:content,:file,:ip,:sent)";
-		$params = array(
-				":to"=>$to,
-				":header"=>$headers,
-				":subject"=>$subject,
-				":content"=>utf8_encode($body),
-				":ip"=>$_SERVER['REMOTE_ADDR'],
-				":file"=>$attachmentFile,
-				":sent"=>$mailSent
-		);
+		$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_sender_useragent,email_time) VALUES 
+	      (:to,:header,:subject,:content,:file,:ip,:sent,:useragent,:time)";
+		  $params = array(
+		      ":to"=>$to,
+		      ":header"=>$headers,
+		      ":subject"=>$subject,
+		      ":content"=>utf8_encode($body),
+		      ":file"=>$attachmentFile,
+		      ":ip"=>$_SERVER['REMOTE_ADDR'],
+	  		  ":sent"=>$mailSent,
+	  		  ":useragent"=>$_SERVER['HTTP_USER_AGENT'],
+	  		  ":time"=>date("d/m/Y H:i:s T(P)"),
+		  );
 		$DBobject->executeSQL($sql,$params);
 		return $DBobject->wrappedSqlIdentity();
 	}catch(Exception $e){}
@@ -308,9 +312,9 @@ function sendMailV2($to,$from,$fromEmail,$subject,$body){
   global $DBobject;
   require_once 'database/safemail.php';
   define("DEFCALLBACKMAIL", "{$fromEmail}");
-  define("DEFCALLBACKNAME", "MedicAlert Foundation");
+  define("DEFCALLBACKNAME", "");
   $final_msg = preparehtmlmail($body);
-
+  
   $mailSent = 0;
   try{
     if(function_exists("SafeMail")){
@@ -328,17 +332,19 @@ function sendMailV2($to,$from,$fromEmail,$subject,$body){
   }catch(Exception $e){}
 
   try{
-    $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent) VALUES
-	      (:to,:header,:subject,:content,:ip,:sent)";
-    $params = array(
-        ":to"=>$to,
-        ":header"=>$final_msg['headers'],
-        ":subject"=>$subject,
-        ":content"=>$final_msg['multipart'],
-				":ip"=>$_SERVER['REMOTE_ADDR'],
-        ":sent"=>$mailSent,
-    );
-    $DBobject->executeSQL($sql,$params);
+    $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_sender_useragent,email_time) VALUES 
+	      (:to,:header,:subject,:content,:ip,:sent,:useragent,:time)";
+	  $params = array(
+	      ":to"=>$to,
+          ":header"=>$final_msg['headers'],
+	      ":subject"=>$subject,
+          ":content"=>$final_msg['multipart'],
+	      ":ip"=>$_SERVER['REMOTE_ADDR'],
+  		  ":sent"=>$mailSent,
+  		  ":useragent"=>$_SERVER['HTTP_USER_AGENT'],
+  		  ":time"=>date("d/m/Y H:i:s T(P)"),
+	  );
+	  $DBobject->executeSQL($sql,$params);
   }catch(Exception $e){}
 
   return $mailSent;
@@ -529,6 +535,90 @@ function htmlclean( $str ){
       break;
   }
   return $str;
+}
+
+function htmlclean_withban( $str ){
+	$type = strtolower(gettype($str));
+
+	switch($type){
+		case "string":
+			if(preg_match("/script/i", $str) && hasTags($str)){ sendtoforbidden(); }
+			if(preg_match("/base64_encode/i", $str)){ sendtoforbidden(); }
+			if(preg_match("/globals=/i", $str)){ sendtoforbidden(); }
+			if(preg_match("/_request/i", $str)){ sendtoforbidden(); }
+			$str = unclean($str);
+			$str = strip_tags($str);
+			$str = htmlspecialchars(trim($str),ENT_QUOTES,'UTF-8',false);
+			$str = addslashes($str);
+			break;
+
+		case "array":
+			foreach($str as $key => $val){
+				if(preg_match("/script/i", $key) && hasTags($str)){ sendtoforbidden(); }
+				if(preg_match("/base64_encode/i", $key)){ sendtoforbidden(); }
+				if(preg_match("/globals=/i", $key)){ sendtoforbidden(); }
+				if(preg_match("/_request/i", $key)){ sendtoforbidden(); }
+				$str[$key] = htmlclean_withban($val);
+			}
+			break;
+		default:
+			if(preg_match("/script/i", $str) && hasTags($str)){ sendtoforbidden(); }
+			if(preg_match("/base64_encode/i", $str)){ sendtoforbidden(); }
+			if(preg_match("/globals=/i", $str)){ sendtoforbidden(); }
+			if(preg_match("/_request/i", $str)){ sendtoforbidden(); }
+			$str = unclean($str);
+			$str = strip_tags($str);
+			$str = htmlspecialchars(trim($str),ENT_QUOTES,'UTF-8',false);
+			$str = addslashes($str);
+			break;
+	}
+	return $str;
+}
+function hasTags( $str )
+{
+	return !(strcmp( $str, strip_tags($str ) ) == 0);
+}
+
+
+function sendtoforbidden(){
+	GLOBAL $DBobject; 
+	if($DBobject){
+		$params = array(
+				"ip"=>$_SERVER['REMOTE_ADDR'],
+				"uri"=>$_SERVER['REQUEST_URI'],
+				"request"=>json_encode($_REQUEST),
+				"get"=>json_encode($_GET),
+				"post"=>json_encode($_POST)
+		);
+		$sql = "INSERT INTO badrequest_log (ip,uri,request,get,post) VALUES (:ip,:uri,:request,:get,:post)";
+		$DBobject->wrappedSql($sql,$params);
+		
+		$sql = "SELECT COUNT(id) AS cnt FROM badrequest_log WHERE created > DATE_SUB(NOW(), INTERVAL 30 MINUTE) AND ip = :ip";
+		$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
+		if($res[0]['cnt'] >= 3){
+			$sql = "INSERT INTO badrequest_blocked (ip) VALUES (:ip)";
+			$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
+		}
+	}
+	
+	header("HTTP/1.1 403 Forbidden");
+	header("Location: /403.html");
+	die();
+}
+
+function checkforbidden(){
+	GLOBAL $DBobject;
+	if($DBobject){
+		$sql = "SELECT COUNT(id) AS cnt FROM badrequest_blocked WHERE created > DATE_SUB(NOW(), INTERVAL 1 DAY) AND deleted IS NULL AND ip = :ip";
+		$res = $DBobject->wrappedSql($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
+		if($res[0]['cnt'] == 0){
+			return false;
+		}
+	}
+	
+	header("HTTP/1.1 403 Forbidden");
+	header("Location: /403.html");
+	die();
 }
 
 function unclean( $str ){
@@ -827,7 +917,6 @@ function getAdminChildren($parentId, $root = 0, $list = array()) {
 	}
 	return $list;
 }
-
 
 /**
  * Set user authentication cookie.

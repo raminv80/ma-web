@@ -20,6 +20,21 @@ if (preg_match('/[A-Z]/', $request[0])){
 include "includes/functions/functions.php";
 global $CONFIG,$SMARTY,$DBobject;
 
+if(!empty($_REQUEST['ldc'])){
+	$cart_obj = new cart();
+	$res = $cart_obj->ApplyDiscountCode($_REQUEST['ldc']);
+}
+if(!empty($_REQUEST['ad'])){
+	$sql = "SELECT discount_code,discount_banner,discount_banner_mob,discount_description, discount_listing_id,discount_product_id FROM tbl_discount WHERE discount_code = 'SAVE25' AND discount_deleted IS NULL AND discount_published = 1 AND (discount_unlimited_use=1 OR discount_fixed_time < discount_used) AND discount_usergroup_id = 0 AND discount_user_id = 0 AND (discount_start_date IS NULL||discount_start_date<=NOW()||discount_start_date>='0000-00-00') AND (discount_start_date IS NULL||discount_end_date>= NOW()||discount_end_date >= '0000-00-00')";
+	$res = $DBobject->wrappedSql($sql,array('code'=>$_REQUEST['ad']));
+	if(!empty($res)){
+		$_SESSION['ad_session'] = $res[0];
+	}
+}
+if(!empty($_SESSION['ad_session'])){
+	$_SESSION['smarty']['ad_session'] = $_SESSION['ad_session'];
+}
+
 // ASSIGN ALL STORED SMARTY VALUES
 foreach($_SESSION['smarty'] as $key=>$val){
   $SMARTY->assign($key,$val);
@@ -145,6 +160,10 @@ function loadPage($_conf){
      header($_conf->header);
   }else{
     header("HTTP/1.0 200 OK");
+  }
+  foreach($_conf->process as $sp){
+  	$file = (string)$sp->file;
+  	if(file_exists($file))	{ include ($file);}
   }
   if(strtolower((string)$_conf->attributes()->standalone) == 'true'){
   	$template = $_conf->template;
