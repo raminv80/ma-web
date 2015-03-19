@@ -38,17 +38,17 @@
 		</div>
 		<div class="col-sm-4 col-sm-offset-2 col-md-3 col-md-offset-3">
 			<div class="row" id="share">
-			<div class="col-sm-12">
-				<div class="share">Share</div> <a target="_blank" href="http://www.facebook.com/sharer.php?u={$DOMAIN}{$REQUEST_URI}"><img src="/images/fb.png" alt="Facebook icon" title="Share this on Facebook"/></a>
-				<a target="_blank" href="http://twitter.com/home?status=Visit Daytrippa. {$DOMAIN}{$REQUEST_URI}"><img src="/images/twitter.png" alt="Twitter icon" title="Share this on Twitter" /></a>
-				<a href="mailto:?subject=Visit Australian Home Heating Association Website&body=Have a look at our website {$DOMAIN}{$REQUEST_URI}"><img src="/images/mail.png" alt="Mail icon" title="Share by email" /></a> 
-			</div>
+				<div class="col-sm-12" id="social">
+	 				Share: <a target="_blank" href="http://www.facebook.com/sharer.php?u={$DOMAIN}{$REQUEST_URI}"><img src="/images/fb.png" alt="Facebook icon" title="Share this on Facebook"/></a>
+					<a target="_blank" href="http://twitter.com/home?status={if $listing_share_text}{$listing_share_text}{else}Visit Berry Funeral Directors.{/if} {$DOMAIN}{$REQUEST_URI}"><img src="/images/twitter.png" alt="Twitter icon" title="Share this on Twitter" /></a>
+					<a href="mailto:?subject=Visit Berry Funeral Directors Website&body={if $listing_share_text}{$listing_share_text}{else}Have a look at our website{/if} {$DOMAIN}{$REQUEST_URI}"><img src="/images/mail.png" alt="Mail icon" title="Share by email" /></a> 
+	 			</div>
 			</div>
 			<div class="row" id="landcare">
-			<div class="col-sm-12">
-				<div id="landin"><img src="/images/landcare.png" alt="" /></div>
-				Proudly supporting the activities of Landcare Australia
-			</div>
+				<div class="col-sm-12">
+					<div id="landin"><img src="/images/landcare.png" alt="" /></div>
+					Proudly supporting the activities of Landcare Australia
+				</div>
 			</div>
 		</div>
 	</div>

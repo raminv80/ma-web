@@ -56,9 +56,13 @@ $SMARTY->assign ( 'HTTP_REFERER', rtrim($_SERVER['HTTP_REFERER'],'/') );
 $_URI = explode("?",$_SERVER['REQUEST_URI']);
 $SMARTY->assign ( 'REQUEST_URI', rtrim($_URI[0],'/') );
 $_request = htmlclean($_REQUEST);
+$SMARTY->assign ( '_REQUEST', $_REQUEST);
 $SMARTY->assign ( 'orderNumber', $_SESSION['orderNumber'] );
 $SMARTY->assign ( 'ga_ec', $_SESSION['ga_ec'] );// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
 unset ( $_SESSION ['ga_ec'] );
+
+$COMP = json_encode($CONFIG->company);
+$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
 
 $token = getToken('frontend');
 $SMARTY->assign('token',$token);
@@ -116,6 +120,10 @@ while(true){
     $needle = str_replace("/","\/",$lp->url);
     $haystack = $_request["arg1"];
     if(preg_match("/^{$needle}/",$haystack)){
+    	foreach($lp->process as $sp){
+    		$file = (string)$sp->file;
+    		if(file_exists($file))	{ include ($file);}
+    	}
       $_nurl = $_request["arg1"];
       $class = (string)$lp->file;
       $obj = new $class($_nurl,$lp);
@@ -134,6 +142,10 @@ while(true){
     $obj = new $class($_request["arg1"],$struct);
     $id = $obj->ChkCache($_request["arg1"],$_PUBLISHED);
     if(! empty($id)){
+    	foreach($struct->process as $sp){
+    		$file = (string)$sp->file;
+    		if(file_exists($file))	{ include ($file);}
+    	}
       $template = $obj->Load($id,$_PUBLISHED);
 			$menu = $obj->LoadMenu($id);
       $SMARTY->assign('menuitems',$menu);
@@ -195,6 +207,10 @@ function loadPage($_conf){
       $obj = new $class($_request["arg1"],$struct);
       $template = $obj->Load($_conf->pageID,$_PUBLISHED);
       if(!empty($template)){
+      	foreach($struct->process as $sp){
+      		$file = (string)$sp->file;
+      		if(file_exists($file))	{ include ($file);}
+      	}
         $template = $_conf->template;
         $menu = $obj->LoadMenu($_conf->pageID);
         $SMARTY->assign('menuitems',$menu);

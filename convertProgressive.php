@@ -90,7 +90,7 @@ function generateImage($source_file, $cache_file,$_width,$_height,$_crop=false) 
   $maxheight = intval($_height);
   
   if($_crop && $maxwidth > 0 && $maxheight > 0){
-    if(($maxwidth > 0 || $maxheight > 0) && (imagesx($src) > $maxwidth || imagesy($src) > $maxheight) ){
+    if(($maxwidth > 0 || $maxheight > 0)){
       $scalex = $maxwidth / imagesx($src); //original scale image size //If the TAG size changes this will need to be scaled.
       $scaley = $maxheight / imagesy($src); //original scale image size //If the TAG size changes this will need to be scaled.
       if(($scaley < $scalex && $maxwidth != 0) || $maxheight == 0){
@@ -110,7 +110,7 @@ function generateImage($source_file, $cache_file,$_width,$_height,$_crop=false) 
       }
     }
   }else{
-    if(($maxwidth > 0 || $maxheight > 0) && (imagesx($src) > $maxwidth || imagesy($src) > $maxheight) ){
+    if(($maxwidth > 0 || $maxheight > 0)){
       $scalex = $maxwidth / imagesx($src); //original scale image size //If the TAG size changes this will need to be scaled.
       $scaley = $maxheight / imagesy($src); //original scale image size //If the TAG size changes this will need to be scaled.
       if(($scalex < $scaley && $maxwidth != 0) || $maxheight == 0){

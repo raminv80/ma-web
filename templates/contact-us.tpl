@@ -35,6 +35,44 @@
 			<div class="col-sm-12">
 				{$listing_content1}
 			</div>
+			<div class="col-sm-12" itemscope itemtype="http://schema.org/LocalBusiness">
+	      <b><h3 itemprop="name">{$COMPANY.name}</h3></b><br>
+	      <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+	        <span itemprop="streetAddress">{$COMPANY.address.street}</span><br>
+	        <span itemprop="addressLocality">{$COMPANY.address.suburb}</span>,
+	        <span itemprop="addressRegion">{$COMPANY.address.state}</span>
+	        <span itemprop="postalCode">{$COMPANY.address.postcode}</span>
+	      </div>
+	      <div class="row ulinks">
+					<div class="col-sm-3">
+			      Free call:
+			    </div>
+			    <div class="col-sm-9">
+			    	{if $COMPANY.freecall}<a href="tel:{$COMPANY.freecall}" itemprop="telephone">{$COMPANY.freecall}</a><br>{/if}
+			    </div>
+			    
+					<div class="col-sm-3">
+			      Phone:
+			    </div>
+			    <div class="col-sm-9">
+			    	{if $COMPANY.phone}<a href="tel:{$COMPANY.phone}" itemprop="telephone">{$COMPANY.phone}</a><br>{/if}
+			    </div>
+			    
+			    <div class="col-sm-3">
+			      Fax:
+			    </div>
+			    <div class="col-sm-9">
+			    	{if $COMPANY.fax}<a href="tel:{$COMPANY.fax}" itemprop="faxNumber">{$COMPANY.fax}</a><br>{/if}
+			    </div>
+			    
+			    <div class="col-sm-3">
+			      Email:<br>
+		      </div>
+		      <div class="col-sm-9">
+			      <a href="mailto:{$COMPANY.email}" itemprop="email">{$COMPANY.email}</a>
+		      </div>
+		    </div>
+	    </div>
 			<div class="col-sm-8">
 			 	<form class="form-horizontal" id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us">
 			  	<input type="hidden" value="question" name="action" id="action" /> 
