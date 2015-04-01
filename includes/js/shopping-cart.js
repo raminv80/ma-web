@@ -11,7 +11,7 @@ if (jQuery.validator) {
 	      $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 	    },
 	    errorPlacement: function (error, element) {
-	     
+	    	$(element).closest('.form-group').find('.help-block').text(error.text());
 	    },
 	    submitHandler: function (form) {
 	    	$('.error-textbox').hide();

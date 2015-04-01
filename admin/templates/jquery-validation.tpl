@@ -91,12 +91,14 @@ if (jQuery.validator) {
   		"uniqueURL", 
   		function(value, element, params) {
   			var response = false;
+  			var idVal = params.id;  	
+  	  	if(params.IdFormField) idVal = $(params.IdFormField).val();
   			$.ajax({
   				type: "POST",
   			    url: "/admin/includes/processes/urlencode.php",
   				cache: false,
   				async: false,
-  				data: "value="+encodeURIComponent(value)+"&id="+params.id+"&idfield="+params.idfield+"&table="+params.table+"&field="+params.field+"&field2="+params.field2+"&value2="+$('#'+params.value2).val(),
+  				data: "value="+encodeURIComponent(value)+"&id="+idVal+"&idfield="+params.idfield+"&table="+params.table+"&field="+params.field+"&field2="+params.field2+"&value2="+$('#'+params.value2).val(),
   				dataType: "json",
   			    success: function(res, textStatus) {
   			    	try{

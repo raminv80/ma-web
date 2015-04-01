@@ -36,6 +36,9 @@ if($_request['arg1']  == 'logout' ){
 }
 
 if((!isset($_SESSION['user']['admin']) || empty($_SESSION['user']['admin']) ) && $_request['arg1']  != 'register' && $_request['arg1']  != 'login' && $_request['arg1']  != 'recover-password'){
+	$ignoreArr = array('/admin/logout', '/admin', '/admin/login');
+	$uri = rtrim($_SERVER['REQUEST_URI'],'/');
+	$_SESSION['redirect'] = (in_array($uri, $ignoreArr))?$_SESSION['redirect']:$uri;
 	header("Location:/admin/login");
 	die();
 }
@@ -54,6 +57,7 @@ if(!isset($_SESSION['user']['admin']) || empty($_SESSION['user']['admin']) ){
 while(true){
 	/******* Goes to login  *******/
 	if($_request['arg1'] == 'login'){
+		$SMARTY->assign('redirect',$_SESSION['redirect']);
 		$template = "login.tpl";
 		break 1;
 	}

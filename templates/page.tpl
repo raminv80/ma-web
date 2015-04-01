@@ -137,7 +137,7 @@
 
 	function nonAplha(ID){
 		var str = $(ID).val();
-	   t = str.replace(/[^a-zA-Z0-9-_+]/gi,'');
+	   t = str.replace(/[^a-zA-Z0-9-_+]/i,'');
 	   $(ID).val(t); 
 	}
 

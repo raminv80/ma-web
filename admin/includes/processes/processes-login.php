@@ -11,6 +11,8 @@ if(checkToken('admin', $_POST["formToken"])){
   if($res[0]['cnt'] == 0){
   	if($result = AdminLogIn($_POST['email'],$_POST['password'])){	
   	   $error = '';
+  	   $redirect = empty($_POST['redirect'])?'/admin/home':$_POST['redirect'];
+  	   $_SESSION['redirect'] = '';
   	}else{
   	  $error = "Wrong email or password";
   	}
@@ -29,6 +31,7 @@ if(checkToken('admin', $_POST["formToken"])){
   
   echo json_encode(array(
   		'error'=>$error,
-  		'success'=>$result
+  		'success'=>$result,
+		'redirect'=>$redirect
   ));
 }

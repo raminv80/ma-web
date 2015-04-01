@@ -60,6 +60,12 @@
 				<input class="form-control" type="text" value="{$images.gallery_alt_tag}" name="field[10][tbl_gallery][{$imageno}][gallery_alt_tag]" id="gallery_alt_tag_{$imageno}" >
 			</div>
 		</div>
+		<div class="row form-group">
+			<label class="col-sm-3 control-label" for="gallery_order_{$imageno}">Order</label>
+			<div class="col-sm-5">
+				<input class="form-control number" type="number" value="{$images.gallery_order}" name="field[10][tbl_gallery][{$imageno}][gallery_order]" id="gallery_order_{$imageno}">
+			</div>
+		</div>
 	</div>
 </div>
 {/block}

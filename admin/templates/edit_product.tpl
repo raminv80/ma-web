@@ -1,9 +1,10 @@
 {block name=body}
 {function name=linking_list data=$data level=0 levelcount=0 order='5' table='tbl_additional_category' dfield='additional_category_product_id' dvalue='product_id' 
 						dvalue_val= $fields.product_id pkey='additional_category_id' skey='additional_category_listing_id' flag='additional_category_flag' 
-						preselectedArr = $preselectedArr existingArr= $fields.additional_category} 
+						preselectedArr = $preselectedArr existingArr= $fields.additional_category ignoreId='0'} 
   {foreach $data as $opt}
-  {if $count eq ""}
+  {if $opt.id eq $ignoreId}{continue}{/if}
+  {if $count eq "" }
   	{if $level eq 0}<input type="hidden" value="{$dvalue}" name="default[{$dfield}]" />{/if}
   	{assign var=count value=1}
   {else}
@@ -28,31 +29,6 @@
 {function name=fn_value id="" existingArr="" preselectedArr = ""}{assign var=val value=0}{if $id neq ""}{foreach $existingArr as $add}{if $id eq $add.$skey}{assign var=val value=$add.$flag}{break}{/if}{if $id|in_array:$preselectedArr}{assign var=val value=1}{break}{/if}{/foreach}{/if}{$val}{/function}
 {function name=fn_selection id="" existingArr="" preselectedArr = ""}{if $id neq ""}{foreach $existingArr as $add}{if $id eq $add.$skey}{if $add.$flag eq 1}checked="checked"{/if}{break}{/if}{if $id|in_array:$preselectedArr}checked="checked"{break}{/if}{/foreach}{/if}{/function}
 {function name=fn_pkey id="" existingArr=""}{if $id neq ""}{foreach $existingArr as $add}{if $id eq $add.$skey}{$add.$pkey}{break}{/if}{/foreach}{/if}{/function}
-
-
-
-{function name=additional_list data=$data level=0 levelcount=0} 
-  {foreach $data as $opt}
-  {if $count eq ""}{assign var=count value=1}{else}{assign var=count value=$count+1}{/if} 
-  <div class="row form-group">
-     <input type="hidden" value="additional_category_id" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][id]" />
-     <input type="hidden" value="{call name=additional_category_id id=$opt.id}" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][additional_category_id]" class="key"/>
-     <input type="hidden" value="{$fields.product_id}" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][additional_category_product_id]" id="additional_category_product_id" class="key">
-     <input type="hidden" value="{$opt.id}" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][additional_category_listing_id]" id="additional_category_listing_id">
-     <div class="col-sm-{$level+1}">
-       <input type="hidden" value="{call name=additional_category_value id=$opt.id}" name="field[3][tbl_additional_category][{$levelcount*10}{$count}][additional_category_flag]" class="value">
-       <input style="float:right;" class="chckbx" type="checkbox" {call name=additional_category_selected id=$opt.id} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_location{$opt.id}">
-     </div>
-     <label style="text-align:left;" class="col-sm-3 control-label" for="id_additional_cat{$opt.id}">{$opt.value}</label>
-   </div>
-   {if count($opt.subs) > 0}
-   {call name=additional_list data=$opt.subs level=$level+1 levelcount=$levelcount+{$count} } 
-   {/if}
-   {/foreach} 
-{/function}
-{function name=additional_category_value id=""}{assign var=val value=0}{if $id neq ""}{foreach $fields.additional_category as $add}{if $id eq $add.additional_category_listing_id}{assign var=val value=$add.additional_category_flag}{break}{/if}{if $id eq $fields.product_listing_id}{assign var=val value=1}{break}{/if}{/foreach}{/if}{$val}{/function}
-{function name=additional_category_selected id=""}{if $id neq ""}{foreach $fields.additional_category as $add}{if $id eq $add.additional_category_listing_id}{if $add.additional_category_flag eq 1}checked="checked"{/if}{break}{/if}{if $id eq $fields.product_listing_id}checked="checked"{break}{/if}{/foreach}{/if}{/function}
-{function name=additional_category_id id=""}{if $id neq ""}{foreach $fields.additional_category as $add}{if $id eq $add.additional_category_listing_id}{$add.additional_category_id}{break}{/if}{/foreach}{/if}{/function}
 
 
 {* Define the function *} {function name=options_list level=0} 
@@ -108,6 +84,8 @@
 				<li><a href="#pricing" data-toggle="tab">Pricing</a></li>
 				<li><a href="#images" data-toggle="tab">Images</a></li>
 				<li><a href="#attributes" data-toggle="tab">Attributes</a></li>
+				<li><a href="#associated" data-toggle="tab">Associated Products</a></li>
+				<li><a href="#share" data-toggle="tab">Social Sharing</a></li>
 				<li><a href="#tags" data-toggle="tab">Tags</a></li>
 				<li><a href="#log" data-toggle="tab">Log</a></li>
 				<!-- <button class="btn btn-primary" onClick="$('#Edit_Record').submit();" type="submit">Submit</button> -->
@@ -226,8 +204,9 @@
               	<h3>Categories to appear under</h3>
               </div>
             </div>
-            <input type="hidden" value="product_object_id" name="default[additional_category_product_id]" />
-            {call name=additional_list data=$fields.options.product_listing_id} 
+            {call name=linking_list data=$fields.options.categories order='5' table='tbl_additional_category' dfield='additional_category_product_id' 
+            dvalue='product_id' dvalue_val= $fields.product_id pkey='additional_category_id' skey='additional_category_listing_id' flag='additional_category_flag' 
+						preselectedArr = "" existingArr= $fields.additional_category ignoreId= $fields.product_object_id} 
           </div>
         </div>
 				<!--===+++===+++===+++===+++===+++ PRICING TAB +++===+++===+++===+++===+++====-->
@@ -373,6 +352,43 @@
 					</div>
 					<input type="hidden" value="{$attributeno}" id="attributeno">
 				</div>
+				<!--===+++===+++===+++===+++===+++ ASSOCIATED PRODUCTS TAB +++===+++===+++===+++===+++====-->
+        <div class="tab-pane" id="associated">
+          <div class="form">
+             <input type="hidden" value="product_id" name="default[productassoc_product_id]" />
+	           {call name=linking_list data=$fields.options.products order='5' table='tbl_productassoc' dfield='productassoc_product_id' 
+            dvalue='product_id' dvalue_val= $fields.product_id pkey='productassoc_id' skey='productassoc_product_object_id' flag='productassoc_flag' 
+						preselectedArr = "" existingArr= $fields.productassoc} 
+	        </div>
+        </div>
+				<!--===+++===+++===+++===+++===+++ SHARE TAB +++===+++===+++===+++===+++====-->
+        <div class="tab-pane" id="share">
+          <div class="row form" data-error="Error found on <b>Social Sharing tab</b>. View <b>Details tab</b> to see specific error notices.">
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_share_title">Share Title</label>
+              <div class="col-sm-5">
+                <input class="form-control" type="text" value="{$fields.product_share_title}" name="field[1][tbl_product][{$cnt}][product_share_title]" id="id_product_share_title" >
+                <span class="help-block"></span>
+              </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-3 control-label" for="product_share_image">Share Image<br>
+                <small>Size: 1200px Wide x 630px Tall (less than 1Mb) <br>("None" for default image)</small></label>
+              <div class="col-sm-9">
+                <input type="hidden" value="{$fields.product_share_image}" name="field[1][tbl_product][{$cnt}][product_share_image]" id="product_share_image_link" class="fileinput"> 
+                <span class="file-view" id="product_share_image_path"> {if $fields.product_share_image}<a href="{$fields.product_share_image}" target="_blank" >View</a>{else}None{/if} </span> 
+                <a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('product_share_image','','');">Select File</a> 
+                <a href="javascript:void(0);" class="btn btn-info" onclick="$('#product_share_image_link').val('');$('#product_share_image_path').html('None');">Remove File</a>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_share_text">Share Text <br><span class="small">(120 Characters)</span></label>
+              <div class="col-sm-5">
+                <textarea class="form-control"name="field[1][tbl_product][{$cnt}][product_share_text]" id="id_product_share_text" maxlength="120">{$fields.product_share_text}</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
 				<!--===+++===+++===+++===+++===+++ TAGS TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="tags">
 					<div class="form">

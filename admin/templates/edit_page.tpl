@@ -40,6 +40,7 @@
 			<ul class="nav nav-tabs" id="myTab">
 				<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
 				<li><a href="#images" data-toggle="tab">Images</a></li>
+				<li><a href="#share" data-toggle="tab">Social Sharing</a></li>
 				<li><a href="#files" data-toggle="tab">Files</a></li>
 				<li><a href="#tags" data-toggle="tab">Tags</a></li>
 				<li><a href="#log" data-toggle="tab">Log</a></li>
@@ -169,6 +170,34 @@
 					</div>
 					<input type="hidden" value="{$imageno}" id="imageno">
 				</div>
+				<!--===+++===+++===+++===+++===+++ SHARE TAB +++===+++===+++===+++===+++====-->
+        <div class="tab-pane" id="share">
+          <div class="row form" data-error="Error found on <b>Social Sharing tab</b>. View <b>Details tab</b> to see specific error notices.">
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_share_title">Share Title</label>
+              <div class="col-sm-5">
+                <input class="form-control" type="text" value="{$fields.listing_share_title}" name="field[1][tbl_listing][{$cnt}][listing_share_title]" id="id_listing_share_title" >
+                <span class="help-block"></span>
+              </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-3 control-label" for="listing_share_image">Share Image<br>
+                <small>Size: 1200px Wide x 630px Tall (less than 1Mb) <br>("None" for default image)</small></label>
+              <div class="col-sm-9">
+                <input type="hidden" value="{$fields.listing_share_image}" name="field[1][tbl_listing][{$cnt}][listing_share_image]" id="listing_share_image_link" class="fileinput"> 
+                <span class="file-view" id="listing_share_image_path"> {if $fields.listing_share_image}<a href="{$fields.listing_share_image}" target="_blank" >View</a>{else}None{/if} </span> 
+                <a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('listing_share_image','','');">Select File</a> 
+                <a href="javascript:void(0);" class="btn btn-info" onclick="$('#listing_share_image_link').val('');$('#listing_share_image_path').html('None');">Remove File</a>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_share_text">Share Text <br><span class="small">(120 Characters)</span></label>
+              <div class="col-sm-5">
+                <textarea class="form-control"name="field[1][tbl_listing][{$cnt}][listing_share_text]" id="id_listing_share_text" maxlength="120">{$fields.listing_share_text}</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
 				<!--===+++===+++===+++===+++===+++ FILES TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="files">
 					<div class="row form" id="files-wrapper">{assign var='filesno' value=0} {assign var='gTableName' value='listing'} {foreach $fields.files as $files} {assign var='filesno' value=$filesno+1} {include file='files.tpl'} {/foreach}</div>
