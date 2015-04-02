@@ -1,30 +1,4 @@
 {block name=body} 
-<div id="banners">
-	<div id="banner-top" class="carousel slide" data-ride="carousel">
-  	<!-- Wrapper for slides -->
-		<div class="carousel-inner">
-			<div class="item active">
-				<img src="{if $listing_image}{$listing_image}{else}/images/bannerin.jpg{/if}" alt="banner">
-				<div class="carousel-caption">
-					<div class="container">
-						<div class="row">
-			  			<div class="col-sm-7">
-				  			<h1><span>{$listing_name}</span></h1>
-			  			</div>
-						</div>
-					</div>
-				</div>	        
-			</div>        			    
-		</div>
-	</div>
-	<div id="what">
- 		<h3>What are you looking for?</h3>
- 		<ul>
- 			<li><a href="/wood-heaters/how-to-choose-a-wood-heater" title="Information on how to choose a wood heater">Information on how to choose a wood heater</a></li>
-			<li><a href="/manufacturers-suppliers-and-services/local-suppliers-and-service-providers" title="Find retailers, suppliers and services in your area">Find retailers, suppliers and services in your area</a></li>
- 		</ul>
- 	</div>
-</div>
 
 <div id="maincont">
 	<div class="container">
@@ -33,6 +7,7 @@
 				{include file='breadcrumbs.tpl'}		
 			</div>
 			<div class="col-sm-12">
+			<h2>[contact-us.tpl]</h2>
 				{$listing_content1}
 			</div>
 			<div class="col-sm-12" itemscope itemtype="http://schema.org/LocalBusiness">

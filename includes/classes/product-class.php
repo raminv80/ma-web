@@ -164,17 +164,49 @@ class ProductClass extends ListClass {
     }
     
     // GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
-    $filter = "";
+ 		$filter = "";
+    $_default_filter = "";
     $filter_params = array();
     $f_count = 1;
-    if(! empty($this->CONFIG_OBJ->filter)){
+    if(!empty($this->CONFIG_OBJ->filter)){
       foreach($this->CONFIG_OBJ->filter as $f){
-        if(! empty($f->field) && ! empty($f->value)){
-          $filter .= " AND " . $f->field . " = :filter{$f_count}";
-          $filter_params[":filter{$f_count}"] = $f->value;
-          $f_count ++;
+      	if($f->attributes()->default == 1){
+      		if(empty($f->value)){ continue; }
+      		//Filter sql based on config only
+      		$_default_filter = " AND ". (string) $f->value;
+      		continue;
+      	}
+      	
+        $fieldname = (string)$f->attributes()->name;
+      	$value = $_REQUEST[$fieldname];
+      	if(empty($value)) $value = $_POST[$fieldname];
+        if(!empty($value)){
+        	if($f->attributes()->sqlscript == 1){
+        		if(empty($f->value)){ continue; }
+        		$filter .= " AND ". (string) $f->value;
+        		continue;
+        	}
+        	if(empty($f->field) || empty($f->operator)){ continue; }
+					if(is_array($value)){
+						$tmpField = array();
+						foreach ($value as $val){
+							if(!empty($val)) continue;
+							$tmpField[] = "{$f->field} {$f->operator} :filter{$f_count}";
+							$filter_params[":filter{$f_count}"] = $val;
+							$f_count ++;
+						}
+						$filter .= " AND ( ". implode(' OR ', $tmpField)." )";
+					}else{
+						$filter .= " AND {$f->field} {$f->operator} :filter{$f_count}";
+						$filter_params[":filter{$f_count}"] = $value;
+						$f_count ++;
+					}
+					continue;
         }
       }
+    }
+    if(empty($filter) && !empty($_default_filter)){
+    	$filter = $_default_filter;	
     }
     if(! empty($filter)){
       $this->CONFIG_OBJ->limit = 0;
@@ -191,6 +223,51 @@ class ProductClass extends ListClass {
     }
     
     // ---------------------- GET PRODUCTS CHILDREN
+    $prod_filter = "";
+    $prod_default_filter = "";
+    $prod_filter_params = array();
+    $prod_f_count = 1;
+    if(!empty($this->CONFIG_OBJ->producttable->filter)){
+    	foreach($this->CONFIG_OBJ->producttable->filter as $f){
+    		if($f->attributes()->default == 1){
+    			if(empty($f->value)){ continue; }
+    			//Filter sql based on config only
+    			$prod_default_filter = " AND ". (string) $f->value;
+    			continue;
+    		}
+    		 
+    		$fieldname = (string)$f->attributes()->name;
+    		$value = $_REQUEST[$fieldname];
+    		if(empty($value)) $value = $_POST[$fieldname];
+    		if(!empty($value)){
+    			if($f->attributes()->sqlscript == 1){
+    				if(empty($f->value)){ continue; }
+    				$prod_filter .= " AND ". (string) $f->value;
+    				continue;
+    			}
+    			if(empty($f->field) || empty($f->operator)){ continue; }
+    			if(is_array($value)){
+    				$tmpField = array();
+    				foreach ($value as $val){
+    					if(!empty($val)) continue;
+    					$tmpField[] = "{$f->field} {$f->operator} :filter{$prod_f_count}";
+    					$prod_filter_params[":filter{$prod_f_count}"] = $val;
+    					$prod_f_count ++;
+    				}
+    				$prod_filter .= " AND ( ". implode(' OR ', $tmpField)." )";
+    			}else{
+    				$prod_filter .= " AND {$f->field} {$f->operator} :filter{$prod_f_count}";
+    				$prod_filter_params[":filter{$prod_f_count}"] = $value;
+    				$prod_f_count ++;
+    			}
+    			continue;
+    		}
+    	}
+    }
+    if(empty($prod_filter) && !empty($prod_default_filter)){
+    	$prod_filter = $prod_default_filter;
+    }
+    
     $prod_extends = "";
     foreach($this->CONFIG_OBJ->producttable->extends as $a){ // extends product table
       $pre = str_replace("tbl_","",$a->table);
@@ -207,13 +284,13 @@ class ProductClass extends ListClass {
     	$prod_where = " AND " . $this->CONFIG_OBJ->producttable->where;
     }
     
-    $sql = "SELECT * FROM tbl_product {$prod_extends} WHERE product_listing_id = :cid AND product_deleted IS NULL AND product_published = :published" . $prod_where . $prod_order;
+    $sql = "SELECT * FROM tbl_product {$prod_extends} WHERE product_listing_id = :cid AND product_deleted IS NULL AND product_published = :published" . $prod_where . $prod_filter . $prod_order;
     //$sql = "SELECT * FROM tbl_product {$prod_extends} LEFT JOIN tbl_additional_category ON tbl_product.product_id = tbl_additional_category.additional_category_product_id  WHERE (product_listing_id = :cid OR (tbl_additional_category.additional_category_listing_id = :cid AND tbl_additional_category.additional_category_flag = 1) ) AND product_deleted IS NULL AND product_published = :published". $prod_order;
     $params = array(
         ":cid"=>$_cid,
         ":published"=>$_PUBLISHED
     );
-    
+    $params = array_merge($params,$prod_filter_params);
     if($res = $DBobject->wrappedSql($sql,$params)){
       foreach($res as $row){
         $data['products']["{$row['product_object_id']}"] = unclean($row);

@@ -51,6 +51,7 @@
 <!--[if lt IE 9]>
       <script type="text/javascript" src="/includes/js/html5shiv.js"></script>
       <script type="text/javascript" src="/includes/js/respond.min.js"></script>
+			<script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
  	<![endif]-->
  	
 
@@ -83,8 +84,7 @@
 	<header>
 		<div id="header1">
 			<div id="header1in" class="container">
-				{include file='mobilemenu.tpl'}
-				{include file='desktopmenu.tpl'}
+				{include file='menu.tpl'}
 			</div>
 		</div>
 		<div class="info-alert-wrapper" {if !$notice}style="display:none;"{/if}>
@@ -107,7 +107,6 @@
 	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
-	<script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>	
 	<script type="text/javascript">
 	$(document).ready(function(){
@@ -129,10 +128,6 @@
 		  $(this).find('.dropdown-menu:visible').fadeOut(200)
 		});
 
-		{if $login_referer}
-			$('.redirect').val('{$login_referer}');
-			$('#login-modal').modal('show');
-		{/if}
 	});
 
 	function nonAplha(ID){

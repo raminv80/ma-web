@@ -12,7 +12,7 @@
   	
 		<div class="col-md-pull-3 col-md-8">    
 	        {include file='breadcrumbs.tpl'}
-	        <h1>{$listing_name}</h1>
+	        <h1>{$listing_name} [shop-location.tpl]</h1>
 		</div>
 
 

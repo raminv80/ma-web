@@ -6,7 +6,7 @@
 						<div class="row-fluid">
 							<div class="span7">
 					  			{include file='breadcrumbs.tpl'}
-					  			<h3 class="toptitle">{$product_name}</h3>
+					  			<h3 class="toptitle">{$listing_name} [search.tpl]</h3>
 				  			</div>
 						</div>
 					</div>

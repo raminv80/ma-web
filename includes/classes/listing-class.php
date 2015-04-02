@@ -165,6 +165,9 @@ class ListClass {
     }
     
     $template = $this->CONFIG_OBJ->template;
+    foreach($this->CONFIG_OBJ->template as $t){
+    	if($t->attributes()->typeid == $res[0]['listing_type_id']) $template = $t;
+    }
     
     if(empty($data) && !empty($this->CONFIG_OBJ->table->template) && ($tree_ID == $this->ID)){
       $template = $this->CONFIG_OBJ->table->template;
@@ -361,7 +364,7 @@ class ListClass {
     $data = array();
     
     // GET LISTINGS AND CATEGORIES FOR THIS SECTION
-    $sql = "SELECT tbl_listing.listing_object_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_listing.listing_name, tbl_listing.listing_parent_id, tbl_listing.listing_parent_flag FROM tbl_listing WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_published = :published AND tbl_listing.listing_display_menu = '1' AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_order ASC";
+    $sql = "SELECT tbl_listing.listing_object_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_listing.listing_name, tbl_listing.listing_parent_id, tbl_listing.listing_parent_flag, tbl_listing.listing_type_id FROM tbl_listing WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_published = :published AND tbl_listing.listing_display_menu = '1' AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_type_id, tbl_listing.listing_order ASC";
     $params = array(
         ":cid"=>$_cid,
         ":published"=>$_PUBLISHED
@@ -373,6 +376,7 @@ class ListClass {
             "category_id"=>$row['listing_object_id'],
             "title"=>ucfirst(unclean($row['listing_name'])),
             "url"=>$row['listing_url'],
+        		"type_id"=>$row['listing_type_id'],
             "selected"=>0,
             "listings"=>0
         );
@@ -418,17 +422,49 @@ class ListClass {
     }
     
     // GET THE TOP LEVEL CATEGORY (IF ANY) WHICH THIS OBJECT IS LINKED TOO
-    $filter = "";
+   	$filter = "";
+    $_default_filter = "";
     $filter_params = array();
     $f_count = 1;
-    if(! empty($this->CONFIG_OBJ->filter)){
+    if(!empty($this->CONFIG_OBJ->filter)){
       foreach($this->CONFIG_OBJ->filter as $f){
-        if(! empty($f->field) && ! empty($f->value)){
-          $filter .= " AND " . $f->field . " = :filter{$f_count}";
-          $filter_params[":filter{$f_count}"] = $f->value;
-          $f_count ++;
+      	if($f->attributes()->default == 1){
+      		if(empty($f->value)){ continue; }
+      		//Filter sql based on config only
+      		$_default_filter = " AND ". (string) $f->value;
+      		continue;
+      	}
+      	
+        $fieldname = (string)$f->attributes()->name;
+      	$value = $_REQUEST[$fieldname];
+      	if(empty($value)) $value = $_POST[$fieldname];
+        if(!empty($value)){
+        	if($f->attributes()->sqlscript == 1){
+        		if(empty($f->value)){ continue; }
+        		$filter .= " AND ". (string) $f->value;
+        		continue;
+        	}
+        	if(empty($f->field) || empty($f->operator)){ continue; }
+					if(is_array($value)){
+						$tmpField = array();
+						foreach ($value as $val){
+							if(!empty($val)) continue;
+							$tmpField[] = "{$f->field} {$f->operator} :filter{$f_count}";
+							$filter_params[":filter{$f_count}"] = $val;
+							$f_count ++;
+						}
+						$filter .= " AND ( ". implode(' OR ', $tmpField)." )";
+					}else{
+						$filter .= " AND {$f->field} {$f->operator} :filter{$f_count}";
+						$filter_params[":filter{$f_count}"] = $value;
+						$f_count ++;
+					}
+					continue;
         }
       }
+    }
+    if(empty($filter) && !empty($_default_filter)){
+    	$filter = $_default_filter;	
     }
     if(! empty($filter)){
       $this->CONFIG_OBJ->limit = 0;
