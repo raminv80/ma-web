@@ -65,6 +65,7 @@
 		<template>503.tpl</template>
 	</error503>
 	<search>
+		<url>search</url>
 		<template>search.tpl</template>
 		<pageID>136</pageID>
 	</search>

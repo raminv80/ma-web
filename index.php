@@ -20,6 +20,8 @@ if (preg_match('/[A-Z]/', $request[0])){
 include "includes/functions/functions.php";
 global $CONFIG,$SMARTY,$DBobject;
 
+$SMARTY->loadFilter('output', 'trimwhitespace');
+
 if(!empty($_REQUEST['ldc'])){
 	$cart_obj = new cart();
 	$res = $cart_obj->ApplyDiscountCode($_REQUEST['ldc']);
@@ -105,10 +107,12 @@ while(true){
   /**
    * ***** Goes to search ******
    */
-  if($_request['arg1'] == 'search'){
-    $template = loadPage($CONFIG->search);
-    searchcms($_GET['q']);
-    break 1;
+  foreach($CONFIG->search as $sp){
+  	if($sp->url == $_request['arg1']){
+  		$template = loadPage($sp);
+  		searchcms($_REQUEST);
+  		break 2;
+  	}
   }
   
   /**

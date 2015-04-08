@@ -1,6 +1,7 @@
 <?php
-function searchcms($str){
+function searchcms($data){
 	global $SMARTY,$DBobject;
+	$str = $data['q'];
 	$SMARTY->assign('term',$str);
 	$count = 0;
 	$tags = array();

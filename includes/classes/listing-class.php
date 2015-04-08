@@ -166,7 +166,7 @@ class ListClass {
     
     $template = $this->CONFIG_OBJ->template;
     foreach($this->CONFIG_OBJ->template as $t){
-    	if($t->attributes()->typeid == $res[0]['listing_type_id']) $template = $t;
+    	if(!empty($res[0]['listing_type_id']) && $t->attributes()->typeid == $res[0]['listing_type_id']) $template = $t;
     }
     
     if(empty($data) && !empty($this->CONFIG_OBJ->table->template) && ($tree_ID == $this->ID)){
