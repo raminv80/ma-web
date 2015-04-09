@@ -41,7 +41,8 @@ if(!empty($_SESSION['ad_session'])){
 foreach($_SESSION['smarty'] as $key=>$val){
   $SMARTY->assign($key,$val);
 }
-$SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$SMARTY->assign('DOMAIN', $protocol. $GLOBALS['HTTP_HOST']);
 unset($_SESSION['smarty']);
 $SMARTY->assign('error',$_SESSION['error']);
 unset($_SESSION['error']); // ASSIGN ERROR MESSAGES FOR TEMPLATES
