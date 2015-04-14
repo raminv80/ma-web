@@ -150,14 +150,20 @@ class ListClass {
     		$options = $this->getOptionsCatTree($f, $f->attributes()->parent_root);
     	}else{
     		$pre = str_replace("tbl_","",$f->table);
-    		$sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+    		$extraArr = array();
+    		foreach($f->extra as $xt){
+    			$extraArr[] = (string) $xt;
+    		}
+    		$extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
+    		$sql = "SELECT {$f->id},{$f->reference} FROM {$extraStr} {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
     		if($res = $DBobject->wrappedSqlGet($sql)){
     			$options = array();
-    			foreach($res as $key=>$row){
-    				$options[] = array(
-    						'id'=>$row["{$f->id}"],
-    						'value'=>$row["{$f->reference}"]
-    				);
+    			foreach($res as $row){
+    				$options[$row["{$f->id}"]]['id'] = $row["{$f->id}"];
+    				$options[$row["{$f->id}"]]['value'] = $row["{$f->reference}"];
+    				foreach($extraArr as $xt){
+    					$options[$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
+    				}
     			}
     		}
     	}
@@ -532,15 +538,20 @@ class ListClass {
   
   	$pid  = empty($pid)?0:$pid;
   	$pre = str_replace("tbl_","",$f->table);
-  	$sql = "SELECT {$f->id}, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''?"AND {$f->where} ":"") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
-  
+  	$extraArr = array();
+  	foreach($f->extra as $xt){
+  		$extraArr[] = (string) $xt;
+  	}
+  	$extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
+  	$sql = "SELECT {$f->id}, {$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''?"AND {$f->where} ":"") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
   	if($res = $DBobject->wrappedSqlGet($sql)){
   		foreach($res as $row){
-  			$results[] = array(
-  					'id'=>$row["{$f->id}"],
-  					'value'=>$row["{$f->reference}"],
-  					'subs'=>self::getOptionsCatTree($f,$row["{$f->id}"])
-  			);
+  			$results[$row["{$f->id}"]]['id'] = $row["{$f->id}"];
+  			$results[$row["{$f->id}"]]['value'] = $row["{$f->reference}"];
+  			foreach($extraArr as $xt){
+  				$results[$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
+  			}
+  			$results[$row["{$f->id}"]]['subs'] = self::getOptionsCatTree($f,$row["{$f->id}"]);
   		}
   	}
   	return $results;

@@ -85,26 +85,33 @@
           <input type="hidden" value="create" name="action" id="action" /> 
           <input type="hidden" value="{$redirect}" name="redirect" class="redirect" /> 
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-          <!-- <div class="form-group">
+          <div class="form-group">
               <label for="gname" class="col-sm-4 control-label">First Name</label>
               <div class="col-sm-8">
                   <input type="text" value="{if $post}{$post.gname}{/if}" class="form-control" id="gname" name="gname" required>
-              <span class="help-block"></span>
-            </div>
+              		<span class="help-block"></span>
+            	</div>
           </div>
           <div class="form-group">
               <label for="surname" class="col-sm-4 control-label">Last Name</label>
               <div class="col-sm-8">
                   <input type="text" value="{if $post}{$post.surname}{/if}" class="form-control" id="surname" name="surname" required>
-              <span class="help-block"></span>
-            </div>
-          </div> -->
+              		<span class="help-block"></span>
+            	</div>
+          </div>
+          <div class="form-group">
+              <label for="phone" class="col-sm-4 control-label">Phone</label>
+              <div class="col-sm-8">
+                  <input type="text" value="{if $post}{$post.surname}{/if}" class="form-control" id="phone" name="phone" required>
+              		<span class="help-block"></span>
+            	</div>
+          </div>
           <div class="form-group">
               <label for="email" class="col-sm-4 control-label">Email</label>
               <div class="col-sm-8">
                   <input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="reg-email" name="email" required>
-              <span class="help-block"></span>
-            </div>
+              		<span class="help-block"></span>
+            	</div>
           </div>
           <!-- <div class="form-group">
               <label for="confirm_email" class="col-sm-4 control-label">Re-enter Email</label>
