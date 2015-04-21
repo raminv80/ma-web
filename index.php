@@ -195,11 +195,20 @@ function loadPage($_conf){
         $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
         $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
       }
-      foreach($_conf->options as $o){
-        $domdict = dom_import_simplexml($struct->table);
-        $domcat  = dom_import_simplexml($o);
-        $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
-        $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
+    	foreach($_conf->options as $o){
+      	if(!empty($struct->table->options)){
+      		foreach($o->field as $of){
+      			$domdict = dom_import_simplexml($struct->table->options);
+      			$domcat  = dom_import_simplexml($of);
+      			$domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);
+      			$domdict->appendChild($domcat);
+      		}
+      	}else{
+      		$domdict = dom_import_simplexml($struct->table);
+      		$domcat  = dom_import_simplexml($o);
+      		$domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
+      		$domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
+      	}
       }
       foreach($_conf->extends as $e){
         $domdict = dom_import_simplexml($struct->table);

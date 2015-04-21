@@ -144,9 +144,10 @@
 	            baseHref = jQuery('base').attr('href');
 	        jQuery('a').each(function() {
 	            var href = jQuery(this).attr('href');
-	            if (href && (href.match(/^https?\:/i)) && (!href.match(document.domain))) {
+	            if (href && (href.match(/^http?\:/i) || href.match(/^https?\:/i))  && (!href.match(document.domain))) {
 	                jQuery(this).click(function() {
-	                    var extLink = href.replace(/^https?\:\/\//i, '');
+	                    var extLink = href.replace(/^https?\:\/\//i, ''); 
+	                    extLink = extLink.replace(/^http?\:\/\//i, '');
 	                    //_gaq.push(['_trackEvent', 'External', 'Click', extLink]);
 	                    ga('send', 'event', 'External', 'Click', extLink);
 	                    if (jQuery(this).attr('target') != undefined && jQuery(this).attr('target').toLowerCase() != '_blank') {
