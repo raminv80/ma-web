@@ -1015,3 +1015,93 @@ function checkUserAuthCookie($name ='usrauth') {
 	return false;
 }
 
+
+function sendGAEvent($_tid,$_category,$_action,$_label="",$_value=0){
+  if(empty($_tid) || empty($_category) || empty($_action)) return false;
+
+  //Submit Google Event
+  // Standard params
+  $v = 1;
+  $tid = $_tid; // Put your own Analytics ID in here
+  $cid = gaParseCookie();
+
+  $dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
+
+  $info = array();
+  $info['category'] = $_category; // Event category
+  $info['action'] = $_action; // event action
+  $info['label'] = $_label; // event label
+  $info['value'] = $_value;
+
+
+  // Set up Transaction params
+  $ec = $info['category']; // Event category
+  $ea = $info['action']; // event action
+  $el = $info['label']; // event label
+  $ev = $info['value']; // event value
+  // Send Transaction hit
+  $data = array(
+      'v' => $v,
+      'tid' => $tid,
+      'cid' => $cid,
+      't' => 'event',
+      'ec' => $ec,
+      'ea' => $ea,
+      'el' => $el,
+      'ev' => $ev,
+      'dh' => $dh,
+      'dp' => "/win/",
+      'p' => "/win/"
+  );
+  gaFireHit($data);
+}
+
+// See https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+function gaFireHit( $data = null ) {
+  if ( $data ) {
+    $getString = 'https://ssl.google-analytics.com/collect';
+    $getString .= '?payload_data&';
+    $getString .= http_build_query($data);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $getString);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_exec($ch);
+    return true;
+  }
+  return false;
+}
+
+// Handle the parsing of the _ga cookie or setting it to a unique identifier
+function gaParseCookie() {
+  if (isset($_COOKIE['_ga'])) {
+    list($version,$domainDepth, $cid1, $cid2) = split('[\.]', $_COOKIE["_ga"],4);
+    $contents = array('version' => $version, 'domainDepth' => $domainDepth, 'cid' => $cid1.'.'.$cid2);
+    $cid = $contents['cid'];
+  }elseif (!empty($_POST["_ga"])) {
+    list($version,$domainDepth, $cid1, $cid2) = split('[\.]', $_POST["_ga"],4);
+    $contents = array('version' => $version, 'domainDepth' => $domainDepth, 'cid' => $cid1.'.'.$cid2);
+    $cid = $contents['cid'];
+  }
+  else $cid = gaGenUUID();
+  return $cid;
+}
+
+// Generate UUID v4 function - needed to generate a CID when one isn't available
+function gaGenUUID() {
+  return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+      // 32 bits for "time_low"
+      mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+      // 16 bits for "time_mid"
+      mt_rand( 0, 0xffff ),
+      // 16 bits for "time_hi_and_version",
+      // four most significant bits holds version number 4
+      mt_rand( 0, 0x0fff ) | 0x4000,
+      // 16 bits, 8 bits for "clk_seq_hi_res",
+      // 8 bits for "clk_seq_low",
+      // two most significant bits holds zero and one for variant DCE1.1
+      mt_rand( 0, 0x3fff ) | 0x8000,
+      // 48 bits for "node"
+      mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+  );
+}
