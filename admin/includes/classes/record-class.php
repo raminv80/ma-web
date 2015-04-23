@@ -95,44 +95,56 @@ Class Record{
 				foreach ($f->reference as $r){
 					$ref[] = $r;
 				}
-				$sql = "SELECT {$f->id},". implode(',', $ref)." FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+				$extraArr = array();
+				foreach($f->extra as $xt){
+					$extraArr[] = (string) $xt;
+				}
+				$extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
+				$sql = "SELECT {$f->id},". implode(',', $ref)." {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 					foreach ( $res as $key => $row ) {
 						$value = array();
 						foreach ($ref as $r){
 							$value[] = $row ["{$r}"];
 						}
-						$article_f ['options'] ["{$f->name}"] [] = array (
-								'id' => $row ["{$f->id}"],
-								'value' => implode(' ', $value),
-								'record'=> $row
-						);
+						$article_f['options']["{$f->name}"][$row["{$f->id}"]]['id'] = $row["{$f->id}"];
+						$article_f['options']["{$f->name}"][$row["{$f->id}"]]['value'] = implode(' ', $value);
+						foreach($extraArr as $xt){
+							$article_f['options']["{$f->name}"][$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
+						}
 					}
 					}
 				}
 		}
-
 		return  $article_f;
 	}
+	
 	function getOptionsCatTree($f, $pid){
 		global $SMARTY,$DBobject;
 		$results = array();
 	
 		$pre = str_replace("tbl_","",$f->table);
-		$sql = "SELECT {$f->id}, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+		$extraArr = array();
+		foreach($f->extra as $xt){
+			$extraArr[] = (string) $xt;
+		}
+		$extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
+		$sql = "SELECT {$f->id}, {$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 	
 		if($res = $DBobject->wrappedSqlGet($sql)){
-			foreach ($res as $row) {
-				$results[] = array (
-						'id' => $row ["{$f->id}"],
-						'value' => $row ["{$f->reference}"],
-						'subs' => $this->getOptionsCatTree($f, $row["{$f->id}"])
-				);
+			foreach($res as $row){
+				$results[$row["{$f->id}"]]['id'] = $row["{$f->id}"];
+				$results[$row["{$f->id}"]]['value'] = $row["{$f->reference}"];
+				foreach($extraArr as $xt){
+					$results[$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
+				}
+				$results[$row["{$f->id}"]]['subs'] = self::getOptionsCatTree($f,$row["{$f->id}"]);
 			}
-	
 		}
 		return $results;
 	}
+	
+	
 	function getAssociated($a,$id){
 		global $SMARTY,$DBobject;
 		$results = array();

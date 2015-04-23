@@ -18,7 +18,7 @@
 	</div>
 	<div class="row images" id="image{$imageno}">
 		<div class="row form-group">
-			<label class="col-sm-3 control-label" for="gallery_image">Image<br><small>Size: 480px Wide x 480px Tall</small></label>
+			<label class="col-sm-3 control-label" for="gallery_image">Image<br><small>{if $image_size}{$image_size}{/if}</small></label>
 			<div class="col-sm-9">
 				<input type="hidden" value="{$gTableName}_id" name="default[gallery_{$gTableName}_id]" />
 				<input type="hidden" value="gallery_id" name="field[10][tbl_gallery][{$imageno}][id]" id="id" />

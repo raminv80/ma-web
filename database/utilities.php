@@ -224,7 +224,7 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
 	  	);
 	  	$res = $DBobject->executeSQL($sql,$params);
 	  	if(count($res) < 5 ){
-	    	$mailSent = SafeMail($to,$subject,$body,$headers, "-f $fromEmail");
+	    	$mailSent = (SafeMail($to,$subject,$body,$headers, "-f $fromEmail"))?1:0;;
 	  	}else{
 				$mailSent= -1;
 			}
@@ -245,10 +245,8 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
   		  ":time"=>date("d/m/Y H:i:s T(P)"),
 	  );
 	  $DBobject->executeSQL($sql,$params);
-	  return $DBobject->wrappedSqlIdentity();
 	}catch(Exception $e){}
-	
-	return false;
+	return $mailSent;
 }
 
 function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmentFile=null){
@@ -266,11 +264,7 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 				$mp1 = new Multipart($attachmentFile);
 				$mail->addAttachment($mp1);
 			}
-	
-			if(!empty($bcc)){
-				$mail->addBCC($bcc);
-			}
-	
+			$mail->addBCC('cmsemails@them.com.au'.(!empty($bcc)?",".$bcc:""));
 			$mail->setHtml($body);
 	
 			$sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND NOW() LIMIT 5";
@@ -279,7 +273,7 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 			);
 			$res = $DBobject->executeSQL($sql,$params);
 			if(count($res) < 5 ){
-				$mailSent = $mail->send();
+				$mailSent = ($mail->send())?1:0;;
 			}else{
 				$mailSent= -1;
 			}
@@ -302,10 +296,8 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 	  		  ":time"=>date("d/m/Y H:i:s T(P)"),
 		  );
 		$DBobject->executeSQL($sql,$params);
-		return $DBobject->wrappedSqlIdentity();
 	}catch(Exception $e){}
-
-	return false;
+	return $mailSent;
 }
 
 function sendMailV2($to,$from,$fromEmail,$subject,$body){

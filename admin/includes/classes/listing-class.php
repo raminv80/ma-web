@@ -84,13 +84,19 @@ class Listing {
         $listing_f['options']["{$f->name}"] = $this->getOptionsCatTree($f,$parentID);
       }else{
         $pre = str_replace("tbl_","",$f->table);
-        $sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+        $extraArr = array();
+        foreach($f->extra as $xt){
+        	$extraArr[] = (string) $xt;
+        }
+        $extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
+        $sql = "SELECT {$f->id},{$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
         if($res = $DBobject->wrappedSqlGet($sql)){
-          foreach($res as $key=>$row){
-            $listing_f['options']["{$f->name}"][] = array(
-                'id'=>$row["{$f->id}"],
-                'value'=>$row["{$f->reference}"]
-            );
+          foreach($res as $row){
+          	$listing_f['options']["{$f->name}"][$row["{$f->id}"]]['id'] = $row["{$f->id}"];
+          	$listing_f['options']["{$f->name}"][$row["{$f->id}"]]['value'] = $row["{$f->reference}"];
+          	foreach($extraArr as $xt){
+          		$listing_f['options']["{$f->name}"][$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
+          	}
           }
         }
       }
@@ -103,15 +109,21 @@ class Listing {
     $results = array();
     
     $pre = str_replace("tbl_","",$f->table);
-    $sql = "SELECT {$f->id}, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''?"AND {$f->where} ":"") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+    $extraArr = array();
+    foreach($f->extra as $xt){
+    	$extraArr[] = (string) $xt;
+    }
+    $extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
+    $sql = "SELECT {$f->id}, {$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''?"AND {$f->where} ":"") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
     
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
-        $results[] = array(
-            'id'=>$row["{$f->id}"],
-            'value'=>$row["{$f->reference}"],
-            'subs'=>$this->getOptionsCatTree($f,$row["{$f->id}"])
-        );
+      	$results[$row["{$f->id}"]]['id'] = $row["{$f->id}"];
+      	$results[$row["{$f->id}"]]['value'] = $row["{$f->reference}"];
+      	foreach($extraArr as $xt){
+      		$results[$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
+      	}
+      	$results[$row["{$f->id}"]]['subs'] = self::getOptionsCatTree($f,$row["{$f->id}"]);
       }
     }
     return $results;

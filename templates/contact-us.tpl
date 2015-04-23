@@ -52,7 +52,11 @@
 			 	<form class="form-horizontal" id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us">
 			  	<input type="hidden" value="question" name="action" id="action" /> 
 			    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-			  	
+			  	<input type="hidden" value="Contact" name="form_name" id="form_name" />
+					<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
+			  	<div style="height:0;overflow:hidden;">
+             <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1">
+          </div>
 			  	<div class="row form-group">
 						<div class="col-sm-4 col-lg-2">
 							<label for="name" class="control-label">Name*: </label>

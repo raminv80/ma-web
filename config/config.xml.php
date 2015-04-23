@@ -3,7 +3,7 @@
 <config debug="false" staging="true">
 	<domain></domain>
 	<google_analytics>
-		<id>UA-33575281-1</id>
+		<id>UA-</id>
 	</google_analytics>
 	<company>
 		<name>Christoper Pyne MP</name>
@@ -14,9 +14,9 @@
 			<postcode>5068</postcode>
 		</address>
 		<phone>(08) 8431 2277</phone>
-		<email>info@pyneonline.com.au</email>
-		<email_from>noreply@pyneonline.com.au</email_from>
-		<email_contact>sarah@them.com.au</email_contact>
+		<email_from>noreply@them.com.au</email_from>
+		<email_contact>apolo@them.com.au</email_contact>
+		<email_orders>apolo@them.com.au</email_orders>
 		<logo>logo.png</logo>
 	</company> 
 	<database> 

@@ -13,7 +13,7 @@
 		<phone>08 8363 2717</phone>
 		<email>hello@them.com.au</email>
 		<email>hello@them.com.au</email>
-		<email_from>noreply@themserver.com.au</email_from>
+		<email_from>noreply@them.com.au</email_from>
 		<email_contact>apolo@them.com.au</email_contact>
 		<email_orders>apolo@them.com.au</email_orders>
 		<logo>themlogo.png</logo>

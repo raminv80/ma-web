@@ -155,7 +155,7 @@ class ListClass {
     			$extraArr[] = (string) $xt;
     		}
     		$extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
-    		$sql = "SELECT {$f->id},{$f->reference} FROM {$extraStr} {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+    		$sql = "SELECT {$f->id},{$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
     		if($res = $DBobject->wrappedSqlGet($sql)){
     			$options = array();
     			foreach($res as $row){

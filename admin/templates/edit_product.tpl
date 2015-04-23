@@ -128,14 +128,15 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_seo_title">SEO Title *</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_seo_title}" name="field[1][tbl_product][{$cnt}][product_seo_title]" id="id_product_seo_title" required>
-								<span class="help-block"></span>
+								<input class="form-control" type="text" onkeyup="$(this).parent().find('.charcount').html($(this).val().length);" value="{$fields.product_seo_title}" name="field[1][tbl_product][{$cnt}][product_seo_title]" id="id_product_seo_title" required>
+								<span class="small pull-right charcount">{$fields.product_seo_title|count_characters:true}</span><span class="small pull-right">characters: </span><span class="help-block"></span>
 							</div>
 						</div>
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_meta_description">Meta Description</label>
 							<div class="col-sm-5 ">
-								<input class="form-control" type="text" value="{$fields.product_meta_description}" name="field[1][tbl_product][{$cnt}][product_meta_description]" id="id_product_meta_description">
+								<textarea class="form-control" rows="3" onkeyup="$(this).parent().find('.charcount').html($(this).val().length);" name="field[1][tbl_product][{$cnt}][product_meta_description]" id="id_product_meta_description">{$fields.product_meta_description}</textarea>
+								<span class="small pull-right charcount">{$fields.listing_meta_description|count_characters:true}</span><span class="small pull-right">characters: </span>
 							</div>
 						</div>					
 						<div class="row form-group">
@@ -327,6 +328,7 @@
 					<div class="form" id="images-wrapper">
 						{assign var='imageno' value=0}
 						{assign var='gTableName' value='product'}
+						{assign var='image_size' value='Size: 1170px Wide x 560px Tall'}
 						{foreach $fields.gallery as $images}
 							{assign var='imageno' value=$imageno+1}
 							{include file='gallery.tpl'}
@@ -745,7 +747,7 @@
 			type : "POST",
 			url : "/admin/includes/processes/load-template.php",
 			cache : false,
-			data : "template=gallery.tpl&imageno=" + no + "&gTableName=product",
+			data : "template=gallery.tpl&imageno=" + no + "&gTableName=product&image_size="+ encodeURIComponent('Size: 1170px Wide x 560px Tall'),
 			dataType : "html",
 			success : function(data, textStatus) {
 				try {
