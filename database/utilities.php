@@ -1031,6 +1031,9 @@ function sendGAEvent($_tid,$_category,$_action,$_label="",$_value=0){
   $ea = $info['action']; // event action
   $el = $info['label']; // event label
   $ev = $info['value']; // event value
+  $dp = !empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:"/API/";
+  $p = !empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:"/API/";
+
   // Send Transaction hit
   $data = array(
       'v' => $v,
@@ -1042,8 +1045,8 @@ function sendGAEvent($_tid,$_category,$_action,$_label="",$_value=0){
       'el' => $el,
       'ev' => $ev,
       'dh' => $dh,
-      'dp' => "/win/",
-      'p' => "/win/"
+      'dp' => $dp,
+      'p' => $p
   );
   gaFireHit($data);
 }
