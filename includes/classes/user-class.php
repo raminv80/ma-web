@@ -235,32 +235,52 @@ class UserClass {
      * @return array
      */
     function ResetPassword($email){
-    	global $DBobject,$SMARTY;
+      global $DBobject,$SMARTY;
     
-        if ($res = $this->RetrieveByUsername($email)){
-            $newPass = genRandomString(10);
-            
-            $temp_str = getPass($email,$newPass);
-            
-            
-            $params = array (
-                            ":id" => $res['user_id'],
-                            ":password" => $temp_str,
-                            ":ip" => $_SERVER['REMOTE_ADDR'],
-                            ":browser" => $_SERVER['HTTP_USER_AGENT']
-            );
-            $sql = "UPDATE tbl_user SET user_password = :password, user_ip = :ip, user_browser = :browser, user_modified = now()
+      if ($res = $this->RetrieveByUsername($email)){
+        $newPass = genRandomString(10);
+        $temp_str = getPass($email,$newPass);
+    
+        $params = array (
+            ":id" => $res['user_id'],
+            ":token" => $temp_str,
+            ":ip" => $_SERVER['REMOTE_ADDR'],
+            ":browser" => $_SERVER['HTTP_USER_AGENT']
+        );
+        $sql = "UPDATE tbl_user SET user_token = :token, user_token_date = now() , user_ip = :ip, user_browser = :browser, user_modified = now()
                    WHERE user_id = :id ";
-
-            if ( $DBobject->wrappedSql($sql, $params) ) {
-            	return array ('success' => 'Your new password has been sent to the registered email address.', 
-            							'temp_pass' =>$newPass,
-            							'user_gname' =>$res['user_gname']);
-            } 
-            return array ('error' => 'There was a connection problem. Please, try again!');
+    
+        if ( $DBobject->wrappedSql($sql, $params) ) {
+          return array ('success' => 'Your new password has been sent to the registered email address.',
+              'token' =>$newPass,
+              'user_gname' =>$res['user_gname']);
         }
-    	return array( 'error' => "Sorry, '{$email}' does not appear to be registered with this site. Can you please check your email address or please create an account.");
+        return array ('error' => 'There was a connection problem. Please, try again!');
+      }
+      return array( 'error' => "Sorry, '{$email}' does not appear to be registered with this site. Check your email or please create an account.");
     }
+//     function ResetPassword($email){
+//     	global $DBobject,$SMARTY;
+//         if ($res = $this->RetrieveByUsername($email)){
+//             $newPass = genRandomString(10);
+//             $temp_str = getPass($email,$newPass);
+//             $params = array (
+//                             ":id" => $res['user_id'],
+//                             ":password" => $temp_str,
+//                             ":ip" => $_SERVER['REMOTE_ADDR'],
+//                             ":browser" => $_SERVER['HTTP_USER_AGENT']
+//             );
+//             $sql = "UPDATE tbl_user SET user_password = :password, user_ip = :ip, user_browser = :browser, user_modified = now()
+//                    WHERE user_id = :id ";
+//             if ( $DBobject->wrappedSql($sql, $params) ) {
+//             	return array ('success' => 'Your new password has been sent to the registered email address.', 
+//             							'temp_pass' =>$newPass,
+//             							'user_gname' =>$res['user_gname']);
+//             } 
+//             return array ('error' => 'There was a connection problem. Please, try again!');
+//         }
+//     	return array( 'error' => "Sorry, '{$email}' does not appear to be registered with this site. Can you please check your email address or please create an account.");
+//     }
     
     /**
      * Insert new address in tbl_address and returns address_id
@@ -299,6 +319,8 @@ class UserClass {
     					address_deleted IS NULL";
     	
     	if ( $res = $DBobject->wrappedSql ( $sql, $params ) ) {
+    		$sql = "UPDATE tbl_address SET address_modified = now()  WHERE address_id = :id ";
+    		$DBobject->wrappedSql ( $sql, array(':id'=>$res[0]['address_id']) );
     		return $res[0]['address_id'];
     	} else {
 	    	$sql = " INSERT INTO tbl_address (

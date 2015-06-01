@@ -94,7 +94,7 @@ while(true){
     $template = loadPage($CONFIG->index_page); 
     break 1; 
   }
-  
+
   /**
    * **** Goes to individual script pages ******
    */
@@ -138,6 +138,40 @@ while(true){
       break 2;
     }
   }
+  
+  
+  /*** POSSIBLE VARIATION TO LOAD DYNAMIC URL LISTINGS BASED ON CACHE TABLE MATCH URL BASE ***/
+  /* $_t_config = array(); $_t_key = "";
+  $arr = explode("/",$_request["arg1"]);
+  foreach($CONFIG->listing_page as $lp){
+    if(empty($lp->url)){continue;}
+    //LOAD URL FROM CACHE TABLE BASED ON pageID FROM CONFIG FILE
+    
+    $needle = str_replace("/","\/",$lp->url);
+    $haystack = $_request["arg1"];
+    if(preg_match("/^{$needle}/",$haystack)){
+      if(count($lp->url) > count($_t_key)){
+        $_t_config = $lp;
+        $_t_key = $lp->url;
+      }
+    }
+  }
+  if(!empty($_t_config)){
+    foreach($lp->process as $sp){
+      $file = (string)$sp->file;
+      if(file_exists($file))	{ include ($file);}
+    }
+    $_nurl = $_request["arg1"];
+    $class = (string)$lp->file;
+    $obj = new $class($_nurl,$lp);
+    $template = $obj->Load((!empty($lp->root_parent_id)?$lp->root_parent_id:null),$_PUBLISHED);
+    $menu = $obj->LoadMenu($lp->root_parent_id);
+    $SMARTY->assign('menuitems',$menu);
+    break 2;
+  } */
+  
+  /***** END POSSIBLE VARIATION ***/
+  
   /**
    * ***** Dynamic Page Check Here ******
    */
@@ -147,6 +181,18 @@ while(true){
     $obj = new $class($_request["arg1"],$struct);
     $id = $obj->ChkCache($_request["arg1"],$_PUBLISHED);
     if(! empty($id)){
+      /**
+       * **** Goes to individual script pages ******
+       */
+      foreach($CONFIG->static_page as $sp){
+        if($sp->pageID == $id){
+          $template = loadPage($sp);
+          break 2;
+        }
+      }
+      /**
+       * **** load dynamic page *****
+       */
     	foreach($struct->process as $sp){
     		$file = (string)$sp->file;
     		if(file_exists($file))	{ include ($file);}

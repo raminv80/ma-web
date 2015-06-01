@@ -17,14 +17,14 @@
 	</div>
 	<div class="row files" id="file{$filesno}">
 		<div class="row form-group">
-			<label class="col-sm-3 control-label" for="files_title">Title</label>
+			<label class="col-sm-3 control-label" for="files_title_{$filesno}">Title</label>
 			<div class="col-sm-5">
 				<input type="hidden" value="{$gTableName}_id" name="default[files_{$gTableName}_id]" />
-				<input type="hidden" value="files_id" name="field[10][tbl_files][{$filesno}][id]" id="id"/>
+				<input type="hidden" value="files_id" name="field[10][tbl_files][{$filesno}][id]" id="id_{$filesno}"/>
 				<input type="hidden" value="{$files.files_id}" name="field[10][tbl_files][{$filesno}][files_id]" class="key" >
-				<input type="hidden" value="{$files.files_listing_id}" name="field[10][tbl_files][{$filesno}][files_listing_id]" id="files_listing_id" class="key" >
-				<input type="hidden" value="{$files.files_product_id}" name="field[10][tbl_files][{$filesno}][files_product_id]" id="files_product_id" class="key" >
-				
+				<input type="hidden" value="{$files.files_listing_id}" name="field[10][tbl_files][{$filesno}][files_listing_id]" id="files_listing_id_{$filesno}" class="key" >
+				<input type="hidden" value="{$files.files_product_id}" name="field[10][tbl_files][{$filesno}][files_product_id]" id="files_product_id_{$filesno}" class="key" >
+				<input type="hidden" value="{if $files.files_created}{$files.files_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[10][tbl_files][{$filesno}][files_created]" id="files_created_{$filesno}">
 				<input class="form-control" type="text" value="{$files.files_friendly_name}" name="field[10][tbl_files][{$filesno}][files_friendly_name]" id="files_title_{$filesno}" onchange="$('#files_title_{$filesno}').html(this.value);">
 			</div>
 		</div>
@@ -41,7 +41,7 @@
 			</div>
 		</div>
 		<div class="row form-group">
-			<label class="col-sm-3 control-label" for="files_path">File</label>
+			<label class="col-sm-3 control-label" for="files_path_{$filesno}">File</label>
 			<div class="col-sm-5">
 				
 				<input type="hidden" value="{$files.files_path}" name="field[10][tbl_files][{$filesno}][files_path]" id="files_path_{$filesno}_link" class="fileinput"> 

@@ -1100,3 +1100,22 @@ function gaGenUUID() {
       mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
   );
 }
+
+
+function getShortURL($longUrl, $apiKey = '') {
+	$jsonData = json_encode(array('longUrl' => $longUrl));
+	$curlObj = curl_init();
+	curl_setopt($curlObj, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url'. (!empty($apiKey)?'?key='.$apiKey:''));
+	curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($curlObj, CURLOPT_HEADER, 0);
+	curl_setopt($curlObj, CURLOPT_HTTPHEADER, array('Content-type:application/json'));
+	curl_setopt($curlObj, CURLOPT_POST, true);
+	curl_setopt($curlObj, CURLOPT_POSTFIELDS, $jsonData);
+	$response = curl_exec($curlObj);
+	$json = json_decode($response);
+	curl_close($curlObj);
+
+	if(!empty($json->id))	return $json->id;
+	return $longUrl;
+}

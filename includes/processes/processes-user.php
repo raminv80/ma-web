@@ -114,6 +114,75 @@ if(checkToken('frontend',$_POST["formToken"],false)){
           'success'=>$success
       ));
       die();
+    case 'passwordreset':
+      $status = false;
+      $error="";
+      $em = $_POST['email'];
+      $tk = $_POST['userToken'];
+      $pw = $_POST['pass'];
+      $token = getPass($em,$tk);
+    
+      // SEND CONFIRMATION EMAIL
+      $sql = "SELECT user_id,IF(user_token_date>=DATE_SUB(NOW( ),INTERVAL 4 HOUR),0,1) AS expired FROM tbl_user WHERE user_token = :token"; //Reset password
+      if($res2 = $DBobject->wrappedSql ( $sql, array(':token' => $token)) ){
+        if($res2[0]['expired'] == 1){
+          $error = 'This url has expired, please request a new reset password.';
+        }else{
+          $temp_str = getPass($em,$pw);
+          $params = array (
+              ":id" => $res2[0]['user_id'],
+              ":password" => $temp_str,
+              ":ip" => $_SERVER['REMOTE_ADDR'],
+              ":browser" => $_SERVER['HTTP_USER_AGENT']
+          );
+          $sql = "UPDATE tbl_user SET user_password = :password, user_ip = :ip,user_browser = :browser,user_modified = now() WHERE user_id = :id ";
+          if ( $DBobject->wrappedSql($sql, $params) ) {
+            $sql = "UPDATE tbl_user SET user_token = NULL, user_token_date = NULL WHERE user_id = :id "; //Reset password
+            $DBobject->wrappedSql($sql, array("id"=>$res2[0]['user_id']));
+            saveInLog('Edit', 'tbl_user', $res['id']);
+            $status = true;
+          }else{
+            $error = 'There was a connection problem. Please, try again!';
+          }
+          try {
+            $user_obj = new Member();
+            $res = $user_obj->Authenticate($em, $pw);
+            $cart_obj = new cart();
+  	    		$message = $cart_obj->SetUserCart($res['id']);
+  	    		$_SESSION['user']['public'] = $res;
+  	    		$url = $_SERVER['HTTP_REFERER'];
+  	    		if ($_POST['redirect']) {
+                  	$url = unclean($_POST['redirect']);
+            }
+            if(empty($_SESSION['address'])){
+            	$addressArr = $user_obj->GetUsersAddresses($res['id']);
+            	$_SESSION['address'] =  array("S"=> $addressArr[0], "same_address" => true);
+            }
+            if(!empty($payments)) {
+              $_SESSION['agreed_tc'] = true;
+            }
+          }catch(Exception $e){
+      
+          }
+        }
+      }else{
+        $error = 'There was a connection problem. Please, try again!';
+      }
+    
+      if($status){
+        echo json_encode(array(
+            'error'=>false,
+            'success'=>true,
+            'url'=>$url
+        ));
+        die();
+      }
+      echo json_encode(array(
+          'error'=>$error,
+          'success'=>false,
+          'url'=>$url
+      ));
+      die();
     
     case 'updatePassword':
       $user_obj = new UserClass();
@@ -177,7 +246,9 @@ if(checkToken('frontend',$_POST["formToken"],false)){
 	unset($_SESSION['user']['public']);
   unset($_SESSION['address']);
   session_regenerate_id();
-  header('Location: ' . $_SERVER['HTTP_REFERER']);
+  $redirect = $_SERVER['HTTP_REFERER'];
+  if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
+  header('Location: ' . $redirect);
   die();
 }
 	
