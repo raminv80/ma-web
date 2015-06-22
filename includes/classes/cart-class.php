@@ -466,7 +466,7 @@ class cart {
     $cart_arr = array();
     
    $sql = "SELECT tbl_cart.*, tbl_payment.*, status_id, status_order, status_name FROM tbl_cart LEFT JOIN tbl_payment ON cart_id = payment_cart_id LEFT JOIN tbl_order ON order_payment_id = payment_id LEFT JOIN tbl_status ON order_status_id = status_id 
-    			WHERE cart_user_id = :uid AND cart_site = :site AND cart_deleted IS NULL AND cart_closed_date IS NOT NULL AND cart_id <> '0' AND order_deleted IS NULL ORDER BY cart_closed_date DESC";
+    			WHERE cart_user_id = :uid AND cart_site = :site  AND payment_status != 'F' AND cart_deleted IS NULL AND cart_closed_date IS NOT NULL AND cart_id <> '0' AND order_deleted IS NULL ORDER BY cart_closed_date DESC";
      
     if($res = $DBobject->wrappedSql($sql,array(
         ":uid"=>$userId,

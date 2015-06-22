@@ -1,28 +1,55 @@
 <?php
 function AdminLogIn($email,$password){
-	$temp_str = getPass($email,$password);
-	//die('@'.$temp_str.'@');
 	$DBobject = new DBmanager();
-	$sql = "SELECT * FROM tbl_admin WHERE admin_email = :email AND admin_password = :password AND admin_deleted IS NULL";
-	$params = array( "email" => $email , "password" => $temp_str );
-	$res = $DBobject->executeSQL($sql , $params );
-	if($res){
-		$_SESSION['user']['admin']["id"]=$res[0]["admin_id"];
+	$encrypt = "new";
+
+  $isValidPassword = isValidPassword($password);
+
+  $temp_str = getPass($email,$password);
+  //die('@'.$temp_str.'@');
+  $DBobject = new DBmanager();
+  $sql = "SELECT * FROM tbl_admin WHERE admin_email = :email AND admin_password = :password AND admin_deleted IS NULL";
+  $params = array(
+      "email" => $email ,
+      "password" => $temp_str
+  );
+   
+  if( $res = $DBobject->wrappedSql($sql , $params) ){
+    $_SESSION['user']['admin']["id"]=$res[0]["admin_id"];
 		$_SESSION['user']['admin']["name"]=$res[0]["admin_name"];
 		$_SESSION['user']['admin']["surname"]=$res[0]["admin_surname"];
 		$_SESSION['user']['admin']["email"]=$res[0]["admin_email"];
 		$_SESSION['user']['admin']["level"]=$res[0]["admin_level"];
-		
-		/* $sql = "SELECT access_store_id FROM tbl_access WHERE access_admin_id = :id AND access_deleted IS NULL";
-		$params = array( "id" => $res[0]["admin_id"]);
-		if($res2 = $DBobject->executeSQL($sql , $params)){
-			$_SESSION['user']['admin']["stores"]=$res2;
-		} */
 		saveInLog('Login', 'tbl_admin', $res[0]["admin_id"]);
-		return true;
-	}else{
-		return false;
-	}
+    $_SESSION['user']['admin']["strong_password"]=$isValidPassword;
+    return true;
+  } else {
+    $temp_str2 = getOldPass($email,$password);
+    $sql = "SELECT * FROM tbl_admin WHERE admin_email = :email AND admin_password = :password AND admin_deleted IS NULL AND admin_encryption != :encrypt";
+    $params = array(
+        "email" => $email ,
+        "password" => $temp_str2,
+        "encrypt" => $encrypt
+    );
+    if( $res = $DBobject->wrappedSql($sql , $params) ){
+      //Update Password record
+      $usql = "UPDATE tbl_admin SET admin_password = :password, admin_encryption = :encrypt WHERE admin_id = :uid";
+      $params = array("uid" => $res[0]["admin_id"] ,"password" => $temp_str,"encrypt" => $encrypt);
+      $DBobject->wrappedSql($usql , $params);
+       
+      $_SESSION['user']['admin']["id"]=$res[0]["admin_id"];
+		  $_SESSION['user']['admin']["name"]=$res[0]["admin_name"];
+		  $_SESSION['user']['admin']["surname"]=$res[0]["admin_surname"];
+		  $_SESSION['user']['admin']["email"]=$res[0]["admin_email"];
+		  $_SESSION['user']['admin']["level"]=$res[0]["admin_level"];
+      $_SESSION['user']['admin']["strong_password"]=$isValidPassword;
+      saveInLog('Login', 'tbl_admin', $res[0]["admin_id"]);
+      return true;
+    }else{
+      return false;
+    }
+  }
+  return false;
 }
 
 function showVars(){

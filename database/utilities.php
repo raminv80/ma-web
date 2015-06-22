@@ -1,7 +1,10 @@
 <?php
 
 function getPass($username,$pass){
-	return sha1(md5(bin2hex(strrev(stripslashes(strtolower($username))))) . md5(stripslashes(strtoupper($pass))));
+	return sha1(md5(bin2hex(strrev(stripslashes(strtolower($username))))) . md5(stripslashes($pass)));
+}
+function getOldPass($username,$pass){
+  return sha1(md5(bin2hex(strrev(stripslashes(strtolower($username))))) . md5(stripslashes(strtoupper($pass))));
 }
 function checkEmail($usr){
 	global $DBobject;
@@ -1119,3 +1122,18 @@ function getShortURL($longUrl, $apiKey = '') {
 	if(!empty($json->id))	return $json->id;
 	return $longUrl;
 }
+
+
+function geocode($city){
+	$cityclean = str_replace (" ", "+", $city);
+	$details_url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . urlencode($cityclean) . "&sensor=false";
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $details_url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	$geoloc = json_decode(curl_exec($ch), true);
+	curl_close($ch);
+
+	return $geoloc['results'][0]['geometry']['location'];
+}
+

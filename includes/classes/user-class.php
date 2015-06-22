@@ -175,26 +175,49 @@ class UserClass {
      * @return array
      */
     function Authenticate($email, $pass){
-    	global $DBobject;
+      global $DBobject;
+      $encrypt = "new";
     
-    	$user_arr = array();
-    	$temp_str = getPass($email,$pass);
-    	
-    	$sql = "SELECT * FROM tbl_user WHERE user_username = :email AND user_password = :password AND user_deleted IS NULL";
-    	$params = array( 
-    				"email" => $email , 
-    				"password" => $temp_str 
-    	);
-    	
-    	if( $res = $DBobject->wrappedSql($sql , $params) ){
-    		$user_arr["id"]=$res[0]["user_id"];
+      $user_arr = array();
+      $isValidPassword = isValidPassword($pass);
+      $temp_str = getPass($email,$pass);
+       
+      $sql = "SELECT * FROM tbl_user WHERE user_username = :email AND user_password = :password AND user_deleted IS NULL";
+      $params = array(
+          "email" => $email ,
+          "password" => $temp_str
+      );
+       
+      if( $res = $DBobject->wrappedSql($sql , $params) ){
+        $user_arr["id"]=$res[0]["user_id"];
     		$user_arr["gname"]=$res[0]["user_gname"];
     		$user_arr["surname"]=$res[0]["user_surname"];
     		$user_arr["email"]=$res[0]["user_email"];
-    	} else {
-    		$user_arr["error"] = "Wrong email or password";
-    	}
-    	return $user_arr;
+        $user_arr["strong_password"]=$isValidPassword;
+      } else {
+        $temp_str2 = getOldPass($email,$pass);
+        $sql = "SELECT * FROM tbl_user WHERE user_username = :email AND user_password = :password AND user_deleted IS NULL AND user_encryption != :encrypt";
+        $params = array(
+            "email" => $email ,
+            "password" => $temp_str2,
+            "encrypt" => $encrypt
+        );
+        if( $res = $DBobject->wrappedSql($sql , $params) ){
+          //Update Password record
+          $usql = "UDPATE tbl_user SET user_password = :password, user_encryption = :encrypt WHERE user_id = :uid";
+          $params = array("uid" => $res[0]["user_id"] ,"password" => $temp_str,"encrypt" => $encrypt);
+          $DBobject->wrappedSql($usql , $params);
+          	
+          $user_arr["id"]=$res[0]["user_id"];
+    		  $user_arr["gname"]=$res[0]["user_gname"];
+    		  $user_arr["surname"]=$res[0]["user_surname"];
+    		  $user_arr["email"]=$res[0]["user_email"];
+          $user_arr["strong_password"]=$isValidPassword;
+        }else{
+          $user_arr["error"] = "Wrong email or password.";
+        }
+      }
+      return $user_arr;
     }
     
   
@@ -348,7 +371,7 @@ class UserClass {
     function GetAddress($addressId) {
     	global $DBobject;
     
-    	$sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
+    	$sql = "SELECT * FROM tbl_address WHERE address_deleted IS NULL AND address_id = :id ";
     	$res = $DBobject->wrappedSql ( $sql, array(':id' => $addressId) );
     	return $res[0];
     }
@@ -367,7 +390,7 @@ class UserClass {
     	}else{
     		$orderby = 'ORDER BY address_modified DESC';
     	}
-    	$sql = "SELECT * FROM tbl_address WHERE address_user_id = :id " . $orderby;
+    	$sql = "SELECT * FROM tbl_address WHERE address_deleted IS NULL AND address_user_id = :id " . $orderby;
     	return $DBobject->wrappedSql($sql, array(':id' => $addressUserId));
     }
     
