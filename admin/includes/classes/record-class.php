@@ -44,7 +44,6 @@ Class Record{
 	function getRecord($id){
 		global $SMARTY,$DBobject;
 		$article_f = array();
-		
 		if ($this->CONFIG->table->where->attributes()->notedit) {
 			$this->WHERE = null;
 		}
@@ -91,63 +90,91 @@ Class Record{
 				$article_f ['options'] ["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
 			} else {
 				$pre = str_replace ( "tbl_", "", $f->table );
+				
+				$extends = "";
+				foreach($f->extends as $e){
+					$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
+				}
+				
 				$ref = array();
+				$ext = array();
 				foreach ($f->reference as $r){
 					$ref[] = $r;
 				}
-				$extraArr = array();
-				foreach($f->extra as $xt){
-					$extraArr[] = (string) $xt;
+				foreach ($f->extra as $r){
+					$ext[] = $r;
 				}
-				$extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
-				$sql = "SELECT {$f->id},". implode(',', $ref)." {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+				$sql = "SELECT {$f->id},". implode(',', $ref). (empty($ext) ? '' : ','.implode(',', $ext))." FROM {$f->table} {$extends} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 				if ($res = $DBobject->wrappedSqlGet ( $sql )) {
-					foreach ( $res as $key => $row ) {
+					foreach ( $res as $row ) {
 						$value = array();
 						foreach ($ref as $r){
 							$value[] = $row ["{$r}"];
 						}
-						$article_f['options']["{$f->name}"][$row["{$f->id}"]]['id'] = $row["{$f->id}"];
-						$article_f['options']["{$f->name}"][$row["{$f->id}"]]['value'] = implode(' ', $value);
-						foreach($extraArr as $xt){
-							$article_f['options']["{$f->name}"][$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
+						$extra = array();
+						foreach ($ext as $r){
+							$extra["{$r}"] = $row ["{$r}"];
 						}
+						$article_f ['options'] ["{$f->name}"] [] = array (
+								'id' => $row ["{$f->id}"],
+								'value' => implode(' ', $value),
+								'extra' => $extra
+						);
 					}
 					}
 				}
 		}
+
 		return  $article_f;
 	}
-	
 	function getOptionsCatTree($f, $pid){
 		global $SMARTY,$DBobject;
 		$results = array();
 	
 		$pre = str_replace("tbl_","",$f->table);
-		$extraArr = array();
-		foreach($f->extra as $xt){
-			$extraArr[] = (string) $xt;
+		$extends = "";
+		foreach($f->extends as $e){
+			$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
 		}
-		$extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
-		$sql = "SELECT {$f->id}, {$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+		$ref = array();
+		$ext = array();
+		foreach ($f->reference as $r){
+			$ref[] = $r;
+		}
+		foreach ($f->extra as $r){
+			$ext[] = $r;
+		}
+		$sql = "SELECT {$f->id},". implode(',', $ref). (empty($ext) ? '' : ','.implode(',', $ext))." FROM {$f->table} {$extends} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != '' ? "AND {$f->where} " : "") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 	
 		if($res = $DBobject->wrappedSqlGet($sql)){
-			foreach($res as $row){
-				$results[$row["{$f->id}"]]['id'] = $row["{$f->id}"];
-				$results[$row["{$f->id}"]]['value'] = $row["{$f->reference}"];
-				foreach($extraArr as $xt){
-					$results[$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
+			foreach ($res as $row) {
+				$value = array();
+				foreach ($ref as $r){
+					$value[] = $row ["{$r}"];
 				}
-				$results[$row["{$f->id}"]]['subs'] = self::getOptionsCatTree($f,$row["{$f->id}"]);
+				$extra = array();
+				foreach ($ext as $r){
+					$extra["{$r}"] = $row ["{$r}"];
+				}
+				$results[] = array (
+						'id' => $row ["{$f->id}"],
+						'value' => implode(' ', $value),
+						'extra' => $extra,
+						'subs' => $this->getOptionsCatTree($f, $row["{$f->id}"])
+				);
 			}
+	
 		}
 		return $results;
 	}
-	
-	
 	function getAssociated($a,$id){
 		global $SMARTY,$DBobject;
 		$results = array();
+		
+		$extends = "";
+		foreach($a->extends as $e){
+			$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
+		}
 		
 		$order = "";
 		if (! empty ( $a->orderby )) {
@@ -155,7 +182,7 @@ Class Record{
 		}
 		
 		$pre = str_replace("tbl_","",$a->table);
-		$sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . ($a->where != '' ? "AND {$a->where} " : "") . $order;
+		$sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . ($a->where != '' ? "AND {$a->where} " : "") . $order;
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $row) {
 				$r_array = array();
@@ -188,11 +215,22 @@ Class Record{
 		return  $record;
 	}
 
-	function getRecordList($hierarchy_id=null){
+	function getRecordList($hierarchy_id=null,$level=0){
 		global $SMARTY,$DBobject;
 		$records = array();
-
-		$sql = "SELECT * FROM {$this->TABLE} WHERE {$this->DELETED}  IS NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ".($this->ORDERBY!=''?" ORDER BY {$this->ORDERBY} ":" ");
+		
+		$extends = '';
+		foreach($this->CONFIG->table->extends as $a){
+			$extends .= " LEFT JOIN {$a->table} ON {$a->field} = {$a->linkfield} ";
+		}
+		$limit = '';
+		foreach($this->CONFIG->limit as $l){
+		  if($l->attributes()->level = $level){
+		    $limit .= " LIMIT {$l}";
+		  }
+		}
+		
+		$sql = "SELECT * FROM {$this->TABLE} {$extends} WHERE {$this->DELETED}  IS NULL ".($this->WHERE!=''?"AND {$this->WHERE} ":" ")." ".($this->ORDERBY!=''?" ORDER BY {$this->ORDERBY} ":" ").$limit;
 		if($res = $DBobject->wrappedSqlGet($sql)){
 			foreach ($res as $key => $val) {
 				$n = 0;
@@ -220,7 +258,9 @@ Class Record{
 				if ($f->attributes()->inlist) {
 					$options = array();
 					$pre = str_replace ( "tbl_", "", $f->table );
-					$sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+					$tdel = "{$pre}_deleted";
+					if(!empty($f->deleted)){ $tdel =$f->deleted; }
+					$sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$tdel} IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
 					if ($res = $DBobject->wrappedSqlGet ( $sql )) {
 						foreach ( $res as $key => $row ) {
 							$options ["{$f->name}"] [] = array (
@@ -232,20 +272,54 @@ Class Record{
 					}
 				}
 			}
+			$_trecords = array();
+			foreach ( $this->CONFIG->table->refer->field as $f ) {
+			  if ($f->attributes()->associate) {
+			    $options = array();
+			    $pre = str_replace ( "tbl_", "", $f->table );
+			    $tdel = "{$pre}_deleted";
+			    if(!empty($f->deleted)){ $tdel =$f->deleted; }
+			    $sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$tdel} IS NULL " . ($f->where != '' ? "AND {$f->where} " : "") . " " . ($f->orderby != '' ? " ORDER BY {$f->orderby} " : "");
+			    if ($res = $DBobject->wrappedSqlGet ( $sql )) {
+			      foreach ( $res as $key => $row ) {
+			        if(!empty($records [$row ["{$f->id}"]])) { 
+			          $records [$row ["{$f->id}"]]["{$f->reference}"] = $row ["{$f->reference}"]; 
+			          if($f->attributes()->order){
+			            $_trecords[$row ["{$f->id}"]] = $records [$row ["{$f->id}"]];
+			            $records [$row ["{$f->id}"]] = null;
+			          }
+			        }
+			      }
+			    }
+			    if($f->attributes()->order){
+			      $records = $_trecords;
+			    }
+			  }
+			}
 		}
-		
 		
 		return  $records;
 	}
 	function deleteRecord($id){
 		global $DBobject;
-		$sql = "UPDATE {$this->TABLE} SET {$this->DELETED} = NOW() WHERE {$this->ID} = '{$id}' ";
-		if($DBobject->executeSQL($sql)){
-			global $DELETED;
-			$_SESSION['notice']= $DELETED;
-			saveInLog('Delete', $this->TABLE, $id);
-			return true;
+		try{
+			$sql = "UPDATE {$this->TABLE} SET {$this->DELETED} = NOW()".(!empty($this->PUBLISHED)?",{$this->PUBLISHED} = 0":"")." WHERE {$this->ID} = '{$id}' ";
+			if($DBobject->executeSQL($sql)){
+				global $DELETED;
+				$_SESSION['notice']= $DELETED;
+				saveInLog('Delete', $this->TABLE, $id);
+				return true;
+			}
+		}catch (Exception $e){
+			$sql = "UPDATE {$this->TABLE} SET {$this->DELETED} = NOW() WHERE {$this->ID} = '{$id}' ";
+			if($DBobject->executeSQL($sql)){
+				global $DELETED;
+				$_SESSION['notice']= $DELETED;
+				saveInLog('Delete', $this->TABLE, $id);
+				return true;
+			}
 		}
+	
 		return false;
 
 	}

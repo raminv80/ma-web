@@ -84,19 +84,13 @@ class Listing {
         $listing_f['options']["{$f->name}"] = $this->getOptionsCatTree($f,$parentID);
       }else{
         $pre = str_replace("tbl_","",$f->table);
-        $extraArr = array();
-        foreach($f->extra as $xt){
-        	$extraArr[] = (string) $xt;
-        }
-        $extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
-        $sql = "SELECT {$f->id},{$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+        $sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
         if($res = $DBobject->wrappedSqlGet($sql)){
-          foreach($res as $row){
-          	$listing_f['options']["{$f->name}"][$row["{$f->id}"]]['id'] = $row["{$f->id}"];
-          	$listing_f['options']["{$f->name}"][$row["{$f->id}"]]['value'] = $row["{$f->reference}"];
-          	foreach($extraArr as $xt){
-          		$listing_f['options']["{$f->name}"][$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
-          	}
+          foreach($res as $key=>$row){
+            $listing_f['options']["{$f->name}"][] = array(
+                'id'=>$row["{$f->id}"],
+                'value'=>$row["{$f->reference}"]
+            );
           }
         }
       }
@@ -109,21 +103,15 @@ class Listing {
     $results = array();
     
     $pre = str_replace("tbl_","",$f->table);
-    $extraArr = array();
-    foreach($f->extra as $xt){
-    	$extraArr[] = (string) $xt;
-    }
-    $extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
-    $sql = "SELECT {$f->id}, {$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''?"AND {$f->where} ":"") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+    $sql = "SELECT {$f->id}, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''?"AND {$f->where} ":"") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
     
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
-      	$results[$row["{$f->id}"]]['id'] = $row["{$f->id}"];
-      	$results[$row["{$f->id}"]]['value'] = $row["{$f->reference}"];
-      	foreach($extraArr as $xt){
-      		$results[$row["{$f->id}"]]["{$xt}"] = $row["{$xt}"];
-      	}
-      	$results[$row["{$f->id}"]]['subs'] = self::getOptionsCatTree($f,$row["{$f->id}"]);
+        $results[] = array(
+            'id'=>$row["{$f->id}"],
+            'value'=>$row["{$f->reference}"],
+            'subs'=>$this->getOptionsCatTree($f,$row["{$f->id}"])
+        );
       }
     }
     return $results;
@@ -133,13 +121,18 @@ class Listing {
     global $SMARTY,$DBobject;
     $results = array();
     
+    $extends = "";
+    foreach($a->extends as $e){
+    	$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
+    }
+    
     $order = "";
     if(! empty($a->orderby)){
       $order = " ORDER BY " . $a->orderby;
     }
     
     $pre = str_replace("tbl_","",$a->table);
-    $sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . $order;
+    $sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . $order;
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
         $r_array = array();
@@ -165,7 +158,12 @@ class Listing {
       $order = " ORDER BY " . $this->CONFIG_OBJ->orderby;
     }
     
-    $sql = "SELECT * FROM {$this->DBTABLE}
+    $extends = "";
+    foreach($this->CONFIG_OBJ->extends as $e){
+    	$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
+    }
+    
+    $sql = "SELECT * FROM {$this->DBTABLE} {$extends}
 		WHERE listing_parent_id = :pid AND 
 		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL " . ($this->WHERE != ''?"AND {$this->WHERE} ":" ") . $order;
     
@@ -184,6 +182,12 @@ class Listing {
           if(intval($val['listing_published']) == 0){
             $p_url = '/draft';
           }
+          foreach($this->CONFIG_OBJ->associated as $a){
+          	if ($a->attributes()->inlist) {
+          		$val["{$a->name}"] = $this->getAssociated($a, $val["{$a->linkfield}"]);
+          	}
+          }
+          $val["record"] = $val;
           $val["title"] = $val['listing_name'];
           $val["order"] = $val['listing_order'];
           $val["id"] = $val['listing_id'];

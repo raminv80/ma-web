@@ -69,6 +69,7 @@ function sendImage($filename, $browser_cache) {
 
 /* generates the given cache file for the given source file with the given resolution */
 function generateImage($source_file, $cache_file,$_width,$_height,$_crop=false) {
+	ini_set('memory_limit','500M');
   global $sharpen, $jpg_quality,$quality;
 
   make_path($cache_file);
@@ -175,6 +176,7 @@ function make_path($path) {
 }
 
 function resizeimage($image, $width, $height, $nWidth, $nHeight){
+	ini_set('memory_limit','500M');
   $newImg = imagecreatetruecolor($nWidth, $nHeight);
   imagealphablending($newImg, false);
   imagesavealpha($newImg,true);
@@ -185,6 +187,7 @@ function resizeimage($image, $width, $height, $nWidth, $nHeight){
 }
 
 function cropimage($image,$width, $height, $focus="center"){
+	ini_set('memory_limit','500M');
   // Coordinates calculator
 //   if($focus == 'center')
 //   {

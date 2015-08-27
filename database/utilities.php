@@ -1054,6 +1054,115 @@ function sendGAEvent($_tid,$_category,$_action,$_label="",$_value=0){
   gaFireHit($data);
 }
 
+/**
+ * Ecommerce Tracking  - Measuring Purchases
+ *
+ * @param string $_tid
+ * @param array $_totalArr
+ * @param array $_cartitemArr
+ * @return boolean
+ */
+function sendGAEcPurchase($_tid,$_totalArr,$_cartitemArr){
+	if(empty($_tid) || empty($_totalArr) || empty($_cartitemArr)) return false;
+
+	$v = 1;
+	$tid = $_tid; // Put your own Analytics ID in here
+	$cid = gaParseCookie();
+	$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
+
+	// Send Transaction hit
+	$data = array(
+			'v' => $v,
+			'tid' => $tid,
+			'cid' => $cid,
+			't' => 'transaction',
+			'ti' => $_totalArr['id'],
+			'ta' => $dh.'-ecommerce',
+			'tr' => $_totalArr['total'],
+			'tt' => $_totalArr['tax'],
+			'ts' => $_totalArr['shipping'],
+			'cu' => 'AUD'
+	);
+	gaFireHit($data);
+
+	// Send Item hit
+	foreach($_cartitemArr as $item){
+		$data = array(
+				'v' => $v,
+				'tid' => $tid,
+				'cid' => $cid,
+				't' => 'item',
+				'ti' => $_totalArr['id'],
+				'in' => $item['name'],
+				'ip' => $item['price'],
+				'iq' => $item['quantity'],
+				'ic' => $item['id'],
+				'iv' => $item['variant'],
+				'cu' => 'AUD'
+		);
+		gaFireHit($data);
+	}
+	return true;
+}
+
+/**
+ * NOT WORKING!!! Enhanced Ecommerce Tracking  - Measuring Purchases
+ *
+ * @param string $_tid
+ * @param array $_totalArr
+ * @param array $_cartitemArr
+ * @return boolean
+ */
+/* function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr){
+ //************************************* NOT WORKING *********************************
+if(empty($_tid) || empty($_totalArr) || empty($_cartitemArr)) return false;
+
+$v = 1;
+$tid = $_tid; // Put your own Analytics ID in here
+$cid = gaParseCookie();
+$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
+
+// Send Transaction hit
+$data = array(
+		'v' => $v,
+		'tid' => $tid,
+		'cid' => $cid,
+		't' => 'pageview',
+		'dh' => $dh,
+		'ti' => $_totalArr['id'],
+		'ta' => $dh.'-ecommerce',
+		'tr' => $_totalArr['total'],
+		'tt' => $_totalArr['tax'],
+		'ts' => $_totalArr['shipping'],
+		'tcc' => $_totalArr['coupon'],
+		'pa' => 'purchase'
+);
+$cnt = 1;
+foreach($_cartitemArr as $item){
+$data["pr{$cnt}id"] = $item['id'];
+$data["pr{$cnt}nm"] = urlencode($item['name']);
+$data["pr{$cnt}ca"] = $item['category'];
+$data["pr{$cnt}br"] = $item['brand'];
+$data["pr{$cnt}va"] = $item['variant'];
+$data["pr{$cnt}ps"] = $item['position'];
+$cnt++;
+}
+if(!empty($data)) {
+$getString = 'https://ssl.google-analytics.com/collect';
+$getString .= '?payload_data&';
+$getString .= http_build_query($data);
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $getString);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+$response = curl_exec($ch);
+curl_close($ch);
+}
+//$response = gaFireHit($data);
+sendMail('apolo@them.com.au', 'Ready Steady Go Kids', 'noreply@readysteadygokids.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
+return $response;
+} */
+
 // See https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 function gaFireHit( $data = null ) {
   if ( $data ) {
@@ -1104,6 +1213,26 @@ function gaGenUUID() {
   );
 }
 
+function saveInLog($ACTION, $TABLE, $ID, $ADDITIONAL = ''){
+	global $DBobject;
+	if(empty($TABLE) || empty($ID)){
+		return false;
+	}
+	$params = array (
+			":log_admin_id" => $_SESSION['user']['admin']["id"],
+			":log_action" => $ACTION,
+			":log_record_id" => $ID,
+			":log_record_table" => $TABLE,
+			":log_additional" => $ADDITIONAL,
+			":log_ip" => $_SERVER['REMOTE_ADDR'],
+			":log_browser" => $_SERVER['HTTP_USER_AGENT'],
+			":log_referer" => $_SERVER['HTTP_REFERER']
+	);
+
+	$sql = "INSERT INTO tbl_log ( log_admin_id, log_action, log_record_table, log_record_id, log_additional, log_ip, log_browser, log_referer )
+							values( :log_admin_id, :log_action, :log_record_table, :log_record_id, :log_additional, :log_ip, :log_browser, :log_referer)";
+	return $DBobject->wrappedSql($sql, $params);
+}
 
 function getShortURL($longUrl, $apiKey = '') {
 	$jsonData = json_encode(array('longUrl' => $longUrl));
