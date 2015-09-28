@@ -28,7 +28,7 @@ $optim_source_file      = $document_root.$optim.$requested_uri; // Full path to 
 if((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0) || (!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)){
   $requested_directory  = urlencode(dirname($requested_uri));
   $_f_arr = explode('.', $requested_file,2);
-  $requested_file = $_f_arr[0].((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").(!empty($_REQUEST['crop'])?"cropped":"").'.'.$_f_arr[1];
+  $requested_file = $_f_arr[0].((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").'.'.$_f_arr[1];
   //$requested_file       = str_replace(".".$extension, ((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").".".$extension, $requested_file);
   $optim_source_file      = $document_root.$optim.parse_url(urldecode($requested_directory)."/".($requested_file),PHP_URL_PATH);
 }
@@ -69,28 +69,28 @@ function sendImage($filename, $browser_cache) {
 
 /* generates the given cache file for the given source file with the given resolution */
 function generateImage($source_file, $cache_file,$_width,$_height,$_crop=false) {
-	ini_set('memory_limit','500M');
-  global $sharpen, $jpg_quality,$quality;
+	ini_set('memory_limit','512M');
+	global $sharpen, $jpg_quality,$quality;
 
-  make_path($cache_file);
-  
-  $extension = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
-  switch ($extension) {
-    case 'png':
-      $src = @ImageCreateFromPng($source_file); // original image
-      break;
-    case 'gif':
-      $src = @ImageCreateFromGif($source_file); // original image
-      break;
-    default:
-      $src = @ImageCreateFromJpeg($source_file); // original image
-      break;
-  }
-  
-  $maxwidth = intval($_width);
-  $maxheight = intval($_height);
-  
-  if($_crop && $maxwidth > 0 && $maxheight > 0){
+	make_path($cache_file);
+
+	$extension = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
+	
+	switch ($extension) {
+		case 'png':
+			$src = @ImageCreateFromPng($source_file); // original image
+			break;
+		case 'gif':
+			$src = @ImageCreateFromGif($source_file); // original image
+			break;
+		default:
+			$src = @ImageCreateFromJpeg($source_file); // original image
+			break;
+	}
+	
+	$maxwidth = intval($_width);
+	$maxheight = intval($_height);
+	if($_crop && $maxwidth > 0 && $maxheight > 0){
     if(($maxwidth > 0 || $maxheight > 0)){
       $scalex = $maxwidth / imagesx($src); //original scale image size //If the TAG size changes this will need to be scaled.
       $scaley = $maxheight / imagesy($src); //original scale image size //If the TAG size changes this will need to be scaled.
@@ -130,29 +130,29 @@ function generateImage($source_file, $cache_file,$_width,$_height,$_crop=false) 
     }
   }
   
+	// save the new file in the appropriate path, and send a version to the browser
+	switch ($extension) {
+		case 'png':
+			ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
+			imagealphablending($src, false);
+			imagesavealpha($src,true);
+			$transparent = imagecolorallocatealpha($src, 255, 255, 255, 127);
+			$gotSaved = ImagePng($src, $cache_file, $quality);
+			break;
+		case 'gif':
+			ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
+			$gotSaved = ImageGif($src, $cache_file);
+			break;
+		default:
+			ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
+			$gotSaved = ImageJpeg($src, $cache_file, $jpg_quality);
+			break;
+	}
+	ImageDestroy($src);
 
-  // save the new file in the appropriate path, and send a version to the browser
-  switch ($extension) {
-    case 'png':
-      ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
-      imagealphablending($src, false);
-      imagesavealpha($src,true);
-      $transparent = imagecolorallocatealpha($src, 255, 255, 255, 127);
-      $gotSaved = ImagePng($src, $cache_file, $quality);
-      break;
-    case 'gif':
-      ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
-      $gotSaved = ImageGif($src, $cache_file);
-      break;
-    default:
-      ImageInterlace($src, true); // Enable interlancing (progressive JPG, smaller size file)
-      $gotSaved = ImageJpeg($src, $cache_file, $jpg_quality);
-      break;
-  } 
-  ImageDestroy($src);
-
-  return $cache_file;
+	return $cache_file;
 }
+
 
 /**
  Make a nested path , creating directories down the path
@@ -176,28 +176,28 @@ function make_path($path) {
 }
 
 function resizeimage($image, $width, $height, $nWidth, $nHeight){
-	ini_set('memory_limit','500M');
-  $newImg = imagecreatetruecolor($nWidth, $nHeight);
-  imagealphablending($newImg, false);
-  imagesavealpha($newImg,true);
-  $transparent = imagecolorallocatealpha($newImg, 255, 255, 255, 127);
-  imagefilledrectangle($newImg, 0, 0, $nWidth, $nHeight, $transparent);
-  imagecopyresampled($newImg, $image, 0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
-  return $newImg;
+	ini_set('memory_limit','128M');
+	$newImg = imagecreatetruecolor($nWidth, $nHeight);
+	imagealphablending($newImg, false);
+	imagesavealpha($newImg,true);
+	$transparent = imagecolorallocatealpha($newImg, 255, 255, 255, 127);
+	imagefilledrectangle($newImg, 0, 0, $nWidth, $nHeight, $transparent);
+	imagecopyresampled($newImg, $image, 0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
+	return $newImg;
 }
 
 function cropimage($image,$width, $height, $focus="center"){
-	ini_set('memory_limit','500M');
-  // Coordinates calculator
-//   if($focus == 'center')
-//   {
-    $x_pos = (imagesx($image) - $width) / 2;
-    $x_pos = ceil($x_pos);
-    $y_pos = (imagesy($image) - $height) / 2;
-    $y_pos = ceil($y_pos);
-//   }
-  $new_image = ImageCreateTrueColor($width, $height);
-  // Crop to Square using the given dimensions
-  ImageCopy($new_image, $image, 0, 0, $x_pos, $y_pos, $width, $height);
-  return $new_image;
+	ini_set('memory_limit','128M');
+	// Coordinates calculator
+	//   if($focus == 'center')
+	//   {
+	$x_pos = (imagesx($image) - $width) / 2;
+	$x_pos = ceil($x_pos);
+	$y_pos = (imagesy($image) - $height) / 2;
+	$y_pos = ceil($y_pos);
+	//   }
+	$new_image = ImageCreateTrueColor($width, $height);
+	// Crop to Square using the given dimensions
+	ImageCopy($new_image, $image, 0, 0, $x_pos, $y_pos, $width, $height);
+	return $new_image;
 }

@@ -35,8 +35,9 @@ if (jQuery.validator) {
           		
         	case 'checkout3-form': 
 	        	$('#payment-btn').html('Processing...').attr('disabled','disabled');
-        		var paymentOption = 'Credit Card';
-        		ga('ec:setAction', 'checkout_option', {
+        		var paymentOption = 'Credit Card'; 
+        		form.submit();
+        		/*ga('ec:setAction', 'checkout_option', {
 		 	        'step': 2,
 		 	        'option': paymentOption
 		 	      });
@@ -44,7 +45,7 @@ if (jQuery.validator) {
 		 	       hitCallback: function() {
 		 	    	  form.submit();
 		 	       }
-		 	    });
+		 	    });*/
           		break;
           		
         	case 'reset-pass-form': 
@@ -186,7 +187,7 @@ function addCart(form){
 			 	setTimeout(function() {
 			 		$('#shop-cart-btn').fadeOut(200);
 			    }, 4000);
-			 	ga('ec:addProduct', {
+			 	/*ga('ec:addProduct', {
 			 	    'id': obj.product.id,
 			 	    'name': obj.product.name,
 			 	    'category': obj.product.category,
@@ -201,7 +202,7 @@ function addCart(form){
 			 		 fullname += ' | ' +  obj.product.variant
 			 	  }
 			 	  ga('send', 'event', 'Add to Cart', 'click', fullname); 
-			 	
+			 	*/
 			}catch(err){
 				console.log('TRY-CATCH error');
 			}
@@ -297,7 +298,7 @@ function deleteItem(ID){
                 $('.nav-subtotal').html('$'+obj.totals['subtotal']);
 			 	$('#shop-cart-btn').html( obj.popoverShopCart );
 			 	if (response) {
-			 		ga('ec:addProduct', {
+			 		/*ga('ec:addProduct', {
 				 	    'id': obj.product.id,
 				 	    'name': obj.product.name,
 				 	    'category': obj.product.category,
@@ -312,7 +313,7 @@ function deleteItem(ID){
 			 		if(obj.product.variant){
 			 			fullname += ' | ' +  obj.product.variant
 			 		}
-			 	  	ga('send', 'event', 'Remove from Cart', 'click', fullname); 
+			 	  	ga('send', 'event', 'Remove from Cart', 'click', fullname); */
 				 	  
 			 		if ( parseInt(obj.itemsCount) > 0 ){
                         $( '#'+ ID ).hide('slow');
@@ -363,7 +364,7 @@ function checkout2(form) {
 			 		scrolltodiv('#checkout3-form');
 			 		
 			 		var shippingOption = 'Standard';
-			 	    ga('ec:setAction', 'checkout_option', {
+			 	   /* ga('ec:setAction', 'checkout_option', {
 			 	        'step': 1,
 			 	        'option': shippingOption
 			 	      });
@@ -371,7 +372,7 @@ function checkout2(form) {
 			 	    ga('ec:setAction','checkout', {
 			 		   'step': 2
 			 		  });
-			 	    ga('send', 'pageview');
+			 	    ga('send', 'pageview');*/
 			 	}
 			}catch(err){
 				console.log('TRY-CATCH error');

@@ -1,8 +1,5 @@
 <?php
-
-
 class UserClass {
-
 	
     /**
      * Insert a new record in tbl_user and return associative array: ('id', 'gname', 'surname', 'email') 
@@ -73,6 +70,7 @@ class UserClass {
 										)";
 	    	if ( $DBobject->wrappedSql($sql, $params) ) {
 	    		$userId =  $DBobject->wrappedSqlIdentity();
+	    		$this->SetUnsubscribeToken($userId);
 	    		$result = array (
 	    				"id" => $userId,
 	    				"gname" => $user['gname'],
@@ -304,6 +302,52 @@ class UserClass {
 //         }
 //     	return array( 'error' => "Sorry, '{$email}' does not appear to be registered with this site. Can you please check your email address or please create an account.");
 //     }
+
+
+
+    /**
+     * Set user's unsubscribe token given the user_id
+     *
+     * @param int $userId
+     * @return bool
+     */
+    function SetUnsubscribeToken($userId){
+    	global $DBobject;
+    
+    	$sql = "SELECT user_email, user_created FROM tbl_user WHERE user_deleted IS NULL AND user_id = :user_id";
+    	if($res = $DBobject->wrappedSql($sql, array(':user_id'=>$userId))){
+    		$usql = "UPDATE tbl_user SET user_unsubscribe = :unsub WHERE user_id = :id";
+    		$tok = sha1(md5(bin2hex(strrev(stripslashes(strtolower($res[0]['user_email']))))) . md5(stripslashes(strtoupper($res[0]['user_created']))));
+    		$DBobject->wrappedSql($usql, array("unsub"=>$tok,"id"=>$userId));
+    		return true;
+    	}
+    	return false;
+    }
+    
+    
+    /**
+     * Set user's unsubscribe token given the user's unsubscribe token and its created_datetime
+     * $createdDatetime string format '%Y%m%d%H%i%s'
+     *
+     * @param string $token
+     * @param string $createdDatetime
+     * @return bool
+     */
+    function UnsubscribeUser($token, $createdDatetime){
+    	global $DBobject;
+    
+    	if(!empty($token) && !empty($createdDatetime)){
+    		$params = array("token"=>$token,"timeloc"=>$createdDatetime);
+    		$sql = "SELECT * FROM tbl_user WHERE user_unsubscribe = :token AND DATE_FORMAT(user_created,'%Y%m%d%H%i%s') = :timeloc";
+    		if($res = $DBobject->wrappedSql($sql,$params)){
+    			$usql = "UPDATE tbl_user SET user_want_promo = 0 WHERE user_id = :id";
+    			$DBobject->wrappedSql($usql,array("id"=>$res[0]['user_id']));
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
     
     /**
      * Insert new address in tbl_address and returns address_id

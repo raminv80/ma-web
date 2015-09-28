@@ -13,7 +13,6 @@ function AdminLogIn($email,$password){
       "email" => $email ,
       "password" => $temp_str
   );
-   
   if( $res = $DBobject->wrappedSql($sql , $params) ){
     $_SESSION['user']['admin']["id"]=$res[0]["admin_id"];
 		$_SESSION['user']['admin']["name"]=$res[0]["admin_name"];
@@ -25,7 +24,7 @@ function AdminLogIn($email,$password){
     return true;
   } else {
     $temp_str2 = getOldPass($email,$password);
-    $sql = "SELECT * FROM tbl_admin WHERE admin_email = :email AND admin_password = :password AND admin_deleted IS NULL AND admin_encryption != :encrypt";
+    $sql = "SELECT * FROM tbl_admin WHERE admin_email = :email AND admin_password = :password AND admin_deleted IS NULL AND (admin_encryption IS NULL OR admin_encryption != :encrypt)";
     $params = array(
         "email" => $email ,
         "password" => $temp_str2,
@@ -140,23 +139,3 @@ function get_type_from_extension($ext) {
 	}
 }
 
-function saveInLog($ACTION, $TABLE, $ID, $ADDITIONAL = ''){
-	$DBobject = new DBmanager();
-	if(empty($TABLE) || empty($ID)){
-		return false;
-	}
-	$params = array (
-			":log_admin_id" => $_SESSION['user']['admin']["id"],
-			":log_action" => $ACTION,
-			":log_record_id" => $ID,
-			":log_record_table" => $TABLE,
-			":log_additional" => $ADDITIONAL,
-			":log_ip" => $_SERVER['REMOTE_ADDR'],
-			":log_browser" => $_SERVER['HTTP_USER_AGENT'],
-			":log_referer" => $_SERVER['HTTP_REFERER']
-	);
-
-	$sql = "INSERT INTO tbl_log ( log_admin_id, log_action, log_record_table, log_record_id, log_additional, log_ip, log_browser, log_referer )
-							values( :log_admin_id, :log_action, :log_record_table, :log_record_id, :log_additional, :log_ip, :log_browser, :log_referer)";
-	return $DBobject->wrappedSql($sql, $params);
-}

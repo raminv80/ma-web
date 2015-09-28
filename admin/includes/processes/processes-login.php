@@ -21,7 +21,7 @@ if(checkToken('admin', $_POST["formToken"])){
   	
   	$sql = "SELECT COUNT(id) AS cnt FROM login_log WHERE created > DATE_SUB(NOW(), INTERVAL 30 MINUTE) AND ip = :ip AND success = 0";
   	$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
-  	if($res[0]['cnt'] >= 3){
+  	if($res[0]['cnt'] >= 5){
   	 $sql = "INSERT INTO login_blocked (ip) VALUES (:ip)";
   	 $res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
   	}

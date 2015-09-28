@@ -101,11 +101,19 @@ include_once 'includes/classes/listing-class.php';
 include_once 'includes/functions/functions-search.php';
 include_once 'includes/processes/processes.php';
 
-if(! empty($CONFIG->database->host) && ! empty($CONFIG->database->user) && ! empty($CONFIG->database->password) && ! empty($CONFIG->database->dbname)){
+if(!empty($CONFIG->database->host) && !empty($CONFIG->database->user) && !empty($CONFIG->database->password) && !empty($CONFIG->database->dbname)){
   $GLOBALS['DBobject'] = new DBmanager();
 }
 
-if(! empty($CONFIG->socialwall)){
+if(!empty($CONFIG->product_page)){
+	include_once 'includes/classes/product-class.php';
+	include_once 'includes/classes/cart-class.php';
+	include_once 'includes/classes/bank-class.php';
+	include_once 'includes/classes/shipping-class.php';
+	include_once 'includes/classes/user-class.php';
+}
+
+if(!empty($CONFIG->socialwall)){
   $GLOBALS['SOCIAL'] = INITSOCIALWALL($CONFIG);
 }
 
@@ -114,9 +122,11 @@ $GLOBALS['SMARTY'] = INITSMARTY($CONFIG);
 $staging = (string)$CONFIG->attributes()->staging;
 if($staging === "true" || $_PUBLISHED == 0 ){
   $SMARTY->assign("staging",true);
+  $GLOBALS['GA_ID'] = null;
 }else{
   $SMARTY->assign("staging",false);
   $ga_id = (string) $CONFIG->google_analytics->id;
+  $GLOBALS['GA_ID'] = $ga_id;
   $SMARTY->assign("ga_id", $ga_id);
 }
 

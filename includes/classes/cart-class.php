@@ -474,7 +474,45 @@ class cart {
     ))){
       foreach($res as $order){
         $cart_arr[$order['cart_id']] = $order;
-        $cart_arr[$order['cart_id']]['items'] = $this->GetDataProductsOnCart($order['cart_id']);
+        
+        // Get cartitem details
+        $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' ";
+        $cartitems = $DBobject->wrappedSql($sql,array(
+        		":id"=>$order['cart_id']
+        ));
+        foreach($cartitems as $p){
+        	// ---------------- ATTRIBUTES SAVED IN tbl_cartitem_attr ----------------
+        	$sql = "SELECT cartitem_attr_id, cartitem_attr_cartitem_id, cartitem_attr_attribute_id, cartitem_attr_attr_value_id, cartitem_attr_attribute_name, cartitem_attr_attr_value_name
+					FROM tbl_cartitem_attr
+					WHERE cartitem_attr_cartitem_id	= :id AND cartitem_attr_deleted IS NULL AND cartitem_attr_cartitem_id <> '0'";
+        	$res2 = $DBobject->wrappedSql($sql, array(":id"=>$p['cartitem_id']));
+        	$p['attributes'] = $res2;
+        	 
+        	 
+        	$sql = "SELECT product_id FROM tbl_product WHERE product_deleted IS NULL AND product_published = 1 AND product_object_id = :pid ";
+        	if($product = $DBobject->wrappedSql($sql, array(":pid"=>$p['cartitem_product_id']))){
+        
+        		// ---------------- BUILD URL ----------------
+        		$p['url'] = '';
+        		$sql = "SELECT cache_url FROM cache_tbl_product WHERE cache_published = '1' AND cache_record_id = :id ";
+        		if($res2 = $DBobject->wrappedSql($sql, array(":id"=>$p['cartitem_product_id']))){
+        			$p['url'] = '/' . $res2[0]['cache_url'];
+        		}
+        		if(!empty($p['attributes']) && ! empty($p['url'])){
+        			foreach($p['attributes'] as $k=>$a){
+        				if($k == 0){
+        					$p['url'] .= '?' . strtolower($a['cartitem_attr_attribute_name']) . '=' . strtolower($a['cartitem_attr_attr_value_name']);
+        				}else{
+        					$p['url'] .= '&' . strtolower($a['cartitem_attr_attribute_name']) . '=' . strtolower($a['cartitem_attr_attr_value_name']);
+        				}
+        			}
+        		}
+        		// ---------------- PRODUCTS DETAILS FROM tbl_gallery ----------------
+        		$sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_ishero DESC";
+        		$p['gallery'] = $DBobject->wrappedSql($sql,array(":id"=>$p['product_id']));
+        	}
+        	$cart_arr[$order['cart_id']]['items'][$p['cartitem_id']] = $p;
+        }
         
         $sql = "SELECT * FROM tbl_address WHERE address_id = :id ";
         $res = $DBobject->wrappedSql($sql,array(
@@ -1345,6 +1383,30 @@ function ApplyDiscountCode($code, $cartId = null) {
   	return $result;
   }
   
+
+
+  /**
+   * Return array with products details given a cart_id for Google Analytics - Enhanced ecommerce.
+   * @param int $cartId
+   * @return string
+   */
+  function getCartitemsByCartId_GA($cartId = null) {
+  	global $DBobject;
+  
+  	if(is_null($cartId)){
+  		$cartId = $this->cart_id;
+  	}
+  	$result = array();
+  	$param = array(":id"=>$cartId);
+  	$sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id = :id";
+  	if($res = $DBobject->wrappedSql($sql,$param)){
+  		foreach( $res as $r){
+  			$result[] = $this->getProductInfoByCartItem_GA($r['cartitem_id']);
+  		
+  		}
+  	}
+  	return $result;
+  }
   
   
   /**

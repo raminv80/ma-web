@@ -202,9 +202,11 @@ function logError($trace, $err, $sql = false) {
 	}
 }
 
-function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
+function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $adminId = 0){
 	global $DBobject;
-	require_once 'database/safemail.php';
+	try{
+		if(is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php')){	require_once 'database/safemail.php';}
+	}catch (Exception $e){}
 
 	/* To send HTML mail, you can set the Content-type header. */
 	$headers  = "MIME-Version: 1.0\r\n";
@@ -220,63 +222,20 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
 
 	$mailSent = 0;
 	try{
-	  if(function_exists("SafeMail")){
-	  	$sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND NOW() LIMIT 5";
-	  	$params = array(
-	  			":ip"=>$_SERVER['REMOTE_ADDR']
-	  	);
-	  	$res = $DBobject->executeSQL($sql,$params);
-	  	if(count($res) < 5 ){
-	    	$mailSent = (SafeMail($to,$subject,$body,$headers, "-f $fromEmail"))?1:0;;
-	  	}else{
-				$mailSent= -1;
-			}
-	  }
-	}catch(Exception $e){}
-	
-	try{
-	  $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_sender_useragent,email_time) VALUES 
-	      (:to,:header,:subject,:content,:ip,:sent,:useragent,:time)";
-	  $params = array(
-	      ":to"=>$to,
-	      ":header"=>$headers,
-	      ":subject"=>$subject,
-	      ":content"=>utf8_encode($body),
-	      ":ip"=>$_SERVER['REMOTE_ADDR'],
-  		  ":sent"=>$mailSent,
-  		  ":useragent"=>$_SERVER['HTTP_USER_AGENT'],
-  		  ":time"=>date("d/m/Y H:i:s T(P)"),
-	  );
-	  $DBobject->executeSQL($sql,$params);
-	}catch(Exception $e){}
-	return $mailSent;
-}
+		$verify = false;
+		$sql = "SELECT count(email_id) as cnt FROM tbl_email_queue WHERE email_sent = 1 AND email_modified BETWEEN DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND NOW() ";
+		if($resc = $DBobject->executeSQL($sql)){
+			$verify = ($resc[0]['cnt'] >= 480)? false : true;
+		}
 
-function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmentFile=null){
-	global $DBobject;
-	require_once 'database/mail/Mail.php';
-	require_once 'database/mail/AttachmentMail.php';
-	require_once 'database/mail/Multipart.php';
-	
-	$mailSent = 0;
-	try{
-		if(!empty($to) && !empty($subject) && !empty($body) ){
-			$mail = new AttachmentMail($to, $subject, $from, $fromEmail);
-	
-			if(!empty($attachmentFile) && file_exists($attachmentFile)){
-				$mp1 = new Multipart($attachmentFile);
-				$mail->addAttachment($mp1);
-			}
-			$mail->addBCC('cmsemails@them.com.au'.(!empty($bcc)?",".$bcc:""));
-			$mail->setHtml($body);
-	
-			$sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 5 MINUTE) AND NOW() LIMIT 5";
+		if(function_exists("SafeMail") && $verify){
+			$sql = "SELECT email_id FROM tbl_email_queue WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND NOW() LIMIT 5";
 			$params = array(
 					":ip"=>$_SERVER['REMOTE_ADDR']
 			);
 			$res = $DBobject->executeSQL($sql,$params);
-			if(count($res) < 5 ){
-				$mailSent = ($mail->send())?1:0;;
+			if(count($res) < 5 || !empty($_SESSION['user']['admin']) ){
+				$mailSent = SafeMail($to,$subject,$body,$headers);
 			}else{
 				$mailSent= -1;
 			}
@@ -284,24 +243,182 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 	}catch(Exception $e){}
 
 	try{
-		$headers = '';
-		$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_sender_useragent,email_time) VALUES 
-	      (:to,:header,:subject,:content,:file,:ip,:sent,:useragent,:time)";
-		  $params = array(
-		      ":to"=>$to,
-		      ":header"=>$headers,
-		      ":subject"=>$subject,
-		      ":content"=>utf8_encode($body),
-		      ":file"=>$attachmentFile,
-		      ":ip"=>$_SERVER['REMOTE_ADDR'],
-	  		  ":sent"=>$mailSent,
-	  		  ":useragent"=>$_SERVER['HTTP_USER_AGENT'],
-	  		  ":time"=>date("d/m/Y H:i:s T(P)"),
-		  );
+		$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified) VALUES
+	      (:to,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id,now())";
+		$params = array(
+				":to"=>$to,
+				":header"=>$headers,
+				":subject"=>$subject,
+				":content"=>utf8_encode($body),
+				":ip"=>$_SERVER['REMOTE_ADDR'],
+				":sent"=>$mailSent,
+				":email_user_id"=>$userId,
+				":email_admin_id"=>$adminId
+		);
 		$DBobject->executeSQL($sql,$params);
+		return $DBobject->wrappedSqlIdentity();
 	}catch(Exception $e){}
-	return $mailSent;
+
+	return false;
 }
+
+/**
+ * Create bulk emails in the database. It does NOT send them
+ *
+ * @param array $to_Array
+ * @param string $from
+ * @param string $fromEmail
+ * @param string $subject
+ * @param string $body
+ * @return boolean
+ */
+function createBulkMail($to_Array,$from,$fromEmail,$subject,$body, $adminId = 0, $userKeyArr = array()){
+	global $DBobject;
+
+	/* To send HTML mail, you can set the Content-type header. */
+	$headers  = "MIME-Version: 1.0\r\n";
+	$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+	$headers .= "X-Priority: 3\r\n";
+	$headers .= "X-Mailer: PHP". phpversion() ."\r\n";
+
+	/* additional headers */
+	$headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
+	$headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
+	$headers .= "From: ". $from . " <".$fromEmail.">\r\n";
+	$headers .= "Bcc: cmsemails@them.com.au\r\n";
+
+	try{
+		foreach ($to_Array as $k => $to){
+			$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified) VALUES
+		      (:to,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id, now())";
+			$params = array(
+					":to"=>$to,
+					":header"=>$headers,
+					":subject"=>$subject,
+					":content"=>utf8_encode($body),
+					":ip"=>$_SERVER['REMOTE_ADDR'],
+					":sent"=>-2,
+					":email_user_id"=> (empty($userKeyArr[$k])?'0':$userKeyArr[$k]),
+					":email_admin_id"=>$adminId
+			);
+			$DBobject->executeSQL($sql,$params);
+		}
+		return true;
+	}catch(Exception $e){}
+	return false;
+}
+
+/**
+ * Send bulk emails in the queue. By default it is limited to 100 emails.
+ *
+ * @return boolean
+ */
+function sendBulkMail(){
+	global $DBobject;
+	try{
+		if(is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php')){	require_once 'database/safemail.php';}
+	}catch (Exception $e){}
+
+	$cnt = 0;
+	$_limit = 50;
+	try{
+		$verify = false;
+		$sql = "SELECT count(email_id) as cnt FROM tbl_email_queue WHERE email_sent = 1 AND email_modified BETWEEN DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND NOW() ";
+		if($resc = $DBobject->executeSQL($sql)){
+			if($resc[0]['cnt'] >= 480){
+				$verify = false;
+			}else{
+				$verify = true;
+				$max = 480 - $resc[0]['cnt'];
+				$sendamount = intval($max/2);
+				$_limit = ($sendamount >= $_limit)?$_limit: $sendamount;
+			}
+		}
+
+		if(function_exists("SafeMail") && $verify){
+			$sql = "SELECT * FROM tbl_email_queue WHERE email_sent = '-2' OR email_sent = '0' ORDER BY email_sent = 0 DESC,email_created LIMIT $_limit";
+			if($res = $DBobject->executeSQL($sql)){
+				foreach ($res as $r){
+					if(SafeMail($r['email_to'],$r['email_subject'],$r['email_content'],$r['email_header'])){
+						$sql = "UPDATE tbl_email_queue SET email_sent = '1',email_modified = now() WHERE email_id = :email_id";
+						$DBobject->executeSQL($sql, array(":email_id"=>$r['email_id']));
+						$cnt++;
+					}
+				}
+			}
+			return $cnt;
+		}
+	}catch(Exception $e){ die("Error: $e"); }
+	return false;
+}
+
+function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmentFile=null, $userId = 0, $adminId = 0){
+	global $DBobject;
+
+	$mailSent = 0;
+	try{
+		if(is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php') && is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php') && is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php')){
+			require_once 'database/mail/Mail.php';
+			require_once 'database/mail/AttachmentMail.php';
+			require_once 'database/mail/Multipart.php';
+				
+			if(!empty($to) && !empty($subject) && !empty($body) ){
+				$mail = new AttachmentMail($to, $subject, $from, $fromEmail);
+					
+				if(!empty($attachmentFile)) {
+					if(!is_array($attachmentFile)) $attachmentFile = array($attachmentFile);
+					foreach($attachmentFile as $att){
+						if(file_exists($att)){
+							$mp1 = new Multipart($att);
+							$mail->addAttachment($mp1);
+						}
+					}
+				}
+					
+				$mail->addBCC('cmsemails@them.com.au');
+				if(!empty($bcc)){
+					$mail->addBCC($bcc);
+				}
+					
+				$mail->setHtml($body);
+					
+				$sql = "SELECT email_id FROM tbl_email_queue WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND NOW() LIMIT 5";
+				$params = array(
+						":ip"=>$_SERVER['REMOTE_ADDR']
+				);
+				$res = $DBobject->executeSQL($sql,$params);
+				if(count($res) < 5  || !empty($_SESSION['user']['admin']) ){
+					$mailSent = $mail->send();
+				}else{
+					$mailSent= -1;
+				}
+			}
+		}
+
+	}catch(Exception $e){}
+
+	try{
+		$headers = '';
+		$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_file,email_ip,email_sent,email_user_id,email_admin_id,email_modified) VALUES
+	      (:to,:header,:subject,:content,:file,:ip,:sent,:email_user_id,:email_admin_id,now())";
+		$params = array(
+				":to"=>$to,
+				":header"=>$headers,
+				":subject"=>$subject,
+				":content"=>utf8_encode($body),
+				":ip"=>$_SERVER['REMOTE_ADDR'],
+				":file"=>json_encode($attachmentFile),
+				":sent"=>$mailSent,
+				":email_user_id"=>$userId,
+				":email_admin_id"=>$adminId
+		);
+		$DBobject->executeSQL($sql,$params);
+		return $DBobject->wrappedSqlIdentity();
+	}catch(Exception $e){}
+
+	return false;
+}
+
 
 function sendMailV2($to,$from,$fromEmail,$subject,$body){
   global $DBobject;
@@ -345,71 +462,7 @@ function sendMailV2($to,$from,$fromEmail,$subject,$body){
   return $mailSent;
 }
 
-/**
- * Create bulk emails in the database. It does NOT send them
- *
- * @param array $to_Array
- * @param string $from
- * @param string $fromEmail
- * @param string $subject
- * @param string $body
- * @return boolean
- */
-function createBulkMail($to_Array,$from,$fromEmail,$subject,$body){
-	global $DBobject;
-	require_once 'database/safemail.php';
 
-	/* To send HTML mail, you can set the Content-type header. */
-	$headers  = "MIME-Version: 1.0\r\n";
-	$headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-
-	/* additional headers */
-	$headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-	try{
-		foreach ($to_Array as $to){
-			$sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent) VALUES
-		      (:to,:header,:subject,:content,:ip,:sent)";
-			$params = array(
-					":to"=>$to,
-					":header"=>$headers,
-					":subject"=>$subject,
-					":content"=>utf8_encode($body),
-					":ip"=>$_SERVER['REMOTE_ADDR'],
-					":sent"=>-2
-			);
-			$DBobject->executeSQL($sql,$params);
-		}
-		return true;
-	}catch(Exception $e){}
-	return false;
-}
-
-/**
- * Send bulk emails in the queue. By default it is limited to 100 emails.
- *
- * @param number $_limit
- * @return boolean
- */
-function sendBulkMail($_limit = 100){
-	global $DBobject;
-	require_once 'database/safemail.php';
-
-	try{
-		if(function_exists("SafeMail")){
-			$sql = "SELECT * FROM tbl_email_copy WHERE email_sent = '-2' OR email_sent = '0' ORDER BY email_created LIMIT $_limit";
-			if($res = $DBobject->executeSQL($sql)){
-				foreach ($res as $r){
-					if(SafeMail($r['email_to'],$r['email_subject'],$r['email_content'],$r['email_header'])){
-						$sql = "UPDATE tbl_email_copy SET email_sent = '1' WHERE email_id = :email_id";
-						$DBobject->executeSQL($sql, array(":email_id"=>$r['email_id']));
-					}
-				}
-			}
-			return true;
-		}
-	}catch(Exception $e){ die("Error: $e"); }
-	return false;
-}
 
 
 function preparehtmlmail($html) {
@@ -1106,62 +1159,178 @@ function sendGAEcPurchase($_tid,$_totalArr,$_cartitemArr){
 }
 
 /**
- * NOT WORKING!!! Enhanced Ecommerce Tracking  - Measuring Purchases
+ * Enhanced Ecommerce Tracking  - Measuring Action
+ * 
+ * PRODUCTS AND PROMOTION ACTIONS
+ * -click: 	A click on a product or product link for one or more products.
+ * -detail: 	A view of product details.
+ * -add: 	Adding one or more products to a shopping cart.
+ * -remove: 	Remove one or more products from a shopping cart.
+ * -checkout: 	Initiating the checkout process for one or more products.
+ * -checkout_option: 	Sending the option value for a given checkout step.
+ * -purchase: 	The sale of one or more products.
+ * -refund: 	The refund of one or more products.
+ * -promo_click: 	A click on an internal promotion.
+
+ * @param string $_tid
+ * @param array $_action
+ * @param array $_cartitemArr
+ * @return boolean
+ */
+function sendGAEnEcAction($_tid, $_action, $_cartitemArr){
+	if(empty($_tid) || empty($_action) || empty($_cartitemArr)) return false;
+
+	$v = 1;
+	$tid = $_tid; // Put your own Analytics ID in here
+	$cid = gaParseCookie();
+	$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
+
+	// Send Transaction hit
+	$data = array(
+			'v' => $v,
+			'tid' => $tid,
+			'cid' => $cid,
+			't' => 'event',
+			'ec' => 'Ecommerce',
+			'ea' => 'click',
+			'el' => $_action,
+			'pa' => $_action,
+			'pa1' => $_SERVER['HTTP_REFERER'],
+			'pr1id' => $_cartitemArr['id'],
+			'pr1nm' => urlencode($_cartitemArr['name']),
+			'pr1ca' => $_cartitemArr['category'],
+			'pr1br' => $_cartitemArr['brand'],
+			'pr1va' => $_cartitemArr['variant'],
+			'pr1ps' => $_cartitemArr['position']
+	);
+	return gaFireHit($data);
+}
+
+
+/**
+ * Enhanced Ecommerce Tracking  - Measuring Checkout Steps
+ *
+ * @param string $_tid
+ * @param string $_stepOption
+ * @param array $_cartitemArr
+ * @return boolean
+ */
+function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr){
+	if(empty($_tid) || empty($_cartitemArr)) return false;
+
+	$v = 1;
+	$tid = $_tid; // Put your own Analytics ID in here
+	$cid = gaParseCookie();
+	$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
+
+	// Send Transaction hit
+	$data = array(
+			'v' => $v,
+			'tid' => $tid,
+			'cid' => $cid,
+			't' => 'pageview',
+			'dh' => $dh,
+			'dp' => $_SERVER['HTTP_REFERER'],
+			'pa' => 'checkout',
+			'cos' => '1',
+			'col' => $_stepOption
+	);
+	$cnt = 1;
+	foreach($_cartitemArr as $item){
+		$data["pr{$cnt}id"] = $item['id'];
+		$data["pr{$cnt}nm"] = urlencode($item['name']);
+		$data["pr{$cnt}ca"] = $item['category'];
+		$data["pr{$cnt}br"] = $item['brand'];
+		$data["pr{$cnt}va"] = $item['variant'];
+		$data["pr{$cnt}qt"] = $item['quantity'];
+		$cnt++;
+	}
+
+	$response = gaFireHit($data);
+	//sendMail('apolo@them.com.au', 'Ready Steady Go Kids', 'noreply@readysteadygokids.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
+	return $response;
+}
+
+
+/**
+ * Enhanced Ecommerce Tracking  - Measuring Checkout Options
+ *
+ * @param string $_tid
+ * @param string $_stepOption
+ * @param integer $_step
+ * @return boolean
+ */
+function sendGAEnEcCheckoutOptions($_tid, $_stepOption, $_step){
+	if(empty($_tid) || empty($_stepOption) || empty($_step)) return false;
+
+	$v = 1;
+	$tid = $_tid; // Put your own Analytics ID in here
+	$cid = gaParseCookie();
+
+	// Send Transaction hit
+	$data = array(
+			'v' => $v,
+			'tid' => $tid,
+			'cid' => $cid,
+			't' => 'event',
+			'ec' => 'Checkout',
+			'ea' => 'Option',
+			'pa' => 'checkout_option',
+			'cos' => $_step,
+			'col' => $_stepOption
+	);
+	return gaFireHit($data);
+}
+
+
+/**
+ * Enhanced Ecommerce Tracking  - Measuring Purchases
  *
  * @param string $_tid
  * @param array $_totalArr
  * @param array $_cartitemArr
  * @return boolean
  */
-/* function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr){
- //************************************* NOT WORKING *********************************
-if(empty($_tid) || empty($_totalArr) || empty($_cartitemArr)) return false;
+function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr){
+	if(empty($_tid) || empty($_totalArr) || empty($_cartitemArr)) return false;
+	
+	$v = 1;
+	$tid = $_tid; // Put your own Analytics ID in here
+	$cid = gaParseCookie();
+	$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
+	
+	// Send Transaction hit
+	$data = array(
+			'v' => $v,
+			'tid' => $tid,
+			'cid' => $cid,
+			't' => 'pageview',
+			'dh' => $dh,
+			'dp' => $_SERVER['HTTP_REFERER'],
+			'ti' => $_totalArr['id'],
+			'ta' => $dh.'-ecommerce',
+			'tr' => $_totalArr['total'],
+			'tt' => $_totalArr['tax'],
+			'ts' => $_totalArr['shipping'],
+			'tcc' => $_totalArr['coupon'],
+			'pa' => 'purchase'
+	);
+	$cnt = 1;
+	foreach($_cartitemArr as $item){
+		$data["pr{$cnt}id"] = $item['id'];
+		$data["pr{$cnt}nm"] = urlencode($item['name']);
+		$data["pr{$cnt}ca"] = $item['category'];
+		$data["pr{$cnt}br"] = $item['brand'];
+		$data["pr{$cnt}va"] = $item['variant'];
+		$data["pr{$cnt}ps"] = $item['position'];
+		$data["pr{$cnt}qt"] = $item['quantity'];
+		$cnt++;
+	}
 
-$v = 1;
-$tid = $_tid; // Put your own Analytics ID in here
-$cid = gaParseCookie();
-$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
-
-// Send Transaction hit
-$data = array(
-		'v' => $v,
-		'tid' => $tid,
-		'cid' => $cid,
-		't' => 'pageview',
-		'dh' => $dh,
-		'ti' => $_totalArr['id'],
-		'ta' => $dh.'-ecommerce',
-		'tr' => $_totalArr['total'],
-		'tt' => $_totalArr['tax'],
-		'ts' => $_totalArr['shipping'],
-		'tcc' => $_totalArr['coupon'],
-		'pa' => 'purchase'
-);
-$cnt = 1;
-foreach($_cartitemArr as $item){
-$data["pr{$cnt}id"] = $item['id'];
-$data["pr{$cnt}nm"] = urlencode($item['name']);
-$data["pr{$cnt}ca"] = $item['category'];
-$data["pr{$cnt}br"] = $item['brand'];
-$data["pr{$cnt}va"] = $item['variant'];
-$data["pr{$cnt}ps"] = $item['position'];
-$cnt++;
-}
-if(!empty($data)) {
-$getString = 'https://ssl.google-analytics.com/collect';
-$getString .= '?payload_data&';
-$getString .= http_build_query($data);
-
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $getString);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-$response = curl_exec($ch);
-curl_close($ch);
-}
-//$response = gaFireHit($data);
-sendMail('apolo@them.com.au', 'Ready Steady Go Kids', 'noreply@readysteadygokids.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
-return $response;
-} */
+	$response = gaFireHit($data);
+	//sendMail('apolo@them.com.au', 'Ready Steady Go Kids', 'noreply@readysteadygokids.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
+	return $response;
+} 
 
 // See https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 function gaFireHit( $data = null ) {

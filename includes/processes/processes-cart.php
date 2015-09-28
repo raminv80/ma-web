@@ -1,5 +1,5 @@
 <?php
-global $SMARTY,$DBobject,$CONFIG;
+global $SMARTY,$DBobject,$CONFIG,$GA_ID;
 $referer = parse_url($_SERVER['HTTP_REFERER']);
 if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	switch ($_POST['action']) {
@@ -14,6 +14,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 			$SMARTY->assign('subtotal', $subtotal);
 			$popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
 			$productGA = $cart_obj->getProductInfo_GA($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['listing_id']);
+			sendGAEnEcAction($GA_ID, 'add', $productGA);
 			echo json_encode(array(
 								'product' => $productGA,
 								'message' => $response,
@@ -37,6 +38,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
             $SMARTY->assign('subtotal',$totals['subtotal']);
             $SMARTY->assign('cart',$cart);
             $popoverShopCart= $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+            sendGAEnEcAction($GA_ID, 'remove', $productGA);
 	    	echo json_encode(array(
 	    					'product' => $productGA,
 	    					'itemsCount' => $itemsCount,
@@ -136,7 +138,9 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 		          $_SESSION['smarty']['selectedShippingSuburb'] = $res[0]['postcode_suburb'];
 		        }
 		      }
-		      
+		      $cart_obj = new cart();
+		      $productsGA = $cart_obj->getCartitemsByCartId_GA();
+		      sendGAEnEcCheckoutStep($GA_ID, $_POST['shipMethod'], $productsGA);
 		      if($CONFIG->checkout->attributes()->guest != 'true' && empty($_SESSION['user']['public']['id'])){
 		        $_SESSION['redirect'] = "/checkout";
 		        header("Location: /login-register");
@@ -271,6 +275,8 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    	
 	    		$ship_obj = new ShippingClass();
 	    		
+	    		sendGAEnEcCheckoutOptions($GA_ID, 'Credit card','2');
+	    		
 	    		$postage = $ship_obj->getPostageByAddressId($shipID);
 	    		$methods = $postage['postage_name'];
 	    		$shippingFee = floatval($postage['postage_price']);
@@ -367,7 +373,10 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 	    		  
     		    
     		    // SET GOOGLE ANALYTICS - ECOMMERCE
-	    		  $affiliation = str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
+    		    $totalsGA = array('id'=>$order_cartId, 'total'=>$chargedAmount, 'tax'=>$gst,'shipping'=>$shippingFee,'coupon'=>$order['cart_discount_code']);
+    		    $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
+	    		  sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
+	    		 /*  $affiliation = str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
     		    $analytics = $cart_obj->getJSCartitemsByCartId_GA($order_cartId);
     		    $analytics .= "ga('ec:setAction', 'purchase', {
 														  'id': '{$orderNumber}',
@@ -378,7 +387,7 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 														  'coupon': '{$order['cart_discount_code']}'  
 														});
 														";
-    		    $_SESSION ['ga_ec'] = $analytics;
+    		    $_SESSION ['ga_ec'] = $analytics; */
     		    
     		    //SET USED DISCOUNT CODE
     		    if ($order['cart_discount_code']) {

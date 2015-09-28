@@ -3,7 +3,7 @@
 $error = 'Missing required info. Please try again.';
 if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 10 ){
   if(!empty($_POST['email']) && !empty($_POST['phone'])  && !empty($_POST['name'])   && !empty($_POST['message'])){
-  	global $CONFIG,$DBobject,$SMARTY,$SITE;
+  	global $CONFIG,$DBobject,$SMARTY,$SITE,$GA_ID;
   	
   	$error = '';
   	$sent = 0;
@@ -103,11 +103,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   	    $error = 'There was an error sending the contact email.';
   	  } */
   		
-  		$staging = (string)$CONFIG->attributes()->staging;
-  		if($staging === "false" ){
-  			$GAID = (string) $CONFIG->google_analytics;
-  			sendGAEvent($GAID,'Enquiry', 'Submitted', $_POST['form_name']);
-  		}
+  		sendGAEvent($GA_ID,'Enquiry', 'Submitted', $_POST['form_name']);
   		
   		header("Location: /thank-you");
   		die();
