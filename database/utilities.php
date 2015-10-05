@@ -420,50 +420,6 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 }
 
 
-function sendMailV2($to,$from,$fromEmail,$subject,$body){
-  global $DBobject;
-  require_once 'database/safemail.php';
-  define("DEFCALLBACKMAIL", "{$fromEmail}");
-  define("DEFCALLBACKNAME", "");
-  $final_msg = preparehtmlmail($body);
-  
-  $mailSent = 0;
-  try{
-    if(function_exists("SafeMail")){
-      $sql = "SELECT email_id FROM tbl_email_copy WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW() LIMIT 5";
-      $params = array(
-          ":ip"=>$_SERVER['REMOTE_ADDR']
-      );
-      $res = $DBobject->executeSQL($sql,$params);
-      if(count($res) < 5 ){
-        $mailSent = SafeMail($to,$subject,$final_msg['headers'],$final_msg['multipart']);
-      }else{
-        $mailSent= -1;
-      }
-    }
-  }catch(Exception $e){}
-
-  try{
-    $sql = "INSERT INTO tbl_email_copy (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_sender_useragent,email_time) VALUES 
-	      (:to,:header,:subject,:content,:ip,:sent,:useragent,:time)";
-	  $params = array(
-	      ":to"=>$to,
-          ":header"=>$final_msg['headers'],
-	      ":subject"=>$subject,
-          ":content"=>$final_msg['multipart'],
-	      ":ip"=>$_SERVER['REMOTE_ADDR'],
-  		  ":sent"=>$mailSent,
-  		  ":useragent"=>$_SERVER['HTTP_USER_AGENT'],
-  		  ":time"=>date("d/m/Y H:i:s T(P)"),
-	  );
-	  $DBobject->executeSQL($sql,$params);
-  }catch(Exception $e){}
-
-  return $mailSent;
-}
-
-
-
 
 function preparehtmlmail($html) {
 
@@ -1403,6 +1359,62 @@ function saveInLog($ACTION, $TABLE, $ID, $ADDITIONAL = ''){
 	return $DBobject->wrappedSql($sql, $params);
 }
 
+
+function sendSMS($recipients = array(), $message, $adminId = 0){
+	global $DBobject, $CONFIG, $HTTP_HOST;
+	require_once('includes/plugins/mmsoap/MMSoap.php');
+
+	// Set up account details
+	$username 	= 	(string) $CONFIG->sms->username;
+	$password 	= 	(string) $CONFIG->sms->password;
+	$origin   	=   (string) $CONFIG->sms->origin;
+	$soap = new MMSoap($username, $password);
+	$error = array();
+	$response = array();
+	$cnt = 0;
+	
+	try{
+		foreach($recipients as $user_id => $to){
+			if(!empty($to)) {
+				
+				// Create new MMSoap class
+				$response[$user_id] = $soap->sendMessages(array($to), html_entity_decode(utf8_decode($message),ENT_QUOTES), null, $origin);
+				$result = $response[$user_id]->getResult();
+				
+				#if failed, send email to THEM
+				if($result->sent){
+					$sent = 1;
+				}else{
+					$sent = 0;
+					$error[] =  "Failed[$user_id]:  $to";
+				}
+				
+				// Store in log
+				$sql = "INSERT INTO tbl_sms (sms_admin_id, sms_user_id, sms_to, sms_content, sms_ip, sms_sent) VALUES
+			      (:sms_admin_id, :sms_user_id, :sms_to, :sms_content, :sms_ip, :sms_sent)";
+				$params = array(
+						":sms_admin_id"=>$adminId,
+						":sms_user_id"=>$user_id,
+						":sms_to"=>$to,
+						":sms_content"=>$message,
+						":sms_ip"=>$_SERVER['REMOTE_ADDR'],
+						":sms_sent"=>$sent
+				);
+				$DBobject->executeSQL($sql,$params);
+				if($sent == 1) $cnt++;
+			}
+		}
+		
+	}catch(Exception $e){
+		$error[] = $e;
+	}
+	if(!empty($error)){
+		$to = "apolo@them.com.au,online@them.com.au";
+		sendMail($to, (string) $CONFIG->company->name, 'noreply@' . str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] ), 'SMS function error', "Error: ".print_r($error,TRUE)." </br> Session: ".print_r($_SESSION,TRUE));
+	}
+	return array('response'=>$response, 'sent'=>$cnt, 'error'=>$error);
+}
+
 function getShortURL($longUrl, $apiKey = '') {
 	$jsonData = json_encode(array('longUrl' => $longUrl));
 	$curlObj = curl_init();
@@ -1420,6 +1432,7 @@ function getShortURL($longUrl, $apiKey = '') {
 	if(!empty($json->id))	return $json->id;
 	return $longUrl;
 }
+
 
 
 function geocode($city){

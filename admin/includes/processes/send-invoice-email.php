@@ -4,7 +4,7 @@ include_once 'admin/includes/functions/admin-functions.php';
 global $DBobject, $SMARTY, $CONFIG;
 
 if(checkToken('admin', $_POST["formToken"]) && !empty($_POST['email']) && !empty($_POST['email_id'])){
-	$sql = "SELECT * FROM tbl_email_copy WHERE email_id = :id ";
+	$sql = "SELECT * FROM tbl_email_queue WHERE email_id = :id ";
 	if($res = $DBobject->wrappedSql( $sql, array(':id' => $_POST["email_id"]))){
 		$to = $_POST['email'];
 		$from = (string) $CONFIG->company->name;

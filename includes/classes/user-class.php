@@ -115,7 +115,7 @@ class UserClass {
 				WHERE user_id = :id ";
 	    	
 	    	if ( $DBobject->wrappedSql($sql, $params) ) {
-	    		return array ('success' => 'Password has been updated.');
+	    		return array ('success' => 'Your password has been updated.');
 	    	} else {
 	    		return array ('error' => 'There was a connection problem. Please, try again!');
 	    	}
@@ -248,14 +248,14 @@ class UserClass {
  
     
     /**
-     * Update the password field given the email in tbl_user and return associative array: ('success') 
+     * Reset the password token for password recovery 
      * On error return associative array: ('error')
-     * Require strings:  email and password
+     * Require strings:  email
      * 
      * @param string $email
      * @return array
      */
-    function ResetPassword($email){
+    function ResetPasswordToken($email){
       global $DBobject,$SMARTY;
     
       if ($res = $this->RetrieveByUsername($email)){
@@ -280,29 +280,47 @@ class UserClass {
       }
       return array( 'error' => "Sorry, '{$email}' does not appear to be registered with this site. Check your email or please create an account.");
     }
-//     function ResetPassword($email){
-//     	global $DBobject,$SMARTY;
-//         if ($res = $this->RetrieveByUsername($email)){
-//             $newPass = genRandomString(10);
-//             $temp_str = getPass($email,$newPass);
-//             $params = array (
-//                             ":id" => $res['user_id'],
-//                             ":password" => $temp_str,
-//                             ":ip" => $_SERVER['REMOTE_ADDR'],
-//                             ":browser" => $_SERVER['HTTP_USER_AGENT']
-//             );
-//             $sql = "UPDATE tbl_user SET user_password = :password, user_ip = :ip, user_browser = :browser, user_modified = now()
-//                    WHERE user_id = :id ";
-//             if ( $DBobject->wrappedSql($sql, $params) ) {
-//             	return array ('success' => 'Your new password has been sent to the registered email address.', 
-//             							'temp_pass' =>$newPass,
-//             							'user_gname' =>$res['user_gname']);
-//             } 
-//             return array ('error' => 'There was a connection problem. Please, try again!');
-//         }
-//     	return array( 'error' => "Sorry, '{$email}' does not appear to be registered with this site. Can you please check your email address or please create an account.");
-//     }
 
+
+    /**
+     * Reset the password field given the email, token and new password. It returns associative array with user's details on success
+     * On error return associative array: ('error')
+     * Require strings:  email and password
+     *
+     * @param string $email
+     * @return array
+     */
+    function ResetPassword($email, $userToken, $newPassword){
+    	global $DBobject,$SMARTY;
+    	
+    	$error = "Sorry, '{$email}' does not appear to be registered with this site. Check your email or please create an account.";
+    	if($res = $this->RetrieveByUsername($email)){
+    		$token = getPass($email,$userToken);
+    		
+    		$sql = "SELECT user_id,IF(user_token_date>=DATE_SUB(NOW( ),INTERVAL 4 HOUR),0,1) AS expired FROM tbl_user WHERE user_token = :token"; 
+    		if($res2 = $DBobject->wrappedSql( $sql, array(':token' => $token)) ){
+    			if(empty($res2) || empty($res2[0]) || $res2[0]['expired'] == 1){
+    				$error = 'This url has expired, please request a new reset password.';
+    			}else{
+    				$temp_str = getPass($email, $newPassword);
+    				$params = array (
+    						":id" => $res2[0]['user_id'],
+    						":password" => $temp_str,
+    						":ip" => $_SERVER['REMOTE_ADDR'],
+    						":browser" => $_SERVER['HTTP_USER_AGENT']
+    				);
+    				$sql = "UPDATE tbl_user SET user_password = :password, user_ip = :ip,user_browser = :browser,user_modified = now() WHERE user_id = :id ";
+    				if ($DBobject->wrappedSql($sql, $params)){
+    					$sql = "UPDATE tbl_user SET user_token = NULL, user_token_date = NULL WHERE user_id = :id "; //Reset password
+    					$DBobject->wrappedSql($sql, array("id"=>$res2[0]['user_id']));
+    					return $this->Authenticate($email, $newPassword);
+    				}
+    			}
+    		}
+    		$error = 'Your token is invalid or has expired, please request a new one.';
+    	}
+    	return array('error' => $error);
+    }
 
 
     /**
@@ -333,16 +351,17 @@ class UserClass {
      * @param string $createdDatetime
      * @return bool
      */
-    function UnsubscribeUser($token, $createdDatetime){
+		function UnsubscribeUser($token, $createdDatetime, $isSMS = false){
     	global $DBobject;
     
     	if(!empty($token) && !empty($createdDatetime)){
     		$params = array("token"=>$token,"timeloc"=>$createdDatetime);
-    		$sql = "SELECT * FROM tbl_user WHERE user_unsubscribe = :token AND DATE_FORMAT(user_created,'%Y%m%d%H%i%s') = :timeloc";
+    		$sql = "SELECT user_id, user_email FROM tbl_user WHERE user_unsubscribe = :token AND DATE_FORMAT(user_created,'%Y%m%d%H%i%s') = :timeloc";
     		if($res = $DBobject->wrappedSql($sql,$params)){
-    			$usql = "UPDATE tbl_user SET user_want_promo = 0 WHERE user_id = :id";
+    			$promoStr = ($isSMS) ? "user_sms_promo = 0" : "user_email_promo = 0"; 
+    			$usql = "UPDATE tbl_user SET {$promoStr} WHERE user_id = :id";
     			$DBobject->wrappedSql($usql,array("id"=>$res[0]['user_id']));
-    			return true;
+    			return $res[0]['user_email'];
     		}
     	}
     	return false;
