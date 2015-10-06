@@ -39,10 +39,10 @@ function importFeed($feed){
 		$params['listing_meta_description'] = excerpt($description); //excerpt ( post_content )
 		$params['listing_published'] = 1; //1
 		$params['listing_created'] = $created; //now()
-		$params['listing_schedule_start'] = $created; //post_date
+		$params['listing_schedule_start_date'] = $created; //post_date
 		$effectiveDate = strtotime("+12 months", strtotime($created));
 		$effectiveDate = strftime ( '%Y-%m-%d' , $effectiveDate );
-		$params['listing_schedule_end'] = $effectiveDate; //post_date + 3 months
+		$params['listing_schedule_end_date'] = $effectiveDate; //post_date + 3 months
 		$params['listing_share_title'] = $row['post_title']; //post_title
 		$params['listing_share_image'] = $image; //post_title
 		$params['listing_share_text'] = excerpt($description); //Read post_title

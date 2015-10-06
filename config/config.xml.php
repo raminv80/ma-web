@@ -6,14 +6,14 @@
 		<id>UA-</id>
 	</google_analytics>
 	<company>
-		<name>Christoper Pyne MP</name>
+		<name></name>
 		<address>
-			<street>429 Magill Road</street>
-			<suburb>St Morris</suburb>
-			<state>SA</state>
-			<postcode>5068</postcode>
+			<street></street>
+			<suburb></suburb>
+			<state></state>
+			<postcode></postcode>
 		</address>
-		<phone>(08) 8431 2277</phone>
+		<phone></phone>
 		<email_from>noreply@them.com.au</email_from>
 		<email_contact>apolo@them.com.au</email_contact>
 		<email_orders>apolo@them.com.au</email_orders>
@@ -198,8 +198,8 @@
  	  <root_parent_id>103</root_parent_id> 
 		<type>4</type> 
 		<file>ListClass</file>
-		<orderby>listing_schedule_start DESC</orderby>
-		<where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL)]]></where>
+		<orderby>listing_schedule_start_date DESC</orderby>
+		<where><![CDATA[(listing_schedule_start_date < NOW() OR listing_schedule_start_date IS NULL)]]></where>
 		<limit level="1">20</limit>
 		<table>	
 			<name>tbl_listing</name>
@@ -241,8 +241,8 @@
 	  <url>home-media-centre</url>
 		<type>4</type> 
 		<file>ListClass</file>
-		<where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL) AND (listing_schedule_end > NOW() OR listing_schedule_end IS NULL) AND listing_parent_flag = 0 AND listing_parent_id != '120']]></where>
-		<orderby>listing_schedule_start DESC</orderby>
+		<where><![CDATA[(listing_schedule_start_date < NOW() OR listing_schedule_start_date IS NULL) AND (listing_schedule_end_date > NOW() OR listing_schedule_end_date IS NULL) AND listing_parent_flag = 0 AND listing_parent_id != '120']]></where>
+		<orderby>listing_schedule_start_date DESC</orderby>
 		<limit>2</limit>
 		<table>	
 			<name>tbl_listing</name>

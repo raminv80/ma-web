@@ -41,8 +41,7 @@ if(!empty($_SESSION['ad_session'])){
 foreach($_SESSION['smarty'] as $key=>$val){
   $SMARTY->assign($key,$val);
 }
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-$SMARTY->assign('DOMAIN', $protocol. $GLOBALS['HTTP_HOST']);
+$SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
 unset($_SESSION['smarty']);
 $SMARTY->assign('error',$_SESSION['error']);
 unset($_SESSION['error']); // ASSIGN ERROR MESSAGES FOR TEMPLATES
@@ -94,7 +93,7 @@ while(true){
     $template = loadPage($CONFIG->index_page); 
     break 1; 
   }
-
+  
   /**
    * **** Goes to individual script pages ******
    */
@@ -110,8 +109,37 @@ while(true){
    */
   foreach($CONFIG->search as $sp){
   	if($sp->url == $_request['arg1']){
-  		$template = loadPage($sp);
-  		searchcms($_REQUEST);
+	    $template = loadPage($sp);
+	    searchcms($_REQUEST);
+	   	break 2;
+    }
+  }
+  
+
+  /**
+   * ***** Product pages here ******
+   */
+  foreach($CONFIG->product_page as $lp){
+  	if(empty($lp->url)){continue;}
+  	$needle = str_replace("/","\/",$lp->url);
+  	$haystack = $_request["arg1"];
+  	if(preg_match("/^{$needle}/",$haystack)){
+  		$_nurl = $_request["arg1"];
+  		$class = (string)$lp->file;
+  		$obj = new $class($_nurl,$lp);
+  		$template = $obj->Load(null,$_PUBLISHED);
+  		$menu = $obj->LoadMenu($lp->pageID);
+  		$SMARTY->assign('menuitems',$menu);
+  		$obj->LoadAssociatedProducts();
+  		foreach($lp->process as $sp){
+  			$file = (string)$sp->file;
+  			if(file_exists($file))	{ include ($file);}
+  		}
+  		$fieldname = (string) $lp->url->attributes()->requiredvar;
+  		if(!empty($fieldname) && empty($_REQUEST[$fieldname])) {
+  			$_request["arg1"] = '404';
+  			$template = "";
+  		}
   		break 2;
   	}
   }
@@ -135,46 +163,18 @@ while(true){
       $template = $obj->Load((!empty($lp->root_parent_id)?$lp->root_parent_id:null),$_PUBLISHED);
       $menu = $obj->LoadMenu($lp->root_parent_id);
       $SMARTY->assign('menuitems',$menu);
+      $fieldname = (string) $lp->url->attributes()->requiredvar;
+      if(!empty($fieldname) && empty($_REQUEST[$fieldname])) {
+      	$_request["arg1"] = '404';
+      	$template = "";
+      }
       break 2;
     }
   }
-  
-  
-  /*** POSSIBLE VARIATION TO LOAD DYNAMIC URL LISTINGS BASED ON CACHE TABLE MATCH URL BASE ***/
-  /* $_t_config = array(); $_t_key = "";
-  $arr = explode("/",$_request["arg1"]);
-  foreach($CONFIG->listing_page as $lp){
-    if(empty($lp->url)){continue;}
-    //LOAD URL FROM CACHE TABLE BASED ON pageID FROM CONFIG FILE
-    
-    $needle = str_replace("/","\/",$lp->url);
-    $haystack = $_request["arg1"];
-    if(preg_match("/^{$needle}/",$haystack)){
-      if(count($lp->url) > count($_t_key)){
-        $_t_config = $lp;
-        $_t_key = $lp->url;
-      }
-    }
-  }
-  if(!empty($_t_config)){
-    foreach($lp->process as $sp){
-      $file = (string)$sp->file;
-      if(file_exists($file))	{ include ($file);}
-    }
-    $_nurl = $_request["arg1"];
-    $class = (string)$lp->file;
-    $obj = new $class($_nurl,$lp);
-    $template = $obj->Load((!empty($lp->root_parent_id)?$lp->root_parent_id:null),$_PUBLISHED);
-    $menu = $obj->LoadMenu($lp->root_parent_id);
-    $SMARTY->assign('menuitems',$menu);
-    break 2;
-  } */
-  
-  /***** END POSSIBLE VARIATION ***/
-  
   /**
    * ***** Dynamic Page Check Here ******
    */
+  $_request["arg1"] = rtrim($_request["arg1"],'/');
   if(!empty($CONFIG->page_strut)){
     $struct = $CONFIG->page_strut;
     $class = (string)$struct->file;
@@ -203,7 +203,6 @@ while(true){
       break 1;
     }
   }
-  
   $template = loadPage($CONFIG->error404);
   break 1;
 }
@@ -241,7 +240,7 @@ function loadPage($_conf){
         $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
         $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
       }
-    	foreach($_conf->options as $o){
+      foreach($_conf->options as $o){
       	if(!empty($struct->table->options)){
       		foreach($o->field as $of){
       			$domdict = dom_import_simplexml($struct->table->options);
@@ -262,7 +261,6 @@ function loadPage($_conf){
         $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
         $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
       }
-      
       $class = (string)$struct->file;
       $obj = new $class($_request["arg1"],$struct);
       $template = $obj->Load($_conf->pageID,$_PUBLISHED);
@@ -280,6 +278,11 @@ function loadPage($_conf){
     }
   }
   loadPageAdditional($_conf);
+  $fieldname = (string) $_conf->url->attributes()->requiredvar; 
+  if(!empty($fieldname) && empty($_REQUEST[$fieldname])) { 
+  	$_request["arg1"] = '404';
+  	return "";
+  }
   return $template;
 }
 
