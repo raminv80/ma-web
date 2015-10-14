@@ -49,7 +49,7 @@ if(	$debug == 'true'){
 	
 }else{
 	$SMARTY->debugging = false;	
-	$SMARTY->force_compile = true;
+	$SMARTY->force_compile = false;
 	$SMARTY->caching = false;
 }
 

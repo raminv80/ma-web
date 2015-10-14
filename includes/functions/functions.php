@@ -181,7 +181,7 @@ function INITSMARTY($CONFIG){
     $SMARTY->caching = false;
   }else{
     $SMARTY->debugging = false;
-    $SMARTY->force_compile = true;
+    $SMARTY->force_compile = false;
     $SMARTY->caching = false;
   }
   return $SMARTY;

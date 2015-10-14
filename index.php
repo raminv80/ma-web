@@ -95,6 +95,74 @@ while(true){
   }
   
   /**
+   * ***** Goes to CHECKOUT ******
+   */
+  if($_request['arg1'] == 'checkout'){
+    /* if(empty($_SESSION['user']['public']['id'])){
+     $_SESSION['redirect'] = "/checkout";
+     header("Location: /login");
+     exit();
+     } */
+    if(empty($_SESSION['selectedShipping'])){
+    		header("Location: /shopping-cart");
+    		die();
+    }
+    $cart_obj = new cart();
+    if($cart_obj->NumberOfProductsOnCart() < 1){
+      header("Location: /");
+      die();
+    }
+    $template = loadPage($CONFIG->checkout);
+    $ship_obj = new ShippingClass();
+    $methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
+    $SMARTY->assign ( 'shippingMethods', $methods );
+    $validation = $cart_obj->ValidateCart();
+    $SMARTY->assign('validation',$validation);
+    $totals = $cart_obj->CalculateTotal();
+    $SMARTY->assign('totals',$totals);
+    $sql = "SELECT * FROM tbl_address WHERE address_user_id = :uid ORDER BY address_id";
+    $addresses = $DBobject->wrappedSql($sql,array(
+        ':uid'=>$_SESSION['user']['public']['id']
+    ));
+    $SMARTY->assign('addresses',$addresses);
+    $sql = "SELECT DISTINCT postcode_state FROM tbl_postcode WHERE postcode_state != 'OTHE' ORDER BY postcode_state";
+    $states = $DBobject->wrappedSql($sql);
+    $SMARTY->assign('options_state',$states);
+    // ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ENHANCED ECOMMERCE
+    $SMARTY->assign ( 'ga_ec', $cart_obj->getJSCartitemsByCartId_GA() . "ga('ec:setAction','checkout', { 'step': 1 });" );
+  
+    break 1;
+  }
+  
+  /**
+   * ***** Goes to SHOPPING CART ******
+   */
+  if($_request['arg1'] == 'shopping-cart'){
+    $template = loadPage($CONFIG->cart);
+    $cart_obj = new cart();
+    $ship_obj = new ShippingClass();
+    $itemNumber = $cart_obj->NumberOfProductsOnCart();
+    $methods = $ship_obj->getShippingMethods($itemNumber);
+    $SMARTY->assign ( 'shippingMethods', $methods );
+    if(!empty($_SESSION['reApplydiscount']) && $itemNumber){		//RE-APPLY DISCOUNT CODE
+      $res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
+      if ($res['error']) {
+      		$_SESSION['error']= $res['error'];
+      		$_SESSION['post']= $_POST;
+      }
+      $_SESSION['reApplydiscount'] = '';
+      unset($_SESSION['reApplydiscount']);
+      header('Location: /shopping-cart');
+      die();
+    }
+    $validation = $cart_obj->ValidateCart();
+    $SMARTY->assign('validation',$validation);
+    $totals = $cart_obj->CalculateTotal();
+    $SMARTY->assign('totals',$totals);
+    break 1;
+  }
+  
+  /**
    * **** Goes to individual script pages ******
    */
   foreach($CONFIG->static_page as $sp){
@@ -205,6 +273,32 @@ while(true){
   }
   $template = loadPage($CONFIG->error404);
   break 1;
+}
+
+
+/**
+ * ***************************************
+ * Load Data Shopping Cart for all pages *
+ * ***************************************
+ */
+$cart_obj = new cart();
+if(!empty($_SESSION['user']['public']['store_id'])){
+  $storeId = $_SESSION['user']['public']['store_id'];
+  $sql = "SELECT listing_name, location_phone FROM tbl_listing LEFT JOIN tbl_location ON listing_id = location_listing_id WHERE listing_object_id = :id AND listing_deleted IS NULL AND listing_published = 1";
+  $params = array(":id"=>$storeId);
+  $res = $DBobject->wrappedSql($sql,$params);
+  $SMARTY->assign("storename",$res[0]['listing_name']);
+}
+$itemNumber = $cart_obj->NumberOfProductsOnCart();
+$SMARTY->assign('itemNumber',$itemNumber);
+$cart = $cart_obj->GetDataCart();
+$SMARTY->assign('cart',$cart);
+$subtotal = $cart_obj->GetSubtotal();
+$SMARTY->assign('subtotal',$subtotal);
+$productsOnCart = $cart_obj->GetDataProductsOnCart();
+$SMARTY->assign('productsOnCart',$productsOnCart);
+if($CONFIG->checkout->attributes()->guest == 'true'){
+  $SMARTY->assign('allowGuest',true);
 }
 
 if(empty($template)){
