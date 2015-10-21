@@ -70,7 +70,7 @@ class AttachmentMail extends AbstractMail {
 		$this->addHeader("X-Mailer: Attachment Mailer ver. 1.0");
 		$this->addHeader("X-Priority: ".$this->priority);
 		$this->addHeader("Content-type: multipart/mixed;".ABSTRACTMAIL_CRLF.chr(9)." boundary=\"".$this->uidBoundary."\"".ABSTRACTMAIL_CRLF);
-		$this->addHeader("This is a multi-part message in MIME format.");
+		//$this->addHeader("This is a multi-part message in MIME format.");
 		$headers = $this->buildHeaders();
 		return mail($this->buildTo(),
 					$this->subject,
