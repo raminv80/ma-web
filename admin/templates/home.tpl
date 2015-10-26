@@ -4,7 +4,7 @@
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&appId=212771495598580&version=v2.0";
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.5&appId=587832504567695";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
@@ -19,7 +19,7 @@
 	{else}
 	<div class="col-sm-offset-1 col-sm-11">
 		<h3>Stay up to date with Them Advertising</h3>
-		<div class="fb-like-box" data-href="https://www.facebook.com/ThemAdvertising" data-width="640" data-height="1000" data-colorscheme="light" data-show-faces="false" data-header="true" data-stream="true" data-show-border="false"></div>
+		<div class="fb-page" data-href="https://www.facebook.com/ThemAdvertising" data-width="500" data-height="1000" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false" data-show-posts="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/ThemAdvertising"><a href="https://www.facebook.com/ThemAdvertising">Them Advertising</a></blockquote></div></div>
 	</div>
 	{/if}
 </div>

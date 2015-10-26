@@ -100,7 +100,7 @@
         content_css : '/includes/css/bootstrap.min.css,/includes/css/custom.css,/admin/includes/css/tinymce.css',
         file_browser_callback : 'elFinderBrowser'
       });
-
+			$('textarea.tinymce').removeClass('tinymce');
 
     }
     

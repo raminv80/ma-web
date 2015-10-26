@@ -28,9 +28,6 @@ function searchcms($data){
 	
 	
 	$results['Pages'] = SearchListing($str);
-	$results['Issues'] = SearchListing($str,2);
-	$results['Campaigns & Petitions'] = SearchListing($str,3);
-	$results['Media Centre'] = SearchListing($str,4);
 	
 	$SMARTY->assign('count',$count);
 	$SMARTY->assign('results',$results);

@@ -178,7 +178,10 @@ while(true){
   foreach($CONFIG->search as $sp){
   	if($sp->url == $_request['arg1']){
 	    $template = loadPage($sp);
-	    searchcms($_REQUEST);
+  	  $file = (string)$sp->file;
+  		if(file_exists($file))
+  		{ include ($file);}
+  		else{ searchcms($_REQUEST); }
 	   	break 2;
     }
   }
