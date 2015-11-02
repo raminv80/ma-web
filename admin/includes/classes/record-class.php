@@ -239,20 +239,21 @@ Class Record{
 					$title .= ($n>0?", ":"").$val["{$f}"];
 					$n++;
 				}
-				$records[$val["{$this->ID}"]] = array(
-						"title"=>$title,
-						"record"=>$val,
-						"id"=>$val["{$this->ID}"],
-						"url"=>"/admin/edit/{$this->URL}/{$val["{$this->ID}"]}",
-						"url_delete"=>"/admin/delete/{$this->URL}/{$val["{$this->ID}"]}",
-						"published"=>$val["{$this->PUBLISHED}"],
-				);
+				
+				$val["title"] = $title;
+				$val["id"] = $val["{$this->ID}"];
+				$val["url"] = "/admin/edit/{$this->URL}/{$val["{$this->ID}"]}";
+				$val["url_delete"] = "/admin/delete/{$this->URL}/{$val["{$this->ID}"]}";
+				$val["published"] = $val["{$this->PUBLISHED}"];
 				
 				foreach($this->CONFIG->table->associated as $a){
-					if ($a->attributes()->inlist) {
-						$records[$val["{$this->ID}"]]["{$a->name}"] = $this->getAssociated($a, $val["{$a->linkfield}"]);
-					}
+				  if ($a->attributes()->inlist) {
+				    $val["{$a->name}"] = $this->getAssociated($a, $val["{$a->linkfield}"]);
+				  }
 				}
+				
+				$records[$val["{$this->ID}"]] = $val;
+
 			}
 			foreach ( $this->CONFIG->table->options->field as $f ) {
 				if ($f->attributes()->inlist) {

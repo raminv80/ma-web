@@ -187,7 +187,6 @@ class Listing {
           		$val["{$a->name}"] = $this->getAssociated($a, $val["{$a->linkfield}"]);
           	}
           }
-          $val["record"] = $val;
           $val["title"] = $val['listing_name'];
           $val["order"] = $val['listing_order'];
           $val["id"] = $val['listing_id'];
