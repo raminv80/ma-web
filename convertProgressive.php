@@ -186,6 +186,24 @@ function resizeimage($image, $width, $height, $nWidth, $nHeight){
 	return $newImg;
 }
 
+
+function cropimage($image,$width, $height, $focus="center"){
+  // Coordinates calculator
+  $x_pos = (imagesx($image) - $width) / 2;
+  $x_pos = ceil($x_pos);
+  $y_pos = (imagesy($image) - $height) / 2;
+  $y_pos = ceil($y_pos);
+  
+  $newImg = imagecreatetruecolor($width, $height);
+  imagealphablending($newImg, false);
+  imagesavealpha($newImg,true);
+  $transparent = imagecolorallocatealpha($newImg, 255, 255, 255, 127);
+  imagefilledrectangle($newImg, 0, 0, $width, $width, $transparent);
+  // Crop to Square using the given dimensions
+  ImageCopy($newImg, $image, 0, 0, $x_pos, $y_pos, $width, $height);
+  return $newImg;
+}
+/* 
 function cropimage($image,$width, $height, $focus="center"){
 	ini_set('memory_limit','128M');
 	// Coordinates calculator
@@ -200,4 +218,4 @@ function cropimage($image,$width, $height, $focus="center"){
 	// Crop to Square using the given dimensions
 	ImageCopy($new_image, $image, 0, 0, $x_pos, $y_pos, $width, $height);
 	return $new_image;
-}
+} */
