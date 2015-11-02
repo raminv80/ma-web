@@ -635,6 +635,8 @@ function unclean( $str ){
 			break;
 		case "string":
 		default:
+			$str = str_replace(chr(146),"'",$str);
+			$str = str_replace(chr(145),"'",$str);
 			$str = stripslashes($str);
 			$str = str_replace('&nbsp;',' ',$str);
 			$str = html_entity_decode($str,ENT_QUOTES,'UTF-8');

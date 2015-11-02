@@ -3233,7 +3233,7 @@ elFinder.prototype._options = {
 	commands : [
 		'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile', 'quicklook', 
 		'download', 'rm', 'duplicate', 'rename', 'mkdir', 'mkfile', 'upload', 'copy', 
-		'cut', 'paste', 'edit', 'extract', 'archive', 'search', 'info', 'view', 'help', 'resize', 'sort', 'netmount', 'netunmount', 'pixlr'
+		'cut', 'paste', 'edit', 'extract', 'archive', 'search', 'info', 'view', 'help', 'sort', 'netmount', 'netunmount'
 	],
 	
 	/**
@@ -3385,7 +3385,7 @@ elFinder.prototype._options = {
 			['quicklook'],
 			['copy', 'cut', 'paste'],
 			['rm'],
-			['duplicate', 'rename', 'edit', 'resize', 'pixlr'],
+			['duplicate', 'rename'],
 			['extract', 'archive'],
 			['search'],
 			['view', 'sort'],
@@ -4331,7 +4331,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errArcType'           : 'Unsupported archive type.',
 			'errNoArchive'         : 'File is not archive or has unsupported archive type.',
 			'errCmdNoSupport'      : 'Backend does not support this command.',
-			'errReplByChild'       : 'The folder â€œ$1â€� canâ€™t be replaced by an item it contains.',
+			'errReplByChild'       : 'The folder Ã¢â‚¬Å“$1Ã¢â‚¬ï¿½ canÃ¢â‚¬â„¢t be replaced by an item it contains.',
 			'errArcSymlinks'       : 'For security reason denied to unpack archives contains symlinks or files with not allowed names.', // edited 24.06.2012
 			'errArcMaxSize'        : 'Archive files exceeds maximum allowed size.',
 			'errResize'            : 'Unable to resize "$1".',
@@ -4512,7 +4512,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'rotate'          : 'Rotate',
 			'rotate-cw'       : 'Rotate 90 degrees CW',
 			'rotate-ccw'      : 'Rotate 90 degrees CCW',
-			'degree'          : 'Â°',
+			'degree'          : 'Ã‚Â°',
 			'netMountDialogTitle' : 'Mount network volume', // added 18.04.2012
 			'protocol'            : 'Protocol', // added 18.04.2012
 			'host'                : 'Host', // added 18.04.2012
@@ -8404,8 +8404,8 @@ elFinder.prototype.commands.help = function() {
 			
 			html.push(sep);
 			html.push('<div class="'+lic+'">Licence: BSD Licence</div>');
-			html.push('<div class="'+lic+'">Copyright Â© 2009-2011, Studio 42</div>');
-			html.push('<div class="'+lic+'">â€ž â€¦'+fm.i18n('dontforget')+' â€�</div>');
+			html.push('<div class="'+lic+'">Copyright Ã‚Â© 2009-2011, Studio 42</div>');
+			html.push('<div class="'+lic+'">Ã¢â‚¬Å¾ Ã¢â‚¬Â¦'+fm.i18n('dontforget')+' Ã¢â‚¬ï¿½</div>');
 			html.push('</div>');
 		},
 		shortcuts = function() {
@@ -10383,7 +10383,7 @@ elFinder.prototype.commands.resize = function() {
 					uiprop   = $('<span />'),
 					reset    = $('<div class="ui-state-default ui-corner-all elfinder-resize-reset"><span class="ui-icon ui-icon-arrowreturnthick-1-w"/></div>'),
 					//uitype   = $('<div class="elfinder-resize-type"><div class="elfinder-resize-label">'+fm.i18n('mode')+'</div></div>')
-					uitype   = $('<div class="elfinder-resize-type"/>')
+					uitype   = $('<div class="elfinder-resize-type2"/>')
 						.append('<input type="radio" name="type" id="type-resize" value="resize" checked="checked" /><label for="type-resize">'+fm.i18n('resize')+'</label>')
 						.append('<input type="radio" name="type" id="type-crop"   value="crop"/><label for="type-crop">'+fm.i18n('crop')+'</label>')
 						.append('<input type="radio" name="type" id="type-rotate" value="rotate"/><label for="type-rotate">'+fm.i18n('rotate')+'</label>'),
