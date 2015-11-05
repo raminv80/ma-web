@@ -62,6 +62,7 @@ $SMARTY->assign ( '_REQUEST', $_REQUEST);
 $SMARTY->assign ( 'orderNumber', $_SESSION['orderNumber'] );
 $SMARTY->assign ( 'ga_ec', $_SESSION['ga_ec'] );// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
 unset ( $_SESSION ['ga_ec'] );
+$SMARTY->assign('shippostcode',$_SESSION['shippostcode']);
 
 $COMP = json_encode($CONFIG->company);
 $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));

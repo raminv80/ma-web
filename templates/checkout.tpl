@@ -196,7 +196,6 @@
                   </div>
                 </div>
                 <div class="col-sm-6" id="shipping">
-                  <div class="row">
                     <div id="shipping-subform">
                      <h4 class="bold tots">Shipping details</h4>
                       <div class="form-group">
@@ -247,7 +246,6 @@
                         </div>  
                       </div>    
                     </div>          
-                  </div>
                   
                   <div class="row">
                     <div class="col-sm-12">
@@ -327,7 +325,7 @@
 	                  </div>
                    </div>
                    <div class="form-group">
-                     <label class="col-sm-4 control-label" for="cccsv">CSV*:<br/><span class="small"><a href="/help-with-checkout#csv" target="_blank">What is this?</a></span></label>
+                     <label class="col-sm-4 control-label" for="cccsv">CSV*:<br/><a class="small" data-toggle="modal" data-target="#csv-info" href="#">What is this?</a></label>
                      <div class="col-sm-8">
                        <input type="text" id="cccsv" name="cc[csv]" class="cc-req form-control" autocomplete="off" />
                      </div>
@@ -341,28 +339,39 @@
                   <div class="row" id="payment-error">{$error}</div>
                 {/if}
               {/if}
-              </div>
-              <div class="row form-group">
-                <div id="chk-tickbox" class="col-sm-1 col-sm-offset-2 text-right">
+             </div>
+                <div id="chk-tickbox" class="col-sm-12">
                   <input type="checkbox" id="accept" name="accept" required/>
-                </div>
-                <label class="col-sm-8 chklab" for="checkbox">
-                  I have read the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and I understand and agree to the <a href="/shipping-and-delivery" target="_blank">Shipping & Delivery Policy</a>, <a href="/returns-policy" target="_blank">Return Policy</a>, <a href="/warranty-and-support" target="_blank">Warranty & Support Policy</a> and the web site <a href="/terms-and-conditions" target="_blank">Terms and Conditions</a>.
-                </label>
+	                <label class="chklab" for="accept">
+	                  I have read the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and I understand and agree to the <a href="/delivery-policy" target="_blank">Delivery Policy</a> and <a href="/refund-policy" target="_blank">Refund Policy</a>.
+	                </label>
               </div>
-              <div class="error-textbox" id="error-text2"></div>
-              <div class="row">
-				        <div class="col-sm-4 col-sm-offset-8 text-right"><a class="red btn" onclick="$('#checkout3-form').submit();">Complete Checkout</a></div>
-				        <div class="col-sm-4 col-sm-offset-8 num text-right">
-                  <span class="small">Your payment will be processed.</span>
-                </div> 
-				      </div>
+              <div class="col-sm-12 text-danger text-right error-textbox" id="error-text2"></div>
+			        <div class="col-sm-4 col-sm-offset-8 text-right"><a class="btn-blue btn" id="payment-btn" onclick="$('#checkout3-form').submit();">Complete Checkout</a></div>
+			        <div class="col-sm-4 col-sm-offset-8 num text-right">
+                 <span class="small">Your payment will be processed.</span>
+               </div>
             </form>
             </div>
           </div>
         </div>
       </div>
   </div>
+  <div id="csv-info" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalcsv" aria-hidden="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        What is CSV?<button type="button" class="close" data-dismiss="modal" aria-hidden="true">Close</button>
+      </div>
+      <div class="modal-body text-center">
+	  			<img src="/images/csv.jpg" alt="csv"> 
+	  			<p>3 digit verification number found on the back of your credit card</p>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
 {/block}
 
 {* Place additional javascript here so that it runs after General JS includes *}

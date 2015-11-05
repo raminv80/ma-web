@@ -44,7 +44,7 @@
 	        
 	        <h3 id="reset-pass-title">Reset password</h3>
 	        <form class="form-horizontal" id="reset-pass-form" data-attr-id="reset-pass-form" role="form" accept-charset="UTF-8" action="" method="post">
-	          <input type="hidden" value="resetPassword" name="action" id="action" /> 
+	          <input type="hidden" value="resetPasswordToken" name="action" id="action" /> 
 	          <input type="hidden" name="formToken" id="formToken" value="{$token}" />
 	          <div class="form-group">
 	              <label for="email" class="col-sm-4 control-label">Email</label>

@@ -103,14 +103,13 @@ function userLogin(form){
 	    url: "/process/user",
 		cache: false,
 		data: datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
-			 	if (obj.error) {
+	    		if (obj.error) {
 			 		$('#'+form).find('.error-alert').find('strong').html(obj.error);
 			 		$('#'+form).find('.error-alert').fadeIn('slow');
-			 	} else {
+			 	} else if (obj.url) { 
 			 		window.location.href = obj.url;
 			 	}
 			 	
@@ -119,9 +118,11 @@ function userLogin(form){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#'+form).find('.error-alert').find('strong').html('Undefined error');
+	 		$('#'+form).find('.error-alert').fadeIn('slow');
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 }
@@ -134,10 +135,9 @@ function resetPass(form){
 	    url: "/process/user",
 		cache: false,
 		data: datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 			 	if (obj.error) {
 			 		$('#'+form).find('.success-alert').hide();
 			 		$('#'+form).find('.error-alert').find('strong').html(obj.error);
@@ -155,9 +155,11 @@ function resetPass(form){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#'+form).find('.error-alert').find('strong').html('Undefined error');
+	 		$('#'+form).find('.error-alert').fadeIn('slow');
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 }
@@ -171,10 +173,9 @@ function addCart(form){
 	    url: "/process/cart",
 		cache: false,
 		data: datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 	    		if (obj.url && $(window).width() < 760){
 	    			window.location.href = obj.url;
 	    		}
@@ -209,9 +210,9 @@ function addCart(form){
 			$('body').css('cursor','default'); 
 			$('.btn-primary').removeClass('disabled');
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
 			$('.btn-primary').removeClass('disabled');
       	}
 	});
@@ -225,10 +226,9 @@ function updateCart(){
 	    url: "/process/cart",
 		cache: false,
 		data: 'action=updateCart&' + datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 	    		var priceunits = obj.priceunits;
 	    		var pricemodifier = obj.pricemodifier;
 	    		var subtotals = obj.subtotals;
@@ -272,9 +272,9 @@ function updateCart(){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 }
@@ -288,10 +288,9 @@ function deleteItem(ID){
 	    url: "/process/cart",
 		cache: false,
 		data: 'action=DeleteItem&cartitem_id='+ID+'&formToken='+frmTkn,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 			 	var response = obj.response;
                 var totals = obj.totals;
                 $('.nav-itemNumber').html(obj.itemsCount);
@@ -334,9 +333,9 @@ function deleteItem(ID){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$( '#'+ ID ).fadeTo( "slow", 1 );
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
 			$('body').css('cursor','default'); 
       	}
 	});
@@ -351,10 +350,9 @@ function checkout2(form) {
 	    url: "/process/cart",
 		cache: false,
 		data:  datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 			 	if (obj.response) {
 			 		$('.checkout2').hide();
 			 		$('.checkout3').show();
@@ -379,9 +377,9 @@ function checkout2(form) {
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 	
@@ -403,10 +401,9 @@ function addProductCart(ID, QTY, PRICE){
 	    url: "/process/cart",
 		cache: false,
 		data: "action=ADDTOCART&product_id="+ID+"&quantity="+QTY+"&price="+PRICE,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 	    		if (obj.url){
 	    			window.location.href = obj.url;
 	    		}
@@ -416,9 +413,9 @@ function addProductCart(ID, QTY, PRICE){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 }
@@ -461,10 +458,9 @@ function updateShipping(){
 		    url: "/process/cart",
 			cache: false,
 			data: 'action=updatePostage&postcode=' + datastring,
-			dataType: "html",
-		    success: function(data) {
+			dataType: "json",
+		    success: function(obj) {
 		    	try{
-		    		var obj = $.parseJSON(data);
 		    		var postagefee = obj.postagefee;
 		    		if(isArray(postagefee)) {
 		    			// Iterate the array and do stuff
@@ -498,9 +494,9 @@ function updateShipping(){
 				}
 				$('body').css('cursor','default'); 
 		    },
-			error: function(){
+			error: function(jqXHR, textStatus, errorThrown){
 				$('body').css('cursor','default'); 
-				console.log('AJAX error');
+				console.log('AJAX error:'+errorThrown);
 	      	}
 		});
 	}

@@ -101,7 +101,7 @@
 		                  <label for="postcode-field" class="control-label">Estimate Shipping Cost<a target="_black" title="Shipping & Delivery" href="/shipping-and-delivery">(?)</a> </label>
 		              </div>
 		              <div class="col-xs-5 col-sm-5 col-sm-offset-5">
-		                  <input id="postcode-field" name="postcodefield" class="zipcode form-control" type="text" value="{$selectedShippingPostcode}" placeholder="postcode" required onPaste="updateShipping();" {literal}onblur="if($(this).val().length >= 4){updateShipping();}" onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal}/>
+		                  <input id="postcode-field" name="postcodefield" class="zipcode form-control" type="text" value="{$shippostcode}" placeholder="postcode" required onPaste="updateShipping();" {literal}onblur="if($(this).val().length >= 4){updateShipping();}" onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal}/>
 		              </div>
 		              <div class="col-xs-7 col-sm-2 num text-right" id="shipping-fee">$-unknown-</div>          
 		            </div>
@@ -139,6 +139,10 @@
        onclick: false
      });
     calculateTotal();
+
+    if($('#postcode-field').val()){
+    	updateShipping();
+    }
     
     var keyStop = {
 		   8: ":not(input:text, textarea, input:file, input:password)", // stop backspace = back
