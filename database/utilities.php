@@ -243,8 +243,8 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $a
 	}catch(Exception $e){}
 
 	try{
-		$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified) VALUES
-	      (:to,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id,now())";
+		$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
+	      (:to,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id,now(),:email_ua,:email_serverip)";
 		$params = array(
 				":to"=>$to,
 				":header"=>$headers,
@@ -253,7 +253,9 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $a
 				":ip"=>$_SERVER['REMOTE_ADDR'],
 				":sent"=>$mailSent,
 				":email_user_id"=>$userId,
-				":email_admin_id"=>$adminId
+				":email_admin_id"=>$adminId,
+		    ":email_ua"=>$_SERVER['HTTP_USER_AGENT'],
+		    ":email_serverip"=>$_SERVER['SERVER_ADDR']
 		);
 		$DBobject->executeSQL($sql,$params);
 		return $DBobject->wrappedSqlIdentity();
@@ -289,8 +291,8 @@ function createBulkMail($to_Array,$from,$fromEmail,$subject,$body, $adminId = 0,
 
 	try{
 		foreach ($to_Array as $k => $to){
-			$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified) VALUES
-		      (:to,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id, now())";
+			$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
+		      (:to,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id, now(),:email_ua,:email_serverip)";
 			$params = array(
 					":to"=>$to,
 					":header"=>$headers,
@@ -299,7 +301,9 @@ function createBulkMail($to_Array,$from,$fromEmail,$subject,$body, $adminId = 0,
 					":ip"=>$_SERVER['REMOTE_ADDR'],
 					":sent"=>-2,
 					":email_user_id"=> (empty($userKeyArr[$k])?'0':$userKeyArr[$k]),
-					":email_admin_id"=>$adminId
+					":email_admin_id"=>$adminId,
+		      ":email_ua"=>$_SERVER['HTTP_USER_AGENT'],
+		      ":email_serverip"=>$_SERVER['SERVER_ADDR']
 			);
 			$DBobject->executeSQL($sql,$params);
 		}
@@ -399,8 +403,8 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 
 	try{
 		$headers = '';
-		$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_file,email_ip,email_sent,email_user_id,email_admin_id,email_modified) VALUES
-	      (:to,:header,:subject,:content,:file,:ip,:sent,:email_user_id,:email_admin_id,now())";
+		$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_file,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
+	      (:to,:header,:subject,:content,:file,:ip,:sent,:email_user_id,:email_admin_id,now(),:email_ua,:email_serverip)";
 		$params = array(
 				":to"=>$to,
 				":header"=>$headers,
@@ -410,7 +414,9 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 				":file"=>json_encode($attachmentFile),
 				":sent"=>$mailSent,
 				":email_user_id"=>$userId,
-				":email_admin_id"=>$adminId
+				":email_admin_id"=>$adminId,
+		    ":email_ua"=>$_SERVER['HTTP_USER_AGENT'],
+		    ":email_serverip"=>$_SERVER['SERVER_ADDR']
 		);
 		$DBobject->executeSQL($sql,$params);
 		return $DBobject->wrappedSqlIdentity();
