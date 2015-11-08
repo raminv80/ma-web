@@ -16,7 +16,7 @@
 
 
 
-<script src="/admin/includes/js/jquery-1.9.1.min.js"></script>
+<script src="/admin/includes/js/jquery-1.11.3.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/admin/includes/css/jqui.css" />
 <link rel="stylesheet" type="text/css" href="/admin/includes/css/styles.css" />
 <link rel="stylesheet" type="text/css" href="/admin/includes/js/timepicker/jquery.ui.timepicker.css" />

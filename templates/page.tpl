@@ -103,7 +103,7 @@
 		<div id="help-alert-bold">Experiencing problems?</div>	
 		Give us a call on <a href="tel:+123456789">+123456789</a>
 	</div>
-	<script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="/includes/js/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
