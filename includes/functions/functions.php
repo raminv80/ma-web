@@ -17,7 +17,7 @@ function fatal_handler() {
     $body .= print_r($_POST,true);
     $body .= '<br />$_SERVER<br/>';
     $body .= print_r($_SERVER,true);
-    if($CONFIG->attributes()->staging == 'true'){
+    if($CONFIG->attributes()->staging == 'true' || $_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
     	die($body);
     }
     $_SESSION['error'] = 'We had trouble saving your entry. Please review your entry and try again. If this continues please contact us.';
