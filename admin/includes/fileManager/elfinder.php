@@ -5,14 +5,12 @@
 		<title>elFinder 2.0</title>
 
 		<!-- jQuery and jQuery UI (REQUIRED) -->
-		<script src="/admin/includes/fileManager/js/jquery-1.9.1.min.js"></script>
-		<script src="/admin/includes/fileManager/js/jquery-migrate-1.1.1.min.js"></script>
-		<script src="/admin/includes/fileManager/js/jquery-ui.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="/admin/includes/css/jqui.css" />
+		<script src="/admin/includes/js/jquery-2.1.4.min.js"></script>
+		<script src="/admin/includes/js/jquery-ui.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/admin/includes/css/jquery-ui.css" />
 
 		<!-- TinyMCE (REQUIRED) -->
-		<script src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
-		<script src="/admin/includes/js/tiny_mce/tiny_mce_popup.js"></script>
+		<script src="/admin/includes/js/tiny_mce/jquery.tinymce.min.js"></script>
 
 		<!-- elFinder CSS (REQUIRED) -->
 		<link rel="stylesheet" type="text/css" href="css/elfinder.min.css">
@@ -23,51 +21,28 @@
 
    		<!-- elFinder initialization (REQUIRED) -->
         <script type="text/javascript">
-            var FileBrowserDialogue = {
-                init : function () {
-                    // Here goes your code for setting your custom things onLoad.
-                },
-                mySubmit : function (URL) {
+        var FileBrowserDialogue = {
+        	    init: function() {
+        	      // Here goes your code for setting your custom things onLoad.
+        	    },
+        	    mySubmit: function (file, elf) {
+        	      // pass selected file data to TinyMCE
+        	      parent.tinymce.activeEditor.windowManager.getParams().oninsert(file, elf);
+        	      // close popup window
+        	      parent.tinymce.activeEditor.windowManager.close();
+        	    }
+        	  }
 
-                    var win = tinyMCEPopup.getWindowArg("window");
-
-                    // insert information now
-                    win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = "/"+URL.path;
-
-                    // are we an image browser
-                    if (typeof(win.ImageDialog) != "undefined") {
-                        // we are, so update image dimensions...
-                        if (win.ImageDialog.getImageData)
-                            win.ImageDialog.getImageData();
-
-                        // ... and preview if necessary
-                        if (win.ImageDialog.showPreviewImage)
-                            win.ImageDialog.showPreviewImage(URL);
-                    }
-
-                    // close popup window
-                    tinyMCEPopup.close();
-                }
-            }
-
-            tinyMCEPopup.onInit.add(FileBrowserDialogue.init, FileBrowserDialogue);
-            $().ready(function() {
-                var elf = $('#elfinder').elfinder({
-                    // lang: 'ru',             // language (OPTIONAL)
-                    url : 'php/connector.php',  // connector URL (REQUIRED)
-                    //url : 'php/connector.php?type=<?php echo $_GET['type']; ?>',  // connector URL (REQUIRED)
-                    getfile : {
-                        onlyURL : true,
-                        multiple : false,
-                        folders : false
-                    },
-                    getFileCallback : function(url) {
-                        path = url;
-                        FileBrowserDialogue.mySubmit(path);
-
-                    }
-                }).elfinder('instance');
-            });
+        	  $().ready(function() {
+        	    var elf = $('#elfinder').elfinder({
+        	      // set your elFinder options here
+        	      url: 'php/connector.php',  // connector URL
+        	      getFileCallback: function(file) { // editor callback
+        	        // Require `commandsOptions.getfile.onlyURL = false` (default)
+        	        FileBrowserDialogue.mySubmit(file, elf); // pass selected file path to TinyMCE 
+        	      }
+        	    }).elfinder('instance');  
+        	  });
         </script>
 	</head>
 	<body>

@@ -22,10 +22,6 @@ global $CONFIG,$SMARTY,$DBobject;
 
 $SMARTY->loadFilter('output', 'trimwhitespace');
 
-if(!empty($_REQUEST['ldc'])){
-	$cart_obj = new cart();
-	$res = $cart_obj->ApplyDiscountCode($_REQUEST['ldc']);
-}
 if(!empty($_REQUEST['ad'])){
 	$sql = "SELECT discount_code,discount_banner,discount_banner_mob,discount_description, discount_listing_id,discount_product_id FROM tbl_discount WHERE discount_code = 'SAVE25' AND discount_deleted IS NULL AND discount_published = 1 AND (discount_unlimited_use=1 OR discount_fixed_time < discount_used) AND discount_usergroup_id = 0 AND discount_user_id = 0 AND (discount_start_date IS NULL||discount_start_date<=NOW()||discount_start_date>='0000-00-00') AND (discount_start_date IS NULL||discount_end_date>= NOW()||discount_end_date >= '0000-00-00')";
 	$res = $DBobject->wrappedSql($sql,array('code'=>$_REQUEST['ad']));
@@ -62,7 +58,6 @@ $SMARTY->assign ( '_REQUEST', $_REQUEST);
 $SMARTY->assign ( 'orderNumber', $_SESSION['orderNumber'] );
 $SMARTY->assign ( 'ga_ec', $_SESSION['ga_ec'] );// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
 unset ( $_SESSION ['ga_ec'] );
-$SMARTY->assign('shippostcode',$_SESSION['shippostcode']);
 
 $COMP = json_encode($CONFIG->company);
 $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
@@ -94,75 +89,7 @@ while(true){
     $template = loadPage($CONFIG->index_page); 
     break 1; 
   }
-  
-  /**
-   * ***** Goes to CHECKOUT ******
-   */
-  if($_request['arg1'] == 'checkout'){
-    /* if(empty($_SESSION['user']['public']['id'])){
-     $_SESSION['redirect'] = "/checkout";
-     header("Location: /login");
-     exit();
-     } */
-    if(empty($_SESSION['selectedShipping'])){
-    		header("Location: /shopping-cart");
-    		die();
-    }
-    $cart_obj = new cart();
-    if($cart_obj->NumberOfProductsOnCart() < 1){
-      header("Location: /");
-      die();
-    }
-    $template = loadPage($CONFIG->checkout);
-    $ship_obj = new ShippingClass();
-    $methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
-    $SMARTY->assign ( 'shippingMethods', $methods );
-    $validation = $cart_obj->ValidateCart();
-    $SMARTY->assign('validation',$validation);
-    $totals = $cart_obj->CalculateTotal();
-    $SMARTY->assign('totals',$totals);
-    $sql = "SELECT * FROM tbl_address WHERE address_user_id = :uid ORDER BY address_id";
-    $addresses = $DBobject->wrappedSql($sql,array(
-        ':uid'=>$_SESSION['user']['public']['id']
-    ));
-    $SMARTY->assign('addresses',$addresses);
-    $sql = "SELECT DISTINCT postcode_state FROM tbl_postcode WHERE postcode_state != 'OTHE' ORDER BY postcode_state";
-    $states = $DBobject->wrappedSql($sql);
-    $SMARTY->assign('options_state',$states);
-    // ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ENHANCED ECOMMERCE
-    $SMARTY->assign ( 'ga_ec', $cart_obj->getJSCartitemsByCartId_GA() . "ga('ec:setAction','checkout', { 'step': 1 });" );
-  
-    break 1;
-  }
-  
-  /**
-   * ***** Goes to SHOPPING CART ******
-   */
-  if($_request['arg1'] == 'shopping-cart'){
-    $template = loadPage($CONFIG->cart);
-    $cart_obj = new cart();
-    $ship_obj = new ShippingClass();
-    $itemNumber = $cart_obj->NumberOfProductsOnCart();
-    $methods = $ship_obj->getShippingMethods($itemNumber);
-    $SMARTY->assign ( 'shippingMethods', $methods );
-    if(!empty($_SESSION['reApplydiscount']) && $itemNumber){		//RE-APPLY DISCOUNT CODE
-      $res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
-      if ($res['error']) {
-      		$_SESSION['error']= $res['error'];
-      		$_SESSION['post']= $_POST;
-      }
-      $_SESSION['reApplydiscount'] = '';
-      unset($_SESSION['reApplydiscount']);
-      header('Location: /shopping-cart');
-      die();
-    }
-    $validation = $cart_obj->ValidateCart();
-    $SMARTY->assign('validation',$validation);
-    $totals = $cart_obj->CalculateTotal();
-    $SMARTY->assign('totals',$totals);
-    break 1;
-  }
-  
+    
   /**
    * **** Goes to individual script pages ******
    */
@@ -185,35 +112,6 @@ while(true){
   		else{ searchcms($_REQUEST); }
 	   	break 2;
     }
-  }
-  
-
-  /**
-   * ***** Product pages here ******
-   */
-  foreach($CONFIG->product_page as $lp){
-  	if(empty($lp->url)){continue;}
-  	$needle = str_replace("/","\/",$lp->url);
-  	$haystack = $_request["arg1"];
-  	if(preg_match("/^{$needle}/",$haystack)){
-  		$_nurl = $_request["arg1"];
-  		$class = (string)$lp->file;
-  		$obj = new $class($_nurl,$lp);
-  		$template = $obj->Load(null,$_PUBLISHED);
-  		$menu = $obj->LoadMenu($lp->pageID);
-  		$SMARTY->assign('menuitems',$menu);
-  		$obj->LoadAssociatedProducts();
-  		foreach($lp->process as $sp){
-  			$file = (string)$sp->file;
-  			if(file_exists($file))	{ include ($file);}
-  		}
-  		$fieldname = (string) $lp->url->attributes()->requiredvar;
-  		if(!empty($fieldname) && empty($_REQUEST[$fieldname])) {
-  			$_request["arg1"] = '404';
-  			$template = "";
-  		}
-  		break 2;
-  	}
   }
   
   /**
@@ -285,24 +183,13 @@ while(true){
  * Load Data Shopping Cart for all pages *
  * ***************************************
  */
-$cart_obj = new cart();
+
 if(!empty($_SESSION['user']['public']['store_id'])){
   $storeId = $_SESSION['user']['public']['store_id'];
   $sql = "SELECT listing_name, location_phone FROM tbl_listing LEFT JOIN tbl_location ON listing_id = location_listing_id WHERE listing_object_id = :id AND listing_deleted IS NULL AND listing_published = 1";
   $params = array(":id"=>$storeId);
   $res = $DBobject->wrappedSql($sql,$params);
   $SMARTY->assign("storename",$res[0]['listing_name']);
-}
-$itemNumber = $cart_obj->NumberOfProductsOnCart();
-$SMARTY->assign('itemNumber',$itemNumber);
-$cart = $cart_obj->GetDataCart();
-$SMARTY->assign('cart',$cart);
-$subtotal = $cart_obj->GetSubtotal();
-$SMARTY->assign('subtotal',$subtotal);
-$productsOnCart = $cart_obj->GetDataProductsOnCart();
-$SMARTY->assign('productsOnCart',$productsOnCart);
-if($CONFIG->checkout->attributes()->guest == 'true'){
-  $SMARTY->assign('allowGuest',true);
 }
 
 if(empty($template)){

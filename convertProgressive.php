@@ -25,19 +25,29 @@ $extension = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
 // $optim_source_file      = $document_root.$optim.str_replace($extension, "jpg", $requested_file); // Full path to optimised source file
 $optim_source_file      = $document_root.$optim.$requested_uri; // Full path to optimised source file
 
+//CHECK FILE EXISTS
+if(!file_exists($source_file)){
+  header("HTTP/1.0 404 Not Found"); //PHP ErrorDocument
+  header("Status: 404 Not Found"); //FastCGI
+  //header("location: /404");
+  //die();
+  $requested_uri = "images/no-image-available.jpg";
+  $requested_file   = urlencode(basename($requested_uri));
+  $source_file      = $document_root.$requested_uri; // Full path to source file
+  $extension = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
+  $optim_source_file      = $document_root.$optim.$requested_uri;
+  if( empty($_REQUEST['width']) || empty($_REQUEST['height']) ) {
+    $_REQUEST['width'] = 60;
+    $_REQUEST['height'] = 60;
+  }
+}
+
 if((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0) || (!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)){
   $requested_directory  = urlencode(dirname($requested_uri));
   $_f_arr = explode('.', $requested_file,2);
   $requested_file = $_f_arr[0].((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").'.'.$_f_arr[1];
   //$requested_file       = str_replace(".".$extension, ((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").".".$extension, $requested_file);
   $optim_source_file      = $document_root.$optim.parse_url(urldecode($requested_directory)."/".($requested_file),PHP_URL_PATH);
-}
-//CHECK FILE EXISTS
-if(!file_exists($source_file)){
-  //   header("HTTP/1.0 404 Not Found"); //PHP ErrorDocument
-  //   header("Status: 404 Not Found"); //FastCGI
-  header("location: /404");
-  die();
 }
 
 if(!file_exists($optim_source_file) || filemtime($source_file) > filemtime($optim_source_file)){
@@ -186,24 +196,6 @@ function resizeimage($image, $width, $height, $nWidth, $nHeight){
 	return $newImg;
 }
 
-
-function cropimage($image,$width, $height, $focus="center"){
-  // Coordinates calculator
-  $x_pos = (imagesx($image) - $width) / 2;
-  $x_pos = ceil($x_pos);
-  $y_pos = (imagesy($image) - $height) / 2;
-  $y_pos = ceil($y_pos);
-  
-  $newImg = imagecreatetruecolor($width, $height);
-  imagealphablending($newImg, false);
-  imagesavealpha($newImg,true);
-  $transparent = imagecolorallocatealpha($newImg, 255, 255, 255, 127);
-  imagefilledrectangle($newImg, 0, 0, $width, $width, $transparent);
-  // Crop to Square using the given dimensions
-  ImageCopy($newImg, $image, 0, 0, $x_pos, $y_pos, $width, $height);
-  return $newImg;
-}
-/* 
 function cropimage($image,$width, $height, $focus="center"){
 	ini_set('memory_limit','128M');
 	// Coordinates calculator
@@ -218,4 +210,4 @@ function cropimage($image,$width, $height, $focus="center"){
 	// Crop to Square using the given dimensions
 	ImageCopy($new_image, $image, 0, 0, $x_pos, $y_pos, $width, $height);
 	return $new_image;
-} */
+}

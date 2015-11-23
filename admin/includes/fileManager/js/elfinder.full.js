@@ -4331,7 +4331,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'errArcType'           : 'Unsupported archive type.',
 			'errNoArchive'         : 'File is not archive or has unsupported archive type.',
 			'errCmdNoSupport'      : 'Backend does not support this command.',
-			'errReplByChild'       : 'The folder Ã¢â‚¬Å“$1Ã¢â‚¬ï¿½ canÃ¢â‚¬â„¢t be replaced by an item it contains.',
+			'errReplByChild'       : 'The folder â€œ$1â€� canâ€™t be replaced by an item it contains.',
 			'errArcSymlinks'       : 'For security reason denied to unpack archives contains symlinks or files with not allowed names.', // edited 24.06.2012
 			'errArcMaxSize'        : 'Archive files exceeds maximum allowed size.',
 			'errResize'            : 'Unable to resize "$1".',
@@ -4512,7 +4512,7 @@ if (elFinder && elFinder.prototype && typeof(elFinder.prototype.i18) == 'object'
 			'rotate'          : 'Rotate',
 			'rotate-cw'       : 'Rotate 90 degrees CW',
 			'rotate-ccw'      : 'Rotate 90 degrees CCW',
-			'degree'          : 'Ã‚Â°',
+			'degree'          : 'Â°',
 			'netMountDialogTitle' : 'Mount network volume', // added 18.04.2012
 			'protocol'            : 'Protocol', // added 18.04.2012
 			'host'                : 'Host', // added 18.04.2012
@@ -8404,8 +8404,8 @@ elFinder.prototype.commands.help = function() {
 			
 			html.push(sep);
 			html.push('<div class="'+lic+'">Licence: BSD Licence</div>');
-			html.push('<div class="'+lic+'">Copyright Ã‚Â© 2009-2011, Studio 42</div>');
-			html.push('<div class="'+lic+'">Ã¢â‚¬Å¾ Ã¢â‚¬Â¦'+fm.i18n('dontforget')+' Ã¢â‚¬ï¿½</div>');
+			html.push('<div class="'+lic+'">Copyright Â© 2009-2011, Studio 42</div>');
+			html.push('<div class="'+lic+'">â€ž â€¦'+fm.i18n('dontforget')+' â€�</div>');
 			html.push('</div>');
 		},
 		shortcuts = function() {

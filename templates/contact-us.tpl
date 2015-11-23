@@ -25,18 +25,21 @@
 			    <div class="col-sm-9">
 			    	{if $COMPANY.freecall}<a href="tel:{$COMPANY.freecall}" itemprop="telephone">{$COMPANY.freecall}</a><br>{/if}
 			    </div>
+			    
 					<div class="col-sm-3">
 			      Phone:
 			    </div>
 			    <div class="col-sm-9">
 			    	{if $COMPANY.phone}<a href="tel:{$COMPANY.phone}" itemprop="telephone">{$COMPANY.phone}</a><br>{/if}
 			    </div>
+			    
 			    <div class="col-sm-3">
 			      Fax:
 			    </div>
 			    <div class="col-sm-9">
 			    	{if $COMPANY.fax}<a href="tel:{$COMPANY.fax}" itemprop="faxNumber">{$COMPANY.fax}</a><br>{/if}
 			    </div>
+			    
 			    <div class="col-sm-3">
 			      Email:<br>
 		      </div>

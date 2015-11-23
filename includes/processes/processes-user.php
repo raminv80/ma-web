@@ -15,8 +15,6 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
         ));
       }else{
         $_SESSION['user']['public'] = $res;
-        $cart_obj = new cart();
-        $cart_obj->SetUserCart($res['id']);
         $url = $_SERVER['HTTP_REFERER'];
         if($_POST['redirect']){
           $url = $_POST['redirect'];
@@ -40,7 +38,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
         	$to = $_SESSION['user']['public']['email'];
         	$from = (string) $CONFIG->company->name;
         	$fromEmail = "noreply@" . str_replace ( "www.", "", $HTTP_HOST );
-        	$subject = "{$from} | New Membership";
+        	$subject = 'Ready Steady Go Kids | New Membership';
         	$body = $buffer;
         	$mailID = sendMail($to, $from, $fromEmail, $subject, $body, null, $res['id']);
         	
@@ -71,8 +69,6 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
 	    	 	));
 	    	} else {
 	    		$_SESSION['user']['public'] = $res;
-	    		$cart_obj = new cart();
-	    		$cart_obj->SetUserCart($res['id']);
 	    		$url = $_SERVER['HTTP_REFERER'];
 	    		if ($_POST['redirect']) {
 	    			$url = $_POST['redirect'];
@@ -112,7 +108,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
       		$to = $_POST["email"];
       		$from = (string) $CONFIG->company->name;
       		$fromEmail = (string) $CONFIG->company->email_from;
-      		$subject = "{$from} | Password Recovery";
+      		$subject = 'Ready Steady Go Kids | Password Recovery';
       		if(sendMail($to, $from, $fromEmail, $subject, $body)){
       			$success = $res['success'];
       		}else{

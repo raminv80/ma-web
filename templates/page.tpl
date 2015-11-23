@@ -39,13 +39,8 @@
 <meta itemprop="image" content="{$DOMAIN}/images/logo.png">
 
 <!-- Bootstrap -->
-<link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
 <link href="/includes/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="/includes/css/cart.css" rel="stylesheet" media="screen">
-<link href="/includes/css/tipTip.css" rel="stylesheet" media="screen">
-<link href="/includes/css/custom.css" rel="stylesheet" media="screen">
-<link href='http://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
+<link href="/includes/css/styles.css" rel="stylesheet" media="screen">
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -53,67 +48,45 @@
       <script type="text/javascript" src="/includes/js/respond.min.js"></script>
 			<script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
  	<![endif]-->
- 	
+ 		<script type="text/javascript" src="/includes/js/jquery-2.1.4.min.js"></script>
 
 {block name=head}{/block}
 
 
 {if $ga_id}
 	<script>
-	(function(i,s,o,g,r,a,m){ i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+// 	(function(i,s,o,g,r,a,m){ i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+// 	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+// 	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+// 	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 	
-	ga('create', '{$ga_id}', 'auto', { 'siteSpeedSampleRate': 50 });  
-	ga('require', 'displayfeatures');
-	ga('require', 'linkid', 'linkid.js');
-	ga('require', 'ec');
-	ga('set', '&cu', 'AUD');
+// 	ga('create', '{$ga_id}', 'auto', { 'siteSpeedSampleRate': 50 });  
+// 	ga('require', 'displayfeatures');
+// 	ga('require', 'linkid', 'linkid.js');
+// 	ga('require', 'ec');
+// 	ga('set', '&cu', 'AUD');
 	
-	{$ga_ec}
-	{block name=enhanced_ecommerce}{/block}
+// 	{$ga_ec}
+// 	{block name=enhanced_ecommerce}{/block}
 		
-	ga('send', 'pageview');
+// 	ga('send', 'pageview');
 	</script>
 {/if}
 
 </head>
 <body>
-	<div id="fb-root"></div>
-	<header>
-		<div id="header1">
-			<div id="header1in" class="container">
-				{include file='menu.tpl'}
-			</div>
-		</div>
-		<div class="info-alert-wrapper" {if !$notice}style="display:none;"{/if}>
-      <div class="alert alert-info fade in info-alert">
-				<button class="close" aria-hidden="true" type="button"  onclick="$(this).closest('.info-alert-wrapper').fadeOut('slow');">&times;</button>
-				<strong>{$notice}</strong>
-			</div>
-    </div>
-	</header>		 
+  {include file='overlay-menu.tpl'}
 
 	{block name=body}{/block}
 	{include file='footer.tpl'}
 	
-	<div id="help-alert" style="display:none;" >
-		<button class="close" onclick="$('#help-alert').slideUp();" type="button">×</button>
-		<div id="help-alert-bold">Experiencing problems?</div>	
-		Give us a call on <a href="tel:+123456789">+123456789</a>
-	</div>
-	<script type="text/javascript" src="/includes/js/jquery-1.11.3.min.js"></script>
+
 	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
-	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>	
 	<script type="text/javascript">
 	$(document).ready(function(){
 
-		setTimeout(function(){
-			$('#help-alert').slideDown();
-    	},300000);
     	
 		$('#searchbox').bind('keyup', function(event) {
 		    if(event.keyCode==13){

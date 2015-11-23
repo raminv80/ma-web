@@ -370,7 +370,7 @@ class ListClass {
     $data = array();
     
     // GET LISTINGS AND CATEGORIES FOR THIS SECTION
-    $sql = "SELECT tbl_listing.listing_object_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_listing.listing_name, tbl_listing.listing_parent_id, tbl_listing.listing_parent_flag, tbl_listing.listing_type_id FROM tbl_listing WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_published = :published AND tbl_listing.listing_display_menu = '1' AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_type_id, tbl_listing.listing_order ASC";
+    $sql = "SELECT tbl_listing.listing_object_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_listing.listing_name, tbl_listing.listing_parent_id, tbl_listing.listing_parent_flag, tbl_listing.listing_type_id, tbl_listing.listing_menu_group,listing_menu_image,listing_flag1 FROM tbl_listing WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_published = :published AND tbl_listing.listing_display_menu = '1' AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_type_id, tbl_listing.listing_order ASC";
     $params = array(
         ":cid"=>$_cid,
         ":published"=>$_PUBLISHED
@@ -378,11 +378,14 @@ class ListClass {
     if($res = $DBobject->executeSQL($sql,$params)){
       foreach($res as $row){
         $t_array = array(
-            "category_name"=>ucfirst(unclean($row['listing_name'])),
+            "menu_group"=>unclean($row['listing_menu_group']),
+            "menu_img"=>unclean($row['listing_menu_image']),
+            "category_name"=>unclean($row['listing_name']),
             "category_id"=>$row['listing_object_id'],
-            "title"=>ucfirst(unclean($row['listing_name'])),
+            "title"=>unclean($row['listing_name']),
             "url"=>$row['listing_url'],
         		"type_id"=>$row['listing_type_id'],
+            "listing_flag1"=>$row['listing_flag1'],
             "selected"=>0,
             "listings"=>0
         );

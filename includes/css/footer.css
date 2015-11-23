@@ -1,0 +1,15 @@
+.foot-menu ul {
+  list-style: none;
+  text-align: center; }
+  .foot-menu ul .foot-nav {
+    float: left; }
+.foot-menu > ul {
+  width: 33%;
+  display: inline-block; }
+
+.foot-menu ul:after {
+  content: "";
+  display: table;
+  clear: both; }
+
+/*# sourceMappingURL=footer.css.map */

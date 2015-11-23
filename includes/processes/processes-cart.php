@@ -74,7 +74,6 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     		exit;
     case 'updatePostage':
     	$ship_obj = new ShippingClass();
-    	$_SESSION['shippostcode'] = $_POST['postcode'];
       echo json_encode(array(
           'postagefee'=> $ship_obj->getPostageByPostcode($_POST['postcode'])
       ));
@@ -125,7 +124,6 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
 		    exit;
 		    
 		    case 'checkout1':
-		    	$_SESSION['shippostcode'] = $_POST['postcodefield'];
 		      $_SESSION['smarty']['selectedShippingPostcode'] = $_POST['postcodefield'];
 		      $_SESSION['smarty']['selectedShippingFee'] = $_POST['shipFee'];
 		      $_SESSION['smarty']['selectedShipping'] = $_POST['shipMethod'];

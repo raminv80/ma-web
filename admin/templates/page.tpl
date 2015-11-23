@@ -14,10 +14,8 @@
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
-
-
-<script src="/admin/includes/js/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/admin/includes/css/jqui.css" />
+<script src="/admin/includes/js/jquery-2.1.4.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/admin/includes/css/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="/admin/includes/css/styles.css" />
 <link rel="stylesheet" type="text/css" href="/admin/includes/js/timepicker/jquery.ui.timepicker.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="/admin/includes/fileManager/css/elfinder.min.css">
@@ -73,65 +71,7 @@
     
     
     
-    <script type="text/javascript">
-    $(document).ready(function(){
-      tinyMCEinit();
-    });
-
-    function tinyMCEinit(){
-      $('textarea.tinymce').tinymce({
-        // Location of TinyMCE script
-        script_url : '/admin/includes/js/tiny_mce/tiny_mce.js',
-
-        // General options
-        theme : "advanced",
-        plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking",
-
-        // Theme options
-        theme_advanced_buttons1 : "forecolor,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
-        theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,file,cleanup,code",
-        theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media",
-        theme_advanced_buttons4 : "",
-        theme_advanced_toolbar_location : "top",
-        theme_advanced_toolbar_align : "left",
-        theme_advanced_statusbar_location : "bottom",
-        theme_advanced_resizing : true,
-        convert_urls : false,
-        content_css : '/includes/css/bootstrap.min.css,/includes/css/custom.css,/admin/includes/css/tinymce.css',
-        file_browser_callback : 'elFinderBrowser'
-      });
-			$('textarea.tinymce').removeClass('tinymce');
-
-    }
-    
-    function elFinderBrowser (field_name, url, type, win) {
-            var cmsURL = '/admin/includes/fileManager/elfinder.php';    // script URL - use an absolute path!
-            if (cmsURL.indexOf("?") < 0) {
-                //add the type as the only query parameter
-                cmsURL = cmsURL + "?type=" + type;
-            }
-            else {
-                //add the type as an additional query parameter
-                // (PHP session ID is now included if there is one at all)
-                cmsURL = cmsURL + "&type=" + type;
-            }
-
-            tinyMCE.activeEditor.windowManager.open({
-                file : cmsURL,
-                title : 'elFinder 2.0',
-                width : 900,
-                height : 450,
-                resizable : "yes",
-                inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
-                popup_css : false, // Disable TinyMCE's default popup CSS
-                close_previous : "no"
-            }, {
-                window : win,
-                input : field_name
-            });
-            return false;
-        }
-  </script>
+   
   </div>
   
   <div class="notification" id="form-error" style="display:none;">
@@ -184,13 +124,94 @@
       </div>
   </div>
   
-  <script src="/admin/includes/js/jquery-migrate-1.2.1.min.js"></script>
-  <script src="/admin/includes/js/jquery-ui-1.10.2.min.js"></script>
+  <script src="/admin/includes/js/jquery-ui.min.js"></script>
   <script src="/admin/includes/js/admin-general.js"></script>
-  <script src="/admin/includes/js/tiny_mce/jquery.tinymce.js"></script>
+  <script src="/admin/includes/js/tiny_mce/tinymce.min.js"></script>
   <script src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>
   <script src="/admin/includes/fileManager/js/elfinder.full.js"></script>
   <script src="/admin/includes/js/bootstrap.min.js"></script>
+
+{literal}
+ <script type="text/javascript">
+    $(document).ready(function(){
+      tinyMCEinit();
+    });
+
+    function tinyMCEinit(){
+			tinymce.init({
+        selector: "textarea.tinymce",
+        width: 500,
+ 	      plugins: [
+         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+         "autosave save table contextmenu directionality template paste textcolor"
+        ],
+        content_css: "/includes/css/bootstrap.min.css,/includes/css/custom.css,/admin/includes/css/tinymce.css",
+        toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print media | forecolor backcolor",
+				file_picker_callback  : elFinderBrowser,
+				convert_urls : false,
+				init_instance_callback : function(editor) {
+					$('#'+editor.id).removeClass('tinymce');
+				},
+				setup: function(editor) {
+            editor.on('focus', function(e) {
+                tinymce.triggerSave();
+            });
+
+            editor.on('blur', function(e) {
+                tinymce.triggerSave();
+            });
+        },
+				save_enablewhendirty: true
+      	});
+    }
+
+    function elFinderBrowser (callback, value, meta)  {
+            var cmsURL = '/admin/includes/fileManager/elfinder.php';    // script URL - use an absolute path!
+
+            tinyMCE.activeEditor.windowManager.open({
+                file : cmsURL,
+                title : 'elFinder 2.0',
+                width : 900,
+                height : 450,
+                resizable : "yes",
+                inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
+                popup_css : false, // Disable TinyMCE's default popup CSS
+                close_previous : "no"
+            }, {
+            oninsert: function (file, elf) {
+              var url, reg, info;
+
+            // URL normalization
+            url = file.url;
+            reg = /\/[^/]+?\/\.\.\//;
+            while(url.match(reg)) {
+              url = url.replace(reg, '/');
+            }
+
+            // Make file info
+            info = file.name + ' (' + elf.formatSize(file.size) + ')';
+
+            // Provide file and text for the link dialog
+            if (meta.filetype == 'file') {
+              callback(url, {text: info, title: info});
+            }
+
+            // Provide image and alt text for the image dialog
+            if (meta.filetype == 'image') {
+              callback(url, {alt: info});
+            }
+
+            // Provide alternative source and posted for the media dialog
+            if (meta.filetype == 'media') {
+              callback(url);
+            }
+          }
+        });
+            return false;
+        }
+  </script>
+{/literal}
 {block name=tail}{/block}
 </body>
 </html>
