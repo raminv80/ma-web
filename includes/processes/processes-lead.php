@@ -18,7 +18,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   					$path =  $_SERVER['DOCUMENT_ROOT'];
   					$file_short = time() . '_' . str_replace(" ",'',$_FILES["file"]["name"]);
   					$_POST['filename'] = $file_short;
-  					$file_name = $path . "uploads_contact/" . $file_short;
+  					$file_name = $path . "uploads_lead/" . $file_short;
   					if(move_uploaded_file($_FILES["file"]["tmp_name"],$file_name)){
   					}
   				}else{
@@ -44,9 +44,9 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   			}
   		}
   		$body = $buf;
-  		$subject = 'Website contact';
+  		$subject = 'Website lead';
   		$fromEmail = (string) $CONFIG->company->email_from;
-  		$to = (string) $CONFIG->company->email_contact;
+  		$to = (string) $CONFIG->company->email_lead;
   		$COMP = json_encode($CONFIG->company);
   		$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
   		$from = (string) $CONFIG->company->name;
@@ -60,30 +60,29 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   	}catch (Exception $e){
   		$error = 'There was an error sending your enquiry.';
   	}
-  	
-  	
+
   	//SAVE IN DATABASE
   	try{
-  		$sql = "INSERT INTO tbl_contact (contact_site,contact_form_name,contact_reference_id,contact_reference_name,contact_name,contact_email,contact_phone,contact_postcode,contact_file,contact_enquiry,contact_content1,contact_content2,contact_flag1,contact_flag2,contact_ip,contact_sent,contact_created)
-            VALUES (:contact_site,:contact_form_name,:contact_reference_id,:contact_reference_name,:contact_name,:contact_email,:contact_phone,:contact_postcode,:contact_file,:contact_enquiry,:contact_content1,:contact_content2,:contact_flag1,:contact_flag2,:contact_ip,:contact_sent,now() )";
-  		$params = array(":contact_name"=>$_POST['name'],
-  				":contact_site"=>$SITE,
-  				":contact_form_name"=>$_POST['form_name'],
-  				":contact_reference_id"=>'',
-  				":contact_reference_name"=>$_POST['brand_interested_in'],
-  				":contact_name"=>$_POST['name'],
-  				":contact_email"=>$_POST['email'],
-  				":contact_phone"=>$_POST['phone'],
-  				":contact_postcode"=>$_POST['postcode'],
-  				":contact_file"=> empty($file_short)?"":"uploads_contact/" . $file_short,
-  				":contact_enquiry"=>$_POST['message'],
-  				":contact_content1"=> $_POST['jobtitle'],
-  				":contact_content2"=> $_POST['companyname'],
-  				":contact_flag1"=> '',
-  				":contact_flag2"=> '',
-  				":contact_ip"=>$_SERVER['REMOTE_ADDR'],
-  		    ":contact_ga_clientid"=>gaParseCookie(),
-  				":contact_sent"=>$sent);
+  		$sql = "INSERT INTO tbl_lead (lead_site,lead_form_name,lead_reference_id,lead_reference_name,lead_name,lead_email,lead_phone,lead_postcode,lead_file,lead_enquiry,lead_content1,lead_content2,lead_flag1,lead_flag2,lead_ip,lead_sent,lead_created)
+            VALUES (:lead_site,:lead_form_name,:lead_reference_id,:lead_reference_name,:lead_name,:lead_email,:lead_phone,:lead_postcode,:lead_file,:lead_enquiry,:lead_content1,:lead_content2,:lead_flag1,:lead_flag2,:lead_ip,:lead_sent,now() )";
+  		$params = array(":lead_name"=>$_POST['name'],
+  				":lead_site"=>$SITE,
+  				":lead_form_name"=>$_POST['form_name'],
+  				":lead_reference_id"=>'',
+  				":lead_reference_name"=>$_POST['brand_interested_in'],
+  				":lead_name"=>$_POST['name'],
+  				":lead_email"=>$_POST['email'],
+  				":lead_phone"=>$_POST['phone'],
+  				":lead_postcode"=>$_POST['postcode'],
+  				":lead_file"=> empty($file_short)?"":"uploads_lead/" . $file_short,
+  				":lead_enquiry"=>$_POST['message'],
+  				":lead_content1"=> $_POST['jobtitle'],
+  				":lead_content2"=> $_POST['companyname'],
+  				":lead_flag1"=> '',
+  				":lead_flag2"=> '',
+  				":lead_ip"=>$_SERVER['REMOTE_ADDR'],
+  		    ":lead_ga_clientid"=>gaParseCookie(),
+  				":lead_sent"=>$sent);
   		$DBobject->wrappedSql($sql,$params);
   	}catch(Exception $e){
   		$error = 'There was an unexpected error saving your enquiry.';
@@ -101,7 +100,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   	    $from = (string) $CONFIG->company->name;
   	    $sent = sendMail($to, $from, $fromEmail, $subject, $body);
   	  }catch (Exception $e){
-  	    $error = 'There was an error sending the contact email.';
+  	    $error = 'There was an error sending the lead email.';
   	  } */
   		
   		sendGAEvent($GA_ID,'Enquiry', 'Submitted', $_POST['form_name']);

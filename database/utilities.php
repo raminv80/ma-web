@@ -1028,14 +1028,14 @@ function checkUserAuthCookie($name ='usrauth') {
 }
 
 
-function sendGAEvent($_tid,$_category,$_action,$_label="",$_value=0){
+function sendGAEvent($_tid,$_category,$_action,$_label="",$_value=0,$_cid=null){
   if(empty($_tid) || empty($_category) || empty($_action)) return false;
 
   //Submit Google Event
   // Standard params
   $v = 1;
   $tid = $_tid; // Put your own Analytics ID in here
-  $cid = gaParseCookie();
+  $cid = !empty($_cid)?$_cid:gaParseCookie();
 
   $dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
 
@@ -1079,12 +1079,12 @@ function sendGAEvent($_tid,$_category,$_action,$_label="",$_value=0){
  * @param array $_cartitemArr
  * @return boolean
  */
-function sendGAEcPurchase($_tid,$_totalArr,$_cartitemArr){
+function sendGAEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 	if(empty($_tid) || empty($_totalArr) || empty($_cartitemArr)) return false;
 
 	$v = 1;
 	$tid = $_tid; // Put your own Analytics ID in here
-	$cid = gaParseCookie();
+	$cid = !empty($_cid)?$_cid:gaParseCookie();
 	$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
 
 	// Send Transaction hit
@@ -1141,12 +1141,12 @@ function sendGAEcPurchase($_tid,$_totalArr,$_cartitemArr){
  * @param array $_cartitemArr
  * @return boolean
  */
-function sendGAEnEcAction($_tid, $_action, $_cartitemArr){
+function sendGAEnEcAction($_tid, $_action, $_cartitemArr,$_cid=null){
 	if(empty($_tid) || empty($_action) || empty($_cartitemArr)) return false;
 
 	$v = 1;
 	$tid = $_tid; // Put your own Analytics ID in here
-	$cid = gaParseCookie();
+	$cid = !empty($_cid)?$_cid:gaParseCookie();
 	$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
 
 	// Send Transaction hit
@@ -1179,12 +1179,12 @@ function sendGAEnEcAction($_tid, $_action, $_cartitemArr){
  * @param array $_cartitemArr
  * @return boolean
  */
-function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr){
+function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr,$_cid=null){
 	if(empty($_tid) || empty($_cartitemArr)) return false;
 
 	$v = 1;
 	$tid = $_tid; // Put your own Analytics ID in here
-	$cid = gaParseCookie();
+	$cid = !empty($_cid)?$_cid:gaParseCookie();
 	$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
 
 	// Send Transaction hit
@@ -1224,12 +1224,12 @@ function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr){
  * @param integer $_step
  * @return boolean
  */
-function sendGAEnEcCheckoutOptions($_tid, $_stepOption, $_step){
+function sendGAEnEcCheckoutOptions($_tid, $_stepOption, $_step,$_cid=null){
 	if(empty($_tid) || empty($_stepOption) || empty($_step)) return false;
 
 	$v = 1;
 	$tid = $_tid; // Put your own Analytics ID in here
-	$cid = gaParseCookie();
+	$cid = !empty($_cid)?$_cid:gaParseCookie();
 
 	// Send Transaction hit
 	$data = array(
@@ -1255,12 +1255,12 @@ function sendGAEnEcCheckoutOptions($_tid, $_stepOption, $_step){
  * @param array $_cartitemArr
  * @return boolean
  */
-function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr){
+function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 	if(empty($_tid) || empty($_totalArr) || empty($_cartitemArr)) return false;
 	
 	$v = 1;
 	$tid = $_tid; // Put your own Analytics ID in here
-	$cid = gaParseCookie();
+	$cid = !empty($_cid)?$_cid:gaParseCookie();
 	$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
 	
 	// Send Transaction hit
