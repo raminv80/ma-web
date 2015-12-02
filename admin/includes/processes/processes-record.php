@@ -38,10 +38,12 @@ if((isset($_SESSION['user']['admin']) && !empty($_SESSION['user']['admin']) )){
   									if(empty($val) && array_key_exists($key, $_POST['default'])){
   										$val = $stored["{$_POST['default']["{$key}"]}"];
   									}
-  									$_update_vals[] = "{$key} = :{$key} ";
-  									$_insert_vals[] = ":{$key} ";
+  								  $_inp = ":{$key}";
+  									if(empty($val) && $val !== "0" && !preg_match("/_url/", $key)){ $_inp="(NULL)"; }
+  									else{	$_params["{$_inp}"] = $val; }
+  									$_update_vals[] = "{$key} = {$_inp} ";
+  									$_insert_vals[] = "{$_inp} ";
   									$_insert_fields[] = "{$key}";
-  									$_params["{$key}"] = $val;
   									if(preg_match("/deleted/", $key)){
   										$additionalAction = 'Delete';
   									}

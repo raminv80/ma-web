@@ -272,7 +272,7 @@ class UserClass {
                    WHERE user_id = :id ";
     
         if ( $DBobject->wrappedSql($sql, $params) ) {
-          return array ('success' => 'Your new password has been sent to the registered email address.',
+          return array ('success' => 'A password recovery email has been sent to the registered email address.',
               'token' =>$newPass,
               'user_gname' =>$res['user_gname']);
         }
