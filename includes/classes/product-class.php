@@ -587,7 +587,27 @@ class ProductClass extends ListClass {
   
   function LoadAssociatedProducts($ID = null) {
   	global $CONFIG,$SMARTY,$DBobject;
+  	/*  ++++++++++++++  FOR MORE THAN 3 ASSOCIATED PRODUCTS    ++++++++++++++++++++++ 
+  	$ID = empty($ID)?$this->ID:$ID;
+  	$associated_products = array();
+  	$sql ="SELECT product_id FROM tbl_product WHERE product_deleted IS NULL AND product_published = '1' AND product_object_id = :id";
+  	$params = array(':id'=>$ID);
+  	$res_d = $DBobject->wrappedSql($sql,$params);
+  	$pid = $res_d[0]['product_id'];
   	
+  	$sql ="SELECT * FROM tbl_product AS a LEFT JOIN tbl_gallery ON gallery_product_id = a.product_id
+      					LEFT JOIN cache_tbl_product ON cache_record_id = a.product_object_id
+						LEFT JOIN tbl_productassoc ON productassoc_product_object_id = a.product_object_id
+      					 WHERE a.product_deleted IS NULL AND a.product_published = '1' AND gallery_deleted IS NULL AND productassoc_deleted IS NULL AND productassoc_product_id = :id GROUP BY a.product_object_id ORDER BY a.product_order";
+  	$params = array(':id'=>$pid);
+  	if($res2 = $DBobject->wrappedSql($sql,$params)){
+  		foreach($res2 as $r2){
+  			$associated_products[] = unclean($r2);
+  		}
+  		$SMARTY->assign('associated_products',$associated_products);
+  		return true;
+  	}
+  	return false; */
   	$ID = empty($ID)?$this->ID:$ID;
   	$sql ="SELECT * FROM tbl_product LEFT JOIN tbl_productspec ON productspec_product_id = product_id WHERE product_deleted IS NULL AND productspec_deleted IS NULL AND product_object_id = :id";
   	$params = array(':id'=>$ID);

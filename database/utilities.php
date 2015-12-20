@@ -131,15 +131,17 @@ function isValidUsername($data){
 }
 
 function parse_backtrace($raw){
-
 	$output="Trace:<br/>";
-	foreach($raw as $entry){
-		$output.="<br/>File: ".$entry['file']." (Line: ".$entry['line'].")<br/>";
-		$output.="Function: ".$entry['function']."<br/>";
-		$output.="Args: ".implode(", ", $entry['args'])."<br/>";
-	}
+	try{
+		foreach($raw as $entry){
+			$output.="<br/>File: ".$entry['file']." (Line: ".$entry['line'].")<br/>";
+			$output.="Function: ".$entry['function']."<br/>";
+			try{ $output.="Args: ".implode(", ", $entry['args'])."<br/>"; }catch(Exception $e){}
+		}
+	}catch(Exception $e){}
 	return $output;
 }
+
 function formatBytes($size, $precision = 2)
 {
 	$base = log($size) / log(1024);
