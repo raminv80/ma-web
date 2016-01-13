@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors',1);
-ini_set('error_reporting', E_ALL);
+ ini_set('error_reporting', E_ALL); 
 /*  PROJECT INFO --------------------------------------------------------------------------------------------------------
     Project:   Convert Images to Progressive JEPG,
     Version:   0.5
@@ -12,7 +12,7 @@ ini_set('error_reporting', E_ALL);
 session_start();
 
 /* get all of the required data from the HTTP request */
-$jpg_quality   = 75; // the quality of any generated JPGs on a scale of 0 to 100
+$jpg_quality   = 85; // the quality of any generated JPGs on a scale of 0 to 100
 $quality = 9; //0 - 9 (0= no compression, 9 = high compression)
 $sharpen       = TRUE; // Shrinking images can blur details, perform a sharpen on re-scaled images?
 $browser_cache = 60*60*24*7; // How long the BROWSER cache should last (seconds, minutes, hours, days. 7days by default)
@@ -24,6 +24,7 @@ $source_file      = $document_root.$requested_uri; // Full path to source file
 $extension = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
 // $optim_source_file      = $document_root.$optim.str_replace($extension, "jpg", $requested_file); // Full path to optimised source file
 $optim_source_file      = $document_root.$optim.$requested_uri; // Full path to optimised source file
+$watermark = "";//$document_root.'images/watermark.png';
 
 //CHECK FILE EXISTS
 if(!file_exists($source_file)){
@@ -50,13 +51,22 @@ if((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0) || (!empty($_R
   $optim_source_file      = $document_root.$optim.parse_url(urldecode($requested_directory)."/".($requested_file),PHP_URL_PATH);
 }
 
-if(!file_exists($optim_source_file) || filemtime($source_file) > filemtime($optim_source_file)){
+if(!file_exists($optim_source_file) || filemtime($source_file) > filemtime($optim_source_file) || (!empty($watermark) && filemtime($watermark) > filemtime($optim_source_file) ) ){
   //BUILD OPTIMISED IMAGE
   /* It exists as a source file, and it doesn't exist cached - lets make one: */
   $width = ((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?intval($_REQUEST['width']):null);
   $height = ((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?intval($_REQUEST['height']):null);
   $crop = (!empty($_REQUEST['crop'])?true:false);
   $file = generateImage($source_file, $optim_source_file,$width, $height, $crop);
+  
+  // ADD WATERMARK TO FILES IN 'UPLOADS'
+  if($watermark){
+    $directory = str_replace($document_root.$optim, '', $optim_source_file);
+    if(preg_match('/^\/uploads\//', $directory)){ 
+    	addWatermark($optim_source_file, $watermark);
+    }
+  }
+
 }
 
 sendImage($optim_source_file, $browser_cache);
@@ -70,8 +80,16 @@ function sendImage($filename, $browser_cache) {
   } else {
     header("Content-Type: image/jpeg");
   }
-  header("Cache-Control: private, max-age=".$browser_cache);
-  header('Expires: '.gmdate('D, d M Y H:i:s', time()+$browser_cache).' GMT');
+  
+  $directory = str_replace($_SERVER['DOCUMENT_ROOT']."optimised/", '', $filename);
+  if(preg_match('/^\/uploads\/entry_|^\/images\//', $directory)){
+  	header("Cache-Control: private, max-age=".$browser_cache);
+  	header('Expires: '.gmdate('D, d M Y H:i:s', time()+$browser_cache).' GMT');
+  }else{
+  	header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+  	header('Pragma: no-cache'); // HTTP 1.0.
+  	header('Expires: 0'); // Proxies.
+  }
   header('Content-Length: '.filesize($filename));
   readfile($filename);
   exit();
@@ -96,6 +114,9 @@ function generateImage($source_file, $cache_file,$_width,$_height,$_crop=false) 
 		default:
 			$src = @ImageCreateFromJpeg($source_file); // original image
 			break;
+	}
+	if(!$src){
+		$src = imagecreatefromstring(file_get_contents($source_file));
 	}
 	
 	$maxwidth = intval($_width);
@@ -210,4 +231,78 @@ function cropimage($image,$width, $height, $focus="center"){
 	// Crop to Square using the given dimensions
 	ImageCopy($new_image, $image, 0, 0, $x_pos, $y_pos, $width, $height);
 	return $new_image;
+}
+
+
+function addWatermark($_image, $_watermark){
+	ini_set('memory_limit','128M');
+	global $sharpen, $jpg_quality,$quality;
+	
+	$watermark = @ImageCreateFromPng($_watermark);
+	if (!$watermark) die('Unable to open watermark');
+	
+	$extension = strtolower(pathinfo($_image, PATHINFO_EXTENSION));
+	switch ($extension) {
+		case 'png':
+			$image = @ImageCreateFromPng($_image); // original image
+			break;
+		case 'gif':
+			$image = @ImageCreateFromGif($_image); // original image
+			break;
+		default:
+			$image = @ImageCreateFromJpeg($_image); // original image
+			break;
+	}
+	
+	$scalex = imagesx($image) * 0.11 / 350 ; //original scale image size //If the TAG size changes this will need to be scaled.
+	$scaley = imagesy($image) * 0.11 / 121; //original scale image size //If the TAG size changes this will need to be scaled.
+	if($scalex > $scaley){
+		$width = imagesx($watermark);
+		$height = imagesy($watermark);
+		$nWidth = $width * $scalex;
+		$nHeight = $height * $scalex;
+		$watermark = resizeimage($watermark, $width, $height, $nWidth, $nHeight);
+	}else{
+		$width = imagesx($watermark);
+		$height = imagesy($watermark);
+		$nWidth = $width * $scaley;
+		$nHeight = $height * $scaley;
+		$watermark = resizeimage($watermark, $width, $height, $nWidth, $nHeight);
+	}
+	
+	// calculate the position of the watermark in the output image (the
+	// watermark shall be placed in the lower right corner)
+	$watermark_pos_x = imagesx($image) - imagesx($watermark) - 8;
+	$watermark_pos_y = imagesy($image) - imagesy($watermark) - 10;
+
+	
+	// merge the source image and the watermark
+	imagecopy($image, $watermark,  $watermark_pos_x, $watermark_pos_y, 0, 0,
+	imagesx($watermark), imagesy($watermark));
+	
+	//$response = imagejpeg($image, $_image, 100);  // use best image quality (100)
+	// save the new file in the appropriate path, and send a version to the browser
+	switch ($extension) {
+	  case 'png':
+	    ImageInterlace($image, true); // Enable interlancing (progressive JPG, smaller size file)
+	    imagealphablending($image, false);
+	    imagesavealpha($image,true);
+	    $transparent = imagecolorallocatealpha($image, 255, 255, 255, 127);
+	    $response = ImagePng($image, $_image, $quality);
+	    break;
+	  case 'gif':
+	    ImageInterlace($image, true); // Enable interlancing (progressive JPG, smaller size file)
+	    $response = ImageGif($image, $_image);
+	    break;
+	  default:
+	    ImageInterlace($image, true); // Enable interlancing (progressive JPG, smaller size file)
+	    $response = ImageJpeg($image, $_image, $jpg_quality);
+	    break;
+	}
+	
+	// remove the images from memory
+	imagedestroy($image);
+	imagedestroy($watermark);
+	
+	return $response;
 }

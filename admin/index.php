@@ -32,6 +32,8 @@ $SMARTY->assign('token',$token);
 if($_request['arg1']  == 'logout' ){
 	$_SESSION = null;
 	session_destroy();
+	ini_set('session.gc_maxlifetime', 7200);
+	session_set_cookie_params(7200);
 	session_start();
 }
 
@@ -44,6 +46,10 @@ if((!isset($_SESSION['user']['admin']) || empty($_SESSION['user']['admin']) ) &&
 }
 
 if(!empty($_SESSION['user']['admin']) && $_request['arg1']  == 'login'){
+	if(intval($_SESSION['user']['admin']['level']) == 2){
+		header("Location:/admin/level2");
+		die();
+	}
 	header("Location:/admin");
 	die();
 }
@@ -64,9 +70,11 @@ while(true){
 
 	/******* Goes to login  *******/
 	if($_request['arg1'] == 'home' || $_request['arg1'] == ''){
+		if(intval($_SESSION['user']['admin']['level']) == 2){
+			header("Location:/admin/level2");
+			die();
+		}
 		$template = "home.tpl";
-		$SMARTY->assign('them_news_domain',$CONFIG->them_news->domain);
-		$SMARTY->assign('them_news_page',$CONFIG->them_news->page);
 		break 1;
 	}
 
@@ -84,70 +92,73 @@ while(true){
 	if($arr[0] == 'list' && $arr[1] != ""){
 		/****** Goes to individual script pages *******/
 		foreach($CONFIG->group as $gp){	
+		  if( (!empty($gp->attributes()->levelonly) && intval($gp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($gp->attributes()->level) && intval($gp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 			foreach($gp->section as $sp){
+			if( (!empty($sp->attributes()->levelonly) && intval($sp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($sp->attributes()->level) && intval($sp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 				if($sp->url == $arr[1] ){
-					if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level'])){
-						//IF ADMIN HAS STORES
-						if(intval($_SESSION['user']['admin']['level']) == 2 && !empty($_SESSION['user']['admin']['franchisee'])){
-							// INJECT CONFIG FOR PROMOTIONS
-							$a = array();
-							foreach ($_SESSION['user']['admin']['franchisee'] as $strs){
-								$a[] = $sp->franchiseefield . ' = ' . $strs['access_franchisee_id'];
+					foreach($sp->process as $pr){
+						$file = $_SERVER['DOCUMENT_ROOT']. (string)$pr->file; 
+						if(file_exists($file))	{ include ($file);}
+					}
+					
+					//IF ADMIN HAS STORES
+					if(intval($_SESSION['user']['admin']['level']) == 2 && !empty($_SESSION['user']['admin']['franchisee'])){
+						// INJECT CONFIG FOR PROMOTIONS
+						$a = array();
+						foreach ($_SESSION['user']['admin']['franchisee'] as $fid){
+							if(!empty($sp->franchiseefield)) $a[] = $sp->franchiseefield . ' = ' . $fid;
+						}
+						$where =  implode(' OR ', $a);
+						//CREATE WHERE CONFIG STRUCTURE WHICH INCLUDES ALL ADMIN FRANCHISEE AGAINST FRANCHISEEFIELD eg. (FRANCHISEE_ID = 4 OR FRANCHISEE_ID = 5)
+						//ADD WHERE CONFIG TO EXISTING WHERE IF ANY
+					}
+					
+					
+					$SMARTY->assign("zone",$sp->title);
+					$SMARTY->assign ("typeID", intval($sp->type_id));
+					$parentID = 0;
+					if ($sp->root_parent_id) {
+						$SMARTY->assign ("rootParentID", intval($sp->root_parent_id));
+						$parentID = intval($sp->root_parent_id);
+					}
+					$template = "list.tpl";
+					if($sp->type == "LISTING"){
+						if($sp->category_object_id) $SMARTY->assign("category_object_id", $sp->category_object_id );
+						if(!empty($where)){
+							if(empty($sp->where)){
+								$sp->addChild ( 'where', $where );
+							}else{
+								$sp->where = $sp->table->where . " AND ( ". $where ." )";
 							}
-							$where =  implode(' OR ', $a);
-							//CREATE WHERE CONFIG STRUCTURE WHICH INCLUDES ALL ADMIN FRANCHISEE AGAINST FRANCHISEEFIELD eg. (FRANCHISEE_ID = 4 OR FRANCHISEE_ID = 5)
-							//ADD WHERE CONFIG TO EXISTING WHERE IF ANY
 						}
-						
-						
-						$SMARTY->assign("zone",$sp->title);
-						$SMARTY->assign ( "typeID", intval($sp->type_id) );
-						$parentID = 0;
-						if ($sp->root_parent_id) {
-							$SMARTY->assign ( "rootParentID", intval($sp->root_parent_id) );
-							$parentID = intval($sp->root_parent_id);
-						}
-						$template = "list.tpl";
-						if($sp->type == "LISTING"){
-							if(!empty($where)){
-								if(empty($sp->where)){
-									$sp->addChild ( 'where', $where );
-								}else{
-									$sp->where = $sp->table->where . " AND ( ". $where ." )";
-								}
+						$record = new Listing($sp);
+						$list = $record->getListingList($parentID);
+						$SMARTY->assign("list",$list);
+						$SMARTY->assign("path",(string)$sp->url);
+						$template = $sp->list_template;
+						break 3;
+					}
+					if($sp->type == "PRODUCT"){
+						$record = new Product($sp);
+						$list = $record->getRecordList($parentID);
+						$SMARTY->assign("list",$list);
+						$SMARTY->assign("path",(string)$sp->url);
+						$template = $sp->list_template;
+						break 3;
+					}
+					if($sp->type == "TABLE"){
+						if(!empty($where)){
+							if(empty($sp->table->where)){
+								$sp->table->addChild ( 'where', $where );
+							}else{
+								$sp->table->where = $sp->table->where . " AND ( ". $where ." )";
 							}
-							$record = new Listing($sp);
-							$list = $record->getListingList($parentID);
-							$SMARTY->assign("list",$list);
-							$SMARTY->assign("path",(string)$sp->url);
-							$template = $sp->list_template;
-							break 3;
 						}
-						if($sp->type == "PRODUCT"){
-							$record = new Product($sp);
-							$list = $record->getRecordList($parentID);
-							$SMARTY->assign("list",$list);
-							$SMARTY->assign("path",(string)$sp->url);
-							$template = $sp->list_template;
-							break 3;
-						}
-						if($sp->type == "TABLE"){
-							if(!empty($where)){
-								if(empty($sp->table->where)){
-									$sp->table->addChild ( 'where', $where );
-								}else{
-									$sp->table->where = $sp->table->where . " AND ( ". $where ." )";
-								}
-							}
-							$record = new Record($sp);
-							$list = $record->getRecordList();
-							$SMARTY->assign("list",$list);
-							$SMARTY->assign("path",(string)$sp->url);
-							$template = $sp->list_template;
-							break 3;
-						}
-					}else{
-						$template = "home.tpl";
+						$record = new Record($sp);
+						$list = $record->getRecordList(null,1);
+						$SMARTY->assign("list",$list);
+						$SMARTY->assign("path",(string)$sp->url);
+						$template = $sp->list_template;
 						break 3;
 					}
 				}
@@ -166,77 +177,79 @@ while(true){
 				$objID = $DBobject->wrappedSqlIdentity();
 			}
 		}
+		
 		foreach($CONFIG->group as $gp){
+		if( (!empty($gp->attributes()->levelonly) && intval($gp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($gp->attributes()->level) && intval($gp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 			foreach($gp->section as $sp){
+			if( (!empty($sp->attributes()->levelonly) && intval($sp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($sp->attributes()->level) && intval($sp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 				if($sp->url == $arr[1] ){
-					if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) ){
-						$SMARTY->assign("zone",$sp->title);
-						$SMARTY->assign ( "typeID", intval($sp->type_id) );
-						$SMARTY->assign ( "parentID", intval($sp->parent_id) );
-						$SMARTY->assign ( "rootParentID", intval($sp->root_parent_id) );
-						$SMARTY->assign ( "objID", $objID );
-						if($sp->type == "LISTING"){
-							$record = new Listing($sp);
-							$tm = $record->getListing(intval($arr[2]));
-							$SMARTY->assign("fields",$tm);
-							$template = $sp->edit_template;
-							foreach($sp->custom_template as $ct){
-								$f = $ct->attributes()->field;
-								$v = $ct->attributes()->value;
-								if($tm["{$f}"] == $v){
-									$template = $ct;
-									break;
-								}
+				  foreach($sp->process as $pr){
+						$file = $_SERVER['DOCUMENT_ROOT']. '/'. (string)$pr->file;
+						if(file_exists($file))	{ include ($file);}
+					}
+					$SMARTY->assign("zone",$sp->title);
+					$SMARTY->assign ( "typeID", $sp->type_id );
+					$SMARTY->assign ( "parentID", $sp->parent_id );
+					$SMARTY->assign ( "rootParentID", $sp->root_parent_id );
+					$SMARTY->assign ( "objID", $objID );
+					if($sp->type == "LISTING"){
+						$record = new Listing($sp);
+						$tm = $record->getListing(intval($arr[2]));
+						$SMARTY->assign("fields",$tm);
+						$template = $sp->edit_template;
+						foreach($sp->custom_template as $ct){
+							$f = $ct->attributes()->field;
+							$v = $ct->attributes()->value;
+							if($tm["{$f}"] == $v){
+								$template = $ct;
+								break;
 							}
-							foreach($sp->custom as $ct){
-							  $f = $ct->attributes()->field;
-							  $v = $ct->attributes()->value;
-							  if($tm["{$f}"] == $v){
-							    foreach($ct->associated as $a){
-							      $domdict = dom_import_simplexml($sp);
-							      $domcat  = dom_import_simplexml($a);
-							      $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
-							      $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
-							    }
-							    foreach($ct->options as $o){
-							      $domdict = dom_import_simplexml($sp);
-							      $domcat  = dom_import_simplexml($o);
-							      $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
-							      $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
-							    }
-							    foreach($ct->extends as $e){
-							      $domdict = dom_import_simplexml($sp);
-							      $domcat  = dom_import_simplexml($e);
-							      $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
-							      $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
-							    }
-							    $record = new Listing($sp);
-	    						$tm = $record->getListing(intval($arr[2]));
-	    						$SMARTY->assign("fields",$tm);
-	    						$template = $ct->template;
-							    break;
-							  }
-							}
-							break 3;
 						}
-						if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
-							$record = new Record($sp);
-							$tm = $record->getRecord(intval($arr[2]));
-							$SMARTY->assign("fields",$tm);
-							$SMARTY->assign("type",(string)$sp->slide);
-							$template = $sp->edit_template;
-							foreach($sp->custom_template as $ct){
-								$f = $ct->attributes()->field;
-								$v = $ct->attributes()->value;
-								if($tm["{$f}"] ===$v){
-									$template = $ct;
-									break;
-								}
-							}
-							break 3;
+						foreach($sp->custom as $ct){
+						  $f = $ct->attributes()->field;
+						  $v = $ct->attributes()->value;
+						  if($tm["{$f}"] == $v){
+						    foreach($ct->associated as $a){
+						      $domdict = dom_import_simplexml($sp);
+						      $domcat  = dom_import_simplexml($a);
+						      $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
+						      $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
+						    }
+						    foreach($ct->options as $o){
+						      $domdict = dom_import_simplexml($sp);
+						      $domcat  = dom_import_simplexml($o);
+						      $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
+						      $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
+						    }
+						    foreach($ct->extends as $e){
+						      $domdict = dom_import_simplexml($sp);
+						      $domcat  = dom_import_simplexml($e);
+						      $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
+						      $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
+						    }
+						    $record = new Listing($sp);
+    						$tm = $record->getListing(intval($arr[2]));
+    						$SMARTY->assign("fields",$tm);
+    						$template = $ct->template;
+						    break;
+						  }
 						}
-					}else{
-						$template = "home.tpl";
+						break 3;
+					}
+					if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
+						$record = new Record($sp);
+						$tm = $record->getRecord(intval($arr[2]));
+						$SMARTY->assign("fields",$tm);
+						$SMARTY->assign("type",(string)$sp->slide);
+						$template = $sp->edit_template;
+						foreach($sp->custom_template as $ct){
+							$f = $ct->attributes()->field;
+							$v = $ct->attributes()->value;
+							if($tm["{$f}"] ===$v){
+								$template = $ct;
+								break;
+							}
+						}
 						break 3;
 					}
 				}
@@ -247,23 +260,20 @@ while(true){
 
 	if($arr[0] == 'delete' && $arr[1] != ""){
 		foreach($CONFIG->group as $gp){
+		  if( (!empty($gp->attributes()->levelonly) && intval($gp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($gp->attributes()->level) && intval($gp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 			foreach($gp->section as $sp){
+			  if( (!empty($sp->attributes()->levelonly) && intval($sp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($sp->attributes()->level) && intval($sp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 				if($sp->url == $arr[1] ){
-					if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) ){
-						if($sp->type == "LISTING"){
-							$record = new Listing($sp);
-							$res = $record->deleteListing($arr[2]);
-						}
-						if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
-							$record = new Record($sp);
-							$res = $record->deleteRecord($arr[2]);
-						}
-						header("Location: {$_SERVER['HTTP_REFERER']}");
-						die();
-					}else{
-						$template = "home.tpl";
-						break 3;
+					if($sp->type == "LISTING"){
+						$record = new Listing($sp);
+						$res = $record->deleteListing($arr[2]);
 					}
+					if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
+						$record = new Record($sp);
+						$res = $record->deleteRecord($arr[2]);
+					}
+					header("Location: {$_SERVER['HTTP_REFERER']}");
+					die();
 				}
 			}
 		}
@@ -271,150 +281,29 @@ while(true){
 	}
 	
 	foreach($CONFIG->group as $gp){
+	  if( (!empty($gp->attributes()->levelonly) && intval($gp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($gp->attributes()->level) && intval($sp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 		foreach($gp->section as $sp){
+		  if( (!empty($sp->attributes()->levelonly) && intval($sp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($sp->attributes()->level) && intval($sp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 			if((string) $sp->attributes()->subsection == 'true' ){
 				$needle = str_replace("/","\/",$sp->url);
 				if(preg_match("/^{$needle}/",$arr[0])){
 					foreach($sp->subsection as $sb){
+					  if( (!empty($sb->attributes()->levelonly) && intval($sb->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($sb->attributes()->level) && intval($sb->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 						$needle2 = str_replace("/","\/",$sb->url);
 						if(preg_match("/^{$needle2}/",$arr[1])){
+							foreach($sb->process as $pr){
+								$file = $_SERVER['DOCUMENT_ROOT']. '/'. (string)$pr->file;
+								if(file_exists($file))	{ include ($file);}
+							}
 							
+							if(intval($_SESSION['user']['admin']['level']) > 1 && !empty($_SESSION['user']['admin']['franchisee'])){
+								$franchiseeIdArr = $_SESSION['user']['admin']['franchisee'];
+							}
+							$SMARTY->assign("zone",$sp->title);
 							$template = (string) $sb->template;
-							$classTermObj = new ClassTermClass();
-							$terms = $classTermObj->GetCurrentTerm();
-							$SMARTY->assign("terms",$terms);
-							$classes = $classTermObj->GetCurrentClasses();
-							$SMARTY->assign("classes",$classes);
-							
-							if($arr[1] == 'new' || $arr[1] == 're-enrol' || $arr[1] == 'convert'){
-								$_SESSION['makepayment'] = '';
-								$enrol_obj = new Enrolment();
-								$_SESSION['enrol']['step'] = (empty($_SESSION['enrol']['step']))?1:$_SESSION['enrol']['step'];
+							//SET SUBSECTION BASED ON THE REQUEST URI
+							if($arr[0] == 'members'){
 								
-								//CLEAR SESSION WHEN NO USER_ID
-								if((empty($arr[2]) && ($_SESSION['enrol']['step']) < 3) || (!empty($arr[2]) && !empty($_SESSION['enrol']['user']['user_id']) && $arr[2] != $_SESSION['enrol']['user']['user_id']) ){
-									unset($_SESSION['user']['public']);
-									unset($_SESSION['enrol']);
-									session_regenerate_id();
-									$enrol_obj->CreateCart();
-								}
-								if(!empty($arr[2])  && empty($_SESSION['enrol']['user']['user_id'])){
-									
-									$member_obj = new Member();
-									$memberArr = $member_obj->GetMemberDetails($arr[2]);
-									$_SESSION['enrol']['user'] = $memberArr['user'];
-									$_SESSION['enrol']['address']['B'] = $memberArr['address'];
-									$_SESSION['enrol']['students'] = $memberArr['students'];
-									
-									//FAKE USER LOGIN & CART INIT
-									if(!empty($_SESSION['enrol']['user']['user_id'])){
-										$_SESSION['user']['public'] = array (
-												"id" => $_SESSION['enrol']['user']['user_id'],
-												"gname" => $_SESSION['enrol']['user']['user_gname'],
-												"surname" => $_SESSION['enrol']['user']['user_surname'],
-												"email" => $_SESSION['enrol']['user']['user_email']
-										);
-										$cartArr = $enrol_obj->GetDataCart();
-										if(empty($cartArr['cart_user_id'])){
-											$enrol_obj->SetUserCart($_SESSION['enrol']['user']['user_id']);
-										}
-										
-									}
-									
-								}
-								
-								$_SESSION['enrol']['convert'] = false;
-								if($arr[1] == 'convert'){
-									$_SESSION['enrol']['convert'] = true;
-									$trialArr = $enrol_obj->GetTrialClassesByUserId($_SESSION['enrol']['user']['user_id']);
-									$SMARTY->assign("selectedClasses",$trialArr['selectedClasses']);
-									$_SESSION['enrol']['selectedStudent'] = $trialArr['selectedStudent'];
-									$SMARTY->assign("selectedStudent",$trialArr['selectedStudent']);
-									$_SESSION['enrol']['type'] = 'S';
-									
-									foreach ($trialArr['classterm'] as $ct){
-											$response[] = $enrol_obj->AddToCart($ct['id'], $ct['attr'], 1, 0, null, 0, 1, 'S', true);
-									}
-								}
-								
-								if($arr[1] == 're-enrol'){
-									$selectedClasses = $enrol_obj->GetMemberPreviousTermClasses($_SESSION['enrol']['user']['user_id']);
-									$SMARTY->assign("selectedClasses",$selectedClasses);
-									$_SESSION['enrol']['type'] = 'S';
-								}
-								
-								$SMARTY->assign("step",$_SESSION['enrol']['step']);
-								$SMARTY->assign("user",$_SESSION['enrol']['user']);
-								$SMARTY->assign("type",$_SESSION['enrol']['type']);
-								$SMARTY->assign("address",$_SESSION['enrol']['address']);
-								$SMARTY->assign("students",$_SESSION['enrol']['students']);
-								$SMARTY->assign('classtermstudents', $_SESSION['enrol']['classtermStudent']);
-								$SMARTY->assign('additional', $_SESSION['enrol']['additional']);
-								$cart = $enrol_obj->GetDataCart();
-								$SMARTY->assign('cart',$cart);
-								$totals = $enrol_obj->CalculateTotal();
-								$SMARTY->assign('totals', $totals);
-								$productsOnCart = $enrol_obj->GetDataProductsOnCart();
-								$SMARTY->assign('productsOnCart',$productsOnCart);
-								loadAdditional($sb);
-							}
-							
-							
-							if($arr[1] == 'existing' && !empty($arr[2])){
-								$member_obj = new Member();
-								$memberArr = $member_obj->GetMemberDetails($arr[2]);
-								if (!empty($memberArr['user'])){
-									$SMARTY->assign('user', $memberArr['user']);
-									$SMARTY->assign('notes', $memberArr['notes']);
-									$SMARTY->assign('emails', $memberArr['emails']);
-									$address = array('B'=>$memberArr['address']);
-									$SMARTY->assign('address', $address);
-									$enrol_obj = new Enrolment();
-									$studentArr = array();
-									foreach ($memberArr['students'] as $student){
-										$studentArr["{$student['student_id']}"] = $student;
-										$studentArr["{$student['student_id']}"]['enrolments'] = $enrol_obj->GetStudentEnrolments($student['student_id']);
-									}
-									$SMARTY->assign('students', $studentArr);
-									$payments = $enrol_obj->GetOrderHistoryByUser($arr[2]);
-									$SMARTY->assign ( 'payments', $payments );
-								}
-							}
-							
-							
-							if($arr[1] == 'make-payment' && !empty($arr[2])){
-								$member_obj = new Member();
-								
-								$memberArr = $member_obj->RetrieveById($arr[2]);
-								if(!empty($memberArr)){
-									$addresses = $member_obj->GetUsersAddresses($memberArr['user_id']);
-									$_SESSION['makepayment']['user'] = $memberArr;
-									$_SESSION['address']['B'] = $addresses[0];
-									$_SESSION['user']['public'] = array (
-											"id" => $memberArr['user_id'],
-											"gname" => $memberArr['user_gname'],
-											"surname" => $memberArr['user_surname'],
-											"email" => $memberArr['user_email']
-									);
-									$enrol_obj = new Enrolment();
-									$cartArr = $enrol_obj->GetDataCart();
-									if(!empty($cartArr['cart_user_id']) && $cartArr['cart_user_id'] != $memberArr['user_id']){
-										session_regenerate_id();
-										$enrol_obj->CreateCart();
-									}
-									$enrol_obj->SetUserCart($memberArr['user_id']);
-									
-									$SMARTY->assign('user', $memberArr);
-									$SMARTY->assign("customProduct",$_SESSION['makepayment']['customProduct']);
-									$SMARTY->assign("address",$_SESSION['address']);
-									$SMARTY->assign('cart',$cartArr);
-									$totals = $enrol_obj->CalculateTotal();
-									$SMARTY->assign('totals', $totals);
-									$productsOnCart = $enrol_obj->GetDataProductsOnCart();
-									$SMARTY->assign('productsOnCart',$productsOnCart);
-									$_SESSION['makepayment']['step'] = empty($_SESSION['makepayment']['step'])?5:$_SESSION['makepayment']['step'];
-									$SMARTY->assign("step",$_SESSION['makepayment']['step']);
-								}
 							}
 							break 4;
 						}
@@ -429,49 +318,52 @@ while(true){
 
 $menu = array();
 foreach($CONFIG->group as $gp){
+  if( (!empty($gp->attributes()->levelonly) && intval($gp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($gp->attributes()->level) && intval($sp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 	foreach($gp->section as $sp){
-		if(intval($sp->attributes()->level) >= intval($_SESSION['user']['admin']['level']) ){
-			$list = array();
-			if($sp->type == "LISTING" && $sp->showlist != 'FALSE'){
-				$record = new Listing($sp);
-				$list = $record->getListingList();
-			}
-		
-			if($sp->type == "TABLE" && $sp->showlist != 'FALSE'){
-				$record = new Record($sp);
-				$list = $record->getRecordList();
-			}
-			$addUrl = "/admin/edit/{$sp->url}";
-			if((string)$sp->attributes()->hideadd == 'true'){
-			  $addUrl = "";
-			}
-			//	CUSTOM SECTIONS
-			$customUrls= array();
-			if($sp->type == "CUSTOM"){ 
-				if(!empty($sp->file)){
-					$class = (string)$sp->file;
-					$obj = new $class($sp);
-					$list = $obj->getList();
-				}
-				foreach($sp->subsection as $sub){
-					$title =	(string) $sub->title;
-					$url =	(string) $sub->url;
-					if(!empty($title) && !empty($url) && empty($sub->attributes()->hidden) ){
-						$customUrls["/admin/{$sp->url}/{$url}"] = $title;
-					}
-				}
-				
-			}
-			$groupName = (string)$gp->attributes()->name;
-			$menu["{$groupName}"]['section'][] = array("title"=>$sp->title,
-											"url"=>"/admin/list/{$sp->url}",
-											"list"=>$list,
-											"addNewUrl"=>$addUrl,
-											"customUrls"=>$customUrls
-			);
+	  if( (!empty($sp->attributes()->levelonly) && intval($sp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($sp->attributes()->level) && intval($sp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
+		$list = array();
+		if($sp->type == "LISTING" && $sp->showlist != 'FALSE'){
+			$record = new Listing($sp);
+			$list = $record->getListingList();
 		}
+	
+		if($sp->type == "TABLE" && $sp->showlist != 'FALSE'){
+			$record = new Record($sp);
+			$list = $record->getRecordList(null,1);
+		}
+		$addUrl = "/admin/edit/{$sp->url}";
+		if((string)$sp->attributes()->hideadd == 'true'){
+		  $addUrl = "";
+		}
+		//	CUSTOM SECTIONS
+		$customUrls= array();
+		if($sp->type == "CUSTOM"){ 
+			if(!empty($sp->file)){
+				$class = (string)$sp->file;
+				$obj = new $class($sp);
+				$list = $obj->getList();
+			}
+			foreach($sp->subsection as $sub){
+				$title =	(string) $sub->title;
+				$url =	(string) $sub->url;
+				if(!empty($title) && !empty($url) && empty($sub->attributes()->hidden) ){
+					$customUrls["/admin/{$sp->url}/{$url}"] = $title;
+				}
+			}
+			
+		}
+		$groupName = (string)$gp->attributes()->name;
+		$url = ($sp->url->attributes()->notlist)?"/admin/edit/{$sp->url}":"/admin/list/{$sp->url}";
+		if ($sp->url->attributes()->append_admin_id) $url .= "/". $_SESSION['user']['admin']['id'];
+		$menu["{$groupName}"]['section'][] = array("title"=>$sp->title,
+										"url"=>$url,
+										"list"=>$list,
+										"addNewUrl"=>$addUrl,
+										"customUrls"=>$customUrls
+		);
 	}
 }
+
 $SMARTY->assign("menu", $menu);
 $SMARTY->display("extends:page.tpl|$nav|$template");
 die();
