@@ -150,6 +150,7 @@
         toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print media | forecolor backcolor",
 				file_picker_callback  : elFinderBrowser,
 				convert_urls : false,
+				indentation  : '5px',
 				init_instance_callback : function(editor) {
 					$('#'+editor.id).removeClass('tinymce');
 				},
