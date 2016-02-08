@@ -14,7 +14,7 @@ if((isset($_SESSION['user']['admin']) && !empty($_SESSION['user']['admin']) )){
   	$pre = str_replace ( "tbl_", "", $_POST ['table'] );
   	$params = array(':url'=>$url);
   	$where = '';
-  	if(!empty($_POST['field2']) && !empty($_POST['value2'])){
+  	if(!empty($_POST['field2'])){
   		$where = "AND {$_POST['field2']} = :pid ";
   		$params = array_merge($params,array(':pid'=>$_POST ['value2']));
   	}

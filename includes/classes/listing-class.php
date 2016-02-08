@@ -5,6 +5,8 @@ class ListClass {
   // URL value passed into constructor
   protected $URL;
   // SQL ELEMENTS
+  protected $P_TBL = "tbl_listing";
+  protected $TBL = "tbl_listing";
   protected $SELECT = "*";
   protected $TABLES = "";
   protected $WHERE = "";
@@ -19,6 +21,7 @@ class ListClass {
     global $SMARTY,$DBobject;
     $this->URL = $_URL;
     $this->CONFIG_OBJ = $_CONFIG_OBJ;
+    $this->TBL = !empty($_CONFIG_OBJ->sqltable)?$_CONFIG_OBJ->sqltable:$this->P_TBL;
     // $this->DBTABLE = new Table($this->CONFIG_OBJ->ID);
     $this->init();
   }
@@ -35,7 +38,17 @@ class ListClass {
       $publish_name = $tbl_comp . "_published";
       $type = $tbl_comp . "_type_id";
       
-      $this->WHERE = " {$deleted_name} IS NULL AND {$publish_name} = 1 AND {$type} = '{$this->CONFIG_OBJ->type}'  ";
+      $typeIdSQL_d = array();
+      $cnt_t = 0;
+      foreach($this->CONFIG_OBJ->type as $t){
+        $typeIdSQL_d[] = "{$type} = {$t}";
+        $cnt_t++;
+      }
+      if(count($typeIdSQL_d) > 0 ){
+        $typeIdSQL = " AND (".implode(" OR ", $typeIdSQL_d).")";
+      }
+      
+      $this->WHERE = " {$deleted_name} IS NULL AND {$publish_name} = 1 {$typeIdSQL}";
       foreach($t->extends as $et){
         $f_id = str_replace("tbl_","",$t->name);
         $s_id = str_replace("tbl_","",$et->table);
@@ -116,7 +129,7 @@ class ListClass {
     if(!empty($this->CONFIG_OBJ->table->where)){
       $where = " AND " . $this->CONFIG_OBJ->table->where;
     }
-    $sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_object_id = :id AND tbl_listing.listing_deleted IS NULL {$where} ORDER BY tbl_listing.listing_published = :published DESC ";
+    $sql = "SELECT * FROM {$this->TBL} {$extends} WHERE {$this->TBL}.listing_object_id = :id AND {$this->TBL}.listing_deleted IS NULL {$where} ORDER BY {$this->TBL}.listing_published = :published DESC ";
     $params = array(
         ":id"=>$this->ID,
         ":published"=>$_PUBLISHED
@@ -156,9 +169,9 @@ class ListClass {
     		}
     		$extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
     		$sql = "SELECT {$f->id},{$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
-    		if($res = $DBobject->wrappedSqlGet($sql)){
+    		if($res2 = $DBobject->wrappedSqlGet($sql)){
     			$options = array();
-    			foreach($res as $row){
+    			foreach($res2 as $row){
     				$options[$row["{$f->id}"]]['id'] = $row["{$f->id}"];
     				$options[$row["{$f->id}"]]['value'] = $row["{$f->reference}"];
     				foreach($extraArr as $xt){
@@ -169,17 +182,62 @@ class ListClass {
     	}
       $SMARTY->assign("{$f->name}",$options);
     }
+    $this->loadPageAdditional($this->CONFIG_OBJ);
     
     $template = $this->CONFIG_OBJ->template;
     foreach($this->CONFIG_OBJ->template as $t){
-    	if(!empty($res[0]['listing_type_id']) && $t->attributes()->typeid == $res[0]['listing_type_id']) $template = $t;
+    	if(!empty($res[0]['listing_type_id']) && $t->attributes()->typeid == $res[0]['listing_type_id']){
+    	  $template = $t;
+    	  break;
+    	}
     }
     
     if(empty($data) && !empty($this->CONFIG_OBJ->table->template) && ($tree_ID == $this->ID)){
       $template = $this->CONFIG_OBJ->table->template;
+      foreach($this->CONFIG_OBJ->table->template as $t){
+      	if(!empty($res[0]['listing_type_id']) && $t->attributes()->typeid == $res[0]['listing_type_id']){
+      	  $template = $t;
+      	  break;
+      	}
+      }
     }
     
     return $template;
+  }
+  
+  private function loadPageAdditional($_conf){
+    global $CONFIG,$_PUBLISHED,$SMARTY,$_request;
+    if(!empty($_conf)){
+      foreach($_conf->additional as $ad){
+  
+        $tag = (string)$ad->tag;
+        $name = (string)$ad->name;
+        $data = (string)$ad->data;
+        foreach($CONFIG->$tag as $lp){
+          if($lp->attributes()->name == $name){
+            foreach($ad->update as $up){
+              $child = (string)$up->child;
+              $parent = (string)$up->parent;
+              if(!empty($child)){ $path = $parent .'->'. $child; }
+  						else{ $path = $parent; }
+              $value = (string)$up->value;
+              if(!empty($lp->$path)){
+                $lp->$path = $value;
+              }else{
+                if(!empty($child)){ $lp->$parent->addChild($child, $value); }
+  						  else{ $lp->addChild($parent, $value); }
+              }
+            }
+ 
+            $class = (string)$lp->file;
+            $obj = new $class($_request["arg1"],$lp);
+            $data2 = $obj->LoadTree($lp->root_parent_id);
+            $SMARTY->assign($data,unclean($data2));
+            break 1;
+          }
+        }
+      }
+    }
   }
 
   private function cached($type, $timestamp, $func, $p = null) {
@@ -218,7 +276,7 @@ class ListClass {
   function LoadParents($_ID, $_PUBLISHED = 1) {
     global $SMARTY,$DBobject;
     $data = array();
-    $sql = "SELECT tbl_listing.* FROM tbl_listing WHERE tbl_listing.listing_object_id = :id AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_published = :published DESC ";
+    $sql = "SELECT {$this->TBL}.* FROM {$this->TBL} WHERE {$this->TBL}.listing_object_id = :id AND {$this->TBL}.listing_deleted IS NULL ORDER BY {$this->TBL}.listing_published = :published DESC ";
     $params = array(
         ":id"=>$_ID,
         ":published"=>$_PUBLISHED
@@ -233,11 +291,20 @@ class ListClass {
     return $data;
   }
 
-  function ChkCache($_url, $_PUBLISHED) {
+  /**
+   * Checks if the URL exists in the Cache table and returns the Page Record ID for the
+   * url page. Returns FALSE if URL does not exist in the list of all pages.
+   * 
+   * @param String $_url URL without the leading / or domain components
+   * @param Boolean $_PUBLISHED 1 or 0 representing True or False
+   * @param Boolean $typeflag Boolean flag changes return to page type instead of id
+   * @return Page Record ID or Page Record Type
+   */
+  function ChkCache($_url, $_PUBLISHED, $typeflag = false) {
     global $SMARTY,$DBobject;
     $args = explode('/',$_url);
     $a = end($args);
-    $sql = "SELECT cache_record_id FROM cache_tbl_listing WHERE cache_url = :url AND EXISTS (SELECT listing_id FROM tbl_listing WHERE listing_object_id = cache_record_id AND listing_published = :published AND listing_deleted IS NULL)";
+    $sql = "SELECT cache_record_id, cache_type FROM cache_{$this->TBL} WHERE cache_url = :url AND EXISTS (SELECT listing_id FROM {$this->TBL} WHERE listing_object_id = cache_record_id AND listing_published = :published AND listing_deleted IS NULL)";
 		$params = array(
         ":url"=>$_url,
         ":published"=>$_PUBLISHED
@@ -245,7 +312,7 @@ class ListClass {
     try{
       $row = $DBobject->wrappedSqlGetSingle($sql,$params);
       if(empty($row)){
-        $sql2 = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url AND listing_published = :published";
+        $sql2 = "SELECT listing_url FROM {$this->TBL} WHERE listing_url = :url AND listing_published = :published";
         $params2 = array(
             ":url"=>$a,
             ":published"=>$_PUBLISHED
@@ -256,7 +323,7 @@ class ListClass {
         }
       }
     }catch(Exception $e){
-      $sql2 = "SELECT listing_url FROM tbl_listing WHERE listing_url = :url AND listing_published = :published";
+      $sql2 = "SELECT listing_url FROM {$this->TBL} WHERE listing_url = :url AND listing_published = :published";
       $params2 = array(
           ":url"=>$a,
           ":published"=>$_PUBLISHED
@@ -266,8 +333,12 @@ class ListClass {
         $row = $DBobject->wrappedSqlGetSingle($sql,$params);
       }
     }
-    if(! empty($row)){
-      return $row['cache_record_id'];
+    if(!empty($row)){
+      if($typeflag){
+        return $row['cache_type'];
+      }else{
+        return $row['cache_record_id'];
+      }
     }
     return false;
   }
@@ -275,7 +346,7 @@ class ListClass {
   // TODO: THIS NEEDS TO BE REVISED TO SUPPORT HAVING 2 URLS FOR THE SAME LISTING_OBJECT_ID IN THE EVENT THAT THE URL VALUE IS CHANGING.
   function BuildUrl($_id, &$url, $_PUBLISHED = 1) {
     global $DBobject;
-    $sql = "SELECT * FROM tbl_listing WHERE listing_object_id = :id AND listing_published = :published AND listing_deleted IS NULL ORDER BY listing_modified DESC";
+    $sql = "SELECT * FROM {$this->TBL} WHERE listing_object_id = :id AND listing_published = :published AND listing_deleted IS NULL ORDER BY listing_modified DESC";
     $params = array(
         ":id"=>$_id,
         ":published"=>$_PUBLISHED
@@ -297,10 +368,12 @@ class ListClass {
   function BuildCache() {
   	global $SMARTY,$DBobject;
 
-  	$sql[0] = "CREATE TABLE IF NOT EXISTS `cache_tbl_listing` (
+  	$sql[0] = "CREATE TABLE IF NOT EXISTS `cache_{$this->TBL}` (
 		`cache_id` INT(11) NOT NULL AUTO_INCREMENT,
 		`cache_record_id` INT(11) DEFAULT NULL,
 		`cache_url` VARCHAR(255) DEFAULT NULL,
+		`cache_type` INT(2) DEFAULT NULL,
+		`cache_published` TINYINT(1) DEFAULT NULL,
 		`cache_created` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
 		`cache_modified` DATETIME DEFAULT NULL,
 		`cache_deleted` DATETIME DEFAULT NULL,
@@ -308,15 +381,15 @@ class ListClass {
 		) ENGINE=MYISAM DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;";
   	$DBobject->wrappedSql($sql[0]);
   	
-  	$sql[3] = "TRUNCATE cache_tbl_listing;";
-  	$sql[1] = "SELECT DISTINCT(listing_parent_id) FROM tbl_listing WHERE listing_deleted IS NULL";
+  	$sql[3] = "TRUNCATE cache_{$this->TBL};";
+  	$sql[1] = "SELECT DISTINCT(listing_parent_id) FROM {$this->TBL} WHERE listing_deleted IS NULL";
   	$res = $DBobject->wrappedSql($sql[1]);
 
   	$ids = array();
   	foreach($res as $row){
   	  $ids[] = "listing_object_id = {$row['listing_parent_id']}";
   	}
-  	$sql_r = "SELECT listing_object_id AS id, listing_parent_id,listing_url, listing_published FROM tbl_listing WHERE (".implode(" OR ",$ids).") AND listing_deleted IS NULL GROUP BY CONCAT(listing_object_id,':',listing_url) ORDER BY listing_published = 1"; // GET DISTINCT object_id + url
+  	$sql_r = "SELECT listing_object_id AS id, listing_parent_id,listing_url, listing_published FROM {$this->TBL} WHERE (".implode(" OR ",$ids).") AND listing_deleted IS NULL GROUP BY CONCAT(listing_object_id,':',listing_url) ORDER BY listing_published = 1"; // GET DISTINCT object_id + url
   	$res = $DBobject->wrappedSql($sql_r);
   	foreach($res as $row){
   	  $id = $row['id'];
@@ -325,9 +398,9 @@ class ListClass {
   	  if(! self::BuildUrl($row['id'],$url,$published)){
   	    continue;
   	  }
-  	  $sql_c[] = "INSERT INTO cache_tbl_listing (cache_record_id,cache_published,cache_url,cache_modified) SELECT listing_object_id,listing_published, CONCAT('{$url}','/',listing_url), now() FROM tbl_listing WHERE listing_parent_id = {$id} AND listing_deleted IS NULL";
+  	  $sql_c[] = "INSERT INTO cache_{$this->TBL} (cache_record_id,cache_published,cache_url,cache_type,cache_modified) SELECT listing_object_id,listing_published, CONCAT('{$url}','/',listing_url), listing_type_id, now() FROM {$this->TBL} WHERE listing_parent_id = {$id} AND listing_deleted IS NULL";
   	}
-  	$sql_c[] = "INSERT INTO cache_tbl_listing (cache_record_id,cache_published,cache_url,cache_modified) SELECT listing_object_id,listing_published, listing_url, now() FROM tbl_listing WHERE listing_parent_id = 0 AND listing_deleted IS NULL";
+  	$sql_c[] = "INSERT INTO cache_{$this->TBL} (cache_record_id,cache_published,cache_url,cache_type,cache_modified) SELECT listing_object_id,listing_published, listing_url, listing_type_id, now() FROM {$this->TBL} WHERE listing_parent_id = 0 AND listing_deleted IS NULL";
 
   	$DBobject->wrappedSql($sql[3]);
   	foreach($sql_c as $s){
@@ -338,12 +411,12 @@ class ListClass {
   
   // FOR REFERENCE
   /*
-   * function BuildUrl($_id, &$url) { global $DBobject; $sql = "SELECT * FROM tbl_listing WHERE listing_object_id = :id ORDER BY listing_modified DESC"; $params = array ( ":id" => $_id ); if ($res = $DBobject->wrappedSql ( $sql, $params )) { if (! empty ( $res [0] ['listing_deleted'] ) || $res [0] ['listing_published'] != '1') { return false; } if (! empty ( $res [0] ['listing_parent_id'] )) { // category_listing_id $url = $res [0] ['listing_url'] . '/' . $url; return self::BuildUrl ( $res [0] ['listing_parent_id'], $url ); // category_listing_id } else { $url = $res [0] ['listing_url'] . '/' . $url; $url = ltrim ( rtrim ( $url, '/' ), '/' ); return true; } } else { return false; } }
+   * function BuildUrl($_id, &$url) { global $DBobject; $sql = "SELECT * FROM {$this->TBL} WHERE listing_object_id = :id ORDER BY listing_modified DESC"; $params = array ( ":id" => $_id ); if ($res = $DBobject->wrappedSql ( $sql, $params )) { if (! empty ( $res [0] ['listing_deleted'] ) || $res [0] ['listing_published'] != '1') { return false; } if (! empty ( $res [0] ['listing_parent_id'] )) { // category_listing_id $url = $res [0] ['listing_url'] . '/' . $url; return self::BuildUrl ( $res [0] ['listing_parent_id'], $url ); // category_listing_id } else { $url = $res [0] ['listing_url'] . '/' . $url; $url = ltrim ( rtrim ( $url, '/' ), '/' ); return true; } } else { return false; } }
    */
   function LoadBreadcrumb($_id, $_subs = null, $_PUBLISHED = 1) {
     global $CONFIG,$SMARTY,$DBobject;
     $data = array();
-    $sql = "SELECT * FROM tbl_listing WHERE tbl_listing.listing_object_id = :id AND tbl_listing.listing_deleted IS NULL";
+    $sql = "SELECT * FROM {$this->TBL} WHERE {$this->TBL}.listing_object_id = :id AND {$this->TBL}.listing_deleted IS NULL";
     $params = array(
         ":id"=>$_id
     );
@@ -352,7 +425,7 @@ class ListClass {
       $data[$res[0]['listing_id']]["url"] = $res[0]['listing_url'];
       $data[$res[0]['listing_id']]["subs"] = $_subs;
       if(! empty($res[0]['listing_parent_id']) && $res[0]['listing_parent_id'] != 0){
-        $sql2 = "SELECT * FROM tbl_listing WHERE tbl_listing.listing_object_id = :cid AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_published = :published DESC";
+        $sql2 = "SELECT * FROM {$this->TBL} WHERE {$this->TBL}.listing_object_id = :cid AND {$this->TBL}.listing_deleted IS NULL ORDER BY {$this->TBL}.listing_published = :published DESC";
         $params2 = array(
             ":cid"=>$res[0]['listing_parent_id'],
             ":published"=>$_PUBLISHED
@@ -370,7 +443,7 @@ class ListClass {
     $data = array();
     
     // GET LISTINGS AND CATEGORIES FOR THIS SECTION
-    $sql = "SELECT tbl_listing.listing_object_id, tbl_listing.listing_title, tbl_listing.listing_url, tbl_listing.listing_name, tbl_listing.listing_parent_id, tbl_listing.listing_parent_flag, tbl_listing.listing_type_id, tbl_listing.listing_menu_group,listing_menu_image,listing_flag1 FROM tbl_listing WHERE tbl_listing.listing_parent_id = :cid AND tbl_listing.listing_published = :published AND tbl_listing.listing_display_menu = '1' AND tbl_listing.listing_deleted IS NULL ORDER BY tbl_listing.listing_type_id, tbl_listing.listing_order ASC";
+    $sql = "SELECT {$this->TBL}.listing_object_id, {$this->TBL}.listing_title, {$this->TBL}.listing_url, {$this->TBL}.listing_name, {$this->TBL}.listing_parent_id, {$this->TBL}.listing_parent_flag, {$this->TBL}.listing_type_id, {$this->TBL}.listing_menu_group,listing_menu_image,listing_flag1 FROM {$this->TBL} WHERE {$this->TBL}.listing_parent_id = :cid AND {$this->TBL}.listing_published = :published AND {$this->TBL}.listing_display_menu = '1' AND {$this->TBL}.listing_deleted IS NULL ORDER BY {$this->TBL}.listing_type_id, {$this->TBL}.listing_order ASC";
     $params = array(
         ":cid"=>$_cid,
         ":published"=>$_PUBLISHED
@@ -480,12 +553,23 @@ class ListClass {
     }
     
     $typeIdSQL = "";
-    if(! empty($this->CONFIG_OBJ->type)){
-    	$typeIdSQL = "AND tbl_listing.listing_type_id = :type";
-    	$typeId_params = array(":type"=> $this->CONFIG_OBJ->type);
+//     if(! empty($this->CONFIG_OBJ->type)){
+//     	$typeIdSQL = "AND {$this->TBL}.listing_type_id = :type";
+//     	$typeId_params = array(":type"=> $this->CONFIG_OBJ->type);
+//     }
+    $typeIdSQL_d = array();
+    $typeId_params = array();
+    $cnt_t = 0;
+    foreach($this->CONFIG_OBJ->type as $t){
+      $typeIdSQL_d[] = "{$this->TBL}.listing_type_id = :type{$cnt_t}";
+      $typeId_params[":type{$cnt_t}"] = $t;
+      $cnt_t++;
+    }
+    if(count($typeIdSQL_d) > 0 ){
+      $typeIdSQL = " AND (".implode(" OR ", $typeIdSQL_d).")";
     }
     
-    $order = " ORDER BY tbl_listing.listing_order ASC";
+    $order = " ORDER BY {$this->TBL}.listing_order ASC";
     if(! empty($this->CONFIG_OBJ->orderby)){
       $order = " ORDER BY " . $this->CONFIG_OBJ->orderby;
     }
@@ -504,10 +588,10 @@ class ListClass {
     $params = array(":published"=>$_PUBLISHED);
     if($this->CONFIG_OBJ->attributes()->ignoreparent == 1 && $_cid == 0){
     }else{
-      $catsql = " AND tbl_listing.listing_parent_id = :cid ";
+      $catsql = " AND {$this->TBL}.listing_parent_id = :cid ";
       $params[":cid"] =$_cid;
     }
-    $sql = "SELECT * FROM tbl_listing {$extends} WHERE tbl_listing.listing_deleted IS NULL {$catsql}{$typeIdSQL} AND tbl_listing.listing_published = :published" .$where. $filter . $order. $limit;
+    $sql = "SELECT * FROM {$this->TBL} {$extends} WHERE {$this->TBL}.listing_deleted IS NULL {$catsql}{$typeIdSQL} AND {$this->TBL}.listing_published = :published" .$where. $filter . $order. $limit;
 
     $params = array_merge($params,$filter_params);
     if(!empty($typeIdSQL)){

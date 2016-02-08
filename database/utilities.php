@@ -1317,11 +1317,11 @@ function gaFireHit( $data = null ) {
 // Handle the parsing of the _ga cookie or setting it to a unique identifier
 function gaParseCookie() {
   if (isset($_COOKIE['_ga'])) {
-    list($version,$domainDepth, $cid1, $cid2) = split('[\.]', $_COOKIE["_ga"],4);
+    list($version,$domainDepth, $cid1, $cid2) = explode('.', $_COOKIE["_ga"],4);
     $contents = array('version' => $version, 'domainDepth' => $domainDepth, 'cid' => $cid1.'.'.$cid2);
     $cid = $contents['cid'];
   }elseif (!empty($_POST["_ga"])) {
-    list($version,$domainDepth, $cid1, $cid2) = split('[\.]', $_POST["_ga"],4);
+    list($version,$domainDepth, $cid1, $cid2) = explode('.', $_POST["_ga"],4);
     $contents = array('version' => $version, 'domainDepth' => $domainDepth, 'cid' => $cid1.'.'.$cid2);
     $cid = $contents['cid'];
   }

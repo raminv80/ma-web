@@ -95,3 +95,9 @@ function convert_to_mysql_date_format(str){
 function setDateValue(id,date){
 	$("#"+id).val( convert_to_mysql_date_format(date) );
 }
+
+function scrolltodiv(ID){
+	$('html,body').animate({
+		scrollTop : $(ID).offset().top
+	});
+}

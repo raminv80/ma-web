@@ -3,14 +3,14 @@ set_include_path($_SERVER['DOCUMENT_ROOT']);
 include 'admin/includes/functions/admin-functions.php';
 global $DBobject;
 
-$error = "Permission Denied!";
+$error = "Session has expired or token is missing. Please refresh.";
 if(checkToken('admin', $_POST["formToken"])){
  
   $sql = "SELECT COUNT(id) AS cnt FROM login_blocked WHERE created > DATE_SUB(NOW(), INTERVAL 1 DAY) AND deleted IS NULL AND ip = :ip";
   $res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
   if($res[0]['cnt'] == 0){
   	if($result = AdminLogIn($_POST['email'],$_POST['password'])){	
-  	   $error = '';
+  	   $error = ($result===true)?'':$result;
   	   $redirect = empty($_POST['redirect'])?'/admin/home':$_POST['redirect'];
   	   $_SESSION['redirect'] = '';
   	}else{
@@ -28,10 +28,9 @@ if(checkToken('admin', $_POST["formToken"])){
   }else{
     $result=false; $error = "You have been blocked for to many incorrect attempts.";
   }
-  
-  echo json_encode(array(
-  		'error'=>$error,
-  		'success'=>$result,
-		'redirect'=>$redirect
-  ));
 }
+echo json_encode(array(
+		'error'=>$error,
+		'success'=>$result,
+		'redirect'=>$redirect
+));

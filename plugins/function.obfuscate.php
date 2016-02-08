@@ -15,15 +15,24 @@ function smarty_function_obfuscate($params, &$smarty)
 		return '';
 	}
 	
+	$visible_content = strrev($params['email']);
+	$style = " style='unicode-bidi:bidi-override;direction:rtl;-moz-user-select: none;-webkit-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;'";
+	$attr = empty($params['attr'])?"":" {$params['attr']}";
+	
+	if(!empty($params['visible_content'])){
+		$visible_content = $params['visible_content'];
+		$style = '';
+	}
+	
 	try {
 			$parts = explode('@',$params['email']);
 			$user = $parts[0];
 			$domain = $parts[1];
-			$output = "<a href='javascript:void(0)' onclick='this.href=\"mailto:\" + \"{$user}\" + \"&#x40;\" + \"{$domain}\"' style='unicode-bidi:bidi-override;direction:rtl;-moz-user-select: none;-webkit-user-select: none;-ms-user-select: none;-o-user-select: none;user-select: none;'>".strrev($params['email'])."</a>";
+			$output = "<a href='javascript:void(0)' onclick='this.href=\"mailto:\" + \"{$user}\" + \"&#x40;\" + \"{$domain}\"'{$attr}{$style}>{$visible_content}</a>";
 	}catch(Exception $e) {
 		return '';
 	}
     
-    return $output;
+  return $output;
 }
 ?>

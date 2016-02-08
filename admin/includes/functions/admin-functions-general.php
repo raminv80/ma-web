@@ -21,6 +21,19 @@ function AdminLogIn($email,$password){
 		$_SESSION['user']['admin']["level"]=$res[0]["admin_level"];
 		saveInLog('Login', 'tbl_admin', $res[0]["admin_id"]);
     $_SESSION['user']['admin']["strong_password"]=$isValidPassword;
+    
+    /* $sql = "SELECT access_store_id FROM tbl_access WHERE access_admin_id = :id AND access_deleted IS NULL";
+    $params = array( "id" => $res[0]["admin_id"]);
+    if($res2 = $DBobject->executeSQL($sql , $params)){
+    	$tempArr = array();
+    	foreach ($res2 as $r2){
+    		$tempArr[] = $r2['access_store_id'];
+    	}
+    }
+    if($res[0]["admin_level"] > 1 && empty($tempArr)){
+     	return "You do not appear to have correct privileges to access the admin area";
+    }
+    if($res[0]["admin_level"] > 1){ $_SESSION['user']['admin']['locations'] = $tempArr; } */
     return true;
   } else {
     $temp_str2 = getOldPass($email,$password);
@@ -35,7 +48,20 @@ function AdminLogIn($email,$password){
       $usql = "UPDATE tbl_admin SET admin_password = :password, admin_encryption = :encrypt WHERE admin_id = :uid";
       $params = array("uid" => $res[0]["admin_id"] ,"password" => $temp_str,"encrypt" => $encrypt);
       $DBobject->wrappedSql($usql , $params);
-       
+      
+      /* $sql = "SELECT access_store_id FROM tbl_access WHERE access_admin_id = :id AND access_deleted IS NULL";
+      $params = array( "id" => $res[0]["admin_id"]);
+      if($res2 = $DBobject->executeSQL($sql , $params)){
+      	$tempArr = array();
+      	foreach ($res2 as $r2){
+      		$tempArr[] = $r2['access_store_id'];
+      	}
+      }
+      if($res[0]["admin_level"] > 1 && empty($tempArr)){
+      	return "You do not appear to have correct privileges to access the admin area";
+      }
+      if($res[0]["admin_level"] > 1){ $_SESSION['user']['admin']['locations'] = $tempArr; } */
+      
       $_SESSION['user']['admin']["id"]=$res[0]["admin_id"];
 		  $_SESSION['user']['admin']["name"]=$res[0]["admin_name"];
 		  $_SESSION['user']['admin']["surname"]=$res[0]["admin_surname"];
