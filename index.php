@@ -81,8 +81,6 @@ while(true){
   if($_request['arg1'] == '404'){ $template = loadPage($CONFIG->error404); break 1; }
   /******* Goes to 403 *******/
   if($_request['arg1'] == '403'){ $template = loadPage($CONFIG->error403); break 1; }
-  /******* Goes to 503 *******/
-  if($_request['arg1'] == '503'){ $template = loadPage($CONFIG->error503); break 1; }
   
   /******* Goes to home *******/
   if($_request['arg1'] == ''){
@@ -160,6 +158,12 @@ while(true){
           break 2;
         }
       }
+      
+      /******* Goes to 404 *******/
+      if($CONFIG->error404->pageID == $id){ $template = loadPage($CONFIG->error404); break 1; }
+      /******* Goes to 403 *******/
+      if($CONFIG->error403->pageID == $id){ $template = loadPage($CONFIG->error403); break 1; }
+      
       /**
        * **** load dynamic page *****
        */
