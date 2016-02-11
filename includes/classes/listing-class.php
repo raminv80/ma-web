@@ -119,16 +119,18 @@ class ListClass {
       return null;
     }
 
+    $where = "";
+    if(!empty($this->CONFIG_OBJ->table->where)){
+      $where = " AND " . $this->CONFIG_OBJ->table->where;
+    }
     
     $extends = "";
     foreach($this->CONFIG_OBJ->table->extends as $a){
       $pre = str_replace("tbl_","",$a->table);
       $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}";
+      $where.=" AND {$pre}_deleted IS NULL";
     }
-    $where = "";
-    if(!empty($this->CONFIG_OBJ->table->where)){
-      $where = " AND " . $this->CONFIG_OBJ->table->where;
-    }
+
     $sql = "SELECT * FROM {$this->TBL} {$extends} WHERE {$this->TBL}.listing_object_id = :id AND {$this->TBL}.listing_deleted IS NULL {$where} ORDER BY {$this->TBL}.listing_published = :published DESC ";
     $params = array(
         ":id"=>$this->ID,
@@ -584,6 +586,7 @@ class ListClass {
     foreach($this->CONFIG_OBJ->table->extends as $a){
       $pre = str_replace("tbl_","",$a->table);
       $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}"; // AND article_deleted IS NULL";
+      $where.=" AND {$pre}_deleted IS NULL";
     }
     $params = array(":published"=>$_PUBLISHED);
     if($this->CONFIG_OBJ->attributes()->ignoreparent == 1 && $_cid == 0){
@@ -667,6 +670,7 @@ class ListClass {
     foreach($a->extends as $e){
     	$pre = str_replace("tbl_","",$e->table);
     	$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
+    	$where.= " AND {$pre}_deleted IS NULL";
     }
     $t_data = array();
     $pre = str_replace("tbl_","",$a->table);
