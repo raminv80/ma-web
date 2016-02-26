@@ -23,7 +23,7 @@ class PaymentNAB extends Bank {
 			$ch = curl_init();
 			curl_setopt_array($ch, array(
 			CURLOPT_URL => $this->url_to_use,
-			CURLOPT_HEADER => true,
+			CURLOPT_HEADER => false,
 			CURLOPT_POST => true,
 			CURLOPT_POSTFIELDS => trim($this->xml_request),
 			CURLOPT_RETURNTRANSFER => true,
@@ -84,8 +84,7 @@ class PaymentNAB extends Bank {
 	function ProcessXMLResponse(){
 	
 		// Encode xml as json and decode from json to php array
-		$content = preg_split("/Connection: close/", $this->xml_response);
-		$xml = simplexml_load_string(trim(end($content))); 
+		$xml = simplexml_load_string($this->xml_response); 
 		$json = json_encode($xml);
 		$xml_response_array = json_decode($json, true); 
 	

@@ -33,6 +33,13 @@ foreach($res_level as $ck => $f){
   }
 }
 $ct = "application/octet-stream";
+try {
+	$finfo = new finfo(FILEINFO_MIME);
+	$type  = $finfo->file($source_file);
+	if(!empty($type)){
+		$ct = $type;
+	}
+} catch (Exception $e) {}
 
 //HAS PERMISSIONS, RETURN FILE
 header($_SERVER["SERVER_PROTOCOL"] . " 200 OK");
