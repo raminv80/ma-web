@@ -1,33 +1,8 @@
 <?php
-// Fatal Error Handler
-// Registering shutdown function
-register_shutdown_function("fatal_handler");
-function fatal_handler() {
-  // Getting last error
-	global $CONFIG;
-  $errno = error_get_last();
-  if($errno['type'] === E_ERROR){
-    $body = "<table><thead bgcolor='#c8c8c8'><th>Item</th><th>Description</th></thead><tbody>";
-    $body .= "<tr valign='top'><td><b>Error</b></td><td><pre>{$errno['message']}</pre></td></tr>";
-    $body .= "<tr valign='top'><td><b>Errno</b></td><td><pre>{$errno['type']}</pre></td></tr>";
-    $body .= "<tr valign='top'><td><b>File</b></td><td>{$errno['file']}</td></tr>";
-    $body .= "<tr valign='top'><td><b>Line</b></td><td>{$errno['line']}</td></tr>";
-    $body .= '</tbody></table>';
-    $body .= '<br />$_POST<br/>';
-    $body .= print_r($_POST,true);
-    $body .= '<br />$_SERVER<br/>';
-    $body .= print_r($_SERVER,true);
-    if($CONFIG->attributes()->staging == 'true'){
-    	die($body);
-    }
-    $_SESSION['error'] = 'We had trouble saving your entry. Please review your entry and try again. If this continues please contact us.';
-    header('location: /503.html');
-    die('@ 503 Service Temporarily Unavailable');
-  }
-}
-
 set_include_path($_SERVER['DOCUMENT_ROOT']);  //SET THE INCLUDE PATH TO DOCUMENT ROOT SO THAT ALL INCLUDES ARE DONE RELATIVE TO WEB FOLDER
 ini_set('display_errors',0); ini_set('error_reporting',0 );error_reporting(0);
+
+include_once 'database/fatal_handler.php';
 
 $_CONF_FILE = "/config/config.xml.php";
 $GLOBALS['CONFIG'] = LOADCONFIG($_CONF_FILE);

@@ -142,7 +142,7 @@
         selector: "textarea.tinymce",
         width: 500,
  	      plugins: [
-         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+         "advlist autolink link image lists charmap print preview hr anchor pagebreak linebreak spellchecker",
          "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
          "autosave save table contextmenu directionality template paste textcolor"
         ],

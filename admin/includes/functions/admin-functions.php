@@ -3,6 +3,9 @@ set_include_path($_SERVER['DOCUMENT_ROOT']);
 ini_set('display_errors',0);
 ini_set('session.gc_maxlifetime', 7200);
 error_reporting(0);
+
+include_once 'database/fatal_handler.php';
+
 if($GLOBALS['CONFIG']=simplexml_load_file($_SERVER['DOCUMENT_ROOT']."/admin/config/config.xml.php")){
 	$debug = (string)$CONFIG->attributes()->debug;
 	if($debug	==	'true'){
