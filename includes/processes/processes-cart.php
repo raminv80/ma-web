@@ -414,14 +414,14 @@ if( $referer['host'] == $GLOBALS['HTTP_HOST'] ){
     		    if($isGuest){
 	    		    unset ( $_SESSION['user']['public'] );
 	    		    //session_regenerate_id();
+    		   		unset ( $_SESSION['address'] );
+    		   		unset ( $_SESSION['comments'] );
+    		    
     		    }
     		    
     		    // OPEN NEW CART
     		    $cart_obj->CreateCart($_SESSION['user']['public']['id']);
     		    	
-    		    unset ( $_SESSION['address'] );
-    		    unset ( $_SESSION['comments'] );
-    		    
     		    // REDIRECT TO THANK YOU PAGE
     		    header('Location: /thank-you-for-buying');
     		    exit;
