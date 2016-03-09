@@ -181,9 +181,9 @@
 				onkeyup: false,
 				onclick: false
 			});
-			
+
+			var attributes = [];
 			{if $attribute}
-				var attributes = [];
 				{foreach $attribute as $attr }
 					var {urlencode data=$attr.attribute_name} = getParameterByName('{urlencode data=$attr.attribute_name}');
 					attributes.push( getParameterByName('{urlencode data=$attr.attribute_name}') );

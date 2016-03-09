@@ -1,4 +1,3 @@
-
 <style>
 body {
 	font-family: calibri, Helvetica, sans-serif;
@@ -12,6 +11,7 @@ table {
 }
 
 table th,table td {
+	padding: 3px;
 	text-align: left;
 }
 
@@ -28,21 +28,22 @@ table td {
 <br>
 <table>
 	<tr>
-		<td>Hi {$user.gname}</td>
+		<td>Hi {$order.user_gname}</td>
 	</tr>
 	<tr>
-		<td>Thank you for buying with us. Your order will be processed by our team and you will receive another email once your package is shipped. Should you have any queries, please call contact us.<br>
+		<td><br>{$message}<br>
+		{if $displayTrackingMsg eq 1 && $order.payment_shipping_tracking}{$order.payment_shipping_tracking}<br>{/if}
 		<br>
 		</td>
 	</tr>
 </table>
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr bgcolor="#f3f3f3">
-		<th colspan="2" align="left">Invoice details</th>
+		<th colspan="2" align="left">Invoice Details</th>
 	</tr>
 	<tr>
 		<td width="50%">Order Number:</td>
-		<td>{$payment.payment_transaction_no}</td>
+		<td>{$order.payment_transaction_no}</td>
 	</tr>
 	<tr>
 		<td>Order Date:</td>
@@ -52,7 +53,7 @@ table td {
 <br />
 &nbsp;
 <br />
-<table cellpadding="0" cellspacing="0" border="0"  width="100%">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
 	<tr bgcolor="#f3f3f3">
 		<th colspan="2" align="left">Your shipping details</th>
 	</tr>
@@ -80,10 +81,10 @@ table td {
 		<td>Phone:</td>
 		<td>{$shipping.address_telephone}</td>
 	</tr>
-	{if $payment.payment_shipping_comments}
+	{if $order.payment_shipping_comments}
 	<tr>
 		<td>Shipping instructions:</td>
-		<td>{$payment.payment_shipping_comments}</td>
+		<td>{$order.payment_shipping_comments}</td>
 	</tr>
 	{/if}
 </table>
@@ -138,7 +139,6 @@ table td {
 					<small>/ {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</small>
 				{/foreach}
 			{/if}
-			<br>{$item.cartitem_product_uid}
 		</td>
 		<td width="10%">{$item.cartitem_quantity}</td>
 		<td width="20%">$ {$item.cartitem_product_price|number_format:2:".":","}</td>
@@ -148,22 +148,22 @@ table td {
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
-		<td><strong>Sub Total</strong></td>
-		<td style="text-align: right"><strong>$ {$payment.payment_subtotal|number_format:2:".":","}</strong></td>
+		<td><strong>Sub total</strong></td>
+		<td style="text-align: right"><strong>$ {$order.payment_subtotal|number_format:2:".":","}</strong></td>
 	</tr>
-	{if $payment.payment_discount neq '0.00'}
+	{if $order.payment_discount neq '0.00'}
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td><strong>Discount</strong></td>
-		<td style="text-align: right"><strong>$ -{$payment.payment_discount|number_format:2:".":","}</strong></td>
+		<td style="text-align: right"><strong>$ -{$order.payment_discount|number_format:2:".":","}</strong></td>
 	</tr>
 	{/if}
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td><strong>Shipping</strong></td>
-		<td style="text-align: right"><strong>{if $payment.payment_shipping_fee eq '0.00'}FREE{else}$ {$payment.payment_shipping_fee|number_format:2:".":","}{/if}</strong></td>
+		<td style="text-align: right"><strong>{if $order.payment_shipping_fee eq '0.00'}FREE{else}$ {$order.payment_shipping_fee|number_format:2:".":","}{/if}</strong></td>
 	</tr>
 	<tr valign="top">
 		<td colspan="4"><hr></td>
@@ -172,20 +172,20 @@ table td {
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>Total (excl. GST)</td>
-    {assign var='totalExclGST' value=$payment.payment_charged_amount - $payment.payment_gst}
+    {assign var='totalExclGST' value=$order.payment_charged_amount - $order.payment_gst}
     <td style="text-align: right">(${$totalExclGST|number_format:2:".":","})</td>
   </tr>
 	<tr valign="top">
     <td>{if $free}(*)GST free item.{/if}</td>
     <td>&nbsp;</td>
     <td>GST</td>
-    <td style="text-align: right">(${$payment.payment_gst|number_format:2:".":","})</td>
+    <td style="text-align: right">(${$order.payment_gst|number_format:2:".":","})</td>
   </tr>
 	<tr valign="top">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td><strong>TOTAL</strong></td>
-		<td style="text-align: right"><strong>$ {$payment.payment_charged_amount|number_format:2:".":","}</strong></td>
+		<td style="text-align: right"><strong>$ {$order.payment_charged_amount|number_format:2:".":","}</strong></td>
 	</tr>
 	<tr valign="top">
 		<td colspan="4"><hr></td>
@@ -194,6 +194,7 @@ table td {
 <br />
 &nbsp;
 <br />
+
 <hr>
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 	<tr>

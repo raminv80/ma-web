@@ -12,8 +12,8 @@ ini_set('display_errors',1);
 session_start();
 
 /* get all of the required data from the HTTP request */
-$jpg_quality   = 85; // the quality of any generated JPGs on a scale of 0 to 100
-$quality = 9; //0 - 9 (0= no compression, 9 = high compression)
+$jpg_quality   = (!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) > 0)?intval($_REQUEST['quality']*10):85; // the quality of any generated JPGs on a scale of 0 to 100
+$quality = (!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) > 0)?intval(ceil($_REQUEST['quality'])):9; //0 - 9 (0= no compression, 9 = high compression)
 $sharpen       = TRUE; // Shrinking images can blur details, perform a sharpen on re-scaled images?
 $browser_cache = 60*60*24*7; // How long the BROWSER cache should last (seconds, minutes, hours, days. 7days by default)
 $optim            = "optimised/";
@@ -43,11 +43,13 @@ if(!file_exists($source_file)){
   }
 }
 
-if((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0) || (!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)){
+if((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0) || (!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0) || (!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) > 0)){
   $requested_directory  = urlencode(dirname($requested_uri));
   $_f_arr = explode('.', $requested_file,2);
-  $requested_file = $_f_arr[0].((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").'.'.$_f_arr[1];
-  //$requested_file       = str_replace(".".$extension, ((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").".".$extension, $requested_file);
+  //$requested_file = $_f_arr[0].((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"").((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"").'.'.$_f_arr[1];
+  $requested_file = $_f_arr[0].((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?"w".intval($_REQUEST['width']):"")
+  .((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?"h".intval($_REQUEST['height']):"")
+  .((!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) > 0)?"q".intval($_REQUEST['quality']):"").'.'.$_f_arr[1];
   $optim_source_file      = $document_root.$optim.parse_url(urldecode($requested_directory)."/".($requested_file),PHP_URL_PATH);
 }
 

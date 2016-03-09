@@ -164,9 +164,9 @@
 			</div>
 		</div>	 -->		
 		<div class="row form-group">
-			<label class="col-sm-3 control-label" for="payment_shipping_tracking">Shipping Tracking</label>
+			<label class="col-sm-3 control-label" for="payment_shipping_tracking">Shipping tracking message</label>
 			<div class="col-sm-5">
-				<input class="form-control" value="{$fields.payment.0.payment_shipping_tracking}" name="field[2][tbl_payment][{$cnt}][payment_shipping_tracking]" id="payment_shipping_tracking">
+				<textarea class="form-control" name="field[2][tbl_payment][{$cnt}][payment_shipping_tracking]" id="payment_shipping_tracking" rows="4" maxlength="500">{$fields.payment.0.payment_shipping_tracking}</textarea>
 			</div>
 		</div>
 		<div class="row form-group">

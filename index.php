@@ -82,6 +82,13 @@ while(true){
   /******* Goes to 403 *******/
   if($_request['arg1'] == '403'){ $template = loadPage($CONFIG->error403); break 1; }
   
+
+  /******* Global process *******/
+  foreach($CONFIG->global_process as $sp){
+  	$file = (string)$sp->file;
+  	if(file_exists($file))	{ include ($file);}
+  }
+  
   /******* Goes to home *******/
   if($_request['arg1'] == ''){
     $template = loadPage($CONFIG->index_page); 

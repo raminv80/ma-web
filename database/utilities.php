@@ -1070,7 +1070,7 @@ function sendGAEvent($_tid,$_category,$_action,$_label="",$_value=0,$_cid=null){
       'dp' => $dp,
       'p' => $p
   );
-  gaFireHit($data);
+  return gaFireHit($data);
 }
 
 /**

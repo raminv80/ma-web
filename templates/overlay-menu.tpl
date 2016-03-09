@@ -67,23 +67,7 @@
 		<div class="row">
 			<div class="col-sm-12">
 			<ul id="overlay-nav">
-				<li class="top-nav page-nav">
-					<ul>
-						<li><span class="h3">Talk to us</span></li>
-						{foreach $menuitems as $item}
-						{if $item.menu_group eq 'talk'}<li class="menu-page"><a href="{$item.url}" target="_blank"><span>{$item.title}</span></a></li>{/if}
-					  {/foreach}
-					</ul>
-				</li>
-				<li class="top-nav page-nav">
-					<ul>
-						<li><span class="h3">About</span></li>
-            {foreach $menuitems as $item}
-						{if $item.menu_group eq 'about'}<li class="menu-page"><a href="{$item.url}" target="_blank"><span>{$item.title}</span></a></li>{/if}
-					  {/foreach}
-					</ul>
-				</li>
-				
+				{call name=render_list items=menuitems}
 			</ul>
 			</div>
 		</div>
