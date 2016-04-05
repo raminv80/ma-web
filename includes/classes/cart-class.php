@@ -1020,7 +1020,7 @@ class cart {
     
     $catArr =  array();
     $params = array(":id"=>$productId);
-    $sql = "SELECT product_listing_id FROM tbl_product WHERE product_id = :id";
+    $sql = "SELECT product_listing_id FROM tbl_product WHERE product_object_id = :id";
     if($res = $DBobject->wrappedSql($sql,$params)){
       $catArr = $this->getParentList($res[0]['product_listing_id'],$root);
     }
@@ -1104,11 +1104,12 @@ function ApplyDiscountCode($code, $cartId = null) {
                     		$discount = $res['discount_amount'];
                     	}
                     }
-				} else { // With filter or special code for a category/product
-                	$sql = "SELECT 	cartitem_product_id, cartitem_subtotal FROM tbl_cartitem
+				}else { // With filter or special code for a category/product
+                	$sql = "SELECT 	cartitem_product_id, cartitem_quantity, cartitem_subtotal FROM tbl_cartitem
                     		WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
 					if ( $cartItems = $DBobject->wrappedSql ( $sql, array ( ":id" => $cartId ) )) {
                     	$listingMatchSubtotal = 0;
+                    	$discount_amount_total = 0; //Added by Nijesh 1/04/2016 - to apply discount on item quantity
                         foreach ($cartItems as $item){
                         	if ($res['discount_listing_id']){
                         		// Special code for category only
@@ -1118,27 +1119,28 @@ function ApplyDiscountCode($code, $cartId = null) {
                                     	$discount += floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
                                     } else {
                                     	$listingMatchSubtotal += floatval($item['cartitem_subtotal']);
-									}
-								}
-							} elseif ($res['discount_product_id'] == $item['cartitem_product_id']){
-								// Special code for product only
-                            	if ($res['discount_amount_percentage']) {
-                                	$discount = floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
-								} else {
-									// Discount must not be higher than subtotal
-                                	if ($res['discount_amount'] > $item['cartitem_subtotal']){
-                                    	$discount = $item['cartitem_subtotal']; 
-									} else {
-                                    	$discount = $res['discount_amount'];
-                                    }
-								}
-							}
-						}
+                                    	$discount_amount_total += floatval($item['cartitem_quantity']*$res['discount_amount']);
+          									        }
+          								        }
+            							} elseif ($res['discount_product_id'] == $item['cartitem_product_id']){
+  								          // Special code for product only
+                              	if ($res['discount_amount_percentage']) {
+                                  	$discount = floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
+              								  } else {
+              									// Discount must not be higher than subtotal
+                                              	if (($res['discount_amount']*$item['cartitem_quantity']) > $item['cartitem_subtotal']){
+                                                  	$discount = $item['cartitem_subtotal']; 
+              									                } else {
+                                                  	$discount = $res['discount_amount']*$item['cartitem_quantity'];
+                                                }
+              								}
+            							}
+          						}
 						if ($listingMatchSubtotal > 0) {
-							if ($res['discount_amount'] > $listingMatchSubtotal){
+							if ($discount_amount_total > $listingMatchSubtotal){
                             	$discount = $listingMatchSubtotal; 
 							} else {
-                            	$discount = $res['discount_amount'];
+                            	$discount = $discount_amount_total;
 							}
 						}
 						if(empty($discount)){

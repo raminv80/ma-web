@@ -125,7 +125,7 @@
 						<div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_order">Order(#position)</label>
               <div class="col-sm-5 ">
-                <input class="form-control number" type="text" value="{$fields.product_order}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
+                <input class="form-control number" type="text" value="{if $fields.product_order}{$fields.product_order}{else}999{/if}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
               </div>
             </div>
             <div class="row form-group">
@@ -168,13 +168,13 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_price">Price ($)</label>
 							<div class="col-sm-5 ">
-								<input class="form-control double" type="text" value="{$fields.product_price}" name="field[1][tbl_product][{$cnt}][product_price]" id="id_product_price">
+								<input class="form-control double" type="text" value="{if $fields.product_price}{$fields.product_price}{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_price]" id="id_product_price">
 							</div>
 						</div>
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="id_product_specialprice">Special Price ($)</label>
 							<div class="col-sm-5 ">
-								<input class="form-control double" type="text" value="{$fields.product_specialprice}" name="field[1][tbl_product][{$cnt}][product_specialprice]" id="id_product_specialprice">
+								<input class="form-control double" type="text" value="{if $fields.product_specialprice}{$fields.product_specialprice}{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_specialprice]" id="id_product_specialprice">
 							</div>
 						</div>
 						<div class="row form-group">
@@ -249,10 +249,10 @@
                 <input type="hidden" value="" name="field[20][tbl_productqty][{$count}][productqty_id]" id="productqty_id" class="key"/>
                 <input type="hidden" value="productqty_id" name="field[{20}][tbl_productqty][{$count}][id]" id="id" />
                 <input type="hidden" value="{$fields.product_id}" name="field[20][tbl_productqty][{$count}][productqty_product_id]" id="productqty_product_id" class="key"/>
-                <input class="form-control double" type="text" value="" name="field[20][tbl_productqty][{$count}][productqty_qty]" id="id_productqty_qty">
+                <input class="form-control double" type="text" value="0" name="field[20][tbl_productqty][{$count}][productqty_qty]" id="id_productqty_qty">
               </div>
               <div class="col-sm-4">
-                <input class="form-control double" type="text" value="" name="field[20][tbl_productqty][{$count}][productqty_modifier]" id="id_productqty_modifier">
+                <input class="form-control double" type="text" value="0" name="field[20][tbl_productqty][{$count}][productqty_modifier]" id="id_productqty_modifier">
               </div>
             </div>
 						{/while}

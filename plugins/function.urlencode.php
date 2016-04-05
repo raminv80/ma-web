@@ -15,8 +15,8 @@ function smarty_function_urlencode($params, &$smarty)
 	}
 	try {
 		$output = str_replace(' ','-',$params['data']);
-		$output = preg_replace("/[\s\W]+/", "-", strtolower($output));
-		$output = trim($output,"-");
+		$output = preg_replace("/[\s\W]+/", "_", strtolower($output));
+		$output = trim($output,"_");
 	}
 	catch(Exception $e) {
 		return '';

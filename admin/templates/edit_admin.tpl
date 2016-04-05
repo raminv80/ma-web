@@ -167,7 +167,7 @@ function createPassword() {
 			type: "POST",
 		    url: "/admin/includes/processes/createPass.php",
 			cache: false,
-			data: "username="+$('#admin_email').val()+"&password="+$('#password').val(),
+			data: "username="+$('#admin_email').val()+"&password="+encodeURIComponent($('#password').val()),
 			dataType: "json",
 		    success: function(res, textStatus) {
 		    	try{
