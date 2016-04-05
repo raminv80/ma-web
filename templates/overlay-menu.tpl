@@ -67,7 +67,7 @@
 		<div class="row">
 			<div class="col-sm-12">
 			<ul id="overlay-nav">
-				{call name=render_list items=menuitems}
+				{*  call name=render_list items=menuitems *}
 			</ul>
 			</div>
 		</div>

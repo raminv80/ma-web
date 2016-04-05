@@ -42,7 +42,6 @@
 				<li><a href="#images" data-toggle="tab">Images</a></li>
 				<li><a href="#share" data-toggle="tab">Social Sharing</a></li>
 				<li><a href="#files" data-toggle="tab">Files</a></li>
-				<li><a href="#testimonials" data-toggle="tab">Testimonials</a></li>
 				<li><a href="#tags" data-toggle="tab">Tags</a></li>
 				<li><a href="#log" data-toggle="tab">Log</a></li>
 			</ul>
@@ -215,14 +214,7 @@
 					</div>
 					<input type="hidden" value="{$filesno}" id="filesno">
 				</div>
-				<!--===+++===+++===+++===+++===+++ TESTIMONIALS TAB +++===+++===+++===+++===+++====-->
-				<div class="tab-pane" id="testimonials">
-					<div class="row form" id="testimonials-wrapper">{assign var='testimonialsno' value=0} {assign var='gTableName' value='listing'} {foreach $fields.testimonials as $testimonials} {assign var='testimonialsno' value=$testimonialsno+1} {include file='testimonial.tpl'} {/foreach}</div>
-					<div class="row btn-inform">
-						<a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.testimonials').slideUp();newTestimonial();"> Add New Testimonial</a>
-					</div>
-					<input type="hidden" value="{$testimonialsno}" id="testimonialsno">
-				</div>
+
 				<!--===+++===+++===+++===+++===+++ TAGS TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="tags">
 					<div class="form">
@@ -507,54 +499,6 @@ function deleteFile(ID) {
 		return false;
 	}
 }
-
-//START TESTIMONIALS
-function newTestimonial() {
-	$('body').css('cursor', 'wait');
-	var no = $('#testimonialsno').val();
-	no++;
-	$('#testimonialsno').val(no);
-	$.ajax({
-		type : "POST",
-		url : "/admin/includes/processes/load-template.php",
-		cache : false,
-		data : "template=testimonial.tpl&testimonialsno=" + no + "&gTableName=listing",
-		dataType : "html",
-		success : function(data, textStatus) {
-			try {
-				$('#testimonials-wrapper').append(data);
-				$('body').css('cursor', 'default');
-				scrolltodiv('#testimonial_wrapper' + no);
-			} catch (err) {
-				$('body').css('cursor', 'default');
-			}
-		}
-	});
-}
-
-function toggleTestimonial(ID) {
-	if ($('#testimonial' + ID).is(':visible')) {
-		$('.testimonials').slideUp();
-	} else {
-		$('.testimonials').slideUp();
-		$('#testimonial' + ID).slideDown();
-	}
-}
-
-function deleteTestimonial(ID) {
-	if (ConfirmDelete()) {
-		var count = $('#' + ID).attr('rel');
-		var today = mysql_now();
-
-		html = '<input type="hidden" value="'+today+'" name="field[10][tbl_testimonial]['+count+'][testimonial_deleted]" />';
-		$('#' + ID).append(html);
-		$('#' + ID).css('display', 'none');
-		$('#' + ID).removeClass('testimonials');
-	} else {
-		return false;
-	}
-}
-//END TESTIMONIALS
 
 function newTag() {
 	if ( $('#new_tag').val() != '' ) { 

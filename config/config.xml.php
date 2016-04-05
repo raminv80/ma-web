@@ -20,10 +20,10 @@
 		<logo>logo.png</logo>
 	</company> 
 	<database> 
-		<host>n3-mysql5-3.ilisys.com.au</host> 
+		<host>n7-mysql5-3.ilisys.com.au</host> 
 		<user>themso</user> 
 		<password>c@^^3L5tRu7s*n9ub11c</password> 
-		<dbname>themso10_db</dbname> 
+		<dbname>themso5_db</dbname> 
 	</database> 
 	<page_strut>
 		<type>1</type>
@@ -45,11 +45,6 @@
 	<index_page>
 		<template>home.tpl</template>
 		<pageID>1</pageID>
-		<additional>
-		  <tag>listing_page</tag>
-		  <name>insurance</name>
-		  <data>insurance</data>
-		</additional>
 	</index_page>
 	<error404>
 		<header>HTTP/1.0 404 Not Found</header>
@@ -75,38 +70,6 @@
 		<template>contact-us.tpl</template>
 		<pageID>6</pageID>
 	</static_page>
-
-	<listing_page name="insurance" ignoreparent="1">
-	  <url>insurance</url>
-		<type>4</type> 
-		<file>ListClass</file>
-		<orderby>listing_order ASC</orderby>
-		<table>	
-			<name>tbl_listing</name>
-			<field>listing_url</field>			
-			<associated listing="false">
-				<name>gallery</name>
-				<table>tbl_gallery</table>
-				<linkfield>listing_id</linkfield>
-				<field>gallery_listing_id</field>
-			</associated>
-			<associated listing="true">
-				<name>tags</name>
-				<table>tbl_tag</table>
-				<linkfield>listing_id</linkfield>
-				<field>tag_object_id</field>
-			</associated>
-			<associated listing="false">
-				<name>files</name>
-				<table>tbl_files</table>
-				<linkfield>listing_id</linkfield>
-				<field>files_listing_id</field>
-			</associated>
-			<template>insurance-list.tpl</template> 
-		</table>
-		<template>mediacentre-list.tpl</template>
-		<loadmoretemplate>mediacentre-structure.tpl</loadmoretemplate>  
-	</listing_page>
 	
 	<process>
 		<url>process/contact-us</url>
