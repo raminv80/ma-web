@@ -77,7 +77,7 @@
 <body>
   {include file='overlay-menu.tpl'}
 
-	{block name=menu}{block}
+	{block name=menu}{/block}
 
 	{block name=body}{/block}
 	{include file='footer.tpl'}
