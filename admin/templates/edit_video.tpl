@@ -23,7 +23,7 @@
 					<input type="hidden" value="{if $fields.listing_object_id}{$fields.listing_object_id}{else}{$objID}{/if}" name="field[1][tbl_listing][{$cnt}][listing_object_id]" id="listing_object_id"> 
 					<input type="hidden" value="{if $fields.listing_created}{$fields.listing_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_listing][{$cnt}][listing_created]" id="listing_created">
 					<input type="hidden" value="{if $typeID}{$typeID}{else}1{/if}" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
-					<input type="hidden" value="{$fields.listing_published}" name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published">
+					<input type="hidden" value="{if $fields.listing_published}{$fields.listing_published}{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published">
 					<input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" class="value">
 					<input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" class="value">
 					<input type="hidden" value="{$rootParentID}" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">

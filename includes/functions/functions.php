@@ -150,8 +150,7 @@ function INITSMARTY($CONFIG){
   ); // plugin directories
   $SMARTY->cache_dir = $_SERVER['DOCUMENT_ROOT'] . "/" . $CONFIG->smartytemplate_config->cache; // name of directory for cache
   $debug = (string)$CONFIG->attributes()->debug;
-  $staging = (string)$CONFIG->attributes()->staging;
-  if($debug == 'true' || $staging == 'true'){
+	if($debug == 'true'){
     $SMARTY->debugging = true;
     $SMARTY->force_compile = true;
     $SMARTY->caching = false;
@@ -159,6 +158,12 @@ function INITSMARTY($CONFIG){
     $SMARTY->debugging = false;
     $SMARTY->force_compile = false;
     $SMARTY->caching = false;
+  }
+  $staging = (string)$CONFIG->attributes()->staging;
+  if($staging == 'true'){
+    $SMARTY->force_compile = true;
+  }else{
+    $SMARTY->force_compile = false;
   }
   return $SMARTY;
 }

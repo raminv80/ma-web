@@ -19,7 +19,7 @@
 
 					<input type="hidden" value="listing_id" name="primary_id" id="primary_id" /> <input type="hidden" value="listing_id" name="field[1][tbl_listing][{$cnt}][id]" id="id" /> <input type="hidden" value="{$fields.listing_id}" name="field[1][tbl_listing][{$cnt}][listing_id]" id="listing_id"
 						class="key"> <input type="hidden" value="{if $fields.listing_object_id}{$fields.listing_object_id}{else}{$objID}{/if}" name="field[1][tbl_listing][{$cnt}][listing_object_id]" id="listing_object_id"> <input type="hidden" value="{$typeID}"
-						name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id"> <input type="hidden" value="{$rootParentID}" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="listing_parent_id"> <input type="hidden" value="{$fields.listing_published}"
+						name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id"> <input type="hidden" value="{$rootParentID}" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="listing_parent_id"> <input type="hidden" value="{if $fields.listing_published}{$fields.listing_published}{else}0{/if}"
 						name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published"> <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_flag1]" id="listing_flag1"> <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_flag2]"
 						id="listing_flag2"> <input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				</div>

@@ -284,7 +284,7 @@ class cart {
     );
     
     $sql = "SELECT cartitem_id, cartitem_quantity FROM tbl_cartitem
-				WHERE cartitem_cart_id = :cid AND cartitem_product_id = :pid AND cartitem_deleted is null AND cartitem_cart_id <> '0'";
+				WHERE cartitem_cart_id = :cid AND cartitem_product_id = :pid AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
     
     if($res = $DBobject->wrappedSql($sql,$params)){
       foreach($res as $item){
@@ -363,7 +363,7 @@ class cart {
     $cart_arr = array();
     
     $sql = "SELECT * FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id
-    			WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND product_published = '1' AND product_deleted IS NULL";
+    			WHERE cartitem_type = 0 AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id AND product_published = '1' AND product_deleted IS NULL";
     
     $res = $DBobject->wrappedSql($sql,array(
         ":id"=>$cartId
@@ -653,6 +653,7 @@ class cart {
 									cartitem_cart_id,
 									cartitem_product_id,
 									cartitem_listing_id,
+      						cartitem_type,
 									cartitem_product_name,
 									cartitem_product_price,
 									cartitem_quantity,
@@ -666,6 +667,7 @@ class cart {
 									:cid,
 									:product_id,
       						:listing_id,
+      						0,
 									:product_name,
 									:product_price,
 									:qty,
@@ -944,7 +946,7 @@ class cart {
     
     $message = array();
     
-    $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted is null AND cartitem_cart_id = :id";
+    $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_type = 0 AND cartitem_cart_id = :id";
     if($res = $DBobject->wrappedSql($sql,array(
         ":id"=>$this->cart_id
     ))){
@@ -1104,7 +1106,7 @@ function ApplyDiscountCode($code, $cartId = null) {
                     		$discount = $res['discount_amount'];
                     	}
                     }
-				}else { // With filter or special code for a category/product
+				} else { // With filter or special code for a category/product
                 	$sql = "SELECT 	cartitem_product_id, cartitem_quantity, cartitem_subtotal FROM tbl_cartitem
                     		WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
 					if ( $cartItems = $DBobject->wrappedSql ( $sql, array ( ":id" => $cartId ) )) {
@@ -1336,7 +1338,7 @@ function ApplyDiscountCode($code, $cartId = null) {
   		}
   		
   		$result = array(
-  				'id' => $res[0]['product_object_id'],
+  				'id' => $res[0]['cartitem_product_id'],
   				'name' => $res[0]['cartitem_product_name'],
   				'category' => $this->getFullCategoryName($res[0]['cartitem_listing_id']),
   				'brand' => $res[0]['product_brand'],
@@ -1424,7 +1426,7 @@ function ApplyDiscountCode($code, $cartId = null) {
   		$cartId = $this->cart_id;
   	}
   	$result = 0;
-  	$sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted is null AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id";
+  	$sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id";
   	$params = array(":id"=>$cartId);
   	if($res = $DBobject->wrappedSql($sql, $params)){
   		foreach($res as $item){
