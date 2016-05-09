@@ -61,7 +61,8 @@ if (jQuery.validator) {
 
 
 $('.modifier').change(function() {
-	calculatePrice();
+	/*calculatePrice();*/
+	calculateAllPrices();
 });
 
 $('#promo').bind('keyup', function(event) {
@@ -94,6 +95,26 @@ function calculatePrice(){
 	$('#price').val(price.formatMoney(2, '.', ',')); 
 }
 
+function calculateAllPrices(){
+	$('.product-form-class').each(function(){
+		var ID = $(this).attr('data-product-id');
+		var price = parseFloat($('#cal-price-'+ID).attr('value'));
+		var oldprice = parseFloat($('#cal-oldprice-'+ID).attr('value'));
+		$(this).find('.modifier').each(function(){
+				price = price + parseFloat($('option:selected', this).attr('price'));
+				oldprice = oldprice + parseFloat($('option:selected', this).attr('oldprice'));
+			});
+		$('#cal-price-'+ID).html(price.formatMoney(0, '.', ',')); 
+		if(price == oldprice){
+			$('#cal-oldprice-'+ID).closest('div').hide();
+		}else{
+			$('#cal-oldprice-'+ID).closest('div').show();
+			$('#cal-oldprice-'+ID).html(oldprice.formatMoney(0, '.', ',')); 
+		}
+		$('#price-'+ID).val(price.formatMoney(0, '.', ',')); 
+	});
+}
+
 
 function userLogin(form){
 	$('body').css('cursor','wait');
@@ -103,15 +124,14 @@ function userLogin(form){
 	    url: "/process/user",
 		cache: false,
 		data: datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
-			 	if (obj.error) {
+	    		if (obj.url) {
+			 		window.location.href = obj.url;
+	    		} else if (obj.error) { 
 			 		$('#'+form).find('.error-alert').find('strong').html(obj.error);
 			 		$('#'+form).find('.error-alert').fadeIn('slow');
-			 	} else {
-			 		window.location.href = obj.url;
 			 	}
 			 	
 			}catch(err){
@@ -119,9 +139,11 @@ function userLogin(form){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#'+form).find('.error-alert').find('strong').html('Undefined error');
+	 		$('#'+form).find('.error-alert').fadeIn('slow');
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 }
@@ -134,10 +156,9 @@ function resetPass(form){
 	    url: "/process/user",
 		cache: false,
 		data: datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 			 	if (obj.error) {
 			 		$('#'+form).find('.success-alert').hide();
 			 		$('#'+form).find('.error-alert').find('strong').html(obj.error);
@@ -155,9 +176,11 @@ function resetPass(form){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#'+form).find('.error-alert').find('strong').html('Undefined error');
+	 		$('#'+form).find('.error-alert').fadeIn('slow');
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 }
@@ -171,10 +194,9 @@ function addCart(form){
 	    url: "/process/cart",
 		cache: false,
 		data: datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 	    		if (obj.url && $(window).width() < 760){
 	    			window.location.href = obj.url;
 	    		}
@@ -209,9 +231,9 @@ function addCart(form){
 			$('body').css('cursor','default'); 
 			$('.btn-primary').removeClass('disabled');
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
 			$('.btn-primary').removeClass('disabled');
       	}
 	});
@@ -225,10 +247,9 @@ function updateCart(){
 	    url: "/process/cart",
 		cache: false,
 		data: 'action=updateCart&' + datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 	    		var priceunits = obj.priceunits;
 	    		var pricemodifier = obj.pricemodifier;
 	    		var subtotals = obj.subtotals;
@@ -241,7 +262,7 @@ function updateCart(){
 			 			if(value === "0%"){
 				 			$('#qty-discount-'+id).html('');
 			 			}else{
-				 			$('#qty-discount-'+id).html('(-'+value+')');
+			 				if(value) $('#qty-discount-'+id).html('(-'+value+')');
 			 			}
 			 		});
 			 		$.each(priceunits, function(id, value){
@@ -258,7 +279,12 @@ function updateCart(){
 			 				$('#subtotal').attr('data-value', amount);
 			 				$('#subtotal').html('$'+amount.formatMoney(2, '.', ','));
 			 			}else if(id == 'discount'){
-			 				$('#'+id).html('$-'+amount.formatMoney(2, '.', ','));
+			 				if(amount>0){
+			 					$('#'+id).html('$-'+amount.formatMoney(2, '.', ','));
+			 				}else{
+			 					$('#'+id).html('$'+amount.formatMoney(2, '.', ','));
+			 				}
+			 				
 			 			}
 			 		});
 			 		//renderShippingMethods(obj.shippingMethods);
@@ -272,9 +298,9 @@ function updateCart(){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 }
@@ -288,10 +314,9 @@ function deleteItem(ID){
 	    url: "/process/cart",
 		cache: false,
 		data: 'action=DeleteItem&cartitem_id='+ID+'&formToken='+frmTkn,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 			 	var response = obj.response;
                 var totals = obj.totals;
                 $('.nav-itemNumber').html(obj.itemsCount);
@@ -334,9 +359,9 @@ function deleteItem(ID){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$( '#'+ ID ).fadeTo( "slow", 1 );
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
 			$('body').css('cursor','default'); 
       	}
 	});
@@ -351,10 +376,9 @@ function checkout2(form) {
 	    url: "/process/cart",
 		cache: false,
 		data:  datastring,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 			 	if (obj.response) {
 			 		$('.checkout2').hide();
 			 		$('.checkout3').show();
@@ -379,9 +403,9 @@ function checkout2(form) {
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 	
@@ -403,10 +427,9 @@ function addProductCart(ID, QTY, PRICE){
 	    url: "/process/cart",
 		cache: false,
 		data: "action=ADDTOCART&product_id="+ID+"&quantity="+QTY+"&price="+PRICE,
-		dataType: "html",
-	    success: function(data) {
+		dataType: "json",
+	    success: function(obj) {
 	    	try{
-	    		var obj = $.parseJSON(data);
 	    		if (obj.url){
 	    			window.location.href = obj.url;
 	    		}
@@ -416,9 +439,9 @@ function addProductCart(ID, QTY, PRICE){
 			}
 			$('body').css('cursor','default'); 
 	    },
-		error: function(){
+		error: function(jqXHR, textStatus, errorThrown){
 			$('body').css('cursor','default'); 
-			console.log('AJAX error');
+			console.log('AJAX error:'+errorThrown);
       	}
 	});
 }
@@ -441,7 +464,7 @@ function renderShippingMethods(OPT){
 
 $('#shippingMethod').change(function() {
 	var price = parseFloat($(this).val());
-	$('#shipping-fee').html('$'+ price.formatMoney(2, '.', ','));
+	//$('#shipping-fee').html('$'+ price.formatMoney(2, '.', ','));
 	calculateTotal(); 
 });
 
@@ -461,10 +484,9 @@ function updateShipping(){
 		    url: "/process/cart",
 			cache: false,
 			data: 'action=updatePostage&postcode=' + datastring,
-			dataType: "html",
-		    success: function(data) {
+			dataType: "json",
+		    success: function(obj) {
 		    	try{
-		    		var obj = $.parseJSON(data);
 		    		var postagefee = obj.postagefee;
 		    		if(isArray(postagefee)) {
 		    			// Iterate the array and do stuff
@@ -476,6 +498,8 @@ function updateShipping(){
 	    			 		calculateTotal();
 	    			 		$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 	    			 		$(element).closest('.form-group').find('.help-block').html('');
+	    			 		$('.process-cnt').show();
+	    			 		$('.postcode-invalid').html("");
 	//    				} else {
 	    					//alert('Error: Cannot be updated');
 	//    				}
@@ -485,22 +509,29 @@ function updateShipping(){
 	    			 		$('#shippingMethod').val(amount);
 	    			 		$('#shipMethod').val(postagefee.postage_name);
 	    			 		$('#postageID').val(postagefee.postage_id);
-	    			 		calculateTotal();
 	    			 		$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 	    			 		$(element).closest('.form-group').find('.help-block').html('');
+	    			 		$('.process-cnt').show();
+	    			 		$('.postcode-invalid').html("");
 	    				} else {
+	    					$('#shippingMethod').val('');
+	    			 		$('#shipMethod').val('');
+	    			 		$('#postageID').val('');
 	    					$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
 	    					$(element).closest('.form-group').find('.help-block').html('Invalid postcode');
+	    					$('.process-cnt').hide();
+	    					$('.postcode-invalid').html("Sorry, we are not shipping to '"+postcode+"'<br> Please <a href='/contact-us'>contact us</a> for more information.");
 	    				}
+	    		    	calculateTotal();
 	    		    }
 				}catch(err){
 					console.log('TRY-CATCH error - '+err);
 				}
 				$('body').css('cursor','default'); 
 		    },
-			error: function(){
+			error: function(jqXHR, textStatus, errorThrown){
 				$('body').css('cursor','default'); 
-				console.log('AJAX error');
+				console.log('AJAX error:'+errorThrown);
 	      	}
 		});
 	}
@@ -509,15 +540,21 @@ function updateShipping(){
 
 function calculateTotal() {
 	var subtotal = parseFloat($('#subtotal').attr('data-value'));
-	var fee = $('#shippingMethod').val();
+	//var fee = $('#shippingMethod').val();
+	/*
 	if(fee){
 		fee = parseFloat(fee);
-		$('#shipping-fee').html('$'+ fee.formatMoney(2, '.', ','));
+		if($('#shipMethod').val() && fee == 0){
+			$('#shipping-fee').html('FREE');
+		}else{
+			$('#shipping-fee').html('$'+ fee.formatMoney(2, '.', ','));
+		}
 	}else{
 		fee = parseFloat(0);
 		$('#shipping-fee').html('$'+ fee.formatMoney(2, '.', ','));
-	}
-	var total = subtotal + fee; 
+	}*/
+	//var total = subtotal + fee; 
+	var total = subtotal; 
 	$('#total').html('$'+ total.formatMoney(2, '.', ',') +' <div class="small notbold">AUD (inc. GST)</div>');
 	/*$('#shipMethod').val($('#shippingMethod option:selected').text());*/
 };

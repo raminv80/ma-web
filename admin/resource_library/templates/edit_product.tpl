@@ -32,7 +32,7 @@
 					<input type="hidden" value="{$fields.product_id}" name="field[1][tbl_product][{$cnt}][product_id]" id="product_id" class="key">
 					<input type="hidden" value="{if $fields.product_object_id}{$fields.product_object_id}{else}{$objID}{/if}" name="field[1][tbl_product][{$cnt}][product_object_id]" id="product_object_id">
 					<input type="hidden" value="{if $fields.product_created}{$fields.product_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_product][{$cnt}][product_created]" id="product_created">
-					<input type="hidden" value="{$fields.product_published}" name="field[1][tbl_product][{$cnt}][product_published]" id="product_published">
+					<input type="hidden" value="{if $fields.product_published}{$fields.product_published}{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_published]" id="product_published">
 
 					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
 				</div>
@@ -125,7 +125,7 @@
 						<div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_order">Order(#position)</label>
               <div class="col-sm-5 ">
-                <input class="form-control number" type="text" value="{if $fields.product_order}{$fields.product_order}{else}999{/if}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
+                <input class="form-control number" type="text" value="{if $fields.product_order neq ''}{$fields.product_order}{else}999{/if}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
               </div>
             </div>
             <div class="row form-group">

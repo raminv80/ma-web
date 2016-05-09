@@ -26,7 +26,7 @@
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="attr_value_order">Order</label>
 			<div class="col-sm-4">
-				<input class="form-control number" type="text" value="{$attr_value.attr_value_order}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_order]" id="attr_value_order">
+				<input class="form-control number" type="text" value="{if $attr_value.attr_value_order neq ''}{$attr_value.attr_value_order}{else}999{/if}" name="field[{$attributeno*20+1}][tbl_attr_value][{$attributeno*20+$attrvalueno}][attr_value_order]" id="attr_value_order">
 			</div>
 		</div>
 		<!-- <div class="row form-group">

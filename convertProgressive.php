@@ -9,6 +9,8 @@ ini_set('display_errors',1);
 ////////////////////
 // REQUEST HANDLER
 ////////////////////
+ini_set('session.gc_maxlifetime', 7200);
+session_set_cookie_params(7200);
 session_start();
 
 /* get all of the required data from the HTTP request */
@@ -16,8 +18,8 @@ $jpg_quality   = (!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) >
 $quality = (!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) > 0)?intval(ceil($_REQUEST['quality'])):9; //0 - 9 (0= no compression, 9 = high compression)
 $sharpen       = TRUE; // Shrinking images can blur details, perform a sharpen on re-scaled images?
 $browser_cache = 60*60*24*7; // How long the BROWSER cache should last (seconds, minutes, hours, days. 7days by default)
-$optim            = "optimised/";
-$document_root    = $_SERVER['DOCUMENT_ROOT'];
+$optim            = "/optimised/";
+$document_root    = rtrim($_SERVER['DOCUMENT_ROOT'],'/');
 $requested_uri    = parse_url(urldecode($_SERVER['REQUEST_URI']), PHP_URL_PATH); //URL
 $requested_file   = urlencode(basename($requested_uri));
 $source_file      = $document_root.$requested_uri; // Full path to source file

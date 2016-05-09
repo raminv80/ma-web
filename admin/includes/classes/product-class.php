@@ -37,24 +37,15 @@ Class Product extends Record{
 				if($val['product_published'] == 0){
 					$p_url = '/draft';
 				}
-				
-				$val["title"] = $val['product_name'];
-				$val["order"] = $val['product_order'];
-				$val["id"] = $val["{$this->ID}"];
-				$val["preview_url"] = $p_url . self::getUrl($val['product_listing_id'],1,$val['product_url']);
-				$val["url"] = "/admin/edit/{$this->CONFIG->url}/{$val['product_id']}";
-				$val["url_delete"] = "/admin/delete/{$this->CONFIG->url}/{$val['product_id']}";
-				$val["published"] = $val['product_published'];
-				
-				//NOT TESTED
-				/*foreach($this->CONFIG->table->associated as $a){
-				  if ($a->attributes()->inlist) {
-				    $val["{$a->name}"] = $this->getAssociated($a, $val["{$a->linkfield}"]);
-				  }
-				}*/
-				
-				$records["p{$val['product_id']}"] = $val;
-
+				$records ["p{$val['product_id']}"] = array (
+						"title" => $val ['product_name'],
+				    "order" => $val ['product_order'],
+						"id" => $val ['product_id'],
+						"published" => $val ['product_published'],
+						"preview_url" => $p_url . self::getUrl($val['product_listing_id'],1,$val['product_url']),
+						"url" => "/admin/edit/{$this->CONFIG->url}/{$val['product_id']}",
+						"url_delete" => "/admin/delete/{$this->CONFIG->url}/{$val['product_id']}"
+				);
 			}
 		}
 		
@@ -77,13 +68,14 @@ Class Product extends Record{
 			foreach ( $res as $key => $val ) {
 					$subs = array ();
 					$subs = $this->getRecordList ( $val ['listing_object_id']);
-					if($val ['listing_type_id'] == $this->TYPE_ID) {
-					  
-					  $val["title"] = $val['listing_name'];
-					  $val["order"] = $val['listing_order'];
-					  $val["id"] = $val['listing_id'];
-					  $val["subs"] = $subs;
-					  $val["published"] = $val['listing_published'];
+					if ($val ['listing_type_id'] == $this->TYPE_ID) {
+						$records ["l{$val['listing_id']}"] = array (
+												"title" => $val ['listing_name'],
+						            "order" => $val ['listing_order'],
+												"id" => $val ['listing_id'],
+												"published" => $val ['listing_published'],
+												"subs" => $subs
+						);
 					}
 			}
 		}

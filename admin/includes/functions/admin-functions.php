@@ -41,8 +41,8 @@ $_GET		=	clean($_GET);
 $DBobject = new DBmanager();
 
 $SMARTY = new Smarty;
-$SMARTY->template_dir    =  $_SERVER['DOCUMENT_ROOT']."admin".$CONFIG->smartytemplate_config->templates;                    // name of directory for templates
-$SMARTY->compile_dir     =  $_SERVER['DOCUMENT_ROOT']."admin".$CONFIG->smartytemplate_config->templates_c;     // name of directory for compiled templates
+$SMARTY->template_dir    =  rtrim($_SERVER['DOCUMENT_ROOT'],'/')."/admin".$CONFIG->smartytemplate_config->templates;                    // name of directory for templates
+$SMARTY->compile_dir     =  rtrim($_SERVER['DOCUMENT_ROOT'],'/')."/admin".$CONFIG->smartytemplate_config->templates_c;     // name of directory for compiled templates
 $SMARTY->plugins_dir     =  array($_SERVER['DOCUMENT_ROOT']."".$CONFIG->smartytemplate_config->plugins, $_SERVER['DOCUMENT_ROOT']."/smarty/plugins");  // plugin directories
 $SMARTY->cache_dir   =  $_SERVER['DOCUMENT_ROOT']."".$CONFIG->smartytemplate_config->cache;                    // name of directory for cache
 if(	$debug == 'true'){

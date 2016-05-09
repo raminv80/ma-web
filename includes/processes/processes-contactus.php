@@ -18,7 +18,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   					$path =  $_SERVER['DOCUMENT_ROOT'];
   					$file_short = time() . '_' . str_replace(" ",'',$_FILES["file"]["name"]);
   					$_POST['filename'] = $file_short;
-  					$file_name = $path . "uploads_contact/" . $file_short;
+  					$file_name = $path . "/uploads_contact/" . $file_short;
   					if(move_uploaded_file($_FILES["file"]["tmp_name"],$file_name)){
   					}
   				}else{
@@ -75,7 +75,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   				":contact_email"=>$_POST['email'],
   				":contact_phone"=>$_POST['phone'],
   				":contact_postcode"=>$_POST['postcode'],
-  				":contact_file"=> empty($file_short)?"":"uploads_contact/" . $file_short,
+  				":contact_file"=> empty($file_short)?"":"/uploads_contact/" . $file_short,
   				":contact_enquiry"=>$_POST['message'],
   				":contact_content1"=> $_POST['jobtitle'],
   				":contact_content2"=> $_POST['companyname'],
@@ -104,7 +104,9 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   	    $error = 'There was an error sending the contact email.';
   	  } */
   		
-  		sendGAEvent($GA_ID,'Enquiry', 'Submitted', $_POST['form_name']);
+  		if(!empty($GA_ID)){
+  			sendGAEvent($GA_ID,'Enquiry', 'Submitted', $_POST['form_name']);
+  		}
   		
   		header("Location: /thank-you");
   		die();

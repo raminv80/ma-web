@@ -2,6 +2,10 @@
 <!-- THEM CMS configuration file -->
 <config debug="true" staging="true"> 
 	<domain></domain>
+	<google_analytics>
+		<id>UA-</id>
+		<old_id></old_id>
+	</google_analytics>
 	<company>
 		<name>Them</name>
 		<address>
@@ -11,18 +15,17 @@
 			<postcode>5067</postcode>
 		</address>
 		<phone>08 8363 2717</phone>
-		<email>hello@them.com.au</email>
-		<email>hello@them.com.au</email>
+		<email>online@them.com.au</email>
 		<email_from>noreply@them.com.au</email_from>
 		<email_contact>apolo@them.com.au</email_contact>
 		<email_orders>apolo@them.com.au</email_orders>
-		<logo>themlogo.png</logo>
+		<logo>logo.png</logo>
 	</company>  
 	<database> 
-		<host>n7-mysql5-3.ilisys.com.au</host> 
+		<host>m4-mysql1-1.ilisys.com.au</host> 
 		<user>themso</user> 
 		<password>c@^^3L5tRu7s*n9ub11c</password> 
-		<dbname>themso5_db</dbname> 
+		<dbname>themso3_db</dbname> 
 	</database> 
 	<resource> 
 		<url>file-manager</url> 

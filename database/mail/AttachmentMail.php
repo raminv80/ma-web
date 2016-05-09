@@ -75,7 +75,7 @@ class AttachmentMail extends AbstractMail {
 		return mail($this->buildTo(),
 					$this->subject,
 					$this->body.$this->createAttachmentBlock(),
-					$headers);
+					$headers, "-f{$this->fromMail}");
 	}
 	
 	function createAttachmentBlock() {

@@ -158,7 +158,7 @@ class cart {
       if($orig_items){
         foreach($orig_items as $item){
           $attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
-          $message[] = $this->AddToCart($item['cartitem_product_id'],$attrs,$item['cartitem_quantity'],$item['cartitem_product_price'],$destination, $item['cartitem_listing_id']);
+          $message[] = $this->AddToCart($item['cartitem_product_id'],$attrs,$item['cartitem_quantity'],$item['cartitem_product_price'],$destination, $item['cartitem_listing_id'], $item['cartitem_type']);
         }
       }
       
@@ -182,6 +182,7 @@ class cart {
         ":id"=>$destination
     );
     $res = $DBobject->wrappedSql($sql,$params);
+    $this->ValidateCart();
     
     return $message;
   }
@@ -608,21 +609,22 @@ class cart {
    * @param int $category          
    * @return string
    */
-  function AddToCart($productId, $AttributesArr, $quantity, $price, $cartId = null, $category = 0) {
+  function AddToCart($productId, $AttributesArr, $quantity, $price, $cartId = null, $category = 0, $type = 0) {
     global $DBobject;
     
+   
     if($this->cart_id == '' || $this->cart_id == '0'){
       $this->__construct();
     }
     
-    if(is_null($cartId)){
+    if(empty($cartId)){
       $cartId = $this->cart_id;
     }
     
     $quantity = intval($quantity);
     $price = floatval($price);
     $message = '';
-    
+   
     $product = $this->GetProductCalculation($productId,$AttributesArr,$quantity);
     
     if($product['error']){
@@ -641,6 +643,7 @@ class cart {
           ":cid"=>$cartId,
           ":product_id"=>$productId,
           ":listing_id"=>$category,
+          ":type"=>$type,
           ":product_name"=>$product['product_name'],
           ":product_price"=>$product['product_price'],
           ":qty"=>$quantity,
@@ -667,7 +670,7 @@ class cart {
 									:cid,
 									:product_id,
       						:listing_id,
-      						0,
+      						:type,
 									:product_name,
 									:product_price,
 									:qty,
@@ -946,7 +949,7 @@ class cart {
     
     $message = array();
     
-    $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_type = 0 AND cartitem_cart_id = :id";
+    $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id = :id";
     if($res = $DBobject->wrappedSql($sql,array(
         ":id"=>$this->cart_id
     ))){

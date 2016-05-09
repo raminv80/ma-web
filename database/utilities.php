@@ -207,7 +207,7 @@ function logError($trace, $err, $sql = false) {
 function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $adminId = 0){
 	global $DBobject;
 	try{
-		if(is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php')){	require_once 'database/safemail.php';}
+		if(is_readable($_SERVER['DOCUMENT_ROOT'].'/database/safemail.php')){	require_once 'database/safemail.php';}
 	}catch (Exception $e){}
 
 	/* To send HTML mail, you can set the Content-type header. */
@@ -322,7 +322,7 @@ function createBulkMail($to_Array,$from,$fromEmail,$subject,$body, $adminId = 0,
 function sendBulkMail(){
 	global $DBobject;
 	try{
-		if(is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php')){	require_once 'database/safemail.php';}
+		if(is_readable($_SERVER['DOCUMENT_ROOT'].'/database/safemail.php')){	require_once 'database/safemail.php';}
 	}catch (Exception $e){}
 
 	$cnt = 0;
@@ -363,7 +363,7 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 
 	$mailSent = 0;
 	try{
-		if(is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php') && is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php') && is_readable($_SERVER['DOCUMENT_ROOT'].'database/safemail.php')){
+		if(is_readable($_SERVER['DOCUMENT_ROOT'].'/database/safemail.php') && is_readable($_SERVER['DOCUMENT_ROOT'].'/database/safemail.php') && is_readable($_SERVER['DOCUMENT_ROOT'].'/database/safemail.php')){
 			require_once 'database/mail/Mail.php';
 			require_once 'database/mail/AttachmentMail.php';
 			require_once 'database/mail/Multipart.php';

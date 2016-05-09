@@ -39,7 +39,6 @@ class ProductClass extends ListClass {
       return null;
     }
     
-      
     // ------------ LOAD PRODUCT/CATEGORY DATA, PARENT AND EXTENDS TABLE ----------
     $LOCALCONF = $this->CONFIG_OBJ->table;
     if($arrChk['isProduct']){

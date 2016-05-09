@@ -4,6 +4,7 @@
 	<domain></domain>
 	<google_analytics>
 		<id>UA-</id>
+		<old_id></old_id>
 	</google_analytics>
 	<company>
 		<name></name>
@@ -20,10 +21,10 @@
 		<logo>logo.png</logo>
 	</company> 
 	<database> 
-		<host>n7-mysql5-3.ilisys.com.au</host> 
+		<host>m4-mysql1-1.ilisys.com.au</host> 
 		<user>themso</user> 
 		<password>c@^^3L5tRu7s*n9ub11c</password> 
-		<dbname>themso5_db</dbname> 
+		<dbname>themso3_db</dbname> 
 	</database> 
 	<page_strut>
 		<type>1</type>
