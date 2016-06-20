@@ -97,7 +97,7 @@ while(true){
 			if( (!empty($sp->attributes()->levelonly) && intval($sp->attributes()->levelonly) != intval($_SESSION['user']['admin']['level']) ) || (!empty($sp->attributes()->level) && intval($sp->attributes()->level) < intval($_SESSION['user']['admin']['level']))){ continue; }
 				if($sp->url == $arr[1] ){
 					foreach($sp->process as $pr){
-						$file = $_SERVER['DOCUMENT_ROOT']. (string)$pr->file; 
+						$file = $_SERVER['DOCUMENT_ROOT']. '/'. (string)$pr->file; 
 						if(file_exists($file))	{ include ($file);}
 					}
 					

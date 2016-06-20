@@ -6,7 +6,7 @@
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="distribution" content="Global" />
-<meta name="author" content="Them Advertising" />
+<meta name="author" content="The Ergo Centre" />
 {if $staging}
 <meta name="robots" content="noindex,nofollow" />
 {else}
@@ -15,7 +15,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <title>{$product_name|ucfirst} {$listing_seo_title}</title>
-<link href="/images/favicon.ico" type="image/x-icon" rel="shortcut icon">
+<link href="/images/logo.png" type="image/png" rel="shortcut icon">
 
 <!-- for Facebook -->
 <meta property="og:title" content="{if $listing_share_title || $product_share_title}{$listing_share_title}{$product_share_title}{else}{$product_name|ucfirst}{$listing_seo_title}{/if}" />
@@ -40,64 +40,137 @@
 
 <!-- Bootstrap -->
 <link href="/includes/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="/includes/css/styles.css" rel="stylesheet" media="screen">
+<link href="/includes/css/cart.css" rel="stylesheet" media="screen">
+<link href="/includes/css/bootstrap-touch-carousel.css" rel="stylesheet" media="screen">
+<link href="/includes/css/custom.css" rel="stylesheet" media="screen">
+<link href="/includes/css/resp.css" rel="stylesheet" media="screen">
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
       <script type="text/javascript" src="/includes/js/html5shiv.js"></script>
       <script type="text/javascript" src="/includes/js/respond.min.js"></script>
-			<script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
  	<![endif]-->
- 		<script type="text/javascript" src="/includes/js/jquery-2.1.4.min.js"></script>
+			<script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 
 {block name=head}{/block}
 
 
 {if $ga_id}
 	<script>
-// 	(function(i,s,o,g,r,a,m){ i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-// 	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-// 	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-// 	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	
-// 	ga('create', '{$ga_id}', 'auto', { 'siteSpeedSampleRate': 50 });  
-// 	ga('require', 'displayfeatures');
-// 	ga('require', 'linkid', 'linkid.js');
-// 	ga('require', 'ec');
-// 	ga('set', '&cu', 'AUD');
-	
-// 	{$ga_ec}
-// 	{block name=enhanced_ecommerce}{/block}
-		
-// 	ga('send', 'pageview');
+	(function(i,s,o,g,r,a,m){ i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', '{$ga_id}', 'auto', { 'siteSpeedSampleRate': 50 });
+	ga('require', 'displayfeatures');
+	ga('require', 'linkid', 'linkid.js');
+	ga('require', 'ec');
+	ga('set', '&cu', 'AUD');
+
+	{$ga_ec}
+	{block name=enhanced_ecommerce}{/block}
+
+	ga('send', 'pageview');
 	</script>
 {/if}
 
 </head>
 <body>
-  {include file='overlay-menu.tpl'}
+<header>
+	<div id="header" class="container">
+		<div id="logo" class="col-sm-1 col-md-2">
+			<a href="/"><img src="/images/logo.png" alt="The Ergo Centre" class="img-responsive {if $listing_id neq 1}insidepg{/if}" /></a>
+		</div>
+		<div class="visible-xs navbar-header">
+				  			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
+				  			<span class="sr-only">Toggle navigation</span>
+				  			<span class="icon-bar"></span>
+				  			<span class="icon-bar"></span>
+				  			<span class="icon-bar"></span>
+				  			</button>
+		</div>
+		<div class="visible-xs" id="mobcart">
+		 	<a href="/shopping-cart"><img src="/images/cart.png" alt="Cart" />
+	 			<div style="display:inline;" class="nav-itemNumber">{if $itemNumber}({$itemNumber}){else}(0){/if}</div>
+	 		</a>
+		</div>
+		<div id="menuout" class="col-sm-11 col-md-10">
+				{include file='menu.tpl'}
+		</div>
+    </div>
+    {if $listing_id eq 1}
+    <div id="homebanner">
+	    <div class="container">
+		    <div class="row">
+			    <div class="col-sm-12 text-center">
+					<h3>The average person spends</h3>
+					<h2>15 hours a day</h2>
+					<h3>sitting down</h3>
 
-	{block name=menu}{/block}
+					<button class="btn btn-white" onclick="$('body,html').animate({ scrollTop: $('#match').offset().top -180},600)">Find the right ergonomic support ></button>
+			    </div>
+		    </div>
+	    </div>
+    </div>
+    {/if}
+    <div id="infoblock" {if $listing_id neq 1}class="shfr"{/if}>
+	    <div class="container">
+		    <div class="row">
+			    <div class="col-sm-3 text-center info">
+				    <a href="/about">
+				    <img src="/images/australia.png" class="Australian owned and operated" />
+				    <div class="infotext">Australian owned and operated</div>
+				    </a>
+			    </div>
+			    <div class="col-sm-3 text-center info">
+				    <a href="/solutions-for-the-homeoffice">
+				    <img src="/images/tailored.png" class="Tailored ergonomic solutions" />
+				    <div class="infotext">Tailored ergonomic solutions</div>
+				    </a>
+			    </div>
+			    <div class="col-sm-3 text-center info">
+				    <a href="/expert-knowledge-and-advice">
+				    <img src="/images/expert.png" class="Expert knowledge and advice" />
+				    <div class="infotext">Expert knowledge and advice</div>
+				    </a>
+			    </div>
+			    <div class="col-sm-3 text-center info">
+				    <a href="/free-trial-and-workplace-audit">
+				    <img src="/images/trial.png" class="Free trial and workplace audit" />
+				    <div class="infotext">Free trial and workplace audit</div>
+				    </a>
+			    </div>
+		    </div>
+	    </div>
+    </div>
+</header>
 
 	{block name=body}{/block}
 	{include file='footer.tpl'}
-	
 
+
+	<script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>
+	<script type="text/javascript" src="/includes/js/bootstrap-touch-carousel.js"></script>
+	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
 
-    	
+		setTimeout(function(){
+			$('#help-alert').slideDown();
+    	},300000);
+
 		$('#searchbox').bind('keyup', function(event) {
 		    if(event.keyCode==13){
 		    	$('#search-form').submit();
 		    }
 		});
 
-		
-		$('.dropdown.navbar-right ').hover(function() { 
+
+		$('.dropdown.navbar-right ').hover(function() {
 		  $(this).find('.dropdown-menu:hidden').fadeIn(200);
 		}, function() {
 		  $(this).find('.dropdown-menu:visible').fadeOut(200)
@@ -108,7 +181,7 @@
 	function nonAplha(ID){
 		var str = $(ID).val();
 	   t = str.replace(/[^a-zA-Z0-9-_+]/i,'');
-	   $(ID).val(t); 
+	   $(ID).val(t);
 	}
 
 	if (typeof jQuery != 'undefined') {
@@ -121,7 +194,7 @@
 	            var href = jQuery(this).attr('href');
 	            if (href && (href.match(/^http?\:/i) || href.match(/^https?\:/i))  && (!href.match(document.domain))) {
 	                jQuery(this).click(function() {
-	                    var extLink = href.replace(/^https?\:\/\//i, ''); 
+	                    var extLink = href.replace(/^https?\:\/\//i, '');
 	                    extLink = extLink.replace(/^http?\:\/\//i, '');
 	                    //_gaq.push(['_trackEvent', 'External', 'Click', extLink]);
 	                    ga('send', 'event', 'External', 'Click', extLink);
@@ -151,7 +224,7 @@
 	                    var filePath = href;
 	                   // _gaq.push(['_trackEvent', 'Download', 'Click-' + extension, filePath]);
 	                    ga('send', 'event', 'Download', 'Click-'+ extension, filePath);
-	                    
+
 	                    if (jQuery(this).attr('target') != undefined && jQuery(this).attr('target').toLowerCase() != '_blank') {
 	                        ;
 	                        setTimeout(function() { location.href = baseHref + href; }, 200);
@@ -164,5 +237,17 @@
 	}
 	</script>
 	{block name=tail}{/block}
+<!-- Hotjar Tracking Code for www.theergocentre.com.au -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){ (h.hj.q=h.hj.q||[]).push(arguments) };
+        h._hjSettings={ hjid:104703,hjsv:5 };
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
 </body>
 </html>

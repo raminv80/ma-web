@@ -1,128 +1,96 @@
-{block name=body} 
+{block name=body}
 
 <div id="maincont">
-	<div class="container">
+	<div class="container" id="contpage">
 		<div class="row">
-			<div class="col-sm-12 col-md-12">
-				{include file='breadcrumbs.tpl'}		
-			</div>
-			<div class="col-sm-12">
-			<h2>[contact-us.tpl]</h2>
-				{$listing_content1}
-			</div>
-			<div class="col-sm-12" itemscope itemtype="http://schema.org/LocalBusiness">
-	      <b><h3 itemprop="name">{$COMPANY.name}</h3></b><br>
+      <div class="col-sm-12 text-center" id="listtoptext">
+	  		<h1>{spanify data=$listing_name}</h1>
+      </div>
+		</div>
+
+<div class="row">
+			<div class="col-sm-6" id="contacttext">
+				<p>For questions relating to our products or this website please contact:</p>
+				<p><strong>{$COMPANY.name}</strong></p>
 	      <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
 	        <span itemprop="streetAddress">{$COMPANY.address.street}</span><br>
 	        <span itemprop="addressLocality">{$COMPANY.address.suburb}</span>,
 	        <span itemprop="addressRegion">{$COMPANY.address.state}</span>
 	        <span itemprop="postalCode">{$COMPANY.address.postcode}</span>
 	      </div>
-	      <div class="row ulinks">
-					<div class="col-sm-3">
-			      Free call:
-			    </div>
-			    <div class="col-sm-9">
-			    	{if $COMPANY.freecall}<a href="tel:{$COMPANY.freecall}" itemprop="telephone">{$COMPANY.freecall}</a><br>{/if}
-			    </div>
-			    
-					<div class="col-sm-3">
-			      Phone:
-			    </div>
-			    <div class="col-sm-9">
-			    	{if $COMPANY.phone}<a href="tel:{$COMPANY.phone}" itemprop="telephone">{$COMPANY.phone}</a><br>{/if}
-			    </div>
-			    
-			    <div class="col-sm-3">
-			      Fax:
-			    </div>
-			    <div class="col-sm-9">
-			    	{if $COMPANY.fax}<a href="tel:{$COMPANY.fax}" itemprop="faxNumber">{$COMPANY.fax}</a><br>{/if}
-			    </div>
-			    
-			    <div class="col-sm-3">
-			      Email:<br>
-		      </div>
-		      <div class="col-sm-9">
-			      <a href="mailto:{$COMPANY.email}" itemprop="email">{$COMPANY.email}</a>
-		      </div>
-		    </div>
-	    </div>
-			<div class="col-sm-8">
-			 	<form class="form-horizontal" id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us">
-			  	<input type="hidden" value="question" name="action" id="action" /> 
+		  <p class="small">ABN 81 131 165 896</p>
+		  <p>T <a class="tel" href="tel:{$COMPANY.phone}">{$COMPANY.phone}</a><br />
+		  E <a href="mailto:{$COMPANY.email}">{$COMPANY.email}</a></p>
+
+		  	<div id="map">
+			  	<iframe src="https://www.google.com.au/maps/embed?pb=!1m18!1m12!1m3!1d3270.4412794784594!2d138.57730831523875!3d-34.9455469803724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ab0cf0aa7ba1dc9%3A0x4041fbaa454297b!2s2%2F27+Anzac+Hwy%2C+Keswick+SA+5035%2C+Australia!5e0!3m2!1sen!2sin!4v1445886637056" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+		  	</div>
+
+			</div>
+			<div class="col-sm-6" id="contform">
+				<div class="row">
+					<div class="col-sm-12"><h4>Get in touch</h4></div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-12 text-right small">*Required fields</div>
+				</div>
+
+			 	<form class="form-horizontal" id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us" novalidate="novalidate">
+					<input type="hidden" value="get in touch" name="action" id="action" /> 
 			    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
 			  	<input type="hidden" value="Contact" name="form_name" id="form_name" />
 					<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
-			  	<div style="height:0;overflow:hidden;">
+			  		<div class="row">
+						<div class="col-sm-6 form-group">
+						  <label class="visible-ie-only" for="name">Name*</label>
+							<input class="form-control" value="{$post.name}" type="text" name="name" id="name" required="">
+						</div>
+						<div class="col-sm-6 form-group">
+						  <label class="visible-ie-only" for="Company">Company</label>
+							<input class="form-control" value="{$post.organisation}" type="text" name="organisation" id="organisation" >
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12 form-group">
+						  <label class="visible-ie-only" for="email">Email address*</label>
+							<input class="form-control" value="{$post.email}" type="email" name="email" id="email" required="">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-6 form-group">
+						  <label class="visible-ie-only" for="phone">Phone</label>
+							<input class="form-control" value="{$post.phone}" type="text" name="phone" id="phone" >
+						</div>
+
+						<div class="col-sm-6 form-group">
+              <label class="visible-ie-only" for="postcode">Postcode*</label>
+							<input class="form-control" value="{$post.postcode}" type="text" name="postcode" id="postcode"  required="">
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-sm-12 form-group">
+						  <label class="visible-ie-only" for="enquiry">Your message*</label>
+							<textarea class="form-control" name="enquiry" id="enquiry" required="">{$post.enquiry}</textarea>
+						</div>
+					</div>
+					<div style="height:0;overflow:hidden;">
              <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1">
           </div>
-			  	<div class="row form-group">
-						<div class="col-sm-4 col-lg-2">
-							<label for="name" class="control-label">Name*: </label>
-						</div>
-						<div class="col-sm-6 col-lg-5">
-							<input class="form-control" value="{if $post.name}{$post.name}{else}{$user.gname}{/if}" type="text" name="name" id="name" required>
+					<div class="row error-msg" id="form-error" {if $error neq ""}style="display:block"{/if}>{$error}</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<input type="button" value="Enquire" onclick="$('#contact_form').submit();" class="btn-blue btn">
 						</div>
 					</div>
-			  	<div class="row form-group">
-						<div class="col-sm-4 col-lg-2">
-							<label for="organisation" class="control-label">Organisation: </label>
-						</div>
-						<div class="col-sm-6 col-lg-5">
-							<input class="form-control" value="{$post.organisation}" type="text" name="organisation" id="organisation">
-						</div>
-					</div>
-					<div class="row form-group">
-						<div class="col-sm-4 col-lg-2">
-							<label for="email" class="control-label">Email*: </label>
-						</div>
-						<div class="col-sm-6 col-lg-5">
-							<input class="form-control" value="{if $post.email}{$post.email}{else}{$user.email}{/if}" type="email" name="email" id="email" required>
-						</div>
-					</div>
-					<div class="row form-group">
-						<div class="col-sm-4 col-lg-2">
-							<label for="phone" class="control-label">Phone: </label>
-						</div>
-						<div class="col-sm-6 col-lg-5">
-							<input class="form-control" value="{$post.phone}" type="text" name="phone" id="phone">
-						</div>
-					</div>
-					<div class="row form-group">
-						<div class="col-sm-4 col-lg-2">
-							<label for="postcode" class="control-label">Postcode*: </label>
-						</div>
-						<div class="col-sm-6 col-lg-5">
-							<input class="form-control" value="{$post.postcode}" type="text" name="postcode" id="postcode" required>
-						</div>
-					</div>
-			  	<div class="row form-group">
-						<div class="col-sm-4 col-lg-2">
-							<label for="enquiry" class="control-label">Enquiry*: </label>
-						</div>
-						<div class="col-sm-6 col-lg-5">
-							<textarea class="form-control" name="enquiry" id="enquiry" required>{$post.enquiry}</textarea>
-						</div>
-					</div>
-					<div class="aditional-form">
-						<input value="" type="text" name="aditional" id="aditional" >
-					</div>
-			  	<div class="row error-msg" id="form-error">{$error}</div>
-			  	<div class="row">
-						<div class="col-sm-4 col-lg-2">
-						</div>
-						<div class="col-sm-4 col-lg-3">
-							<input type="button" value="Submit" onclick="$('#contact_form').submit();" class="orange">
+					<div class="row">
+						<div class="col-sm-12 small">
+							<a href="/privacy-policy">Privacy Collection Statement</a>
 						</div>
 					</div>
 			  </form>
 			</div>
-			{if $listing_content5}
-			<div class="col-sm-4">
-				<img src="{$listing_content5}" title="{$listing_name} image" class="img-responsive" alt="{$listing_name} image" />
-			</div>
-			{/if}
 		</div>
 	</div>
 </div>
@@ -132,12 +100,12 @@
 </div>
 {/block}
 
-{block name=tail}        
+{block name=tail}
 <script type="text/javascript">
 $(document).ready(function(){
-	
+
 	 	$('#contact_form').validate();
-	 	
+
 	 	$('#postcode').rules("add", {
 			digits: true,
 			minlength: 4
@@ -146,7 +114,7 @@ $(document).ready(function(){
 	 	$('#email').rules("add", {
 			email: true
 		});
- 	  
+
 });
 
 </script>

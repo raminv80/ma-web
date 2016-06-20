@@ -12,7 +12,7 @@ function smarty_function_exist_image($params, &$smarty)
 {		
 		$arr = explode('?', $params['image']);
 		$filename = urldecode(trim($arr[0],'/'));
-		if(!empty($params['image']) && !empty($filename) && file_exists( $_SERVER['DOCUMENT_ROOT']."{$filename}")){
+		if(!empty($params['image']) && !empty($filename) && file_exists( $_SERVER['DOCUMENT_ROOT']."/{$filename}")){
 			return $params['image'];
 		}
     return $params['default'];

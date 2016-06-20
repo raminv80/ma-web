@@ -13,7 +13,8 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   	try{
   		if(!empty($_FILES["file"]["name"])){
   			if($_FILES["file"]["error"] == 0){
-  				if(($_FILES["file"]["type"] == "application/pdf") || strtolower(substr($_FILES["file"]["name"],- 3)) == 'pdf' || strtolower(substr($_FILES["file"]["name"],- 3)) == 'jpg' || strtolower(substr($_FILES["file"]["name"],- 3)) == 'png' || strtolower(substr($_FILES["file"]["name"],- 3)) == 'gif'){
+  				$acceptedFileFormat = array('pdf', 'jpeg', 'jpg', 'gif', 'png');
+  				if(in_array(strtolower(substr($_FILES["file"]["name"],- 3)), $acceptedFileFormat)){
   					//$path = getcwd() . '/';
   					$path =  $_SERVER['DOCUMENT_ROOT'];
   					$file_short = time() . '_' . str_replace(" ",'',$_FILES["file"]["name"]);
@@ -32,6 +33,8 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
   		$error = 'Please check your file and  try again later.';
   	}
   	
+
+  	$SMARTY->unloadFilter('output', 'trimwhitespace');
   	
   	//SEND EMAIL TO ADMIN	
   	try{
@@ -115,7 +118,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
     $error = 'Please provide the required information.';
   }
 }else{
-  $error = 'You do not have permission to submit this form. Please refresh the page and try again.';
+  $error = 'You do not have permission to submit this form.<br>Please refresh the page and try again.';
 }
 
 $_SESSION['post'] =  $_POST;

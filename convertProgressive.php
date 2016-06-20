@@ -39,10 +39,10 @@ if(!file_exists($source_file)){
   $source_file      = $document_root.$requested_uri; // Full path to source file
   $extension = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));
   $optim_source_file      = $document_root.$optim.$requested_uri;
-  if( empty($_REQUEST['width']) || empty($_REQUEST['height']) ) {
+  /* if( empty($_REQUEST['width']) || empty($_REQUEST['height']) ) {
     $_REQUEST['width'] = 60;
     $_REQUEST['height'] = 60;
-  }
+  } */
 }
 
 if((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0) || (!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0) || (!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) > 0)){

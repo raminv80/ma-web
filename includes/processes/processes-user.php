@@ -1,9 +1,14 @@
 <?php
 if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],false)){
-  switch($_POST["action"]){
+
+	/************** SET CAMPAIGN MONITOR LIST ID WHEN NEEDED *********/
+	$LIST_ID = '';
+	/************** **************************************** *********/
+	
+	switch($_POST["action"]){
     case 'create':
     	$_POST['want_promo'] = empty($_POST['want_promo']) ? 0 : 1;
-    	SetMemberCampaignMonitor($_POST, $_POST['want_promo']);
+    	SetMemberCampaignMonitor($LIST_ID, $_POST, $_POST['want_promo']); 
     	
       $user_obj = new UserClass();
       $_POST['username'] = $_POST['email'];
@@ -15,6 +20,8 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
         ));
       }else{
         $_SESSION['user']['public'] = $res;
+        $cart_obj = new cart();
+        $cart_obj->SetUserCart($res['id']);
         $url = $_SERVER['HTTP_REFERER'];
         if($_POST['redirect']){
           $url = $_POST['redirect'];
@@ -29,16 +36,11 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
         	$SMARTY->assign("username",$_POST['email']);
         	$SMARTY->assign("password",$_POST['password']);
         	
-        	/* $sql = "SELECT email_additional_content FROM tbl_email_additional WHERE email_additional_id = :id "; //New member
-        	if($res2 = $DBobject->wrappedSql ( $sql, array(':id' => 9)) ){
-        		$message = unclean($res2[0]['email_additional_content']);
-        		$SMARTY->assign('message', $message);
-        	} */
-        	$buffer= $SMARTY->fetch('email-newmember.tpl');
+        	$buffer= $SMARTY->fetch('email/welcome.tpl');
         	$to = $_SESSION['user']['public']['email'];
         	$from = (string) $CONFIG->company->name;
         	$fromEmail = "noreply@" . str_replace ( "www.", "", $HTTP_HOST );
-        	$subject = 'Ready Steady Go Kids | New Membership';
+        	$subject = "{$from} | New Membership";
         	$body = $buffer;
         	$mailID = sendMail($to, $from, $fromEmail, $subject, $body, null, $res['id']);
         	
@@ -69,13 +71,15 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
 	    	 	));
 	    	} else {
 	    		$_SESSION['user']['public'] = $res;
+	    		$cart_obj = new cart();
+	    		$cart_obj->SetUserCart($res['id']);
 	    		$url = $_SERVER['HTTP_REFERER'];
 	    		if ($_POST['redirect']) {
 	    			$url = $_POST['redirect'];
 	    		}
           if(empty($_SESSION['address'])){
           	$addressArr = $user_obj->GetUsersAddresses($res['id']);
-            $_SESSION['address'] =  array("S"=> $addressArr[0], "same_address" => true);
+            $_SESSION['address'] =  array("B"=> $addressArr[0], "same_address" => true);
           }
           
           
@@ -92,23 +96,18 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
       $res = $user_obj->ResetPasswordToken($_POST["email"]);
       if($res['success']){
       	try{
-      		// SEND CONFIRMATION EMAIL
-      		/* $sql = "SELECT email_additional_content FROM tbl_email_additional WHERE email_additional_id = :id "; //Reset password 
-      		if($res2 = $DBobject->wrappedSql ( $sql, array(':id' => 10)) ){
-      			$message = unclean($res2[0]['email_additional_content']);
-      			$SMARTY->assign('message', $message);
-      		} */
       		$SMARTY->assign("user_gname",$res['user_gname']);
       		$SMARTY->assign("token",$res['token']);
       		$SMARTY->assign("email",$_POST["email"]);
       		$SMARTY->assign('DOMAIN', "http://" . $HTTP_HOST);
       		$COMP = json_encode($CONFIG->company);
       		$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
-      		$body= $SMARTY->fetch('email-reset-password.tpl');
+      		$body= $SMARTY->fetch('email/reset-password.tpl');
       		$to = $_POST["email"];
       		$from = (string) $CONFIG->company->name;
       		$fromEmail = (string) $CONFIG->company->email_from;
-      		$subject = 'Ready Steady Go Kids | Password Recovery';
+      		$fromEmail = 'noreply@' . str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] );
+      		$subject = "{$from} | Password Recovery";
       		if(sendMail($to, $from, $fromEmail, $subject, $body)){
       			$success = $res['success'];
       		}else{
@@ -169,7 +168,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
 	    	$user_obj = new UserClass();
 	     	$email = $user_obj->UnsubscribeUser($_REQUEST['tk'], $_REQUEST['tl']);
 	     	if($email){
-	     		SetMemberCampaignMonitor(array('email'=>$email), 0);
+	     		SetMemberCampaignMonitor($LIST_ID, array('email'=>$email), 0);
 	     		$_SESSION['notice'] = 'You have been successfully unsubscribed.';
 	     		header("Location: " . $_SERVER['HTTP_REFERER'] . "#notice");
 	     		die();
@@ -184,7 +183,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
     		$data = array_merge($_POST, array('user_id'=>$_SESSION['user']['public']['id']));
     		$promo = 0;
     		$data['user_want_promo'] = empty($_POST['user_want_promo']) ? 0 : 1;
-    		SetMemberCampaignMonitor($data, $data['user_want_promo']);
+    		SetMemberCampaignMonitor($LIST_ID, $data, $data['user_want_promo']); 
     		
     		$res = $user_obj->UpdateDetails($data);
     		if($user_obj->InsertNewAddress(array_merge(
@@ -197,15 +196,13 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
     			$_SESSION['address'] =  array("S"=> $addressArr[0], "same_address" => true);
     		}
     		
-    		if ( $res['error'] ) {
+    		if(empty($res['error'])){
+    			$_SESSION['user']['public'] = $res['user_record'];
+    			$_SESSION['notice']= $res['success'];
+    			header("Location: ".$_SERVER['HTTP_REFERER']."#notice");
+    		}else{
     			$_SESSION['error']= $res['error'];
     			header("Location: ".$_SERVER['HTTP_REFERER']."#error");
-    		} else {
-    			$_SESSION['user']['public']['gname']= $_POST["user_gname"];
-    			$_SESSION['user']['public']['surname']= $_POST["user_surname"];
-    			$_SESSION['user']['public']['user_want_promo']= $promo;
-    			$_SESSION['notice']= $res['success'];  
-    			header("Location: ".$_SERVER['HTTP_REFERER']."#notice");
     		}
     		die();
     		
@@ -230,20 +227,48 @@ header('Location: ' . $redirect .'#error');
 die(); 
    
 
+
+
  
-function SetMemberCampaignMonitor($data, $flag){
+function SetMemberCampaignMonitor($listId, $data, $flag){
+	global $CONFIG;
+	
+	if(empty($data) || empty($listId)){
+		return false;
+	}
+	
+	$customFields = array();
+	$skipArr = array('email', 'gname', 'surname');
+	foreach($data as $k => $v){
+		if(!in_array($k, $skipArr)){
+			$customFields[] = array('Key' => $k, 'Value' => $v);
+		}
+	}
+	
 	try{
 		require_once 'includes/createsend/csrest_subscribers.php';
-		$wrap = new CS_REST_Subscribers('', '060d24d9003a77b06b95e7c47691975b'); //!!!! UPDATE CREATESEND LIST CODE !!!!!
+		$wrap = new CS_REST_Subscribers($listId, '060d24d9003a77b06b95e7c47691975b'); 
 		if(empty($flag)){
 			$cs_result = $wrap->unsubscribe($data['email']);
 		}else{
 			$cs_result = $wrap->add(array(
 					'EmailAddress' => $data['email'],
 					'Name' => $data['gname'] . ' ' . $data['surname'],
-					'CustomFields' => array(),
+					'CustomFields' => $customFields,
 					"Resubscribe" => "true"
 			));
 		}
-	}catch(Exception $e){die($e);}
+		if($cs_result->was_successful()){
+			return true;
+		}
+	}catch(Exception $e){
+		$COMP = json_encode($CONFIG->company);
+		$body= "Error: {$e}<br> Session: " . print_r($_SESSION, true);
+		$to = 'apolo@them.com.au';
+		$from = (string) $CONFIG->company->name;
+		$fromEmail = (string) $CONFIG->company->email_from;
+		$subject = "{$from} | Campaign monitor error";
+		sendMail($to, $from, $fromEmail, $subject, $body);
+	}
+	return false;
 }

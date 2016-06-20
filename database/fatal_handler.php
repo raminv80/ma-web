@@ -21,10 +21,10 @@ function fatal_handler() {
     	die($body);
     }
     $subject = "Fatal error";
-    $to = "themadvertise@gmail.com,online@them.com.au,readysteadygokids@gmail.com";
+    $to = "themadvertise@gmail.com,online@them.com.au";
     $from = (string) $CONFIG->company->name;
     $from = empty($from)?"website":$from;
-    $fromEmail = 'noreply@' . str_replace ( "www.", "", $HTTP_HOST );
+    $fromEmail = 'noreply@' . str_replace ( "www.", "", $_SERVER['SERVER_NAME'] );
     /* To send HTML mail, you can set the Content-type header. */
     $headers  = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
@@ -36,10 +36,10 @@ function fatal_handler() {
     $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
     $headers .= "Bcc: cmsemails@them.com.au\r\n";
     try{
-    	$filename = $_SERVER['DOCUMENT_ROOT'].'fatalerror'. date("Y-m-d-H") .'.txt';
+    	$filename = $_SERVER['DOCUMENT_ROOT'].'/fatalerror'. date("Y-m-d-H") .'.txt';
     	if(!file_exists($filename)){
     		file_put_contents($filename, $body);
-    		mail($to,$subject,$body,$headers, "-f $fromEmail");
+    		mail($to,$subject,$body,$headers, "-f$fromEmail");
     	}
 			
     }catch(Exception $e){}
