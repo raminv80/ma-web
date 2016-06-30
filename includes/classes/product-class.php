@@ -470,7 +470,7 @@ class ProductClass extends ListClass {
 		`cache_modified` DATETIME DEFAULT NULL,
 		`cache_deleted` DATETIME DEFAULT NULL,
 		PRIMARY KEY (`cache_id`)
-		) ENGINE=MYISAM DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;";
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
     $DBobject->wrappedSql($sql[0]);
     
     $sql[3] = "TRUNCATE cache_tbl_product;";

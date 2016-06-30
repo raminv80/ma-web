@@ -1209,7 +1209,7 @@ function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr,$_cid
 	}
 
 	$response = gaFireHit($data);
-	//sendMail('apolo@them.com.au', 'Ready Steady Go Kids', 'noreply@readysteadygokids.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
+	//sendMail('apolo@them.com.au', 'Themserver', 'noreply@them.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
 	return $response;
 }
 
@@ -1290,7 +1290,7 @@ function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 	}
 
 	$response = gaFireHit($data);
-	//sendMail('apolo@them.com.au', 'Ready Steady Go Kids', 'noreply@readysteadygokids.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
+	//sendMail('apolo@them.com.au', 'Themserver', 'noreply@them.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
 	return $response;
 } 
 

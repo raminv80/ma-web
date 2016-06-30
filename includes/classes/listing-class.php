@@ -380,11 +380,11 @@ class ListClass {
 		`cache_modified` DATETIME DEFAULT NULL,
 		`cache_deleted` DATETIME DEFAULT NULL,
 		PRIMARY KEY (`cache_id`)
-		) ENGINE=MYISAM DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;";
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
   	$DBobject->wrappedSql($sql[0]);
   	
   	$sql[3] = "TRUNCATE cache_{$this->TBL};";
-  	$sql[1] = "SELECT DISTINCT(listing_parent_id) FROM {$this->TBL} WHERE listing_deleted IS NULL";
+  	$sql[1] = "SELECT DISTINCT(listing_parent_id) FROM {$this->TBL} WHERE listing_deleted IS NULL AND listing_parent_id IS NOT NULL";
   	$res = $DBobject->wrappedSql($sql[1]);
 
   	$ids = array();
@@ -402,7 +402,7 @@ class ListClass {
   	  }
   	  $sql_c[] = "INSERT INTO cache_{$this->TBL} (cache_record_id,cache_published,cache_url,cache_type,cache_modified) SELECT listing_object_id,listing_published, CONCAT('{$url}','/',listing_url), listing_type_id, now() FROM {$this->TBL} WHERE listing_parent_id = {$id} AND listing_deleted IS NULL";
   	}
-  	$sql_c[] = "INSERT INTO cache_{$this->TBL} (cache_record_id,cache_published,cache_url,cache_type,cache_modified) SELECT listing_object_id,listing_published, listing_url, listing_type_id, now() FROM {$this->TBL} WHERE listing_parent_id = 0 AND listing_deleted IS NULL";
+  	$sql_c[] = "INSERT INTO cache_{$this->TBL} (cache_record_id,cache_published,cache_url,cache_type,cache_modified) SELECT listing_object_id,listing_published, listing_url, listing_type_id, now() FROM {$this->TBL} WHERE (listing_parent_id = 0 OR listing_parent_id IS NULL) AND listing_deleted IS NULL";
 
   	$DBobject->wrappedSql($sql[3]);
   	foreach($sql_c as $s){
@@ -763,106 +763,5 @@ class ListClass {
       }
     }
   }
-
-  /**
-   * This function retieves a set of raw data for use in templates other than the
-   * listing templates.
-   *
-   * $_WHERE should be formatted as " field = value AND field2 = value2 ".
-   * $_GROUPBY should be formatted as " field, field2 ".
-   * $_ORDERBY should be formatted as " field ASC, field2 DESC ".
-   *
-   * @param string $_WHERE          
-   * @param unknown_type $_GROUPBY          
-   * @param unknown_type $_ORDERBY          
-   */
-  function GetRawData($_WHERE = "", $_GROUPBY = "", $_ORDERBY = "") {
-    return $this->GetData("*",$_WHERE,$_GROUPBY,$_ORDERBY);
-  }
-
-  /**
-   * This function retrieves all the distinct values from $_FIELD in the database.
-   *
-   * @param string $_FIELD          
-   */
-  protected function GetDataField($_FIELD) {
-    return $this->GetData($_FIELD,"",$_FIELD,"");
-  }
-
-  /**
-   * This function retieves a SubSet of all values in the database where the $_WHERE
-   * conditions are satisfied.
-   *
-   * $_WHERE should be formatted as " field = value AND field2 = value2 ".
-   *
-   * @param string $_WHERE          
-   */
-  protected function GetDataSubSet($_WHERE) {
-    return $this->GetData("*",$_WHERE,"","");
-  }
-
-  /**
-   * This function retrieves all values in the database.
-   * The result set will be returned
-   * as ARRAY[][row1]
-   * [row2]
-   * etc.
-   *
-   * $GB_FIELDS can be used to define the field used to group the data at the top level
-   * in the result set.
-   * eg.	GetDataSet("month_field");
-   * ARRAY[April][row5]
-   * [row6]
-   * [May][row7]
-   * [row8]
-   * etc.
-   *
-   * @param string $GB_FIELD          
-   */
-  protected function GetDataSet($GB_FIELD = "") {
-    $_resSet = array();
-    $res = $this->GetData("*","","","");
-    if(! empty($GB_FIELD)){
-      foreach($res as $row){
-        $_resSet[$row[$GB_FIELD]][] = $row;
-      }
-      return $_resSet;
-    }
-    return $res;
-  }
-
-  /**
-   * This function retrieves a single value from the database based on the ID matching against
-   * the primary table.
-   *
-   * @param string $ID          
-   */
-  protected function GetDataSingleSet($ID) {
-    $count = 1;
-    $id_name = str_replace("tbl_","",$this->CONFIG_OBJ->table->name,$count) . "_id";
-    return $this->GetData("*"," {$id_name} = {$ID} ","","");
-  }
-
-  /**
-   * This is the top level class for retrieving data from the database.
-   * Classes such
-   * as GetDataSubSet() or GetDataSet() should be used instead.
-   *
-   * @param unknown_type $_SELECT          
-   * @param unknown_type $_WHERE          
-   * @param unknown_type $_GROUPBY          
-   * @param unknown_type $_ORDERBY          
-   */
-  protected function GetData($_SELECT = "*", $_WHERE = "", $_GROUPBY = "", $_ORDERBY = "") {
-    global $DBobject,$SMARTY;
-    $sql = "SELECT {$_SELECT}
-				FROM {$this->TABLES}
-				" . (! empty($_WHERE)?" WHERE {$this->WHERE} AND {$_WHERE} ":" WHERE {$this->WHERE} ") . "
-				" . (! empty($_GROUPBY)?" GROUP BY {$_GROUPBY}":"") . "
-				" . (! empty($_ORDERBY)?" ORDER BY {$_ORDERBY}":"") . "
-				" . (! empty($this->LIMIT)?" LIMIT {$this->LIMIT}":"");
-    // echo $sql."<br>";
-    $data = $DBobject->wrappedSql($sql);
-    return $data;
-  }
+  
 }
