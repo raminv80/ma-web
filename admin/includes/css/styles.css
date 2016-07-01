@@ -220,7 +220,7 @@ border:px solid #FFFFFF; -webkit-border-radius: px; -moz-border-radius: px;borde
  background-image: linear-gradient(to bottom, #45484d, #000000);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#45484d, endColorstr=#000000);
 }
 
-.login_button:hover{
+.login_button:hover,.login_button:focus,.login_button:active{
   color: #fff !important;
 }
 
@@ -251,7 +251,7 @@ border:px solid #FFFFFF; -webkit-border-radius: px; -moz-border-radius: px;borde
   border-color: #000;
 }
 
-.btn-black:hover{
+.btn-black:hover,.btn-black:active,.btn-black:focus{
   background-color: #555;
   color: #fff !important;
 }

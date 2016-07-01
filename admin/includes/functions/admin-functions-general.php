@@ -6,7 +6,7 @@ function AdminLogIn($email,$password){
   $isValidPassword = isValidPassword($password);
 
   $temp_str = getPass($email,$password);
-  //die('@'.$temp_str.'@');
+  
   $DBobject = new DBmanager();
   $sql = "SELECT * FROM tbl_admin WHERE admin_email = :email AND admin_password = :password AND admin_deleted IS NULL";
   $params = array(

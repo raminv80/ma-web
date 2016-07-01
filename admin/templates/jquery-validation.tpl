@@ -185,6 +185,41 @@ if (jQuery.validator) {
 			"Invalid date."
 	);
 	
+	jQuery.validator.addMethod(
+	  		"hasLowercase", 
+	  		function(value, element) {
+	  		  var validStr = /[a-z]/;
+	  		  return value == '' || validStr.test(value)
+			}, 
+			"Must include at least one lower case character"
+	);
+	
+	jQuery.validator.addMethod(
+	  		"hasUppercase", 
+	  		function(value, element) {
+	  		  var validStr = /[A-Z]/;
+	  		  return value == '' || validStr.test(value)
+			}, 
+			"Must include at least one upper case character"
+	);
+
+	jQuery.validator.addMethod(
+	  		"hasDigit", 
+	  		function(value, element) {
+	  		  var validStr = /\d/;
+	  		  return value == '' || validStr.test(value)
+			}, 
+			"Must include at least one number/digit"
+	);
+
+	jQuery.validator.addMethod(
+	  		"hasSpecialChar", 
+	  		function(value, element) {
+	  		  var validStr = /[!@#\$%\^&*)(\-._=+]/;
+	  		  return value == '' || validStr.test(value)
+			}, 
+			"Must include at least one special character: !@#$%^&*)(-._=+"
+	);	
 }
 
 

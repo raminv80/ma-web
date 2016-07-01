@@ -97,27 +97,21 @@ function isValidInetAddress($data, $strict = false)
 
 function isValidPassword($data)
 {
-	$r1='/[A-Z]/';  //Uppercase
-	$r2='/[a-z]/';  //lowercase
-	$r3='/[!@#$%^&*()-_=+{};:,<.>]/';  // whatever you mean by 'special char'
-	$r4='/[0-9]/';  //numbers
-
-	$regex = '/[A-Z]/';
-	if (preg_match_all($regex, trim($data), $matches)<1) {
-		return false;
+  if(strlen(trim($data))<8){
+    return false;
+  }
+  
+    $rgx = array();
+	$rgx[] = '/[A-Z]/';  //Uppercase
+	$rgx[] = '/[a-z]/';  //lowercase
+	$rgx[] = '/[0-9]/';  //numbers
+	$rgx[] = '/[!@#\$%\^&*)(\-._=+]/';  // whatever you mean by 'special char'
+	
+	foreach($rgx as $r){
+    	if (preg_match_all($r, trim($data), $matches)<1) {
+    		return false;
+    	}
 	}
-	$regex = '/[a-z]/';
-	if (preg_match_all($regex, trim($data), $matches)<1) {
-		return false;
-	}
-	$regex='/[0-9]/';
-	if (preg_match_all($regex, trim($data), $matches)<1) {
-		return false;
-	}
-	if(strlen(trim($data))<8){
-		return false;
-	}
-
 	return true;
 }
 

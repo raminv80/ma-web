@@ -1,7 +1,7 @@
 {block name=body}
 <div class="row">
 	<div class="col-sm-12">
-		<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
+		<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post" autocomplete="off">
 			<div class="row">
 				<div class="col-sm-12 edit-page-header">
 					<span class="edit-page-title">{if $fields.admin_id neq ""}Edit{else}New{/if} Admin {if $cnt eq ""}{assign var=cnt value=0}{/if}</span> 
@@ -42,7 +42,7 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="admin_email">Email *</label>
 							<div class="col-sm-5">
-								<input class="form-control" type="email" value="{$fields.admin_email}" name="field[1][tbl_admin][{$cnt}][admin_email]" id="admin_email" onchange="$('#admin_username').val(this.value);createPassword();" required>
+								<input class="form-control" type="email" value="{$fields.admin_email}" name="field[1][tbl_admin][{$cnt}][admin_email]" id="admin_email" onchange="$('#admin_username').val(this.value);createPassword();"  autocomplete="off" required>
 								<span class="help-block"></span>
 							</div>
 						</div>
@@ -56,17 +56,15 @@
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="password">Password *</label>
 							<div class="col-sm-5">
-								<input class="form-control" type="password" value="" name="field1" id="password" onchange="createPassword();">
-								<span class="help-block"></span>
+								<input class="form-control" type="password" value="" name="field1" id="password" onchange="createPassword();" autocomplete="off">
+								<div><small>Minimum 8 characters</small></div>
+                                <div><small>At least one lower case</small></div>
+                                <div><small>At least one upper case</small></div>
+                                <div><small>At least one number/digit</small></div>
+                                <div><small>At least one special character: !@#$%^&*)(-._=+</small></div>
+                                <span class="help-block"></span>
 							</div>
 						</div>
- 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="re_password">Retype Password *</label>
-							<div class="col-sm-5">
-								<input class="form-control" type="password" value="" name="field2" id="re_password" >
-								<span class="help-block"></span>
-							</div>
-						</div> 
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="admin_level">Admin Level</label>
 							<div class="col-sm-5">
@@ -90,7 +88,7 @@
 							</div>
 						</div> -->
 					</div>
-				</div>
+				</div> 
 				<!--===+++===+++===+++===+++===+++ LOG TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane" id="log">
 					<div class="row form" id="tags-wrapper">
@@ -138,26 +136,21 @@ var init_pass = "{if $fields.admin_password}{$fields.admin_password}{/if}";
 $(document).ready(function(){
 
 	$('#Edit_Record').validate({
-		onkeyup: false
+		onkeyup: false,
 	});
 	
- 	$('#re_password').rules("add", {
-	      equalTo: '#password',
-	      messages: {
-	        equalTo: "The passwords you have entered do not match. Please check them."
-	      }
+ 	$('#password').rules("add", {
+ 	  	minlength: 8,	
+ 	 	hasLowercase: true,
+		hasUppercase: true,
+		hasDigit: true,
+		hasSpecialChar: true
 	 });
 	  
 	$('#admin_email').rules("add", {
 		uniqueEmail: { id: "{if $fields.admin_id}{$fields.admin_id}{else}0{/if}", table:"admin", field:"#admin_id" }
 	 });
 	 
-/* 	$('#admin_reemail').rules("add", {
-	      equalTo: '#admin_email',
-	      messages: {
-	        equalTo: "The emails you have entered do not match. Please check them."
-	      }
-	 }); */
 });
 
 function createPassword() {
