@@ -2,11 +2,10 @@ $font-stack: Helvetica, sans-serif;
 $majpr-color: #333;
 $minor-color: #555;
 
+@import 'reset';
+@import 'bootstrap';
+
 @import 'base';
-
-
-
-
-
-@import 'overlay-menu';
-@import 'footer';
+@import 'upto1200';
+@import 'upto992';
+@import 'upto768';

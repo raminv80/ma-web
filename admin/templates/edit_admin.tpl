@@ -23,7 +23,7 @@
 			<div class="tab-content">
 				<!--===+++===+++===+++===+++===+++ DETAILS TAB +++===+++===+++===+++===+++====-->
 				<div class="tab-pane active" id="details">
-					<div class="row form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
+					<div class="form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
 						
 						<div class="row form-group">
 							<label class="col-sm-3 control-label" for="admin_name">Name *</label>
@@ -57,7 +57,8 @@
 							<label class="col-sm-3 control-label" for="password">Password *</label>
 							<div class="col-sm-5">
 								<input class="form-control" type="password" value="" name="field1" id="password" onchange="createPassword();" autocomplete="off">
-								<div><small>Minimum 8 characters</small></div>
+								<a class="showhide" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[type=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[type=text]').get(0).type='password';$(this).html('Show'); }">Show</a>
+                                <div><small>Minimum 8 characters</small></div>
                                 <div><small>At least one lower case</small></div>
                                 <div><small>At least one upper case</small></div>
                                 <div><small>At least one number/digit</small></div>

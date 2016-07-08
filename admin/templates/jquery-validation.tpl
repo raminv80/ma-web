@@ -15,8 +15,8 @@ if (jQuery.validator) {
 	    highlight: function (element, errorClass, validClass) {
 	      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
 	     /*  $('#error-text').html('<label class="control-label">Error, please check the red highlighted fields and submit again.</label>'); */
-	      if ($.inArray($(element).closest('.row.form').attr('data-error'), error_msg) < 0 ) {
-	    	  error_msg.push($(element).closest('.row.form').attr('data-error'));
+	      if ($.inArray($(element).closest('.form').attr('data-error'), error_msg) < 0 ) {
+	    	  error_msg.push($(element).closest('.form').attr('data-error'));
 		   };
 		   if (error_msg.toString()) {
 			   	$('#form-error-msg').html(error_msg.toString().replace(',', '<br>') );

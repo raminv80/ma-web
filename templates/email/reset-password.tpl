@@ -22,7 +22,7 @@ table{
 		{if $message}{$message}<br><br>{/if}
 		
 		Click the link below to change your password. This link can only be used once and will expire in 4hrs. <br>
-		{$DOMAIN}/resetpassword?token={$token}<br><br><br>
+		{$DOMAIN}/password-recovery?token={$token}<br><br><br>
 		
 		If you have any questions about your account, or did not submit this request, please call our friendly support team on <a href="tel:{$COMPANY.phone}" class="tel">{$COMPANY.phone}</a>.<br><br>
 		Kind regards<br><br>

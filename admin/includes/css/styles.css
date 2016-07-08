@@ -224,6 +224,22 @@ border:px solid #FFFFFF; -webkit-border-radius: px; -moz-border-radius: px;borde
   color: #fff !important;
 }
 
+.showpassword {
+  padding-right: 55px;
+}
+
+.showhide{
+  line-height: 34px; 
+  position: absolute; 
+  right: 20px; 
+  top: 2px;
+  padding: 0 2px;
+}
+
+.showhide:hover, .showhide:active, .showhide:focus {
+  text-decoration:none; 
+} 
+
 #selector{
   margin-bottom: 20px;
 }

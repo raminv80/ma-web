@@ -18,6 +18,7 @@
 		<label  class="col-sm-4 control-label" for="password" >Password:</label>
 		<div class="col-sm-8">
 			<input type="password" class="form-control" name="password" id="password" class="text-box-login-password" required>
+            <a class="showhide" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[type=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[type=text]').get(0).type='password';$(this).html('Show'); }">Show</a>
 		</div>
 	</div>
 	<div class="col-sm-offset-4 error-alert" style="display:none;">

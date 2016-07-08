@@ -77,9 +77,9 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
 	    		if ($_POST['redirect']) {
 	    			$url = $_POST['redirect'];
 	    		}
-          if(empty($_SESSION['address'])){
+          if(empty($_SESSION['user']['public']['address'])){
           	$addressArr = $user_obj->GetUsersAddresses($res['id']);
-            $_SESSION['address'] =  array("B"=> $addressArr[0], "same_address" => true);
+            $_SESSION['user']['public']['address'] =  array("B"=> $addressArr[0], "same_address" => true);
           }
           
           
@@ -193,7 +193,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
     					'address_surname' => $_POST['user_surname']),
     				$_POST)	)){
     			$addressArr = $user_obj->GetUsersAddresses($_SESSION['user']['public']['id']);
-    			$_SESSION['address'] =  array("S"=> $addressArr[0], "same_address" => true);
+    			$_SESSION['user']['public']['address'] =  array("S"=> $addressArr[0], "same_address" => true);
     		}
     		
     		if(empty($res['error'])){
@@ -212,10 +212,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend',$_POST["formToken"],fals
 } 
 $redirect = $_SERVER['HTTP_REFERER'];
 if($_GET["logout"]){
-	unset($_SESSION['user']['public']);
-  unset($_SESSION['address']);
-  unset($_SESSION['comments']);
-  unset($_SESSION['agreed_tc']);
+  unset($_SESSION['user']['public']);
   session_regenerate_id();
   if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
   header('Location: ' . $redirect);
