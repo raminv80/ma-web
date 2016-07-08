@@ -20,10 +20,17 @@
           <input type="hidden" value="{if $fields.listing_created}{$fields.listing_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_listing][{$cnt}][listing_created]" id="listing_created">
           <input type="hidden" value="{if $typeID}{$typeID}{else}1{/if}" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
           <input type="hidden" value="{if $fields.listing_published}{$fields.listing_published}{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published">
-          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" class="value">
-          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" class="value">
+          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]">
+          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_display_menu]">
+          <input type="hidden" value="999" name="field[1][tbl_listing][{$cnt}][listing_order]">
           <input type="hidden" value="{$rootParentID}" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+          <!-- Extended table -->
+          <input type="hidden" value="listing_id" name="primary_id" id="primary_id"/>
+          <input type="hidden" value="listing_id" name="default[news_listing_id]" /> 
+          <input type="hidden" value="news_id" name="field[2][tbl_news][{$cnt}][id]" id="news_id" /> 
+          <input type="hidden" value="{$fields.news_id}" name="field[2][tbl_news][{$cnt}][news_id]" class="key"> 
+          <input type="hidden" value="{$fields.listing_id}" name="field[2][tbl_news][{$cnt}][news_listing_id]" id="news_listing_id" class="key"/>
         </div>
       </div>
       <div class="row published" {if $fields.listing_published eq 0}style="display: none;"{/if}>
@@ -38,17 +45,16 @@
       </div>
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-        <li><a href="#images" data-toggle="tab">Images</a></li>
+        <!-- <li><a href="#images" data-toggle="tab">Images</a></li> -->
         <li><a href="#share" data-toggle="tab">Social Sharing</a></li>
-        <li><a href="#files" data-toggle="tab">Files</a></li>
-        <li><a href="#tags" data-toggle="tab">Tags</a></li>
+        <!-- <li><a href="#tags" data-toggle="tab">Tags</a></li> -->
         <li><a href="#log" data-toggle="tab">Log</a></li>
       </ul>
 
       <div class="tab-content">
         <!--===+++===+++===+++===+++===+++ DETAILS TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane active" id="details">
-          <div class="row form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
+          <div class="form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_schedule_start">Scheduled Start *</label>
               <div class="col-sm-2">
@@ -108,6 +114,13 @@
               </div>
             </div>
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_news_start_date">Date *</label>
+              <div class="col-sm-5">
+                <input class="form-control dates" type="text" value="{if $fields.news_start_date}{$fields.news_start_date|date_format:"%d/%m/%Y"}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}"  name="news_from" id="news_from" onchange="setDateValue('id_news_start_date',this.value);" required>
+                <input type="hidden" value="{if $fields.news_start_date}{$fields.news_start_date}{else}{$smarty.now|date_format:"%Y-%m-%d"}{/if}" name="field[2][tbl_news][{$cnt}][news_start_date]" id="id_news_start_date">
+              </div>
+            </div>
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_content1">Content</label>
               <div class="col-sm-5">
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
@@ -131,7 +144,7 @@
         </div>
         <!--===+++===+++===+++===+++===+++ SHARE TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="share">
-          <div class="row form" data-error="Error found on <b>Social Sharing tab</b>. View <b>Details tab</b> to see specific error notices.">
+          <div class="form" data-error="Error found on <b>Social Sharing tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_share_title">Share Title</label>
               <div class="col-sm-5">
@@ -159,22 +172,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <!--===+++===+++===+++===+++===+++ FILES TAB +++===+++===+++===+++===+++====-->
-        <div class="tab-pane" id="files">
-          <div class="row form" id="files-wrapper">{assign var='filesno' value=0} {assign var='gTableName' value='listing'} {foreach $fields.files as $files} {assign var='filesno' value=$filesno+1} {include file='files.tpl'} {/foreach}</div>
-          <div class="row btn-inform">
-            <a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.files').slideUp();newFile();"> Add New File</a>
-          </div>
-          <input type="hidden" value="{$filesno}" id="filesno">
-        </div>
-        <!--===+++===+++===+++===+++===+++ TESTIMONIALS TAB +++===+++===+++===+++===+++====-->
-        <div class="tab-pane" id="testimonials">
-          <div class="row form" id="testimonials-wrapper">{assign var='testimonialsno' value=0} {assign var='gTableName' value='listing'} {foreach $fields.testimonials as $testimonials} {assign var='testimonialsno' value=$testimonialsno+1} {include file='testimonial.tpl'} {/foreach}</div>
-          <div class="row btn-inform">
-            <a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.testimonials').slideUp();newTestimonial();"> Add New Testimonial</a>
-          </div>
-          <input type="hidden" value="{$testimonialsno}" id="testimonialsno">
         </div>
         <!--===+++===+++===+++===+++===+++ TAGS TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="tags">
@@ -239,6 +236,7 @@
 {include file='jquery-validation.tpl'}
 
 <script type="text/javascript">
+ 
   function seturl(str) {
     seturl(str, false);
   }
@@ -255,56 +253,58 @@
             $('#id_listing_url').val(res.url);
             $('#id_listing_url_text').html(res.url);
           }
-        }catch(err){
-        }
+        }catch(err){}
       }
     });
   }
 
-  $(document).ready(
-      function() {
-        
-        $('#Edit_Record').validate({
-          onkeyup: false
-        });
-        $('.images').hide();
-        $('.files').hide();
-        
-        $('#id_listing_url').rules("add", {
-          uniqueURL: {
-            id: $('#listing_object_id').val(),
-            idfield: "listing_object_id",
-            table: "tbl_listing",
-            field: "listing_url",
-            field2: "listing_parent_id",
-            value2: "id_listing_parent"
-          }
-        });
-        
-        $("#from").datepicker(
-            {
-              changeMonth: true,
-              changeYear: true,
-              dateFormat: "dd/mm/yy",
-              onSelect: function(selectedDate) {
-                $("#id_listing_schedule_start").val(
-                    convert_to_mysql_date_format(selectedDate));
-                $("#to").datepicker("option", "minDate", selectedDate);
-              }
-            });
-        
-        $("#to").datepicker(
-            {
-              changeMonth: true,
-              changeYear: true,
-              dateFormat: "dd/mm/yy",
-              onSelect: function(selectedDate) {
-                $("#id_listing_schedule_end").val(
-                    convert_to_mysql_date_format(selectedDate));
-                $("#from").datepicker("option", "maxDate", selectedDate);
-              }
-            });
-      });
+  $(document).ready(function() {
+    $('#Edit_Record').validate({
+      onkeyup: false
+    });
+    $('.images').hide();
+    $('.files').hide();
+    
+    $('#id_listing_url').rules("add", {
+      uniqueURL: {
+        id: $('#listing_object_id').val(),
+        idfield: "listing_object_id",
+        table: "tbl_listing",
+        field: "listing_url",
+        field2: "listing_parent_id",
+        value2: "id_listing_parent"
+      }
+    });
+    
+    $("#from").datepicker({
+      changeMonth: true,
+      changeYear: true,
+      dateFormat: "dd/mm/yy",
+      onSelect: function(selectedDate) {
+        $("#id_listing_schedule_start").val(convert_to_mysql_date_format(selectedDate));
+        $("#to").datepicker("option", "minDate", selectedDate);
+      }
+    });
+    
+    $("#to").datepicker({
+      changeMonth: true,
+      changeYear: true,
+      dateFormat: "dd/mm/yy",
+      onSelect: function(selectedDate) {
+        $("#id_listing_schedule_end").val(convert_to_mysql_date_format(selectedDate));
+        $("#from").datepicker("option", "maxDate", selectedDate);
+      }
+    });
+    
+    $("#news_from").datepicker({
+      changeMonth: true,
+      changeYear: true,
+      dateFormat: "dd/mm/yy",
+      onSelect: function(selectedDate) {
+        $("#id_news_start_date").val(convert_to_mysql_date_format(selectedDate));
+      }
+    });
+  });
   
   function saveDraft(id_name, objId_name, publish_name, field_name, preview) {
     if($('#Edit_Record').valid()){
@@ -316,34 +316,27 @@
       var publish_key = encodeURIComponent($('#' + publish_name).attr('name'));
       var field_key = encodeURIComponent(field_name);
       var field_value = encodeURIComponent(mysql_now());
-      $
-          .ajax({
-            type: "POST",
-            url: "/admin/includes/processes/processes-record.php",
-            cache: false,
-            async: false,
-            data: id_key0 + '=' + objId_name + '&' + id_key1 + '='
-                + publish_name + '&' + objId_key + "="
-                + $('#' + objId_name).val() + "&" + publish_key + "=0&"
-                + field_key + "=" + field_value + '&formToken='
-                + $('#formToken').val(),
-            dataType: "html",
-            success: function(data, textStatus) {
-              try{
-                var obj = $.parseJSON(data);
-                if(obj.notice){
-                  $('.key').val('');
-                  $('#Edit_Record').submit();
-                  $('.published').hide();
-                  $('.drafts').show();
-                  buildUrl('tbl_listing', 'listing_parent_id', objId_name,
-                      preview);
-                }
-              }catch(err){
-              }
-              $('body').css('cursor', 'default');
+      $.ajax({
+        type: "POST",
+        url: "/admin/includes/processes/processes-record.php",
+        cache: false,
+        async: false,
+        data: id_key0 + '=' + objId_name + '&' + id_key1 + '=' + publish_name + '&' + objId_key + "=" + $('#' + objId_name).val() + "&" + publish_key + "=0&" + field_key + "=" + field_value + '&formToken=' + $('#formToken').val(),
+        dataType: "html",
+        success: function(data, textStatus) {
+          try{
+            var obj = $.parseJSON(data);
+            if(obj.notice){
+              $('.key').val('');
+              $('#Edit_Record').submit();
+              $('.published').hide();
+              $('.drafts').show();
+              buildUrl('tbl_listing', 'listing_parent_id', objId_name, preview);
             }
-          });
+          }catch(err){}
+          $('body').css('cursor', 'default');
+        }
+      });
       $('body').css('cursor', 'default');
     }
   }
@@ -362,10 +355,7 @@
         type: "POST",
         url: "/admin/includes/processes/processes-record.php",
         cache: false,
-        data: id_key0 + '=' + objId_name + '&' + id_key1 + '=' + publish_name
-            + '&' + objId_key + "=" + $('#' + objId_name).val() + "&"
-            + publish_key + "=1&" + field_key + "=" + field_value
-            + '&formToken=' + $('#formToken').val(),
+        data: id_key0 + '=' + objId_name + '&' + id_key1 + '=' + publish_name + '&' + objId_key + "=" + $('#' + objId_name).val() + "&" + publish_key + "=1&" + field_key + "=" + field_value + '&formToken=' + $('#formToken').val(),
         dataType: "html",
         success: function(data, textStatus) {
           try{
@@ -375,8 +365,7 @@
               $('.drafts').hide();
               $('.published').show();
             }
-          }catch(err){
-          }
+          }catch(err){}
           $('body').css('cursor', 'default');
         }
       });
@@ -400,9 +389,7 @@
       type: "POST",
       url: "/admin/includes/processes/load-template.php",
       cache: false,
-      data: "template=gallery.tpl&imageno=" + no
-          + "&gTableName=listing&image_size="
-          + encodeURIComponent('Size: 1170px Wide x 560px Tall'),
+      data: "template=gallery.tpl&imageno=" + no + "&gTableName=listing&image_size=" + encodeURIComponent('Size: 1170px Wide x 560px Tall'),
       dataType: "html",
       success: function(data, textStatus) {
         try{
@@ -442,101 +429,6 @@
     }
   }
 
-  function newFile() {
-    $('body').css('cursor', 'wait');
-    var no = $('#filesno').val();
-    no++ ;
-    $('#filesno').val(no);
-    $.ajax({
-      type: "POST",
-      url: "/admin/includes/processes/load-template.php",
-      cache: false,
-      data: "template=files.tpl&filesno=" + no + "&gTableName=listing",
-      dataType: "html",
-      success: function(data, textStatus) {
-        try{
-          $('#files-wrapper').append(data);
-          $('body').css('cursor', 'default');
-          scrolltodiv('#file_wrapper' + no);
-        }catch(err){
-          $('body').css('cursor', 'default');
-        }
-      }
-    });
-  }
-
-  function toggleFile(ID) {
-    if($('#file' + ID).is(':visible')){
-      $('.files').slideUp();
-    }else{
-      $('.files').slideUp();
-      $('#file' + ID).slideDown();
-    }
-  }
-
-  function deleteFile(ID) {
-    if(ConfirmDelete()){
-      var count = $('#' + ID).attr('rel');
-      var today = mysql_now();
-      
-      html = '<input type="hidden" value="'+today+'" name="field[10][tbl_files]['+count+'][files_deleted]" />';
-      $('#' + ID).append(html);
-      $('#' + ID).css('display', 'none');
-      $('#' + ID).removeClass('files');
-    }else{
-      return false;
-    }
-  }
-
-  //START TESTIMONIALS
-  function newTestimonial() {
-    $('body').css('cursor', 'wait');
-    var no = $('#testimonialsno').val();
-    no++ ;
-    $('#testimonialsno').val(no);
-    $.ajax({
-      type: "POST",
-      url: "/admin/includes/processes/load-template.php",
-      cache: false,
-      data: "template=testimonial.tpl&testimonialsno=" + no
-          + "&gTableName=listing",
-      dataType: "html",
-      success: function(data, textStatus) {
-        try{
-          $('#testimonials-wrapper').append(data);
-          $('body').css('cursor', 'default');
-          scrolltodiv('#testimonial_wrapper' + no);
-        }catch(err){
-          $('body').css('cursor', 'default');
-        }
-      }
-    });
-  }
-
-  function toggleTestimonial(ID) {
-    if($('#testimonial' + ID).is(':visible')){
-      $('.testimonials').slideUp();
-    }else{
-      $('.testimonials').slideUp();
-      $('#testimonial' + ID).slideDown();
-    }
-  }
-
-  function deleteTestimonial(ID) {
-    if(ConfirmDelete()){
-      var count = $('#' + ID).attr('rel');
-      var today = mysql_now();
-      
-      html = '<input type="hidden" value="'+today+'" name="field[10][tbl_testimonial]['+count+'][testimonial_deleted]" />';
-      $('#' + ID).append(html);
-      $('#' + ID).css('display', 'none');
-      $('#' + ID).removeClass('testimonials');
-    }else{
-      return false;
-    }
-  }
-  //END TESTIMONIALS
-  
   function newTag() {
     if($('#new_tag').val() != ''){
       $('body').css('cursor', 'wait');
@@ -547,26 +439,21 @@
         type: "POST",
         url: "/admin/includes/processes/processes-tags.php",
         cache: false,
-        data: "template=tag.tpl&tagno=" + no + "&tag%5Btag_value%5D="
-            + $('#new_tag').val()
-            + "&table_name=tbl_listing&default=listing_id&objId="
-            + $('#listing_id').val(),
+        data: "template=tag.tpl&tagno=" + no + "&tag%5Btag_value%5D=" + $('#new_tag').val() + "&table_name=tbl_listing&default=listing_id&objId=" + $('#listing_id').val(),
         dataType: "html",
         success: function(data, textStatus) {
           try{
             $('#tags-wrapper').prepend(data);
             $('#new_tag').val('');
             $('body').css('cursor', 'default');
-            $('#new_tag').closest('.form-group').removeClass('has-success')
-                .removeClass('has-error');
+            $('#new_tag').closest('.form-group').removeClass('has-success').removeClass('has-error');
           }catch(err){
             $('body').css('cursor', 'default');
           }
         }
       });
     }else{
-      $('#new_tag').closest('.form-group').removeClass('has-success').addClass(
-          'has-error');
+      $('#new_tag').closest('.form-group').removeClass('has-success').addClass('has-error');
     }
   }
 

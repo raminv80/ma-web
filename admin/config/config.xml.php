@@ -110,6 +110,11 @@
       <type>LISTING</type>
       <type_id>2</type_id>
       <root_parent_id>17</root_parent_id>
+      <extends>
+        <table>tbl_news</table>
+        <linkfield>listing_id</linkfield>
+        <field>news_listing_id</field>
+      </extends>
       <associated>
       	<name>tags</name>
       	<table>tbl_tag</table>
@@ -122,7 +127,7 @@
       	<id>listing_id</id>
       	<field>listing_object_id</field>
       </log>
-      <list_template>listall.tpl</list_template>
+      <list_template>list.tpl</list_template>
       <edit_template>edit_news.tpl</edit_template>
   	</section>
     
@@ -134,10 +139,10 @@
       <type_id>3</type_id>
       <root_parent_id>17</root_parent_id>
       <extends>
-          <table>tbl_news</table>
-          <linkfield>news_id</linkfield>
-          <field>productspec_product_id</field>
-        </extends>
+        <table>tbl_news</table>
+        <linkfield>listing_id</linkfield>
+        <field>news_listing_id</field>
+      </extends>
       <associated>
         <name>tags</name>
         <table>tbl_tag</table>
@@ -150,7 +155,7 @@
         <id>listing_id</id>
         <field>listing_object_id</field>
       </log>
-      <list_template>listall.tpl</list_template>
+      <list_template>list.tpl</list_template>
       <edit_template>edit_news.tpl</edit_template>
     </section> 
   </group>

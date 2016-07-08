@@ -215,7 +215,12 @@
     <limit level="1">20</limit>
     <table> 
       <name>tbl_listing</name>
-      <field>listing_url</field>      
+      <field>listing_url</field>  
+      <extends>
+        <table>tbl_news</table>
+        <linkfield>listing_id</linkfield>
+        <field>news_listing_id</field>
+      </extends>    
       <associated listing="false">
         <name>gallery</name>
         <table>tbl_gallery</table>
@@ -228,16 +233,11 @@
         <linkfield>listing_id</linkfield>
         <field>tag_object_id</field>
       </associated>
-      <associated listing="false">
-        <name>files</name>
-        <table>tbl_files</table>
-        <linkfield>listing_id</linkfield>
-        <field>files_listing_id</field>
-      </associated>
-      <template>media-item.tpl</template> 
+      <template typeid="2">news-article.tpl</template> 
+      <template typeid="3">newsletter.tpl</template> 
     </table>
-    <template>mediacentre-list.tpl</template>
-    <loadmoretemplate>mediacentre-structure.tpl</loadmoretemplate>  
+    <template>news-resources.tpl</template>
+    <loadmoretemplate>news-resources-structure.tpl</loadmoretemplate>  
   </listing_page>
 
   <global_process>

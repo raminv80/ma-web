@@ -231,7 +231,7 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $a
 			);
 			$res = $DBobject->executeSQL($sql,$params);
 			if(count($res) < 5 || !empty($_SESSION['user']['admin']) ){
-				$mailSent = SafeMail($to,$subject,$body,$headers);
+				$mailSent = SafeMail($to, $subject, $body, $headers, '-f '. $fromEmail);
 			}else{
 				$mailSent= -1;
 			}
@@ -239,10 +239,12 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $a
 	}catch(Exception $e){}
 
 	try{
-		$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
-	      (:to,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id,now(),:email_ua,:email_serverip)";
+		$sql = "INSERT INTO tbl_email_queue (email_to, email_from, email_from_email, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
+	      (:to,:from,:from_email,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id,now(),:email_ua,:email_serverip)";
 		$params = array(
 				":to"=>$to,
+		        ":from"=>$from,
+      		    ":from_email"=>$fromEmail,
 				":header"=>$headers,
 				":subject"=>$subject,
 				":content"=>utf8_encode($body),
@@ -287,10 +289,12 @@ function createBulkMail($to_Array,$from,$fromEmail,$subject,$body, $adminId = 0,
 
 	try{
 		foreach ($to_Array as $k => $to){
-			$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
-		      (:to,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id, now(),:email_ua,:email_serverip)";
+			$sql = "INSERT INTO tbl_email_queue (email_to, email_from, email_from_email, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
+		      (:to,:from,:from_email,:header,:subject,:content,:ip,:sent,:email_user_id,:email_admin_id, now(),:email_ua,:email_serverip)";
 			$params = array(
 					":to"=>$to,
+    		        ":from"=>$from,
+          		    ":from_email"=>$fromEmail,
 					":header"=>$headers,
 					":subject"=>$subject,
 					":content"=>utf8_encode($body),
@@ -339,7 +343,7 @@ function sendBulkMail(){
 			$sql = "SELECT * FROM tbl_email_queue WHERE email_sent = '-2' OR email_sent = '0' ORDER BY email_sent = 0 DESC,email_created LIMIT $_limit";
 			if($res = $DBobject->executeSQL($sql)){
 				foreach ($res as $r){
-					if(SafeMail($r['email_to'],$r['email_subject'],$r['email_content'],$r['email_header'])){
+					if(SafeMail($r['email_to'],$r['email_subject'],$r['email_content'],$r['email_header'], '-f '.$r['email_from_email'])){
 						$sql = "UPDATE tbl_email_queue SET email_sent = '1',email_modified = now() WHERE email_id = :email_id";
 						$DBobject->executeSQL($sql, array(":email_id"=>$r['email_id']));
 						$cnt++;
@@ -399,10 +403,12 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 
 	try{
 		$headers = '';
-		$sql = "INSERT INTO tbl_email_queue (email_to, email_header, email_subject, email_content,email_file,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
-	      (:to,:header,:subject,:content,:file,:ip,:sent,:email_user_id,:email_admin_id,now(),:email_ua,:email_serverip)";
+		$sql = "INSERT INTO tbl_email_queue (email_to, email_from, email_from_email, email_header, email_subject, email_content,email_file,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
+	      (:to,:from,:from_email,:header,:subject,:content,:file,:ip,:sent,:email_user_id,:email_admin_id,now(),:email_ua,:email_serverip)";
 		$params = array(
 				":to"=>$to,
+    		    ":from"=>$from,
+          		":from_email"=>$fromEmail,
 				":header"=>$headers,
 				":subject"=>$subject,
 				":content"=>utf8_encode($body),
