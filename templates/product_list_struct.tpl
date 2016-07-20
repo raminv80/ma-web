@@ -58,4 +58,24 @@
 	</a>
 	</div>
 </div>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{$item.product_name|strip_tags}",
+  "image": "{$DOMAIN}{exist_image image=$item.gallery.0.gallery_link|cat:'?width=360&height=284&crop=1&quality=10' default='/images/no-image-available.jpg?width=360&height=284&crop=1'}",
+  "description": "{$item.product_content1|strip_tags}",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "AUD",
+    "price": "{if $item.product_specialprice gt 0}{$item.product_specialprice}{else}{$item.product_price}{/if}",
+    "availability": "http://schema.org/{if ($item.product_price gt 0 || $item.product_specialprice gt 0) && $item.product_instock eq 1}InStock{else}OutOfStock{/if}",
+    "seller": {
+      "@type": "Organization",
+      "name": "{$COMPANY.name}"
+    }
+  }
+}
+</script>
 {/block}

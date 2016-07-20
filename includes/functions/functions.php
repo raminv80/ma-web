@@ -11,7 +11,6 @@ $cfg_host = (string)$CONFIG->domain;
 $GLOBALS['HTTP_HOST'] = (!empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$cfg_host);
 
 include_once 'database/pdo-db-manager.php';
-include_once 'database/table-class.php';
 include_once 'database/utilities.php';
 include_once 'smarty/Smarty.class.php';
 
@@ -74,7 +73,6 @@ if(!empty($_COOKIE["sub_site"]) && !$_match_subsite){
 
 include_once 'includes/classes/listing-class.php';
 include_once 'includes/functions/functions-search.php';
-include_once 'includes/processes/processes.php';
 
 if(!empty($CONFIG->database->host) && !empty($CONFIG->database->user) && !empty($CONFIG->database->password) && !empty($CONFIG->database->dbname)){
   $GLOBALS['DBobject'] = new DBmanager();

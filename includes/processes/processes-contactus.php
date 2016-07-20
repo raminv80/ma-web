@@ -1,7 +1,7 @@
 <?php
 
 $error = 'Missing required info. Please try again.';
-if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 3 ){
+if(checkToken('frontend',$_POST["formToken"]) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 3 ){
   if(!empty($_POST['email']) && !empty($_POST['phone'])  && !empty($_POST['name'])   && !empty($_POST['message'])){
   	global $CONFIG,$DBobject,$SMARTY,$SITE,$GA_ID;
   	

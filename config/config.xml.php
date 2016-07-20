@@ -15,6 +15,7 @@
 		<postcode></postcode>
     </address>
     <phone></phone>
+    <email>noreply@themserver.com.au</email>
     <email_from>noreply@themserver.com.au</email_from>
     <email_contact>apolo@them.com.au</email_contact>
     <email_orders>apolo@them.com.au</email_orders>

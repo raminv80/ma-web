@@ -9,7 +9,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
 	}
 	try{
 		//store on API
-		$wrap = new CS_REST_Subscribers('1ad04e1c384a79cacd9ca47e8c3b8f5c', '7d6ddc2467944f2a174afd5eb05040b4');
+		$wrap = new CS_REST_Subscribers('', '7d6ddc2467944f2a174afd5eb05040b4');
 		$customFields = array();
 		//Retrieve Current Subscriptions
 		$check_result = $wrap->get($_POST['submail']);

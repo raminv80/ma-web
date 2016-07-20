@@ -656,7 +656,7 @@ function unclean( $str ){
  * @return string
  */
 function getToken($name){
-	if($_SESSION[$name . "-token"] && !empty($_SESSION[$name . "-token"])){
+	if(!empty($_SESSION[$name . "-token"])){
 		return $_SESSION[$name . "-token"];
 	}else{
 		$_SESSION[$name . "-token"] = generatetoken();

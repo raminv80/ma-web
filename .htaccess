@@ -7,6 +7,10 @@
 #Allow from 150.101.230.130
 #Satisfy Any
 
+#<IfModule mod_deflate.c>
+#AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css text/javascript application/javascript application/x-httpd-php
+#</IfModule>
+
 ## EXPIRES CACHING ##
 #<IfModule mod_expires.c>
 #ExpiresActive On
@@ -28,11 +32,11 @@
 ErrorDocument 503 /home/6-web/68/10/themserver.com/public/cms/503.html
 RewriteEngine  on
 
-# stuff to let through (ignore)
-  RewriteCond %{REQUEST_URI} "/admin/" [OR]
-  RewriteCond %{REQUEST_URI} "/new_admin/" [OR]
-  RewriteCond %{REQUEST_URI} "/includes/"
-  RewriteRule (.*) $1 [L]
+#stuff to let through (ignore)
+RewriteCond %{REQUEST_URI} "/admin/" [OR]
+RewriteCond %{REQUEST_URI} "/new_admin/" [OR]
+RewriteCond %{REQUEST_URI} "/includes/"
+RewriteRule (.*) $1 [L]
   
 #RewriteCond %{REQUEST_URI} "/503.html"
 #RewriteRule (.*) /503.html [R=503,L]
@@ -52,6 +56,13 @@ RewriteRule ^(.*)$ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 #RewriteCond %{HTTPS} !=on
 #RewriteCond %{ENV:STATUS} !^https$
 #RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+##301 Redirects 
+#RewriteCond %{REQUEST_URI} ^/our-program$
+#RewriteRule ^(.*)$ /our-program/about? [R=301,L]
+
+#RewriteRule ^error404.html$ /404 [R=301,L,NC]
+#RewriteRule ^(news/detail/)(.*)$ /resources/$2 [r=301,L,NC,QSA]
 
 RewriteRule \.(?:jpeg|jpg|png)$ convertProgressive.php [QSA,L,NC]
 
