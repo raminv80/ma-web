@@ -6,16 +6,16 @@
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="distribution" content="Global" />
-<meta name="author" content="The Ergo Centre" />
-{if $staging}
+<meta name="author" content="{if $COMPANY.name}{$COMPANY.name}{else}Them Advertising{/if}" />
+{if $staging || $listing_noindex eq 1}
 <meta name="robots" content="noindex,nofollow" />
 {else}
 <meta name="robots" content="index,follow" />
 {/if}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<title>{$product_name|ucfirst} {$listing_seo_title}</title>
-<link href="/images/logo.png" type="image/png" rel="shortcut icon">
+<title>{$product_name|ucfirst}{$listing_seo_title}</title>
+<link href="/images/favicon.png" type="image/png" rel="shortcut icon">
 
 <!-- for Facebook -->
 <meta property="og:title" content="{if $listing_share_title || $product_share_title}{$listing_share_title}{$product_share_title}{else}{$product_name|ucfirst}{$listing_seo_title}{/if}" />
@@ -34,7 +34,7 @@
 <meta name="twitter:domain" content="{$DOMAIN}">
 
 <!-- Schema.org -->
-<meta itemprop="name" content="{$product_name|ucfirst} {$listing_seo_title}">
+<meta itemprop="name" content="{$product_name|ucfirst}{$listing_seo_title}">
 <meta itemprop="description" content="{$product_meta_description} {$listing_meta_description}">
 <meta itemprop="image" content="{$DOMAIN}/images/logo.png">
 
@@ -49,11 +49,9 @@
 <!--[if lt IE 9]>
       <script type="text/javascript" src="/includes/js/html5shiv.js"></script>
       <script type="text/javascript" src="/includes/js/respond.min.js"></script>
- 	<![endif]-->
-			<script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-
+      <script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+ <![endif]-->
 {block name=head}{/block}
-
 
 {if $ga_id}
 	<script>
@@ -78,79 +76,11 @@
 </head>
 <body>
 <header>
-	<div id="header" class="container">
-		<div id="logo" class="col-sm-1 col-md-2">
-			<a href="/"><img src="/images/logo.png" alt="The Ergo Centre" class="img-responsive {if $listing_id neq 1}insidepg{/if}" /></a>
-		</div>
-		<div class="visible-xs navbar-header">
-				  			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
-				  			<span class="sr-only">Toggle navigation</span>
-				  			<span class="icon-bar"></span>
-				  			<span class="icon-bar"></span>
-				  			<span class="icon-bar"></span>
-				  			</button>
-		</div>
-		<div class="visible-xs" id="mobcart">
-		 	<a href="/shopping-cart"><img src="/images/cart.png" alt="Cart" />
-	 			<div style="display:inline;" class="nav-itemNumber">{if $itemNumber}({$itemNumber}){else}(0){/if}</div>
-	 		</a>
-		</div>
-		<div id="menuout" class="col-sm-11 col-md-10">
-				{include file='menu.tpl'}
-		</div>
-    </div>
-    {if $listing_id eq 1}
-    <div id="homebanner">
-	    <div class="container">
-		    <div class="row">
-			    <div class="col-sm-12 text-center">
-					<h3>The average person spends</h3>
-					<h2>15 hours a day</h2>
-					<h3>sitting down</h3>
-
-					<button class="btn btn-white" onclick="$('body,html').animate({ scrollTop: $('#match').offset().top -180},600)">Find the right ergonomic support ></button>
-			    </div>
-		    </div>
-	    </div>
-    </div>
-    {/if}
-    <div id="infoblock" {if $listing_id neq 1}class="shfr"{/if}>
-	    <div class="container">
-		    <div class="row">
-			    <div class="col-sm-3 text-center info">
-				    <a href="/about">
-				    <img src="/images/australia.png" class="Australian owned and operated" />
-				    <div class="infotext">Australian owned and operated</div>
-				    </a>
-			    </div>
-			    <div class="col-sm-3 text-center info">
-				    <a href="/solutions-for-the-homeoffice">
-				    <img src="/images/tailored.png" class="Tailored ergonomic solutions" />
-				    <div class="infotext">Tailored ergonomic solutions</div>
-				    </a>
-			    </div>
-			    <div class="col-sm-3 text-center info">
-				    <a href="/expert-knowledge-and-advice">
-				    <img src="/images/expert.png" class="Expert knowledge and advice" />
-				    <div class="infotext">Expert knowledge and advice</div>
-				    </a>
-			    </div>
-			    <div class="col-sm-3 text-center info">
-				    <a href="/free-trial-and-workplace-audit">
-				    <img src="/images/trial.png" class="Free trial and workplace audit" />
-				    <div class="infotext">Free trial and workplace audit</div>
-				    </a>
-			    </div>
-		    </div>
-	    </div>
-    </div>
+  {include file='menu.tpl'}
 </header>
-
 	{block name=body}{/block}
 	{include file='footer.tpl'}
-
-
-	<script type="text/javascript" src="/includes/js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="/includes/js/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>
@@ -158,10 +88,6 @@
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
-
-		setTimeout(function(){
-			$('#help-alert').slideDown();
-    	},300000);
 
 		$('#searchbox').bind('keyup', function(event) {
 		    if(event.keyCode==13){
@@ -178,76 +104,12 @@
 
 	});
 
-	function nonAplha(ID){
-		var str = $(ID).val();
-	   t = str.replace(/[^a-zA-Z0-9-_+]/i,'');
-	   $(ID).val(t);
-	}
 
-	if (typeof jQuery != 'undefined') {
-	    jQuery(document).ready(function($) {
-	        var filetypes = /\.(zip|exe|pdf|doc*|xls*|ppt*|mp3)$/i;
-	        var baseHref = '';
-	        if (jQuery('base').attr('href') != undefined)
-	            baseHref = jQuery('base').attr('href');
-	        jQuery('a').each(function() {
-	            var href = jQuery(this).attr('href');
-	            if (href && (href.match(/^http?\:/i) || href.match(/^https?\:/i))  && (!href.match(document.domain))) {
-	                jQuery(this).click(function() {
-	                    var extLink = href.replace(/^https?\:\/\//i, '');
-	                    extLink = extLink.replace(/^http?\:\/\//i, '');
-	                    //_gaq.push(['_trackEvent', 'External', 'Click', extLink]);
-	                    ga('send', 'event', 'External', 'Click', extLink);
-	                    if (jQuery(this).attr('target') != undefined && jQuery(this).attr('target').toLowerCase() != '_blank') {
-	                        setTimeout(function() { location.href = href; }, 200);
-	                        return false;
-	                    }
-	                });
-	            }
-	            else if (href && href.match(/^mailto\:/i)) {
-	                jQuery(this).click(function() {
-	                    var mailLink = href.replace(/^mailto\:/i, '');
-	                    //_gaq.push(['_trackEvent', 'Email', 'Click', mailLink]);
-	                    ga('send', 'event', 'Email', 'Click', mailLink);
-	                });
-	            }
-	            else if (href && href.match(/^tel\:/i)) {
-	                jQuery(this).click(function() {
-	                    var telLink = href.replace(/^tel\:/i, '');
-	                    //_gaq.push(['_trackEvent', 'Phone', 'Click', telLink]);
-	                    ga('send', 'event', 'Phone', 'Click', telLink);
-	                });
-	            }
-	            else if (href && href.match(filetypes)) {
-	                jQuery(this).click(function() {
-	                    var extension = (/[.]/.exec(href)) ? /[^.]+$/.exec(href) : undefined;
-	                    var filePath = href;
-	                   // _gaq.push(['_trackEvent', 'Download', 'Click-' + extension, filePath]);
-	                    ga('send', 'event', 'Download', 'Click-'+ extension, filePath);
 
-	                    if (jQuery(this).attr('target') != undefined && jQuery(this).attr('target').toLowerCase() != '_blank') {
-	                        ;
-	                        setTimeout(function() { location.href = baseHref + href; }, 200);
-	                        return false;
-	                    }
-	                });
-	            }
-	        });
-	    });
-	}
+
 	</script>
 	{block name=tail}{/block}
-<!-- Hotjar Tracking Code for www.theergocentre.com.au -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){ (h.hj.q=h.hj.q||[]).push(arguments) };
-        h._hjSettings={ hjid:104703,hjsv:5 };
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
+
 
 </body>
 </html>

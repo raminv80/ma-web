@@ -163,8 +163,70 @@
   <group name="E-commerce">
     <section level="1">
       <showlist>FALSE</showlist>
+      <url>attributes</url>
+      <title>Attributes</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_attribute</name>
+        <id>attribute_id</id>
+        <field>attribute_name</field>
+        <deleted>attribute_deleted</deleted>
+        <orderby>attribute_order, attribute_name</orderby>
+        <associated> 
+          <name>attr_values</name>
+          <table>tbl_attr_value</table>
+          <linkfield>attribute_id</linkfield>
+          <field>attr_value_attribute_id</field> 
+          <orderby>attr_value_order</orderby>
+        </associated>
+        <log>
+          <table>tbl_attribute</table>
+          <id>attribute_id</id>
+          <field>attribute_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>ec_edit_attribute.tpl</edit_template>
+    </section>
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>product-types</url>
+      <title>Product types</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_producttype</name>
+        <id>producttype_id</id>
+        <field>producttype_name</field>
+        <deleted>producttype_deleted</deleted>
+        <orderby>producttype_name</orderby>
+        <associated> 
+          <name>productschemas</name>
+          <table>tbl_productschema</table>
+          <linkfield>producttype_id</linkfield>
+          <field>productschema_type_id</field> 
+        </associated>
+        <options> 
+          <field> 
+            <name>attributes</name>
+            <table>tbl_attribute</table>
+            <id>attribute_id</id>
+            <reference>attribute_name</reference> 
+            <orderby>attribute_name</orderby>
+          </field> 
+        </options>
+        <log>
+          <table>tbl_producttype</table>
+          <id>producttype_id</id>
+          <field>producttype_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>ec_edit_producttype.tpl</edit_template>
+    </section> 
+    <section level="1">
+      <showlist>FALSE</showlist>
       <url>prodcat</url>
-      <title>Product Categories</title>
+      <title>Categories</title>
       <type>LISTING</type>
       <type_id>10</type_id>
       <root_parent_id>6</root_parent_id>
@@ -177,27 +239,20 @@
           <where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
       	</field> 
       </options>
-      <associated>
-      	<name>tags</name>
-      	<table>tbl_tag</table>
-      	<linkfield>listing_id</linkfield>
-      	<field>tag_object_id</field>
-      	<where>tag_object_table = 'tbl_listing'</where> 
-      </associated>
       <log>
       	<table>tbl_listing</table>
       	<id>listing_id</id>
       	<field>listing_object_id</field>
       </log>
       <list_template>list.tpl</list_template>
-      <edit_template>edit_prodcategory.tpl</edit_template>
+      <edit_template>ec_edit_prodcategory.tpl</edit_template>
     </section>  
 	
     <section level="1">
       <showlist>FALSE</showlist>
       <url>products</url>
       <title>Products</title>
-      <type>PRODUCT</type>
+      <type>TABLE</type>
       <root_parent_id>0</root_parent_id>
       <table>
       	<name>tbl_product</name>
@@ -210,14 +265,12 @@
           <field>productspec_product_id</field>
       	</extends>
       	<associated> 
-          <id>attribute_id</id>
           <name>attribute</name>
           <table>tbl_attribute</table>
           <linkfield>product_id</linkfield>
           <field>attribute_product_id</field> 
           <orderby>attribute_order ASC</orderby>
           <associated> 
-          	<id>attr_value_id</id>
           	<name>attr_value</name>
           	<table>tbl_attr_value</table>
           	<linkfield>attribute_id</linkfield>
@@ -274,92 +327,9 @@
       	</log>
       </table>
       <list_template>listall.tpl</list_template>
-      <edit_template>edit_product.tpl</edit_template>
+      <edit_template>ec_edit_product.tpl</edit_template>
     </section> 
     
-    <section level="1">
-      <showlist>FALSE</showlist>
-      <url>orders</url>
-      <title>Orders</title>
-      <type>TABLE</type>
-      <type_id>2</type_id>
-      <table>
-      	<name>tbl_cart</name>
-      	<id>cart_id</id>
-      	<field>cart_closed_date</field>
-      	<deleted>cart_deleted</deleted>
-      	<where notedit="true">DATE(cart_closed_date) BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND CURDATE() </where> 
-      	<orderby>cart_closed_date DESC</orderby>
-      	<associated> 
-          <id>cartitem_id</id>
-          <name>items</name>
-          <table>tbl_cartitem</table>
-          <linkfield>cart_id</linkfield>
-          <field>cartitem_cart_id</field> 
-          <extends>
-          	<table>tbl_custom_stencil</table>
-          	<linkfield>cartitem_id</linkfield>
-          	<field>custom_stencil_cartitem_id</field>
-          </extends>
-          <associated> 
-          	<id>cartitem_attr_id</id>
-          	<name>attributes</name>
-          	<table>tbl_cartitem_attr</table>
-          	<linkfield>cartitem_id</linkfield>
-          	<field>cartitem_attr_cartitem_id</field> 
-          </associated>
-      	</associated>
-      	<associated inlist="true"> 
-          <id>user_id</id>
-          <name>user</name>
-          <table>tbl_user</table>
-          <linkfield>cart_user_id</linkfield>
-          <field>user_id</field> 
-      	</associated>
-      	<associated inlist="true"> 
-          <id>payment_id</id>
-          <name>payment</name>
-          <table>tbl_payment</table>
-          <linkfield>cart_id</linkfield>
-          <field>payment_cart_id</field> 
-          <where>payment_status = 'A'</where>
-          <associated> 
-          	<id>order_id</id>
-          	<name>order</name>
-          	<table>tbl_order</table>
-          	<linkfield>payment_id</linkfield>
-          	<field>order_payment_id</field> 
-          	<orderby>order_modified DESC</orderby> 
-          </associated>
-          <associated> 
-          	<id>address_id</id>
-          	<name>billing_address</name>
-          	<table>tbl_address</table>
-          	<linkfield>payment_billing_address_id</linkfield>
-          	<field>address_id</field> 
-          </associated>
-          <associated> 
-          	<id>address_id</id>
-          	<name>shipping_address</name>
-          	<table>tbl_address</table>
-          	<linkfield>payment_shipping_address_id</linkfield>
-          	<field>address_id</field> 
-          </associated>
-      	</associated>
-      	<options> 
-          <field inlist="true"> 
-          	<name>status</name>
-          	<table>tbl_status</table>
-          	<id>status_id</id>
-          	<reference>status_name</reference> 
-          	<orderby>status_order</orderby> 
-          </field> 
-      	</options>
-      </table>
-      <list_template>list_order.tpl</list_template>
-      <edit_template>edit_order.tpl</edit_template>
-    </section> 
-    	
     <section level="1">
       <showlist>FALSE</showlist>
       <url>discounts</url>
@@ -394,10 +364,94 @@
           <field>discount_id</field>
       	</log>
       </table>
-      <list_template>list_discount.tpl</list_template>
-      <edit_template>edit_discount.tpl</edit_template>
+      <list_template>ec_list_discount.tpl</list_template>
+      <edit_template>ec_edit_discount.tpl</edit_template>
     </section> 
-    
+  </group>
+  
+  <group name="Conversions"> 
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>orders</url>
+      <title>Orders</title>
+      <type>TABLE</type>
+      <type_id>2</type_id>
+      <table>
+        <name>tbl_cart</name>
+        <id>cart_id</id>
+        <field>cart_closed_date</field>
+        <deleted>cart_deleted</deleted>
+        <where notedit="true">DATE(cart_closed_date) BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND CURDATE() </where> 
+        <orderby>cart_closed_date DESC</orderby>
+        <associated> 
+          <id>cartitem_id</id>
+          <name>items</name>
+          <table>tbl_cartitem</table>
+          <linkfield>cart_id</linkfield>
+          <field>cartitem_cart_id</field> 
+          <extends>
+            <table>tbl_custom_stencil</table>
+            <linkfield>cartitem_id</linkfield>
+            <field>custom_stencil_cartitem_id</field>
+          </extends>
+          <associated> 
+            <id>cartitem_attr_id</id>
+            <name>attributes</name>
+            <table>tbl_cartitem_attr</table>
+            <linkfield>cartitem_id</linkfield>
+            <field>cartitem_attr_cartitem_id</field> 
+          </associated>
+        </associated>
+        <associated inlist="true"> 
+          <id>user_id</id>
+          <name>user</name>
+          <table>tbl_user</table>
+          <linkfield>cart_user_id</linkfield>
+          <field>user_id</field> 
+        </associated>
+        <associated inlist="true"> 
+          <id>payment_id</id>
+          <name>payment</name>
+          <table>tbl_payment</table>
+          <linkfield>cart_id</linkfield>
+          <field>payment_cart_id</field> 
+          <where>payment_status = 'A'</where>
+          <associated> 
+            <id>order_id</id>
+            <name>order</name>
+            <table>tbl_order</table>
+            <linkfield>payment_id</linkfield>
+            <field>order_payment_id</field> 
+            <orderby>order_modified DESC</orderby> 
+          </associated>
+          <associated> 
+            <id>address_id</id>
+            <name>billing_address</name>
+            <table>tbl_address</table>
+            <linkfield>payment_billing_address_id</linkfield>
+            <field>address_id</field> 
+          </associated>
+          <associated> 
+            <id>address_id</id>
+            <name>shipping_address</name>
+            <table>tbl_address</table>
+            <linkfield>payment_shipping_address_id</linkfield>
+            <field>address_id</field> 
+          </associated>
+        </associated>
+        <options> 
+          <field inlist="true"> 
+            <name>status</name>
+            <table>tbl_status</table>
+            <id>status_id</id>
+            <reference>status_name</reference> 
+            <orderby>status_order</orderby> 
+          </field> 
+        </options>
+      </table>
+      <list_template>ec_list_order.tpl</list_template>
+      <edit_template>ec_edit_order.tpl</edit_template>
+    </section>  
     <section level="1">
       <showlist>FALSE</showlist>
       <url>enquiries</url>

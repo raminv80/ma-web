@@ -7,14 +7,14 @@
     <old_id></old_id>
   </google_analytics>
   <company>
-    <name></name>
+    <name>Them Advertising</name>
     <address>
-      <street></street>
-        <suburb></suburb>
-		<state></state>
-		<postcode></postcode>
+      <street>1/26 The Parade West</street>
+        <suburb>Kent Town</suburb>
+		<state>SA</state>
+		<postcode>5067</postcode>
     </address>
-    <phone></phone>
+    <phone>08 8363 2717</phone>
     <email>noreply@themserver.com.au</email>
     <email_from>noreply@themserver.com.au</email_from>
     <email_contact>apolo@them.com.au</email_contact>
@@ -43,7 +43,6 @@
       </associated>
     </table>
     <template>standardpage.tpl</template>
-    <template typeid="2">category.tpl</template>
     <process>
       <file>includes/processes/load-products.php</file>
     </process>
@@ -126,35 +125,7 @@
     <template>checkout.tpl</template>
   </checkout>
   
-  <product_category name="products">
-    <url>products</url>
-    <pageID>2</pageID>
-    <root_parent_id>0</root_parent_id>
-    <type>2</type>
-    <file>ListClass</file>
-    <table>
-      <name>tbl_listing</name>
-      <field>listing_url</field>
-      <associated>
-        <name>gallery</name>
-        <table>tbl_gallery</table>
-        <linkfield>listing_id</linkfield>
-        <field>gallery_listing_id</field>
-      </associated>
-      <tags>
-        <name>associated_categories</name>
-        <table>tbl_tag</table>
-        <object_table>tbl_listing</object_table>
-        <object_value>listing_name</object_value>
-      </tags>
-    </table>
-    <template>category.tpl</template>
-    <process>
-      <file>includes/processes/force_product_404.php</file>
-    </process>
-  </product_category>
-
-  <product>
+  <product_page>
     <file>ProductClass</file>
     <table>
       <name>tbl_product</name>
@@ -203,7 +174,7 @@
       </tags>
     </table>
     <template>product.tpl</template>
-  </product>
+  </product_page>
   
   <listing_page name="news-and-resources">
     <url>news-and-resources</url>
@@ -240,7 +211,32 @@
     <template>news-resources.tpl</template>
     <loadmoretemplate>news-resources-structure.tpl</loadmoretemplate>  
   </listing_page>
+  
+  <listing_page name="products">
+    <url>products</url>
+    <root_parent_id>6</root_parent_id> 
+    <type>10</type>
+    <file>ListClass</file>
+    <limit level="1">100</limit>
+    <table> 
+      <name>tbl_listing</name>
+      <field>listing_url</field>  
+      <associated listing="false">
+        <name>gallery</name>
+        <table>tbl_gallery</table>
+        <linkfield>listing_id</linkfield>
+        <field>gallery_listing_id</field>
+      </associated>
+      <template>ec_category.tpl</template> 
+    </table>
+    <template typeid="10">ec_category-details.tpl</template>
+    <template typeid="1">ec_category.tpl</template>
+    <loadmoretemplate>ec_category-loadmore.tpl</loadmoretemplate>  
+  </listing_page>
 
+  <global_process>
+    <file>includes/processes/global-source-referer.php</file>
+  </global_process>
   <global_process>
     <file>includes/processes/global-shopping-cart.php</file>
   </global_process>
@@ -260,11 +256,11 @@
     <return_url></return_url>
   </process>	 	
 
-<smartytemplate_config>
+  <smartytemplate_config>
     <templates>/templates</templates>
     <templates_c>/templates_c</templates_c>
     <cache>/cache</cache>
     <configs>/configs</configs>
     <plugins>/plugins</plugins>
-</smartytemplate_config>
+  </smartytemplate_config>
 </config>

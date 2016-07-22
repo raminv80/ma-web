@@ -158,7 +158,7 @@ class cart {
       if($orig_items){
         foreach($orig_items as $item){
           $attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
-          $message[] = $this->AddToCart($item['cartitem_product_id'],$attrs,$item['cartitem_quantity'],$item['cartitem_product_price'],$destination, $item['cartitem_listing_id'], $item['cartitem_type']);
+          $message[] = $this->AddToCart($item['cartitem_product_id'],$attrs,$item['cartitem_quantity'],$item['cartitem_product_price'],$destination, $item['cartitem_listing_id'], $item['cartitem_type_id']);
         }
       }
       
@@ -364,7 +364,7 @@ class cart {
     $cart_arr = array();
     
     $sql = "SELECT * FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id
-    			WHERE cartitem_type = 0 AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id AND product_published = '1' AND product_deleted IS NULL";
+    			WHERE cartitem_type_id = 0 AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id AND product_published = '1' AND product_deleted IS NULL";
     
     $res = $DBobject->wrappedSql($sql,array(
         ":id"=>$cartId
@@ -656,7 +656,7 @@ class cart {
 									cartitem_cart_id,
 									cartitem_product_id,
 									cartitem_listing_id,
-      						cartitem_type,
+      						cartitem_type_id,
 									cartitem_product_name,
 									cartitem_product_price,
 									cartitem_quantity,

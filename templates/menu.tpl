@@ -31,29 +31,37 @@
 	{/foreach}
 {/function}
 
-<ul id="menu" class="nav navbar-collapse collapse {if $listing_id neq 1}insidep{/if}" data-specials="{$specialCnt}">
- {call name=render_list items=$menuitems}
+<div id="header" class="container">
+    <div id="logo" class="col-sm-1 col-md-2">
+      <a href="/"><img src="/images/logo.png" alt="The Ergo Centre" class="img-responsive {if $listing_id neq 1}insidepg{/if}" /></a>
+    </div>
+    <div class="visible-xs navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
+        <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="visible-xs" id="mobcart">
+      <a href="/shopping-cart"><img src="/images/cart.png" alt="Cart" />
+        <div style="display: inline;" class="nav-itemNumber">{if $itemNumber}({$itemNumber}){else}(0){/if}</div> </a>
+    </div>
+    <div id="menuout" class="col-sm-11 col-md-10">
+      <ul id="menu" class="nav navbar-collapse collapse {if $listing_id neq 1}insidep{/if}" data-specials="{$specialCnt}">
+        {call name=render_list items=$menuitems}
 
-	<li class="dropdown grey navbar-right" id="cartmenu">
-	 	<a href="/shopping-cart" class="dropdown-toggle">
-	        <img src="/images/cart.png" alt="Cart" />
-	 		<div style="display:inline;" class="nav-itemNumber">{if $itemNumber}({$itemNumber}){else}(0){/if}</div>
-
-	 		<!--<div class="badge nav-subtotal" style="display:inline;">${$subtotal|number_format:2:'.':','}</div>-->
-	    </a>
-	    <ul class="dropdown-menu" id="shop-cart-btn">
-	        {include file='popover-shopping-cart.tpl'}
-	    </ul>
-	</li>
-
-{if $user.id}
-	<li class="login navbar-right"><a title="My Account" href="/my-account">MY ACCOUNT</a></li>
-{else}
-	<!-- <li><a title="Log In" href="/login">Log In</a></li> -->
-	<li class="login navbar-right"><a title="Log In" href="/login-register">Login</a></li>
-{/if}
-
-</ul>
-{/block}
-
-
+        <li class="dropdown grey navbar-right" id="cartmenu">
+          <a href="/shopping-cart" class="dropdown-toggle"> <img src="/images/cart.png" alt="Cart" />
+            <div style="display: inline;" class="nav-itemNumber">{if $itemNumber}({$itemNumber}){else}(0){/if}</div> <!--<div class="badge nav-subtotal" style="display:inline;">${$subtotal|number_format:2:'.':','}</div>-->
+          </a>
+          <ul class="dropdown-menu" id="shop-cart-btn">
+            {include file='popover-shopping-cart.tpl'}
+          </ul>
+        </li> 
+        {if $user.id}
+          <li class="login navbar-right"><a title="My Account" href="/my-account">MY ACCOUNT</a></li> 
+        {else}
+          <!-- <li><a title="Log In" href="/login">Log In</a></li> -->
+          <li class="login navbar-right"><a title="Log In" href="/login-register">Login</a></li> 
+        {/if}
+      </ul>
+    </div>
+  </div> {/block}

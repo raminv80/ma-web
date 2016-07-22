@@ -138,14 +138,6 @@ while(true){
 						$template = $sp->list_template;
 						break 3;
 					}
-					if($sp->type == "PRODUCT"){
-						$record = new Product($sp);
-						$list = $record->getRecordList($parentID);
-						$SMARTY->assign("list",$list);
-						$SMARTY->assign("path",(string)$sp->url);
-						$template = $sp->list_template;
-						break 3;
-					}
 					if($sp->type == "TABLE"){
 						if(!empty($where)){
 							if(empty($sp->table->where)){
@@ -236,7 +228,7 @@ while(true){
 						}
 						break 3;
 					}
-					if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
+					if($sp->type == "TABLE"){
 						$record = new Record($sp);
 						$tm = $record->getRecord(intval($arr[2]));
 						$SMARTY->assign("fields",$tm);
@@ -268,7 +260,7 @@ while(true){
 						$record = new Listing($sp);
 						$res = $record->deleteListing($arr[2]);
 					}
-					if($sp->type == "TABLE" || $sp->type == "PRODUCT"){
+					if($sp->type == "TABLE"){
 						$record = new Record($sp);
 						$res = $record->deleteRecord($arr[2]);
 					}

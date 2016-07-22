@@ -86,10 +86,6 @@ if(!empty($CONFIG->product_page)){
 	include_once 'includes/classes/user-class.php';
 }
 
-if(!empty($CONFIG->socialwall)){
-  $GLOBALS['SOCIAL'] = INITSOCIALWALL($CONFIG);
-}
-
 $GLOBALS['SMARTY'] = INITSMARTY($CONFIG);
 
 $staging = (string)$CONFIG->attributes()->staging;
@@ -119,22 +115,6 @@ function LOADCONFIG($_CONF_FILE){
   return $CONFIG;
 }
 
-function INITSOCIALWALL($CONFIG){
-  include_once 'includes/social/youtube.class.php';
-  include_once 'includes/social/instagram.class.php';
-  include_once 'includes/social/twitter.class.php';
-  include_once 'includes/social/facebook.php';
-  include_once 'includes/social/socialwall.class.php';
-  
-  $tag = $CONFIG->socialwall->tag;
-  $table = $CONFIG->socialwall->table;
-  $ads = $CONFIG->socialwall->ads == true?TRUE:FALSE;
-  $instagram = $CONFIG->socialwall->attributes()->instagram == "true"?TRUE:FALSE;
-  $facebook = $CONFIG->socialwall->attributes()->facebook == "true"?TRUE:FALSE;
-  $youtube = $CONFIG->socialwall->attributes()->youtube == "true"?TRUE:FALSE;
-  $twitter = $CONFIG->socialwall->attributes()->twitter == "true"?TRUE:FALSE;
-  return new SocialWall($tag,$table,$ads,$instagram,$facebook,$youtube,$twitter);
-}
 
 function INITSMARTY($CONFIG){
   // Create Smarty object and set

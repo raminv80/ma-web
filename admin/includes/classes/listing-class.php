@@ -180,7 +180,7 @@ class Listing {
         if($val['listing_type_id'] == $this->TYPE_ID){
           $p_url = '';
           if(intval($val['listing_published']) == 0){
-            $p_url = '/draft';
+            $p_url = '/draft/';
           }
           foreach($this->CONFIG_OBJ->associated as $a){
           	if ($a->attributes()->inlist) {

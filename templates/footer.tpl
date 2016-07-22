@@ -20,11 +20,7 @@
 				</div>
 			</div>
 			<div class="col-sm-3">
-				<a href="/contact">
-				Unit 2, 27 Anzac Highway, Keswick SA 5035</a><br />
-				<a href="/contact">
-				Opening Hours:<br />9.00 am – 5.00 pm  Monday – Friday</a>
-				</a>
+				
 			</div>
 			<div class="col-sm-2">
 				<a href="tel://08 8293 5503">08 8293 5503</a><br />
@@ -65,7 +61,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-6">
-					Copyright {"Y"|date} The Ergo Centre
+					Copyright {"Y"|date} {$COMPANY.name}
 				</div>
 				<div class="col-sm-6 text-right">
 					<div class="text-center-xs">Made by <a href="http://www.them.com.au" target="_blank" title="Them Advertising">Them Advertising</a></div>

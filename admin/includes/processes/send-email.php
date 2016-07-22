@@ -16,11 +16,11 @@ if(checkToken('admin', $_POST["formToken"]) && !empty($_POST['action']) && !empt
 			$SMARTY->assign("name",$_POST['name']);
 			$SMARTY->assign("password",$_POST['password']);
 			$SMARTY->assign("DOMAIN","http://".$_SERVER['HTTP_HOST']);
-			$body= $SMARTY->fetch('email-admin-user.tpl');
+			$body= $SMARTY->fetch('email/admin-user.tpl');
 			break;
 		
 		case 'OrderStatus':
-			$template = 'email-order-status.tpl';
+			$template = 'email/ec_order-status.tpl';
 			switch($_POST['status']){
 				//ADDITIONAL CUSTOM MESSAGE / TEMPLATE
 				case '2'://CANCELLED

@@ -30,14 +30,6 @@ function getFileType(ID,parent,listing_id){
 }
 
 
-function deleteFileType(ID){
-	var count = $('#'+ID).parent().attr('rel');
-	var today = mysql_now();
-	
-	html = '<input type="hidden" value="'+today+'" name="field[5][tbl_gallery]['+count+'][gallery_deleted]" />';
-	$('#'+ID).append(html);
-	$('#'+ID).parent().css('display','none');
-}
 
 
 function buildUrl(table_name,parent_fieldname,object_id,preview){
@@ -82,7 +74,7 @@ $('input[type=text][class=tool-tip]').tooltip({
     placement: "right",
     trigger: "focus"
 });
-/** confirm **/
+
 function ConfirmDelete(){
 	 return confirm("Do you want to remove this item ?");
 }
@@ -100,4 +92,13 @@ function scrolltodiv(ID){
 	$('html,body').animate({
 		scrollTop : $(ID).offset().top
 	});
+}
+
+function ToggleAccordionElem(ID, CLASS) {
+  if($('#'+ID).is(':visible')){
+    $('.'+CLASS).slideUp();
+  }else{
+    $('.'+CLASS).slideUp();
+    $('#'+ID).slideDown();
+  }
 }

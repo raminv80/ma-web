@@ -457,5 +457,6 @@ border:px solid #FFFFFF; -webkit-border-radius: px; -moz-border-radius: px;borde
   .navbar-nav .dropdown-toggle { display:none; }
   .dropdown-menu { position: relative !important;display: block !important; }
   .dropdown-menu:before, .dropdown-menu:after { display: none !important; }
+  ul.navbar-nav.nav.wide { margin: 0!important; }
 }
 

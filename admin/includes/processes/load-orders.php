@@ -13,7 +13,7 @@ foreach($CONFIG->group as $gp){
 			$record = new Record($sp);
 			$list = $record->getRecordList();
 			$SMARTY->assign("list",$list);
-			$body= $SMARTY->fetch('orders.tpl');
+			$body= $SMARTY->fetch('ec_orders.tpl');
 			echo json_encode(array(
 					'body' =>  str_replace(array('\r\n', '\r', '\n', '\t'), ' ', $body)
 			));
