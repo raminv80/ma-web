@@ -996,7 +996,7 @@ class cart {
     	return array();
     }
     
-    $sql = "SELECT listing_parent_id FROM tbl_listing WHERE listing_type_id = 2 AND listing_deleted IS NULL AND listing_published = 1 AND listing_object_id = :id";
+    $sql = "SELECT listing_parent_id FROM tbl_listing WHERE listing_type_id = 10 AND listing_deleted IS NULL AND listing_published = 1 AND listing_object_id = :id";
     if($res = $DBobject->wrappedSql($sql,array(
         ":id"=>$parentId
     ))){
@@ -1025,18 +1025,13 @@ class cart {
     
     $catArr =  array();
     $params = array(":id"=>$productId);
-    $sql = "SELECT product_listing_id FROM tbl_product WHERE product_object_id = :id";
-    if($res = $DBobject->wrappedSql($sql,$params)){
-      $catArr = $this->getParentList($res[0]['product_listing_id'],$root);
-    }
     
-    $sql = "SELECT additional_category_listing_id FROM tbl_additional_category WHERE additional_category_flag = 1 AND additional_category_product_id = :id";
+    $sql = "SELECT productcat_listing_id FROM tbl_productcat WHERE productcat_deleted IS NULL AND productcat_product_id = :id ";
     if($res = $DBobject->wrappedSql($sql,$params)){
     	foreach($res as $r){
     		$catArr = array_merge($catArr,$this->getParentList($r['additional_category_listing_id'],$root));
     	}
     }
-    
     return $catArr;
   }
 

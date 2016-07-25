@@ -497,26 +497,6 @@ class ProductClass extends ListClass {
       $n ++;
     }
     
-    //SPECIFIC CASE FOR STEELINE MUTLIPLE CATEGORIES
-    $sql[4] = "SELECT product_object_id AS id, product_url AS url, additional_category_listing_id AS pid, product_published FROM tbl_product LEFT JOIN tbl_additional_category ON product_id = additional_category_product_id WHERE product_deleted IS NULL AND additional_category_deleted IS NULL AND additional_category_flag = 1 AND additional_category_listing_id != product_listing_id";
-    $res = $DBobject->wrappedSql($sql[4]);
-    foreach($res as $row){
-      $id = $row['id'];
-      $url = $row['url'];
-      $published = $row['product_published'];
-      if(! $this->BuildUrl($row['pid'],$url)){
-        continue;
-      }
-    
-      $sql[2] .= " ( :id{$n}, :published{$n}, :title{$n}, now() ) ,";
-      $params = array_merge($params,array(
-          ":id{$n}"=>$id,
-          ":published{$n}"=>$published,
-          ":title{$n}"=>$url
-      ));
-      $n ++;
-    }
-    
     $sql[2] = trim(trim($sql[2]),',');
     $sql[2] .= ";";
     

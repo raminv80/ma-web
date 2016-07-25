@@ -1,5 +1,4 @@
 {block name=body}
-
 {* Define the function *} {function name=options_list level=0}
 	{foreach $opts as $opt}
 		{if $ignore neq $opt.id}
@@ -46,9 +45,9 @@
       </div>
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-        <li><a href="#pricing" data-toggle="tab">Pricing</a></li>
+        <li><a href="#variants" data-toggle="tab">Variants</a></li>
         <li><a href="#images" data-toggle="tab">Images</a></li>
-        <li><a href="#attributes" data-toggle="tab">Attributes</a></li>
+        <li><a href="#categories" data-toggle="tab">Categories</a></li>
         <li><a href="#associated" data-toggle="tab">Associated Products</a></li>
         <li><a href="#share" data-toggle="tab">Social Sharing</a></li>
         <li><a href="#log" data-toggle="tab">Log</a></li>
@@ -57,12 +56,20 @@
       <div class="tab-content">
         <!--===+++===+++===+++===+++===+++ DETAILS TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane active" id="details">
-          <div class="row form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
+          <div class="form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_name">Name *</label>
               <div class="col-sm-5">
                 <input class="form-control" type="text" value="{$fields.product_name}" name="field[1][tbl_product][{$cnt}][product_name]" id="id_product_name" onchange="seturl(this.value);" required>
                 <span class="help-block"></span>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="product_type_id">Type</label>
+              <div class="col-sm-5 ">
+                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_type_id]" id="product_type_id" data-value="{$fields.product_type_id}">
+                  {call name=options_list opts=$fields.options.product_types selected=$fields.product_type_id}
+                </select>
               </div>
             </div>
             <div class="row form-group">
@@ -77,15 +84,6 @@
               <div class="col-sm-5 ">
                 <input class="form-control" type="hidden" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" onchange="seturl(this.value, true);" required>
                 <span style="display: inline-block; width: 74%;" id="id_product_url_text" class="form-control url-text edit-url">{$fields.product_url}&nbsp;</span> <a href="javascript:void(0);" class="btn btn-info btn-sm marg-5r edit-url" onclick="$('.edit-url').removeClass('url-text').hide();$('#id_product_url').get(0).type='text';">Edit URL</a> <span class="help-block"></span>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_listing">Category</label>
-              <div class="col-sm-5 ">
-                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_listing_id]" id="id_product_listing" data-value="{$fields.product_listing_id}">
-                  <option value="{$rootParentID}">Select one</option>
-                  {call name=options_list opts=$fields.options.product_listing_id selected=$fields.product_listing_id ignore=$fields.product_object_id}
-                </select>
               </div>
             </div>
             <div class="row form-group">
@@ -136,80 +134,24 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_content2">Features</label>
+              <label class="col-sm-3 control-label" for="id_product_content2">Warranty</label>
               <div class="col-sm-5 ">
                 <textarea name="field[1][tbl_product][{$cnt}][product_content2]" id="id_product_content2" class="tinymce">{$fields.product_content2}</textarea>
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_content3">Specifications</label>
+              <label class="col-sm-3 control-label" for="id_product_content3">Care &amp; cleaning</label>
               <div class="col-sm-5 ">
                 <textarea name="field[1][tbl_product][{$cnt}][product_content3]" id="id_product_content3" class="tinymce">{$fields.product_content3}</textarea>
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_content4">Downloads</label>
+              <label class="col-sm-3 control-label" for="id_product_content4">Delivery &amp; returns</label>
               <div class="col-sm-5 ">
                 <textarea name="field[1][tbl_product][{$cnt}][product_content4]" id="id_product_content4" class="tinymce">{$fields.product_content4}</textarea>
               </div>
             </div>
-          </div>
-        </div>
-        <!--===+++===+++===+++===+++===+++ PRICING TAB +++===+++===+++===+++===+++====-->
-        <div class="tab-pane" id="pricing">
-          <div class="row form" data-error="Error found on <b>Pricing tab</b>. View <b>Pricing tab</b> to see specific error notices.">
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_price">Price ($)</label>
-              <div class="col-sm-5 ">
-                <input class="form-control double" type="text" value="{if $fields.product_price}{$fields.product_price}{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_price]" id="id_product_price">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_specialprice">Special Price ($)</label>
-              <div class="col-sm-5 ">
-                <input class="form-control double" type="text" value="{if $fields.product_specialprice}{$fields.product_specialprice}{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_specialprice]" id="id_product_specialprice">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_weight">Weight (Kg)</label>
-              <div class="col-sm-5 ">
-                <input class="form-control double" type="text" value="{$fields.product_weight}" name="field[1][tbl_product][{$cnt}][product_weight]" id="id_product_weight">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_width">Width (cm)</label>
-              <div class="col-sm-5 ">
-                <input class="form-control double" type="text" value="{$fields.product_width}" name="field[1][tbl_product][{$cnt}][product_width]" id="id_product_width">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_height">Height (cm)</label>
-              <div class="col-sm-5 ">
-                <input class="form-control double" type="text" value="{$fields.product_height}" name="field[1][tbl_product][{$cnt}][product_height]" id="id_product_height">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_length">Length (cm)</label>
-              <div class="col-sm-5 ">
-                <input class="form-control double" type="text" value="{$fields.product_length}" name="field[1][tbl_product][{$cnt}][product_length]" id="id_product_length">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_gst">Incl. GST</label>
-              <div class="col-sm-5 ">
-                <input type="hidden" value="{if $fields.product_id}{if $fields.product_gst eq 1}1{else}0{/if}{else}1{/if}" name="field[1][tbl_product][{$cnt}][product_gst]" class="value">
-                <input class="chckbx" type="checkbox" {if $fields.product_gst eq 1 || $fields.product_id eq ""}checked="checked" {/if}
-									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_gst">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_instock">In stock</label>
-              <div class="col-sm-5 ">
-                <input type="hidden" value="{if $fields.product_id}{if $fields.product_instock eq 1}1{else}0{/if}{else}1{/if}" name="field[1][tbl_product][{$cnt}][product_instock]" class="value">
-                <input class="chckbx" type="checkbox" {if $fields.product_instock eq 1 || $fields.product_id eq ""}checked="checked" {/if}
-									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_instock">
-              </div>
-            </div>
+            {*************** COMMENTED OUT
             <div class="row form-group">
               <div class="col-sm-3"></div>
               <label class="col-sm-2 control-label" for="id_product_instock">Quantity(>)</label>
@@ -245,9 +187,24 @@
               </div>
             </div>
             {/while}
+            *}
           </div>
         </div>
-
+         <!--===+++===+++===+++===+++===+++ VARIANTS TAB +++===+++===+++===+++===+++====-->
+        <div class="tab-pane" id="variants">
+          <div class="form" id="variants-wrapper" data-error="Error found on <b>Variants tab</b>. View <b>Variants tab</b> to see specific error notices.">
+            {assign var='variantno' value=0} 
+            {assign var='typeID' value=$fields.product_type_id} 
+            {foreach $fields.variants as $variant} 
+              {assign var='variantno' value=$variantno+1} 
+              {include file='ec_variant.tpl'} 
+            {/foreach}
+          </div>
+          <div class="row btn-inform">
+            <a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.variants').slideUp();newVariant();"> Add new variant</a>
+          </div>
+          <input type="hidden" value="{$variantno}" id="variantno">
+        </div>
         <!--===+++===+++===+++===+++===+++ IMAGES TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="images">
           <div class="form" id="images-wrapper">
@@ -265,19 +222,23 @@
           <input type="hidden" value="{$imageno}" id="imageno">
           <!--  gallery -->
         </div>
-        <!--===+++===+++===+++===+++===+++ ATTRIBUTES TAB +++===+++===+++===+++===+++====-->
-        <div class="tab-pane" id="attributes">
-          <div class="row form" id="attributes-wrapper">
-            {assign var='attributeno' value=0} 
-            {foreach $fields.attribute as $attribute} 
-              {assign var='attributeno' value=$attributeno+1} 
-              {include file='form_attribute.tpl'} 
-            {/foreach}
+        <!--===+++===+++===+++===+++===+++ CATEGORIES PRODUCTS TAB +++===+++===+++===+++===+++====-->
+        <div class="tab-pane" id="categories">
+          <div class="form">
+            <input type="hidden" value="product_id" name="default[productcat_product_id]" />
+            {assign var='data' value=$fields.options.categories} 
+            {assign var='proccess_order' value='4'} 
+            {assign var='table_primary_key_field' value='product_id'} 
+            {assign var='table_primary_key_value' value=$fields.product_id} 
+            {assign var='linking_table' value='tbl_productcat'} 
+            {assign var='linking_table_primary_key_field' value='productcat_id'} 
+            {assign var='linking_table_link_field' value='productcat_product_id'} 
+            {assign var='linking_table_associated_field' value='productcat_listing_id'} 
+            {assign var='linking_table_deleted_field' value='productcat_deleted'} 
+            {assign var='selected_array' value=$fields.productcats} 
+            {assign var='ignore_value' value='0'} 
+            {include file='form_linking_input.tpl'}
           </div>
-          <div class="row btn-inform">
-            <a href="javascript:void(0);" class="btn btn-success btn-add-new" onclick="$('.attributes').slideUp();newAttribute();"> Add New Attribute</a>
-          </div>
-          <input type="hidden" value="{$attributeno}" id="attributeno">
         </div>
         <!--===+++===+++===+++===+++===+++ ASSOCIATED PRODUCTS TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="associated">
@@ -299,7 +260,7 @@
         </div>
         <!--===+++===+++===+++===+++===+++ SHARE TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="share">
-          <div class="row form" data-error="Error found on <b>Social Sharing tab</b>. View <b>Details tab</b> to see specific error notices.">
+          <div class="form" data-error="Error found on <b>Social Sharing tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_share_title">Share Title</label>
               <div class="col-sm-5">
@@ -330,7 +291,7 @@
         </div>
         <!--===+++===+++===+++===+++===+++ LOG TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="log">
-          <div class="row form" id="symptoms-wrapper">
+          <div class="form">
             <div class="col-sm-12">
               {if $fields.logs}
               <table class="table table-bordered table-striped table-hover">
@@ -376,201 +337,205 @@
 {include file='jquery-validation.tpl'}
 
 <script type="text/javascript">
-	$(document).ready(function() {
+  $(document).ready(function() {
+    
+    $('#Edit_Record').validate({
+      onkeyup: false
+    });
+    
+    $('#id_product_url').rules("add", {
+      uniqueURL: {
+        id: $('#product_object_id').val(),
+        idfield: "product_object_id",
+        table: "tbl_product",
+        field: "product_url",
+        field2: "product_listing_id",
+        value2: "id_product_listing"
+      }
+    });
+    
+    $('.images').hide();
+    $('.variants').hide();
+    
+  });
+  
+  function saveDraft(id_name, objId_name, publish_name, field_name, preview) {
+    if($('#Edit_Record').valid()){
+      $('body').css('cursor', 'wait');
+      $('#' + publish_name).val('0');
+      var id_key0 = encodeURIComponent(id_name + '[0]');
+      var id_key1 = encodeURIComponent(id_name + '[1]');
+      var objId_key = encodeURIComponent($('#' + objId_name).attr('name'));
+      var publish_key = encodeURIComponent($('#' + publish_name).attr('name'));
+      var field_key = encodeURIComponent(field_name);
+      var field_value = encodeURIComponent(mysql_now());
+      $.ajax({
+        type: "POST",
+        url: "/admin/includes/processes/processes-record.php",
+        cache: false,
+        async: false,
+        data: id_key0 + '=' + objId_name + '&' + id_key1 + '=' + publish_name + '&' + objId_key + "=" + $('#' + objId_name).val() + "&" + publish_key + "=0&" + field_key + "=" + field_value + '&formToken=' + $('#formToken').val(),
+        dataType: "html",
+        success: function(data, textStatus) {
+          try{
+            var obj = $.parseJSON(data);
+            if(obj.notice){
+              $('.key').val('');
+              $('#Edit_Record').submit();
+              $('.published').hide();
+              $('.drafts').show();
+              buildUrl('tbl_product', 'product_listing_id', objId_name, preview);
+            }
+          }catch(err){}
+          $('body').css('cursor', 'default');
+        }
+      });
+      $('body').css('cursor', 'default');
+    }
+  }
 
-		$('#Edit_Record').validate({
-			onkeyup : false
-		});
+  function publish(id_name, objId_name, publish_name, field_name) {
+    if($('#Edit_Record').valid()){
+      $('body').css('cursor', 'wait');
+      $('#' + publish_name).val('1');
+      var id_key0 = encodeURIComponent(id_name + '[0]');
+      var id_key1 = encodeURIComponent(id_name + '[1]');
+      var objId_key = encodeURIComponent($('#' + objId_name).attr('name'));
+      var publish_key = encodeURIComponent($('#' + publish_name).attr('name'));
+      var field_key = encodeURIComponent(field_name);
+      var field_value = encodeURIComponent(mysql_now());
+      $.ajax({
+        type: "POST",
+        url: "/admin/includes/processes/processes-record.php",
+        cache: false,
+        data: id_key0 + '=' + objId_name + '&' + id_key1 + '=' + publish_name + '&' + objId_key + "=" + $('#' + objId_name).val() + "&" + publish_key + "=1&" + field_key + "=" + field_value + '&formToken=' + $('#formToken').val(),
+        dataType: "html",
+        success: function(data, textStatus) {
+          try{
+            var obj = $.parseJSON(data);
+            if(obj.notice){
+              $('#Edit_Record').submit();
+              $('.drafts').hide();
+              $('.published').show();
+            }
+          }catch(err){}
+          $('body').css('cursor', 'default');
+        }
+      });
+      $('body').css('cursor', 'default');
+    }
+  }
 
-		$('#id_product_url').rules("add", {
-			uniqueURL : {
-				id : $('#product_object_id').val(),
-        	  	idfield: "product_object_id",
-	        	table : "tbl_product",
-	        	field : "product_url",
-	        	field2 : "product_listing_id",
-	        	value2 : "id_product_listing"
-			}
-		});
+  function unpublish(publish_name) {
+    $('#' + publish_name).val('0');
+    $('#Edit_Record').submit();
+    $('.published').hide();
+    $('.drafts').show();
+  }
 
-		$('.images').hide();
+  function seturl(str) {
+    seturl(str, false);
+  }
 
+  function seturl(str, editexisting) {
+    $.ajax({
+      type: "POST",
+      url: "/admin/includes/processes/urlencode.php",
+      cache: false,
+      data: "value=" + encodeURIComponent(str),
+      dataType: "json",
+      success: function(res, textStatus) {
+        try{
+          if($('#product_id').val() == "" || editexisting == true){
+            $('#id_product_url').val(res.url);
+            $('#id_product_url_text').html(res.url);
+          }
+        }catch(err){}
+      }
+    });
+  }
 
-	});
+  function newImage() {
+    $('body').css('cursor', 'wait');
+    var no = $('#imageno').val();
+    no++ ;
+    $('#imageno').val(no);
+    $.ajax({
+      type: "POST",
+      url: "/admin/includes/processes/load-template.php",
+      cache: false,
+      data: "template=gallery.tpl&imageno=" + no + "&gTableName=product&image_size=" + encodeURIComponent('Size: 1170px Wide x 560px Tall'),
+      dataType: "html",
+      success: function(data, textStatus) {
+        try{
+          $('#images-wrapper').append(data);
+          $('body').css('cursor', 'default');
+          scrolltodiv('#image_wrapper' + no);
+        }catch(err){
+          $('body').css('cursor', 'default');
+        }
+      }
+    });
+  }
 
+  function toggleImage(ID) {
+    if($('#image' + ID).is(':visible')){
+      $('.images').slideUp();
+    }else{
+      $('.images').slideUp();
+      $('#image' + ID).slideDown();
+    }
+  }
 
-	function saveDraft(id_name,objId_name,publish_name, field_name, preview){
-		if ($('#Edit_Record').valid()) {
-			$('body').css('cursor', 'wait');
-			$('#'+publish_name).val('0');
-			var id_key0 = encodeURIComponent(id_name+'[0]');
-			var id_key1 = encodeURIComponent(id_name+'[1]');
-			var objId_key = encodeURIComponent($('#'+objId_name).attr('name'));
-			var publish_key = encodeURIComponent($('#'+publish_name).attr('name'));
-			var field_key = encodeURIComponent(field_name);
-			var field_value = encodeURIComponent(mysql_now());
-			$.ajax({
-				type : "POST",
-				url : "/admin/includes/processes/processes-record.php",
-				cache: false,
-				async: false,
-				data : id_key0+'='+objId_name+'&'+id_key1+'='+publish_name+'&'+objId_key+"="+$('#'+objId_name).val()+"&"+publish_key+"=0&"+field_key+"="+field_value+'&formToken='+$('#formToken').val(),
-				dataType: "html",
-				success : function(data, textStatus) {
-					try {
-						var obj = $.parseJSON(data);
-						if(obj.notice){
-							$('.key').val('');
-							$('#Edit_Record').submit();
-							$('.published').hide();
-							$('.drafts').show();
-							buildUrl('tbl_product','product_listing_id',objId_name, preview);
-						}
-					} catch (err) {}
-					$('body').css('cursor', 'default');
-				}
-			});
-			$('body').css('cursor', 'default');
-		}
-	}
+  function deleteImage(ID) {
+    if(ConfirmDelete()){
+      var count = $('#' + ID).attr('rel');
+      var today = mysql_now();
+      
+      html = '<input type="hidden" value="'+today+'" name="field[10][tbl_gallery]['+count+'][attr_value_deleted]"/>';
+      $('#' + ID).append(html);
+      $('#' + ID).css('display', 'none');
+      $('#' + ID).removeClass('attr_values');
+    }else{
+      return false;
+    }
+  }
 
-	function publish(id_name,objId_name,publish_name,field_name){
-		if ($('#Edit_Record').valid()) {
-			$('body').css('cursor', 'wait');
-			$('#'+publish_name).val('1');
-			var id_key0 = encodeURIComponent(id_name+'[0]');
-			var id_key1 = encodeURIComponent(id_name+'[1]');
-			var objId_key = encodeURIComponent($('#'+objId_name).attr('name'));
-			var publish_key = encodeURIComponent($('#'+publish_name).attr('name'));
-			var field_key = encodeURIComponent(field_name);
-			var field_value = encodeURIComponent(mysql_now());
-			$.ajax({
-				type : "POST",
-				url : "/admin/includes/processes/processes-record.php",
-				cache: false,
-				data : id_key0+'='+objId_name+'&'+id_key1+'='+publish_name+'&'+objId_key+"="+$('#'+objId_name).val()+"&"+publish_key+"=1&"+field_key+"="+field_value+'&formToken='+$('#formToken').val(),
-				dataType: "html",
-				success : function(data, textStatus) {
-					try {
-						var obj = $.parseJSON(data);
-						if(obj.notice){
-							$('#Edit_Record').submit();
-							$('.drafts').hide();
-							$('.published').show();
-						}
-					} catch (err) {}
-					$('body').css('cursor', 'default');
-				}
-			});
-			$('body').css('cursor', 'default');
-		}
-	}
+  function newVariant() {
+    $('body').css('cursor', 'wait');
+    var no = $('#variantno').val();
+    no++ ;
+    $('#variantno').val(no);
+    $.ajax({
+      type: "POST",
+      url: "/admin/includes/processes/load-template.php",
+      cache: false,
+      data: "template=ec_variant.tpl&process_file=load-product-attributes.php&variantno=" + no + "&typeID=" + $('#product_type_id').val(),
+      dataType: "html",
+      success: function(data, textStatus) {
+        try{
+          $('#variants-wrapper').append(data);
+          $('body').css('cursor', 'default');
+          scrolltodiv('#variant-wrapper' + no);
+        }catch(err){
+          $('body').css('cursor', 'default');
+        }
+      }
+    });
+  }
 
-	function unpublish(publish_name){
-		$('#'+publish_name).val('0');
-		$('#Edit_Record').submit();
-		$('.published').hide();
-		$('.drafts').show();
-	}
-
-
-	function seturl(str){
-		seturl(str,false);
-	}
-
-	function seturl(str,editexisting){
-		$.ajax({
-			type : "POST",
-			url : "/admin/includes/processes/urlencode.php",
-			cache : false,
-			data : "value=" + encodeURIComponent(str),
-			dataType : "json",
-			success : function(res, textStatus) {
-				try {
-					if($('#product_id').val() == "" || editexisting == true){
-					$('#id_product_url').val(res.url);
-					$('#id_product_url_text').html(res.url);
-					}
-				} catch (err) {
-				}
-			}
-		});
-	}
-
-	function newImage() {
-		$('body').css('cursor', 'wait');
-		var no = $('#imageno').val();
-		no++;
-		$('#imageno').val(no);
-		$.ajax({
-			type : "POST",
-			url : "/admin/includes/processes/load-template.php",
-			cache : false,
-			data : "template=gallery.tpl&imageno=" + no + "&gTableName=product&image_size="+ encodeURIComponent('Size: 1170px Wide x 560px Tall'),
-			dataType : "html",
-			success : function(data, textStatus) {
-				try {
-					$('#images-wrapper').append(data);
-					$('body').css('cursor', 'default');
-					scrolltodiv('#image_wrapper' + no);
-				} catch (err) {
-					$('body').css('cursor', 'default');
-				}
-			}
-		});
-	}
-
-	function toggleImage(ID) {
-		if ($('#image' + ID).is(':visible')) {
-			$('.images').slideUp();
-		} else {
-			$('.images').slideUp();
-			$('#image' + ID).slideDown();
-		}
-	}
-
-	function deleteImage(ID) {
-		if (ConfirmDelete()) {
-			var count = $('#' + ID).attr('rel');
-			var today = new Date();
-			var dd = today.getDate();
-			var mm = today.getMonth() + 1;//January is 0!
-			var yyyy = today.getFullYear();
-			var hh = today.getHours();
-			var MM = today.getMinutes();
-			var ss = today.getSeconds();
-
-			html = '<input type="hidden" value="'+yyyy+'-'+mm+'-'+dd+' '+hh+':'+MM+':'+ss+'" name="field[10][tbl_gallery]['+count+'][gallery_deleted]" />';
-			$('#' + ID).append(html);
-			$('#' + ID).css('display', 'none');
-			$('#' + ID).removeClass('images');
-		} else {
-			return false;
-		}
-	}
-
-	function preview() {
-		if ($('#Edit_Record').valid()) {
-			$('body').css('cursor', 'wait');
-			var datastring = $("#Edit_Record").serialize();
-			$.ajax({
-				type : "POST",
-				url : "/admin/includes/processes/processes-preview.php",
-				cache: false,
-				data: datastring,
-				dataType: "html",
-				success : function(data, textStatus) {
-					try {
-
-					} catch (err) {
-
-					}
-				}
-			});
-			$('body').css('cursor', 'default');
-		} else {
-			alert('has-error');
-		}
-	}
+  function deleteVariant(ID) {
+    if(ConfirmDelete()){
+      var count = $('#' + ID).attr('rel');
+      var today = mysql_now();
+      
+      html = '<input type="hidden" value="'+today+'" name="field[2][tbl_variant]['+count+'][variant_deleted]"/>';
+      $('#' + ID).append(html);
+      $('#' + ID).css('display', 'none');
+      $('#' + ID).removeClass('variants');
+    }else{
+      return false;
+    }
+  }
 </script>
 {/block}

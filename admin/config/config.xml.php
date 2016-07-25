@@ -259,25 +259,24 @@
       	<id>product_id</id>
       	<field>product_name</field>
       	<deleted>product_deleted</deleted>
-      	<extends>
-          <table>tbl_productspec</table>
-          <linkfield>product_id</linkfield>
-          <field>productspec_product_id</field>
-      	</extends>
       	<associated> 
-          <name>attribute</name>
-          <table>tbl_attribute</table>
+          <name>schemas</name>
+          <table>tbl_productschema</table>
+          <linkfield>product_type_id</linkfield>
+          <field>productschema_type_id</field> 
+        </associated>
+        <associated> 
+          <name>variants</name>
+          <table>tbl_variant</table>
           <linkfield>product_id</linkfield>
-          <field>attribute_product_id</field> 
-          <orderby>attribute_order ASC</orderby>
-          <associated> 
-          	<name>attr_value</name>
-          	<table>tbl_attr_value</table>
-          	<linkfield>attribute_id</linkfield>
-          	<field>attr_value_attribute_id</field> 
-          	<orderby>attr_value_order ASC</orderby>
+          <field>variant_product_id</field> 
+           <associated> 
+            <name>productattributes</name>
+            <table>tbl_productattr</table>
+            <linkfield>variant_id</linkfield>
+            <field>productattr_variant_id</field> 
           </associated>
-      	</associated>
+        </associated>
       	<associated> 
           <name>gallery</name>
           <table>tbl_gallery</table>
@@ -285,10 +284,10 @@
           <field>gallery_product_id</field> 
       	</associated>
       	<associated>
-          <name>additional_category</name>
-          <table>tbl_additional_category</table>
+          <name>productcats</name>
+          <table>tbl_productcat</table>
           <linkfield>product_id</linkfield>
-          <field>additional_category_product_id</field>
+          <field>productcat_product_id</field>
       	</associated>
       	<associated> 
           <name>qty_modifier</name>
@@ -305,19 +304,26 @@
       	</associated>
       	<options> 
           <field recursive="true"> 
-          	<name>product_listing_id</name>
+          	<name>categories</name>
           	<table>tbl_listing</table>
           	<id>listing_object_id</id>
           	<reference>listing_name</reference> 
           	<where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
           </field>  
           <field> 
-          	<name>products</name>
-          	<table>tbl_product</table>
-          	<id>product_object_id</id>
-          	<reference>product_name</reference> 
-          	<where>product_published = '1'</where> 
-          	<orderby>product_name</orderby> 
+          	<name>product_types</name>
+          	<table>tbl_producttype</table>
+          	<id>producttype_id</id>
+          	<reference>producttype_name</reference> 
+          	<orderby>producttype_id</orderby> 
+          </field>  
+          <field> 
+            <name>products</name>
+            <table>tbl_product</table>
+            <id>product_object_id</id>
+            <reference>product_name</reference> 
+            <where>product_published = '1'</where> 
+            <orderby>product_name</orderby> 
           </field> 
       	</options>
       	<log>
@@ -328,6 +334,9 @@
       </table>
       <list_template>listall.tpl</list_template>
       <edit_template>ec_edit_product.tpl</edit_template>
+      <process>
+        <file>admin/includes/processes/load-product-attributes.php</file>
+      </process>
     </section> 
     
     <section level="1">
@@ -389,11 +398,6 @@
           <table>tbl_cartitem</table>
           <linkfield>cart_id</linkfield>
           <field>cartitem_cart_id</field> 
-          <extends>
-            <table>tbl_custom_stencil</table>
-            <linkfield>cartitem_id</linkfield>
-            <field>custom_stencil_cartitem_id</field>
-          </extends>
           <associated> 
             <id>cartitem_attr_id</id>
             <name>attributes</name>

@@ -16,13 +16,14 @@
   </div>
   <div class="row attr_values" id="attr_value{$attrvalueno}">
     <input type="hidden" value="attribute_id" name="default[attr_value_attribute_id]" />
-    <input type="hidden" value="{$attr_value.attr_value_id}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_id]" id="attr_value_id" class="key" />
-    <input type="hidden" value="attr_value_id" name="field[10][tbl_attr_value][{$attrvalueno}][id]" id="id" />
-    <input type="hidden" value="{$attr_value.attr_value_attribute_id}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_attribute_id]" id="attr_value_attribute_id" class="key" />
+    <input type="hidden" value="{$attr_value.attr_value_id}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_id]" id="attr_value_id_{$attrvalueno}" class="key" />
+    <input type="hidden" value="attr_value_id" name="field[10][tbl_attr_value][{$attrvalueno}][id]" id="id_{$attrvalueno}" />
+    <input type="hidden" value="{$attr_value.attr_value_attribute_id}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_attribute_id]" id="attr_value_attribute_id_{$attrvalueno}" class="key" />
+    <input type="hidden" value="{if $attr_value.attr_value_created}{$attr_value.attr_value_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[10][tbl_variant][{$attrvalueno}][attr_value_created]" id="attr_value_created_{$attrvalueno}">
     <div class="row form-group">
-      <label class="col-sm-3 control-label" for="attr_value_name">Value*</label>
+      <label class="col-sm-3 control-label" for="attr_value_name_{$attrvalueno}">Value*</label>
       <div class="col-sm-4">
-        <input class="form-control" type="text" value="{$attr_value.attr_value_name}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_name]" id="attr_value_name" onchange="$('#attr_value_name_{$attrvalueno}_preview').html(this.value);" required>
+        <input class="form-control" type="text" value="{$attr_value.attr_value_name}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_name]" id="attr_value_name_{$attrvalueno}" onchange="$('#attr_value_name_{$attrvalueno}_preview').html(this.value);" required>
       </div>
     </div>
     {if $enableImg eq '1'}
@@ -51,9 +52,9 @@
     </div>
     {/if}
     <div class="row form-group">
-      <label class="col-sm-3 control-label" for="attr_value_order">Order</label>
+      <label class="col-sm-3 control-label" for="attr_value_order_{$attrvalueno}">Order</label>
       <div class="col-sm-4">
-        <input class="form-control number" type="text" value="{if $attr_value.attr_value_order neq ''}{$attr_value.attr_value_order}{else}999{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_order]" id="attr_value_order">
+        <input class="form-control number" type="text" value="{if $attr_value.attr_value_order neq ''}{$attr_value.attr_value_order}{else}999{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_order]" id="attr_value_order_{$attrvalueno}">
       </div>
     </div>
   </div>
