@@ -1,9 +1,9 @@
-<div id="variant_wrapper{$variantno}" rel="{$variantno}">
+<div id="variant_wrapper{$variantno}" class="variant_wrappers" rel="{$variantno}">
   <div class="row attribute-attr_values-title">
     <div class="col-sm-offset-1  col-sm-7">
       <fieldset>
         <legend style="font-size: 17px;">
-          <div id="variant_title_{$variantno}_preview">{if $variant.variant_uid} {$variant.variant_uid}{else} Variant #{$variantno}{/if}</div>
+          <div class="variant-titles" id="variant_title_{$variantno}_preview">{if $variant.variant_uid}{$variant.variant_uid}{else}Variant #{$variantno}{/if}</div>
         </legend>
       </fieldset>
     </div>
@@ -16,7 +16,7 @@
   </div>
   <div class="variants" id="variant{$variantno}">
     <input type="hidden" value="product_id" name="default[variant_product_id]" />
-    <input type="hidden" value="{$variant.variant_id}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_id]" id="variant_id_{$variantno}" class="key" />
+    <input type="hidden" value="{$variant.variant_id}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_id]" id="variant_id_{$variantno}" class="key variant-ids" />
     <input type="hidden" value="variant_id" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][id]" id="id_{$variantno}" />
     <input type="hidden" value="{$variant.variant_product_id}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_product_id]" id="variant_product_id_{$variantno}" class="key" />
     <input type="hidden" value="{if $variant.variant_created}{$variant.variant_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_created]" id="variant_created_{$variantno}">
@@ -39,25 +39,28 @@
       </div>
     </div>
 
-    <input type="hidden" value="productattr_variant_id" name="default[productattr_variant_id]" />
+    <input type="hidden" value="variant_id" name="default[productattr_variant_id]" />
     {if !$typeID}{assign var="typeID" value="1"}{/if}
     {foreach $attributes.$typeID as $attr}
       {foreach $variant.productattributes as $prdattr}
-        {if $prdattr.productattr_attribute_id eq $attr.id}
-        {assign var="existing_id" value="$prdattr.productattr_id"}
-        {assign var="selected" value="$prdattr.productattr_attr_value_id"}
+        {assign var="existing_id" value=""}
+        {assign var="selected" value=""}
+        {if $prdattr.productattr_attribute_id eq $attr.id} 
+        {assign var="existing_id" value=$prdattr.productattr_id}
+        {assign var="selected" value=$prdattr.productattr_attr_value_id}
+        {break}
         {/if}
       {/foreach}
       <div class="row form-group">
         <label class="col-sm-3 control-label" for="variant_type_id_{$variantno}_{$attr.id}">{$attr.name}</label>
         <div class="col-sm-4">
           <input type="hidden" value="{$existing_id}" name="field[{$variantno*10+2}][tbl_productattr][{$attr.id}][productattr_id]" class="key" />
-          <input type="hidden" value="variant_id" name="field[{$variantno*10+2}][tbl_productattr][{$attr.id}][id]" />
+          <input type="hidden" value="productattr_id" name="field[{$variantno*10+2}][tbl_productattr][{$attr.id}][id]" />
           <input type="hidden" value="{$variant.variant_id}" name="field[{$variantno*10+2}][tbl_productattr][{$attr.id}][productattr_variant_id]" class="key" />
           <input type="hidden" value="{if $variant.productattr_created}{$variant.productattr_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[{$variantno*10+2}][tbl_productattr][{$attr.id}][productattr_created]">
           <input type="hidden" value="{$attr.id}" name="field[{$variantno*10+2}][tbl_productattr][{$attr.id}][productattr_attribute_id]">
   
-          <select class="form-control" name="field[{$variantno*10+2}][tbl_productattr][{$attr.id}][productattr_type_id]" id="variant_type_id_{$variantno}_{$attr.id}">
+          <select class="form-control" name="field[{$variantno*10+2}][tbl_productattr][{$attr.id}][productattr_attr_value_id]" id="productattr_attr_value_id{$variantno}_{$attr.id}">
             <option value="0">Select one</option>
             {foreach $attr.values as $opt}
             <option value="{$opt.attr_value_id}" {if  $selected eq $opt.attr_value_id}selected="selected"{/if}>{$opt.attr_value_name}</option>
@@ -80,9 +83,9 @@
       </div>
     </div>
     <div class="row form-group">
-      <label class="col-sm-3 control-label" for="variant_memberprice_{$variantno}">Member Price ($)</label>
+      <label class="col-sm-3 control-label" for="variant_membersprice_{$variantno}">Members Price ($)</label>
       <div class="col-sm-5 ">
-        <input class="form-control double" type="text" value="{if $variant.variant_memberprice}{$variant.variant_memberprice}{else}0{/if}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_memberprice]" id="variant_memberprice_{$variantno}">
+        <input class="form-control double" type="text" value="{if $variant.variant_membersprice}{$variant.variant_membersprice}{else}0{/if}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_membersprice]" id="variant_membersprice_{$variantno}">
       </div>
     </div>
     <div class="row form-group">
@@ -137,25 +140,48 @@
         <input class="chckbx" type="checkbox" {if $variant.variant_published eq 1 || $variant.variant_id eq ""}checked="checked" {/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="variant_published_{$variantno}">
       </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-    
-
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="variant_order_{$variantno}">Order</label>
       <div class="col-sm-4">
         <input class="form-control number" type="text" value="{if $variant.variant_order neq ''}{$variant.variant_order}{else}999{/if}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_order]" id="variant_order_{$variantno}">
       </div>
     </div>
+    {*************** COMMENTED OUT - NOT TESTED - DOES NOT WORK!!!
+    <div class="row form-group">
+      <div class="col-sm-3"></div>
+      <label class="col-sm-2 control-label" for="id_product_instock">Quantity(>)</label>
+      <div class="col-sm-2"></div>
+      <label class="col-sm-2 control-label" for="id_product_instock">Modifier(%)</label>
+      <input type="hidden" value="variant_id" name="default[productqty_variant_id]" />
+    </div>
+    {assign var=count value=0} {foreach $variant.qty_modifier as $mod} {assign var=count value=$count+1}
+    <div class="row form-group">
+      <label class="col-sm-3 control-label" for="id_product_instock">Quantity/Price Modifier ({$count})</label>
+      <div class="col-sm-4">
+        <input type="hidden" value="{$mod.productqty_id}" name="field[{$variantno*10+1}][tbl_productqty][{$count}][productqty_id]" id="productqty_id" class="key" />
+        <input type="hidden" value="productqty_id" name="field[{$variantno*10+1}][tbl_productqty][{$count}][id]" id="id" />
+        <input type="hidden" value="{$mod.productqty_variant_id}" name="field[{$variantno*10+1}][tbl_productqty][{$count}][productqty_variant_id]" id="productqty_variant_id" class="key" />
+        <input class="form-control double" type="text" value="{$mod.productqty_qty}" name="field[{$variantno*10+1}][tbl_productqty][{$count}][productqty_qty]" id="id_productqty_qty">
+      </div>
+      <div class="col-sm-4">
+        <input class="form-control double" type="text" value="{$mod.productqty_modifier}" name="field[{$variantno*10+1}][tbl_productqty][{$count}][productqty_modifier]" id="id_productqty_modifier">
+      </div>
+    </div>
+    {/foreach} {while $count < 4} {assign var=count value=$count+1}
+    <div class="row form-group">
+      <label class="col-sm-3 control-label" for="id_product_instock">Quantity/Price Modifier ({$count})</label>
+      <div class="col-sm-4">
+        <input type="hidden" value="" name="field[{$variantno*10+1}][tbl_productqty][{$count}][productqty_id]" id="productqty_id" class="key" />
+        <input type="hidden" value="productqty_id" name="field[{$variantno*10+1}][tbl_productqty][{$count}][id]" id="id" />
+        <input type="hidden" value="{$variant.variant_id}" name="field[{$variantno*10+1}][tbl_productqty][{$count}][productqty_variant_id]" id="productqty_variant_id" class="key" />
+        <input class="form-control double" type="text" value="0" name="field[{$variantno*10+1}][tbl_productqty][{$count}][productqty_qty]" id="id_productqty_qty">
+      </div>
+      <div class="col-sm-4">
+        <input class="form-control double" type="text" value="0" name="field[{$variantno*10+1}][tbl_productqty][{$count}][productqty_modifier]" id="id_productqty_modifier">
+      </div>
+    </div>
+    {/while}
+    *}
   </div>
 </div>
 

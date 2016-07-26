@@ -87,6 +87,9 @@ class Record{
         if($this->CONFIG->root_parent_id){
           $parentID = $this->CONFIG->root_parent_id;
         }
+        if(!empty($f->parent_id)){
+          $parentID = $f->parent_id;
+        }
         $article_f['options']["{$f->name}"] = $this->getOptionsCatTree($f, $parentID);
       } else{
         $pre = str_replace("tbl_", "", $f->table);

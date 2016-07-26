@@ -276,6 +276,13 @@
             <linkfield>variant_id</linkfield>
             <field>productattr_variant_id</field> 
           </associated>
+          <associated> 
+            <name>qty_modifier</name>
+            <table>tbl_productqty</table>
+            <linkfield>variant_id</linkfield>
+            <field>productqty_variant_id</field> 
+            <orderby>productqty_qty ASC</orderby>
+          </associated>
         </associated>
       	<associated> 
           <name>gallery</name>
@@ -289,13 +296,6 @@
           <linkfield>product_id</linkfield>
           <field>productcat_product_id</field>
       	</associated>
-      	<associated> 
-          <name>qty_modifier</name>
-          <table>tbl_productqty</table>
-          <linkfield>product_id</linkfield>
-          <field>productqty_product_id</field> 
-          <orderby>productqty_qty ASC</orderby>
-      	</associated>
       	<associated>
           <name>productassoc</name>
           <table>tbl_productassoc</table>
@@ -308,6 +308,7 @@
           	<table>tbl_listing</table>
           	<id>listing_object_id</id>
           	<reference>listing_name</reference> 
+            <parent_id>6</parent_id>
           	<where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
           </field>  
           <field> 
@@ -332,7 +333,7 @@
           <field>product_object_id</field>
       	</log>
       </table>
-      <list_template>listall.tpl</list_template>
+      <list_template>ec_list_product.tpl</list_template>
       <edit_template>ec_edit_product.tpl</edit_template>
       <process>
         <file>admin/includes/processes/load-product-attributes.php</file>

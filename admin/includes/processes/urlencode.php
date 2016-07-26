@@ -21,7 +21,7 @@ if((isset($_SESSION['user']['admin']) && !empty($_SESSION['user']['admin']) )){
   	$sql = "SELECT {$_POST ['idfield']} AS ID FROM {$_POST ['table']} WHERE {$_POST ['field']} = :url {$where} AND {$pre}_deleted IS NULL";
   	if($res = $DBobject->wrappedSql($sql,$params)){
   		foreach ($res as $r){
-  			if ($r['ID'] != $_POST ['id']){
+  			if ($r['ID'] != $_POST['id']){ 
   				echo json_encode ( array ("url" => $url, "duplicated" => true  ) );
   				die ();
   			}

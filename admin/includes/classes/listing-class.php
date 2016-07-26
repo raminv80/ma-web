@@ -81,6 +81,9 @@ class Listing {
         if($this->CONFIG_OBJ->root_parent_id){
           $parentID = $this->CONFIG_OBJ->root_parent_id;
         }
+        if(!empty($f->parent_id)){
+          $parentID = $f->parent_id;
+        }
         $listing_f['options']["{$f->name}"] = $this->getOptionsCatTree($f,$parentID);
       }else{
         $pre = str_replace("tbl_","",$f->table);

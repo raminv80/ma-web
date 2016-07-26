@@ -116,6 +116,35 @@ if (jQuery.validator) {
 		"Invalid URL: It's currently being used or has non-alphanumeric characters."
 	);
 	
+	jQuery.validator.addMethod(
+	  		"uniqueURL2", 
+	  		function(value, element, params) {
+	  			var response = false;
+	  			var idVal = params.id;  	
+	  	  	if(params.IdFormField) idVal = $(params.IdFormField).val();
+	  			$.ajax({
+	  				type: "POST",
+	  			    url: "/admin/includes/processes/urlencode.php",
+	  				cache: false,
+	  				async: false,
+	  				data: "value="+encodeURIComponent(value)+"&id="+idVal+"&idfield="+params.idfield+"&table="+params.table+"&field="+params.field+"&field2="+params.field2+"&value2="+$('#'+params.value2).val(),
+	  				dataType: "json",
+	  			    success: function(res, textStatus) {
+	  			    	try{
+	  			    		if ( res.duplicated ) {
+	  			    			response = false;
+		  			    	} else {
+			  			    	response = true;
+			  			    }
+	  			    	}catch(err){ }
+	  			    }
+	  			});
+	  			return response;
+	  			
+			}, 
+			"Invalid URL: It's currently being used or has non-alphanumeric characters."
+		);
+	
 
 	jQuery.validator.addMethod(
   		"uniqueEmail", 

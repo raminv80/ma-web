@@ -203,17 +203,15 @@ while(true){
    * ***** Product pages here ******
    */
   foreach($CONFIG->product_page as $lp){
-    if(empty($lp->url)){continue;}
     $needle = str_replace("/","\/",$lp->url);
     $haystack = $_request["arg1"];
-    if(preg_match("/^{$needle}/",$haystack)){
+    if(preg_match("/^{$needle}/",$haystack)){ 
       $_nurl = $_request["arg1"];
       $class = (string)$lp->file;
       $obj = new $class($_nurl,$lp);
       $template = $obj->Load(null,$_PUBLISHED);
       $menu = $obj->LoadMenu($lp->pageID);
       $SMARTY->assign('menuitems',$menu);
-      $obj->LoadAssociatedProducts();
       foreach($lp->process as $sp){
         $file = (string)$sp->file;
         if(file_exists($file))	{ include ($file);}

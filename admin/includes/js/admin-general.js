@@ -76,7 +76,7 @@ $('input[type=text][class=tool-tip]').tooltip({
 });
 
 function ConfirmDelete(){
-	 return confirm("Do you want to remove this item ?");
+	 return confirm("Do you want to remove this item?");
 }
 
 function convert_to_mysql_date_format(str){

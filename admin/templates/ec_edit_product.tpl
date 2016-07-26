@@ -151,43 +151,6 @@
                 <textarea name="field[1][tbl_product][{$cnt}][product_content4]" id="id_product_content4" class="tinymce">{$fields.product_content4}</textarea>
               </div>
             </div>
-            {*************** COMMENTED OUT
-            <div class="row form-group">
-              <div class="col-sm-3"></div>
-              <label class="col-sm-2 control-label" for="id_product_instock">Quantity(>)</label>
-              <div class="col-sm-2"></div>
-              <label class="col-sm-2 control-label" for="id_product_instock">Modifier(%)</label>
-            </div>
-            {assign var=count value=0} {foreach $fields.qty_modifier as $mod} {assign var=count value=$count+1}
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_instock">Quantity/Price Modifier ({$count})</label>
-              <div class="col-sm-4">
-                <input type="hidden" value="product_id" name="default[productqty_product_id]" />
-                <input type="hidden" value="{$mod.productqty_id}" name="field[20][tbl_productqty][{$count}][productqty_id]" id="productqty_id" class="key" />
-                <input type="hidden" value="productqty_id" name="field[{20}][tbl_productqty][{$count}][id]" id="id" />
-                <input type="hidden" value="{$mod.productqty_product_id}" name="field[20][tbl_productqty][{$count}][productqty_product_id]" id="productqty_product_id" class="key" />
-                <input class="form-control double" type="text" value="{$mod.productqty_qty}" name="field[20][tbl_productqty][{$count}][productqty_qty]" id="id_productqty_qty">
-              </div>
-              <div class="col-sm-4">
-                <input class="form-control double" type="text" value="{$mod.productqty_modifier}" name="field[20][tbl_productqty][{$count}][productqty_modifier]" id="id_productqty_modifier">
-              </div>
-            </div>
-            {/foreach} {while $count < 4} {assign var=count value=$count+1}
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_instock">Quantity/Price Modifier ({$count})</label>
-              <div class="col-sm-4">
-                <input type="hidden" value="product_id" name="default[productqty_product_id]" />
-                <input type="hidden" value="" name="field[20][tbl_productqty][{$count}][productqty_id]" id="productqty_id" class="key" />
-                <input type="hidden" value="productqty_id" name="field[{20}][tbl_productqty][{$count}][id]" id="id" />
-                <input type="hidden" value="{$fields.product_id}" name="field[20][tbl_productqty][{$count}][productqty_product_id]" id="productqty_product_id" class="key" />
-                <input class="form-control double" type="text" value="0" name="field[20][tbl_productqty][{$count}][productqty_qty]" id="id_productqty_qty">
-              </div>
-              <div class="col-sm-4">
-                <input class="form-control double" type="text" value="0" name="field[20][tbl_productqty][{$count}][productqty_modifier]" id="id_productqty_modifier">
-              </div>
-            </div>
-            {/while}
-            *}
           </div>
         </div>
          <!--===+++===+++===+++===+++===+++ VARIANTS TAB +++===+++===+++===+++===+++====-->
@@ -254,7 +217,7 @@
             {assign var='linking_table_associated_field' value='productassoc_product_object_id'} 
             {assign var='linking_table_deleted_field' value='productassoc_deleted'} 
             {assign var='selected_array' value=$fields.productassoc} 
-            {assign var='ignore_value' value='0'} 
+            {assign var='ignore_value' value=$fields.product_object_id} 
             {include file='form_linking_input.tpl'}
           </div>
         </div>
@@ -337,6 +300,8 @@
 {include file='jquery-validation.tpl'}
 
 <script type="text/javascript">
+
+  var lastSel = $("#product_type_id option:selected");
   $(document).ready(function() {
     
     $('#Edit_Record').validate({
@@ -349,13 +314,34 @@
         idfield: "product_object_id",
         table: "tbl_product",
         field: "product_url",
-        field2: "product_listing_id",
-        value2: "id_product_listing"
+        field2: "",
+        value2: ""
+      },
+      uniqueURL2: {
+        id: $('#product_object_id').val(),
+        idfield: "listing_object_id",
+        table: "tbl_listing",
+        field: "listing_url",
+        field2: "",
+        value2: ""
       }
     });
     
     $('.images').hide();
     $('.variants').hide();
+    SetImgVariantOpts();
+   
+    $('#product_type_id').change(function(){
+      if($('.variant_wrappers').length){
+        if(!confirm("The product variants may be affected by changing the product type. Do you still want to continue?")){
+          lastSel.attr("selected", true);       
+        }
+      }
+    });
+    
+    $('.product-imgs').click(function(){
+      SetImgVariantOpts('#'+ $(this).closest('.gallery-image').attr('id'));
+    });
     
   });
   
@@ -471,6 +457,7 @@
           $('#images-wrapper').append(data);
           $('body').css('cursor', 'default');
           scrolltodiv('#image_wrapper' + no);
+          SetImgVariantOpts('#image_wrapper' + no);
         }catch(err){
           $('body').css('cursor', 'default');
         }
@@ -537,5 +524,40 @@
       return false;
     }
   }
+  
+  function SetImgVariantOpts(ID){
+    //Get all variants
+    var variants = {};
+    variants[0] = 'Select one';
+    $('.variant_wrappers').each(function(){
+      var value = $(this).find('.variant-ids').val()
+      if(value){
+        variants[value] = $(this).find('.variant-titles').html();
+      }
+    });
+    
+    if(ID){
+      $(ID).find('.product-imgs').empty();
+      $.each(variants, function(i, item){
+        $(ID).find('.product-imgs').append($('<option>', { 
+            value: i,
+            text : item 
+        }));
+      });
+      $(ID).find('.product-imgs').val($(ID).find('.product-imgs').attr('data-value'));
+    }else{
+      $('.product-imgs').empty();
+      $.each(variants, function (i, item) {
+        $('.product-imgs').each(function(){
+          $(this).append($('<option>', { 
+            value: i,
+            text : item 
+        	}));
+          $(this).val($(this).attr('data-value'));
+        });
+      });
+    }
+  }
+  
 </script>
 {/block}
