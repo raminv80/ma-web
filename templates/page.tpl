@@ -38,12 +38,7 @@
 <meta itemprop="description" content="{$product_meta_description} {$listing_meta_description}">
 <meta itemprop="image" content="{$DOMAIN}/images/logo.png">
 
-<!-- Bootstrap -->
-<link href="/includes/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="/includes/css/cart.css" rel="stylesheet" media="screen">
-<link href="/includes/css/bootstrap-touch-carousel.css" rel="stylesheet" media="screen">
-<link href="/includes/css/custom.css" rel="stylesheet" media="screen">
-<link href="/includes/css/resp.css" rel="stylesheet" media="screen">
+<link href="/includes/css/styles.css" rel="stylesheet" media="screen">
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>

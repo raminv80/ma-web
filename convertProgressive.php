@@ -34,7 +34,7 @@ if(!file_exists($source_file)){
   header("Status: 404 Not Found"); //FastCGI
   //header("location: /404");
   //die();
-  $requested_uri = "images/no-image-available.jpg";
+  $requested_uri = "/images/no-image-available.jpg";
   $requested_file   = urlencode(basename($requested_uri));
   $source_file      = $document_root.$requested_uri; // Full path to source file
   $extension = strtolower(pathinfo($source_file, PATHINFO_EXTENSION));

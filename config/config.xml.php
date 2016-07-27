@@ -139,6 +139,25 @@
         <orderby>gallery_order</orderby>
       </associated>
       <associated> 
+        <name>attributes</name>
+        <table>tbl_productschema</table>
+        <linkfield>product_type_id</linkfield>
+        <field>productschema_type_id</field> 
+        <orderby>attribute_order</orderby>
+        <extends>
+          <table>tbl_attribute</table>
+          <linkfield>productschema_attribute_id</linkfield>
+          <field>attribute_id</field>
+        </extends> 
+        <associated>
+          <name>values</name>
+          <table>tbl_attr_value</table>
+          <linkfield>attribute_id</linkfield>
+          <field>attr_value_attribute_id</field>
+          <orderby>attr_value_order</orderby>
+        </associated>
+      </associated>
+      <associated> 
         <name>variants</name>
         <table>tbl_variant</table>
         <linkfield>product_id</linkfield>
@@ -148,16 +167,6 @@
           <table>tbl_productattr</table>
           <linkfield>variant_id</linkfield>
           <field>productattr_variant_id</field> 
-          <extends>
-            <table>tbl_attribute</table>
-            <linkfield>productattr_attribute_id</linkfield>
-            <field>attribute_id</field>
-          </extends> 
-          <extends>
-            <table>tbl_attr_value</table>
-            <linkfield>productattr_attr_value_id</linkfield>
-            <field>attr_value_id</field>
-          </extends>
         </associated>
       </associated>
       <associated>
