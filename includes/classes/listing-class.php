@@ -481,7 +481,7 @@ class ListClass{
     $data = array();
     $selected = 0;
     //GET LIST
-    $sql = "SELECT menu_id, menu_name, menu_parent_id, menu_listing_id, menu_external, menu_icon, menu_category, menu_order FROM tbl_menu WHERE menu_deleted IS NULL AND menu_parent_id = :pid AND menu_location = :loc ORDER BY menu_order, menu_name";
+    $sql = "SELECT menu_id, menu_name, menu_parent_id, menu_listing_id, menu_external, menu_icon, menu_type, menu_order FROM tbl_menu WHERE menu_deleted IS NULL AND menu_parent_id = :pid AND menu_location = :loc ORDER BY menu_order, menu_name";
     $params = array(
         ":pid" => $_pid, 
         ":loc" => $_loc 
@@ -490,7 +490,7 @@ class ListClass{
       foreach($res as $key => $val){
         $data[$key]['id'] = $val['menu_id'];
         $data[$key]['title'] = unclean($val['menu_name']);
-        $data[$key]['category'] = $val['menu_category'];
+        $data[$key]['category'] = $val['menu_type'];
         $data[$key]['icon'] = $val['menu_icon'];
         $data[$key]['url'] = $this->getFullUrl($val['menu_listing_id']);
         $data[$key]['selected'] = (!empty($val['menu_listing_id']) && $val['menu_listing_id'] == $_curPageId)? 1 : 0;

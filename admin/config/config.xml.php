@@ -114,7 +114,7 @@
         <field>menu_name</field>
         <parent_field>menu_parent_id</parent_field>
         <deleted>menu_deleted</deleted>
-        <orderby>menu_category DESC, menu_order, menu_name</orderby>
+        <orderby>menu_location DESC, menu_order, menu_name</orderby>
         <options> 
           <field recursive="true">
             <name>pages</name>

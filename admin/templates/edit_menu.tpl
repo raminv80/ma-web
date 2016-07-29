@@ -30,8 +30,19 @@
         <div class="tab-pane active" id="details">
           <div class="form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="menu_type">Type</label>
+              <div class="col-sm-3">
+                <select class="form-control" name="field[1][tbl_menu][{$cnt}][menu_type]" id="menu_type">
+                  <option value="0" {if !$fields.menu_type}selected="selected"{/if}>Page</option>
+                  <option value="1" {if $fields.menu_type eq 1}selected="selected"{/if}>Page - Member's only</option>
+                  <option value="2" {if $fields.menu_type eq 2}selected="selected"{/if}>Category/Group</option>
+                  <option value="3" {if $fields.menu_type eq 3}selected="selected"{/if}>External page</option>
+                </select>
+              </div>
+            </div>
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="menu_location">Location</label>
-              <div class="col-sm-5">
+              <div class="col-sm-3">
                 <select class="form-control" name="field[1][tbl_menu][{$cnt}][menu_location]" id="menu_location">
                   <option value="top-header" {if $fields.menu_location eq 'top-header'}selected="selected"{/if}>Top header</option>
                   <option value="main-header" {if !$fields.menu_location || $fields.menu_location eq 'main-header'}selected="selected"{/if}>Main header</option>
@@ -55,37 +66,21 @@
                 <span class="help-block"></span>
               </div>
             </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="menu_category">Category</label>
+            <div class="row form-group types type0 type1" style="display:none">
+              <label class="col-sm-3 control-label" for="menu_listing_id">Page</label>
               <div class="col-sm-5">
-                <input type="hidden" value="{if $fields.menu_category eq 1}1{else}0{/if}" name="field[1][tbl_menu][{$cnt}][menu_category]" class="value">
-                <input class="chckbx" type="checkbox" {if $fields.menu_category eq 1}checked="checked" {/if} 
-                onclick="if($(this).is(':checked')){ $('.nocategory').hide('slow'); $(this).parent().children('.value').val('1'); }else{ $('.nocategory').show('slow'); $(this).parent().children('.value').val('0'); }" id="menu_category">
+                <select class="form-control" name="field[1][tbl_menu][{$cnt}][menu_listing_id]" id="menu_listing_id">
+                  {call name=options_list opts=$fields.options.pages selected=$fields.menu_listing_id}
+                </select>
               </div>
             </div>
-            <div class="nocategory" {if $fields.menu_category eq 1}style="display:none;"{/if}>
-              <div class="row form-group">
-                <label class="col-sm-3 control-label" for="internal">Internal page</label>
-                <div class="col-sm-5">
-                  <input class="chckbx" type="checkbox" {if $fields.menu_listing_id && !$fields.menu_external}checked="checked"{/if} onclick="if($(this).is(':checked')){ $('.external').hide('slow'); $('.internal').show('slow'); }else{ $('.internal').hide('slow'); $('.external').show('slow'); }" id="internal">
-                </div>
-              </div>
-              <div class="row form-group internal" {if $fields.menu_listing_id && !$fields.menu_external}{else}style="display:none;"{/if}>
-                <label class="col-sm-3 control-label" for="menu_listing_id">Page</label>
-                <div class="col-sm-5">
-                  <select class="form-control" name="field[1][tbl_menu][{$cnt}][menu_listing_id]" id="menu_listing_id">
-                    {call name=options_list opts=$fields.options.pages selected=$fields.menu_listing_id}
-                  </select>
-                </div>
-              </div>
-              <div class="row form-group external" {if $fields.menu_listing_id && !$fields.menu_external}style="display:none;"{/if}>
-                <label class="col-sm-3 control-label" for="menu_external">External <small>(Include http or https)</small></label>
-                <div class="col-sm-5">
-                  <input class="form-control" maxlength="1000" type="text" value="{$fields.menu_external}" name="field[1][tbl_menu][{$cnt}][menu_external]" id="menu_external">
-                </div>
+            <div class="row form-group types type3" style="display:none">
+              <label class="col-sm-3 control-label" for="menu_external">External <small>(Include http or https)</small></label>
+              <div class="col-sm-5">
+                <input class="form-control" maxlength="1000" type="text" value="{$fields.menu_external}" name="field[1][tbl_menu][{$cnt}][menu_external]" id="menu_external">
               </div>
             </div>
-            <div class="row form-group">
+            <div class="row form-group types type0 type1 type2" style="display:none">
                 <label class="col-sm-3 control-label" for="menu_icon">Icon<br>
                 <small>Size: 20px Wide x 20px Tall</small></label>
               <div class="col-sm-9">
@@ -150,15 +145,27 @@
     });
     
     RefreshParents();
+    RenderFieldsByType();
     
     $('#menu_location').change(function(){
       RefreshParents();
     });
+    
+    $('#menu_type').change(function(){
+      RenderFieldsByType(true);
+    });
   });
   
-  function RefreshParents(VALUE){
+  function RefreshParents(){
     $('#menu_parent_id option').hide();
     $('#menu_parent_id').find('.'+ $('#menu_location').val()).show();
   }
+  
+  function RenderFieldsByType(SLOWMODE){
+    SLOWMODE = (SLOWMODE)?'slow':'';
+    $('.types').hide();
+    $('.type'+ $('#menu_type').val()).show(SLOWMODE);
+  }
+  
 </script>
 {/block}
