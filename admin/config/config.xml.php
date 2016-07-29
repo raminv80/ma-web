@@ -65,15 +65,6 @@
       <title>Pages</title>
       <type>LISTING</type>
       <type_id>1</type_id>
-      <options> 
-      	<field>
-          <name>listing_parent_id</name>
-          <table>tbl_listing</table>
-          <id>listing_object_id</id>
-          <reference>listing_name</reference> 
-          <where>listing_parent_flag = 1 AND listing_type_id = 1 AND listing_published = 1</where> 
-      	</field> 
-      </options>
       <associated>
       	<name>tags</name>
       	<table>tbl_tag</table>
@@ -94,6 +85,15 @@
       	<linkfield>listing_id</linkfield>
       	<field>files_listing_id</field> 
       </associated>
+      <options> 
+        <field>
+          <name>listing_parent_id</name>
+          <table>tbl_listing</table>
+          <id>listing_object_id</id>
+          <reference>listing_name</reference> 
+          <where>listing_parent_flag = 1 AND listing_type_id = 1 AND listing_published = 1</where> 
+        </field> 
+      </options>
       <log>
       	<table>tbl_listing</table>
       	<id>listing_id</id>
@@ -102,6 +102,46 @@
       <list_template>list.tpl</list_template>
       <edit_template>edit_page.tpl</edit_template>
   	</section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>menu</url>
+      <title>Menu</title>
+      <type>TABLE</type>
+      <table recursive="true">
+        <name>tbl_menu</name>
+        <id>menu_id</id>
+        <field>menu_name</field>
+        <parent_field>menu_parent_id</parent_field>
+        <deleted>menu_deleted</deleted>
+        <orderby>menu_category DESC, menu_order, menu_name</orderby>
+        <options> 
+          <field recursive="true">
+            <name>pages</name>
+            <table>tbl_listing</table>
+            <id>listing_object_id</id>
+            <reference>listing_name</reference> 
+            <orderby>listing_name</orderby>
+            <where>listing_type_id = 1 AND listing_published = 1 AND (listing_noindex IS NULL OR listing_noindex != 1)</where> 
+          </field> 
+          <field recursive="true">
+            <name>menus</name>
+            <table>tbl_menu</table>
+            <id>menu_id</id>
+            <reference>menu_name</reference> 
+            <extra>menu_location</extra>
+            <where>menu_listing_id IS NOT NULL AND menu_listing_id != 0</where> 
+          </field> 
+        </options>
+        <log>
+          <table>tbl_menu</table>
+          <id>menu_id</id>
+          <field>menu_id</field>
+        </log>
+      </table>
+      <list_template>list_menu.tpl</list_template>
+      <edit_template>edit_menu.tpl</edit_template>
+    </section>
     
   	<section level="1">
       <showlist>FALSE</showlist>

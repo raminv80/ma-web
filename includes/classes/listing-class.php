@@ -460,62 +460,54 @@ class ListClass{
   }
 
 
-  function LoadMenu($_pid, $_cid = 0, $level = 0, $_PUBLISHED = 1){
-    global $CONFIG, $SMARTY, $DBobject;
-    $data = array();
+  function LoadMenu($_curPageId = 0){
+    global $DBobject;
     
-    // GET LISTINGS AND CATEGORIES FOR THIS SECTION
-    $sql = "SELECT {$this->TBL}.listing_object_id, {$this->TBL}.listing_title, {$this->TBL}.listing_url, {$this->TBL}.listing_name, {$this->TBL}.listing_parent_id, {$this->TBL}.listing_parent_flag, {$this->TBL}.listing_type_id, {$this->TBL}.listing_menu_group,listing_menu_image,listing_flag1 FROM {$this->TBL} WHERE {$this->TBL}.listing_parent_id = :cid AND {$this->TBL}.listing_published = :published AND {$this->TBL}.listing_display_menu = '1' AND {$this->TBL}.listing_deleted IS NULL ORDER BY {$this->TBL}.listing_type_id, {$this->TBL}.listing_order ASC";
-    $params = array(
-        ":cid" => $_cid, 
-        ":published" => $_PUBLISHED 
-    );
-    if($res = $DBobject->executeSQL($sql, $params)){
-      foreach($res as $row){
-        $t_array = array(
-            "menu_group" => unclean($row['listing_menu_group']), 
-            "menu_img" => unclean($row['listing_menu_image']), 
-            "category_name" => unclean($row['listing_name']), 
-            "category_id" => $row['listing_object_id'], 
-            "title" => unclean($row['listing_name']), 
-            "url" => $row['listing_url'], 
-            "type_id" => $row['listing_type_id'], 
-            "listing_flag1" => $row['listing_flag1'], 
-            "selected" => 0, 
-            "listings" => 0 
-        );
-        
-        if(intval($row['listing_parent_flag']) == 1){
-          $t_array["category"] = 1;
-          $subs = self::LoadMenu($_pid, $row['listing_object_id'], $level + 1, $_PUBLISHED);
-          if($subs['selected'] == 1){
-            $t_array["selected"] = 1;
-            $data['selected'] = 1;
-            unset($subs['selected']);
-          }
-          if($subs['listings'] == 1){
-            $t_array["listings"] = 1;
-            $data['listings'] = 1;
-            unset($subs['listings']);
-          }
-          $t_array["subs"] = $subs;
-        } else{
-          $data['listings'] = 1;
-        }
-        
-        if($row['listing_object_id'] == $_pid){
-          $data['selected'] = 1;
-          $t_array["selected"] = 1;
-        }
-        $data[] = $t_array;
+    $data = array();
+    //GET MENU LOCATIONS
+    $sql = "SELECT menu_location FROM tbl_menu WHERE menu_deleted IS NULL GROUP BY menu_location";
+    if($locations = $DBobject->executeSQL($sql, $params)){
+      foreach($locations as $loc){
+        $data["{$loc['menu_location']}"] = $this->LoadMenuList($_curPageId, $loc['menu_location']);
       }
-    }
-    if($level == 0){
-      unset($data['selected']);
-      unset($data['listings']);
     }
     return $data;
   }
+  
+  
+  protected function LoadMenuList($_curPageId = 0, $_loc = '', $_pid = 0){
+    global $DBobject;
+    
+    $data = array();
+    $selected = 0;
+    //GET LIST
+    $sql = "SELECT menu_id, menu_name, menu_parent_id, menu_listing_id, menu_external, menu_icon, menu_category, menu_order FROM tbl_menu WHERE menu_deleted IS NULL AND menu_parent_id = :pid AND menu_location = :loc ORDER BY menu_order, menu_name";
+    $params = array(
+        ":pid" => $_pid, 
+        ":loc" => $_loc 
+    );
+    if($res = $DBobject->executeSQL($sql, $params)){
+      foreach($res as $key => $val){
+        $data[$key]['id'] = $val['menu_id'];
+        $data[$key]['title'] = unclean($val['menu_name']);
+        $data[$key]['category'] = $val['menu_category'];
+        $data[$key]['icon'] = $val['menu_icon'];
+        $data[$key]['url'] = $this->getFullUrl($val['menu_listing_id']);
+        $data[$key]['selected'] = (!empty($val['menu_listing_id']) && $val['menu_listing_id'] == $_curPageId)? 1 : 0;
+        
+        //GET SUB LIST
+        $data[$key]['subs'] = array();
+        if(!empty($val['menu_id'])){
+          $data[$key]['subs'] = $this->LoadMenuList($_curPageId, $_loc, $val['menu_id']);
+          if($data[$key]['selected'] == 0 && !empty($data[$key]['subs'])){
+            $data[$key]['selected'] = $data[$key]['subs']['selected'];
+          }
+        }
+      }
+    }
+    return array('list'=>$data, 'selected'=>$selected);
+  }
+  
 
 
   function LoadTree($_cid = 0, $level = 0, $count = 0, $_PUBLISHED = 1){
@@ -786,5 +778,22 @@ class ListClass{
         $SMARTY->assign("{$a->name}", unclean($data));
       }
     }
+  }
+  
+  
+  function getFullUrl($_oid, $_level = 0) {
+    global $DBobject;
+  
+    $url = '';
+    if(!empty($_oid) || $_level > 8){
+      $sql = "SELECT listing_parent_id, listing_url FROM tbl_listing WHERE listing_deleted IS NULL AND listing_published = 1 AND listing_object_id = :oid LIMIT 1";
+      if($res = $DBobject->wrappedSql($sql, array(":oid" => $_oid))){
+        $url = "/{$res[0]['listing_url']}";
+        if(!empty($res[0]['listing_parent_id'])){
+          $url = $this->getFullUrl($res[0]['listing_parent_id'], $_level++) . $url;
+        }
+      }
+    }
+    return $url;
   }
 }

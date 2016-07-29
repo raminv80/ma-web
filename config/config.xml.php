@@ -89,7 +89,65 @@
     <template>checkout-complete.tpl</template>
     <pageID>7</pageID>
   </static_page>
-	
+
+  <listing_page name="news-and-resources">
+    <url>news-and-resources</url>
+    <root_parent_id>0</root_parent_id> 
+    <type>2</type><!-- articles --> 
+    <type>3</type><!-- newsletter -->
+    <file>ListClass</file>
+    <orderby>listing_schedule_start DESC</orderby>
+    <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL)]]></where>
+    <limit level="1">20</limit>
+    <table> 
+      <name>tbl_listing</name>
+      <field>listing_url</field>  
+      <extends>
+        <table>tbl_news</table>
+        <linkfield>listing_id</linkfield>
+        <field>news_listing_id</field>
+      </extends>    
+      <associated listing="false">
+        <name>gallery</name>
+        <table>tbl_gallery</table>
+        <linkfield>listing_id</linkfield>
+        <field>gallery_listing_id</field>
+      </associated>
+      <associated listing="true">
+        <name>tags</name>
+        <table>tbl_tag</table>
+        <linkfield>listing_id</linkfield>
+        <field>tag_object_id</field>
+      </associated>
+      <template typeid="2">news-article.tpl</template> 
+      <template typeid="3">newsletter.tpl</template> 
+    </table>
+    <template>news-resources.tpl</template>
+    <loadmoretemplate>news-resources-structure.tpl</loadmoretemplate>  
+  </listing_page>
+  
+  <listing_page name="products">
+    <url>products</url>
+    <root_parent_id>6</root_parent_id> 
+    <type>10</type>
+    <file>ListClass</file>
+    <limit level="1">100</limit>
+    <table> 
+      <name>tbl_listing</name>
+      <field>listing_url</field>  
+      <associated listing="false">
+        <name>gallery</name>
+        <table>tbl_gallery</table>
+        <linkfield>listing_id</linkfield>
+        <field>gallery_listing_id</field>
+      </associated>
+      <template>ec_category.tpl</template> 
+    </table>
+    <template typeid="10">ec_category-details.tpl</template>
+    <template typeid="1">ec_category.tpl</template>
+    <loadmoretemplate>ec_category-loadmore.tpl</loadmoretemplate>  
+  </listing_page>
+  	
   <login>
     <url>login-register</url>
     <template>login-register.tpl</template>
@@ -179,64 +237,6 @@
     <template>ec_product.tpl</template>
   </product_page>
   
-  <listing_page name="news-and-resources">
-    <url>news-and-resources</url>
-    <root_parent_id>0</root_parent_id> 
-    <type>2</type><!-- articles --> 
-    <type>3</type><!-- newsletter -->
-    <file>ListClass</file>
-    <orderby>listing_schedule_start DESC</orderby>
-    <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL)]]></where>
-    <limit level="1">20</limit>
-    <table> 
-      <name>tbl_listing</name>
-      <field>listing_url</field>  
-      <extends>
-        <table>tbl_news</table>
-        <linkfield>listing_id</linkfield>
-        <field>news_listing_id</field>
-      </extends>    
-      <associated listing="false">
-        <name>gallery</name>
-        <table>tbl_gallery</table>
-        <linkfield>listing_id</linkfield>
-        <field>gallery_listing_id</field>
-      </associated>
-      <associated listing="true">
-        <name>tags</name>
-        <table>tbl_tag</table>
-        <linkfield>listing_id</linkfield>
-        <field>tag_object_id</field>
-      </associated>
-      <template typeid="2">news-article.tpl</template> 
-      <template typeid="3">newsletter.tpl</template> 
-    </table>
-    <template>news-resources.tpl</template>
-    <loadmoretemplate>news-resources-structure.tpl</loadmoretemplate>  
-  </listing_page>
-  
-  <listing_page name="products">
-    <url>products</url>
-    <root_parent_id>6</root_parent_id> 
-    <type>10</type>
-    <file>ListClass</file>
-    <limit level="1">100</limit>
-    <table> 
-      <name>tbl_listing</name>
-      <field>listing_url</field>  
-      <associated listing="false">
-        <name>gallery</name>
-        <table>tbl_gallery</table>
-        <linkfield>listing_id</linkfield>
-        <field>gallery_listing_id</field>
-      </associated>
-      <template>ec_category.tpl</template> 
-    </table>
-    <template typeid="10">ec_category-details.tpl</template>
-    <template typeid="1">ec_category.tpl</template>
-    <loadmoretemplate>ec_category-loadmore.tpl</loadmoretemplate>  
-  </listing_page>
-
   <global_process>
     <file>includes/processes/global-source-referer.php</file>
   </global_process>

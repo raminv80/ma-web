@@ -9,7 +9,7 @@
   <div class="container" id="prolist">
     <div class="row">
       <div class="col-sm-12 text-center" id="listtoptext">
-	  		<h1>{spanify data=$listing_name}</h1>
+	  		<h1>{$listing_name}</h1>
       </div>
       <div class="col-sm-8 col-sm-offset-2 text-center" id="cattoptext">
 	      {$listing_content1}

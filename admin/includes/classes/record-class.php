@@ -235,7 +235,7 @@ class Record{
   }
 
 
-  function getRecordList($hierarchy_id = null, $level = 0){
+  function getRecordList($parent_id = 0, $level = 0){
     global $SMARTY, $DBobject;
     $records = array();
     
@@ -249,79 +249,87 @@ class Record{
         $limit .= " LIMIT {$l}";
       }
     }
-    
-    $sql = "SELECT * FROM {$this->TABLE} {$extends} WHERE {$this->DELETED}  IS NULL " . ($this->WHERE != ''? "AND {$this->WHERE} " : " ") . " " . ($this->ORDERBY != ''? " ORDER BY {$this->ORDERBY} " : " ") . $limit;
+    $parentField = "";
+    $recursive = "";
+    if(!empty($this->CONFIG->table->attributes()->recursive) && !empty($this->CONFIG->table->parent_field)){
+      $parentField = (string) $this->CONFIG->table->parent_field;
+      $recursive = "AND {$parentField} = '{$parent_id}'";
+    }
+    $sql = "SELECT * FROM {$this->TABLE} {$extends} WHERE {$this->DELETED} IS NULL {$recursive} " . ($this->WHERE != ''? "AND {$this->WHERE} " : " ") . " " . ($this->ORDERBY != ''? " ORDER BY {$this->ORDERBY} " : " ") . $limit;
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $key => $val){
         $n = 0;
-        $title = "";
+        $title = '';
         foreach($this->FIELD as $f){
           $title .= ($n > 0? ", " : "") . $val["{$f}"];
           $n++;
         }
-        
         $val["title"] = $title;
         $val["id"] = $val["{$this->ID}"];
         $val["url"] = "/admin/edit/{$this->URL}/{$val["{$this->ID}"]}";
         $val["url_delete"] = "/admin/delete/{$this->URL}/{$val["{$this->ID}"]}";
         $val["published"] = $val["{$this->PUBLISHED}"];
+        $val["subs"] = array(); 
+        if(!empty($parentField) && !empty($val["{$this->ID}"])){
+          $val["subs"] = $this->getRecordList($val["{$this->ID}"], $level);
+        }
         
         foreach($this->CONFIG->table->associated as $a){
           if($a->attributes()->inlist){
             $val["{$a->name}"] = $this->getAssociated($a, $val["{$a->linkfield}"]);
           }
         }
-        
         $records[$val["{$this->ID}"]] = $val;
       }
-      foreach($this->CONFIG->table->options->field as $f){
-        if($f->attributes()->inlist){
-          $options = array();
-          $pre = str_replace("tbl_", "", $f->table);
-          $tdel = "{$pre}_deleted";
-          if(!empty($f->deleted)){
-            $tdel = $f->deleted;
-          }
-          $sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$tdel} IS NULL " . ($f->where != ''? "AND {$f->where} " : "") . " " . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
-          if($res = $DBobject->wrappedSqlGet($sql)){
-            foreach($res as $key => $row){
-              $options["{$f->name}"][] = array(
-                  'id' => $row["{$f->id}"], 
-                  'value' => $row["{$f->reference}"] 
-              );
+      if(empty($parent_id)){
+        foreach($this->CONFIG->table->options->field as $f){
+          if($f->attributes()->inlist){
+            $options = array();
+            $pre = str_replace("tbl_", "", $f->table);
+            $tdel = "{$pre}_deleted";
+            if(!empty($f->deleted)){
+              $tdel = $f->deleted;
             }
-            $SMARTY->assign("options", $options);
+            $sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$tdel} IS NULL " . ($f->where != ''? "AND {$f->where} " : "") . " " . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
+            if($res = $DBobject->wrappedSqlGet($sql)){
+              foreach($res as $key => $row){
+                $options["{$f->name}"][] = array(
+                    'id' => $row["{$f->id}"], 
+                    'value' => $row["{$f->reference}"] 
+                );
+              }
+              $SMARTY->assign("options", $options);
+            }
           }
         }
-      }
-      $_trecords = array();
-      foreach($this->CONFIG->table->refer->field as $f){
-        if($f->attributes()->associate){
-          $options = array();
-          $pre = str_replace("tbl_", "", $f->table);
-          $tdel = "{$pre}_deleted";
-          if(!empty($f->deleted)){
-            $tdel = $f->deleted;
-          }
-          $sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$tdel} IS NULL " . ($f->where != ''? "AND {$f->where} " : "") . " " . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
-          if($res = $DBobject->wrappedSqlGet($sql)){
-            foreach($res as $key => $row){
-              if(!empty($records[$row["{$f->id}"]])){
-                $records[$row["{$f->id}"]]["{$f->reference}"] = $row["{$f->reference}"];
-                if($f->attributes()->order){
-                  $_trecords[$row["{$f->id}"]] = $records[$row["{$f->id}"]];
-                  $records[$row["{$f->id}"]] = null;
+        $_trecords = array();
+        foreach($this->CONFIG->table->refer->field as $f){
+          if($f->attributes()->associate){
+            $options = array();
+            $pre = str_replace("tbl_", "", $f->table);
+            $tdel = "{$pre}_deleted";
+            if(!empty($f->deleted)){
+              $tdel = $f->deleted;
+            }
+            $sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$tdel} IS NULL " . ($f->where != ''? "AND {$f->where} " : "") . " " . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
+            if($res = $DBobject->wrappedSqlGet($sql)){
+              foreach($res as $key => $row){
+                if(!empty($records[$row["{$f->id}"]])){
+                  $records[$row["{$f->id}"]]["{$f->reference}"] = $row["{$f->reference}"];
+                  if($f->attributes()->order){
+                    $_trecords[$row["{$f->id}"]] = $records[$row["{$f->id}"]];
+                    $records[$row["{$f->id}"]] = null;
+                  }
                 }
               }
             }
-          }
-          if($f->attributes()->order){
-            $records = $_trecords;
+            if($f->attributes()->order){
+              $records = $_trecords;
+            }
           }
         }
       }
     }
-    
     return $records;
   }
 

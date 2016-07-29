@@ -166,7 +166,7 @@ while(true){
               }
             }
             $record = new Record($sp);
-            $list = $record->getRecordList(null, 1);
+            $list = $record->getRecordList(0, 1);
             $SMARTY->assign("list", $list);
             $SMARTY->assign("path", (string)$sp->url);
             $template = $sp->list_template;
@@ -364,7 +364,7 @@ foreach($CONFIG->group as $gp){
     
     if($sp->type == "TABLE" && $sp->showlist != 'FALSE'){
       $record = new Record($sp);
-      $list = $record->getRecordList(null, 1);
+      $list = $record->getRecordList(0, 1);
     }
     $addUrl = "/admin/edit/{$sp->url}";
     if((string)$sp->attributes()->hideadd == 'true'){
@@ -398,7 +398,6 @@ foreach($CONFIG->group as $gp){
     );
   }
 }
-
 $SMARTY->assign("menu", $menu);
 $SMARTY->display("extends:page.tpl|$nav|$template");
 die();

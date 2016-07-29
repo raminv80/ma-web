@@ -200,32 +200,6 @@ while(true){
   }
   
   /**
-   * ***** Product pages here ******
-   */
-  foreach($CONFIG->product_page as $lp){
-    $needle = str_replace("/","\/",$lp->url);
-    $haystack = $_request["arg1"];
-    if(preg_match("/^{$needle}/",$haystack)){ 
-      $_nurl = $_request["arg1"];
-      $class = (string)$lp->file;
-      $obj = new $class($_nurl,$lp);
-      $template = $obj->Load(null,$_PUBLISHED);
-      $menu = $obj->LoadMenu($lp->pageID);
-      $SMARTY->assign('menuitems',$menu);
-      foreach($lp->process as $sp){
-        $file = (string)$sp->file;
-        if(file_exists($file))	{ include ($file);}
-      }
-      $fieldname = (string) $lp->url->attributes()->requiredvar;
-      if(!empty($fieldname) && empty($_REQUEST[$fieldname])) {
-        $_request["arg1"] = '404';
-        $template = "";
-      }
-      break 2;
-    }
-  }
-  
-  /**
    * ***** Listing pages here ******
    */
   $arr = explode("/", $_request["arg1"]);
@@ -291,6 +265,34 @@ while(true){
       break 1;
     }
   }
+  
+  /**
+   * ***** Product pages here ******
+   */
+  foreach($CONFIG->product_page as $lp){
+    if(empty($_request["arg1"])){continue;}
+    $needle = str_replace("/","\/",$lp->url);
+    $haystack = $_request["arg1"];
+    if(preg_match("/^{$needle}/",$haystack)){
+      $_nurl = $_request["arg1"];
+      $class = (string)$lp->file;
+      $obj = new $class($_nurl,$lp);
+      $template = $obj->Load(null,$_PUBLISHED);
+      $menu = $obj->LoadMenu($lp->pageID);
+      $SMARTY->assign('menuitems',$menu);
+      foreach($lp->process as $sp){
+        $file = (string)$sp->file;
+        if(file_exists($file))	{ include ($file);}
+      }
+      $fieldname = (string) $lp->url->attributes()->requiredvar;
+      if(!empty($fieldname) && empty($_REQUEST[$fieldname])) {
+        $_request["arg1"] = '404';
+        $template = "";
+      }
+      break 2;
+    }
+  }
+  
   $template = loadPage($CONFIG->error404);
   break 1;
 }
