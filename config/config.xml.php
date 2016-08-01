@@ -22,10 +22,10 @@
     <logo>logo.png</logo>
   </company> 
   <database> 
-    <host>m4-mysql1-1.ilisys.com.au</host> 
-    <user>themso</user> 
-    <password>c@^^3L5tRu7s*n9ub11c</password> 
-    <dbname>themso3_db</dbname> 
+    <host>122.201.97.172</host> 
+    <user>them_usr01</user> 
+    <password>OTwFwL?pSnR+</password> 
+    <dbname>them_db01</dbname> 
   </database> 
   <page_strut>
     <type>1</type>

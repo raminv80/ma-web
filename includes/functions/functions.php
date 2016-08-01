@@ -106,10 +106,12 @@ if(isMobile()){
 
 //SECTION HOLDS THE INIT FUNCTIONS
 function LOADCONFIG($_CONF_FILE){
+  //libxml_use_internal_errors(true);
   if($CONFIG = simplexml_load_file($_SERVER['DOCUMENT_ROOT'] . $_CONF_FILE)){
     $debug = (string)$CONFIG->attributes()->debug;
     if($debug == 'true'){ ini_set('display_errors',1); ini_set('error_reporting',E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT); } //ENABLE ERRORS IF DEBUG ON
   }else{
+    //var_dump(libxml_get_errors());
     ini_set('display_errors',1);  echo "configuration file not loaded";  die(); //CONFIG DOES NOT EXIST. DIE AND TELL USER
   }
   return $CONFIG;
