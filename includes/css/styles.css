@@ -8258,4 +8258,7 @@ a, a:active, a:selected, a:focus {
 form {
   margin: 0px; }
 
+ul.nav li.dropdown:hover ul.dropdown-menu {
+  display: block; }
+
 /*# sourceMappingURL=styles.css.map */

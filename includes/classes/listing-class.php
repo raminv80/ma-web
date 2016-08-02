@@ -490,9 +490,9 @@ class ListClass{
       foreach($res as $key => $val){
         $data[$key]['id'] = $val['menu_id'];
         $data[$key]['title'] = unclean($val['menu_name']);
-        $data[$key]['category'] = $val['menu_type'];
+        $data[$key]['type'] = $val['menu_type'];
         $data[$key]['icon'] = $val['menu_icon'];
-        $data[$key]['url'] = $this->getFullUrl($val['menu_listing_id']);
+        $data[$key]['url'] = ($val['menu_type'] == 3) ? $val['menu_external'] : ($this->getFullUrl($val['menu_listing_id']));
         $data[$key]['selected'] = (!empty($val['menu_listing_id']) && $val['menu_listing_id'] == $_curPageId)? 1 : 0;
         
         //GET SUB LIST
