@@ -19,7 +19,7 @@
     <input type="hidden" value="{$attr_value.attr_value_id}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_id]" id="attr_value_id_{$attrvalueno}" class="key" />
     <input type="hidden" value="attr_value_id" name="field[10][tbl_attr_value][{$attrvalueno}][id]" id="id_{$attrvalueno}" />
     <input type="hidden" value="{$attr_value.attr_value_attribute_id}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_attribute_id]" id="attr_value_attribute_id_{$attrvalueno}" class="key" />
-    <input type="hidden" value="{if $attr_value.attr_value_created}{$attr_value.attr_value_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[10][tbl_variant][{$attrvalueno}][attr_value_created]" id="attr_value_created_{$attrvalueno}">
+    <input type="hidden" value="{if $attr_value.attr_value_created}{$attr_value.attr_value_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_created]" id="attr_value_created_{$attrvalueno}">
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_name_{$attrvalueno}">Value*</label>
       <div class="col-sm-4">

@@ -122,7 +122,7 @@
             <id>listing_object_id</id>
             <reference>listing_name</reference> 
             <orderby>listing_name</orderby>
-            <where>listing_type_id = 1 AND listing_published = 1 AND (listing_noindex IS NULL OR listing_noindex != 1)</where> 
+            <where>listing_type_id = 1 AND listing_published = 1 AND listing_display_menu = 1</where> 
           </field> 
           <field recursive="true">
             <name>menus</name>

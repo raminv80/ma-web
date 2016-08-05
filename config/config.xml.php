@@ -90,8 +90,8 @@
     <pageID>7</pageID>
   </static_page>
 
-  <listing_page name="news-and-resources">
-    <url>news-and-resources</url>
+  <listing_page name="media">
+    <url>media</url>
     <root_parent_id>0</root_parent_id> 
     <type>2</type><!-- articles --> 
     <type>3</type><!-- newsletter -->

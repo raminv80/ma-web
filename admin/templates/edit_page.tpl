@@ -64,12 +64,6 @@
 								<input type="hidden" value="{if $fields.listing_display_menu eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" class="value">
 								<input class="chckbx" type="checkbox" {if $fields.listing_display_menu eq 1} checked="checked" {/if}
 									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1'); $(this).parent().children('.group-div').show(); }else{ $(this).parent().children('.value').val('0');  $(this).parent().children('.group-div').hide(); $(this).parent().children('.group-div').find('select').prop('selectedIndex', 0); }" id="id_listing_display_menu">
-								<div class="group-div" {if $fields.listing_display_menu eq 1}{else}style="display:none"{/if}><label class="control-label" for="menugroup">Menu Group</label>
-<select class="form-control" name="field[1][tbl_listing][0][listing_menu_group]" id="menugroup">
-<option value=""></option>
-<option value="about" {if $fields.listing_menu_group eq 'about'}selected="selected"{/if}>About</option>
-<option value="talk" {if $fields.listing_menu_group eq 'talk'}selected="selected"{/if}>Talk to us</option>
-</select></div>
 							</div>
 						</div>
 						<div class="row form-group">

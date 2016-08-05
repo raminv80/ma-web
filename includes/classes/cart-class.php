@@ -1,4 +1,10 @@
 <?php
+class exceptionCart extends Exception{}
+
+class exceptionCartNotFound extends exceptionCart{}
+class exceptionCartNotAuthenticated extends exceptionCart{}
+class exceptionCartSessionExpired extends exceptionCart{}
+
 class cart {
   public $cart_id;
   public $cart_user_id = null;

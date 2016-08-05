@@ -146,7 +146,7 @@
          "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
          "autosave save table contextmenu directionality template paste textcolor"
         ],
-        content_css: "/includes/css/style.css,/admin/includes/css/tinymce.css",
+        content_css: "/includes/css/styles.css,/admin/includes/css/tinymce.css",
         toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print media | forecolor backcolor",
 				file_picker_callback  : elFinderBrowser,
 				convert_urls : false,

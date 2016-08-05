@@ -79,7 +79,7 @@
 	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>
-	<script type="text/javascript" src="/includes/js/bootstrap-touch-carousel.js"></script>
+	<!--<script type="text/javascript" src="/includes/js/bootstrap-touch-carousel.js"></script>-->
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){

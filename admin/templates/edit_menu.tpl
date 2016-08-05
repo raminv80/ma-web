@@ -45,6 +45,7 @@
               <div class="col-sm-3">
                 <select class="form-control" name="field[1][tbl_menu][{$cnt}][menu_location]" id="menu_location">
                   <option value="top-header" {if $fields.menu_location eq 'top-header'}selected="selected"{/if}>Top header</option>
+                  <option value="mobile-header" {if $fields.menu_location eq 'mobile-header'}selected="selected"{/if}>Mobile header</option>
                   <option value="main-header" {if !$fields.menu_location || $fields.menu_location eq 'main-header'}selected="selected"{/if}>Main header</option>
                   <option value="footer" {if $fields.menu_location eq 'footer'}selected="selected"{/if}>Footer</option>
                 </select>
@@ -54,7 +55,7 @@
               <label class="col-sm-3 control-label" for="menu_parent_id">Parent</label>
               <div class="col-sm-5">
                 <select class="form-control" name="field[1][tbl_menu][{$cnt}][menu_parent_id]" id="menu_parent_id">
-                  <option value="0">None</option>
+                  <option value="0" class="top-header main-header footer">None</option>
                   {call name=options_list opts=$fields.options.menus selected=$fields.menu_parent_id ignore=$fields.menu_id}
                 </select>
               </div>
