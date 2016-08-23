@@ -165,10 +165,15 @@ class Listing {
     foreach($this->CONFIG_OBJ->extends as $e){
     	$extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
     }
+
+    $typeSQL = '';
+    if(!empty($this->CONFIG_OBJ->type_id->attributes()->exclusive)){
+      $typeSQL = " AND listing_type_id = " . intval($this->CONFIG_OBJ->type_id);
+    }
     
     $sql = "SELECT * FROM {$this->DBTABLE} {$extends}
 		WHERE listing_parent_id = :pid AND 
-		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL " . ($this->WHERE != ''?"AND {$this->WHERE} ":" ") . $order;
+		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL " . ($this->WHERE != ''?"AND {$this->WHERE} ":" ") . $typeSQL . $order;
     
     $params = array(
         ":pid"=>$parent_id
@@ -181,7 +186,7 @@ class Listing {
           $subs = $this->getListingList($val['listing_object_id']);
         }
         if($val['listing_type_id'] == $this->TYPE_ID){
-          $p_url = '';
+          $p_url = '/';
           if(intval($val['listing_published']) == 0){
             $p_url = '/draft/';
           }

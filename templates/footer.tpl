@@ -9,7 +9,7 @@
          {else}
          <div class="foot-cat">{$item.title}</div>
          {/if}
-          
+
           {if count($item.subs.list) > 0 && $item.type neq 1}
             <ul class="{if $ismobile neq 1}{else}subcat-menu{/if}">
               {call name=render_list items=$item.subs.list level=$level+1 menu=$menu ismobile=$ismobile}
@@ -80,7 +80,7 @@
             <a target="_blank" href="#"><img src="/images/footer-insta.png" alt="Instagram icon" title="Find us on Instagram" /></a>
           </div>
         </div>
-        <div class="col-sm-2 col-sm-offset-4" id="socfooter2">
+        <div class="col-sm-3 col-md-2 col-sm-offset-3 col-md-offset-4" id="socfooter2">
 	        <div>Site secured by:</div>
 	        <img src="/images/geotrust.jpg" alt="Site secured by Geotrust" />
         </div>
@@ -98,9 +98,9 @@
     <div id="mobbot">
       <div class="container">
         <div class="row">
-          <div class="col-sm-6">&copy; Copyright {$COMPANY.name} {"Y"|date}. | <a href="/privacy-policy">Privacy policy</a> | <a href="/terms">Terms &amp; conditions</a>
+          <div class="col-sm-9">&copy; Copyright {$COMPANY.name} {"Y"|date}. | <a href="/privacy-policy">Privacy policy</a> | <a href="/terms">Terms &amp; conditions</a>
           </div>
-          <div class="col-sm-6 text-right">
+          <div class="col-sm-3 text-right">
             <div class="text-center-xs">
               Made by <a href="http://www.them.com.au" target="_blank" title="Them Advertising">Them</a>
             </div>

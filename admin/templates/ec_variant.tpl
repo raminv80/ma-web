@@ -70,19 +70,27 @@
       </div>
     {/foreach}
 
+
     <div class="row form-group">
+      <label class="col-sm-3 control-label" for="variant_editableprice_{$variantno}">Front-end editable price</label>
+      <div class="col-sm-5 ">
+        <input type="hidden" value="{if $variant.variant_id}{if $variant.variant_editableprice eq 1}1{else}0{/if}{else}0{/if}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_editableprice]" class="value">
+        <input class="chckbx" type="checkbox" {if $variant.variant_editableprice eq 1}checked="checked" {/if} onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1'); $(this).closest('.variants').find('.editableprice').hide('slow'); }else{ $(this).parent().children('.value').val('0'); $(this).closest('.variants').find('.editableprice').show('slow'); }" id="variant_editableprice_{$variantno}">
+      </div>
+    </div>
+    <div class="row form-group editableprice"{if $variant.variant_editableprice eq 1} style="display:none" {/if}>
       <label class="col-sm-3 control-label" for="variant_price_{$variantno}">Price ($)</label>
       <div class="col-sm-5 ">
         <input class="form-control double" type="text" value="{if $variant.variant_price}{$variant.variant_price}{else}0{/if}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_price]" id="variant_price_{$variantno}">
       </div>
     </div>
-    <div class="row form-group">
+    <div class="row form-group editableprice"{if $variant.variant_editableprice eq 1} style="display:none" {/if}>
       <label class="col-sm-3 control-label" for="variant_specialprice_{$variantno}">Special Price ($)</label>
       <div class="col-sm-5 ">
         <input class="form-control double" type="text" value="{if $variant.variant_specialprice}{$variant.variant_specialprice}{else}0{/if}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_specialprice]" id="variant_specialprice_{$variantno}">
       </div>
     </div>
-    <div class="row form-group">
+    <div class="row form-group editableprice"{if $variant.variant_editableprice eq 1} style="display:none" {/if}>
       <label class="col-sm-3 control-label" for="variant_membersprice_{$variantno}">Members Price ($)</label>
       <div class="col-sm-5 ">
         <input class="form-control double" type="text" value="{if $variant.variant_membersprice}{$variant.variant_membersprice}{else}0{/if}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_membersprice]" id="variant_membersprice_{$variantno}">

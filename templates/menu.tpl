@@ -26,22 +26,22 @@
 <div id="top">
 	<div class="container">
 		<div class="row">
-		<div class="col-xs-2 visible-xs">
+		<div class="col-xs-2 col-sm-2 visible-xs visible-sm">
         	<button aria-controls="main-navbar" aria-expanded="false" class="collapsed navbar-toggle" data-target="#mobile-navbar" data-toggle="collapse" type="button">
 			<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
 			</div>
-			<div class="col-xs-8 col-sm-3">
+			<div class="col-xs-8 col-sm-8 col-md-3" id="logoout">
 				<a href="/" title="Home"><img src="/images/medicalert-logo.png"	class="img-responsive" alt="Logo" id="logo" /></a>
 			</div>
-			<div class="col-sm-4 col-sm-offset-2 hidden-sm hidden-xs" id="top-menu">
+			<div class="col-sm-4 col-sm-offset-1 hidden-sm hidden-xs" id="top-menu">
 				<nav class="collapse navbar-collapse">
 					<ul class="nav navbar-nav navbar-right">
 						{call name=render_list items=$menuitems['top-header']['list'] ismobile=0}
 					</ul>
 				</nav>
 			</div>
-			<div class="hidden-xs col-sm-3 text-right" id="call">
+			<div class="hidden-xs hidden-sm col-sm-3 text-right" id="call">
 				<a href="tel:1800 88 22 22">
 					<div class="callout">
 						Call Membership Services
@@ -50,7 +50,7 @@
 					<img src="/images/header-phone.png" alt="Phone" />
 				</a>
 			</div>
-			<div class="col-xs-2 visible-xs">
+			<div class="col-xs-2 col-sm-2 visible-xs visible-sm" id="mobcart">
 
 			</div>
 		</div>
@@ -60,6 +60,14 @@
 <div id="main">
 	<div class="container">
 		<div class="row">
+		  	<div class="hidden-md hidden-lg">
+			<nav class="collapse navbar-collapse" id="mobile-navbar">
+				<ul class="nav navbar-nav">
+					{call name=render_list items=$menuitems['mobile-header']['list'] ismobile=0}
+				</ul>
+			</nav>
+		  	</div>
+
 			<div class="col-sm-10">
 				<div class="hidden-xs hidden-sm" id="main-navbar">
 				<nav class="collapse navbar-collapse">
@@ -68,25 +76,21 @@
 					</ul>
 				</nav>
 				</div>
-
-			  	<div class="hidden-md hidden-lg">
-				<nav class="collapse navbar-collapse" id="mobile-navbar">
-					<ul class="nav navbar-nav">
-						{call name=render_list items=$menuitems['main-header']['list'] ismobile=0}
-					</ul>
-				</nav>
-			  	</div>
 			</div>
-			<div class="col-xs-12 visible-xs" id="mobsearch">
-				<input type="text" id="search" placeholder="I'm looking for..." /><input type="image" src="/images/mob-header-search.png" alt="Search" />
+			<div class="col-xs-12 col-sm-12 visible-xs visible-sm" id="mobsearch">
+				<div id="mobin">
+					<input type="text" id="search" placeholder="I'm looking for..." /><input type="image" src="/images/mob-header-search.png" alt="Search" />
+				</div>
 			</div>
-			<div class="col-sm-2 hidden-xs" id="headactions">
+			<div class="col-sm-2 hidden-xs hidden-sm" id="headactions">
 				<a href="#" id="wishlist"><img src="/images/header-wishlist.png" alt="Wishlist" /></a>
+				<div id="cartout">
 				<div id="cart" class="dropdown">
-					<a href="/shopping-cart" class="dropdown-toggle" id="cart-hover"> <img src="/images/header-basket.png" alt="Shopping Cart" /> <span style="" class="nav-itemNumber">{$itemNumber}</span>
+					<a href="/shopping-cart" class="dropdown-toggle" id="cart-hover"> <img src="/images/mob-header-cart.png" alt="Shopping Cart" class="visible-xs visible-sm" /> <img src="/images/header-basket.png" alt="Shopping Cart" class="hidden-xs hidden-sm" /> <span style="" class="nav-itemNumber">{$itemNumber}</span>
 					</a>
 					<ul class="dropdown-menu" id="shop-cart-btn">{include file='popover-shopping-cart.tpl'}
 					</ul>
+				</div>
 				</div>
 				<a href="#" id="wishlist"><img src="/images/header-search.png" alt="Search" /></a>
 			</div>

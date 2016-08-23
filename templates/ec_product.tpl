@@ -37,6 +37,7 @@
           <div class="form-group">
             <div class="prodprice col-sm-12">
               <input type="hidden" value="0" name="price" id="price" />
+              <input type="hidden" value="0" name="variant_id" id="variant_id" />
               {$min_price = 999999}
               {$max_price = 0}
               {foreach $variants as $variant}
@@ -91,17 +92,31 @@
               <div class="attrtype1_name">Select one</div>
                 {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   <div class="attrtype1">
-                    <input type="radio" onclick="$(this).closest('.form-group').find('.attrtype1_name').html($(this).attr('data-name'));" data-name="{$value.attr_value_name}" class="mainAttr hasAttr updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}" value="{$value.attr_value_id}" name="attr[{$attr.attribute_id}]" id="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}" required="required">
-                    <label for="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}"><img src="{$value.attr_value_description}" title="{$value.attr_value_name}" alt="{$value.attr_value_name}"></label>
+                    <input type="radio" onclick="$(this).closest('.form-group').find('.attrtype1_name').html($(this).attr('data-name'));" data-name="{$value.attr_value_name}" class="mainAttr hasAttr updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}" value="{$value.attr_value_id}" name="attr[{$attr.attribute_id}][id]" id="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}" required="required">
+                    <label for="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}"><img src="{$value.attr_value_image}" title="{$value.attr_value_name}" alt="{$value.attr_value_name}"></label>
                   </div>
                 {/foreach}
               {else}
-              <select id="{urlencode data=$attr.attribute_name}" name="attr[{$attr.attribute_id}]" class="form-control required notMainAttr hasAttr" required="required">
+              <select id="{urlencode data=$attr.attribute_name}" name="attr[{$attr.attribute_id}][id]" class="form-control required notMainAttr hasAttr{if $attr.attribute_type eq 2} hasAdditional{/if}" required="required">
                 <option value="" class="defaultAttr updateprice{foreach $prdattrArr[$attr.attribute_id] as $vr} variant-{$vr}{/foreach}" >Select one</option>
                 {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   <option value="{$value.attr_value_id}" class="updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}">{$value.attr_value_name}</option>
                 {/foreach}
               </select>
+                {if $attr.attribute_type eq 2}
+                  {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
+                  <div class="additionals" id="additional-{$value.attr_value_id}" style="display:none;">
+                    <div>{$value.attr_value_description}</div>
+                    {for $var=1 to 7}
+                      {$varName = 'attr_value_var'|cat:$var}
+                      {if $value[$varName] gt 0}
+                        <label class="control-label" for="additional-{$attr.attribute_id}-{$var}">Line {$var}:</label>
+                        <input class="form-control" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}">
+                      {/if}
+                    {/for}
+                    </div>
+                  {/foreach}
+                {/if}
               {/if}
             </div>
           </div>
@@ -109,27 +124,23 @@
          
           <div class="form-group">
   	        <div class="prodprice col-sm-12">
+              <div style="display: inline; color: #ff0000" id="error-text"></div>
               {foreach $variants as $variant}
+                <div class="variant-panels" id="variant-{$variant.variant_id}-panel" style="display:none">
                 {if $variant.variant_instock eq 1}
-                <div class="variant-instocks" id="variant-instock{$variant.variant_id}" style="display:none">
                   <!--<div class="form-group">
                     <label for="address_state_1" class="col-sm-2 control-label">Qty: </label>
                     <div class="col-sm-2">
                       <input type="text" value="1" name="quantity" id="quantity" class="form-control unsigned-int gt-zero" pattern="[0-9]" >
                     </div>
                   </div>-->
-                  <div class="form-group">
-                    <div class="col-sm-12">
-                      <a class="btn btn-blue" onclick="$('#product-form').submit();">Add to Cart <img src="/images/cartblue1.png" alt="" /></a>
-                      <div style="display: inline; color: #ff0000" id="error-text"></div>
+                    <div>
+                      <button class="btn" type="submit">Add to Cart</button>
                     </div>
-                  </div>
-                </div>
                 {else}
-                <div class="form-group">
                   <div style="display: inline; color: #ff0000">Out of stock</div>
-                </div>
                 {/if}
+                </div>
               {/foreach}
             </div>
           </div>
@@ -273,6 +284,12 @@
 			$('select.hasAttr').focus(function(){
 			  UnblockSelectOptions(this);
 			});
+			
+			$('select.hasAdditional').change(function(){
+			  SetAdditionals($(this).val());
+			});
+			
+			
 			//calculatePrice();
 
 			/* ga('ec:addProduct', {
@@ -295,7 +312,6 @@
 	  var selArr = [];
 	  var defaultOptions = $(ELEMENT).find('option.defaultAttr').attr('class').replace(/defaultAttr|updateprice/g, '').trim().split(/\s+/);
 	  $(ELEMENT).find('option').addClass('ignoreOption');
-	  console.log(defaultOptions);
 	  if(defaultOptions){
 	    selArr.push(defaultOptions);
 	  }
@@ -303,7 +319,7 @@
 	  //Check all selected attributes
 	  $('.updateprice:selected, .updateprice:checked').each(function(){
 	    if(!$(this).hasClass('ignoreOption')){
-	      selArr.push($(this).attr('class').replace(/mainAttr|notMainAttr|defaultAttr|hasAttr|updateprice/g, '').trim().split(/\s+/));
+	      selArr.push($(this).attr('class').replace(/mainAttr|notMainAttr|defaultAttr|hasAttr|updateprice|hasAdditional/g, '').trim().split(/\s+/));
 	    }
 	  });
 	  if(selArr){
@@ -337,12 +353,13 @@
 	  //Clear all selections when main-attribute 
 	  if($(ELEMENT).hasClass('mainAttr')){
 	    $('.notMainAttr').val('');
+	    SetAdditionals();
 	  }
 	  
 	  //Check all selected attributes
 	  var selArr = [];
 	  $('.updateprice:selected, .updateprice:checked').each(function(){
-	    selArr.push($(this).attr('class').replace(/mainAttr|notMainAttr|defaultAttr|hasAttr|updateprice/g, '').trim().split(/\s+/));
+	    selArr.push($(this).attr('class').replace(/mainAttr|notMainAttr|defaultAttr|hasAttr|updateprice|hasAdditional/g, '').trim().split(/\s+/));
 	  });
 	  if(selArr){
     	  classes = getIntersectionArray(selArr);
@@ -394,9 +411,28 @@
 	  
 	  //Display selected variant-price
 	  $('.variant-prices').hide();
+	  $('#price').val('0');
+	  $('.variant-panels').hide();
 	  $('#'+variantElem).fadeIn('slow');
+	  $('#variant_id').val('0');
+	  
+	  //If valid variant/price then display add-to-cart button and update price field 
+	  if(variantElem != 'variant-'){
+	    var price = $('#'+variantElem).find('.selected-price').attr('data-value');
+	    $('#price').val(price);
+	    $('#'+variantElem+'-panel').fadeIn();
+	    $('#variant_id').val(variantElem.replace('variant-', ''));
+	  }
 	}
 	
+	
+	function SetAdditionals(ID){
+	  $('.additionals').hide().find('input').attr('disabled', 'disabled');
+	  if(ID){
+	    $('#additional-'+ID).fadeIn().find('input').removeAttr('disabled');
+	  }
+	}
+		
 	
 	function getParameterByName(name) {
 		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");

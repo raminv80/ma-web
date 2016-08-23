@@ -13,6 +13,7 @@ class ProductClass extends ListClass {
     $this->DBTABLE = '';
     $this->DBPRODTABLE = $_CONFIG_OBJ->table->name; //tbl_product
     $this->DBPRODTABLE_KEY = $_CONFIG_OBJ->table->id; //product_id
+    $this->DBPRODTABLE_OBJ_KEY = empty($_CONFIG_OBJ->table->objid) ? 'product_object_id' : (string)$_CONFIG_OBJ->table->objid;
     $this->DBPRODTABLE_URL = $_CONFIG_OBJ->table->field; //product_url
   }
 
@@ -36,10 +37,17 @@ class ProductClass extends ListClass {
         ":published" => $_PUBLISHED
     );
     if($res = $DBobject->wrappedSqlGet($sql,$params)){
-      $this->ID = $res[0]["{$this->DBPRODTABLE_KEY}"];
+      $this->ID = $res[0]["{$this->DBPRODTABLE_OBJ_KEY}"]; 
       foreach($res[0] as $key=>$val){
         $SMARTY->assign($key,unclean($val));
       }
+      
+      // ------------- LOAD PRODUCT GENERAL DETAILS --------------
+      if(!empty($this->ID)){
+        $general_details = $this->GetProductGeneralDetails($this->ID);
+        $SMARTY->assign('general_details', unclean($general_details));
+      }
+      
       // ------------- LOAD ASSOCIATED TABLES --------------
       foreach($LOCALCONF->associated as $a){
         $t_data = $this->LoadAssociated($a,$res[0]["{$a->linkfield}"]);
@@ -138,4 +146,70 @@ class ProductClass extends ListClass {
     }
   }
  
+  
+  /**
+   * Return product base general details - all attributes and price range
+   *
+   * @param int $cartId
+   * @return float
+   */
+  function GetProductGeneralDetails($productObjId) {
+    global $DBobject;
+  
+    $result = array();
+  
+    //Set default values
+    $result['id'] = $productObjId;
+    $result['price']['min'] = 999999;
+    $result['price']['max'] = 0;
+    $result['instock']['flag'] = 0;
+    $result['instock']['variants'] = array();
+    $result['limitedstock']['flag'] = 0;
+    $result['limitedstock']['variants'] = array();
+    $result['new']['flag'] = 0;
+    $result['new']['variants'] = array();
+    $result['has_attributes'] = array();
+  
+    //Check all variants
+    $sql = "SELECT tbl_variant.* FROM tbl_product LEFT JOIN tbl_variant ON variant_product_id = product_id
+        WHERE product_deleted IS NULL AND product_published = 1 AND product_object_id = :id AND variant_deleted IS NULL AND variant_published = 1";
+    $params = array(":id" => $productObjId);
+    if($res = $DBobject->wrappedSql($sql, $params)){
+      foreach($res as $r){
+        $price = ($r['variant_specialprice'] > 0) ? $r['variant_specialprice'] : $r['variant_price'];
+        if($price < $result['price']['min']){
+          $result['price']['min'] = $price;
+        }
+        if($price > $result['price']['max']){
+          $result['price']['max'] = $price;
+        }
+        if(!empty($r['variant_instock'])){
+          $result['instock']['flag'] = 1;
+          $result['instock']['variants'][] = $r['variant_id'];
+        }
+        if(!empty($r['variant_limitedstock'])){
+          $result['limitedstock']['flag'] = 1;
+          $result['limitedstock']['variants'][] = $r['variant_id'];
+        }
+        if(!empty($r['variant_new'])){
+          $result['new']['flag'] = 1;
+          $result['new']['variants'][] = $r['variant_id'];
+        }
+  
+        //Create attributes array
+        $sql = "SELECT tbl_productattr.*, attribute_name, attribute_type, attr_value_name, attr_value_image FROM tbl_productattr
+            LEFT JOIN tbl_attribute ON attribute_id = productattr_attribute_id
+            LEFT JOIN tbl_attr_value ON attr_value_id = productattr_attr_value_id
+            WHERE productattr_deleted IS NULL AND productattr_variant_id = :id";
+        $params = array(":id" => $r['variant_id']);
+        if($attr = $DBobject->wrappedSql($sql, $params)){
+          foreach($attr as $a){
+            $result['has_attributes'][$a['productattr_attribute_id']][$a['productattr_attr_value_id']]['values'] = array('attribute_name' => $a['attribute_name'], 'attribute_name' => $a['attribute_name'], 'attr_value_name' => $a['attr_value_name'], 'attr_value_image' => $a['attr_value_image']);
+            $result['has_attributes'][$a['productattr_attribute_id']][$a['productattr_attr_value_id']]['variants'][] = $r['variant_id'];
+          }
+        }
+      }
+    }
+    return $result;
+  }
 }

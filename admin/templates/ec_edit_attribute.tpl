@@ -9,7 +9,6 @@
           <input type="hidden" value="attribute_id" name="field[1][tbl_attribute][{$cnt}][id]" id="id" />
           <input type="hidden" value="{$fields.attribute_id}" name="field[1][tbl_attribute][{$cnt}][attribute_id]" id="attribute_id" class="key">
           <input type="hidden" value="{if $fields.attribute_created}{$fields.attribute_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_attribute][{$cnt}][attribute_created]" id="attribute_created">
-          <input type="hidden" value="{if $fields.attribute_type}{$fields.attribute_type}{else}0{/if}" name="field[1][tbl_attribute][{$cnt}][attribute_type]" id="attribute_type">
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
         </div>
       </div>
@@ -37,6 +36,16 @@
               </div>
             </div>
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="attribute_type">Type</label>
+              <div class="col-sm-3">
+                <select class="form-control" name="field[1][tbl_attribute][{$cnt}][attribute_type]" id="attribute_type">
+                  <option value="0" {if !$fields.attribute_type}selected="selected"{/if}>Standard</option>
+                  <option value="1" {if $fields.attribute_type eq 1}selected="selected"{/if}>Image selector</option>
+                  <option value="2" {if $fields.attribute_type eq 2}selected="selected"{/if}>Extended fields</option>
+                </select>
+              </div>
+            </div>
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="attribute_order">Order</label>
               <div class="col-sm-5">
                 <input class="form-control number" type="text" value="{if $fields.attribute_order neq ''}{$fields.attribute_order}{else}999{/if}" name="field[1][tbl_attribute][{$cnt}][attribute_order]" id="attribute_order">
@@ -50,7 +59,7 @@
             {assign var='attrvalueno' value=0}
             {foreach $fields.attr_values as $attr_value}
               {assign var='attrvalueno' value=$attrvalueno+1}
-              {assign var='enableImg' value=$fields.attribute_type}
+              {assign var='attrtype' value=$fields.attribute_type}
               {include file='ec_attr_value.tpl'}
             {/foreach}
           </div>
@@ -114,12 +123,13 @@
       type: "POST",
       url: "/admin/includes/processes/load-template.php",
       cache: false,
-      data: "template=ec_attr_value.tpl&attrvalueno="+no+"&enableImg="+(($('#attribute_type').val()==1)?'1':''),
+      data: "template=ec_attr_value.tpl&attrvalueno="+no+"&attrtype="+ $('#attribute_type').val(),
       dataType: "html",
       success: function(data, textStatus) {
         try{
           $('#attr_value-wrapper').append(data);
           $('body').css('cursor', 'default');
+          tinyMCEinit('tinymce'+no);
           scrolltodiv('#attr_value-wrapper' + no);
         }catch(err){
           $('body').css('cursor', 'default');

@@ -70,6 +70,11 @@
     <pageID>16</pageID>
   </search>
   <static_page>
+    <url>about-medicalert-foundation</url>
+    <template>about.tpl</template>
+    <pageID>3</pageID>
+  </static_page>
+  <static_page>
     <url>contact-us</url>
     <template>contact-us.tpl</template>
     <pageID>3</pageID>
@@ -89,9 +94,24 @@
     <template>checkout-complete.tpl</template>
     <pageID>7</pageID>
   </static_page>
+  <static_page>
+    <url>benefits-of-membership</url>
+    <template>benefits.tpl</template>
+    <pageID>99</pageID>
+  </static_page>
+  <static_page>
+    <url>cost</url>
+    <template>cost.tpl</template>
+    <pageID>114</pageID>
+  </static_page>
+  <static_page>
+    <url>how-to-become-a-member</url>
+    <template>how-to-become-a-member.tpl</template>
+    <pageID>96</pageID>
+  </static_page>
 
-  <listing_page name="media">
-    <url>media</url>
+  <listing_page name="news-and-resources">
+    <url>news-and-resources</url>
     <root_parent_id>0</root_parent_id> 
     <type>2</type><!-- articles --> 
     <type>3</type><!-- newsletter -->
@@ -126,6 +146,21 @@
     <loadmoretemplate>news-resources-structure.tpl</loadmoretemplate>  
   </listing_page>
   
+  <listing_page name="testimonials">
+    <url>testimonials</url>
+    <root_parent_id>0</root_parent_id> 
+    <type>4</type>
+    <file>ListClass</file>
+    <orderby>listing_order</orderby>
+    <limit level="1">200</limit>
+    <table> 
+      <name>tbl_listing</name>
+      <field>listing_url</field>  
+      <template typeid="4">testimonial-details.tpl</template> 
+    </table>
+    <template>testimonials.tpl</template>
+  </listing_page>
+  
   <listing_page name="products">
     <url>products</url>
     <root_parent_id>6</root_parent_id> 
@@ -146,6 +181,12 @@
     <template typeid="10">ec_category-details.tpl</template>
     <template typeid="1">ec_category.tpl</template>
     <loadmoretemplate>ec_category-loadmore.tpl</loadmoretemplate>  
+    <process>
+      <file>includes/processes/process-load-viewed-products.php</file>
+    </process>
+    <process>
+      <file>includes/processes/process-load-popular-products.php</file>
+    </process>
   </listing_page>
   	
   <login>

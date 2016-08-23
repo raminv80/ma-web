@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true" staging="true"> 
+<config debug="false" staging="true"> 
   <domain></domain>
   <google_analytics>
   	<id>UA-</id>
@@ -101,6 +101,8 @@
       </log>
       <list_template>list.tpl</list_template>
       <edit_template>edit_page.tpl</edit_template>
+      <custom_template field="listing_object_id" value="1">edit_page_home.tpl</custom_template>
+      <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>
   	</section>
     
     <section level="1">
@@ -162,13 +164,20 @@
       	<field>tag_object_id</field>
       	<where>tag_object_table = 'tbl_listing'</where> 
       </associated>
+      <associated> 
+        <name>gallery</name>
+        <table>tbl_gallery</table>
+        <linkfield>listing_id</linkfield>
+        <field>gallery_listing_id</field> 
+        <orderby>gallery_order ASC</orderby>
+      </associated>
       <log>
       	<table>tbl_listing</table>
       	<id>listing_id</id>
       	<field>listing_object_id</field>
       </log>
       <list_template>list.tpl</list_template>
-      <edit_template>edit_news.tpl</edit_template>
+      <edit_template>edit_news_article.tpl</edit_template>
   	</section>
     
     <section level="1">
@@ -196,11 +205,27 @@
         <field>listing_object_id</field>
       </log>
       <list_template>list.tpl</list_template>
-      <edit_template>edit_news.tpl</edit_template>
+      <edit_template>edit_newsletter.tpl</edit_template>
+    </section> 
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>testimonials</url>
+      <title>Testimonials</title>
+      <type>LISTING</type>
+      <type_id>4</type_id>
+      <root_parent_id>104</root_parent_id>
+      <log>
+        <table>tbl_listing</table>
+        <id>listing_id</id>
+        <field>listing_object_id</field>
+      </log>
+      <list_template>list.tpl</list_template>
+      <edit_template>edit_testimonial.tpl</edit_template>
     </section> 
   </group>
   
-  <group name="E-commerce">
+  <group name="Settings">
     <section level="1">
       <showlist>FALSE</showlist>
       <url>attributes</url>
@@ -228,6 +253,7 @@
       <list_template>list_noviewbtn.tpl</list_template>
       <edit_template>ec_edit_attribute.tpl</edit_template>
     </section>
+    
     <section level="1">
       <showlist>FALSE</showlist>
       <url>product-types</url>
@@ -263,10 +289,13 @@
       <list_template>list_noviewbtn.tpl</list_template>
       <edit_template>ec_edit_producttype.tpl</edit_template>
     </section> 
+  </group>
+  
+  <group name="E-commerce">
     <section level="1">
       <showlist>FALSE</showlist>
       <url>prodcat</url>
-      <title>Categories</title>
+      <title>Collections</title>
       <type>LISTING</type>
       <type_id>10</type_id>
       <root_parent_id>6</root_parent_id>
@@ -386,37 +415,37 @@
       <title>Discount Codes</title>
       <type>TABLE</type>
       <table>
-      	<name>tbl_discount</name>
-      	<id>discount_id</id>
-      	<field>discount_name</field>
-      	<deleted>discount_deleted</deleted>
-      	<orderby>discount_id DESC</orderby>
-      	<published>discount_published</published>
-      	<options> 
+        <name>tbl_discount</name>
+        <id>discount_id</id>
+        <field>discount_name</field>
+        <deleted>discount_deleted</deleted>
+        <orderby>discount_id DESC</orderby>
+        <published>discount_published</published>
+        <options> 
           <field recursive="true"> 
-          	<name>categories</name>
-          	<table>tbl_listing</table>
-          	<id>listing_object_id</id>
-          	<reference>listing_name</reference> 
-          	<where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
+            <name>categories</name>
+            <table>tbl_listing</table>
+            <id>listing_object_id</id>
+            <reference>listing_name</reference> 
+            <where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
           </field> 
           <field> 
-          	<name>products</name>
-          	<table>tbl_product</table>
-          	<id>product_object_id</id>
-          	<reference>product_name</reference> 
-          	<orderby>product_name AND product_published = 1</orderby>
+            <name>products</name>
+            <table>tbl_product</table>
+            <id>product_object_id</id>
+            <reference>product_name</reference> 
+            <orderby>product_name AND product_published = 1</orderby>
           </field> 
-      	</options>
-      	<log>
+        </options>
+        <log>
           <table>tbl_discount</table>
           <id>discount_id</id>
           <field>discount_id</field>
-      	</log>
+        </log>
       </table>
       <list_template>ec_list_discount.tpl</list_template>
       <edit_template>ec_edit_discount.tpl</edit_template>
-    </section> 
+    </section>
   </group>
   
   <group name="Conversions"> 

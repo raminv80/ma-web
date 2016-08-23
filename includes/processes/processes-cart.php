@@ -4,34 +4,39 @@ $referer = parse_url($_SERVER['HTTP_REFERER']);
 if($referer['host'] == $GLOBALS['HTTP_HOST']){
   switch($_POST['action']){
     case 'ADDTOCART':
-      $cart_obj = new cart();
-      $response = $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['price'], null, $_POST['listing_id']);
-      $itemsCount = $cart_obj->NumberOfProductsOnCart();
-      $subtotal = $cart_obj->GetSubtotal();
-      $productsOnCart = $cart_obj->GetDataProductsOnCart();
-      $SMARTY->assign('productsOnCart', $productsOnCart);
-      $SMARTY->assign('itemNumber', $itemsCount);
-      $SMARTY->assign('subtotal', $subtotal);
-      $popoverShopCart = $SMARTY->fetch('templates/popover-shopping-cart.tpl');
-      $productGA = $cart_obj->getProductInfo_GA($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['listing_id']);
-      sendGAEnEcAction($GA_ID, 'add', $productGA);
+      try{
+        $cart_obj = new cart($_SESSION['user']['public']['id']);
+        $success = $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['price'], $_POST['quantity'], null, $_POST['variant_id']);
+        $itemsCount = $cart_obj->NumberOfProductsOnCart();
+        $subtotal = $cart_obj->GetSubtotal();
+        $productsOnCart = $cart_obj->GetDataProductsOnCart();
+        
+        //Resources to update the fron end view
+        $SMARTY->assign('productsOnCart', $productsOnCart);
+        $SMARTY->assign('itemNumber', $itemsCount);
+        $SMARTY->assign('subtotal', $subtotal);
+        $popoverShopCart = $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+        
+      }catch(exceptionCart $e){
+        $error = $e->getMessage();
+      }
+      
+      //----------------- PENDING TO DO -------------
+      /* $productGA = $cart_obj->getProductInfo_GA($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['listing_id']);
+      sendGAEnEcAction($GA_ID, 'add', $productGA); */
+      
       echo json_encode(array(
-          'product' => $productGA, 
-          'message' => $response, 
+          'success' => $success,
+          'error' => $error,
           'itemsCount' => $itemsCount, 
           'subtotal' => $subtotal, 
-          'url' => 'http://' . $GLOBALS['HTTP_HOST'] . '/shopping-cart', 
-          'popoverShopCart' => str_replace(array(
-              '\r\n', 
-              '\r', 
-              '\n', 
-              '\t' 
-          ), ' ', $popoverShopCart) 
+          'url' => '/shopping-cart', 
+          'popoverShopCart' => $popoverShopCart 
       ));
       exit();
     
     case 'DeleteItem':
-      $cart_obj = new cart();
+      $cart_obj = new cart($_SESSION['user']['public']['id']);
       $response = $cart_obj->RemoveFromCart($_POST['cartitem_id']);
       $productGA = $cart_obj->getProductInfoByCartItem_GA($_POST['cartitem_id']);
       $totals = $cart_obj->CalculateTotal();
@@ -59,7 +64,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       exit();
     
     case 'updateCart':
-      $cart_obj = new cart();
+      $cart_obj = new cart($_SESSION['user']['public']['id']);
       $updated_products = $cart_obj->UpdateQtyCart($_POST['qty']);
       $subtotals = $updated_products['subtotals'];
       $priceunits = $updated_products['priceunits'];
@@ -99,7 +104,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $success = false;
       if(!empty($_SESSION['user']['public']['id'])){
         $logged = true;
-        $cart_obj = new cart();
+        $cart_obj = new cart($_SESSION['user']['public']['id']);
         if($res = $cart_obj->AddFavourite($_SESSION['user']['public']['id'], $_POST['productObjId'])){
           $success = true;
         }
@@ -114,7 +119,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $logged = false;
       if(!empty($_SESSION['user']['public']['id'])){
         $logged = true;
-        $cart_obj = new cart();
+        $cart_obj = new cart($_SESSION['user']['public']['id']);
         $res = $cart_obj->DeleteFavourite($_SESSION['user']['public']['id'], $_POST['productObjId']);
       }
       echo json_encode(array(
@@ -125,7 +130,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       exit();
     
     case 'applyDiscount':
-      $cart_obj = new cart();
+      $cart_obj = new cart($_SESSION['user']['public']['id']);
       $res = $cart_obj->ApplyDiscountCode($_POST['discount_code']);
       if($res['error']){
         $_SESSION['error'] = $res['error'];
@@ -154,7 +159,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $_SESSION['smarty']['selectedShippingSuburb'] = $res[0]['postcode_suburb'];
         }
       }
-      $cart_obj = new cart();
+      $cart_obj = new cart($_SESSION['user']['public']['id']);
       $productsGA = $cart_obj->getCartitemsByCartId_GA();
       sendGAEnEcCheckoutStep($GA_ID, $_POST['shipMethod'], $productsGA);
       if($CONFIG->checkout->attributes()->guest != 'true' && empty($_SESSION['user']['public']['id'])){
@@ -206,7 +211,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $_SESSION['address'] = $_POST['address'];
       
       $ship_obj = new ShippingClass();
-      $cart_obj = new cart();
+      $cart_obj = new cart($_SESSION['user']['public']['id']);
       
       $methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
       
@@ -255,7 +260,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             header("Location: " . $_SERVER['HTTP_REFERER'] . "#error");
             die();
           } else{
-            $cart_obj = new cart();
+            $cart_obj = new cart($_SESSION['user']['public']['id']);
             $cart_obj->SetUserCart($res['id']);
             $_SESSION['user']['public'] = $res;
             $_POST['address']['B']['address_user_id'] = $res['id'];
@@ -286,7 +291,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           die();
         }
         
-        $cart_obj = new cart();
+        $cart_obj = new cart($_SESSION['user']['public']['id']);
         $order_cartId = $cart_obj->cart_id;
         $orderNumber = $order_cartId . '-' . date("is");
         

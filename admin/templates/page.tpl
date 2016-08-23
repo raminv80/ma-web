@@ -134,12 +134,12 @@
 {literal}
  <script type="text/javascript">
     $(document).ready(function(){
-      tinyMCEinit();
+      tinyMCEinit('tinymce');
     });
 
-    function tinyMCEinit(){
+    function tinyMCEinit(CLASSID){
 			tinymce.init({
-        selector: "textarea.tinymce",
+        selector: "textarea."+CLASSID,
         width: 500,
  	      plugins: [
          "advlist autolink link image lists charmap print preview hr anchor pagebreak linebreak spellchecker",

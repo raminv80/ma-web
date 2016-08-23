@@ -14,13 +14,13 @@
 <div id="redbar">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-6">
+			<div class="col-sm-5 col-md-6">
 				Our members wear the genuine MedicAlert ID
 			</div>
-			<div class="col-sm-3 col-sm-offset-1 hidden-xs">
+			<div class="col-sm-3 col-md-3 col-sm-offset-0 col-md-offset-0 hidden-xs">
 				<img src="/images/homeredbracelet.png" alt="Bracelet" class="img-responsive" />
 			</div>
-			<div class="col-sm-2">
+			<div class="col-sm-4 col-md-2">
 				<a href="#" class="btn btn-transp">Shop the range</a>
 			</div>
 		</div>
@@ -33,7 +33,7 @@
 <div id="whiteblock1">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-8 col-sm-offset-2 text-center">
+			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
 				<h2>MedicAlert offers more than just medical identification jewellery</h2>
 				<p>MedicAlert offers more than just medical identification jewellery. When you purchase one of our products, you're also investing in a vital MedicAlert membership. This allows emergency services to quickly recognise your conditions, allergies, implants, devices, identification needs or management plans, and provide the fastest and most effective treatment in an emergency.</p>
 			</div>
@@ -88,7 +88,7 @@
 <div id="whiteblock2">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-8 col-sm-offset-2 text-center">
+			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
 				<h2>Find a product that suits your style</h2>
 			</div>
 		</div>
@@ -151,10 +151,86 @@
 <div id="greyblock2">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-8 col-sm-offset-2 text-center">
+			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
 				<h2>MedicAlert speaks for its members in an emergency</h2>
+
+				<div id="testimonials">
+					<div id="testim1" class="flexslider">
+					  <ul class="slides">
+						<li>
+							<div>
+								<img src="/images/homequote.png" alt="" />
+							</div>
+							As someone who deeply understands the importance of being able to communicate clearly, it’s great to know that even if I was caught in an emergency overseas, my medical details would be made available to the people treating me.
+						</li>
+						<li>
+							<div>
+								<img src="/images/homequote.png" alt="" />
+							</div>
+							As someone who deeply understands the importance of being able to communicate clearly, it’s great to know that even if I was caught in an emergency overseas, my medical details would be made available to the people treating me.
+						</li>
+						<li>
+							<div>
+								<img src="/images/homequote.png" alt="" />
+							</div>
+							As someone who deeply understands the importance of being able to communicate clearly, it’s great to know that even if I was caught in an emergency overseas, my medical details would be made available to the people treating me.
+						</li>
+					  </ul>
+					</div>
+					<div id="testim2" class="flexslider">
+					  <ul class="slides">
+						<li>
+							<img src="/images/hometesti1.png" alt="" title="">
+							<div>Denise Mascaro<br />
+								<span>Dubbo, NSW</span>
+							</div>
+						</li>
+						<li>
+							<img src="/images/hometesti2.png" alt="" title="">
+							<div>Thomas Bunning<br />
+								<span>Adelaide, SA</span>
+							</div>
+						</li>
+						<li>
+							<img src="/images/hometesti3.png" alt="" title="">
+							<div>Robert Tunbridge<br />
+								<span>Craigmore, NSW</span>
+							</div>
+						</li>
+					  </ul>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>
 </div>
+{/block}
+
+{block name=tail}
+<script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
+<script type="text/javascript">
+$(window).load(function() {
+  $('#testim2').flexslider({
+    animation: "slide",
+    controlNav: false,
+    animationLoop: false,
+    slideshow: false,
+    itemWidth: 210,
+    itemMargin: 5,
+    asNavFor: '#testim1',
+    minItems: 3,
+    maxItems: 3
+  });
+
+  $('#testim1').flexslider({
+    animation: "slide",
+    controlNav: false,
+    animationLoop: false,
+    slideshow: true,
+    sync: "#testim2"
+  });
+});
+</script>
+
 {/block}

@@ -432,6 +432,10 @@ border:px solid #FFFFFF; -webkit-border-radius: px; -moz-border-radius: px;borde
   color: #fff;
 }
 
+.mce-tinymce.mce-container {
+  max-width: 100%;
+}
+
 @media (min-width: 768px) {
   #navbtn {
     display: block;

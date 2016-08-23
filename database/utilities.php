@@ -1169,6 +1169,7 @@ function sendGAEnEcAction($_tid, $_action, $_cartitemArr,$_cid=null){
 			'pr1ca' => $_cartitemArr['category'],
 			'pr1br' => $_cartitemArr['brand'],
 			'pr1va' => $_cartitemArr['variant'],
+			'pr1pr' => $_cartitemArr['price'],
 			'pr1ps' => $_cartitemArr['position']
 	);
 	return gaFireHit($data);
@@ -1210,6 +1211,7 @@ function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr,$_cid
 		$data["pr{$cnt}ca"] = $item['category'];
 		$data["pr{$cnt}br"] = $item['brand'];
 		$data["pr{$cnt}va"] = $item['variant'];
+		$data["pr{$cnt}pr"] = $item['price'];
 		$data["pr{$cnt}qt"] = $item['quantity'];
 		$cnt++;
 	}
@@ -1290,6 +1292,7 @@ function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 		$data["pr{$cnt}ca"] = $item['category'];
 		$data["pr{$cnt}br"] = $item['brand'];
 		$data["pr{$cnt}va"] = $item['variant'];
+		$data["pr{$cnt}pr"] = $item['price'];
 		$data["pr{$cnt}ps"] = $item['position'];
 		$data["pr{$cnt}qt"] = $item['quantity'];
 		$cnt++;

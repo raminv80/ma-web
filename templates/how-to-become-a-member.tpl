@@ -1,0 +1,134 @@
+{block name=head}
+<style type="text/css">
+
+</style>
+{/block}
+
+{block name=body}
+<div id="pagehead">
+	<div class="bannerout">
+		<img src="{$listing_image}" alt="{$listing_name} banner" />
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+				{$listing_content1}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="cost">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-md-10 col-md-offset-1">
+			<div class="row">
+
+			<div class="col-sm-3 text-center ">
+				<img src="/images/join-1.png" alt="Choose your medical ID " class="img-responsive" />
+				<div class="cost-text"><span>1.</span> Choose your medical ID from our <a href="/products">product range</a>. Prices start from just $35</div>
+			</div>
+			<div class="hidden-xs col-sm-1 text-center">
+				<img src="/images/join-arrow.png" alt="Arrow" />
+			</div>
+			<div class="col-sm-3 text-center">
+				<img src="/images/join-2.png" alt="Fill out your details" class="img-responsive" />
+				<div class="cost-text"><span>2.</span> Fill out your details to receive a membership number</div>
+			</div>
+			<div class="hidden-xs col-sm-1 text-center">
+				<img src="/images/join-arrow.png" alt="Arrow" />
+			</div>
+			<div class="col-sm-3 text-center">
+				<img src="/images/join-3.png" alt="Postage" class="img-responsive" />
+				<div class="cost-text"><span>3.</span> Sign in to the Members’ Area to complete your profile </div>
+			</div>
+
+			</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<br />
+				{$listing_content2}
+				<a href="#" class="btn btn-red">Find a product</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="cost-grey" class="howto">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+				{$listing_content3}
+				<br />
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3 text-center ways">
+				<img src="/images/join-post.png" alt="Post" class="img-responsive" />
+				<div class="grey-text">
+					<span class="bold">Post</span><span>*</span><br />
+					Australia MedicAlert Foundation,<br />
+					GPO Box 9963 in your<br />
+					capital city<br />
+					(e.g. ADELAIDE SA 5001)
+				</div>
+			</div>
+			<div class="col-sm-3 text-center ways">
+				<img src="/images/access-phone.png" alt="Phone" class="img-responsive" />
+				<div class="grey-text">
+					<span class="bold">Call</span><br />
+					<a href="tel:1800 88 22 22">1800 88 22 22</a><br />
+					between 9 am–5 pm ACST
+				</div>
+			</div>
+			<div class="col-sm-3 text-center ways">
+				<img src="/images/access-email.png" alt="Email" class="img-responsive" />
+				<div class="grey-text">
+					<span class="bold">Email</span><span>*</span><br />
+					<a href="mailto:enquiry@medicalert.org.au">enquiry@medicalert.org.au</a>
+				</div>
+			</div>
+			<div class="col-sm-3 text-center ways">
+				<img src="/images/join-fax.png" alt="Fax" class="img-responsive" />
+				<div class="grey-text">
+					<span class="bold">Fax</span><span>*</span><br />
+					<a href="tel:1800 64 32 59">1800 64 32 59</a>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+				<br />
+				*Please download <a href="#">a membership application form</a> and complete your details to join by post, email or fax.
+				<br />
+				<br />
+				<a href="#" class="btn btn-red">Download form</a>
+				<br />
+				<br />
+				{$listing_content4}
+			</div>
+		</div>
+	</div>
+</div>
+
+{/block}
+
+{* Place additional javascript here so that it runs after General JS includes *}
+{block name=tail}
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	$("#readmore").click(function(){
+		$(this).hide();
+		$("#benefits #benefit1").show();
+	});
+
+	$("#readmore2").click(function(){
+		$(this).hide();
+		$("#benefits #benefit4 .tablebox").css("height","auto");
+	});
+
+});
+</script>
+{/block}

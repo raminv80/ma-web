@@ -65,7 +65,7 @@ while(true){
   /******* Global process *******/
   foreach($CONFIG->global_process as $sp){
   	$file = (string)$sp->file;
-  	if(file_exists($file)){ include ($file);}
+  	if(file_exists($file)){ include ($file); }
   }
   
   /******* Goes to home *******/
@@ -131,73 +131,6 @@ while(true){
     break 1;
   }
   
-  /**
-   * ***** Goes to CHECKOUT ******
-   */
-  if($_request['arg1'] == 'checkout'){
-    /* if(empty($_SESSION['user']['public']['id'])){
-     $_SESSION['redirect'] = "/checkout";
-     header("Location: /login");
-     exit();
-     } */
-    /* if(empty($_SESSION['selectedShipping'])){
-     header("Location: /shopping-cart");
-     die();
-     } */
-    $cart_obj = new stencil();
-    if($cart_obj->NumberOfProductsOnCart() < 1){
-      header("Location: /");
-      die();
-    }
-    $template = loadPage($CONFIG->checkout);
-    /* $ship_obj = new ShippingClass();
-     $methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
-     $SMARTY->assign ( 'shippingMethods', $methods ); */
-    $validation = $cart_obj->ValidateCart();
-    $SMARTY->assign('validation',$validation);
-    $totals = $cart_obj->CalculateTotal();
-    $SMARTY->assign('totals',$totals);
-    $sql = "SELECT * FROM tbl_address WHERE address_user_id = :uid ORDER BY address_id";
-    $addresses = $DBobject->wrappedSql($sql,array(
-        ':uid'=>$_SESSION['user']['public']['id']
-    ));
-    $SMARTY->assign('addresses',$addresses);
-    $sql = "SELECT DISTINCT postcode_state FROM tbl_postcode WHERE postcode_state != 'OTHE' ORDER BY postcode_state";
-    $states = $DBobject->wrappedSql($sql);
-    $SMARTY->assign('options_state',$states);
-    // ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ENHANCED ECOMMERCE
-    $SMARTY->assign ( 'ga_ec', $cart_obj->getJSCartitemsByCartId_GA() . "ga('ec:setAction','checkout', { 'step': 1 });" );
-  
-    break 1;
-  }
-  
-  /**
-   * ***** Goes to SHOPPING CART ******
-   */
-  if($_request['arg1'] == 'shopping-cart'){
-    $template = loadPage($CONFIG->cart);
-    $cart_obj = new stencil();
-    $itemNumber = $cart_obj->NumberOfProductsOnCart();
-    /* $ship_obj = new ShippingClass();
-     $methods = $ship_obj->getShippingMethods($itemNumber);
-     $SMARTY->assign ( 'shippingMethods', $methods ); */
-    if(!empty($_SESSION['reApplydiscount']) && $itemNumber){		//RE-APPLY DISCOUNT CODE
-      $res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
-      if ($res['error']) {
-        $_SESSION['error']= $res['error'];
-        $_SESSION['post']= $_POST;
-      }
-      $_SESSION['reApplydiscount'] = '';
-      unset($_SESSION['reApplydiscount']);
-      header('Location: /shopping-cart');
-      die();
-    }
-    $validation = $cart_obj->ValidateCart();
-    $SMARTY->assign('validation',$validation);
-    $totals = $cart_obj->CalculateTotal();
-    $SMARTY->assign('totals',$totals);
-    break 1;
-  }
   
   /**
    * ***** Listing pages here ******

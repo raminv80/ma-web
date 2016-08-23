@@ -47,7 +47,7 @@
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
         <li><a href="#variants" data-toggle="tab">Variants</a></li>
         <li><a href="#images" data-toggle="tab">Images</a></li>
-        <li><a href="#categories" data-toggle="tab">Categories</a></li>
+        <li><a href="#categories" data-toggle="tab">Collections</a></li>
         <li><a href="#associated" data-toggle="tab">Associated Products</a></li>
         <li><a href="#share" data-toggle="tab">Social Sharing</a></li>
         <li><a href="#log" data-toggle="tab">Log</a></li>
@@ -133,7 +133,7 @@
                 <textarea name="field[1][tbl_product][{$cnt}][product_content1]" id="id_product_content1" class="tinymce">{$fields.product_content1}</textarea>
               </div>
             </div>
-            <div class="row form-group">
+            <!-- <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_content2">Warranty</label>
               <div class="col-sm-5 ">
                 <textarea name="field[1][tbl_product][{$cnt}][product_content2]" id="id_product_content2" class="tinymce">{$fields.product_content2}</textarea>
@@ -150,7 +150,7 @@
               <div class="col-sm-5 ">
                 <textarea name="field[1][tbl_product][{$cnt}][product_content4]" id="id_product_content4" class="tinymce">{$fields.product_content4}</textarea>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
          <!--===+++===+++===+++===+++===+++ VARIANTS TAB +++===+++===+++===+++===+++====-->
@@ -339,9 +339,9 @@
       }
     });
     
-    $('.product-imgs').click(function(){
-      SetImgVariantOpts('#'+ $(this).closest('.gallery-image').attr('id'));
-    });
+    //$('.product-imgs').click(function(){
+    //  SetImgVariantOpts('#'+ $(this).closest('.gallery-image').attr('id'));
+    //});
     
   });
   
@@ -527,6 +527,8 @@
   
   function SetImgVariantOpts(ID){
     //Get all variants
+    console.log('+');
+    console.log(ID);
     var variants = {};
     variants[0] = 'Select one';
     $('.variant_wrappers').each(function(){
