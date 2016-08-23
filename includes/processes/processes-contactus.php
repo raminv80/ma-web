@@ -2,13 +2,14 @@
 
 $error = 'Missing required info. Please try again.';
 if(checkToken('frontend',$_POST["formToken"]) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 3 ){
-  if(!empty($_POST['email']) && !empty($_POST['phone'])  && !empty($_POST['name'])   && !empty($_POST['message'])){
+  if(!empty($_POST['email']) && !empty($_POST['phone'])  && !empty($_POST['name'])   && !empty($_POST['enquiry'])){
   	global $CONFIG,$DBobject,$SMARTY,$SITE,$GA_ID;
   	
   	$error = '';
   	$sent = 0;
   	
   	//SAVE FILE FUNCTIONS (Accepts Image types)
+  	/*
   	$file_name = "";
   	try{
   		if(!empty($_FILES["file"]["name"])){
@@ -38,6 +39,7 @@ if(checkToken('frontend',$_POST["formToken"]) && empty($_POST['honeypot']) && (t
   	}catch(Exception $e){
   		$error = 'Please check your file and  try again later.';
   	}
+  	*/
   	
     //SEND EMAIL TO ADMIN	
   	if(empty($error)){
@@ -46,16 +48,17 @@ if(checkToken('frontend',$_POST["formToken"]) && empty($_POST['honeypot']) && (t
     	  
     		$banned=array('formToken','action', 'additional', 'wantpromo', 'enqsub','Hp','timestamp', 'honeypot');
     		$content=serialize($_POST);
-    		$buf.='<h2>Website enquiry</h2>';
+    		$buf.='<h2>Website '.$_POST['form_name'].'</h2>';
     		foreach ($_POST as $name => $var){
     			if(!in_array($name, $banned)){
     				$buf.='<br/><b>'.ucwords($name).': </b> <br/> '.$var.'<br/>';
     			}
     		}
     		$body = $buf;
-    		$subject = 'Website contact';
+    		$subject = 'Website '.$_POST['form_name'];
     		$fromEmail = (string) $CONFIG->company->email_from;
-    		$to = (string) $CONFIG->company->email_contact;
+    		//$to = (string) $CONFIG->company->email_contact;
+    		$to = "nijesh@them.com.au";
     		$COMP = json_encode($CONFIG->company);
     		$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
     		$from = (string) $CONFIG->company->name;
@@ -76,25 +79,28 @@ if(checkToken('frontend',$_POST["formToken"]) && empty($_POST['honeypot']) && (t
   	//SAVE IN DATABASE
   	if(empty($error)){
     	try{
-    		$sql = "INSERT INTO tbl_contact (contact_site,contact_form_name,contact_reference_id,contact_reference_name,contact_name,contact_email,contact_phone,contact_postcode,contact_file,contact_enquiry,contact_content1,contact_content2,contact_flag1,contact_flag2,contact_ip,contact_sent,contact_created)
-              VALUES (:contact_site,:contact_form_name,:contact_reference_id,:contact_reference_name,:contact_name,:contact_email,:contact_phone,:contact_postcode,:contact_file,:contact_enquiry,:contact_content1,:contact_content2,:contact_flag1,:contact_flag2,:contact_ip,:contact_sent,now() )";
+    		$sql = "INSERT INTO tbl_contact (contact_site,contact_form_name,contact_reference_id,contact_reference_name,contact_name,contact_email,
+    		    contact_phone,contact_postcode,contact_file,contact_enquiry,contact_content1,contact_content2,contact_flag1,contact_flag2,contact_ip,
+    		    contact_sent,contact_created)
+              VALUES (:contact_site,:contact_form_name,:contact_reference_id,:contact_reference_name,:contact_name,:contact_email,:contact_phone,
+    		    :contact_postcode,:contact_file,:contact_enquiry,:contact_content1,:contact_content2,:contact_flag1,:contact_flag2,:contact_ip,
+    		    :contact_sent,now() )";
     		$params = array(":contact_name"=>$_POST['name'],
     				":contact_site"=>$SITE,
     				":contact_form_name"=>$_POST['form_name'],
     				":contact_reference_id"=>'',
-    				":contact_reference_name"=>$_POST['brand_interested_in'],
+    				":contact_reference_name"=>$_POST['nature_enquiry'],
     				":contact_name"=>$_POST['name'],
     				":contact_email"=>$_POST['email'],
     				":contact_phone"=>$_POST['phone'],
     				":contact_postcode"=>$_POST['postcode'],
     				":contact_file"=> empty($file_short)?"":"/uploads_contact/" . $file_short,
-    				":contact_enquiry"=>$_POST['message'],
-    				":contact_content1"=> $_POST['jobtitle'],
-    				":contact_content2"=> $_POST['companyname'],
+    				":contact_enquiry"=>$_POST['enquiry'],
+    				":contact_content1"=> $_POST['membership_no'],
+    				":contact_content2"=> '',
     				":contact_flag1"=> '',
     				":contact_flag2"=> '',
     				":contact_ip"=>$_SERVER['REMOTE_ADDR'],
-    		    ":contact_ga_clientid"=>gaParseCookie(),
     				":contact_sent"=>$sent);
     		$DBobject->wrappedSql($sql,$params);
     	}catch(Exception $e){

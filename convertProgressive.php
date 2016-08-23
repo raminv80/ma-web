@@ -210,7 +210,7 @@ function make_path($path) {
 function resizeimage($image, $width, $height, $nWidth, $nHeight){
 	ini_set('memory_limit','128M');
 	$newImg = imagecreatetruecolor($nWidth, $nHeight);
-	imagecolortransparent($new_image, imagecolorallocatealpha($newImg, 255, 255, 255, 127));
+	imagecolortransparent($newImg, imagecolorallocatealpha($newImg, 255, 255, 255, 127));
 	imagealphablending($newImg, false);
 	imagesavealpha($newImg,true);
 	imagecopyresampled($newImg, $image, 0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
@@ -230,7 +230,7 @@ function cropimage($image, $width, $height, $focus="center"){
 	//   }
 	
 	$newImg = ImageCreateTrueColor($width, $height);
-	imagecolortransparent($new_image, imagecolorallocatealpha($newImg, 255, 255, 255, 127));
+	imagecolortransparent($newImg, imagecolorallocatealpha($newImg, 255, 255, 255, 127));
 	imagealphablending($newImg, false);
 	imagesavealpha($newImg,true);
 

@@ -44,6 +44,14 @@ $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
 $token = getToken('frontend');
 $SMARTY->assign('token', $token);
 $SMARTY->assign('timestamp', time());
+
+if(empty($_SESSION['heardabout_options'])){
+  $sql = "SELECT heardabout_name,heardabout_value FROM tbl_heardabout WHERE heardabout_deleted IS NULL ORDER BY heardabout_order";
+  $opt = $DBobject->wrappedSql($sql);
+  $_SESSION['heardabout_options']=$opt;
+}
+$SMARTY->assign("heardaboutus",$_SESSION['heardabout_options']);
+
 while(true){
   
   /******* Processes *******/

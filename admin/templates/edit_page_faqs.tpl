@@ -36,8 +36,8 @@
       </div>
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-        <li><a href="#images" data-toggle="tab">Images</a></li>
-        <!-- <li><a href="#additional" data-toggle="tab">Additional</a></li> -->
+        <!-- <li><a href="#images" data-toggle="tab">Images</a></li> -->
+        <li><a href="#additional" data-toggle="tab">Q&amp;A</a></li>
         <!-- <li><a href="#files" data-toggle="tab">Files</a></li> -->
         <!-- <li><a href="#tags" data-toggle="tab">Tags</a></li> -->
         <li><a href="#share" data-toggle="tab">Social Sharing</a></li>
@@ -153,24 +153,6 @@
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
               </div>
             </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content2">Content 2</label>
-              <div class="col-sm-5">
-                <textarea name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content3">Content 3</label>
-              <div class="col-sm-5">
-                <textarea name="field[1][tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="tinymce">{$fields.listing_content3}</textarea>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content4">Content 4</label>
-              <div class="col-sm-5">
-                <textarea name="field[1][tbl_listing][{$cnt}][listing_content4]" id="id_listing_content4" class="tinymce">{$fields.listing_content4}</textarea>
-              </div>
-            </div>
           </div>
         </div>
         <!--===+++===+++===+++===+++===+++ IMAGES TAB +++===+++===+++===+++===+++====-->
@@ -216,7 +198,7 @@
         <!--===+++===+++===+++===+++===+++ ADDITIONAL TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="additional">
           <div class="form" id="additionals-wrapper">
-          {$addcats = ['category one', 'category two']}
+          {$addcats = ['Membership and service questions', 'Product questions', 'Medical  questions', 'Donation  questions']}
           {assign var='additionalno' value=0}
           {assign var='addName' value='Question'}
           {assign var='addDescriptionName' value=''}

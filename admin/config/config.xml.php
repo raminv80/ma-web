@@ -80,10 +80,17 @@
       	<orderby>gallery_order ASC</orderby>
       </associated>
       <associated> 
-      	<name>files</name>
-      	<table>tbl_files</table>
+      	<name>additionals</name>
+      	<table>tbl_additional</table>
       	<linkfield>listing_id</linkfield>
-      	<field>files_listing_id</field> 
+      	<field>additional_listing_id</field> 
+        <orderby>additional_category, additional_order, additional_name</orderby>
+      </associated>
+      <associated> 
+        <name>files</name>
+        <table>tbl_files</table>
+        <linkfield>listing_id</linkfield>
+        <field>files_listing_id</field> 
       </associated>
       <options> 
         <field>
@@ -103,6 +110,7 @@
       <edit_template>edit_page.tpl</edit_template>
       <custom_template field="listing_object_id" value="1">edit_page_home.tpl</custom_template>
       <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>
+      <custom_template field="listing_object_id" value="103">edit_page_faqs.tpl</custom_template>
   	</section>
     
     <section level="1">

@@ -12,28 +12,12 @@
 	 </div>
      <div class="row"></div>
  	 <div class="row">
-    	<div class="col-sm-6" id="contacttext">
-            <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-              <span itemprop="streetAddress">{$COMPANY.address.street}</span><br>
-              <span itemprop="addressLocality">{$COMPANY.address.suburb}</span>
-              <span itemprop="addressRegion"> {$COMPANY.address.state}</span>
-              <span itemprop="postalCode"> {$COMPANY.address.postcode}</span>
-            </div>
-            <p>T <a class="tel" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a></p>
-            <p>F <a class="tel" href="tel:{$COMPANY.fax}">{$COMPANY.fax}</a></p>
-            <p class="small"><i>Please note: calls from mobile phones may attreact extra charges.</i></p>
-            <p>T <a class="tel" href="tel:{$COMPANY.phone}">{$COMPANY.phone}</a></p>
-            <p>E <a href="mailto:{$COMPANY.email_contact}">{$COMPANY.email_contact}</a></p>
-            <p>Office hours:<br>Monday - Friday, 9am - 5pm CST</p>
-            <p><hr></p>
-            <p>Join the community:</p>
-    	</div>
       
-		<div class="col-sm-6 text-center" id="contform">
+		<div class="col-sm-6 col-sm-offset-3 text-center" id="contform">
     	 	<form id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us" novalidate="novalidate">
     			<input type="hidden" value="get in touch" name="action" id="action" /> 
         	    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-        	  	<input type="hidden" value="Contact" name="form_name" id="form_name" />
+        	  	<input type="hidden" value="Feedback" name="form_name" id="form_name" />
     			<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
     	  		<div class="row">
     				<div class="col-sm-6 form-group">
@@ -63,13 +47,11 @@
     				</div>
     
   				    <div class="col-sm-6 form-group">
-                      <label class="visible-ie-only" for="nature_enquiry">Nature of enquiry*</label>
+                      <label class="visible-ie-only" for="nature_enquiry">How do you hear about us?*</label>
                       <select class="selectlist-medium" id="nature_enquiry" name="nature_enquiry" required="">
-                    		<option value="Update my information">Update my information</option>
-                    		<option value="Product/Price enquiry">Product/Price enquiry</option>
-                    		<option value="Order/Delivery status">Order/Delivery status</option>
-                    		<option value="Deceased member notification">Deceased member notification</option>
-                    		<option value="General enquiry" selected="selected">General enquiry</option>
+                          {foreach $heardaboutus as $ha}
+                            <option value="{$ha.heardabout_value}" {if $post.nature_enquiry eq $ha.heardabout_value} selected="selected"{/if}>{$ha.heardabout_name}</option>
+                          {/foreach}
                       </select>
     				</div>
     			</div>

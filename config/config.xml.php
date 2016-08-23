@@ -7,17 +7,19 @@
     <old_id></old_id>
   </google_analytics>
   <company>
-    <name>Them Advertising</name>
+    <name>MedicAlert Foundation</name>
     <address>
-      <street>1/26 The Parade West</street>
-        <suburb>Kent Town</suburb>
+      <street>Level 1, 210 Greenhill Road</street>
+        <suburb>Eastwood</suburb>
 		<state>SA</state>
-		<postcode>5067</postcode>
+		<postcode>5063</postcode>
     </address>
-    <phone>08 8363 2717</phone>
+    <phone>08 82738401</phone>
+    <toll_free>1800 88 22 22</toll_free>
+    <fax>1800 64 32 59</fax>
     <email>noreply@themserver.com.au</email>
     <email_from>noreply@themserver.com.au</email_from>
-    <email_contact>apolo@them.com.au</email_contact>
+    <email_contact>enquiry@medicalert.org.au</email_contact>
     <email_orders>apolo@them.com.au</email_orders>
     <logo>logo.png</logo>
   </company> 
@@ -78,6 +80,21 @@
     <url>contact-us</url>
     <template>contact-us.tpl</template>
     <pageID>3</pageID>
+  </static_page>
+  <static_page>
+    <url>feedback</url>
+    <template>feedback.tpl</template>
+    <pageID>108</pageID>
+  </static_page>
+  <static_page>
+    <url>emergency-personnel</url>
+    <template>emergency-personnel.tpl</template>
+    <pageID>106</pageID>
+  </static_page>
+  <static_page>
+    <url>accessibility</url>
+    <template>accessibility.tpl</template>
+    <pageID>111</pageID>
   </static_page>
   <static_page>
     <url>password-recovery</url>
