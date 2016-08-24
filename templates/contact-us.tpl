@@ -1,16 +1,22 @@
 {block name=body}
 
-<div id="maincont">
-	<div class="container" id="contpage">
-	 <div class="row">
+<div id="pagehead"> 
+  <div class="bannerout"> 
+    <img alt="Contact us banner" src="{$listing_image}">
+  </div> 
+  <div class="container" id="contpage">
+    <div class="row">
       <div class="col-sm-12 text-center" id="listtoptext">
-	  		<h1>{$listing_content1}</h1>
+      	<h1>{$listing_content1}</h1>
       </div>
       <div class="col-sm-8 col-sm-offset-2 text-center">
         <p>{$listing_content2}</p>
       </div>
-	 </div>
-     <div class="row"></div>
+    </div>
+  </div>
+</div>
+<div id="greyblock1">
+  <div class="container">
  	 <div class="row">
     	<div class="col-sm-6" id="contacttext">
             <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
@@ -86,7 +92,7 @@
     			<div class="row error-msg" id="form-error" {if $error neq ""}style="display:block"{/if}>{$error}</div>
     			<div class="row">
     				<div class="col-sm-12">
-    					<input type="button" value="SEND" onclick="$('#contact_form').submit();" class="btn-blue btn">
+    					<input type="button" value="SEND" onclick="$('#contact_form').submit();" class="btn-red btn">
     				</div>
     			</div>
     	  </form>
