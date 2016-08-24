@@ -6,8 +6,8 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 text-center">
-				<h1>{$listing_content1}</h1>
-				<p>{$listing_content2}</p>
+				<h1>{$listing_title}</h1>
+				<p>{$listing_content1}</p>
 			</div>
 		</div>
 	</div>
@@ -20,13 +20,13 @@
       {assign var='cnt' value=0} {foreach $data.4 as $da} {assign var='cnt' value=$cnt+1}
       <div class="col-sm-6 col-md-4 testresout" data-sort="{$cnt}" data-{$da.listing_schedule_start_date|date_format:"%B-%Y"}="1" data-all="1" {foreach $da.linkedcats as $cat}data-{$cat.news_category_value}="1"{/foreach}>
         <div class="testres text-center">
-          <a href="{$REQUEST_URI}/{$da.listing_url}"> <img src="{if $da.listing_image}{$da.listing_image}{else}/images/testimonial-noimg.png{/if}?width=96&height=96&crop=1" alt="{$da.listing_name}" class="img-responsive fullwidth">
+          <a href="{$listing_url}/{$da.listing_url}"> <img src="{if $da.listing_image}{$da.listing_image}{else}/images/testimonial-noimg.png{/if}?width=96&height=96&crop=1" alt="{$da.listing_name}" class="img-responsive fullwidth">
           </a>
           <div class="testrestext">
             <div class="h5">{$da.listing_name}</div>
             <div class="testloc">{$da.listing_content1}</div>
             <div class="testtext">{$da.listing_content2|truncate:90:"..."}</div>
-            <a href="{$REQUEST_URI}/{$da.listing_url}" class="readart"> Read my story ></a>
+            <a href="{$listing_url}/{$da.listing_url}" class="readart"> Read my story ></a>
           </div>
         </div>
       </div>

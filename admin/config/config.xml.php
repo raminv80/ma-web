@@ -109,8 +109,10 @@
       <list_template>list.tpl</list_template>
       <edit_template>edit_page.tpl</edit_template>
       <custom_template field="listing_object_id" value="1">edit_page_home.tpl</custom_template>
+      <custom_template field="listing_object_id" value="2">edit_page_about.tpl</custom_template>
       <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="103">edit_page_faqs.tpl</custom_template>
+      <custom_template field="listing_object_id" value="107">edit_page_corporate-partners.tpl</custom_template>
   	</section>
     
     <section level="1">

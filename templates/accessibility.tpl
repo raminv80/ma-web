@@ -53,20 +53,6 @@
 
 {block name=tail}
 <script type="text/javascript">
-$(document).ready(function(){
-
-	 	$('#contact_form').validate();
-
-	 	$('#postcode').rules("add", {
-			digits: true,
-			minlength: 4
-		});
-
-	 	$('#email').rules("add", {
-			email: true
-		});
-
-});
 
 </script>
 {/block}

@@ -37,7 +37,7 @@
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
         <!-- <li><a href="#images" data-toggle="tab">Images</a></li> -->
-        <li><a href="#additional" data-toggle="tab">Medical conditions</a></li>
+        <li><a href="#additional" data-toggle="tab">Directors</a></li>
         <!-- <li><a href="#files" data-toggle="tab">Files</a></li> -->
         <!-- <li><a href="#tags" data-toggle="tab">Tags</a></li> -->
         <li><a href="#share" data-toggle="tab">Social Sharing</a></li>
@@ -122,14 +122,6 @@
                 <input class="form-control number" type="text" value="{if $fields.listing_order neq ''}{$fields.listing_order}{else}999{/if}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
               </div>
             </div>
-            <!-- 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_listing_published">Published</label>
-							<div class="col-sm-5">
-								<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value">
-								<input class="chckbx" type="checkbox" {if $fields.listing_published eq 1} checked="checked" {/if}
-									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
-							</div>
-						</div> -->
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="listing_image">
                 Header Image<br> <small>Size: 1960px Wide x 345px Tall <br>("None" for default image)
@@ -154,9 +146,19 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content2">Bottom content</label>
+              <label class="col-sm-3 control-label" for="id_listing_content2">Our history content</label>
               <div class="col-sm-5">
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="listing_image2">
+                Our history image<br> <small>Size: 640px Wide x 480px Tall</small>
+              </label>
+              <div class="col-sm-9">
+                <input type="hidden" value="{$fields.listing_image2}" name="field[1][tbl_listing][{$cnt}][listing_image2]" id="listing_image2_link" class="fileinput">
+                <span class="file-view" id="listing_image2_path"> {if $fields.listing_image2}<a href="{$fields.listing_image2}" target="_blank">View</a>{else}None{/if}
+                </span> <a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('listing_image2','','');">Select File</a> <a href="javascript:void(0);" class="btn btn-info" onclick="$('#listing_image2_link').val('');$('#listing_image2_path').html('None');">Remove File</a>
               </div>
             </div>
           </div>
@@ -206,11 +208,11 @@
           <div class="form" id="additionals-wrapper">
           {$addcats = ['']}
           {assign var='additionalno' value=0}
-          {assign var='addName' value='Title'}
-          {assign var='addDescriptionName' value='Short description'}
-          {assign var='addContent1Name' value='Long description'}
+          {assign var='addName' value='Name'}
+          {assign var='addDescriptionName' value='Date'}
+          {assign var='addContent1Name' value='Role/position'}
           {assign var='addFileName' value=''}
-          {assign var='addImageName' value='Icon'}
+          {assign var='addImageName' value='Photo'}
           {assign var='addFlag1Name' value=''}
           {foreach $addcats as $k => $ac}
             <div id="additionals-wrapper{$k}">

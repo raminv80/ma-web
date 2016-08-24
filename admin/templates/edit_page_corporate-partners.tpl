@@ -37,7 +37,7 @@
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
         <!-- <li><a href="#images" data-toggle="tab">Images</a></li> -->
-        <li><a href="#additional" data-toggle="tab">Medical conditions</a></li>
+        <li><a href="#additional" data-toggle="tab">Partners</a></li>
         <!-- <li><a href="#files" data-toggle="tab">Files</a></li> -->
         <!-- <li><a href="#tags" data-toggle="tab">Tags</a></li> -->
         <li><a href="#share" data-toggle="tab">Social Sharing</a></li>
@@ -148,15 +148,9 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content1">Top content</label>
+              <label class="col-sm-3 control-label" for="id_listing_content1">Content</label>
               <div class="col-sm-5">
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content2">Bottom content</label>
-              <div class="col-sm-5">
-                <textarea name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea>
               </div>
             </div>
           </div>
@@ -206,11 +200,11 @@
           <div class="form" id="additionals-wrapper">
           {$addcats = ['']}
           {assign var='additionalno' value=0}
-          {assign var='addName' value='Title'}
-          {assign var='addDescriptionName' value='Short description'}
-          {assign var='addContent1Name' value='Long description'}
+          {assign var='addName' value='Name'}
+          {assign var='addDescriptionName' value='Website link'}
+          {assign var='addContent1Name' value='Description'}
           {assign var='addFileName' value=''}
-          {assign var='addImageName' value='Icon'}
+          {assign var='addImageName' value='Logo'}
           {assign var='addFlag1Name' value=''}
           {foreach $addcats as $k => $ac}
             <div id="additionals-wrapper{$k}">

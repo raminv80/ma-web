@@ -37,12 +37,19 @@
       <name>tbl_listing</name>
 	<field>listing_url</field>
 	<associated>
-        <name>gallery</name>
-        <table>tbl_gallery</table>
-        <linkfield>listing_id</linkfield>
-        <field>gallery_listing_id</field>
-        <orderby>gallery_order ASC</orderby>
-      </associated>
+      <name>gallery</name>
+      <table>tbl_gallery</table>
+      <linkfield>listing_id</linkfield>
+      <field>gallery_listing_id</field>
+      <orderby>gallery_order ASC</orderby>
+    </associated>
+    <associated> 
+      <name>additionals</name>
+      <table>tbl_additional</table>
+      <linkfield>listing_id</linkfield>
+      <field>additional_listing_id</field> 
+      <orderby>additional_category, additional_order, additional_name</orderby>
+    </associated>
     </table>
     <template>standardpage.tpl</template>
     <process>
@@ -74,7 +81,7 @@
   <static_page>
     <url>about-medicalert-foundation</url>
     <template>about.tpl</template>
-    <pageID>3</pageID>
+    <pageID>2</pageID>
   </static_page>
   <static_page>
     <url>contact-us</url>
@@ -122,9 +129,27 @@
     <pageID>114</pageID>
   </static_page>
   <static_page>
+    <url>who-needs-membership</url>
+    <template>who-needs-membership.tpl</template>
+    <pageID>95</pageID>
+    <process>
+      <file>includes/processes/process-load-testimonials.php</file>
+    </process>
+  </static_page>
+  <static_page>
     <url>how-to-become-a-member</url>
     <template>how-to-become-a-member.tpl</template>
     <pageID>96</pageID>
+  </static_page>
+  <static_page>
+    <url>faqs</url>
+    <template>faqs.tpl</template>
+    <pageID>103</pageID>
+  </static_page>
+  <static_page>
+    <url>corporate-partners</url>
+    <template>corporate-partners.tpl</template>
+    <pageID>107</pageID>
   </static_page>
 
   <listing_page name="news-and-resources">

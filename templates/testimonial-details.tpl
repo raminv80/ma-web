@@ -6,7 +6,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12 text-center">
-	    <a href="/testimonials" id="backt">&lt;	Back to testimonials</a>
+	    <a href="/{$listing_parent.listing_url}" id="backt">&lt;	Back to testimonials</a>
         <h1>Testimonials</h1>
       </div>
     </div>
