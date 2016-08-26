@@ -47,7 +47,7 @@
       <div class="tab-content">
         <!--===+++===+++===+++===+++===+++ DETAILS TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane active" id="details">
-          <div class="row form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
+          <div class="form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_parent_flag">Is Parent?</label>
               <div class="col-sm-5">
@@ -57,11 +57,27 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_display_menu">Display in Menu?</label>
+              <label class="col-sm-3 control-label" for="id_listing_display_menu">Display in Menu</label>
               <div class="col-sm-5">
                 <input type="hidden" value="{if $fields.listing_display_menu eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" class="value">
                 <input class="chckbx" type="checkbox" {if $fields.listing_display_menu eq 1} checked="checked" {/if}
-									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1'); $(this).parent().children('.group-div').show(); }else{ $(this).parent().children('.value').val('0');  $(this).parent().children('.group-div').hide(); $(this).parent().children('.group-div').find('select').prop('selectedIndex', 0); }" id="id_listing_display_menu">
+									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_display_menu">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_membersonly">Members only</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.listing_membersonly eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_membersonly]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.listing_membersonly eq 1} checked="checked" {/if}
+                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_membersonly">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_noindex">No index</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.listing_noindex eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_noindex]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.listing_noindex eq 1} checked="checked" {/if}
+                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_noindex">
               </div>
             </div>
             <div class="row form-group">
@@ -183,7 +199,7 @@
         </div>
         <!--===+++===+++===+++===+++===+++ SHARE TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="share">
-          <div class="row form" data-error="Error found on <b>Social Sharing tab</b>. View <b>Details tab</b> to see specific error notices.">
+          <div class="form" data-error="Error found on <b>Social Sharing tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_share_title">Share Title</label>
               <div class="col-sm-5">

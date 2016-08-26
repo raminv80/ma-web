@@ -36,14 +36,14 @@
 			</div>
 			<div class="col-sm-4 text-center">
 				<img src="/images/cost-membership.png" alt="Membeship" class="img-responsive" />
-				<div class="cost-text">Membership – <span>$32</span></div>
+				<div class="cost-text">Membership – <span>{$CONFIG_VARS['membership_fee']}</span></div>
 			</div>
 			<div class="col-sm-1 text-center">
 
 			</div>
 			<div class="col-sm-3 text-center">
 				<img src="/images/cost-post.png" alt="Postage" class="img-responsive" />
-				<div class="cost-text">Postage – from <span>$9</span></div>
+				<div class="cost-text">Postage – from <span>{$CONFIG_VARS['membership_fee']}</span></div>
 			</div>
 
 			</div>

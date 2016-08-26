@@ -1,8 +1,10 @@
 <?php
+set_include_path ( $_SERVER ['DOCUMENT_ROOT'] );
+include_once 'includes/functions/functions.php';
 global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 
 try{
-
+  
   /* $ship_obj = new ShippingClass();
    $methods = $ship_obj->getShippingMethods($itemNumber);
    $SMARTY->assign ( 'shippingMethods', $methods ); */

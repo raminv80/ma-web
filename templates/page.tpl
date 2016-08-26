@@ -82,7 +82,27 @@
 	<!--<script type="text/javascript" src="/includes/js/bootstrap-touch-carousel.js"></script>-->
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript">
+	if (jQuery.validator) {
+	  jQuery.validator.setDefaults({
+	    errorClass: 'has-error',
+	    validClass: 'has-success',
+	    ignore: "",
+	    highlight: function (element, errorClass, validClass) {
+	      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+     	  $('#form-error').html('Error, please check the highlighted fields.').show();
+	    },
+	    unhighlight: function (element, errorClass, validClass) {
+	      $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+          $(element).closest('.form-group').find('.help-block').text('');
+	    },
+	    errorPlacement: function (error, element) {
+   	$(element).closest('.form-group').find('.help-block').text(error.text());
+	    }
+	  });
+	}
+	
 	$(document).ready(function(){
+	  
 
 		$('#searchbox').bind('keyup', function(event) {
 		    if(event.keyCode==13){

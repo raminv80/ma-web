@@ -17,12 +17,20 @@
     <phone>08 82738401</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
-    <email>noreply@themserver.com.au</email>
+    <email>enquiry@medicalert.org.au</email>
     <email_from>noreply@themserver.com.au</email_from>
-    <email_contact>enquiry@medicalert.org.au</email_contact>
+    <email_contact>apolo@them.com.au</email_contact>
     <email_orders>apolo@them.com.au</email_orders>
     <logo>logo.png</logo>
-  </company> 
+  </company>
+  <global_variables>
+    <name>membership_fee</name>
+    <value>$32</value>
+  </global_variables> 
+  <global_variables>
+    <name>postage</name>
+    <value>$9</value>
+  </global_variables> 
   <database> 
     <host>122.201.97.172</host> 
     <user>them_usr01</user> 
@@ -59,6 +67,22 @@
   <index_page>
     <template>home.tpl</template>
     <pageID>1</pageID>
+    <options> 
+      <field> 
+        <name>collections</name>
+        <table>tbl_listing</table>
+        <id>listing_object_id</id>
+        <value>listing_url</value>
+        <reference>listing_name</reference>
+        <extra>listing_image</extra>
+        <extra>listing_url</extra>
+        <where>listing_type_id = '10' AND listing_published = '1'</where> 
+        <orderby>listing_order,listing_name</orderby> 
+      </field>  
+    </options>
+    <process>
+      <file>includes/processes/process-load-testimonials.php</file>
+    </process>
   </index_page>
   <error404>
     <header>HTTP/1.0 404 Not Found</header>
@@ -151,6 +175,35 @@
     <template>corporate-partners.tpl</template>
     <pageID>107</pageID>
   </static_page>
+  
+  <!-- ECOMMERCE  -->
+  <static_page>
+    <url>login-register</url>
+    <template>login-register.tpl</template>
+    <pageID>8</pageID>
+  </static_page>
+  <static_page>
+    <url>my-account</url>
+    <template>account.tpl</template>
+    <pageID>9</pageID>
+    <process>
+      <file>includes/processes/process-load-account.php</file>
+    </process>
+  </static_page>
+  <static_page>
+    <url>shopping-cart</url>
+    <template>shopping-cart.tpl</template>
+    <pageID>12</pageID>
+  </static_page>
+  <static_page>
+    <url>checkout</url>
+    <template>checkout.tpl</template>
+    <pageID>13</pageID>
+    <process>
+      <file>includes/processes/process-load-checkout.php</file>
+    </process>
+  </static_page>
+  
 
   <listing_page name="news-and-resources">
     <url>news-and-resources</url>
@@ -224,6 +277,9 @@
     <template typeid="1">ec_category.tpl</template>
     <loadmoretemplate>ec_category-loadmore.tpl</loadmoretemplate>  
     <process>
+      <file>includes/processes/process-load-category-products.php</file>
+    </process>
+    <process>
       <file>includes/processes/process-load-viewed-products.php</file>
     </process>
     <process>
@@ -231,41 +287,6 @@
     </process>
   </listing_page>
   	
-  <login>
-    <url>login-register</url>
-    <template>login-register.tpl</template>
-    <pageID>8</pageID>
-    <fallback_redirect>my-account</fallback_redirect>
-  </login>
-  <account restricted="true">
-    <url>my-account</url>
-    <template>account.tpl</template>
-    <pageID>9</pageID>
-    <fallback_redirect>login-register</fallback_redirect>
-  </account>
-  <cart>
-    <url>shopping-cart</url>
-    <pageID>12</pageID>
-    <type>1</type>
-    <file>ListClass</file>
-    <table>
-      <name>tbl_cart</name>
-      <field>listing_url</field>
-    </table>
-    <template>shopping-cart.tpl</template>
-  </cart>
-  <checkout guest="false">
-    <url>checkout</url>
-    <pageID>13</pageID>
-    <type>1</type>
-    <file>ListClass</file>
-    <table>
-      <name>tbl_listing</name>
-      <field>listing_url</field>
-    </table>
-    <template>checkout.tpl</template>
-  </checkout>
-  
   <product_page>
     <file>ProductClass</file>
     <table>
@@ -320,12 +341,12 @@
     <template>ec_product.tpl</template>
   </product_page>
   
-  <global_process>
+  <global_process_pre>
     <file>includes/processes/global-source-referer.php</file>
-  </global_process>
-  <global_process>
-    <file>includes/processes/global-shopping-cart.php</file>
-  </global_process>
+  </global_process_pre>
+  <global_process_post>
+    <file>includes/processes/global-ecommerce.php</file>
+  </global_process_post>
   <process>
     <url>process/cart</url>
     <file>includes/processes/processes-cart.php</file>

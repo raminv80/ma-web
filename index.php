@@ -9,7 +9,7 @@ if (preg_match('/[A-Z]/', $request[0])){
 } 
 
 include "includes/functions/functions.php";
-global $CONFIG,$SMARTY,$DBobject;
+global $CONFIG,$SMARTY,$DBobject,$REQUEST_URI;
 
 $SMARTY->loadFilter('output', 'trimwhitespace');
 
@@ -30,27 +30,19 @@ $SMARTY->assign('redirect', !empty($_SESSION['redirect'])?$_SESSION['redirect']:
 unset($_SESSION['redirect']); // ASSIGN REDIRECT URL VALUE AFTER LOGIN AND SHOW LOGIN MODAL
 $SMARTY->assign('user', $_SESSION['user']['public']); // ASSIGN USER FOR TEMPLATES
 $SMARTY->assign('HTTP_REFERER', rtrim($_SERVER['HTTP_REFERER'],'/'));
-$_URI = explode("?", $_SERVER['REQUEST_URI']);
-$SMARTY->assign('REQUEST_URI', rtrim($_URI[0],'/'));
+$SMARTY->assign('REQUEST_URI', $REQUEST_URI);
 $_request = htmlclean($_REQUEST);
 $SMARTY->assign('_REQUEST', $_REQUEST);
 $SMARTY->assign('orderNumber', $_SESSION['orderNumber']);
 $SMARTY->assign('ga_ec', $_SESSION['ga_ec']);// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
 unset($_SESSION['ga_ec']);
 
-$COMP = json_encode($CONFIG->company);
-$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
 
 $token = getToken('frontend');
 $SMARTY->assign('token', $token);
 $SMARTY->assign('timestamp', time());
 
-if(empty($_SESSION['heardabout_options'])){
-  $sql = "SELECT heardabout_name,heardabout_value FROM tbl_heardabout WHERE heardabout_deleted IS NULL ORDER BY heardabout_order";
-  $opt = $DBobject->wrappedSql($sql);
-  $_SESSION['heardabout_options']=$opt;
-}
-$SMARTY->assign("heardaboutus",$_SESSION['heardabout_options']);
+
 
 while(true){
   
@@ -70,8 +62,8 @@ while(true){
   if($_request['arg1'] == '403'){ $template = loadPage($CONFIG->error403); break 1; }
   
 
-  /******* Global process *******/
-  foreach($CONFIG->global_process as $sp){
+  /******* Global process - pre data load *******/
+  foreach($CONFIG->global_process_pre as $sp){
   	$file = (string)$sp->file;
   	if(file_exists($file)){ include ($file); }
   }
@@ -109,38 +101,6 @@ while(true){
   }
 
   /**
-   * ***** Goes to Login-register ******
-   */
-  if($_request['arg1'] == 'login-register'){
-    if(!empty($_SESSION['user']['public']['id'])){
-      header("Location: /" . $CONFIG->login->fallback_redirect);
-      exit();
-    }
-    $template = loadPage($CONFIG->login);
-    break 1;
-  }
-  
-  /**
-   * **** Goes to my-account ******
-   */
-  if($_request['arg1'] == 'my-account'){
-    if($CONFIG->account->attributes()->restricted == 'true' && empty($_SESSION['user']['public']['id'])){
-      $_SESSION['redirect'] = "/my-account";
-      header("Location: /" . $CONFIG->account->fallback_redirect);
-      exit();
-    }
-    $template = loadPage($CONFIG->account);
-    $cart_obj = new stencil();
-    $orders = $cart_obj->GetOrderHistoryByUser($_SESSION['user']['public']['id']);
-    $SMARTY->assign ( 'orders', $orders );
-    $user_obj = new UserClass();
-    $userDetails = $user_obj->RetrieveById($_SESSION['user']['public']['id']);
-    $SMARTY->assign ( 'userDetails', $userDetails );
-    break 1;
-  }
-  
-  
-  /**
    * ***** Listing pages here ******
    */
   $arr = explode("/", $_request["arg1"]);
@@ -149,10 +109,6 @@ while(true){
     $needle = str_replace("/","\/",$lp->url);
     $haystack = $_request["arg1"];
     if(preg_match("/^{$needle}/",$haystack)){
-      foreach($lp->process as $sp){
-    	$file = (string)$sp->file;
-    	if(file_exists($file)){ include ($file);}
-      }
       $_nurl = $_request["arg1"];
       $class = (string)$lp->file;
       $obj = new $class($_nurl,$lp);
@@ -163,6 +119,10 @@ while(true){
       if(!empty($fieldname) && empty($_REQUEST[$fieldname])) {
       	$_request["arg1"] = '404';
       	$template = "";
+      }
+      foreach($lp->process as $sp){
+        $file = (string)$sp->file;
+        if(file_exists($file)){ include ($file);}
       }
       break 2;
     }
@@ -196,13 +156,13 @@ while(true){
       /**
        * **** load dynamic page *****
        */
-    	foreach($struct->process as $sp){
-    		$file = (string)$sp->file;
-    		if(file_exists($file))	{ include ($file);}
-    	}
       $template = $obj->Load($id,$_PUBLISHED);
-			$menu = $obj->LoadMenu($id);
+	  $menu = $obj->LoadMenu($id);
       $SMARTY->assign('menuitems',$menu);
+      foreach($struct->process as $sp){
+        $file = (string)$sp->file;
+        if(file_exists($file))	{ include ($file);}
+      }
       break 1;
     }
   }
@@ -238,9 +198,14 @@ while(true){
   break 1;
 }
 
-
 if(empty($template)){
   $template = loadPage($CONFIG->error404);
+}
+
+/******* Global process - post data load *******/
+foreach($CONFIG->global_process_post as $sp){
+  $file = (string)$sp->file;
+  if(file_exists($file)){ include ($file); }
 }
 
 $page_tpl = "page.tpl";
@@ -255,11 +220,11 @@ function loadPage($_conf){
   }else{
     header("HTTP/1.0 200 OK");
   }
-  foreach($_conf->process as $sp){
-  	$file = (string)$sp->file;
-  	if(file_exists($file))	{ include ($file);}
-  }
   if(strtolower((string)$_conf->attributes()->standalone) == 'true'){
+    foreach($_conf->process as $sp){
+      $file = (string)$sp->file;
+      if(file_exists($file))	{ include ($file);}
+    }
   	$template = $_conf->template;
     $SMARTY->display("extends:$template");
     die();
@@ -307,6 +272,10 @@ function loadPage($_conf){
         $SMARTY->assign('requested_page',$_SERVER['HTTP_REFERER']);
         loadPageAdditional($struct->table);
       }
+    }
+    foreach($_conf->process as $sp){
+      $file = (string)$sp->file;
+      if(file_exists($file))	{ include ($file);}
     }
   }
   loadPageAdditional($_conf);

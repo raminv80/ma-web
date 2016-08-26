@@ -41,7 +41,7 @@
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
         <!-- <li><a href="#images" data-toggle="tab">Images</a></li> -->
-        <li><a href="#additional" data-toggle="tab">Partners</a></li>
+        <!-- <li><a href="#additional" data-toggle="tab">Additional</a></li> -->
         <!-- <li><a href="#files" data-toggle="tab">Files</a></li> -->
         <!-- <li><a href="#tags" data-toggle="tab">Tags</a></li> -->
         <li><a href="#share" data-toggle="tab">Social Sharing</a></li>
@@ -59,6 +59,13 @@
                 <span class="help-block"></span>
               </div>
             </div>
+            <!-- 			<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_title">Title *</label>
+							<div class="col-sm-5">
+								<input class="form-control" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" onchange="seturl(this.value);" required>
+								<span class="help-block"></span>
+							</div>
+						</div> -->
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
               <div class="col-sm-5">
@@ -103,6 +110,14 @@
                 <input class="form-control number" type="text" value="{if $fields.listing_order neq ''}{$fields.listing_order}{else}999{/if}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
               </div>
             </div>
+            <!-- 						<div class="row form-group">
+							<label class="col-sm-3 control-label" for="id_listing_published">Published</label>
+							<div class="col-sm-5">
+								<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value">
+								<input class="chckbx" type="checkbox" {if $fields.listing_published eq 1} checked="checked" {/if}
+									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
+							</div>
+						</div> -->
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="listing_image">
                 Header Image<br> <small>Size: 1960px Wide x 345px Tall <br>("None" for default image)
@@ -121,9 +136,33 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content1">Content</label>
+              <label class="col-sm-3 control-label" for="id_listing_content1">Top content</label>
               <div class="col-sm-5">
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_content2">Middle left content</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_content3">Middle right content</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="tinymce">{$fields.listing_content3}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_content4">Middle content headline</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content4]" id="id_listing_content4" class="form-control">{$fields.listing_content4}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_content5">Bottom content</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content5]" id="id_listing_content5" class="tinymce">{$fields.listing_content5}</textarea>
               </div>
             </div>
           </div>
@@ -171,13 +210,13 @@
         <!--===+++===+++===+++===+++===+++ ADDITIONAL TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="additional">
           <div class="form" id="additionals-wrapper">
-          {$addcats = ['']}
+          {$addcats = ['category one', 'category two']}
           {assign var='additionalno' value=0}
-          {assign var='addName' value='Name'}
-          {assign var='addDescriptionName' value='Website link'}
-          {assign var='addContent1Name' value='Description'}
+          {assign var='addName' value='Question'}
+          {assign var='addDescriptionName' value=''}
+          {assign var='addContent1Name' value='Answer'}
           {assign var='addFileName' value=''}
-          {assign var='addImageName' value='Logo'}
+          {assign var='addImageName' value=''}
           {assign var='addFlag1Name' value=''}
           {foreach $addcats as $k => $ac}
             <div id="additionals-wrapper{$k}">

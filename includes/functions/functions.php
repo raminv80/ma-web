@@ -9,6 +9,8 @@ $GLOBALS['CONFIG'] = LOADCONFIG($_CONF_FILE);
 $GLOBALS['SITE'] = "";
 $cfg_host = (string)$CONFIG->domain;
 $GLOBALS['HTTP_HOST'] = (!empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$cfg_host);
+$_URI = explode("?", $_SERVER['REQUEST_URI']);
+$GLOBALS['REQUEST_URI'] = rtrim($_URI[0],'/');
 
 include_once 'database/pdo-db-manager.php';
 include_once 'database/utilities.php';
@@ -99,10 +101,15 @@ if($staging === "true" || $_PUBLISHED == 0 ){
   $SMARTY->assign("ga_id", $ga_id);
 }
 
-if(isMobile()){
-  $SMARTY->assign("mobile",true);
-}
+//COMPANY INFO FROM CONFIG
+$COMP = json_encode($CONFIG->company);
+$SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
 
+//GLOBAL VARIABLES FROM CONFIG
+foreach($CONFIG->global_variables as $gv){
+  $GLOBALS['CONFIG_VARS'][(string)$gv->name] = (string)$gv->value;
+}
+$SMARTY->assign("CONFIG_VARS", $GLOBALS['CONFIG_VARS']);
 
 //SECTION HOLDS THE INIT FUNCTIONS
 function LOADCONFIG($_CONF_FILE){

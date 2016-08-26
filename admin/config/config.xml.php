@@ -15,12 +15,20 @@
   		<postcode>5067</postcode>
   	</address>
   	<phone>08 8363 2717</phone>
-  	<email>online@them.com.au</email>
-  	<email_from>noreply@themserver.com.au</email_from>
-  	<email_contact>apolo@them.com.au</email_contact>
-  	<email_orders>apolo@them.com.au</email_orders>
+  	<email>enquiry@medicalert.org.au</email>
+    <email_from>noreply@themserver.com.au</email_from>
+    <email_contact>apolo@them.com.au</email_contact>
+    <email_orders>apolo@them.com.au</email_orders>
   	<logo>logo.png</logo>
-  </company>  
+  </company> 
+  <global_variables>
+    <name>membership_fee</name>
+    <value>$32</value>
+  </global_variables> 
+  <global_variables>
+    <name>postage</name>
+    <value>$9</value>
+  </global_variables>  
   <database> 
   	<host>122.201.97.172</host> 
     <user>them_usr01</user> 
@@ -110,6 +118,7 @@
       <edit_template>edit_page.tpl</edit_template>
       <custom_template field="listing_object_id" value="1">edit_page_home.tpl</custom_template>
       <custom_template field="listing_object_id" value="2">edit_page_about.tpl</custom_template>
+      <custom_template field="listing_object_id" value="94">edit_page_benefits-of-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="103">edit_page_faqs.tpl</custom_template>
       <custom_template field="listing_object_id" value="107">edit_page_corporate-partners.tpl</custom_template>

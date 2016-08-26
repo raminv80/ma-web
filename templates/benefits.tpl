@@ -22,19 +22,18 @@
 <div id="benefits">
 	<div class="container">
 		<div class="row" id="benefit1">
-			<div class="hidden-xs col-sm-1">
+			<div class="hidden-xs col-sm-2 col-md-1">
 				<img src="/images/benefits-protects.png" alt="Protects in an emergency" class="img-responsive" />
 			</div>
-			<div class="col-xs-12 col-sm-5">
-				<h3>Protects in an emergency</h3>
-				<p>Recommended by the World Health Organisation and World Allergy Organisation, the internationally recognised MedicAlert medical ID can help protect you in an emergency, no matter where you are in the world.</p>
+			<div class="col-xs-12 col-sm-10 col-md-5">
+                {$listing_content2}
+                <br>
 			</div>
-			<div class="hidden-xs col-sm-1">
+			<div class="hidden-xs col-sm-2 col-md-1">
 				<img src="/images/benefits-store.png" alt="Store your secure electronic health record" class="img-responsive" />
 			</div>
-			<div class="col-xs-12 col-sm-5">
-				<h3>Store your secure electronic health record</h3>
-				<p>As a MedicAlert member, your personal and medical information is stored in our secure database. These details can be accessed by  emergency services and healthcare professionals via our 24/7 emergency hotline, which is operated by professionally trained staff. This vital service ensures you can receive the fastest and most effective treatment when seconds count.</p>
+			<div class="col-xs-12 col-sm-10 col-md-5">
+                {$listing_content3}
 			</div>
 		</div>
 		<div class="row visible-xs">
@@ -44,7 +43,7 @@
 		</div>
 		<div class="row" id="benefit2">
 			<div class="col-sm-12 text-center">
-				For just $32 per year, MedicAlert membership gives you access to a range of exclusive benefits
+              {$listing_content4}
 			</div>
 		</div>
 		<div class="row" id="benefit3">
@@ -88,8 +87,8 @@
 					</tr>
 					<tr>
 						<th>Services and Benefits</th>
-						<th class="text-center border">MedicAlert</th>
-						<th class="text-center">Other ID Providers</th>
+						<th class="text-center border">MedicAlert Foundation</th>
+						<th class="text-center">Other ID providers</th>
 						<th class="text-center">Pharmacy IDs</th>
 					</tr>
 					<tr>
@@ -98,38 +97,38 @@
 					<tr>
 						<td>A trusted not-for-profit organisation for over 40 years</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Provides assistance to those with financial hardships</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Internationally recognised medical ID and the first medical identification and alerting company</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Part of a worldwide network of MedicAlert affiliates in 40 countries that provide a personal medical emergency identification system to protect and save lives.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>All staff located in Australia</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Brand recommended by the World Health Organisation and World Allergy Organisation</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td colspan="4" class="section">Services</td>
@@ -137,74 +136,74 @@
 					<tr>
 						<td>Secure electronic health record created and managed by MedicAlert.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Member can update the electronic health record at any time.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Emergency hotline relays key personal and medical information to emergency services or healthcare professionals within an average of 10 seconds of a call in Australia, and is accessible worldwide.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Membership provides protection for 12 months worldwide.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
+						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>24/7 emergency hotline phone number for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Interpreting services offered.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
+						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Delivers training resources for emergency services and healthcare personnel, or for training students and other first responder teams.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Provides regular communication with valuable health and education information.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>On-going support from a Membership Services team.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>24/7 online access to your electronic health record noted above.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Unlimited wallet and fridge cards listing your details.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Exclusive member only offers.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 
 					<tr>
@@ -213,26 +212,26 @@
 					<tr>
 						<td>Supplier of medical ID devices.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td><img src="/images/checkmark.png" alt="checkmark" /></td>
+						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
+						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 					</tr>
 					<tr>
 						<td>Custom engraved IDs with globally accepted medical terminology critically relied upon by emergency responders.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
+						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>All ID information is reviewed by medically trained staff.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Offers a wide selection of comfortable, trusted and recognised brand name medical ID’s for various lifestyles, ages, and needs.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
+						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 
 					<tr>
@@ -241,14 +240,14 @@
 					<tr>
 						<td>Health fund and Department of Veterans Affairs rebates.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
 						<td>Membership offers with corporate partners including Tunstall Healthcare.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td></td>
-						<td></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 
 				</table>
@@ -266,66 +265,66 @@
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Provides assistance to those with financial hardships</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Internationally recognised medical ID and the first medical identification and alerting company</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Part of a worldwide network of MedicAlert affiliates in 40 countries that provide a personal medical emergency identification system to protect and save lives.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">All staff located in Australia</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Brand recommended by the World Health Organisation and World Allergy Organisation</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 
 
@@ -337,134 +336,134 @@
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Member can update the electronic health record at any time.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Emergency hotline relays key personal and medical information to emergency services or healthcare professionals within an average of 10 seconds of a call in Australia, and is accessible worldwide.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Membership provides protection for 12 months worldwide.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 						<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers
+						<td>Other ID<br>providers
 						<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Pharmacy IDs</td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">24/7 emergency hotline phone number for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Interpreting services offered.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Delivers training resources for emergency services and healthcare personnel, or for training students and other first responder teams.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Provides regular communication with valuable health and education information.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">On-going support from a Membership Services team.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">24/7 online access to your electronic health record noted above.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Unlimited wallet and fridge cards listing your details.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Exclusive member only offers.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 
 
@@ -476,48 +475,48 @@
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Custom engraved IDs with globally accepted medical terminology critically relied upon by emergency responders.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers
+						<td>Other ID<br>providers
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Pharmacy IDs</td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">All ID information is reviewed by medically trained staff.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Offers a wide selection of comfortable, trusted and recognised brand name medical ID’s for various lifestyles, ages, and needs.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers
+						<td>Other ID<br>providers
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Pharmacy IDs</td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 
 					<tr>
@@ -528,22 +527,22 @@
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
 						<td colspan="3">Membership offers with corporate partners including Tunstall Healthcare.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
-							Medicalert
+							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID providers</td>
-						<td>Pharmacy IDs</td>
+						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 				</table>
 				</div>
@@ -560,13 +559,11 @@
 
 		<div class="row" id="benefit5">
 			<div class="col-sm-12 col-md-10 col-md-offset-1 text-center">
-				<h3>How MedicAlert membership protects you in an emergency</h3>
-				<p>MedicAlert members wear the genuine MedicAlert medical ID. This provides first responders with vital information about your conditions, and a 24/7 emergency hotline number to call to access your personal details held on your electronic health record, so they can provide the fastest and most effective treatment. The following diagram shows how your medical identification jewellery helps protect you when seconds count.</p>
-
+				{$listing_content5}
 				<img src="/images/benefits-frontback.jpg" class="img-responsive" alt="Jewellery diagram" />
 
 				<div>
-					<a href="#" class="btn btn-red">Find a product</a>
+					<a href="/products" title="Find a product" class="btn btn-red">Find a product</a>
 				</div>
 			</div>
 		</div>

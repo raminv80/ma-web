@@ -79,22 +79,23 @@
 				<img src="/images/access-phone.png" alt="Phone" class="img-responsive" />
 				<div class="grey-text">
 					<span class="bold">Call</span><br />
-					<a href="tel:1800 88 22 22">1800 88 22 22</a><br />
-					between 9 am–5 pm ACST
+                  <a class="tel" href="tel:{$COMPANY.toll_free}" title="Click to call">{$COMPANY.toll_free}</a>
+                   <br />
+					between 9 - 5 pm ACST
 				</div>
 			</div>
 			<div class="col-sm-3 text-center ways">
 				<img src="/images/access-email.png" alt="Email" class="img-responsive" />
 				<div class="grey-text">
 					<span class="bold">Email</span><span>*</span><br />
-					<a href="mailto:enquiry@medicalert.org.au">enquiry@medicalert.org.au</a>
+					<a href="mailto:{$COMPANY.email}" title="click to email us">{$COMPANY.email}</a>
 				</div>
 			</div>
 			<div class="col-sm-3 text-center ways">
 				<img src="/images/join-fax.png" alt="Fax" class="img-responsive" />
 				<div class="grey-text">
 					<span class="bold">Fax</span><span>*</span><br />
-					<a href="tel:1800 64 32 59">1800 64 32 59</a>
+					<a href="tel:{$COMPANY.fax}">{$COMPANY.fax}</a>
 				</div>
 			</div>
 		</div>

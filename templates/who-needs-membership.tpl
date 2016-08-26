@@ -47,6 +47,7 @@
           {/foreach}
       </div>
     </div>
+  </div>
 
     <div class="row">
 	    <div class="col-sm-12 text-center">
@@ -57,12 +58,18 @@
 	    </div>
     </div>
   </div>
-  </div>
 </div>
 
-<div id="testimonial-list">
+<div id="testimonial-list" class="who-needs">
   <div class="container">
     <div class="row" id="testcont">
+	  <div class="col-sm-10 col-sm-offset-1 text-center">
+	  <h3>The voice for people living with medical conditions</h3>
+	  <p>MedicAlert membership has given thousands of Australians peace of mind knowing that they’re protected in a medical emergency.<br />
+		  <a href="/testimonials">View our members’ stories here ></a></p>
+	  </div>
+
+	  <div id="tests" class="hidden-xs">
       {foreach $testimonials as $da}
       <div class="col-sm-6 col-md-4 testresout">
         <div class="testres text-center">
@@ -77,6 +84,7 @@
         </div>
       </div>
       {/foreach}
+	  </div>
     </div>
   </div>
 </div>

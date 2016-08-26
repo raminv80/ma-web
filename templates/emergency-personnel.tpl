@@ -1,8 +1,8 @@
 {block name=body}
-<div id="pagehead"> 
-  <div class="bannerout"> 
+<div id="pagehead">
+  <div class="bannerout">
     <img alt="Emergency personnel banner" src="{$listing_image}">
-  </div> 
+  </div>
   <div class="container" id="contpage">
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2 text-center" id="listtoptext">
@@ -14,7 +14,7 @@
     </div>
    </div>
 </div>
-<div id="greyblock1">
+<div class="emergency-grey">
   <div class="container">
      <div class="row">
         <div class="col-sm-8 col-sm-offset-2 text-center">
@@ -27,37 +27,53 @@
      </div>
    </div>
 </div>
-<div id="whiteblock2">
+<div id="emergency-white">
    <div class="container">
      <div class="row">
         <div class="col-sm-12 text-center">
           <h3>Know what to do in medical emergency</h3>
           <p>In the first instance of a medical emergency, you should follow these four simple steps.</p>
         </div>
-        <div class="col-sm-3 text-center">
-          <img alt="Check" src="">
-          <p>Check</p>
-          <p>around your patients' wrists or neck (pulse point) for the genuine MedicAlert medical ID. If conscious, ask your patient if they are a MedicAlert member. </p>
+        <div class="col-sm-3 text-center step">
+	      <div class="col-xs-3 col-sm-12">
+          <img alt="Check" src="/images/emergency-check.png" class="img-responsive">
+	      </div>
+	      <div class="col-xs-9 col-sm-12">
+          <div class="bold">Check</div>
+          <div>around your patients' wrists or neck (pulse point) for the genuine MedicAlert medical ID. If conscious, ask your patient if they are a MedicAlert member. </div>
+	      </div>
         </div>
-        <div class="col-sm-3 text-center">
-          <img alt="Read" src="">
-          <p>Read</p>
-          <p>the medical and personal information engraved on the reverse of the patient's MedicAlert medical ID.</p>
+        <div class="col-sm-3 text-center step">
+	      <div class="col-xs-3 col-sm-12">
+          <img alt="Read" src="/images/emergency-read.png" class="img-responsive">
+	      </div>
+	      <div class="col-xs-9 col-sm-12">
+          <div class="bold">Read</div>
+          <div>the medical and personal information engraved on the reverse of the patient's MedicAlert medical ID.</div>
+	      </div>
         </div>
-        <div class="col-sm-3 text-center">
-          <img alt="Call" src="">
-          <p>Call</p>
-          <p>the 24/7 emergency hotline number engraved on the medical ID (08 8272 8822) to receive more detailed medical and personal information.</p>
+        <div class="col-sm-3 text-center step">
+	      <div class="col-xs-3 col-sm-12">
+          <img alt="Call" src="/images/emergency-call.png" class="img-responsive">
+	      </div>
+	      <div class="col-xs-9 col-sm-12">
+          <div class="bold">Call</div>
+          <div>the 24/7 emergency hotline number engraved on the medical ID (08 8272 8822) to receive more detailed medical and personal information.</div>
+	      </div>
         </div>
-        <div class="col-sm-3 text-center">
-          <img alt="Advice" src="">
-          <p>Advice</p>
-          <p>on handover that your patient is wearing a MedicAlert medical ID.</p>
+        <div class="col-sm-3 text-center step">
+	      <div class="col-xs-3 col-sm-12">
+          <img alt="Advice" src="/images/emergency-advice.png" class="img-responsive">
+	      </div>
+	      <div class="col-xs-9 col-sm-12">
+          <div class="bold">Advice</div>
+          <div>on handover that your patient is wearing a MedicAlert medical ID.</div>
+	      </div>
         </div>
      </div>
    </div>
 </div>
-<div id="greyblock2">
+<div class="emergency-grey">
   <div class="container">
    <div class="row">
       <div class="col-sm-12 text-center" id="listtoptext">

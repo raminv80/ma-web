@@ -21,6 +21,10 @@
           <input type="hidden" value="{if $fields.listing_created}{$fields.listing_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_listing][{$cnt}][listing_created]" id="listing_created">
           <input type="hidden" value="{if $typeID}{$typeID}{else}1{/if}" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
           <input type="hidden" value="{if $fields.listing_published}{$fields.listing_published}{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published">
+          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" id="listing_parent_flag">
+          <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" id="listing_display_menu">
+          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_membersonly]" id="listing_membersonly">
+          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_noindex]" id="listing_noindex">
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
         </div>
       </div>
@@ -49,35 +53,12 @@
         <div class="tab-pane active" id="details">
           <div class="row form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_parent_flag">Is Parent?</label>
-              <div class="col-sm-5">
-                <input type="hidden" value="{if $fields.listing_parent_flag eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" class="value">
-                <input class="chckbx" type="checkbox" {if $fields.listing_parent_flag eq 1} checked="checked" {/if} 
-									onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_parent_flag">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_display_menu">Display in Menu?</label>
-              <div class="col-sm-5">
-                <input type="hidden" value="{if $fields.listing_display_menu eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" class="value">
-                <input class="chckbx" type="checkbox" {if $fields.listing_display_menu eq 1} checked="checked" {/if}
-									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1'); $(this).parent().children('.group-div').show(); }else{ $(this).parent().children('.value').val('0');  $(this).parent().children('.group-div').hide(); $(this).parent().children('.group-div').find('select').prop('selectedIndex', 0); }" id="id_listing_display_menu">
-              </div>
-            </div>
-            <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_name">Name *</label>
               <div class="col-sm-5">
                 <input class="form-control" type="text" value="{$fields.listing_name}" name="field[1][tbl_listing][{$cnt}][listing_name]" id="id_listing_name" onchange="seturl(this.value);" required>
                 <span class="help-block"></span>
               </div>
             </div>
-            <!-- 			<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_listing_title">Title *</label>
-							<div class="col-sm-5">
-								<input class="form-control" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" onchange="seturl(this.value);" required>
-								<span class="help-block"></span>
-							</div>
-						</div> -->
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
               <div class="col-sm-5">
@@ -122,14 +103,6 @@
                 <input class="form-control number" type="text" value="{if $fields.listing_order neq ''}{$fields.listing_order}{else}999{/if}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
               </div>
             </div>
-            <!-- 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_listing_published">Published</label>
-							<div class="col-sm-5">
-								<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value">
-								<input class="chckbx" type="checkbox" {if $fields.listing_published eq 1} checked="checked" {/if}
-									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
-							</div>
-						</div> -->
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="listing_image">
                 Header Image<br> <small>Size: 1960px Wide x 345px Tall <br>("None" for default image)

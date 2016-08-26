@@ -7,7 +7,14 @@
 		<div class="row">
 			<div class="col-sm-12 text-center">
 				<h1>{$listing_title}</h1>
+				<div class="about-text">
 				<p>{$listing_content1}</p>
+				</div>
+			</div>
+		</div>
+		<div class="row visible-xs">
+			<div class="col-xs-12 text-center">
+				<a href="#" id="readmore">Read more <img src="/images/down-arrow.png" alt="Down" /></a>
 			</div>
 		</div>
 	</div>
@@ -16,15 +23,15 @@
 <div id="our-history">
   <div class="container">
     <div class="row">
-      <div class="col-md-12">
-        <div class="h2 text-center">Our history</div>
+      <div class="col-sm-12 text-center">
+        <h3>Our history</h3>
       </div>
       {if $listing_image2}
-      <div class="col-md-4">
-        <img src="{$listing_image2}" alt="Our history image">
+      <div class="col-sm-4">
+        <img src="{$listing_image2}" alt="Our history image" class="img-responsive">
       </div>
       {/if}
-      <div class="col-md-{if $listing_image2}8{else}12{/if}">
+      <div class="col-sm-{if $listing_image2}8{else}12{/if}">
         {$listing_content2}
       </div>
     </div>
@@ -34,15 +41,15 @@
 <div id="directors-wrapper">
   <div class="container">
     <div class="row">
-      <div class="col-md-12">
-        <div class="h2 text-center">Board of Directors</div>
-        <p>Our national Board of Directors ...</p>
+      <div class="col-md-12 text-center">
+        <h3>Board of Directors</h3>
+        <p>Our national Board of Directors volunteer their time to ensure we can provide the best possible service for our members</p>
       </div>
     </div>
-    <div class="row">
-        {foreach $additionals as $ad} 
-          <div class="col-sm-6 col-md-4 directors">
-            <img src="{if $ad.additional_image}{$ad.additional_image}{else}/images/default-director.png{/if}" alt="{$ad.additional_name} photo">
+    <div class="row" id="dirout">
+        {foreach $additionals as $ad}
+          <div class="col-sm-4 col-md-3 directors text-center">
+            <img src="{if $ad.additional_image}{$ad.additional_image}{else}/images/default-director.png{/if}" alt="{$ad.additional_name} photo" class="img-responsive">
             <div class="date">{$ad.additional_description}</div>
             <div class="h3">{$ad.additional_name}</div>
             {$ad.additional_content1}
@@ -55,7 +62,11 @@
 
 {block name=tail}
 <script type="text/javascript">
-
-
+jQuery(document).ready(function(){
+	$("#readmore").click(function(){
+		$(this).hide();
+		$("#pagehead .about-text").css("height","auto");
+	});
+});
 </script>
 {/block}

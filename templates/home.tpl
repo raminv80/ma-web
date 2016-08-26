@@ -3,9 +3,8 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 text-center">
-				<h1>Peace of mind knowing you’re protected<br />
-				with MedicAlert<sup>&reg;</sup> membership</h1>
-				<a href="#" class="btn btn-red">Learn more</a>
+				<h1>{$listing_title}</h1>
+				<a href="/benefits-of-membership" title="Learn more about MedicAlert membership" class="btn btn-red">Learn more</a>
 			</div>
 		</div>
 	</div>
@@ -21,7 +20,7 @@
 				<img src="/images/homeredbracelet.png" alt="Bracelet" class="img-responsive" />
 			</div>
 			<div class="col-sm-4 col-md-2">
-				<a href="#" class="btn btn-transp">Shop the range</a>
+				<a href="/products" class="btn btn-transp">Shop the range</a>
 			</div>
 		</div>
 	</div>
@@ -34,8 +33,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
-				<h2>MedicAlert offers more than just medical identification jewellery</h2>
-				<p>MedicAlert offers more than just medical identification jewellery. When you purchase one of our products, you're also investing in a vital MedicAlert membership. This allows emergency services to quickly recognise your conditions, allergies, implants, devices, identification needs or management plans, and provide the fastest and most effective treatment in an emergency.</p>
+				{$listing_content1}
 			</div>
 		</div>
 	</div>
@@ -46,7 +44,7 @@
 		<div class="row">
 			<div class="col-sm-12 text-center">
 				<img src="/images/homemembers.png" alt="Members" class="img-responsive" />
-				<p class="bigtxt">MedicAlert membership is just $32 a year</p>
+				<p class="bigtxt">MedicAlert membership is just {$CONFIG_VARS['membership_fee']} a year</p>
 
 				<p>MedicAlert membership gives you access to a range of exclusive benefits:</p>
 				<br />
@@ -79,132 +77,95 @@
 			</div>
 
 			<div class="col-sm-12 text-center">
-				<a href="#" class="btn btn-red">Learn more</a>
+				<a href="/benefits-of-membership" title="Learn more about MedicAlert membership" class="btn btn-red">Learn more</a>
 			</div>
 		</div>
 	</div>
 </div>
 
 <div id="whiteblock2">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
-				<h2>Find a product that suits your style</h2>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-6">
-				<div class="prodcat">
-					<a href="#">
-					<img src="/images/homeprodwomen.jpg" alt="Shop Women" class="img-responsive" />
-					<div class="prodcat-txt prodlt">
-						Shop <span>WOMEN</span>
-					</div>
-					</a>
-				</div>
-			</div>
-			<div class="col-sm-3">
-				<div class="prodcat">
-					<a href="#">
-					<img src="/images/homeprodmen.jpg" alt="Shop Men" class="img-responsive" />
-					<div class="prodcat-txt prodrt">
-						Shop <span>MEN</span>
-					</div>
-					</a>
-				</div>
-				<div class="prodcat">
-					<a href="#">
-					<img src="/images/homeproddaily.png" alt="Shop Everyday Products" class="img-responsive" />
-					<div class="prodcat-txt prodrt">
-						Everyday <span>PRODUCTS</span>
-					</div>
-					</a>
-				</div>
-			</div>
-			<div class="col-sm-3">
-				<div class="prodcat">
-					<a href="#">
-					<img src="/images/homeprodkids.jpg" alt="Shop Kids" class="img-responsive" />
-					<div class="prodcat-txt prodrt">
-						Shop <span>KIDS</span>
-					</div>
-					</a>
-				</div>
-				<div class="prodcat">
-					<a href="#">
-					<img src="/images/homeprodwrist.jpg" alt="New Wristband Tag" class="img-responsive" />
-					<div class="prodcat-txt prodrt">
-						New <span>WRISTBAND TAG</span>
-					</div>
-					</a>
-				</div>
-			</div>
-
-			<div class="col-sm-12 text-center">
-				<a href="#" class="btn btn-red">View all products</a>
-			</div>
-		</div>
-	</div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+        <h2>Find a product that suits your style</h2>
+      </div>
+    </div>
+    <div class="row">
+      {if $collections}
+      <div id="categorycontainer">
+        {assign var='count' value=0}
+        {foreach $collections as $item}
+          {if $count lt 5}
+            {if $count eq 0}<div class="col-sm-6">{elseif $count eq 1 || $count eq 3}<div class="col-sm-3">{/if}
+              <div class="prodcat">
+                <a href="/products/{$item.listing_url}" title="View {$item.value} Products">
+                  <div class="imgcont">
+                  <img src="{if $item.listing_image neq ''}{$item.listing_image}?width=800&height={if $count eq 0}440{else}360{/if}&crop=1{else}/images/no-image-available.png{/if}" alt="{$item.value}" title="{$item.value}" class="img-responsive">
+                  </div>
+                  <div class="prodcat-txt prodlt">
+                    Shop <span>{$item.value}</span>
+                  </div>
+                </a>
+              </div>
+            {if $count eq 0 || $count eq 2 || $count eq 4}</div>{/if}
+          {else}
+            {break}
+          {/if}
+        {assign var='count' value=$count+1}
+        {/foreach}
+      </div>
+      {/if}
+    </div>
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <a href="/products" class="btn btn-red">View all products</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 
-<div id="greyblock2">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
-				<h2>MedicAlert speaks for its members in an emergency</h2>
+{if $testimonials}
+  <div id="greyblock2">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+          <h2>MedicAlert speaks for its members in an emergency</h2>
 
-				<div id="testimonials">
-					<div id="testim1" class="flexslider">
-					  <ul class="slides">
-						<li>
-							<div>
-								<img src="/images/homequote.png" alt="" />
-							</div>
-							As someone who deeply understands the importance of being able to communicate clearly, it’s great to know that even if I was caught in an emergency overseas, my medical details would be made available to the people treating me.
-						</li>
-						<li>
-							<div>
-								<img src="/images/homequote.png" alt="" />
-							</div>
-							As someone who deeply understands the importance of being able to communicate clearly, it’s great to know that even if I was caught in an emergency overseas, my medical details would be made available to the people treating me.
-						</li>
-						<li>
-							<div>
-								<img src="/images/homequote.png" alt="" />
-							</div>
-							As someone who deeply understands the importance of being able to communicate clearly, it’s great to know that even if I was caught in an emergency overseas, my medical details would be made available to the people treating me.
-						</li>
-					  </ul>
-					</div>
-					<div id="testim2" class="flexslider">
-					  <ul class="slides">
-						<li>
-							<img src="/images/hometesti1.png" alt="" title="">
-							<div>Denise Mascaro<br />
-								<span>Dubbo, NSW</span>
-							</div>
-						</li>
-						<li>
-							<img src="/images/hometesti2.png" alt="" title="">
-							<div>Thomas Bunning<br />
-								<span>Adelaide, SA</span>
-							</div>
-						</li>
-						<li>
-							<img src="/images/hometesti3.png" alt="" title="">
-							<div>Robert Tunbridge<br />
-								<span>Craigmore, NSW</span>
-							</div>
-						</li>
-					  </ul>
-					</div>
-				</div>
+          <div id="testimonials">
+            <div id="testim1" class="flexslider">
+              <ul class="slides">
+                {foreach $testimonials as $t}
+                <li>
+                  <div>
+                    <img src="/images/homequote.png" alt="" />
+                  </div> 
+                  {$t.listing_content2|truncate:220:'... <a href="/testimonials/'|cat:$t.listing_url|cat:'">Read more</a>'}
+                </li>
+                {/foreach}
+              </ul>
+            </div>
+            <div id="testim2" class="flexslider">
+              <ul class="slides">
+                {foreach $testimonials as $t}
+                <li>
+                  <img src="{if $t.listing_image}{$t.listing_image}{else}/images/testimonial-noimg.png{/if}?width=96&height=96&crop=1" alt="{$t.listing_name} photo" title="{$t.listing_name}">
+                  <div>
+                    {$t.listing_name}
+                    <br />
+                    {$t.listing_content1}
+                  </div>
+                </li>
+                {/foreach}
+              </ul>
+            </div>
+          </div>
 
-			</div>
-		</div>
-	</div>
-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {/if}
 {/block}
 
 {block name=tail}

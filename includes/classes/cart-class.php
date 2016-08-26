@@ -376,7 +376,7 @@ class cart {
     global $DBobject;
     
     if(empty($cartId)){
-      $cartId = 88888;//$this->cart_id;
+      $cartId = $this->cart_id;
     }
     $sql = "SELECT * FROM tbl_cart WHERE cart_id = :id AND cart_deleted IS NULL AND cart_id <> 0";
     if($res = $DBobject->wrappedSql($sql, array(":id"=>$cartId))){
