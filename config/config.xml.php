@@ -271,7 +271,7 @@
         <linkfield>listing_id</linkfield>
         <field>gallery_listing_id</field>
       </associated>
-      <template>ec_category.tpl</template> 
+      <template>ec_category-details.tpl</template> 
     </table>
     <template typeid="10">ec_category-details.tpl</template>
     <template typeid="1">ec_category.tpl</template>

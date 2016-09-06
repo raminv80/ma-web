@@ -117,8 +117,8 @@
 
   				    <div class="col-sm-6 form-group">
                       <label class="visible-ie-only" for="nature_enquiry">How do you hear about us?<span>*</span></label>
-                      <select class="selectlist-medium" id="nature_enquiry" name="nature_enquiry" required="">
-                            <option>Please select</option>
+                      <select class="selectlist-medium" id="nature_enquiry" name="nature_enquiry" required>
+                            <option value="">Please select</option>
                           {foreach $heardaboutus as $ha}
                             <option value="{$ha.heardabout_value}" {if $post.nature_enquiry eq $ha.heardabout_value} selected="selected"{/if}>{$ha.heardabout_name}</option>
                           {/foreach}

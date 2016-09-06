@@ -43,7 +43,7 @@
 			</div>
 			<div class="col-sm-3 text-center">
 				<img src="/images/cost-post.png" alt="Postage" class="img-responsive" />
-				<div class="cost-text">Postage – from <span>{$CONFIG_VARS['membership_fee']}</span></div>
+				<div class="cost-text">Postage – from <span>$</span></div>
 			</div>
 
 			</div>

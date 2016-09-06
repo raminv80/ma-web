@@ -37,7 +37,10 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
             $mail->FromName = $nameArr[0];
             break;
           case 'Bcc':
-            $mail->addBCC(trim($content[1]));
+            $bccArr = explode(',', trim($content[1]));
+            foreach($bccArr as $bcc){
+              $mail->addBCC($bcc);
+            }
             break;
         }
       }

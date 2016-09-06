@@ -169,6 +169,7 @@ class ProductClass extends ListClass {
     $result['new']['flag'] = 0;
     $result['new']['variants'] = array();
     $result['has_attributes'] = array();
+    $result['image'] = '';
   
     //Check all variants
     $sql = "SELECT tbl_variant.* FROM tbl_product LEFT JOIN tbl_variant ON variant_product_id = product_id
@@ -201,13 +202,19 @@ class ProductClass extends ListClass {
             LEFT JOIN tbl_attribute ON attribute_id = productattr_attribute_id
             LEFT JOIN tbl_attr_value ON attr_value_id = productattr_attr_value_id
             WHERE productattr_deleted IS NULL AND productattr_variant_id = :id";
-        $params = array(":id" => $r['variant_id']);
-        if($attr = $DBobject->wrappedSql($sql, $params)){
+        if($attr = $DBobject->wrappedSql($sql, array(":id" => $r['variant_id']))){
           foreach($attr as $a){
             $result['has_attributes'][$a['productattr_attribute_id']][$a['productattr_attr_value_id']]['values'] = array('attribute_name' => $a['attribute_name'], 'attribute_name' => $a['attribute_name'], 'attr_value_name' => $a['attr_value_name'], 'attr_value_image' => $a['attr_value_image']);
             $result['has_attributes'][$a['productattr_attribute_id']][$a['productattr_attr_value_id']]['variants'][] = $r['variant_id'];
           }
         }
+      }
+      
+      //Get hero image
+      $sql = "SELECT gallery_link FROM tbl_gallery LEFT JOIN tbl_product ON product_id = gallery_product_id
+          WHERE gallery_deleted IS NULL AND (gallery_variant_id IS NULL OR gallery_variant_id = 0) AND product_deleted IS NULL AND product_published = 1 AND product_object_id = :id ORDER BY gallery_order LIMIT 1";
+      if($res2 = $DBobject->wrappedSql($sql, $params)){
+        $result['image'] = $res2[0]['gallery_link'];
       }
     }
     return $result;

@@ -13,18 +13,18 @@
 <div id="redbar">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-5 col-md-6">
+			<div class="col-sm-12 col-md-6">
 				Our members wear the genuine MedicAlert ID
 			</div>
-			<div class="col-sm-3 col-md-3 col-sm-offset-0 col-md-offset-0 hidden-xs">
+			<div class="col-sm-3 col-md-3 col-sm-offset-0 col-md-offset-0 hidden-xs hidden-sm">
 				<img src="/images/homeredbracelet.png" alt="Bracelet" class="img-responsive" />
 			</div>
-			<div class="col-sm-4 col-md-2">
+			<div class="col-sm-12 col-md-2">
 				<a href="/products" class="btn btn-transp">Shop the range</a>
 			</div>
 		</div>
 	</div>
-	<div class="visible-xs">
+	<div class="visible-xs visible-sm text-center">
 		<img src="/images/mob-home-bracelet.png" alt="Bracelet" class="img-responsive" />
 	</div>
 </div>
@@ -44,7 +44,7 @@
 		<div class="row">
 			<div class="col-sm-12 text-center">
 				<img src="/images/homemembers.png" alt="Members" class="img-responsive" />
-				<p class="bigtxt">MedicAlert membership is just {$CONFIG_VARS['membership_fee']} a year</p>
+				<p class="bigtxt">MedicAlert membership is just $32 a year</p>
 
 				<p>MedicAlert membership gives you access to a range of exclusive benefits:</p>
 				<br />
@@ -139,7 +139,7 @@
                 <li>
                   <div>
                     <img src="/images/homequote.png" alt="" />
-                  </div> 
+                  </div>
                   {$t.listing_content2|truncate:220:'... <a href="/testimonials/'|cat:$t.listing_url|cat:'">Read more</a>'}
                 </li>
                 {/foreach}

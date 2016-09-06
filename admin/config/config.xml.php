@@ -275,8 +275,8 @@
     
     <section level="1">
       <showlist>FALSE</showlist>
-      <url>product-types</url>
-      <title>Product types</title>
+      <url>schemas</url>
+      <title>Schemas</title>
       <type>TABLE</type>
       <table>
         <name>tbl_producttype</name>
@@ -307,7 +307,114 @@
       </table>
       <list_template>list_noviewbtn.tpl</list_template>
       <edit_template>ec_edit_producttype.tpl</edit_template>
-    </section> 
+    </section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>product-types</url>
+      <title>Product types</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_ptype</name>
+        <id>ptype_id</id>
+        <field>ptype_name</field>
+        <deleted>ptype_deleted</deleted>
+        <orderby>ptype_order, ptype_name</orderby>
+        <log>
+          <table>tbl_ptype</table>
+          <id>ptype_id</id>
+          <field>ptype_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>ec_edit_ptype.tpl</edit_template>
+    </section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>product-materials</url>
+      <title>Product materials</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_pmaterial</name>
+        <id>pmaterial_id</id>
+        <field>pmaterial_name</field>
+        <deleted>pmaterial_deleted</deleted>
+        <orderby>pmaterial_order, pmaterial_name</orderby>
+        <log>
+          <table>tbl_pmaterial</table>
+          <id>pmaterial_id</id>
+          <field>pmaterial_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>ec_edit_pmaterial.tpl</edit_template>
+    </section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>product-deliveries</url>
+      <title>Product deliveries</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_pdelivery</name>
+        <id>pdelivery_id</id>
+        <field>pdelivery_name</field>
+        <deleted>pdelivery_deleted</deleted>
+        <orderby>pdelivery_order, pdelivery_name</orderby>
+        <log>
+          <table>tbl_pdelivery</table>
+          <id>pdelivery_id</id>
+          <field>pdelivery_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>ec_edit_pdelivery.tpl</edit_template>
+    </section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>product-warranties</url>
+      <title>Product warranties</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_pwarranty</name>
+        <id>pwarranty_id</id>
+        <field>pwarranty_name</field>
+        <deleted>pwarranty_deleted</deleted>
+        <orderby>pwarranty_order, pwarranty_name</orderby>
+        <log>
+          <table>tbl_pwarranty</table>
+          <id>pwarranty_id</id>
+          <field>pwarranty_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>ec_edit_pwarranty.tpl</edit_template>
+    </section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>product-cares</url>
+      <title>Product cares</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_pcare</name>
+        <id>pcare_id</id>
+        <field>pcare_name</field>
+        <deleted>pcare_deleted</deleted>
+        <orderby>pcare_order, pcare_name</orderby>
+        <log>
+          <table>tbl_pcare</table>
+          <id>pcare_id</id>
+          <field>pcare_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>ec_edit_pcare.tpl</edit_template>
+    </section>
+    
+    
   </group>
   
   <group name="E-commerce">
@@ -390,6 +497,18 @@
           <linkfield>product_id</linkfield>
           <field>productassoc_product_id</field>
       	</associated>
+        <associated>
+          <name>pmateriallinks</name>
+          <table>tbl_pmateriallink</table>
+          <linkfield>product_id</linkfield>
+          <field>pmateriallink_product_id</field>
+        </associated>
+        <associated>
+          <name>pcarelinks</name>
+          <table>tbl_pcarelink</table>
+          <linkfield>product_id</linkfield>
+          <field>pcarelink_product_id</field>
+        </associated>
       	<options> 
           <field recursive="true"> 
           	<name>categories</name>
@@ -404,7 +523,7 @@
           	<table>tbl_producttype</table>
           	<id>producttype_id</id>
           	<reference>producttype_name</reference> 
-          	<orderby>producttype_id</orderby> 
+          	<orderby>producttype_name</orderby> 
           </field>  
           <field> 
             <name>products</name>
@@ -413,7 +532,42 @@
             <reference>product_name</reference> 
             <where>product_published = '1'</where> 
             <orderby>product_name</orderby> 
-          </field> 
+          </field>
+          <field> 
+            <name>ptypes</name>
+            <table>tbl_ptype</table>
+            <id>ptype_id</id>
+            <reference>ptype_name</reference> 
+            <orderby>ptype_name</orderby> 
+          </field>
+          <field> 
+            <name>pcares</name>
+            <table>tbl_pcare</table>
+            <id>pcare_id</id>
+            <reference>pcare_name</reference> 
+            <orderby>pcare_name</orderby> 
+          </field>
+          <field> 
+            <name>pdeliveries</name>
+            <table>tbl_pdelivery</table>
+            <id>pdelivery_id</id>
+            <reference>pdelivery_name</reference> 
+            <orderby>pdelivery_name</orderby> 
+          </field>
+          <field> 
+            <name>pmaterials</name>
+            <table>tbl_pmaterial</table>
+            <id>pmaterial_id</id>
+            <reference>pmaterial_name</reference> 
+            <orderby>pmaterial_name</orderby> 
+          </field>
+          <field> 
+            <name>pwarranties</name>
+            <table>tbl_pwarranty</table>
+            <id>pwarranty_id</id>
+            <reference>pwarranty_name</reference> 
+            <orderby>pwarranty_name</orderby> 
+          </field>  
       	</options>
       	<log>
           <table>tbl_product</table>

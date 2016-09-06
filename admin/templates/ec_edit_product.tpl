@@ -45,6 +45,7 @@
       </div>
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+        <li><a href="#materials" data-toggle="tab">Materials & cares</a></li>
         <li><a href="#variants" data-toggle="tab">Variants</a></li>
         <li><a href="#images" data-toggle="tab">Images</a></li>
         <li><a href="#categories" data-toggle="tab">Collections</a></li>
@@ -58,14 +59,14 @@
         <div class="tab-pane active" id="details">
           <div class="form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_name">Name *</label>
+              <label class="col-sm-3 control-label" for="id_product_name">Name*</label>
               <div class="col-sm-5">
                 <input class="form-control" type="text" value="{$fields.product_name}" name="field[1][tbl_product][{$cnt}][product_name]" id="id_product_name" onchange="seturl(this.value);" required>
                 <span class="help-block"></span>
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="product_type_id">Type</label>
+              <label class="col-sm-3 control-label" for="product_type_id">Schema</label>
               <div class="col-sm-5 ">
                 <select class="form-control" name="field[1][tbl_product][{$cnt}][product_type_id]" id="product_type_id" data-value="{$fields.product_type_id}">
                   {call name=options_list opts=$fields.options.product_types selected=$fields.product_type_id}
@@ -80,7 +81,7 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_url">URL *</label>
+              <label class="col-sm-3 control-label" for="id_product_url">URL*</label>
               <div class="col-sm-5 ">
                 <input class="form-control" type="hidden" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" onchange="seturl(this.value, true);" required>
                 <span style="display: inline-block; width: 74%;" id="id_product_url_text" class="form-control url-text edit-url">{$fields.product_url}&nbsp;</span> <a href="javascript:void(0);" class="btn btn-info btn-sm marg-5r edit-url" onclick="$('.edit-url').removeClass('url-text').hide();$('#id_product_url').get(0).type='text';">Edit URL</a> <span class="help-block"></span>
@@ -94,7 +95,7 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_seo_title">SEO Title *</label>
+              <label class="col-sm-3 control-label" for="id_product_seo_title">SEO Title*</label>
               <div class="col-sm-5 ">
                 <input class="form-control" type="text" onkeyup="$(this).parent().find('.charcount').html($(this).val().length);" value="{$fields.product_seo_title}" name="field[1][tbl_product][{$cnt}][product_seo_title]" id="id_product_seo_title" required>
                 <span class="small pull-right charcount">{$fields.product_seo_title|count_characters:true}</span><span class="small pull-right">characters: </span><span class="help-block"></span>
@@ -114,12 +115,39 @@
               </div>
             </div>
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="product_associate1">Type*</label>
+              <div class="col-sm-5 ">
+                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate1]" id="product_associate1" data-value="{$fields.product_associate1}" required>
+                  <option value="">Select one</option>
+                  {call name=options_list opts=$fields.options.ptypes selected=$fields.product_associate1}
+                </select>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="product_associate2">Delivery*</label>
+              <div class="col-sm-5 ">
+                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate2]" id="product_associate2" data-value="{$fields.product_associate2}" required>
+                  <option value="">Select one</option>
+                  {call name=options_list opts=$fields.options.pdeliveries selected=$fields.product_associate2}
+                </select>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="product_associate3">Warranty*</label>
+              <div class="col-sm-5 ">
+                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate3]" id="product_associate3" data-value="{$fields.product_associate3}" required>
+                  <option value="">Select one</option>
+                  {call name=options_list opts=$fields.options.pwarranties selected=$fields.product_associate3}
+                </select>
+              </div>
+            </div>
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_order">Order(#position)</label>
               <div class="col-sm-5 ">
                 <input class="form-control number" type="text" value="{if $fields.product_order neq ''}{$fields.product_order}{else}999{/if}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
               </div>
             </div>
-            <div class="row form-group">
+            <!-- <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_flag1">Featured Product</label>
               <div class="col-sm-5 ">
                 <input type="hidden" value="{if $fields.product_flag1 eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_flag1]" class="value">
@@ -133,7 +161,7 @@
                 <textarea name="field[1][tbl_product][{$cnt}][product_content1]" id="id_product_content1" class="tinymce">{$fields.product_content1}</textarea>
               </div>
             </div>
-            <!-- <div class="row form-group">
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_content2">Warranty</label>
               <div class="col-sm-5 ">
                 <textarea name="field[1][tbl_product][{$cnt}][product_content2]" id="id_product_content2" class="tinymce">{$fields.product_content2}</textarea>
@@ -151,6 +179,46 @@
                 <textarea name="field[1][tbl_product][{$cnt}][product_content4]" id="id_product_content4" class="tinymce">{$fields.product_content4}</textarea>
               </div>
             </div> -->
+          </div>
+        </div>
+        <!--===+++===+++===+++===+++===+++ MATERIALS TAB +++===+++===+++===+++===+++====-->
+        <div class="tab-pane" id="materials">
+          <div class="form">
+            <div>
+              <h3>Materials</h3>
+            </div>
+            <input type="hidden" value="product_id" name="default[pmateriallink_product_id]" />
+            {assign var='data' value=$fields.options.pmaterials} 
+            {assign var='proccess_order' value='5'} 
+            {assign var='table_primary_key_field' value='product_id'} 
+            {assign var='table_primary_key_value' value=$fields.product_id} 
+            {assign var='linking_table' value='tbl_pmateriallink'} 
+            {assign var='linking_table_primary_key_field' value='pmateriallink_id'} 
+            {assign var='linking_table_link_field' value='pmateriallink_product_id'} 
+            {assign var='linking_table_associated_field' value='pmateriallink_record_id'} 
+            {assign var='linking_table_deleted_field' value='pmateriallink_deleted'} 
+            {assign var='selected_array' value=$fields.pmateriallinks} 
+            {assign var='ignore_value' value='0'} 
+            {include file='form_linking_input.tpl'}
+          </div>
+          <div class="form">
+            <div>
+              <hr>
+              <h3>Cares</h3>
+            </div>
+            <input type="hidden" value="product_id" name="default[pcarelink_product_id]" />
+            {assign var='data' value=$fields.options.pcares} 
+            {assign var='proccess_order' value='5'} 
+            {assign var='table_primary_key_field' value='product_id'} 
+            {assign var='table_primary_key_value' value=$fields.product_id} 
+            {assign var='linking_table' value='tbl_pcarelink'} 
+            {assign var='linking_table_primary_key_field' value='pcarelink_id'} 
+            {assign var='linking_table_link_field' value='pcarelink_product_id'} 
+            {assign var='linking_table_associated_field' value='pcarelink_record_id'} 
+            {assign var='linking_table_deleted_field' value='pcarelink_deleted'} 
+            {assign var='selected_array' value=$fields.pcarelinks} 
+            {assign var='ignore_value' value='0'} 
+            {include file='form_linking_input.tpl'}
           </div>
         </div>
          <!--===+++===+++===+++===+++===+++ VARIANTS TAB +++===+++===+++===+++===+++====-->
