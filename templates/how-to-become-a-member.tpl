@@ -11,7 +11,7 @@
 	</div>
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-8 col-md-offset-2 text-center">
 				{$listing_content1}
 			</div>
 		</div>
@@ -59,7 +59,7 @@
 <div id="cost-grey" class="howto">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-8 col-md-offset-2 text-center">
 				{$listing_content3}
 				<br />
 			</div>
@@ -88,7 +88,7 @@
 				<img src="/images/access-email.png" alt="Email" class="img-responsive" />
 				<div class="grey-text">
 					<span class="bold">Email</span><span>*</span><br />
-					<a href="mailto:{$COMPANY.email}" title="click to email us">{$COMPANY.email}</a>
+					{obfuscate email=$COMPANY.email attr='title="Click to email us"'}
 				</div>
 			</div>
 			<div class="col-sm-3 text-center ways">
@@ -100,7 +100,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-8 col-md-offset-2 text-center">
 				<br />
 				*Please download <a href="#">a membership application form</a> and complete your details to join by post, email or fax.
 				<br />

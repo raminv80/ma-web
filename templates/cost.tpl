@@ -13,7 +13,7 @@
 	{/if}
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-8 col-md-offset-2 text-center">
 				<h1>MedicAlert membership is a small price to pay for complete peace of mind</h1>
 				<p>{$listing_content1}</p>
 			</div>
@@ -24,7 +24,7 @@
 <div id="cost">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+			<div class="col-md-8 col-md-offset-2">
 			<div class="row">
 
 			<div class="col-sm-3 text-center">
@@ -61,7 +61,7 @@
 <div id="cost-grey">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-8 col-md-offset-2 text-center">
 				{$listing_content2}
 			</div>
 		</div>
@@ -71,7 +71,7 @@
 <div id="cost-help">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-8 col-md-offset-2 text-center">
 				{$listing_content3}
 
 				<div class="row">

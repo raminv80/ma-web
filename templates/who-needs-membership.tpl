@@ -5,7 +5,7 @@
 	</div>
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 text-center">
+			<div class="text-center">
 				<h1>{$listing_title}</h1>
 				<p>{$listing_content1}</p>
 			</div>
@@ -63,7 +63,7 @@
 <div id="testimonial-list" class="who-needs">
   <div class="container">
     <div class="row" id="testcont">
-	  <div class="col-sm-10 col-sm-offset-1 text-center">
+	  <div class="text-center">
 	  <h3>The voice for people living with medical conditions</h3>
 	  <p>MedicAlert membership has given thousands of Australians peace of mind knowing that they’re protected in a medical emergency.<br />
 		  <a href="/testimonials">View our members’ stories here ></a></p>

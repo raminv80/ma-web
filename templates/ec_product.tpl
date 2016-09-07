@@ -38,28 +38,24 @@
             <div class="prodprice col-sm-12">
               <input type="hidden" value="0" name="price" id="price" />
               <input type="hidden" value="0" name="variant_id" id="variant_id" />
-              {$min_price = 999999}
-              {$max_price = 0}
               {foreach $variants as $variant}
                 {$price = $variant.variant_price}
                 {if $variant.variant_specialprice gt 0}{$price = $variant.variant_specialprice}{/if}
                 {if $user.id && $variant.variant_membersprice gt 0}{$price = $variant.variant_membersprice}{/if}
-                {if $price gt $max_price}{$max_price = $price}{/if}
-                {if $price lt $min_price}{$min_price = $price}{/if}
                 <div class="variant-prices variants" id="variant-{$variant.variant_id}" style="display:none">
                   {if $user.id && $variant.variant_membersprice gt 0}
-                    <div>$<span>{$variant.variant_price|number_format:2:'.':','}</span></div>
-                    <div><b>Members Price:</b> $<span class="selected-price" data-value="{$variant.variant_membersprice}">{$variant.variant_membersprice|number_format:2:'.':','}</span></div>
+                    <div>$<span>{$variant.variant_price|number_format:0:'.':','}</span></div>
+                    <div><b>Members Price:</b> $<span class="selected-price" data-value="{$variant.variant_membersprice}">{$variant.variant_membersprice|number_format:0:'.':','}</span></div>
                   {elseif $variant.variant_specialprice gt 0}
-                    <div>$<span>{$variant.variant_price|number_format:2:'.':','}</span></div>
-                    <div><b>Special Price:</b> $<span class="selected-price" data-value="{$variant.variant_specialprice}">{$variant.variant_specialprice|number_format:2:'.':','}</span></div>
+                    <div>$<span>{$variant.variant_price|number_format:0:'.':','}</span></div>
+                    <div><b>Special Price:</b> $<span class="selected-price" data-value="{$variant.variant_specialprice}">{$variant.variant_specialprice|number_format:0:'.':','}</span></div>
                   {else}
-                    <div>$<span class="selected-price" data-value="{$variant.variant_price}">{$variant.variant_price|number_format:2:'.':','}</span></div>
+                    <div>$<span class="selected-price" data-value="{$variant.variant_price}">{$variant.variant_price|number_format:0:'.':','}</span></div>
                   {/if}
                 </div>
               {/foreach}
               <div class="variant-prices" id="variant-">
-                  <div>${$min_price|number_format:2:'.':','}{if $min_price neq $max_price} - ${$max_price|number_format:2:'.':','}{/if}</div>
+                  <div>${$general_details.price.min|number_format:0:'.':','}{if $general_details.price.min neq $general_details.price.max} - ${$general_details.price.max|number_format:0:'.':','}{/if}</div>
               </div>
             </div>
           </div>
@@ -73,6 +69,11 @@
                   {if $prdattr.productattr_attr_value_id eq $value.attr_value_id}
                     {if !$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id]['attr_value_id']}
                       {$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id] = $value}
+                      {* HACK FOR MAF TO CHANGE THE COLOUR IMAGE *}
+                        {foreach $gallery as $g}
+                          {if $g.gallery_variant_id eq $variant.variant_id}{$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id]['attr_value_image'] = $g.gallery_link}{break}{/if}
+                        {/foreach}
+                      {* END OF HACK *}
                     {/if}
                     {$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id]['variants'][] = $variant.variant_id}
                     {$prdattrArr[$attr.attribute_id][] = $variant.variant_id}  
@@ -93,7 +94,7 @@
                 {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   <div class="attrtype1">
                     <input type="radio" onclick="$(this).closest('.form-group').find('.attrtype1_name').html($(this).attr('data-name'));" data-name="{$value.attr_value_name}" class="mainAttr hasAttr updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}" value="{$value.attr_value_id}" name="attr[{$attr.attribute_id}][id]" id="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}" required="required">
-                    <label for="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}"><img src="{$value.attr_value_image}" title="{$value.attr_value_name}" alt="{$value.attr_value_name}"></label>
+                    <label for="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}"><img src="{$value.attr_value_image}?width=50&height=50&crop=1" title="{$value.attr_value_name}" alt="{$value.attr_value_name}"></label>
                   </div>
                 {/foreach}
               {else}
@@ -146,49 +147,49 @@
           </div>
         </form>
         
-        {if $product_content1}
+        {if $product_description}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingOne">
               <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Description                </a>
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Description</a>
               </h4>
             </div>
             <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">{$product_content1}</div>
+              <div class="panel-body">{$product_description}</div>
             </div>
           </div>
-          {/if} {if $product_content3}
+          {/if} {if $pwarranty_description}
           <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingTwo">
               <h4 class="panel-title">
-                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Specifications</a>
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Warranty</a>
               </h4>
             </div>
             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-              <div class="panel-body">{$product_content3}</div>
+              <div class="panel-body">{$pwarranty_description}</div>
             </div>
           </div>
-          {/if} {if $product_content2}
+          {/if} {if count($pcarelinks) gt 0}
           <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingThree">
               <h4 class="panel-title">
-                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Features</a>
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Care &amp; cleaning</a>
               </h4>
             </div>
             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-              <div class="panel-body">{$product_content2}</div>
+              <div class="panel-body">{foreach $pcarelinks as $care}{$care.pcare_description}{/foreach}</div>
             </div>
           </div>
-          {/if} {if $product_content4}
+          {/if} {if $pdelivery_description}
           <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingFour">
               <h4 class="panel-title">
-                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">Downloads</a>
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">Delivery &amp; returns</a>
               </h4>
             </div>
             <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-              <div class="panel-body">{$product_content4}</div>
+              <div class="panel-body">{$pdelivery_description}</div>
             </div>
           </div>
           {/if}
@@ -202,64 +203,12 @@
 </div>
 
 {if $associated_products}
+<div id="related">Members also pruchased</div>
+{/if} 
 
-<div id="related">Related products</div>
+{/block} 
 
-<div id="relatedcont">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-12" id="homeprods">
-        {foreach from=$associated_products key=k item=item}
-        <div class="product">
-          <div itemscope itemtype="http://schema.org/Product">
-            <div class="productin">
-              <a href="{if $parenturl neq ''}{$parenturl}/{$item.product_url}{else}/{$item.cache_url}{/if}">
-                <meta itemprop="brand" content="{$item.brand.0.listing_name}">
-                <meta itemprop="description" content="{$item.product_content1|strip_tags}"> <!--<a href="{if $parenturl neq ''}{$parenturl}/{$item.product_url}{else}/{$item.cache_url}{/if}" itemprop="url">
-							<!-- <img itemprop='image' src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?height=276{else}/images/no-image-available.jpg{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" class="img-responsive"> --> <!--	<img itemprop='image' src="{exist_image image=$item.gallery.0.gallery_link|cat:'?height=276' default='/images/no-image-available.jpg?height=180'}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" class="img-responsive">
-						</a> -->
-                <div class="prodimg">
-                  <img itemprop='image' src="{exist_image image=$item.gallery_link|cat:'?width=235&height=235' default='/images/no-image-available.jpg?height=235'}" alt="{$item.gallery_alt_tag}" title="{$item.gallery_title}" class="img-responsive" />
-                </div>
-
-                <div class="prodinfo">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <div class="prodcat pull-left">Sit to stand</div>
-                    </div>
-                    <div class="col-sm-12">
-                      <div class="prodname1 pull-left" itemprop="name">{$item.product_name}</div>
-                    </div>
-                    <div class="col-sm-12">
-                      <div class="prodprice1 pull-left" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                        {if $item.product_instock eq 1}
-                        <meta itemprop="availability" href="http://schema.org/InStock" />
-                        {else}
-                        <meta itemprop="availability" href="http://schema.org/OutOfStock" />
-                        {/if}
-                        <div class="prodfullprice">
-                          <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="prodprice">
-                            {if $item.product_specialprice > 0.0} <span itemprop="price" class="prodsave">${$item.product_specialprice|number_format:2:'.':','}</span> {else} <span itemprop="price">${$item.product_price|number_format:2:'.':','}</span> {/if}
-                          </div>
-                        </div>
-                      </div>
-                      <img src="/images/cart.png" align="Cart" class="cartimg pull-right" />
-                    </div>
-                  </div>
-                </div> {if $item.product_specialprice > 0.0} <img src="/images/sale.png" alt="Sale" id="saleimg" /> {/if}
-                <div class="prodhover">
-                  <div class="circle">View product</div>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-        {/foreach}
-      </div>
-    </div>
-  </div>
-</div>
-{/if} {/block} {block name=tail}
+{block name=tail}
 <script type="text/javascript">
 
 	$(document).ready(function(){

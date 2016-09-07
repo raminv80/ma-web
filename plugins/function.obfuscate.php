@@ -23,12 +23,16 @@ function smarty_function_obfuscate($params, &$smarty)
 		$visible_content = $params['visible_content'];
 		$style = '';
 	}
+	if(!empty($params['event'])){
+	  $event = ";".$params['event'];
+	}
+	
 	
 	try {
 			$parts = explode('@',$params['email']);
 			$user = $parts[0];
 			$domain = $parts[1];
-			$output = "<a href='javascript:void(0)' onclick='this.href=\"mailto:\" + \"{$user}\" + \"&#x40;\" + \"{$domain}\"'{$attr}{$style}>{$visible_content}</a>";
+			$output = "<a href='javascript:void(0)' onclick=\"this.href='mailto:' + '{$user}' + '&#x40;' + '{$domain}'{$event}\"{$attr}{$style}>{$visible_content}</a>";
 	}catch(Exception $e) {
 		return '';
 	}

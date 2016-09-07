@@ -12,7 +12,7 @@
 <div id="news">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 text-center">
+			<div class="text-center">
 				<h1 class="h3">{$listing_name}</h1>
 				<p class="date">{$news_start_date|date_format:"%e %B %Y"}</p>
 			</div>

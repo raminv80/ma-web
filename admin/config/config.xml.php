@@ -118,6 +118,7 @@
       <edit_template>edit_page.tpl</edit_template>
       <custom_template field="listing_object_id" value="1">edit_page_home.tpl</custom_template>
       <custom_template field="listing_object_id" value="2">edit_page_about.tpl</custom_template>
+      <custom_template field="listing_object_id" value="3">edit_page_contact-us.tpl</custom_template>
       <custom_template field="listing_object_id" value="94">edit_page_benefits-of-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="103">edit_page_faqs.tpl</custom_template>

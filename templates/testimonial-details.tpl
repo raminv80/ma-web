@@ -16,7 +16,7 @@
 <div id="test-details">
   <div class="container">
 	<div class="row">
-		<div class="col-sm-10 col-sm-offset-1 text-center" id="test-info">
+		<div class="text-center" id="test-info">
 			<img src="{if $listing_image}{$listing_image}{else}/images/testimonial-noimg.png{/if}?width=96&height=96&crop=1" alt="{$da.listing_name}" class="img-responsive fullwidth">
 			<div class="h5">{$listing_name}</div>
 			<div class="testloc">{$listing_content1}</div>

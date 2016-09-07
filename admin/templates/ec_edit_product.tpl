@@ -115,6 +115,12 @@
               </div>
             </div>
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_description">Description</label>
+              <div class="col-sm-5 ">
+                <textarea name="field[1][tbl_product][{$cnt}][product_description]" id="id_product_description" class="tinymce">{$fields.product_description}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="product_associate1">Type*</label>
               <div class="col-sm-5 ">
                 <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate1]" id="product_associate1" data-value="{$fields.product_associate1}" required>

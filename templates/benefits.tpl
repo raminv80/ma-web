@@ -11,8 +11,8 @@
 	</div>
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
-				<h1>{$listing_name}</h1>
+			<div class="col-md-8 col-md-offset-2 text-center">
+				<h1>{$listing_title}</h1>
 				<p>{$listing_content1}</p>
 			</div>
 		</div>

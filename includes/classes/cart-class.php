@@ -8,29 +8,38 @@ class cart {
   public $cart_session;
   private $ses_cart_id;
   protected $cart_user_id = null;
+  protected $cart_db_user_id = null;
   protected $dbProducts = array();
   protected $cartProducts = array();
+  protected $enableMerging = false;
 
-  function __construct($userId = null) {
+  /**
+   * 
+   * @param int $userId
+   * @param string $enableMerging
+   */
+  function __construct($userId = null, $enableMerging = false) {
+    $this->cart_user_id = empty($userId) ? 0 : $userId;
+    $this->enableMerging = $enableMerging;
     if($this->VerifySessionCart(session_id())){
-      if(empty($userId) && !empty($this->cart_user_id)){
+      if($this->cart_user_id != $this->cart_db_user_id){
+        //create new cart because the user ids don't match or user is not logged in
         session_regenerate_id();
         $this->CreateCart();
       }
-      $this->cart_id = $this->ses_cart_id; // do nothing since session cart exists and user is not logged in
+      //do nothing since session cart exists
+      $this->cart_id = $this->ses_cart_id; 
     }else{
-      $this->CreateCart(userId);
+      //create new cart because it's a brand new session
+      $this->CreateCart();
     }
   }
 
   /**
-   *
-   *
-   *
    * Takes a Session_id value and checks if a cart exists in the database for this session.
    * Returns True if exists, else returns false.
    *
-   * @param unknown_type $ses_val          
+   * @param string $ses_val          
    * @return boolean
    */
   function VerifySessionCart($ses_val) {
@@ -45,7 +54,7 @@ class cart {
         ":site"=>$SITE
     ))){
       $this->ses_cart_id = $res[0]['cart_id'];
-      $this->cart_user_id = $res[0]['cart_user_id'];
+      $this->cart_db_user_id = $res[0]['cart_user_id'];
       return true;
     }else{
       return false;
@@ -60,25 +69,25 @@ class cart {
    *
    * @return boolean
    */
-  function SetUserCart() {
+  function SetUserCart($merge = false) {
     global $DBobject,$SITE;
     
     if(!empty($this->cart_user_id)){
       $sql = "SELECT * FROM tbl_cart WHERE cart_user_id = :id AND cart_site = :site AND cart_closed_date IS NULL AND cart_deleted IS NULL AND cart_id <> '0' ORDER BY cart_id DESC";
       if($res = $DBobject->wrappedSql($sql, array(":id" => $this->cart_user_id, ":site" => $SITE))){
-        if($this->NumberOfProductsOnCart($res[0]['cart_id'])){
+        if($this->NumberOfProductsOnCart($res[0]['cart_id']) && $this->enableMerging){
           $old_cart_id = $this->cart_id;
           $this->ResetSession($res[0]['cart_session']);
-          $this->CreateCart($this->cart_user_id);
+          $this->CreateCart();
           $message = $this->MergeCarts(array($res[0]['cart_id'], $old_cart_id), $this->cart_id);
           return $message;
         }else{
           $this->DeleteCart($res[0]['cart_id']);
-          $this->UpdateUserIdCart($this->cart_user_id);
+          $this->UpdateUserIdCart();
           return true;
         }
       }else{
-        $this->UpdateUserIdCart($this->cart_user_id);
+        $this->UpdateUserIdCart();
         return true;
       }
     }
@@ -103,9 +112,8 @@ class cart {
   /**
    * Create new cart, set user_id when given
    * 
-   * @param string $userId          
    */
-  function CreateCart($userId = null) {
+  function CreateCart() {
     global $DBobject,$SITE;
     
     $this->cart_session = session_id();
@@ -113,12 +121,11 @@ class cart {
         VALUES ( now(), :sid, :uid, :site )";
     $params = array(
         ":sid" => $this->cart_session, 
-        ":uid" => $userId, 
+        ":uid" => $this->cart_user_id, 
         ":site" => $SITE
     );
     $res = $DBobject->wrappedSql($sql, $params);
     $this->cart_id = $DBobject->wrappedSqlIdentity();
-    $this->cart_user_id = $userId;
     return true;
   }
 
@@ -145,7 +152,7 @@ class cart {
       if($orig_items){
         foreach($orig_items as $item){
           $attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
-          $message[] = $this->AddToCart($item['cartitem_product_id'],$attrs,$item['cartitem_quantity'],$item['cartitem_product_price'],$destination, $item['cartitem_listing_id'], $item['cartitem_type_id']);
+          $message[] = $this->AddToCart($item['cartitem_product_id'], $attrs, $item['cartitem_product_price'], $item['cartitem_quantity'], $destination, $item['cartitem_variant_id']);
         }
       }
       
@@ -198,19 +205,18 @@ class cart {
   /**
    * Set the cart_user_id field in tbl_cart with given userid
    * 
-   * @param int $userId          
    * @return boolean
    */
-  function UpdateUserIdCart($userId) {
+  function UpdateUserIdCart() {
     global $DBobject;
     
     $params = array(
-        ":uid"=>$userId,
+        ":uid"=>$this->cart_user_id,
         ":cid"=>$this->cart_id
     );
     $sql = "UPDATE tbl_cart SET cart_user_id = :uid WHERE cart_id = :cid";
     if($DBobject->wrappedSql($sql,$params)){
-      $this->cart_user_id = $userId;
+      $this->cart_db_user_id = $this->cart_user_id;
       return $userId;
     }
     return 0;
@@ -343,11 +349,11 @@ class cart {
       $cart_arr[$p['cartitem_id']]['category'] = $this->getFullCategoryName($p['cartitem_product_id']);
       
       // ---------------- PRODUCTS GALLERY ----------------
-      $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_variant_id = :id AND gallery_deleted IS NULL ORDER BY gallery_order DESC LIMIT 1";
+      $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_variant_id = :id AND gallery_deleted IS NULL ORDER BY gallery_order LIMIT 1";
       if($gal1 = $DBobject->wrappedSql($sql, array(":id" => $p['cartitem_variant_id']))){
         $cart_arr[$p['cartitem_id']]['gallery'] = $gal1;
       }else{
-        $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_order DESC LIMIT 1";
+        $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_order LIMIT 1";
         $cart_arr[$p['cartitem_id']]['gallery'] = $DBobject->wrappedSql($sql, array(":id" => $p['product_id']));
       }
       

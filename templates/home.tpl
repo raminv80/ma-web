@@ -32,7 +32,7 @@
 <div id="whiteblock1">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+			<div class="col-md-8 col-md-offset-2 text-center">
 				{$listing_content1}
 			</div>
 		</div>
@@ -86,7 +86,7 @@
 <div id="whiteblock2">
   <div class="container">
     <div class="row">
-      <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+      <div class="col-md-8 col-md-offset-2 text-center">
         <h2>Find a product that suits your style</h2>
       </div>
     </div>
@@ -129,7 +129,7 @@
   <div id="greyblock2">
     <div class="container">
       <div class="row">
-        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 text-center">
+        <div class="col-md-8 col-md-offset-2 text-center">
           <h2>MedicAlert speaks for its members in an emergency</h2>
 
           <div id="testimonials">

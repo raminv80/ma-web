@@ -111,7 +111,7 @@
 		});
 
 
-		$('.dropdown.navbar-right ').hover(function() {
+		$('#cart').hover(function() {
 		  $(this).find('.dropdown-menu:hidden').fadeIn(200);
 		}, function() {
 		  $(this).find('.dropdown-menu:visible').fadeOut(200)

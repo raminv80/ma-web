@@ -31,20 +31,20 @@
 		{foreach $existingArr as $l}
 			{if $l.$skey eq $opt.id}
       	{if $exists eq 1}{assign var='count' value=$count+1}
-      		<input type="hidden" value="{$pkey}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][id]" id="id_{$levelcount*10}{$count}"/>
+      		<input type="hidden" value="{$pkey}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][id]" id="id_{$table}_{$levelcount*10}{$count}"/>
       		<input type="hidden" value="{$l.$pkey}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$pkey}]" class="key" >
       		<input type="hidden" value="{$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$dltfield}]" />
       	{/if}
        	{assign var='exists' value=1}
        	<div class="row form-group selwrapper active">
-					<input type="hidden" value="{$pkey}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][id]" id="id_{$levelcount*10}{$count}" class="publish delete"/>
+					<input type="hidden" value="{$pkey}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][id]" id="id_{$table}_{$levelcount*10}{$count}" class="publish delete"/>
 					<input type="hidden" value="{$l.$pkey}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$pkey}]" class="key publish delete">
 					<input type="hidden" value="{$opt.id}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$skey}]" class="publish"/>
 					<input type="hidden" value="{$dvalue_val}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$dfield}]" class="publish"/>
 			    <div class="col-sm-{$level+1}">
-						<input style="float:right;" class="chckbx" type="checkbox" checked="checked" onclick="if($(this).is(':checked')){ $(this).closest('.selwrapper').find('input.delete').prop('disabled','disabled');$(this).closest('.selwrapper').find('input.publish').prop('disabled',false); }else{ $(this).closest('.selwrapper').find('input.publish').prop('disabled','disabled'); $(this).closest('.selwrapper').find('input.delete').prop('disabled',false); }" id="id_checkbox{$opt.id}">
+						<input style="float:right;" class="chckbx" type="checkbox" checked="checked" onclick="if($(this).is(':checked')){ $(this).closest('.selwrapper').find('input.delete').prop('disabled','disabled');$(this).closest('.selwrapper').find('input.publish').prop('disabled',false); }else{ $(this).closest('.selwrapper').find('input.publish').prop('disabled','disabled'); $(this).closest('.selwrapper').find('input.delete').prop('disabled',false); }" id="id_{$table}_checkbox{$opt.id}">
 					</div>
-					<label style="text-align:left;" class="col-sm-3 control-label" for="id_checkbox{$opt.id}">{$opt.value}</label>
+					<label style="text-align:left;" class="col-sm-3 control-label" for="id_{$table}_checkbox{$opt.id}">{$opt.value}</label>
 					<!-- Delete object fields -->
 			    <input type="hidden" value="{$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$dltfield}]" disabled="disabled" class="delete"/>
 			    <input type="hidden" value="" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$dltfield}]" disabled="disabled" class="publish"/>
@@ -53,14 +53,14 @@
 		{/foreach}
 		{if $exists eq 0}
 			<div class="row form-group selwrapper">
-				<input type="hidden" value="{$pkey}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][id]" id="id_{$levelcount*10}{$count}" disabled="disabled"class="publish delete"/>
+				<input type="hidden" value="{$pkey}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][id]" id="id_{$table}_{$levelcount*10}{$count}" disabled="disabled"class="publish delete"/>
 				<input type="hidden" value="" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$pkey}]" disabled="disabled" class="key publish delete"/>
 				<input type="hidden" value="{$opt.id}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$skey}]"  disabled="disabled" class="publish"/>
 				<input type="hidden" value="{$dvalue_val}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$dfield}]" disabled="disabled" class="publish"/>
 				<div class="col-sm-{$level+1}">
-					<input style="float:right;" class="chckbx" type="checkbox" onclick="if($(this).is(':checked')){ $(this).closest('.selwrapper').find('input.delete').prop('disabled','disabled');$(this).closest('.selwrapper').find('input.publish').prop('disabled',false); }else{ $(this).closest('.selwrapper').find('input.publish').prop('disabled','disabled'); $(this).closest('.selwrapper').find('input.delete').prop('disabled',false); }" id="id_checkbox{$opt.id}">
+					<input style="float:right;" class="chckbx" type="checkbox" onclick="if($(this).is(':checked')){ $(this).closest('.selwrapper').find('input.delete').prop('disabled','disabled');$(this).closest('.selwrapper').find('input.publish').prop('disabled',false); }else{ $(this).closest('.selwrapper').find('input.publish').prop('disabled','disabled'); $(this).closest('.selwrapper').find('input.delete').prop('disabled',false); }" id="id_{$table}_checkbox{$opt.id}">
 				</div>
-				<label style="text-align:left;" class="col-sm-3 control-label" for="id_checkbox{$opt.id}">{$opt.value}</label>
+				<label style="text-align:left;" class="col-sm-3 control-label" for="id_{$table}_checkbox{$opt.id}">{$opt.value}</label>
 				<!-- Delete object fields -->
 			  <input type="hidden" value="{$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"}" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$dltfield}]" disabled="disabled" class="delete"/>
 				<input type="hidden" value="" name="field[{$order}][{$table}][{$levelcount*10}{$count}][{$dltfield}]" disabled="disabled" class="publish"/>

@@ -1,10 +1,6 @@
 <?php
-set_include_path ( $_SERVER ['DOCUMENT_ROOT'] );
-include_once 'includes/functions/functions.php';
-global $SMARTY, $DBobject, $CONFIG, $GA_ID;
-
+global $CONFIG, $SMARTY, $DBobject, $GA_ID, $REQUEST_URI;
 try{
-  
   /* $ship_obj = new ShippingClass();
    $methods = $ship_obj->getShippingMethods($itemNumber);
    $SMARTY->assign ( 'shippingMethods', $methods ); */
@@ -22,12 +18,11 @@ try{
     die();
   } */
   
-  $cart_obj = new cart();
+  $cart_obj = new cart($_SESSION['user']['public']['id']);
   $validation = $cart_obj->ValidateCart();
   $SMARTY->assign('validation',$validation);
   $totals = $cart_obj->CalculateTotal();
   $SMARTY->assign('totals',$totals);
-  
   
 }catch(exceptionCart $e) {
   $SMARTY->assign('error', $e->getMessage());

@@ -39,8 +39,8 @@
 			<div class="col-sm-4 text-center ways">
 				<img src="/images/access-email.png" alt="Email" class="img-responsive" />
 				<div class="grey-text">
-					<div class="bold">Email</span></div>
-					<div><a href="mailto:{$COMPANY.email}" title="click to email us">{$COMPANY.email}</a></div>
+					<div class="bold">Email</div>
+					<div>{obfuscate email=$COMPANY.email attr='title="Click to email us"'}</div>
 				</div>
 			</div>
 			<div class="col-sm-4 text-center ways">

@@ -175,6 +175,16 @@
     <template>corporate-partners.tpl</template>
     <pageID>107</pageID>
   </static_page>
+  <static_page>
+    <url>gift-certificates</url>
+    <template>gift-certificates.tpl</template>
+    <pageID>97</pageID>
+  </static_page>
+  <static_page>
+    <url>donate</url>
+    <template>donate.tpl</template>
+    <pageID>112</pageID>
+  </static_page>
   
   <!-- ECOMMERCE  -->
   <static_page>
@@ -194,6 +204,9 @@
     <url>shopping-cart</url>
     <template>shopping-cart.tpl</template>
     <pageID>12</pageID>
+    <process>
+      <file>includes/processes/process-load-shopping-cart.php</file>
+    </process>
   </static_page>
   <static_page>
     <url>checkout</url>
@@ -293,6 +306,32 @@
       <name>tbl_product</name>
       <id>product_object_id</id>
       <field>product_url</field>
+      <extends>
+        <table>tbl_ptype</table>
+        <linkfield>product_associate1</linkfield>
+        <field>ptype_id</field>
+      </extends>
+      <extends>
+        <table>tbl_pdelivery</table>
+        <linkfield>product_associate2</linkfield>
+        <field>pdelivery_id</field>
+      </extends>
+      <extends>
+        <table>tbl_pwarranty</table>
+        <linkfield>product_associate3</linkfield>
+        <field>pwarranty_id</field>
+      </extends>
+      <associated>
+        <name>pcarelinks</name>
+        <table>tbl_pcarelink</table>
+        <linkfield>product_id</linkfield>
+        <field>pcarelink_product_id</field>
+        <extends>
+          <table>tbl_pcare</table>
+          <linkfield>pcarelink_record_id</linkfield>
+          <field>pcare_id</field>
+        </extends> 
+      </associated>
       <associated>
         <name>gallery</name>
         <table>tbl_gallery</table>

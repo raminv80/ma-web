@@ -7,10 +7,10 @@
   <div class="container" id="contpage">
     <div class="row">
       <div class="col-sm-12 text-center" id="listtoptext">
-      	<h1>{$listing_content1}</h1>
+      	<h1>{$listing_title}</h1>
       </div>
-      <div class="col-sm-8 col-sm-offset-2 text-center">
-        <p>{$listing_content2}</p>
+      <div class="col-md-8 col-md-offset-2 text-center">
+        <p>{$listing_content1}</p>
       </div>
     </div>
   </div>
@@ -18,66 +18,7 @@
 <div id="contact">
   <div class="container">
  	 <div class="row">
-    	<div class="col-sm-4" id="contacttext">
-	    	<div class="contline">
-		    	<img src="/images/contact-location.png" alt="Location" />
-	            <div class="cont-text" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-	              <span itemprop="streetAddress">{$COMPANY.address.street}</span><br>
-	              <span itemprop="addressLocality">{$COMPANY.address.suburb}</span>
-	              <span itemprop="addressRegion"> {$COMPANY.address.state}</span>
-	              <span itemprop="postalCode"> {$COMPANY.address.postcode}</span>
-	            </div>
-	    	</div>
-	    	<div class="contline">
-		    	<img src="/images/contact-phone.png" alt="Location" />
-		    	<div class="cont-text">
-				<p>Free call <a class="tel" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a></p>
-		    	</div>
-	    	</div>
-	    	<div class="contline">
-		    	<img src="/images/contact-fax.png" alt="Location" />
-		    	<div class="cont-text">
-				<p>Free fax <a class="tel" href="tel:{$COMPANY.fax}">{$COMPANY.fax}</a></p>
-				</div>
-	    	</div>
-	    	<div class="contline">
-		    	<div class="contliner">
-					<p class="small"><i>Please note: calls from mobile phones may attract extra charges.</i></p>
-		    	</div>
-	    	</div>
-	    	<div class="contline">
-		    	<img src="/images/contact-phone.png" alt="Location" />
-		    	<div class="cont-text">
-				<p><a class="tel" href="tel:{$COMPANY.phone}">{$COMPANY.phone}</a> (outside Australia)</p>
-		    	</div>
-	    	</div>
-	    	<div class="contline">
-		    	<img src="/images/contact-email.png" alt="Location" />
-				<div class="cont-text">
-				<p><a href="mailto:{$COMPANY.email}">{$COMPANY.email}</a></p>
-				</div>
-	    	</div>
-	    	<div class="contline">
-		    	<img src="/images/contact-time.png" alt="Location" />
-				<div class="cont-text">
-				<p>Office hours:<br>Monday - Friday, 9am - 5pm CST</p>
-				</div>
-	    	</div>
-	    	<div class="contline">
-            	<hr />
-				<div class="contliner">
-				<p>Join the community:</p>
-				<div>
-					<a href="#"><img src="/images/contact-fb.png" alt="Facebook" /></a>
-					<a href="#"><img src="/images/contact-twitter.png" alt="Twitter" /></a>
-					<a href="#"><img src="/images/contact-yt.png" alt="YouTube" /></a>
-					<a href="#"><img src="/images/contact-insta.png" alt="Instagram" /></a>
-				</div>
-				</div>
-	    	</div>
-    	</div>
-
-		<div class="col-sm-7 col-sm-offset-1 text-center" id="contform">
+		<div class=" col-sm-offset-2 col-sm-8 col-md-offset-0 col-md-7 text-center" id="contform">
     	 	<form id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us" novalidate="novalidate">
     			<input type="hidden" value="get in touch" name="action" id="action" />
         	    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
@@ -144,7 +85,71 @@
     				</div>
     			</div>
     	  </form>
+          <br>
+          <div>{$listing_content2}</div>
+          <br><br>
 		</div>
+    
+    <div class="col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4" id="contacttext">
+        <div class="contline">
+          <img src="/images/contact-location.png" alt="Location" />
+              <div class="cont-text" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                <span itemprop="streetAddress">{$COMPANY.address.street}</span><br>
+                <span itemprop="addressLocality">{$COMPANY.address.suburb}</span>
+                <span itemprop="addressRegion"> {$COMPANY.address.state}</span>
+                <span itemprop="postalCode"> {$COMPANY.address.postcode}</span>
+              </div>
+        </div>
+        <div class="contline">
+          <img src="/images/contact-phone.png" alt="Location" />
+          <div class="cont-text">
+        <p>Free call <a class="tel" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a></p>
+          </div>
+        </div>
+        <div class="contline">
+          <img src="/images/contact-fax.png" alt="Location" />
+          <div class="cont-text">
+        <p>Free fax <a class="tel" href="tel:{$COMPANY.fax}">{$COMPANY.fax}</a></p>
+        </div>
+        </div>
+        <div class="contline">
+          <div class="contliner">
+          <p class="small"><i>Please note: calls from mobile phones may attract extra charges.</i></p>
+          </div>
+        </div>
+        <div class="contline">
+          <img src="/images/contact-phone.png" alt="Location" />
+          <div class="cont-text">
+        <p><a class="tel" href="tel:{$COMPANY.phone}">{$COMPANY.phone}</a> (outside Australia)</p>
+          </div>
+        </div>
+        <div class="contline">
+          <img src="/images/contact-email.png" alt="Location" />
+        <div class="cont-text">
+        <p>{obfuscate email=$COMPANY.email attr='title="Click to email us"'}</p>
+      
+        </div>
+        </div>
+        <div class="contline">
+          <img src="/images/contact-time.png" alt="Location" />
+        <div class="cont-text">
+        <p>Office hours:<br>Monday - Friday, 9am - 5pm CST</p>
+        </div>
+        </div>
+        <div class="contline">
+              <hr />
+        <div class="contliner">
+        <p>Join the community:</p>
+        <div>
+          <a href="#"><img src="/images/contact-fb.png" alt="Facebook" /></a>
+          <a href="#"><img src="/images/contact-twitter.png" alt="Twitter" /></a>
+          <a href="#"><img src="/images/contact-yt.png" alt="YouTube" /></a>
+          <a href="#"><img src="/images/contact-insta.png" alt="Instagram" /></a>
+        </div>
+        </div>
+        </div>
+      </div>
+      
 		</div>
 	</div>
 </div>

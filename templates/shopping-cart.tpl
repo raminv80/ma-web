@@ -30,13 +30,15 @@
 					  				<img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?height=80{else}/images/no-image-available.jpg?height=80{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
 					  			</div>
 					  			<div class="col-xs-10 col-sm-5 bluetext valgn">
-					  				<a href="{$item.url}">{$item.cartitem_product_name}</a>
+					  				<a href="/{$item.product_url}">{$item.cartitem_product_name}</a>
 								  	{if $item.attributes }
-										<small>
 										{foreach from=$item.attributes item=attr}
-											- {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}
+										  <div class="attributes">{$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</div>
+                                          {if $attr.cartitem_attr_attr_value_additional}
+                                            <a href="javascript:void(0)" onclick="if($('.addattr{$attr.cartitem_attr_id}').is(':visible')){ $('.addattr{$attr.cartitem_attr_id}').hide('slow'); $(this).html('Show engraving'); }else{ $('.addattr{$attr.cartitem_attr_id}').show('slow'); $(this).html('Hide engraving'); }">Show engraving</a>
+                                            {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}<div class="additional-attributes addattr{$attr.cartitem_attr_id}" style="display:none;">Line {$k}: {$v}</div>{/foreach}
+                                          {/if}
 										{/foreach}
-										</small>
 									{/if}
 									<span class="text-right">
 									</span>
@@ -106,10 +108,10 @@
 		            <input type="hidden" value="{$postageID}" name="postageID" id="postageID"/>
 		            <div class="row form-group">
 		              <div class="col-xs-12 col-sm-12">
-		                  <label for="postcode-field" class="control-label">Estimate Shipping Cost<a target="_black" title="Shipping & Delivery" href="/delivery-policy">(?)</a> </label>
+		                  <label for="postcode-field" class="control-label">Postage</label>
 		              </div>
 		              <div class="col-xs-5 col-sm-5">
-		                  <input id="postcode-field" name="postcodefield" class="zipcode form-control" type="text" value="{$shippostcode}" placeholder="postcode" required onPaste="updateShipping();" {literal}onblur="if($(this).val().length >= 4){updateShipping();}" onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal}/>
+		                 {* NOT REQUIRED <input id="postcode-field" name="postcodefield" class="zipcode form-control" type="text" value="{$shippostcode}" placeholder="postcode" required onPaste="updateShipping();" {literal}onblur="if($(this).val().length >= 4){updateShipping();}" onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal}/> *
 		              </div>
 		              <div class="col-xs-7 col-sm-2 col-sm-offset-5 num text-right" id="shipping-fee">$-unknown-</div>
 		            </div>
