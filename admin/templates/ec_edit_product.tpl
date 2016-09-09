@@ -73,25 +73,18 @@
                 </select>
               </div>
             </div>
-            <div class="row form-group">
+            <!-- <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_uid">Code (ISDN,Product code,etc)</label>
               <div class="col-sm-5">
                 <input class="form-control" type="text" value="{$fields.product_uid}" name="field[1][tbl_product][{$cnt}][product_uid]" id="id_product_uid">
                 <span class="help-block"></span>
               </div>
-            </div>
+            </div> -->
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_url">URL*</label>
               <div class="col-sm-5 ">
                 <input class="form-control" type="hidden" value="{$fields.product_url}" name="field[1][tbl_product][{$cnt}][product_url]" id="id_product_url" onchange="seturl(this.value, true);" required>
                 <span style="display: inline-block; width: 74%;" id="id_product_url_text" class="form-control url-text edit-url">{$fields.product_url}&nbsp;</span> <a href="javascript:void(0);" class="btn btn-info btn-sm marg-5r edit-url" onclick="$('.edit-url').removeClass('url-text').hide();$('#id_product_url').get(0).type='text';">Edit URL</a> <span class="help-block"></span>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_brand">Brand</label>
-              <div class="col-sm-5 ">
-                <input class="form-control" type="text" value="{$fields.product_brand}" name="field[1][tbl_product][{$cnt}][product_brand]" id="id_product_brand">
-                <span class="help-block"></span>
               </div>
             </div>
             <div class="row form-group">
@@ -105,7 +98,7 @@
               <label class="col-sm-3 control-label" for="id_product_meta_description">Meta Description</label>
               <div class="col-sm-5 ">
                 <textarea class="form-control" rows="3" onkeyup="$(this).parent().find('.charcount').html($(this).val().length);" name="field[1][tbl_product][{$cnt}][product_meta_description]" id="id_product_meta_description">{$fields.product_meta_description}</textarea>
-                <span class="small pull-right charcount">{$fields.listing_meta_description|count_characters:true}</span><span class="small pull-right">characters: </span>
+                <span class="small pull-right charcount">{$fields.product_meta_description|count_characters:true}</span><span class="small pull-right">characters: </span>
               </div>
             </div>
             <div class="row form-group">
@@ -114,6 +107,13 @@
                 <input class="form-control" type="text" value="{$fields.product_meta_words}" name="field[1][tbl_product][{$cnt}][product_meta_words]" id="id_product_meta_words">
               </div>
             </div>
+            <!-- <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_brand">Brand</label>
+              <div class="col-sm-5 ">
+                <input class="form-control" type="text" value="{$fields.product_brand}" name="field[1][tbl_product][{$cnt}][product_brand]" id="id_product_brand">
+                <span class="help-block"></span>
+              </div>
+            </div> -->
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_description">Description</label>
               <div class="col-sm-5 ">
@@ -121,30 +121,46 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="product_associate1">Type*</label>
+              <label class="col-sm-3 control-label" for="product_associate1">Type</label>
               <div class="col-sm-5 ">
-                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate1]" id="product_associate1" data-value="{$fields.product_associate1}" required>
+                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate1]" id="product_associate1" data-value="{$fields.product_associate1}">
                   <option value="">Select one</option>
                   {call name=options_list opts=$fields.options.ptypes selected=$fields.product_associate1}
                 </select>
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="product_associate2">Delivery*</label>
+              <label class="col-sm-3 control-label" for="product_associate2">Delivery</label>
               <div class="col-sm-5 ">
-                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate2]" id="product_associate2" data-value="{$fields.product_associate2}" required>
+                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate2]" id="product_associate2" data-value="{$fields.product_associate2}">
                   <option value="">Select one</option>
                   {call name=options_list opts=$fields.options.pdeliveries selected=$fields.product_associate2}
                 </select>
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="product_associate3">Warranty*</label>
+              <label class="col-sm-3 control-label" for="product_associate3">Warranty</label>
               <div class="col-sm-5 ">
-                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate3]" id="product_associate3" data-value="{$fields.product_associate3}" required>
+                <select class="form-control" name="field[1][tbl_product][{$cnt}][product_associate3]" id="product_associate3" data-value="{$fields.product_associate3}">
                   <option value="">Select one</option>
                   {call name=options_list opts=$fields.options.pwarranties selected=$fields.product_associate3}
                 </select>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_gst">Incl. GST</label>
+              <div class="col-sm-5 ">
+                <input type="hidden" value="{if $fields.product_id}{if $fields.product_gst eq 1}1{else}0{/if}{else}1{/if}" name="field[1][tbl_product][{$cnt}][product_gst]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.product_gst eq 1 || $fields.product_id eq ""}checked="checked" {/if} 
+                  onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_gst">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_noindex">No index</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.product_noindex eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_noindex]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.product_noindex eq 1} checked="checked" {/if}
+                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_noindex">
               </div>
             </div>
             <div class="row form-group">
@@ -247,7 +263,7 @@
           <div class="form" id="images-wrapper">
             {assign var='imageno' value=0} 
             {assign var='gTableName' value='product'} 
-            {assign var='image_size' value='Size: 1170px Wide x 560px Tall'} 
+            {assign var='image_size' value='Size: 770px Wide x 492px Tall'} 
             {foreach $fields.gallery as $images} 
               {assign var='imageno' value=$imageno+1} 
               {include file='gallery.tpl'} 
@@ -524,7 +540,7 @@
       type: "POST",
       url: "/admin/includes/processes/load-template.php",
       cache: false,
-      data: "template=gallery.tpl&imageno=" + no + "&gTableName=product&image_size=" + encodeURIComponent('Size: 1170px Wide x 560px Tall'),
+      data: "template=gallery.tpl&imageno=" + no + "&gTableName=product&image_size=" + encodeURIComponent('Size: 770px Wide x 492px Tall'),
       dataType: "html",
       success: function(data, textStatus) {
         try{

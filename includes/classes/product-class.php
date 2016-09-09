@@ -51,7 +51,7 @@ class ProductClass extends ListClass {
       // ------------- LOAD ASSOCIATED TABLES --------------
       foreach($LOCALCONF->associated as $a){
         $t_data = $this->LoadAssociated($a,$res[0]["{$a->linkfield}"]);
-        $SMARTY->assign("{$a->name}",$t_data);
+        $SMARTY->assign("{$a->name}", unclean($t_data));
       }
     }else{
       return null;
@@ -79,7 +79,7 @@ class ProductClass extends ListClass {
           }
         }
       }
-      $SMARTY->assign("{$f->name}",$options);
+      $SMARTY->assign("{$f->name}",unclean($options));
     }
     $template = $this->CONFIG_OBJ->template;
     return $template;

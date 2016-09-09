@@ -13,13 +13,40 @@
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2 text-center">
 				<h1>{$listing_name}</h1>
-				<p>{$listing_content1}</p>
+				{$listing_content1}
 			</div>
 		</div>
 	</div>
 </div>
-
-
+{if $listing_content2}
+<div id="cost-grey" class="howto">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        {$listing_content2}
+      </div>
+    </div>
+  </div>
+</div>
+{/if}
+{if $listing_content3 || $listing_content4}
+<div>
+  <div class="container">
+    <br>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        {$listing_content3}
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        {$listing_content4}
+      </div>
+    </div>
+  </div>
+</div>
+{/if}
 {/block}
 
 {* Place additional javascript here so that it runs after General JS includes *}

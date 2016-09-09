@@ -37,11 +37,11 @@ try{
   $SMARTY->assign('pmaterials', $pmaterials);
   
 
-  //LOAD PRODUCT ATTRIBUTES
+  //LOAD PRODUCT ATTRIBUTES >>>>> ONLY COLOURS <<<<<<
   $attributes = array();
   $sql = "SELECT attribute_id, attribute_name, attr_value_id, attr_value_name FROM tbl_attribute
       LEFT JOIN tbl_attr_value ON attr_value_attribute_id = attribute_id
-      WHERE attribute_deleted IS NULL AND attr_value_deleted IS NULL";
+      WHERE attribute_deleted IS NULL AND attribute_type = 1 AND attr_value_deleted IS NULL";
   if($res = $DBobject->wrappedSql($sql, $paramsType)){
     foreach($res as $r){
       $attributes[$r['attribute_id']]['name'] = $r['attribute_name'];
@@ -50,6 +50,17 @@ try{
     }
   }
   $SMARTY->assign('attributes', $attributes);
+  
+  //LOAD PRICE FILTERS
+  $prices = array(
+      array('name' => 'Sale items only', 'cnt' => 0, 'value' => 'sale'),
+      array('name' => '$0 - $50', 'cnt' => 0, 'value' => '0-50'),
+      array('name' => '$51 - $100', 'cnt' => 0, 'value' => '51-100'),
+      array('name' => '$101 - $200', 'cnt' => 0, 'value' => '101-200'),
+      array('name' => '$201 - $400', 'cnt' => 0, 'value' => '201-400'),
+      array('name' => '$401 plus', 'cnt' => 0, 'value' => '401-99999')
+  );
+  $SMARTY->assign('prices', $prices);
 
   
   //FILTERS

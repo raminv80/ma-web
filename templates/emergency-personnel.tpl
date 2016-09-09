@@ -9,7 +9,7 @@
           <h1>{$listing_title}</h1>
         </div>
         <div class="col-sm-8 col-sm-offset-2 text-center">
-          <p>{$listing_content1}</p>
+          {$listing_content1}
         </div>
     </div>
    </div>

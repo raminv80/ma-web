@@ -96,7 +96,7 @@
         <input class="form-control double" type="text" value="{if $variant.variant_membersprice}{$variant.variant_membersprice}{else}0{/if}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_membersprice]" id="variant_membersprice_{$variantno}">
       </div>
     </div>
-    <div class="row form-group">
+   <!--  <div class="row form-group">
       <label class="col-sm-3 control-label" for="variant_weight_{$variantno}">Weight (Kg)</label>
       <div class="col-sm-5 ">
         <input class="form-control double" type="text" value="{$variant.variant_weight}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_weight]" id="variant_weight_{$variantno}">
@@ -119,7 +119,7 @@
       <div class="col-sm-5 ">
         <input class="form-control double" type="text" value="{$variant.variant_length}" name="field[{$variantno*10+1}][tbl_variant][{$variantno}][variant_length]" id="variant_length_{$variantno}">
       </div>
-    </div>
+    </div> -->
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="variant_new_{$variantno}">New</label>
       <div class="col-sm-5 ">

@@ -15,7 +15,7 @@
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2 text-center">
 				<h1>MedicAlert membership is a small price to pay for complete peace of mind</h1>
-				<p>{$listing_content1}</p>
+				{$listing_content1}
 			</div>
 		</div>
 	</div>

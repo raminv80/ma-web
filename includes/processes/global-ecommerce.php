@@ -19,6 +19,13 @@ try{
   $SMARTY->assign('subtotal', $subtotal);
   $productsOnCart = $cart_obj->GetDataProductsOnCart();
   $SMARTY->assign('productsOnCart', $productsOnCart);
+  
+  //Shipping
+  $discountData = $cart_obj->GetDiscountData($cart['cart_discount_code']);
+  $shippable = $cart_obj->ShippableCartitems();
+  $SMARTY->assign('shippable', $shippable);
+  $shipping_obj = new ShippingClass(count($shippable), $discountData['discount_shipping']);
+  $SMARTY->assign('shippingMethods', $shipping_obj->getShippingMethods());
 }
 catch(exceptionCart $e){
   $SMARTY->assign('error', $e->getMessage());

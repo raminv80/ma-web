@@ -18,7 +18,7 @@
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
     <email>enquiry@medicalert.org.au</email>
-    <email_from>noreply@themserver.com.au</email_from>
+    <email_from>noreply@themdigital.com.au</email_from>
     <email_contact>apolo@them.com.au</email_contact>
     <email_orders>apolo@them.com.au</email_orders>
     <logo>logo.png</logo>
@@ -111,10 +111,20 @@
     <url>contact-us</url>
     <template>contact-us.tpl</template>
     <pageID>3</pageID>
+    <options> 
+      <field> 
+        <name>reasons</name>
+        <table>tbl_reason</table>
+        <id>reason_id</id>
+        <value>reason_value</value>
+        <reference>reason_name</reference>
+        <orderby>reason_order, reason_name</orderby> 
+      </field>  
+    </options>
   </static_page>
   <static_page>
-    <url>feedback</url>
-    <template>feedback.tpl</template>
+    <url>help</url>
+    <template>help.tpl</template>
     <pageID>108</pageID>
   </static_page>
   <static_page>

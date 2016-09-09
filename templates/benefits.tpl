@@ -13,7 +13,7 @@
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2 text-center">
 				<h1>{$listing_title}</h1>
-				<p>{$listing_content1}</p>
+				{$listing_content1}
 			</div>
 		</div>
 	</div>

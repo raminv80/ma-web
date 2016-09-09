@@ -26,13 +26,13 @@
 <div id="top">
 	<div class="container">
 		<div class="row">
-		<div class="col-xs-2 col-sm-2 visible-xs visible-sm">
+		<div class="col-xs-2 col-sm-2 visible-xs visible-sm" id="mobmenu">
         	<button aria-controls="main-navbar" aria-expanded="false" class="collapsed navbar-toggle" data-target="#mobile-navbar" data-toggle="collapse" type="button">
 			<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
 			</div>
 			<div class="col-xs-8 col-sm-8 col-md-3" id="logoout">
-				<a href="/" title="Home"><img src="/images/medicalert-logo.png"	class="img-responsive" alt="Logo" id="logo" /></a>
+				<a href="/" title="Home"><img src="/images/moblogo.svg"	class="img-responsive" alt="Logo" id="logo" /></a>
 			</div>
 			<div class="col-sm-4 col-sm-offset-1 hidden-sm hidden-xs" id="top-menu">
 				<nav class="collapse navbar-collapse">
@@ -86,7 +86,7 @@
 				<a href="#" id="wishlist"><img src="/images/header-wishlist.png" alt="Wishlist" /></a>
 				<div id="cartout">
 				<div id="cart" class="dropdown">
-					<a href="/shopping-cart" class="dropdown-toggle" id="cart-hover"> <img src="/images/mob-header-cart.png" alt="Shopping Cart" class="visible-xs visible-sm" /> <img src="/images/header-basket.png" alt="Shopping Cart" class="hidden-xs hidden-sm" /> <span style="" class="nav-itemNumber">{$itemNumber}</span>
+					<a href="/shopping-cart" class="dropdown-toggle" id="cart-hover"> <img src="/images/cart.svg" alt="Shopping Cart" class="visible-xs visible-sm" /> <img src="/images/header-basket.png" alt="Shopping Cart" class="hidden-xs hidden-sm" /> <span style="" class="nav-itemNumber">{$itemNumber}</span>
 					</a>
 					<ul class="dropdown-menu" id="shop-cart-btn">{include file='popover-shopping-cart.tpl'}
 					</ul>

@@ -112,7 +112,7 @@ class ListClass{
           }
         }
       }
-      $SMARTY->assign("{$f->name}", $options);
+      $SMARTY->assign("{$f->name}", unclean($options));
     }
     $this->loadPageAdditional($this->CONFIG_OBJ);
     

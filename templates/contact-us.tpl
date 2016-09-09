@@ -10,7 +10,7 @@
       	<h1>{$listing_title}</h1>
       </div>
       <div class="col-md-8 col-md-offset-2 text-center">
-        <p>{$listing_content1}</p>
+        {$listing_content1}
       </div>
     </div>
   </div>
@@ -20,7 +20,6 @@
  	 <div class="row">
 		<div class=" col-sm-offset-2 col-sm-8 col-md-offset-0 col-md-7 text-center" id="contform">
     	 	<form id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us" novalidate="novalidate">
-    			<input type="hidden" value="get in touch" name="action" id="action" />
         	    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
         	  	<input type="hidden" value="Contact" name="form_name" id="form_name" />
     			<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
@@ -45,7 +44,7 @@
 
                     <div class="col-sm-6 form-group">
                       <label class="visible-ie-only" for="postcode">Postcode<span>*</span>:</label>
-                      <input class="form-control" value="{$post.postcode}" type="text" name="postcode" id="postcode"  required="">
+                      <input class="form-control" value="{$post.postcode}" maxlength="4" type="text" name="postcode" id="postcode"  required="">
 						<div class="error-msg help-block"></div>
                     </div>
     			</div>
@@ -57,11 +56,11 @@
     				</div>
 
   				    <div class="col-sm-6 form-group">
-                      <label class="visible-ie-only" for="nature_enquiry">How do you hear about us?<span>*</span></label>
+                      <label class="visible-ie-only" for="nature_enquiry">Nature of enquiry<span>*</span></label>
                       <select class="selectlist-medium" id="nature_enquiry" name="nature_enquiry" required>
                             <option value="">Please select</option>
-                          {foreach $heardaboutus as $ha}
-                            <option value="{$ha.heardabout_value}" {if $post.nature_enquiry eq $ha.heardabout_value} selected="selected"{/if}>{$ha.heardabout_name}</option>
+                          {foreach $reasons as $ha}
+                            <option value="{$ha.value}" {if $post.nature_enquiry eq $ha.value} selected="selected"{/if}>{$ha.value}</option>
                           {/foreach}
                       </select>
 						<div class="error-msg help-block"></div>
@@ -89,8 +88,10 @@
           <div>{$listing_content2}</div>
           <br><br>
 		</div>
-    
+
     <div class="col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4" id="contacttext">
+        <div class="h2">Contact details</div>
+        <hr>
         <div class="contline">
           <img src="/images/contact-location.png" alt="Location" />
               <div class="cont-text" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
@@ -127,7 +128,7 @@
           <img src="/images/contact-email.png" alt="Location" />
         <div class="cont-text">
         <p>{obfuscate email=$COMPANY.email attr='title="Click to email us"'}</p>
-      
+
         </div>
         </div>
         <div class="contline">
@@ -140,7 +141,7 @@
               <hr />
         <div class="contliner">
         <p>Join the community:</p>
-        <div>
+        <div id="contsocial">
           <a href="#"><img src="/images/contact-fb.png" alt="Facebook" /></a>
           <a href="#"><img src="/images/contact-twitter.png" alt="Twitter" /></a>
           <a href="#"><img src="/images/contact-yt.png" alt="YouTube" /></a>
@@ -149,7 +150,7 @@
         </div>
         </div>
       </div>
-      
+
 		</div>
 	</div>
 </div>

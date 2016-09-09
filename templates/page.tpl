@@ -88,11 +88,13 @@
 	    validClass: 'has-success',
 	    ignore: "",
 	    highlight: function (element, errorClass, validClass) {
-	      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+	      //$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+	      $(element).closest('.form-group').addClass('has-error');
      	  $('#form-error').html('Error, please check the highlighted fields.').show();
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
-	      $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+	      //$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+	      $(element).closest('.form-group').removeClass('has-error');
           $(element).closest('.form-group').find('.help-block').text('');
 	    },
 	    errorPlacement: function (error, element) {

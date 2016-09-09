@@ -7,19 +7,21 @@
   	<old_id></old_id>
   </google_analytics>
   <company>
-  	<name>Them</name>
-  	<address>
-  		<street>1/26 The Parade West</street>
-  		<suburb>Kent Town</suburb>
-  		<state>SA</state>
-  		<postcode>5067</postcode>
-  	</address>
-  	<phone>08 8363 2717</phone>
-  	<email>enquiry@medicalert.org.au</email>
-    <email_from>noreply@themserver.com.au</email_from>
+    <name>MedicAlert Foundation</name>
+    <address>
+      <street>Level 1, 210 Greenhill Road</street>
+        <suburb>Eastwood</suburb>
+		<state>SA</state>
+		<postcode>5063</postcode>
+    </address>
+    <phone>08 82738401</phone>
+    <toll_free>1800 88 22 22</toll_free>
+    <fax>1800 64 32 59</fax>
+    <email>enquiry@medicalert.org.au</email>
+    <email_from>noreply@themdigital.com.au</email_from>
     <email_contact>apolo@them.com.au</email_contact>
     <email_orders>apolo@them.com.au</email_orders>
-  	<logo>logo.png</logo>
+    <logo>logo.png</logo>
   </company> 
   <global_variables>
     <name>membership_fee</name>
@@ -119,6 +121,7 @@
       <custom_template field="listing_object_id" value="1">edit_page_home.tpl</custom_template>
       <custom_template field="listing_object_id" value="2">edit_page_about.tpl</custom_template>
       <custom_template field="listing_object_id" value="3">edit_page_contact-us.tpl</custom_template>
+      <custom_template field="listing_object_id" value="108">edit_page_contact-us.tpl</custom_template>
       <custom_template field="listing_object_id" value="94">edit_page_benefits-of-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="103">edit_page_faqs.tpl</custom_template>
@@ -455,12 +458,6 @@
       	<id>product_id</id>
       	<field>product_name</field>
       	<deleted>product_deleted</deleted>
-      	<associated> 
-          <name>schemas</name>
-          <table>tbl_productschema</table>
-          <linkfield>product_type_id</linkfield>
-          <field>productschema_type_id</field> 
-        </associated>
         <associated> 
           <name>variants</name>
           <table>tbl_variant</table>
@@ -524,7 +521,7 @@
           	<table>tbl_producttype</table>
           	<id>producttype_id</id>
           	<reference>producttype_name</reference> 
-          	<orderby>producttype_name</orderby> 
+          	<orderby>producttype_name = 'Standard' DESC</orderby> 
           </field>  
           <field> 
             <name>products</name>

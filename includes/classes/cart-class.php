@@ -301,14 +301,14 @@ class cart {
    */
   function NumberOfProductsOnCart($cid = null) {
     global $DBobject;
-    
+  
     if(is_null($cid)){
       $cid = $this->cart_id;
     }
     if($this->VerifySessionCart(session_id()) == true && $this->cart_id != '0'){
       $sql = "SELECT SUM(cartitem_quantity) AS SUM FROM tbl_cartitem
 					WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0'";
-      
+  
       $cart_arr = $DBobject->wrappedSql($sql,array(
           ":id"=>$cid
       ));
@@ -318,6 +318,29 @@ class cart {
     }
     return 0;
   }
+  
+  
+  /**
+   * Return array with cartitem IDs of products that require shipping, normally cartitems with cartitem_type_id = 1
+   *
+   * @return array
+   */
+  function ShippableCartitems($cid = null) {
+    global $DBobject;
+    
+    if(empty($cid)){
+      $cid = $this->cart_id;
+    }
+    $cart_arr = array();
+    $sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_type_id = 1 AND cartitem_cart_id = :id";
+    if($res = $DBobject->wrappedSql($sql, array(":id"=>$cid))){
+      foreach($res as $r){
+        $cart_arr[] = $r['cartitem_id'];
+      }
+    }
+    return $cart_arr;
+  }
+  
 
   /**
    * Return array with product details on current cart (or given cartId)
