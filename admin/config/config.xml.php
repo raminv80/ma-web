@@ -27,10 +27,6 @@
     <name>membership_fee</name>
     <value>$32</value>
   </global_variables> 
-  <global_variables>
-    <name>postage</name>
-    <value>$9</value>
-  </global_variables>  
   <database> 
   	<host>122.201.97.172</host> 
     <user>them_usr01</user> 
@@ -121,6 +117,7 @@
       <custom_template field="listing_object_id" value="1">edit_page_home.tpl</custom_template>
       <custom_template field="listing_object_id" value="2">edit_page_about.tpl</custom_template>
       <custom_template field="listing_object_id" value="3">edit_page_contact-us.tpl</custom_template>
+      <custom_template field="listing_object_id" value="102">edit_page_contact-us.tpl</custom_template>
       <custom_template field="listing_object_id" value="108">edit_page_contact-us.tpl</custom_template>
       <custom_template field="listing_object_id" value="94">edit_page_benefits-of-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>

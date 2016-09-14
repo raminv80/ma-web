@@ -7,7 +7,7 @@ try{
   $SMARTY->assign('orders', $orders);
   
   $user_obj = new UserClass();
-  $userDetails = $user_obj->RetrieveById($_SESSION['user']['public']['id']);
+  //$userDetails = $user_obj->RetrieveById($_SESSION['user']['public']['id']);
   $SMARTY->assign('userDetails', $userDetails);
 }
 catch(exceptionCart $e){

@@ -85,7 +85,8 @@ if(!empty($CONFIG->product_page)){
 	include_once 'includes/classes/cart-class.php';
 	include_once 'includes/classes/bank-class.php';
 	include_once 'includes/classes/shipping-class.php';
-	include_once 'includes/classes/user-class.php';
+	//include_once 'includes/classes/user-class.php';
+	include_once 'includes/classes/user-class-maf.php';
 }
 
 $GLOBALS['SMARTY'] = INITSMARTY($CONFIG);

@@ -65,73 +65,78 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       die();
     
     case 'login':
-      $user_obj = new UserClass();
-      $res = $user_obj->Authenticate($_POST["email"], $_POST["pass"]);
-      if($res['error']){
-        echo json_encode(array(
-            'error' => $res['error'], 
-            'url' => null 
-        ));
-      } else{
-        $_SESSION['user']['public'] = $res;
-        $cart_obj = new cart($_SESSION['user']['public']['id']);
-        $cart_obj->SetUserCart($res['id']);
-        $url = $_SERVER['HTTP_REFERER'];
-        if($_POST['redirect']){
-          $url = $_POST['redirect'];
-        }
-        if(empty($_SESSION['user']['public']['address'])){
-          $addressArr = $user_obj->GetUsersAddresses($res['id']);
-          $_SESSION['user']['public']['address'] = array(
-              "B" => $addressArr[0], 
-              "same_address" => true 
-          );
-        }
-        
-        echo json_encode(array(
-            'error' => null, 
-            'url' => $url, 
-            'success' => true 
-        ));
-      }
-      die();
-    
-    case 'resetPasswordToken':
-      $user_obj = new UserClass();
-      $res = $user_obj->ResetPasswordToken($_POST["email"]);
-      if($res['success']){
-        try{
-          $SMARTY->assign("user_gname", $res['user_gname']);
-          $SMARTY->assign("token", $res['token']);
-          $SMARTY->assign("email", $_POST["email"]);
-          $SMARTY->assign('DOMAIN', "http://" . $HTTP_HOST);
-          $COMP = json_encode($CONFIG->company);
-          $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
-          $body = $SMARTY->fetch('email/reset-password.tpl');
-          $to = $_POST["email"];
-          $from = (string)$CONFIG->company->name;
-          $fromEmail = (string)$CONFIG->company->email_from;
-          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-          $subject = "{$from} | Password Recovery";
-          if(sendMail($to, $from, $fromEmail, $subject, $body)){
-            $success = $res['success'];
-          } else{
-            $error = 'Error while sending email. Please, try again later!';
+      $error = "Error: Missing parameters.";
+      $success = null;
+      $url = empty($_POST['redirect']) ? $_SERVER['HTTP_REFERER'] : $_POST['redirect'];
+
+      if(!empty($_POST['username']) && !empty($_POST['pass'])){
+        $user_obj = new UserClass();
+        if($user_obj->authenticate($_POST['username'], $_POST['pass'])){
+          $error = "Error: no data.";
+          if($_SESSION['user']['public']['maf'] = $user_obj->getSessionVars()){
+            $_SESSION['user']['public']['id'] = $_SESSION['user']['public']['maf']['main']['user_id'];
+            $_SESSION['user']['public']['gname'] = $_SESSION['user']['public']['maf']['main']['user_firstname'];
+            $_SESSION['user']['public']['surname'] = $_SESSION['user']['public']['maf']['main']['user_lastname'];
+            $_SESSION['user']['public']['email'] = $_SESSION['user']['public']['maf']['main']['user_email'];
+            $error = null;
+            $success = true;
           }
+        }else{
+          $error = $user_obj->getErrorMsg();
         }
-        catch(Exception $e){
-          $error = $e;
-        }
-      } else{
-        $error = $res['error'];
       }
       echo json_encode(array(
-          'error' => $res['error'], 
-          'success' => $res['success'] 
+          'error' => $error,
+          'url' => $url,
+          'success' => $success
+      ));
+      die();
+      
+    
+    case 'resetPasswordToken':
+      $member = new UserClass();
+      $success = null;
+      $error = 'Undefined error. Please <a href="/contact-us">contact us</a>.';
+      try{
+        $authenticationRecord = json_decode($member->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD), true);
+      }catch(exceptionMedicAlertApiNotAuthenticated $e){
+        $_SESSION['user']['public'] = null;
+        $error = "API init error: {$e}";
+      }catch(exceptionMedicAlertApiSessionExpired $e){
+        $_SESSION['user']['public'] = null;
+        $error = "API init error: {$e}";
+      }catch(exceptionMedicAlertApi $e){
+        $error = "API init error: {$e}";
+      }
+      $sessionToken = $authenticationRecord['sessionToken'];
+      try{
+        $results = $member->medicAlertApi->lostPassWord($sessionToken, $_POST["membership_number"], $_POST["email"]);
+        $success = "An email has been sent to your";
+      }catch(exceptionMedicAlertNotFound $e){
+        $error = 'The details you entered do not match any member record.';
+      }
+      	
+      // logout of the API
+      try{
+        $member->medicAlertApi->logout($sessionToken);
+      }catch(exceptionMedicAlertApiNotAuthenticated $e){
+        $_SESSION['user']['public'] = null;
+        $error = "API error: {$e}";
+      }catch(exceptionMedicAlertApiSessionExpired $e){
+        $_SESSION['user']['public'] = null;
+        $error = "API error: {$e}";
+      }catch(exceptionMedicAlertApi $e){
+        $error = "API error: {$e}";
+      }
+      
+      echo json_encode(array(
+          'error' => $error, 
+          'success' => $success
       ));
       die();
     
     case 'passwordreset':
+      
       $user_obj = new UserClass();
       $res = $user_obj->ResetPassword($_POST["email"], $_POST['userToken'], $_POST['pass']);
       if(empty($res['error'])){
@@ -221,7 +226,9 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
 }
 $redirect = $_SERVER['HTTP_REFERER'];
 if($_GET["logout"]){
-  unset($_SESSION['user']['public']);
+  $user_obj = new UserClass();
+  $user_obj->logOut($_SESSION['user']['public']['maf']['token']);
+  $_SESSION['user']['public'] = null;
   session_regenerate_id();
   if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
   header('Location: ' . $redirect);

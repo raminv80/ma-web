@@ -5,7 +5,7 @@
 	</div>
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-12 text-center">
+			<div class="col-sm-12 col-md-8 col-md-offset-2 text-center">
 				<h1>{$listing_title}</h1>
 				{$listing_content1}
 			</div>
@@ -17,13 +17,17 @@
 <div id="partners-wrapper">
   <div class="container">
     <div class="row">
-      <div class="col-sm-12">
-          {foreach $additionals as $ad} 
-            <div class="partners">
-              <div class="h3"><img src="{if $ad.additional_image}{$ad.additional_image}{else}/images/default-who-needs-icon.png{/if}" alt="{$ad.additional_name} icon">{$ad.additional_name}</div>
-              <div class="website">{$ad.additional_description}</div>
-              <div class="description">{$ad.additional_content1}</div>
-              <br>
+      <div class="col-sm-12 col-md-8 col-md-offset-2">
+          {foreach $additionals as $ad}
+            <div class="partners row">
+	            <div class="col-sm-3">
+		            <img src="{if $ad.additional_image}{$ad.additional_image}?width=250&height=150&crop=1{else}/images/no-image-available.jpg?width=250&height=150&crop=1{/if}" alt="{$ad.additional_name}" class="img-responsive" />
+	            </div>
+	            <div class="col-sm-9">
+		            <h3>{$ad.additional_name}</h3>
+					<div class="website"><a href="{$ad.additional_description}" target="_blank">{$ad.additional_description}</a></div>
+					<div class="description">{$ad.additional_content1}</div>
+	            </div>
             </div>
           {/foreach}
       </div>

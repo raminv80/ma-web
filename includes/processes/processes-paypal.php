@@ -5,7 +5,7 @@ if(true){
   require_once 'includes/classes/paypal-expresscheckout-class.php';
   switch($_REQUEST['action']){
     case 'REDIRECT':
-      $cart_obj = new cart();
+      $cart_obj = new cart($_SESSION['user']['public']['id']);
       $itemNumber = $cart_obj->NumberOfProductsOnCart();
       if(empty($_SESSION['selectedShipping']) || $itemNumber == 0){
         $_SESSION['post'] = $_POST;
@@ -98,7 +98,7 @@ if(true){
               header("Location: " . $_SERVER['HTTP_REFERER'] . "#error");
               die();
             } else{
-              $cart_obj = new cart();
+              $cart_obj = new cart($_SESSION['user']['public']['id']);
               $cart_obj->SetUserCart($res['id']);
               $_SESSION['user']['public'] = $res;
               $_POST['address']['B']['address_user_id'] = $res['id'];
@@ -144,7 +144,7 @@ if(true){
             die();
           }
           
-          $cart_obj = new cart();
+          $cart_obj = new cart($_SESSION['user']['public']['id']);
           $order_cartId = $cart_obj->cart_id;
           
           $ship_obj = new ShippingClass();

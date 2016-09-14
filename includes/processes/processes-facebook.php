@@ -19,7 +19,7 @@ if($_GET["code"]){ // FACEBOOK AUTH 2ND PART  -- NOTE: DUE TO A FACEBOOK USER LO
 			if($res['error']){
 				setRedirection($res['error'], $_SESSION['fb_referer'].'#error', isMobile());
 			}else{
-				$cart_obj = new cart();
+				$cart_obj = new cart($_SESSION['user']['public']['id']);
 				$cart_obj->SetUserCart($res['id']);
 				$_SESSION['user']['public'] = $res;
 				setRedirection('', $_SESSION['fb_referer'], isMobile());
@@ -57,7 +57,7 @@ if(checkToken('frontend',$_POST["formToken"],false)){
             $error = true;
             $message = $res['error'];
           }else{
-            $cart_obj = new cart();
+            $cart_obj = new cart($_SESSION['user']['public']['id']);
             $cart_obj->SetUserCart($res['id']);
             $_SESSION['user']['public'] = $res;
             $login_url = $_SESSION['fb_referer'];

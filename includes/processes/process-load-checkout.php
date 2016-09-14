@@ -2,7 +2,7 @@
 global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 
 try{
-  $cart_obj = new cart();
+  $cart_obj = new cart($_SESSION['user']['public']['id']);
   if($cart_obj->NumberOfProductsOnCart() < 1){
     header("Location: /shopping-cart");
     die();

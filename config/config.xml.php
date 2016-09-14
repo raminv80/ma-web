@@ -26,11 +26,7 @@
   <global_variables>
     <name>membership_fee</name>
     <value>$32</value>
-  </global_variables> 
-  <global_variables>
-    <name>postage</name>
-    <value>$9</value>
-  </global_variables> 
+  </global_variables>  
   <database> 
     <host>122.201.97.172</host> 
     <user>them_usr01</user> 
@@ -194,6 +190,11 @@
     <url>donate</url>
     <template>donate.tpl</template>
     <pageID>112</pageID>
+  </static_page>
+  <static_page>
+    <url>share-your-story</url>
+    <template>share-your-story.tpl</template>
+    <pageID>102</pageID>
   </static_page>
   
   <!-- ECOMMERCE  -->
@@ -399,6 +400,11 @@
   <process>
     <url>process/cart</url>
     <file>includes/processes/processes-cart.php</file>
+    <return_url></return_url>
+  </process>  
+  <process>
+    <url>process/user</url>
+    <file>includes/processes/processes-user-maf.php</file>
     <return_url></return_url>
   </process>  
   <process>

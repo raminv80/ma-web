@@ -57,6 +57,7 @@ function AppendEventTrackingToString($string) {
   $string = preg_replace_callback($regex, '_appendEventTrackingToString', $string);
   return $string;
 }
+
 function _AppendEventTrackingToString($match) {
   $url = $match[2];
   if (strpos($url, '?') === false) {
