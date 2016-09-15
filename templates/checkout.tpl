@@ -1,54 +1,112 @@
 {block name=body}
+<div id="carttop">
+	<div class="container">
+		<div class="checkout2">
+		<div class="row hidden-xs">
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="bold">1. Cart</span>
+			</div>
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="red">2. Delivery</span>
+			</div>
+			<div class="col-xs-4 col-sm-4 text-center">
+				3. Payment
+			</div>
+		</div>
+		<div class="row visible-xs">
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="bold">Step 1</span>
+			</div>
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="red">Step 2</span>
+			</div>
+			<div class="col-xs-4 col-sm-4 text-center">
+				Step 3
+			</div>
+		</div>
+		</div>
+		<div class="checkout3">
+		<div class="row hidden-xs">
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="bold">1. Cart</span>
+			</div>
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="bold">2. Delivery</span>
+			</div>
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="red">3. Payment</span>
+			</div>
+		</div>
+		<div class="row visible-xs">
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="bold">Step 1</span>
+			</div>
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="bold">Step 2</span>
+			</div>
+			<div class="col-xs-4 col-sm-4 text-center">
+				<span class="red">Step 3</span>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
 
+<div id="maincart">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" id="checkout">
+        <h1>Delivery</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="carttext">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-10 col-md-offset-1 text-center">
+        {$listing_content1}
+      </div>
+    </div>
+  </div>
+</div>
  <div id="maincont">
     <div class="container">
       <div class="row">
         <div class="col-sm-12" id="checkout">
-          <h3>Checkout</h3>
-          <div class="checkout2">
-            <div class="hidden-xs">
-              <a href="/shopping-cart">Cart review</a> / <span class="bold">Personal details</span> / Payment
-            </div>
-            <div class="visible-xs">
-              <span class="bold">Step 2 of 3</span>
-            </div>
-          </div>
-          <div class="checkout3" style="display:none;">
-            <div class="hidden-xs">
-              <a href="/shopping-cart">Cart review</a> / Personal details / <span class="bold tots">Payment</span>
-            </div>
-            <div class="visible-xs">
-              <span class="bold">Step 3 of 3</span>
-            </div>
-          </div>
-          <br />
-          <br />
 
+          <div class="row tallbox">
+	        <div class="col-sm-12 text-center">
+		        <h3>Your cart</h3>
+	        </div>
+          </div>
+		  <div class="row headings">
+          	<div class="col-sm-5 col-md-6">Items</div>
+		  	<div class="hidden-xs col-xs-3 col-sm-2 text-center">Price</div>
+		  	<div class="hidden-xs col-xs-3 col-sm-2 text-center">Total</div>
+		  </div>
           <div class="row tallbox">
 	        <div class="col-sm-12">
               {foreach from=$productsOnCart item=item}
                 <div class="row cartitem">
-                  <div class="hidden-xs col-sm-1">
-                    <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}{else}/images/no-image-available.jpg?height=235{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
+                  <div class="col-xs-3 col-sm-2 col-md-3 text-center">
+                    <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?width=150&height=150&crop=1{else}/images/no-image-available.jpg?width=150&height=150&crop=1{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
                   </div>
-                  <div class="col-xs-12 col-sm-6 bluetext">
-                    <a href="{$item.url}">{$item.cartitem_product_name}</a>
+                  <div class="col-xs-9 col-sm-3 bluetext valgn">
                     {if $item.attributes }
-                    <small>
-                    {foreach from=$item.attributes item=attr}
-                      - {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}
-                    {/foreach}
-                    </small>
+		                <a href="/{$item.product_url}">{$item.cartitem_product_name}</a> {if $item.attributes } {foreach from=$item.attributes item=attr}
+		                <div class="attributes">{$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</div>
+		                {if $attr.cartitem_attr_attr_value_additional} <a class="eng" href="javascript:void(0)" onclick="if($('.addattr{$attr.cartitem_attr_id}').is(':visible')){ $('.addattr{$attr.cartitem_attr_id}').hide('slow'); $(this).html('Show engraving +'); }else{ $('.addattr{$attr.cartitem_attr_id}').show('slow'); $(this).html('Hide engraving  -'); }">Show engraving +</a> {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
+		                <div class="additional-attributes addattr{$attr.cartitem_attr_id}" style="display: none;">Line {$k}: {$v}</div>
+		                {/foreach} {/if} {/foreach} {/if} <span class="text-right"> </span> <br>
+		                <span class="mini">{$item.cartitem_product_uid}</span>
                   {/if}
                   </div>
-                  <div class="col-xs-3 col-sm-2 centre">
-                    <div id="qty-{$item.cartitem_id}">{$item.cartitem_quantity}</div>
-                    <div id="qty-discount-{$item.cartitem_id}">{if $item.productqty_modifier.productqty_modifier neq 0}(-{$item.productqty_modifier.productqty_modifier|number_format:0:".":','}%){/if}</div>
-                  </div>
-                  <div class="col-xs-3 col-sm-1 centre" id="priceunit-{$item.cartitem_id}">
+                  <div class="hidden-xs col-xs-9 col-sm-2 text-center valgn" id="priceunit-{$item.cartitem_id}">
                   <div id="price-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
                   </div>
-                  <div class="col-xs-3 col-sm-1 centre" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
+                  <div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0 text-center valgn mobl" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
                   <div class="col-xs-3 col-sm-1">
                     <a href="/shopping-cart">Edit</a>
                   </div>
@@ -56,18 +114,42 @@
               {/foreach}
               <div class="row">
               <div class="col-sm-6 col-sm-offset-6">
-                <div class="row" {if $totals.discount lte 0}style="display:none"{/if}><div class="col-xs-4 col-sm-9 text-right">Discount</div>
-                <div class="col-xs-8 col-sm-3 num text-right" id="discount">${if $totals.discount gt 0}-{/if}{$totals.discount|number_format:2:".":","}</div></div>
-                <div class="row"><div class="col-xs-4 col-sm-9 text-right">Subtotal</div><!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
-                <div class="col-xs-8 col-sm-3 num text-right" id="subtotal" data-value="{$totals.total}">${$totals.total|number_format:2:".":","}</div></div>
-                <div class="row"><div class="col-xs-4 col-sm-9 text-right">Shipping</div>
-                <div class="col-xs-8 col-sm-3 num text-right" data-value="{$selectedShippingFee}" id="shipping-fee">{if $selectedShippingFee}${$selectedShippingFee|number_format:2:".":","}{else}$0.00{/if} </div></div>
-                <div class="row tots">
-	                <div class="col-xs-4 col-sm-2 col-sm-offset-7 bold text-right">
-	                  Total
-	                </div>
-                <div class="col-xs-8 col-sm-3 bold num text-right" id="total">{assign var='newTotal' value=$selectedShippingFee + $totals.total}<div class="bold tots" id="total">${$newTotal|number_format:2:".":","}</div> <div class="small">AUD (inc. GST)</div></div>
-                </div>
+	            <div class="row tallrow">
+	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right mobl">Subtotal</div>
+	              <!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr" id="subtotal" data-value="{$totals.total}">${$totals.total|number_format:2:".":","}</div>
+	            </div>
+	            {if $totals.discount gt 0}
+	            <div class="row tallrow">
+	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right mobl">Discount</div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr" id="discount" data-value="{$totals.total}">	                  {if $totals.discount gt 0} <small><b>$-{$totals.discount|number_format:2:".":","}</b></small> {else} $0.00 {/if}</div>
+	            </div>
+				{/if}
+	            <!-- SHIPPING -->
+	            <div class="row tallrow">
+	              <form class="form-horizontal" id="checkout1-form" accept-charset="UTF-8" action="/process/cart" method="post">
+	                <input type="hidden" value="checkout1" name="action" id="action" />
+	              {foreach $shippingMethods as $k => $v}
+	                <input type="hidden" value="{$v}" name="shipMethod" id="shippingMethod" />
+	                <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">{$k}</div>
+	                <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr">${$v|number_format:2:".":","}</div>
+	                {break}
+	              {/foreach}
+	              </form>
+	            </div>
+
+	            <div class="row tallrow">
+	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">GST inc. in total<br /><span class="subj">(*Subject to GST)</span></div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr">$2.38</div>
+	            </div>
+
+	            <div class="row tots tallrow"><!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
+	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label bold text-right mobl" id="totall">Total</div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 bold num text-left mobr" id="total">{assign var='newTotal' value=$selectedShippingFee + $totals.total}<div class="bold tots" id="total">${$newTotal|number_format:2:".":","}</div>
+	            </div>
+
+
+
              </div>
             </div>
             <div class="row topborder checkout3" style="display:none;">
@@ -365,7 +447,7 @@
         What is CSV?<button type="button" class="close" data-dismiss="modal" aria-hidden="true">Close</button>
       </div>
       <div class="modal-body text-center">
-	  			<img src="/images/csv.jpg" alt="csv"> 
+	  			<img src="/images/csv.jpg" alt="csv">
 	  			<p>3 digit verification number found on the back of your credit card</p>
       </div>
       <div class="modal-footer">

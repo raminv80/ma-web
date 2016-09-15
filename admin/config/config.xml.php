@@ -7,7 +7,7 @@
   	<old_id></old_id>
   </google_analytics>
   <company>
-    <name>MedicAlert Foundation</name>
+    <name>Australia Medic Alert Foundation</name>
     <address>
       <street>Level 1, 210 Greenhill Road</street>
         <suburb>Eastwood</suburb>
@@ -119,6 +119,7 @@
       <custom_template field="listing_object_id" value="3">edit_page_contact-us.tpl</custom_template>
       <custom_template field="listing_object_id" value="102">edit_page_contact-us.tpl</custom_template>
       <custom_template field="listing_object_id" value="108">edit_page_contact-us.tpl</custom_template>
+      <custom_template field="listing_object_id" value="101">edit_page_refer-a-friend.tpl</custom_template>
       <custom_template field="listing_object_id" value="94">edit_page_benefits-of-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="103">edit_page_faqs.tpl</custom_template>
@@ -242,7 +243,29 @@
       </log>
       <list_template>list.tpl</list_template>
       <edit_template>edit_testimonial.tpl</edit_template>
-    </section> 
+    </section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>banner-ads</url>
+      <title>Banner ads</title>
+      <type>TABLE</type>
+      <table recursive="true">
+        <name>tbl_banner</name>
+        <id>banner_id</id>
+        <field>banner_name</field>
+        <deleted>banner_deleted</deleted>
+        <orderby>banner_order, banner_name</orderby>
+        <log>
+          <table>tbl_banner</table>
+          <id>banner_id</id>
+          <field>banner_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>edit_banner.tpl</edit_template>
+    </section>
+    
   </group>
   
   <group name="Settings">
@@ -433,7 +456,14 @@
           <id>listing_object_id</id>
           <reference>listing_name</reference> 
           <where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
-      	</field> 
+      	</field>
+        <field> 
+          <name>banners</name>
+          <table>tbl_banner</table>
+          <id>banner_id</id>
+          <reference>banner_name</reference> 
+          <orderby>banner_name</orderby> 
+        </field> 
       </options>
       <log>
       	<table>tbl_listing</table>

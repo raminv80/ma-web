@@ -7,9 +7,9 @@
 		<li class="{if count($item.subs.list) > 0}dropdown{/if} {if $item.selected eq 1}active{/if}">
 		  <a title="{$item.title}" {if $item.type eq 3}target="_blank"{/if} href="{if $item.type neq 2}{$item.url}{else}javascript:void(0){/if}" >
 		  {if $item.icon}<img src="{$item.icon}" alt="" />{/if}
-          {$item.title} {if count($item.subs.list) > 0 && $ismobile neq 1}<span class="arrow-down"></span>{/if}
+          {if $item.type eq 1 && $user.gname}Hi {$user.gname}{else}{$item.title}{/if} {if count($item.subs.list) > 0 && $ismobile neq 1}<span class="arrow-down"></span>{/if}
           </a>
-		  {if count($item.subs.list) > 0 && $item.type neq 1}
+		  {if count($item.subs.list) > 0}
             <ul class="{if $ismobile neq 1}dropdown-menu{else}subcat-menu{/if}">
               {call name=render_list items=$item.subs.list level=$level+1 menu=$menu ismobile=$ismobile}
             </ul>
@@ -97,6 +97,21 @@
 		</div>
 	</div>
 </div>
+{$donotshow = [1,7,12,13]}
+{if $user && $user.maf.main.user_RenewalDate|date_format:"%Y%m%d" lt $smarty.now|date_format:"%Y%m%d" && !$listing_object_id|in_array:$donotshow}
+<div id="reminder">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10">
+        Don't wait until it's too late. <a class="link" href="/quick-renew" title="Click to renew now">Renew your annual MedicAlert membership</a> today and stay protected in a medical emergency.
+      </div>
+      <div class="col-md-2">
+        <a href="/quick-renew" class="btn btn-red pull-right" title="Click to renew now">Renew now</a>
+      </div>
+    </div>
+  </div>
+</div>
+{/if}
 {/block}
 
 

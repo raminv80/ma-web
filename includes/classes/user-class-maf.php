@@ -441,8 +441,8 @@ class UserClass{
 		$user['user_accountBalance']		= $userData['dataBaseRecord']['accountBalance'];
 		$user['user_membershipType']		= $userData['dataBaseRecord']['membership']['membershipTypeId'];
 		$user['user_membershipTypeText']	= $this->getMembershipTypeText($userData['dataBaseRecord']['membership']['membershipTypeId']);
-		$user['user_RenewalDate']			= $userData['dataBaseRecord']['membership']['RenewalDate'];
-		$user['user_RenewalMonth']			= date("F", strtotime($user['user_RenewalDate']));
+		$user['user_RenewalDate']			= date("Y-m-d", strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
+		$user['user_RenewalMonth']			= date("F", strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
 		$user['preferedPaymentMethod']	= $userData['dataBaseRecord']['details']['preferedPaymentMethod'];
 		
 		$user['WestpacCustomerNo']     = $userData['dataBaseRecord']['WestpacCustomerNo'];

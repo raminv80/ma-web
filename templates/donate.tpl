@@ -25,7 +25,6 @@
 		<div class="row">
 			<div class="col-sm-12 text-center">
 				<h3>Make a donation to MedicAlert Foundation</h3>
-				<h4>Donation details</h4>
 				<p>Please select a donation amount:</p>
 
 				<form id="gift_form" accept-charset="UTF-8" method="post" action="/process/contact-us" novalidate="novalidate">
@@ -110,8 +109,8 @@
 			    			<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
 			    	  		<div class="row">
 			    				<div class="col-sm-12 form-group" id="otheram">
-			    				  <label class="visible-ie-only" for="amount">Please specify an amount:</label>
-			    					<input class="form-control" value="{$post.amount}" type="text" name="amount" id="amount" >
+			    				  <label class="visible-ie-only" for="amount">Please specify an amount<span>*</span>:</label>
+			    					<input class="form-control" value="{$post.amount}" type="text" pattern="[0-9]" name="amount" id="amount" >
 									<div class="error-msg help-block"></div>
 			    				</div>
 			    			</div>
@@ -143,9 +142,14 @@
 							<br /><br />
 			    			<div class="row">
 								<div class="col-sm-12">
-									<h3>Account information</h3>
+									<h3>Payment information</h3>
 								</div>
 			    			</div>
+                            <div class="row">
+                              <div class="col-sm-12 form-group">
+                              <br>Payment accepted: <img src="/images/gift-cards.jpg" alt="Payment accepted" title="Payment accepted" id="accepted" />
+                              </div>
+                            </div>
 			    			<div class="row">
 			    				<div class="col-sm-6 form-group">
 			    				  <label class="visible-ie-only" for="cardno">Card number<span>*</span>:</label>
@@ -159,17 +163,13 @@
 									<div class="error-msg help-block"></div>
 			                    </div>
 			    			</div>
-			    			<div class="row">
-			    				<div class="col-sm-12 form-group text-left">
-									Payment accepted: <img src="/images/gift-cards.jpg" alt="Payment accepted" title="Payment accepted" id="accepted" />
-			    				</div>
-			    			</div>
+			    			
 			    			<div class="row">
 			    				<div class="col-sm-3 form-group">
 			    				  <label class="visible-ie-only">Expiry<span>*</span>:</label>
 			    				  <div class="newl">
 			    				  <select class="form-control" name="month" id="month" required="">
-				    				  <option value=""></option>
+				    				  <option value="">Month</option>
 				    				  <option value="01">01</option>
 				    				  <option value="02">02</option>
 				    				  <option value="03">03</option>
@@ -185,18 +185,12 @@
 			    				  </select>
 			    				  <div class="flleft">/</div>
 			    				  <select class="form-control" name="month" id="month" required="">
-				    				  <option value=""></option>
-				    				  <option value="16">16</option>
-				    				  <option value="17">17</option>
-				    				  <option value="18">18</option>
-				    				  <option value="19">19</option>
-				    				  <option value="20">20</option>
-				    				  <option value="21">21</option>
-				    				  <option value="22">22</option>
-				    				  <option value="23">23</option>
-				    				  <option value="24">24</option>
-				    				  <option value="25">25</option>
-				    				  <option value="26">26</option>
+				    				  {assign var=thisyear value=$smarty.now|date_format:"%Y"} 
+                                      {assign var=tenyears value=$thisyear+10}
+                                      <option value="">Year</option>
+                                      {for $year=$thisyear to $tenyears}
+                                        <option value="{$year}">{$year}</option> 
+                                      {/for}
 			    				  </select>
 			    				  </div>
 								  <div class="error-msg help-block"></div>
@@ -255,9 +249,9 @@
 				<img src="/images/join-post.png" alt="Post" class="img-responsive" />
 				<div class="grey-text">
 					<span class="bold">Mailing a cheque or money order payable to:</span><br />
-					Australia Medic Alert Foundation<br />
-					Level 1, 210 Greenhill Road<br />
-					Eastwood SA 5063
+			        {$COMPANY.name}<br />     
+                    {$COMPANY.address.street}<br />
+                    {$COMPANY.address.suburb} {$COMPANY.address.state} {$COMPANY.address.postcode}	
 				</div>
 			</div>
 			<div class="col-sm-4 text-center ways">

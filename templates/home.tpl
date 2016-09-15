@@ -44,7 +44,7 @@
 		<div class="row">
 			<div class="col-sm-12 text-center">
 				<img src="/images/homemembers.png" alt="Members" class="img-responsive" />
-				<p class="bigtxt">MedicAlert membership is just $32 a year</p>
+				<p class="bigtxt">MedicAlert membership is just {$CONFIG_VARS.membership_fee} a year</p>
 
 				<p>MedicAlert membership gives you access to a range of exclusive benefits:</p>
 				<br />

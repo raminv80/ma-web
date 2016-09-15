@@ -67,8 +67,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
     case 'login':
       $error = "Error: Missing parameters.";
       $success = null;
-      $url = empty($_POST['redirect']) ? $_SERVER['HTTP_REFERER'] : $_POST['redirect'];
-
+      $url = null;
       if(!empty($_POST['username']) && !empty($_POST['pass'])){
         $user_obj = new UserClass();
         if($user_obj->authenticate($_POST['username'], $_POST['pass'])){
@@ -80,6 +79,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
             $_SESSION['user']['public']['email'] = $_SESSION['user']['public']['maf']['main']['user_email'];
             $error = null;
             $success = true;
+            $url = empty($_POST['redirect']) ? $_SERVER['HTTP_REFERER'] : $_POST['redirect'];
           }
         }else{
           $error = $user_obj->getErrorMsg();

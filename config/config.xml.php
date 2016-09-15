@@ -7,7 +7,7 @@
     <old_id></old_id>
   </google_analytics>
   <company>
-    <name>MedicAlert Foundation</name>
+    <name>Australia Medic Alert Foundation</name>
     <address>
       <street>Level 1, 210 Greenhill Road</street>
         <suburb>Eastwood</suburb>
@@ -151,7 +151,7 @@
   <static_page>
     <url>benefits-of-membership</url>
     <template>benefits.tpl</template>
-    <pageID>99</pageID>
+    <pageID>94</pageID>
   </static_page>
   <static_page>
     <url>cost</url>
@@ -192,9 +192,19 @@
     <pageID>112</pageID>
   </static_page>
   <static_page>
+    <url>refer-a-friend</url>
+    <template>refer-a-friend.tpl</template>
+    <pageID>101</pageID>
+  </static_page>
+  <static_page>
     <url>share-your-story</url>
     <template>share-your-story.tpl</template>
     <pageID>102</pageID>
+  </static_page>
+  <static_page>
+    <url>refer-your-patients</url>
+    <template>refer-your-patients.tpl</template>
+    <pageID>105</pageID>
   </static_page>
   
   <!-- ECOMMERCE  -->
@@ -294,6 +304,12 @@
         <table>tbl_gallery</table>
         <linkfield>listing_id</linkfield>
         <field>gallery_listing_id</field>
+      </associated>
+      <associated listing="false">
+        <name>banner</name>
+        <table>tbl_banner</table>
+        <linkfield>listing_associate1</linkfield>
+        <field>banner_id</field>
       </associated>
       <template>ec_category-details.tpl</template> 
     </table>

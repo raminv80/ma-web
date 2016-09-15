@@ -63,9 +63,9 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_parent">Parent</label>
+              <label class="col-sm-3 control-label" for="id_listing_parent_id">Parent</label>
               <div class="col-sm-5">
-                <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
+                <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent_id">
                   <option value="{$rootParentID}">None</option>
                   {call name=options_list opts=$fields.options.listing_parent_id selected=$fields.listing_parent_id}
                 </select>
@@ -92,15 +92,9 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_order">Order</label>
-              <div class="col-sm-5">
-                <input class="form-control number" type="text" value="{$fields.listing_order}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
-              </div>
-            </div>
-            <div class="row form-group">
               <label class="col-sm-3 control-label" for="listing_image">
                 Image<br>
-                <small>Size: 480px Wide x 480px Tall</small>
+                <small>Size: 800px Wide x 440px Tall</small>
               </label>
               <div class="col-sm-9">
                 <input type="hidden" value="{$fields.listing_image}" name="field[1][tbl_listing][{$cnt}][listing_image]" id="listing_image_link" class="fileinput">
@@ -112,6 +106,21 @@
               <label class="col-sm-3 control-label" for="id_listing_content1">Content</label>
               <div class="col-sm-5">
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_associate1">Banner ad</label>
+              <div class="col-sm-5">
+                <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate1]" id="id_listing_associate1">
+                  <option value="0">None</option>
+                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate1}
+                </select>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_order">Order</label>
+              <div class="col-sm-5">
+                <input class="form-control number" type="text" value="{$fields.listing_order}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
               </div>
             </div>
           </div>

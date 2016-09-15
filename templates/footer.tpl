@@ -46,7 +46,6 @@
 						</div>
 						<div class="row form-group">
 							<div class="col-sm-12 text-center">
-								<div class="error-msg" id="form-error" {if !$error}style="display:none"{/if}></div>
 								<input type="submit" value="Subscribe" class="btn-red btn">
 							</div>
 						</div>

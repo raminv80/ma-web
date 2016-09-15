@@ -143,7 +143,7 @@
                 </div>
                 <div class="clearl" id="othervalout">
                     <input type="text" id="otherval" name="otherval" placeholder="Please specify an amount" />
-					<div class="text-center">
+					<div class="text-center small">
                     Please only specify a whole dollar amount.
 					</div>
                 </div>
@@ -250,7 +250,7 @@
             <button class="btn btn-red process-cnt" type="button" onclick="$('#checkout1-form').submit();">Continue</button>
           </div>
           <div class="col-sm-6 col-md-3 col-sm-offset-6 col-md-offset-9 text-center" id="belowbtn">
-            Please note that the MedicAlert membership fee of $32 will be added to your cart if you are joining or you renewal is due.<br />See the <a href="#">benefits of membership</a>.
+            Please note that the MedicAlert membership fee of {$CONFIG_VARS.membership_fee} will be added to your cart if you are joining or you renewal is due.<br />See the <a href="#">benefits of membership</a>.
           </div>
         </div>
         <br />
@@ -274,9 +274,9 @@
       onkeyup: false,
       onclick: false
     });
-    
+
     $('#discount-form').validate();
-    
+
     calculateTotal();
 
     if($('#postcode-field').val()){
@@ -307,14 +307,14 @@
       }
       return true;
     });
-    
+
     $('input[name="donate"]').change(function(){
       $('.donate-btn').removeClass('active');
       $('#donate'+ $(this).val()+ '-btn').addClass('active');
     });
   });
-  
-  
+
+
 </script>
 {/block}
 

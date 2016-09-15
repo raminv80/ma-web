@@ -12,7 +12,7 @@
 	  <div class="col-sm-12 visible-xs visible-sm">
         <div class="text-center">
 	        <h1>{$product_name}</h1>
-			<div class="prodcode">Product code: MA14534G323</div>
+			<div class="prodcode"></div>
         </div>
 	  </div>
       <div class="col-sm-12 col-md-7" id="prodleft">
@@ -109,7 +109,7 @@
       </div>
       <div class="col-sm-12 col-md-5" id="prodright">
         <h1 class="hidden-xs hidden-sm">{$product_name}</h1>
-        <div class="prodcode hidden-xs hidden-sm">Product code: MA14534G323</div>
+        <div class="prodcode hidden-xs hidden-sm"></div>
         <form class="form-horizontal" id="product-form" role="form" accept-charset="UTF-8" action="" method="post">
           <input type="hidden" value="ADDTOCART" name="action" id="action" />
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
@@ -124,7 +124,7 @@
                 {$price = $variant.variant_price}
                 {if $variant.variant_specialprice gt 0}{$price = $variant.variant_specialprice}{/if}
                 {if $user.id && $variant.variant_membersprice gt 0}{$price = $variant.variant_membersprice}{/if}
-                <div class="variant-prices variants" id="variant-{$variant.variant_id}" style="display:none">
+                <div class="variant-prices variants" id="variant-{$variant.variant_id}" style="display:none" data-uid="{$variant.variant_uid}">
                   {if $user.id && $variant.variant_membersprice gt 0}
                     <div>$<span>{$variant.variant_price|number_format:0:'.':','}</span></div>
                     <div><b>Members Price:</b> $<span class="selected-price" data-value="{$variant.variant_membersprice}">{$variant.variant_membersprice|number_format:0:'.':','}</span></div>
@@ -140,9 +140,11 @@
               <div class="variant-prices" id="variant-">
                   <div class="specialprice">${$general_details.price.min|number_format:0:'.':','}{if $general_details.price.min neq $general_details.price.max} - ${$general_details.price.max|number_format:0:'.':','}{/if}</div>
               </div>
+              {if $product_type_id eq 1}
               <div class="memfee">
-              + $32 membership fee (new members only). <a href="#" class="price">Learn more ></a>
+              + {$CONFIG_VARS.membership_fee} membership fee (new members only). <a href="#" class="price">Learn more ></a>
               </div>
+              {/if}
             </div>
           </div>
           {* CREATE ARRAY OF ATTRIBUTES *}
@@ -253,23 +255,22 @@
               {/foreach}
             </div>
           </div>
+          {if $product_type_id eq 1}
           <div class="form-group">
 	          <div class="col-sm-12" id="bottombox">
 		          <h5>When you purchase your first medical ID you are also becoming a MedicAlert member</h5>
 				  <p>From the moment you join, and each year you renew your membership, you’ll get access to a range of valuable benefits that could help save your life. <a href="#">Learn more ></a></p>
 	          </div>
           </div>
+          {/if}
         </form>
 
         </div>
 		<div class="col-xs-12" id="prodformbelow"></div>
-
-      </div>
-
     </div>
   </div>
 </div>
-
+{if $product_type_id eq 1}
 <div id="recent">
   <div class="container">
     <div class="row">
@@ -313,6 +314,7 @@
             <div class="prod">
               <a href="#"> <img src="/images/pop1.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
               </a>
+             </div>
           </li>
 
           <li>
@@ -334,7 +336,7 @@
     </div>
   </div>
 </div>
-
+{/if}
 
 {/block}
 
@@ -577,6 +579,7 @@ $(window).load(function() {
 	  $('.variant-panels').hide();
 	  $('#'+variantElem).fadeIn('slow');
 	  $('#variant_id').val('0');
+	  $('.prodcode').html('');
 
 	  //If valid variant/price then display add-to-cart button and update price field
 	  if(variantElem != 'variant-'){
@@ -584,6 +587,7 @@ $(window).load(function() {
 	    $('#price').val(price);
 	    $('#'+variantElem+'-panel').fadeIn();
 	    $('#variant_id').val(variantElem.replace('variant-', ''));
+	    $('.prodcode').html('Product code: ' + $('#'+variantElem).attr('data-uid'));
 	  }
 	}
 

@@ -1,10 +1,18 @@
 <?php
 global $CONFIG, $SMARTY, $DBobject, $GA_ID, $REQUEST_URI;
 
-// Redirect to login page when displaying members only page and user is not logged in
 $loginUrl = '/login-register';
+$membersAreaUrl = '/my-account';
+
+// Redirect to login page when displaying members only page and user is not logged in
 if(!empty($SMARTY->getTemplateVars('listing_membersonly')) && $REQUEST_URI != $loginUrl && empty($_SESSION['user']['public']['id'])){
   header('Location: ' . $loginUrl);
+  die();
+}
+
+//Redirect to member's area when logged in
+if($REQUEST_URI == $loginUrl && !empty($_SESSION['user']['public']['id'])){
+  header('Location: ' . $membersAreaUrl);
   die();
 }
 

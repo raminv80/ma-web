@@ -22,7 +22,7 @@
 <div id="product-list">
   <div class="container" id="prolist">
     <div class="row">
-      {if count($data) > 0}
+      {if $data}
       <div id="categorycontainer">
         {assign var='count' value=0} {foreach $data.10 as $item}
         <div class="{if $count <2}col-sm-6{else}col-sm-4{/if} prodcatout text-center">

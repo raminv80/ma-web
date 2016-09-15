@@ -3,37 +3,29 @@
 </style>
 {/block} {block name=body}
 
-<div id="reminder">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-10">
-				Don't wait until it's too late. <a class="link" href="#">Renew your annual MedicAlert membership</a> today and stay protected in a medical emergency.
-			</div>
-			<div class="col-md-2">
-				<a href="#" class="btn btn-red pull-right">Renew now</a>
-			</div>
-		</div>
-	</div>
-</div>
 
 <div id="ad">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 visible-xs visible-sm">
-				<a href="#" class="breadcrumbs1" title="Back to collections">< Back to collections</a>
-			</div>
-			<div class="col-sm-12">
-				<a href="#">
-				<img src="/images/prod-women-ad.jpg" class="img-responsive hidden-xs" />
-				<img src="/images/prod-women-admob.jpg" class="img-responsive visible-xs" />
-				</a>
-			</div>
-			<div class="col-sm-12 visible-xs visible-sm text-center" id="mobcont">
-				<h1>Shop <span>{$listing_name}</span></h1>
-				{$listing_content1}
-			</div>
-		</div>
-	</div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 visible-xs visible-sm">
+        <a href="/products" class="breadcrumbs1" title="Back to collections">< Back to collections</a>
+      </div>
+      {if $banner}
+      <div class="col-sm-12">
+        <a href="{$banner.0.banner_link}" {if $banner.0.banner_link|strstr:"http"} target="_blank"{/if} title="{$banner.0.banner_name}">
+          <img src="{$banner.0.banner_image1}" alt="{$banner.0.banner_name}" class="img-responsive hidden-xs" />
+          <img src="{$banner.0.banner_image2}" alt="{$banner.0.banner_name}" class="img-responsive visible-xs" />
+        </a>
+      </div>
+      {/if}
+      <div class="col-sm-12 visible-xs visible-sm text-center" id="mobcont">
+        <h1>
+          Shop <span>{$listing_name}</span>
+        </h1>
+        {$listing_content1}
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -41,7 +33,7 @@
   <div class="container">
     <div class="row">
 	  <div class="col-sm-12">
-		  <a href="#" class="breadcrumbs hidden-xs hidden-sm" title="Back to collections">< Back to collections</a>
+		  <a href="/products" class="breadcrumbs hidden-xs hidden-sm" title="Back to collections">< Back to collections</a>
 	  </div>
       <div class="col-md-3" id="collection-left">
         <!-- COLLECTIONS -->
@@ -74,7 +66,7 @@
 						<a role="button" data-toggle="collapse" data-parent="#accordion2" href="#narrow" aria-expanded="true" aria-controls="narrow">
 							<i class="more-less glyphicon glyphicon-plus"></i>
 							<div class="head-text">
-								<div class="head-title"><span class="visible-xs visible-sm">Filter 279 products</span><span class="hidden-xs hidden-sm">Narrow your results</span></div>
+								<div class="head-title"><span class="visible-xs visible-sm">Filter {count($products)} product{if count($products) gt 1}s{/if}</span><span class="hidden-xs hidden-sm">Narrow your results</span></div>
 							</div>
 						</a>
 					</h4>
@@ -182,19 +174,21 @@
       <div class="col-md-9">
         <!-- CATEGORY HEADER -->
  	    <div class="row hidden-xs hidden-sm">
-          <div class="col-sm-4">
+          <div class="col-sm-{if $listing_image}4{else}12{/if}">
             <h1>Shop <span>{$listing_name}</span></h1>
             {$listing_content1}
           </div>
+          {if $listing_image}
           <div class="col-sm-8">
-            <img src="{$listing_image}" alt="{$listing_name} banner" class="img-responsive" />
+            <img src="{$listing_image}?width=800&height=440&crop=1" alt="{$listing_name} banner" class="img-responsive" />
           </div>
+          {/if}
         </div>
 
         <!-- PRODUCTS -->
         <div class="row" id="products-head">
 	        <div class="col-md-6 hidden-xs hidden-sm" id="prodcnt">
-		        <span>98</span> Products
+		        <span>{count($products)}</span> product{if count($products) gt 1}s{/if}
 	        </div>
 	        <div class="col-md-6 text-right">
 		        <div class="sortlab">Sort by:</div>
@@ -206,7 +200,7 @@
 	        </div>
         </div>
         <div class="row" id="products-wrapper">
-          {if count($products) > 0}
+          {if $products}
           {foreach $products as $item}
             {include file='ec_product_list_struct.tpl'}
           {/foreach}
@@ -291,7 +285,7 @@
       <div class="col-sm-7">
         <h2>More than just medical identification jewellery</h2>
         <p>When you purchase a genuine MedicAlert medical ID, you also invest in a vital MedicAlert membership. This gives you access to a range of exclusive benefits.</p>
-        <a href="#" class="btn btn-red">Learn more</a>
+        <a href="/benefits-of-membership" title="Benefits of membership" class="btn btn-red">Learn more</a>
       </div>
     </div>
   </div>
@@ -301,7 +295,7 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12 text-center">
-        <a href="#">More than just medical identification jewellery <span>+</span></a>
+        <a href="/benefits-of-membership" title="Benefits of membership">More than just medical identification jewellery <span>+</span></a>
       </div>
     </div>
   </div>

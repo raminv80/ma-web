@@ -90,7 +90,7 @@
 	    highlight: function (element, errorClass, validClass) {
 	      //$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
 	      $(element).closest('.form-group').addClass('has-error');
-     	  $('#form-error').html('Error, please check the highlighted fields.').show();
+	      $(element).closest('form').find('#form-error').html('Error, please check the highlighted fields.').show();
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
 	      //$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
@@ -105,6 +105,7 @@
 	
 	$(document).ready(function(){
 	  
+	  	$('#newsl_form').validate();
 
 		$('#searchbox').bind('keyup', function(event) {
 		    if(event.keyCode==13){

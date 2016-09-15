@@ -34,7 +34,7 @@
               <div class="col-sm-3">
                 <select class="form-control" name="field[1][tbl_menu][{$cnt}][menu_type]" id="menu_type">
                   <option value="0" {if !$fields.menu_type}selected="selected"{/if}>Page</option>
-                  <option value="1" {if $fields.menu_type eq 1}selected="selected"{/if}>Page - Member's only</option>
+                  <option value="1" {if $fields.menu_type eq 1}selected="selected"{/if}>Login page</option>
                   <option value="2" {if $fields.menu_type eq 2}selected="selected"{/if}>Category/Group</option>
                   <option value="3" {if $fields.menu_type eq 3}selected="selected"{/if}>External page</option>
                 </select>
