@@ -174,7 +174,7 @@
 
 
           {foreach $attributes as $attr}
-          <div class="form-group">
+          <div class="form-group{if $product_type_id eq 1 && $attr.attribute_type neq 1} attr-hidden{/if}" style="{if $product_type_id eq 1 && $attr.attribute_type neq 1}display:none{/if}">
             <div class="col-sm-12">
               <label for="{urlencode data=$attr.attribute_name}" class="control-label">{$attr.attribute_name}</label>
               {if $attr.attribute_type eq 1}
@@ -182,7 +182,7 @@
                 {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   <div class="attrtype1">
 				  	<label for="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}">
-	                    <input type="radio" onclick="$(this).closest('.form-group').find('.attrtype1_name').html($(this).attr('data-name'));" data-name="{$value.attr_value_name}" class="mainAttr hasAttr updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}" value="{$value.attr_value_id}" name="attr[{$attr.attribute_id}][id]" id="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}" required="required">
+	                    <input type="radio" onclick="$(this).closest('.form-group').find('.attrtype1_name').html($(this).attr('data-name'));$('.attr-hidden').show();" data-name="{$value.attr_value_name}" class="mainAttr hasAttr updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}" value="{$value.attr_value_id}" name="attr[{$attr.attribute_id}][id]" id="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}" required="required">
                     	<img src="{$value.attr_value_image}?width=50&height=50&crop=1" title="{$value.attr_value_name}" alt="{$value.attr_value_name}">
                     </label>
                   </div>

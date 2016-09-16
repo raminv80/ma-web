@@ -82,7 +82,7 @@
               <div class="hidden-xs col-xs-9 col-sm-2 text-center valgn" id="priceunit-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
               <div class="col-xs-9 col-xs-offset-3 col-sm-2 col-sm-offset-0 col-md-1 quant text-center valgn mobl">
                 <select id="quantity" class="quantity" name="qty[{$item.cartitem_id}]">
-                  {assign var='max' value=150} {if $max lt $item.cartitem_quantity} {assign var='max' value=$item.cartitem_quantity} {/if} {for $opt=1 to $max}
+                  {assign var='max' value=10} {if $max lt $item.cartitem_quantity} {assign var='max' value=$item.cartitem_quantity} {/if} {for $opt=1 to $max}
                   <option value="{$opt}" {if $item.cartitem_quantity eq $opt}selected{/if}>{$opt}</option>
                   {/for}
                 </select>

@@ -99,7 +99,6 @@ if(true){
               die();
             } else{
               $cart_obj = new cart($_SESSION['user']['public']['id']);
-              $cart_obj->SetUserCart($res['id']);
               $_SESSION['user']['public'] = $res;
               $_POST['address']['B']['address_user_id'] = $res['id'];
               $_POST['address']['S']['address_user_id'] = $res['id'];

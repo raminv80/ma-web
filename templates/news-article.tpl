@@ -36,83 +36,62 @@
 
 				{$listing_content2}
 			</div>
-
+        {if $data.3 || $data.5}
 			<div class="col-sm-4 col-sm-offset-1" id="contright">
-				<h3>Videos</h3>
-
+				{if $data.5}
+                <h3>Videos</h3>
 				<div class="videobox">
-					<div class="row vidb">
+					{$cnt = 0}
+                    {foreach $data.5 as $vid}
+                    <div class="row vidb{if $cnt gt 3} video-hidden{/if}" style="{if $cnt gt 3}display:none;{/if}">
 						<div class="col-xs-5 col-sm-5">
-							<a href="#">
-							<img src="/images/newsdet-1.jpg" class="img-responsive" alt="Video1" />
+							<a href="{$vid.listing_content1}" target="_blank" title="Click to view video">
+							<img src="{$vid.listing_image}" class="img-responsive" alt="{$vid.listing_name} thumbnail" />
 							</a>
 						</div>
 						<div class="col-xs-7 col-sm-7">
-							<a href="#">
-							<h5>Paramedic Morgan's Incredible MedicAlert Story</h5>
+							<a href="{$vid.listing_content1}" target="_blank" title="Click to view video">
+							<h5>{$vid.listing_name}</h5>
 							</a>
 							<div class="red">Medicalert</div>
-							<div>12 March 2016</div>
+							<div>{$vid.news_start_date|date_format:"%e %B %Y"}</div>
 						</div>
 					</div>
-					<div class="row vidb">
-						<div class="col-xs-5 col-sm-5">
-							<a href="#">
-							<img src="/images/newsdet-2.jpg" class="img-responsive" alt="Video1" />
-							</a>
-						</div>
-						<div class="col-xs-7 col-sm-7">
-							<a href="#">
-							<h5>Paramedic Morgan's Incredible MedicAlert Story</h5>
-							</a>
-							<div class="red">Medicalert</div>
-							<div>12 March 2016</div>
-						</div>
-					</div>
-					<div class="row vidb">
-						<div class="col-xs-5 col-sm-5">
-							<a href="#">
-							<img src="/images/newsdet-3.jpg" class="img-responsive" alt="Video1" />
-							</a>
-						</div>
-						<div class="col-xs-7 col-sm-7">
-							<a href="#">
-							<h5>Paramedic Morgan's Incredible MedicAlert Story</h5>
-							</a>
-							<div class="red">Medicalert</div>
-							<div>12 March 2016</div>
-						</div>
-					</div>
+                    {$cnt = $cnt+1}
+                    {/foreach}
+                    {if $cnt gt 3}
 					<div class="row vidb">
 						<div class="col-sm-12">
-							<a href="#" class="red">See all ></a>
+							<a href="javascript:void(0)" onclick="$('.video-hidden').show('slow');$(this).hide();" class="red">See all ></a>
 						</div>
 					</div>
+                    {/if}
 				</div>
-
+                {/if}
+				{if $data.3}
 				<h3>Newsletters</h3>
 				<div class="newslbox">
-					<div class="row newsl">
+                    {$cnt = 0}
+					{foreach $data.3 as $nws}
+                    <div class="row newsl{if $cnt gt 3} newsletter-hidden{/if}" style="{if $cnt gt 3}display:none;{/if}">
 						<div class="col-sm-12">
-							<a href="#"><h5>Newsletter name</h5></a>
-							<div>14 August 2016</div>
+							<a href="/{$listing_url}/{$nws.listing_url}" title="Click to read more"><h5>{$nws.listing_name}</h5></a>
+							<div>{$nws.news_start_date|date_format:"%e %B %Y"}</div>
 						</div>
 					</div>
-
-					<div class="row newsl">
-						<div class="col-sm-12">
-							<a href="#"><h5>Newsletter name</h5></a>
-							<div>14 July 2016</div>
-						</div>
-					</div>
-
-					<div class="row newsl">
-						<div class="col-sm-12">
-							<a href="#" class="red">See all ></a>
-						</div>
-					</div>
+                    {$cnt = $cnt+1}
+                    {/foreach}
+                    {if $cnt gt 3}
+                    <div class="row vidb">
+                      <div class="col-sm-12">
+                        <a href="javascript:void(0)" onclick="$('.newsletter-hidden').show('slow');$(this).hide();" class="red">See all ></a>
+                      </div>
+                    </div>
+                    {/if}
 				</div>
+                {/if}
 			</div>
+      {/if}
 		</div>
 	</div>
 </div>

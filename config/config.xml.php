@@ -244,6 +244,7 @@
     <root_parent_id>0</root_parent_id> 
     <type>2</type><!-- articles --> 
     <type>3</type><!-- newsletter -->
+    <type>5</type><!-- videos -->
     <file>ListClass</file>
     <orderby>listing_schedule_start DESC</orderby>
     <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL)]]></where>
@@ -270,6 +271,7 @@
       </associated>
       <template typeid="2">news-article.tpl</template> 
       <template typeid="3">newsletter.tpl</template> 
+      <template typeid="5">newsletter.tpl</template> 
     </table>
     <template>news-resources.tpl</template>
     <loadmoretemplate>news-resources-structure.tpl</loadmoretemplate>  
@@ -426,6 +428,11 @@
   <process>
     <url>process/contact-us</url>
     <file>includes/processes/processes-contactus.php</file>
+    <return_url></return_url>
+  </process>
+  <process>
+    <url>process/refer-friend</url>
+    <file>includes/processes/processes-refer-friend.php</file>
     <return_url></return_url>
   </process>
   <process>

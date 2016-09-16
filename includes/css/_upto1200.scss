@@ -1,3 +1,41 @@
 @media (min-width:992px) and (max-width:1199px){
+#main #main-navbar li a{padding: 15px 8px;}
+#main #headactions>a{padding: 5px;}
+#top #top-menu a{padding: 15px 8px;}
+#main #headactions>a img{padding: 7px 0;}
+#logo{margin-top: 7px;}
+#redbar{line-height: 103px;font-size: 20px;}
+#redbar .btn.btn-transp{padding: 12px 8px;}
+#product-list #categorycontainer .prodcatout .prodcat .imgcont{min-height: 131px;}
+#product-list #categorycontainer .prodcatout:nth-child(1) .prodcat .imgcont, #product-list #categorycontainer .prodcatout:nth-child(2) .prodcat .imgcont{min-height: 205px;}
+#top #call a div.callout{font-size: 15px;}
+#top #top-menu a{font-size: 13px;}
+#reminder{line-height: 24px;}
+#proddet #prodslider ul.slides{min-height: 252px;}
+.prod img.prodimg{min-height: 125px;}
+
+#proddet #prodright .lineno, #proddet #prodright .charleft{
+			text-align: center;
+}
+
+#giftgrey #gift_form .giftopimg{
+	min-height: 96px;
+}
+
+#cartmain #special h3{
+	font-size: 20px;
+    line-height: 24px;
+    color: #e9003b;
+    font-weight: bold;
+    margin: 12px 0 5px;
+}
+
+#cartmain #special .condn{
+	font-size: 16px;
+}
+
+#cartmain #special #select {
+    padding: 23px 15px;
+}
 
 }

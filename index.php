@@ -26,8 +26,6 @@ $SMARTY->assign('notice', $_SESSION['notice']);
 unset($_SESSION['notice']); // ASSIGN NOTICE MESSAGES FOR TEMPLATES
 $SMARTY->assign('post', $_SESSION['post']);
 unset($_SESSION['post']); // ASSIGN POST FOR FORM VARIABLES
-$SMARTY->assign('redirect', !empty($_SESSION['redirect'])?$_SESSION['redirect']:(!empty($_SESSION['post']['redirect'])?$_SESSION['post']['redirect']:$_SERVER['HTTP_REFERER']));
-unset($_SESSION['redirect']); // ASSIGN REDIRECT URL VALUE AFTER LOGIN AND SHOW LOGIN MODAL
 $SMARTY->assign('user', $_SESSION['user']['public']); // ASSIGN USER FOR TEMPLATES
 $SMARTY->assign('HTTP_REFERER', rtrim($_SERVER['HTTP_REFERER'],'/'));
 $SMARTY->assign('REQUEST_URI', $REQUEST_URI);

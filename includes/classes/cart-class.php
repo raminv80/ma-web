@@ -22,17 +22,19 @@ class cart {
     $this->cart_user_id = empty($userId) ? 0 : $userId;
     $this->enableMerging = $enableMerging;
     if($this->VerifySessionCart(session_id())){
-      if($this->cart_user_id != $this->cart_db_user_id){
+      if($this->cart_user_id != $this->cart_db_user_id && !empty($this->cart_db_user_id)){
         //create new cart because the user ids don't match or user is not logged in
         session_regenerate_id();
         $this->CreateCart();
       }
       //do nothing since session cart exists
       $this->cart_id = $this->ses_cart_id; 
+      
     }else{
       //create new cart because it's a brand new session
       $this->CreateCart();
     }
+    $this->SetUserCart();
   }
 
   /**
@@ -69,12 +71,12 @@ class cart {
    *
    * @return boolean
    */
-  function SetUserCart($merge = false) {
+  private function SetUserCart() {
     global $DBobject,$SITE;
     
     if(!empty($this->cart_user_id)){
-      $sql = "SELECT * FROM tbl_cart WHERE cart_user_id = :id AND cart_site = :site AND cart_closed_date IS NULL AND cart_deleted IS NULL AND cart_id <> '0' ORDER BY cart_id DESC";
-      if($res = $DBobject->wrappedSql($sql, array(":id" => $this->cart_user_id, ":site" => $SITE))){
+      $sql = "SELECT * FROM tbl_cart WHERE cart_user_id = :uid AND cart_site = :site AND cart_closed_date IS NULL AND cart_deleted IS NULL AND cart_id <> '0' ORDER BY cart_id DESC";
+      if($res = $DBobject->wrappedSql($sql, array(":uid" => $this->cart_user_id, ":site" => $SITE))){
         if($this->NumberOfProductsOnCart($res[0]['cart_id']) && $this->enableMerging){
           $old_cart_id = $this->cart_id;
           $this->ResetSession($res[0]['cart_session']);
@@ -82,7 +84,11 @@ class cart {
           $message = $this->MergeCarts(array($res[0]['cart_id'], $old_cart_id), $this->cart_id);
           return $message;
         }else{
-          $this->DeleteCart($res[0]['cart_id']);
+          foreach($res as $r){
+            if($r['cart_id'] != $this->cart_id){
+              $this->DeleteCart($r['cart_id']);
+            }
+          }
           $this->UpdateUserIdCart();
           return true;
         }
@@ -391,8 +397,8 @@ class cart {
       }
     }
     
-    $this->cartProducts = $cart_arr;
-    return $cart_arr;
+    $this->cartProducts = unclean($cart_arr);
+    return $this->cartProducts;
   }
 
   /**
@@ -807,7 +813,7 @@ class cart {
           $DBproduct = $this->GetProductCalculation($res[0]['cartitem_product_id'], $attrs, $qty);
           $subtotal = $DBproduct['product_price'] * $qty;
           $pricemodifier = "";
-          $sql = "SELECT * FROM tbl_productqty WHERE productqty_product_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";
+          $sql = "SELECT * FROM tbl_productqty WHERE productqty_variant_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";
           $params = array(
               ":qty"=>$qty,
               ":pid"=>$res[0]['product_id']

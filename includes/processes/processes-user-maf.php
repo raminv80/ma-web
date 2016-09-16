@@ -25,7 +25,6 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       } else{
         $_SESSION['user']['public'] = $res;
         $cart_obj = new cart($_SESSION['user']['public']['id']);
-        $cart_obj->SetUserCart($res['id']);
         $url = $_SERVER['HTTP_REFERER'];
         if($_POST['redirect']){
           $url = $_POST['redirect'];

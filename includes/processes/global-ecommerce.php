@@ -1,11 +1,17 @@
 <?php
 global $CONFIG, $SMARTY, $DBobject, $GA_ID, $REQUEST_URI;
 
+// **************** REDIRECT SECTION
 $loginUrl = '/login-register';
 $membersAreaUrl = '/my-account';
 
+$redirect = empty($_SESSION['redirect']) ? (empty($_SESSION['post']['redirect']) ? $_SERVER['HTTP_REFERER'] : $_SESSION['post']['redirect']) : $_SESSION['redirect'];
+$SMARTY->assign('redirect', $redirect);
+$_SESSION['redirect'] = null;
+
 // Redirect to login page when displaying members only page and user is not logged in
 if(!empty($SMARTY->getTemplateVars('listing_membersonly')) && $REQUEST_URI != $loginUrl && empty($_SESSION['user']['public']['id'])){
+  $_SESSION['redirect'] = $REQUEST_URI;
   header('Location: ' . $loginUrl);
   die();
 }
@@ -16,7 +22,8 @@ if($REQUEST_URI == $loginUrl && !empty($_SESSION['user']['public']['id'])){
   die();
 }
 
-// Load shopping cart details
+
+// **************** LOAD ECOMMERCE DETAILS
 try{
   $cart_obj = new cart($_SESSION['user']['public']['id']);
   $cart = $cart_obj->GetDataCart();

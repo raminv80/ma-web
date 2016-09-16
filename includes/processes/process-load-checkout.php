@@ -19,8 +19,6 @@ try{
   $states = $DBobject->wrappedSql($sql);
   $SMARTY->assign('options_state',$states);
   
-  // ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ENHANCED ECOMMERCE
-  $SMARTY->assign ( 'ga_ec', $cart_obj->getJSCartitemsByCartId_GA() . "ga('ec:setAction','checkout', { 'step': 1 });" );
   
 }catch(exceptionCart $e) {
   $SMARTY->assign('error', $e->getMessage());
