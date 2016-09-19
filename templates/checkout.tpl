@@ -679,9 +679,6 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
 
     $('#ccno').rules("add", {
       creditcard : true,
-      messages : {
-        equalTo : "Number not valid."
-      }
     });
 
     $('#cccsv').rules("add", {

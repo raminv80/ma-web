@@ -185,6 +185,9 @@
     <url>gift-certificates</url>
     <template>gift-certificates.tpl</template>
     <pageID>97</pageID>
+    <process>
+      <file>includes/processes/process-load-gift-certificates.php</file>
+    </process>
   </static_page>
   <static_page>
     <url>donate</url>

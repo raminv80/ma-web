@@ -2,206 +2,111 @@
 <style type="text/css">
 </style>
 {/block} {block name=body}
-<div id="maincont">
+<div id="headgrey">
 	<div class="container">
-		<div class="row" id="account">
+		<div class="row">
 			<div class="col-sm-12">
-				<h3>{$listing_name}</h3>
+				<h2>Welcome back, Owen</h2>
 			</div>
-			<div class="col-sm-12">
-				{if $error}
-				<div class="alert alert-danger fade in">
-					<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
-					<strong>{$error}</strong>
+		</div>
+	</div>
+</div>
+<div id="pagehead">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 text-left">
+			{if $error}
+			<div class="alert alert-danger fade in">
+				{$error}
+			</div>
+			{/if}
+	  		{if $notice}
+			<div class="alert alert-success fade in">
+				<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
+				{$notice}
+			</div>
+			{/if}
+      </div>
+      <div class="col-sm-12 text-center" id="listtoptext">
+      	<h1>{$listing_title}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="account">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-6 col-md-7 col-lg-8">
+				<div id="daysrenew" class=" text-center">
+					<img src="/images/dashboard-warning.png" alt="Warning" /> <span class="warning">Your membership has expired</span>
+					<div class="days">7</div>
+					<div>days overdue</div>
+					<a href="#" class="btn btn-red">Renew now</a>
 				</div>
-				{/if} {if $notice}
-				<div class="alert alert-success fade in">
-					<button class="close" aria-hidden="true" data-dismiss="alert" type="button">&times;</button>
-					<strong>{$notice}</strong>
-				</div>
-				{/if}
-				<h4>Welcome back {$user.gname}</h4>
-				<div><a title="Log Out"  href="/process/user?logout=true"><span class="glyphicon glyphicon-log-out"></span><div style="display:inline;">Log Out</div></a></div>
-				<div id="tab-container">
-					<ul class="nav nav-tabs" id="account-tab">
-						<li class="active"><a href="#orders" data-toggle="tab">My Order History</a></li> {if !$user.social_id}
-						<!-- <li><a href="#details" data-toggle="tab">Update My Details</a></li> -->
-						<li><a href="#password" data-toggle="tab">Change My Password</a></li> {/if}
-					</ul>
-
-					<div class="tab-content">
-						<!--===+++===+++===+++===+++===+++ ORDER HISTORY TAB +++===+++===+++===+++===+++====-->
-						<div class="tab-pane active" id="orders">
-							<div class="tab-content-open">
-
-								{if $orders }
-								<div id="orders-list">
-									<div class="panel-group" id="accordion">
-										{foreach $orders as $order}
-										<div class="panel panel-default">
-											<div class="panel-heading">
-												<h4 class="panel-title">
-													<a data-toggle="collapse" data-parent="#accordion" href="#{$order.payment_transaction_no}"> <b>Order No.</b> {$order.payment_transaction_no} | <b>Placed date:</b> {$order.cart_closed_date|date_format:"%d %b %Y"}
-													</a>
-												</h4>
-											</div>
-											<div id="{$order.payment_transaction_no}" class="panel-collapse collapse">
-												<div class="panel-body">
-													<table cellspacing="0" width="100%" cellpadding="0" border="0">
-														<tr align="left">
-															<th>Items</th>
-															<th class="text-right">Qty</th>
-															<th style="min-width:65px;" class="text-right">Unit Price</th>
-															<th style="min-width:70px;" class="text-right">Total Price</th>
-														</tr>
-														{foreach $order.items as $item}
-														<tr valign="top" aling="left">
-															{assign var=free value=0}
-															<td>{if $item.cartitem_product_gst eq '0'} {assign var=free value=1} *{/if}{$item.cartitem_product_name} {if $item.attributes} {foreach $item.attributes as $attr} <small>/ {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</small> {/foreach} {/if}
-															</td>
-															<td width="10%" class="text-right">{$item.cartitem_quantity}</td>
-															<td width="20%" class="text-right">$ {$item.cartitem_product_price|number_format:2:".":","}</td>
-															<td width="20%" class="text-right">$ {$item.cartitem_subtotal|number_format:2:".":","}</td>
-														</tr>
-														{/foreach}
-														<tr valign="top" align="left">
-															<td colspan="4"><hr></td>
-														</tr>
-														<tr valign="top" align="left">
-															<td colspan="3" class="text-right"><strong>Sub Total</strong></td>
-															<td style="text-align: right">$ {$order.payment_subtotal|number_format:2:".":","}</td>
-														</tr>
-														<tr valign="top" align="left">
-															<td colspan="3" class="text-right"><strong>Discount</strong></td>
-															<td class="text-right">$ -{$order.payment_discount|number_format:2:".":","}</td>
-														</tr>
-														<tr valign="top" align="left">
-															<td>{if $free}(*)GST free item.{/if}</td>
-															<td colspan="2" class="text-right"><strong>Shipping</strong></td>
-															<td style="text-align: right">$ {$order.payment_shipping_fee|number_format:2:".":","}</td>
-														</tr>
-														<tr valign="top" align="left">
-															<td colspan="4"><hr></td>
-														</tr>
-														<tr valign="top" align="left">
-															<td colspan="3" class="text-right">Total (excl. GST)</td>
-															{assign var='totalExclGST' value=$order.payment_charged_amount - $order.payment_gst}
-															<td style="text-align: right">($ {$totalExclGST|number_format:2:".":","})</td>
-														</tr>
-														<tr valign="top" align="left">
-															<td colspan="3" class="text-right">GST</td>
-															<td style="text-align: right">($ {$order.payment_gst|number_format:2:".":","})</td>
-														</tr>
-														<tr valign="top" align="left">
-															<td colspan="3" class="text-right"><strong>TOTAL</strong></td>
-															<td style="text-align: right"><strong>$ {$order.payment_charged_amount|number_format:2:".":","}</strong></td>
-														</tr>
-														<tr valign="top" align="left">
-															<td colspan="4"><hr></td>
-														</tr>
-													</table>
-													<div class="col-sm-12">
-														<div class="col-sm-6">
-															<div>
-																<strong>Billing Address</strong>
-															</div>
-															<div>{$order.billing.address_name}</div>
-															<div>{$order.billing.address_line1} {$order.billing.address_line2}</div>
-															<div>{$order.billing.address_suburb}, {$order.billing.address_state}</div>
-															<div>{$order.billing.address_country} {$order.billing.address_postcode}</div>
-															<div>{$order.billing.address_telephone}</div>
-															<div>{$order.billing.address_mobile}</div>
-														</div>
-														<div class="col-sm-6">
-															<div>
-																<strong>Shipping Address</strong>
-															</div>
-															<div>{$order.shipping.address_name}</div>
-															<div>{$order.shipping.address_line1} {$order.shipping.address_line2}</div>
-															<div>{$order.shipping.address_suburb}, {$order.shipping.address_state}</div>
-															<div>{$order.shipping.address_country} {$order.shipping.address_postcode}</div>
-															<div>{$order.shipping.address_telephone}</div>
-															<div>{$order.shipping.address_mobile}</div>
-															<strong>Shipping Method:</strong> {$order.payment_shipping_method}
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										{/foreach}
-									</div>
-								</div>
-								{else} No orders found. {/if}
-
-
-							</div>
+			</div>
+			<div class="col-sm-6 col-md-5 col-lg-4">
+				<div id="accinfo">
+					<div class="accrow">
+						<div class="col-xs-8 col-sm-8">
+							<img src="/images/dashboard-name.png" alt="Account" /> Member name
+						</div>
+						<div class="col-xs-4 col-sm-4">
+							Owen Smith
+						</div>
+					</div>
+					<div class="accrow">
+						<div class="col-xs-8 col-sm-8">
+							<img src="/images/dashboard-memberno.png" alt="Account" /> Member number
+						</div>
+						<div class="col-xs-4 col-sm-4">
+							2222
+						</div>
+					</div>
+					<div class="accrow">
+						<div class="col-xs-8 col-sm-8">
+							<img src="/images/dashboard-membersince.png" alt="Account" /> Member since
+						</div>
+						<div class="col-xs-4 col-sm-4">
+							21/04/2010
+						</div>
+					</div>
+					<div class="accrow">
+						<div class="col-xs-8 col-sm-8">
+							<img src="/images/dashboard-renewal.png" alt="Account" /> Your next renewal is due
+						</div>
+						<div class="col-xs-4 col-sm-4">
+							21/04/2016
+						</div>
+					</div>
+					<div class="accrow">
+						<div class="col-sm-12">
+							<img src="/images/dashboard-password.png" alt="Account" /> <a href="#">Update my password</a>
 						</div>
 
-						{if !$user.social_id}
-						<!--===+++===+++===+++===+++===+++ UPDATE DETAILS TAB +++===+++===+++===+++===+++====-->
-						<!-- <div class="tab-pane" id="details">
-              <div class="tab-content-open">
-            <form class="form-horizontal" id="update-details-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
-              <input type="hidden" value="updateDetails" name="action" id="action" />
-              <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-              <div class="form-group">
-                  <label for="gname" class="col-sm-3 control-label">Given Name</label>
-                  <div class="col-sm-4">
-                      <input type="text" value="{if $post}{$post.gname}{else}{$user.gname}{/if}" class="form-control" id="gname" name="gname" required>
-                  <span class="help-block"></span>
-                </div>
-              </div>
-              <div class="form-group">
-                  <label for="surname" class="col-sm-3 control-label">Surname</label>
-                  <div class="col-sm-4">
-                      <input type="text" value="{if $post}{$post.surname}{else}{$user.surname}{/if}" class="form-control" id="surname" name="surname" required>
-                  <span class="help-block"></span>
-                </div>
-              </div>
-              <div class="form-group">
-                  <div class="col-sm-offset-3 col-sm-9">
-                      <button type="submit" class="btn btn-primary">Update</button>
-                  </div>
-                </div>
-            </form>
-          </div>
-        </div> -->
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
 
-						<!--===+++===+++===+++===+++===+++ CHANGE PASSWORD TAB +++===+++===+++===+++===+++====-->
-						<div class="tab-pane" id="password">
-							<div class="tab-content-open">
-								<form class="form-horizontal" id="update-pass-form" role="form" accept-charset="UTF-8" action="/process/user" method="post">
-									<input type="hidden" value="updatePassword" name="action" id="action" /> <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-									<div class="form-group">
-										<label for="password" class="col-sm-3 control-label">Current Password</label>
-										<div class="col-sm-4">
-											<input type="password" value="" class="form-control" id="old_password" name="old_password" autocomplete="off" required> <a class="showhide" style="line-height: 34px; position: absolute; right: 20px; top: 0;" href="javascript:void(0);"
-												onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[name=old_password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[name=old_password]').get(0).type='password';$(this).html('Show'); }">Show</a> <span class="help-block"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="password" class="col-sm-3 control-label">New Password</label>
-										<div class="col-sm-4">
-											<input type="password" value="" class="form-control" id="password2" name="password" autocomplete="off" required> <a class="showhide" style="line-height: 34px; position: absolute; right: 20px; top: 0;" href="javascript:void(0);"
-												onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[name=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[name=password]').get(0).type='password';$(this).html('Show'); }">Show</a> <span class="help-block"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="confirm_password" class="col-sm-3 control-label">Re-enter New Password</label>
-										<div class="col-sm-4">
-											<input type="password" class="form-control" value="" id="confirm_password2" name="confirm_password" autocomplete="off" required> <a class="showhide" style="line-height: 34px; position: absolute; right: 20px; top: 0;" href="javascript:void(0);"
-												onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[name=confirm_password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[name=confirm_password]').get(0).type='password';$(this).html('Show'); }">Show</a> <span class="help-block"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-sm-offset-3 col-sm-9">
-											<button type="submit" class="btn btn-blue">Update</button>
-										</div>
-									</div>
-								</form>
-							</div>
+			<div class="col-sm-12 text-center" id="renewal">
+				<h3>Owen, is your membership up to date?</h3>
+				<p>It’s important to keep your MedicAlert membership up to date so we can continue to help protect you in an emergency. Don’t wait until it’s too late.  </p>
+
+				<div class="row">
+					<div class="col-sm-6 text-center" id="viewup">
+						<div>
+							<img src="/images/dashboard-viewupdate.png" alt="View / update your profile" class="img-responsive" />
 						</div>
-						{/if}
+						<a href="#" class="btn btn-red">View / update your profile</a>
+					</div>
+					<div class="col-sm-6 text-center" id="autor">
+						<div>
+							<img src="/images/dashboard-autorenew.png" alt="Register for auto-renewals" class="img-responsive" />
+						</div>
+						<a href="#" class="btn btn-red">Register for auto-renewals</a>
+
+						<p>Take the hassle out of remembering to pay your annual MedicAlert membership with auto-renewals. By setting up Direct Debit payments from your nominated bank account, you can rest assured knowing you’ll always be protected.</p>
 					</div>
 				</div>
 			</div>
@@ -209,26 +114,306 @@
 		</div>
 	</div>
 </div>
+
+<div id="popprod">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<h3>Popular products</h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6 col-sm-3 col-md-2 col-md-offset-2 prod">
+				<a href="#">
+					<img src="/images/dashboard-popular1.jpg" alt="Popular product" class="img-responsive" />
+				</a>
+			</div>
+			<div class="col-xs-6 col-sm-3 col-md-2 prod">
+				<a href="#">
+					<img src="/images/dashboard-popular2.jpg" alt="Popular product" class="img-responsive" />
+				</a>
+			</div>
+			<div class="col-xs-6 col-sm-3 col-md-2 prod">
+				<a href="#">
+					<img src="/images/dashboard-popular3.jpg" alt="Popular product" class="img-responsive" />
+				</a>
+			</div>
+			<div class="col-xs-6 col-sm-3 col-md-2 text-center prod">
+					<div class="find">
+						<a href="#">
+							<img src="/images/dashboard-plus.png" alt="Find a new product" class="img-responsive" />
+							<div>Find a new product</div>
+						</a>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="specialoffer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<h3>Special offers just for you</h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4">
+				<a href="#">
+					<img src="/images/dashboard-special1.png" alt="Special product" class="img-responsive" />
+				</a>
+				<div class="sptextout">
+				<div class="specialtext">
+					<h3>STAY PROTECTED every step you take</h3>
+					<p>Stainless Steel Wristband Tag</p>
+				</div>
+				<div class="view">
+					<a href="#">View product ></a>
+				</div>
+				</div>
+			</div>
+
+			<div class="col-sm-4">
+				<a href="#">
+					<img src="/images/dashboard-special2.png" alt="Special product" class="img-responsive" />
+				</a>
+				<div class="sptextout">
+				<div class="specialtext">
+					<h3>Gorgeous gold</h3>
+					<p>The gold look has never been so affordable!</p>
+				</div>
+				<div class="view">
+					<a href="#">View product ></a>
+				</div>
+				</div>
+			</div>
+
+			<div class="col-sm-4">
+				<a href="#">
+					<img src="/images/dashboard-special3.jpg" alt="Special product" class="img-responsive" />
+				</a>
+				<div class="sptextout">
+				<div class="specialtext">
+					<h3>GIVE DAD THE GIFT OF PROTECTION</h3>
+					<p>Only one week to go! Free express shipping on orders over $50*</p>
+				</div>
+				<div class="view">
+					<a href="#">View product ></a>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="greyblock1" class="dashboard">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<h3>For just $32 a year, your MedicAlert membership gives you:</h3>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 col-md-10 col-md-offset-1">
+			<div class="row">
+				<div class="col-sm-4 text-center benefits">
+					<img src="/images/benefit1.png" alt="Protection for 12 months" class="img-responsive" />
+					<p>Protection for 12 months</p>
+				</div>
+				<div class="col-sm-4 text-center benefits">
+					<img src="/images/benefit2.png" alt="24/7 emergency service access to your medical information" class="img-responsive" />
+					<p>24/7 emergency service access to your medical information</p>
+				</div>
+				<div class="col-sm-4 text-center benefits">
+					<img src="/images/benefit3.png" alt="Exclusive member only offers" class="img-responsive" />
+					<p>Exclusive member only offers</p>
+				</div>
+				<div class="col-sm-4 text-center benefits">
+					<img src="/images/benefit4.png" alt="Unlimited wallet and fridge cards listing your details" class="img-responsive" />
+					<p>Unlimited wallet and fridge cards listing your details</p>
+				</div>
+				<div class="col-sm-4 text-center benefits">
+					<img src="/images/benefit5.png" alt="Secure online access to your electronic health record " class="img-responsive" />
+					<p>Secure online access to your electronic health record </p>
+				</div>
+				<div class="col-sm-4 text-center benefits">
+					<img src="/images/benefit6.png" alt="Support from our Membership Services team" class="img-responsive" />
+					<p>Support from our Membership Services team</p>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="contact" class="share1">
+  <div class="container">
+ 	 <div class="row">
+	 	<div class="col-md-offset-1 col-md-10 text-center">
+		 	<h4>Share your story</h4>
+		 	<p>We’d love to hear about what your MedicAlert membership means to you. No matter how big or small your story may be, we welcome you to share it with us. Your very own story could inspire others, and help demonstrate the importance of membership when it matters most.</p>
+	 	</div>
+		<div class="col-md-offset-2 col-md-8 text-center">
+    	 	<form id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us" novalidate="novalidate">
+        	    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+        	  	<input type="hidden" value="Share your story" name="form_name" id="form_name" />
+    			<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
+    	  		<div class="row">
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="name">Full name<span>*</span>:</label>
+    					<input class="form-control" value="{$post.name}" type="text" name="name" id="name" required="">
+						<div class="error-msg help-block"></div>
+    				</div>
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="email">Email<span>*</span>:</label>
+    					<input class="form-control" value="{$post.email}" type="email" name="email" id="email" required="">
+						<div class="error-msg help-block"></div>
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="phone">Phone<span>*</span>:</label>
+    				  <input class="form-control" value="{$post.phone}" type="text" name="phone" id="phone" required="">
+						<div class="error-msg help-block"></div>
+    				</div>
+
+                    <div class="col-sm-6 form-group">
+                      <label class="visible-ie-only" for="postcode">Postcode<span>*</span>:</label>
+                      <input class="form-control" value="{$post.postcode}" maxlength="4" type="text" name="postcode" id="postcode"  required="">
+						<div class="error-msg help-block"></div>
+                    </div>
+    			</div>
+    			<div class="row">
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="membership_no">Membership number:</label>
+    				  <input class="form-control" value="{$post.membership_no}" type="text" name="membership_no" id="membership_no" >
+						<div class="error-msg help-block"></div>
+    				</div>
+
+  				    <div class="col-sm-6 form-group">
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-sm-12 form-group">
+    				  <label class="visible-ie-only" for="enquiry">Your story<span>*</span>:</label>
+    					<textarea class="form-control" name="enquiry" id="enquiry" required="">{$post.enquiry}</textarea>
+						<div class="error-msg help-block"></div>
+    				</div>
+    			</div>
+    			<div style="height:0;overflow:hidden;">
+                   <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1">
+                </div>
+				<div class="row">
+					<div class="col-sm-12">
+						<span class="bold">Your name and story will not be published without your approval and consent.</span>
+						<br /><br />
+					</div>
+				</div>
+    			<div class="row error-msg" id="form-error" {if !$error}style="display:none"{/if}>{$error}</div>
+    			<div class="row">
+    				<div class="col-sm-12">
+    					<input type="button" value="Share your story" onclick="$('#contact_form').submit();" class="btn-red btn" id="fbsub">
+    				</div>
+    			</div>
+    	  </form>
+		</div>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="whywait">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<h3>If someone you know could benefit from a MedicAlert membership, don’t wait until it’s too late to tell them about it.</h3>
+				<a href="#" class="btn btn-red">Refer a friend</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="donate">
+	<div class="container">
+        <div class="row" id="help">
+	        <div class="col-sm-12 col-md-8 helpl">
+				<h3>Help us to help others</h3>
+				<p>While you’re here, why not make a small donation to our not-for-profit organisation? Just a few dollars can help provide our life-saving service, and allow us to educate Australians about the importance of MedicAlert Foundation. Donations over $2 are tax deductible. </p>
+
+				<h4>Select a donation amount:</h4>
+				<div class="donbtn">
+				  	<label for="donate25">
+	                    <input type="radio" value="25" name="donate" id="donate25">
+                    	<div id="donate25-btn" class="donate-btn btn btn-grey">$25</div>
+                    </label>
+                </div>
+				<div class="donbtn">
+				  	<label for="donate50">
+	                    <input type="radio" value="50" name="donate" id="donate50">
+                    	<div id="donate50-btn" class="donate-btn btn btn-grey">$50</div>
+                    </label>
+                </div>
+				<div class="donbtn">
+				  	<label for="donate100">
+	                    <input type="radio" value="100" name="donate" id="donate100">
+                    	<div id="donate100-btn" class="donate-btn btn btn-grey">$100</div>
+                    </label>
+                </div>
+				<div class="donbtn">
+				  	<label for="donateother">
+	                    <input type="radio" value="other" name="donate" id="donateother">
+                    	<div id="donateother-btn" class="donate-btn btn btn-grey">Other</div>
+                    </label>
+                </div>
+                <div class="clearl" id="othervalout">
+                    <input type="text" id="otherval" name="otherval" placeholder="Please specify an amount" />
+					<div class="text-center small">
+                    Please only specify a whole dollar amount.
+					</div>
+                </div>
+				<div class="clearl">
+					<a href="#" class="btn btn-red">Add to cart</a>
+				</div>
+	        </div>
+	        <div class="col-sm-4 hidden-xs hidden-sm helpr">
+				<img src="/images/cart-girls.png" class="img-responsive" alt="Help us to help others" />
+	        </div>
+        </div>
+	</div>
+</div>
 {/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
 <script type="text/javascript">
-	$(document)
-			.ready(
-					function() {
+$(document).ready(function(){
 
-						$('#update-pass-form').validate();
-						$('#update-details-form').validate();
+	 	$('#contact_form').validate();
 
-						$('#confirm_password2')
-								.rules(
-										"add",
-										{
-											required : true,
-											equalTo : '#password2',
-											messages : {
-												equalTo : "The passwords you have entered do not match. Please check them."
-											}
-										});
+	 	$('#postcode').rules("add", {
+			digits: true,
+			minlength: 4
+		});
 
-					});
+	 	$('#email').rules("add", {
+			email: true
+		});
+
+		$("input[name=donate]").change(function()
+		{
+        if ( $("#donateother").is(':checked'))
+            $("#othervalout").show();
+        else
+            $("#othervalout").hide();
+		});
+
+
+    $('input[name="donate"]').change(function(){
+      $('.donate-btn').removeClass('active');
+      $('#donate'+ $(this).val()+ '-btn').addClass('active');
+    });
+
+});
+
 </script>
 {/block}

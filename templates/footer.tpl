@@ -31,7 +31,7 @@
 				<p>If you, or someone you care for, are one of the many Australians living with a medical condition, sign up to our email newsletter and be the first to hear about the latest news and special offers from</p>
 				<br />
 
-					<form action="#" method="post" id="newsl_form" novalidate="novalidate">
+					<form action="https://themdigital.createsend.com/t/r/s/djiijii/" method="post" id="newsl_form" novalidate="novalidate">
 						<div class="row form-group">
 							<div class="col-sm-6 ">
 							  <label for="fieldName">Name<span>*</span></label>
@@ -40,7 +40,7 @@
 							</div>
 							<div class="col-sm-6 ">
 							  <label for="fieldEmail">Email<span>*</span></label>
-							  <input class="form-control" type="email" name="cm-hkkiudy-hkkiudy" id="fieldEmail" required="">
+							  <input class="form-control" type="email" name="cm-djiijii-djiijii" id="fieldEmail" required="">
 							  <div class="error-msg help-block"></div>
 							</div>
 						</div>
@@ -97,7 +97,7 @@
     <div id="mobbot">
       <div class="container">
         <div class="row">
-          <div class="col-sm-9">&copy; Copyright {$COMPANY.name} {"Y"|date}. | <a href="/privacy-policy">Privacy policy</a> | <a href="/terms">Terms &amp; conditions</a>
+          <div class="col-sm-9">&copy; Copyright {$COMPANY.name} {"Y"|date}. | <a href="/privacy-policy" title="View our privacy policy">Privacy policy</a> | <a href="/terms-and-conditions" title="View our terms and conditions">Terms &amp; conditions</a>
           </div>
           <div class="col-sm-3 text-right">
             <div class="text-center-xs">

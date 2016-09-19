@@ -1,275 +1,289 @@
 {block name="head"}
 <link href="/includes/css/jquery-ui.css" rel="stylesheet" media="screen">
-{/block}
-{block name=body}
+{/block} {block name=body}
 <div id="pagehead">
-	<div class="bannerout">
-		<img src="{if $listing_image}{$listing_image}{else}/images/newsdet-banner.jpg{/if}" alt="{$listing_name} banner" />
-	</div>
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 col-md-8 col-md-offset-2 text-center">
-				<h1>{$listing_title}</h1>
-				{$listing_content1}
-			</div>
-		</div>
-	</div>
+  <div class="bannerout">
+    <img src="{if $listing_image}{$listing_image}{else}/images/newsdet-banner.jpg{/if}" alt="{$listing_name} banner" />
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-8 col-md-offset-2 text-center">
+        <h1>{$listing_title}</h1>
+        {$listing_content1}
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="giftgrey">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 text-center">
-				<h3>Purchase your gift certificate now</h3>
-				<p>Please select a gift certificate amount:</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <h3>Purchase your gift certificate now</h3>
+        <p>Please select a gift certificate amount:</p>
+        {$defaultImgArr = ['images/gift-1.jpg', 'images/gift-2.jpg', 'images/gift-3.jpg', 'images/gift-4.jpg']}
+        <form id="gift_form" accept-charset="UTF-8" method="post" action="/process/cart" novalidate="novalidate">
+          <input type="hidden" name="action" value="quickcheckout" />
+          <input type="hidden" name="product_object_id" value="{$products.product_object_id}" />
+          <input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
+          <div class="row">
+            {foreach $products.variants as $k => $v} {$price = $v.variant_price} {if $v.variant_specialprice gt 0}{$price = $v.variant_specialprice}{/if} {if $user.id && $v.variant_membersprice gt 0}{$price = $v.variant_membersprice}{/if}
+            <div class="col-sm-6 col-md-3">
+              <div class="giftoption">
+                <label for="gift-{$v.variant_id}">
+                  <input type="radio" class="all-options{if $v.variant_editableprice eq 1} other-val{/if}" data-value="{$price}" id="gift-{$v.variant_id}" value="{$v.variant_id}" name="variant_id" />
+                  <div class="giftopin">
+                    <div class="giftopimg">
+                      <img src="/{$defaultImgArr.$k}" class="img-responsive" alt="{$v.variant_uid}" title="{$v.variant_uid}" />
+                    </div>
+                    <div class="giftoptext">
+                      <h3>
+                        {if $v.variant_editableprice eq 1}Other{else}<span>$</span>{$price|number_format:0:'.':','}{/if}
+                      </h3>
+                      <p>{$v.variant_description|truncate:150:"..."}</p>
+                      <a href="javascript:void(0);" class="btn btn-red">Select</a>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+            {/foreach}
 
-				<form id="gift_form" accept-charset="UTF-8" method="post" action="/process/contact-us" novalidate="novalidate">
-				<div class="row">
-					<div class="col-sm-3">
-						<div class="giftoption">
-							<label for="gift32">
-							<input type="radio" id="gift32" value="$32" name="giftval" />
-							<div class="giftopin">
-								<div class="giftopimg">
-									<img src="/images/gift-1.jpg" class="img-responsive" alt="$32" title="$32" />
-								</div>
-								<div class="giftoptext">
-								<h3><span>$</span>32</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
-								<a href="javascript:void(0);" class="btn btn-red">Select</a>
-								</div>
-							</div>
-							</label>
-						</div>
-					</div>
+          </div>
+          <br />
+          <br />
+          <div class="row" id="fields-wrapper" {if !$post}style="display:none"{/if}>
+            <div class="col-sm-12 col-md-8 col-md-offset-2">
+              <div class="row">
+                <div class="col-sm-12 form-group" id="otheram">
+                  <label class="visible-ie-only" for="amount">
+                    Please specify a whole dollar amount<span>*</span>:
+                  </label>
+                  <input class="form-control" value="{$post.amount}" type="text" pattern="[0-9]" name="amount" id="amount" required="">
+                  <div class="error-msg help-block"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6 form-group">
+                  <label class="visible-ie-only" for="rname">
+                    Recipient's name<span>*</span>:
+                  </label>
+                  <input class="form-control" value="{$post.rname}" type="text" name="rname" id="rname" required="">
+                  <div class="error-msg help-block"></div>
+                </div>
+                <div class="col-sm-6 form-group">
+                  <label class="visible-ie-only" for="remail">
+                    Recipient's email<span>*</span>:
+                  </label>
+                  <input class="form-control" value="{$post.remail}" type="email" name="remail" id="remail" required="">
+                  <div class="error-msg help-block"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6 form-group">
+                  <label class="visible-ie-only" for="sname">
+                    Your name<span>*</span>:
+                  </label>
+                  <input class="form-control" value="{$post.sname}" type="text" name="sname" id="sname" required="">
+                  <div class="error-msg help-block"></div>
+                </div>
 
-					<div class="col-sm-3">
-						<div class="giftoption">
-							<label for="gift47">
-							<input type="radio" id="gift47" value="$47" name="giftval" />
-							<div class="giftopin">
-								<div class="giftopimg">
-									<img src="/images/gift-2.jpg" class="img-responsive" alt="$47" title="$47" />
-								</div>
-								<div class="giftoptext">
-								<h3><span>$</span>47</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
-								<a href="javascript:void(0);" class="btn btn-red">Select</a>
-								</div>
-							</div>
-							</label>
-						</div>
-					</div>
+                <div class="col-sm-6 form-group">
+                  <label class="visible-ie-only" for="semail">
+                    Your email<span>*</span>:
+                  </label>
+                  <input class="form-control" value="{$post.semail}" type="text" name="semail" id="semail" required="">
+                  <div class="error-msg help-block"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <input type="checkbox" class="form-control" value="Send anonymously" id="anonymous" name="anonymous" />
+                  <label for="anonymous">Send anonymously</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 form-group">
+                  <label class="visible-ie-only" for="message">Message (optional):</label>
+                  <textarea class="form-control" name="message" id="message">{$post.message}</textarea>
+                  <div class="error-msg help-block"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-4 form-group">
+                  <div class="clearl">
+                    <input type="radio" class="form-control" {if !$post.sendtime}checked="checked"{/if} value="now" id="sendnow" name="sendtime" required/>
+                    <label for="sendnow">Send now</label>
+                  </div>
+                  <div class="clearl">
+                    <input type="radio" class="form-control" value="Select a day to send" id="selectday" name="sendtime" required/>
+                    <label for="selectday">Select a day to send</label>
+                  </div>
+                  <div class="clearl">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                  <br />
 
-					<div class="col-sm-3">
-						<div class="giftoption">
-							<label for="gift52">
-							<input type="radio" id="gift52" value="$52" name="giftval" />
-							<div class="giftopin">
-								<div class="giftopimg">
-									<img src="/images/gift-3.jpg" class="img-responsive" alt="$52" title="$52" />
-								</div>
-								<div class="giftoptext">
-								<h3><span>$</span>52</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
-								<a href="javascript:void(0);" class="btn btn-red">Select</a>
-								</div>
-							</div>
-							</label>
-						</div>
-					</div>
+                  <br />
+                  <input type="text" class="customdate" placeholder="DD/MM/YYYY" id="sendday" name="sendday" />
+                </div>
+              </div>
+              <div class="row customdate" style="display:none">
+                <div class="col-sm-12 text-left">
+                  <small><b>*All certificates with a set delivery date will be sent at 9.00 am AEST.</b></small>
+                </div>
+              </div>
+              <br />
+              <br />
+              <div class="row">
+                <div class="col-sm-12">
+                  Payment accepted: <img src="/images/donate-visamc.jpg" alt="Visa Mastercard" />
+                </div>
+              </div>
+              <div class="row notice">
+                <div class="col-sm-12 dark">
+                  All transactions are secure and encrypted, and we never store your credit card information. To learn more, please view our <a href="/privacy-policy" target="_blank">privacy policy</a>.
+                  <br>
+                  <br>
+                </div>
+              </div>
 
-					<div class="col-sm-3">
-						<div class="giftoption">
-							<label for="gift120">
-							<input type="radio" id="gift120" value="$120" name="giftval" />
-							<div class="giftopin">
-								<div class="giftopimg">
-									<img src="/images/gift-4.jpg" class="img-responsive" alt="$120" title="$120" />
-								</div>
-								<div class="giftoptext">
-								<h3><span>$</span>120</h3>
-								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
-								<a href="javascript:void(0);" class="btn btn-red">Select</a>
-								</div>
-							</div>
-							</label>
-						</div>
-					</div>
-				</div>
-				<br /><br />
-				<div class="row">
-					<div class="col-sm-12 col-md-8 col-md-offset-2">
-			        	    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-			        	  	<input type="hidden" value="Contact" name="form_name" id="form_name" />
-			    			<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
-			    	  		<div class="row">
-			    				<div class="col-sm-6 form-group">
-			    				  <label class="visible-ie-only" for="rname">Recipient's name<span>*</span>:</label>
-			    					<input class="form-control" value="{$post.rname}" type="text" name="rname" id="rname" required="">
-									<div class="error-msg help-block"></div>
-			    				</div>
-			    				<div class="col-sm-6 form-group">
-			    				  <label class="visible-ie-only" for="remail">Recipient's email<span>*</span>:</label>
-			    					<input class="form-control" value="{$post.remail}" type="email" name="remail" id="remail" required="">
-									<div class="error-msg help-block"></div>
-			    				</div>
-			    			</div>
-			    			<div class="row">
-			    				<div class="col-sm-6 form-group">
-			    				  <label class="visible-ie-only" for="sname">Your name<span>*</span>:</label>
-			    				  <input class="form-control" value="{$post.sname}" type="text" name="sname" id="sname" required="">
-									<div class="error-msg help-block"></div>
-			    				</div>
+              <div class="row">
+                <div class="col-sm-6 form-group">
+                  <label class="visible-ie-only" for="ccno">
+                    Card number<span>*</span>:
+                  </label>
+                  <input type="text" id="ccno" class="form-control" name="cc[number]" autocomplete="off" required />
+                  <div class="error-msg help-block"></div>
+                </div>
 
-			                    <div class="col-sm-6 form-group">
-			                      <label class="visible-ie-only" for="semail">Your email<span>*</span>:</label>
-			                      <input class="form-control" value="{$post.semail}" type="text" name="semail" id="semail"  required="">
-									<div class="error-msg help-block"></div>
-			                    </div>
-			    			</div>
-			    			<div class="row">
-								<div class="col-sm-12">
-									<input type="checkbox" class="form-control" value="Send anonymously" id="anonymous" name="anonymous" /><label for="anonymous">Send anonymously</label>
-								</div>
-			    			</div>
-			    			<div class="row">
-			    				<div class="col-sm-12 form-group">
-			    				  <label class="visible-ie-only" for="message">Message (optional):</label>
-			    					<textarea class="form-control" name="message" id="message">{$post.message}</textarea>
-									<div class="error-msg help-block"></div>
-			    				</div>
-			    			</div>
-			    			<div class="row">
-								<div class="col-sm-6">
-									<div class="clearl">
-									<input type="radio" class="form-control" value="Send now" id="sendnow" name="sendtime" /><label for="sendnow">Send now</label>
-									</div>
-									<div class="clearl">
-									<input type="radio" class="form-control" value="Select a day to send" id="selectday" name="sendtime" /><label for="selectday">Select a day to send</label></div>
-									<br /><br />
-									<input type="text" id="sendday" name="sendday" />
-								</div>
-			    			</div>
-							<br /><br />
-			    			<div class="row">
-								<div class="col-sm-12">
-									<h3>Account information</h3>
-								</div>
-			    			</div>
-			    			<div class="row">
-			    				<div class="col-sm-6 form-group">
-			    				  <label class="visible-ie-only" for="cardno">Card number<span>*</span>:</label>
-			    				  <input class="form-control"  type="text" name="cardno" id="cardno" required="">
-									<div class="error-msg help-block"></div>
-			    				</div>
+                <div class="col-sm-6 form-group">
+                  <label class="visible-ie-only" for="ccname">
+                    Cardholder's name<span>*</span>:
+                  </label>
+                  <input type="text" id="ccname" class="form-control" name="cc[name]" autocomplete="off" required />
+                  <div class="error-msg help-block"></div>
+                </div>
+              </div>
 
-			                    <div class="col-sm-6 form-group">
-			                      <label class="visible-ie-only" for="cardname">Cardholder name<span>*</span>:</label>
-			                      <input class="form-control" type="text" name="cardname" id="cardname"  required="">
-									<div class="error-msg help-block"></div>
-			                    </div>
-			    			</div>
-			    			<div class="row">
-			    				<div class="col-sm-12 form-group text-left">
-									Payment accepted: <img src="/images/gift-cards.jpg" alt="Payment accepted" title="Payment accepted" id="accepted" />
-			    				</div>
-			    			</div>
-			    			<div class="row">
-			    				<div class="col-sm-3 form-group">
-			    				  <label class="visible-ie-only">Expiry<span>*</span>:</label>
-			    				  <div class="newl">
-			    				  <select class="form-control" name="month" id="month" required="">
-				    				  <option value=""></option>
-				    				  <option value="01">01</option>
-				    				  <option value="02">02</option>
-				    				  <option value="03">03</option>
-				    				  <option value="04">04</option>
-				    				  <option value="05">05</option>
-				    				  <option value="06">06</option>
-				    				  <option value="07">07</option>
-				    				  <option value="08">08</option>
-				    				  <option value="09">09</option>
-				    				  <option value="10">10</option>
-				    				  <option value="11">11</option>
-				    				  <option value="12">12</option>
-			    				  </select>
-			    				  <div class="flleft">/</div>
-			    				  <select class="form-control" name="month" id="month" required="">
-				    				  <option value=""></option>
-				    				  <option value="16">16</option>
-				    				  <option value="17">17</option>
-				    				  <option value="18">18</option>
-				    				  <option value="19">19</option>
-				    				  <option value="20">20</option>
-				    				  <option value="21">21</option>
-				    				  <option value="22">22</option>
-				    				  <option value="23">23</option>
-				    				  <option value="24">24</option>
-				    				  <option value="25">25</option>
-				    				  <option value="26">26</option>
-			    				  </select>
-			    				  </div>
-								  <div class="error-msg help-block"></div>
-			    				</div>
+              <div class="row">
+                <div class="col-sm-6 form-group">
+                  <label class="visible-ie-only" for="ccmonth">
+                    Expiry<span>*</span>:
+                  </label>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <select id="ccmonth" name="cc[month]" class="form-control" required>
+                        <option value="">Month</option>
+                        <option value="01">1 - Jan</option>
+                        <option value="02">2 - Feb</option>
+                        <option value="03">3 - Mar</option>
+                        <option value="04">4 - Apr</option>
+                        <option value="05">5 - May</option>
+                        <option value="06">6 - Jun</option>
+                        <option value="07">7 - Jul</option>
+                        <option value="08">8 - Aug</option>
+                        <option value="09">9 - Sep</option>
+                        <option value="10">10 - Oct</option>
+                        <option value="11">11 - Nov</option>
+                        <option value="12">12 - Dec</option>
+                      </select>
+                      <div class="error-msg help-block"></div>
+                    </div>
+                    <div class="col-sm-6">
+                      <select id="ccyear" name="cc[year]" class="cc-select-req form-control">
+                        {assign var=thisyear value=$smarty.now|date_format:"%Y"} {assign var=numyears value=$thisyear+20}
+                        <option value="">Year</option>
+                        {for $year=$thisyear to $numyears}
+                        <option value="{$year}">{$year}</option>
+                        {/for}
+                      </select>
+                      <div class="error-msg help-block"></div>
+                    </div>
+                  </div>
+                </div>
 
-			                    <div class="col-sm-3 form-group">
-			                      <label class="visible-ie-only" for="securitycode">Security code<span>*</span>:</label>
-			    				  <div class="newl">
-			                      <input class="form-control" type="text" name="securitycode" id="securitycode"  required="">
-			                      <img src="/images/gift-scode.jpg" alt="Security code" title="Security code" id="scodeimg" />
-			    				  </div>
-								  <div class="error-msg help-block"></div>
-			                    </div>
-			    			</div>
-			    			<div class="row">
-				    			<div class="col-sm-12 text-center">
-					    			<br />
-									<p>*All certificates with a set delivery date will be sent at 9.00 am AEST.<br />
-									Please ensure you have read our <a href="#">Terms and Conditions</a> before purchasing a gift certificate.</p>
-									<br />
-				    			</div>
-			    			</div>
-			    			<div style="height:0;overflow:hidden;">
-			                   <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1">
-			                </div>
-			    			<div class="row error-msg" id="form-error" {if !$error}style="display:none"{/if}>{$error}</div>
-			    			<div class="row">
-			    				<div class="col-sm-12 text-center">
-			    					<input type="button" value="Buy now" onclick="$('#gift_form').submit();" class="btn-red btn" id="fbsub">
-			    				</div>
-			    			</div>
-					</div>
-				</div>
-		    	</form>
-			</div>
-		</div>
-	</div>
+                <div class="col-sm-6 form-group">
+                  <label class="visible-ie-only" for="cccsv">
+                    Security code<span>*</span> <img src="/images/question-mark.png" alt="What is this?" title="What is this?" data-toggle="tooltip" data-placement="top" /> :
+                  </label>
+                  <div>
+                    <input type="text" id="cccsv" name="cc[csv]" class="seccode form-control" autocomplete="off" pattern="[0-9]" required/>
+                    <img class="seccode" src="/images/donate-security.jpg" alt="Security code" />
+                  </div>
+                  <div class="error-msg help-block"></div>
+                </div>
+              </div>
+                <div class="row text-left">
+                  <div class="col-sm-12 form-group chkbx">
+	                  <div>
+                          <input class="autor" type="checkbox" id="accept" name="accept" required/>
+                          <label class="autor chklab" for="accept">
+                            I confirm that I have read and agreed to the <a href="/terms-and-conditions">terms &amp; conditions</a>.
+                          </label>
+	                  </div>
+                    <div class="error-msg help-block clearl"></div>
+                  </div>
+                </div>
+              <div style="height: 0; overflow: hidden;">
+                <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1">
+              </div>
+              <div class="row error-msg" id="form-error" {if !$error}style="display: none"{/if}>{$error}</div>
+              <div class="row">
+                <div class="col-sm-12 text-center">
+                  <input type="button" value="Buy now" onclick="$('#gift_form').submit();" class="btn-red btn" id="fbsub">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
-{/block}
-
-{* Place additional javascript here so that it runs after General JS includes *}
-{block name=tail}
+{/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
 <script src="/includes/js/jquery-ui.js"></script>
 <script src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
+  $(document).ready(function() {
 
-	    $( "#sendday" ).datepicker( {  dateFormat: "dd/mm/yy"} );
+    $("#sendday").datepicker({
+      dateFormat: "dd/mm/yy"
+    });
 
+    $("select").selectBoxIt();
 
-		$("select").selectBoxIt();
+    $("input[name=variant_id]").change(function() {
+      if($("input[name=variant_id]:checked").hasClass('other-val')){
+        $("#otheram").show();
+        $("#amount").val('');
+      }else{
+        $("#amount").val( $("input[name=variant_id]:checked").attr('data-value') );
+        $("#otheram").hide();
+      }
+      $('#fields-wrapper').fadeIn();
+    });
 
+    $('input[name="sendtime"]').change(function() {
+      if($(this).val() == 'now'){
+        $(".customdate").hide();
+      }else{
+        $(".customdate").fadeIn();
+      }
+    });
 
-		$("#selectday").click(function(){
-			$("#sendday").show();
-		});
+    $('#gift_form').validate();
 
-	 	$('#gift_form').validate();
+    $('#ccno').rules("add", {
+      creditcard : true,
+    });
 
-});
+    $('#cccsv').rules("add", {
+      digits: true,
+      minlength: 3
+    });
 
-
+  });
 </script>
 {/block}

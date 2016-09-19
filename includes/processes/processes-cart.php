@@ -454,6 +454,145 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $_SESSION['post'] = $_POST;
       header('Location: ' . $_SERVER['HTTP_REFERER'] . '#error');
       exit();
+      
+      
+    case 'quickcheckout':
+      //Has mandatory field: credit cart details, product_object_id, variant_id
+      if(empty($_POST['honeypot']) && !empty($_POST['timestamp']) && (time() - $_POST['timestamp']) > 3 && !empty($_POST['cc']) && !empty($_POST['product_object_id']) && !empty($_POST['variant_id'] )){
+        
+        $cart_obj = new cart($_SESSION['user']['public']['id']);
+        $order_cartId = $cart_obj->cart_id;
+        $orderNumber = $order_cartId . '-' . date("is");
+    
+        $userArr = $_SESSION['user']['public'];
+        // Load user details when empty
+        if(empty($userArr)){
+          $userArr = array(
+            "id" => 0, 
+            "gname" => $_POST['gname'], 
+            "surname" => $_POST['surname'], 
+            "email" => $_POST['email'] 
+          );
+        }
+        
+        $paymentMethod = 'Credit card';
+        if(!empty($GA_ID)){
+          sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
+        }
+    
+        $shippingFee = 0;
+    
+        $totals = $cart_obj->CalculateTotal();
+        $chargedAmount = $totals['total'] + $shippingFee;
+        $gst = round(($totals['GST_Taxable'] + $shippingFee) / 11, 2);
+        $params = array(
+            'payment_billing_address_id' => 0,
+            'payment_shipping_address_id' => 0,
+            'payment_status' => 'P',
+            'payment_transaction_no' => $orderNumber,
+            'payment_cart_id' => $order_cartId,
+            'payment_user_id' => $userArr['id'],
+            'payment_subtotal' => $totals['subtotal'],
+            'payment_discount' => $totals['discount'],
+            'payment_shipping_fee' => $shippingFee,
+            'payment_shipping_method' => '',
+            'payment_shipping_comments' => '',
+            'payment_payee_name' => $_POST['cc']['name'],
+            'payment_charged_amount' => $chargedAmount,
+            'payment_gst' => $gst,
+            'payment_method' => $paymentMethod
+        );
+        $pay_obj = new PayWay();
+        $response = false;
+    
+        $paymentId = $pay_obj->StorePaymentRecord($params);
+        $CCdata = array(
+            'amount' => $chargedAmount 
+        );
+        if(!empty($_POST['cc'])){
+          $CCdata = array_merge($CCdata, $_POST['cc']);
+        }
+        $pay_obj->PreparePayment($CCdata);
+        
+        try{
+          $response = $pay_obj->Submit();
+          $paymentId = $paypalObj->GetPaymentId();
+        }
+        catch(Exception $e){
+          if($error_msg = $pay_obj->GetErrorMessage()){
+            $_SESSION['error'] = $error_msg;
+          } else{
+            $_SESSION['error'] = 'Payment failed (on submit). Please verify the payment details and try again. ';
+          }
+          header('Location: ' . $_SERVER['HTTP_REFERER'] . '#error');
+          exit();
+        }
+        
+        $response = true;
+        if($response){
+          // PAYMENT SUCCESS
+          $cart_obj->CloseCart();
+          $pay_obj->SetOrderStatus($paymentId);
+          $_SESSION['orderNumber'] = $orderNumber;
+    
+          try{
+            // SEND CONFIRMATION EMAIL
+            $SMARTY->assign("user", $userArr);
+            $order = $cart_obj->GetDataCart($order_cartId);
+            $SMARTY->assign('order', $order);
+            $payment = $pay_obj->GetPaymentRecord($paymentId);
+            $SMARTY->assign('payment', $payment);
+            $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
+            $SMARTY->assign('orderItems', $orderItems);
+            $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+            $COMP = json_encode($CONFIG->company);
+            $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+            
+            $to = $userArr['email'];
+            // $bcc = 'apolo@them.com.au';
+            $from = (string)$CONFIG->company->name;
+            $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+            $subject = 'Confirmation of your order';
+            $body = $SMARTY->fetch('email-confirmation.tpl');
+            if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
+              $pay_obj->SetInvoiceEmail($paymentId, $mailID);
+            }
+          }
+          catch(Exception $e){}
+    
+          // SET GOOGLE ANALYTICS - ECOMMERCE
+          $totalsGA = array(
+              'id' => $order_cartId,
+              'total' => $chargedAmount,
+              'tax' => $gst,
+              'shipping' => $shippingFee,
+              'coupon' => $order['cart_discount_code']
+          );
+          $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
+          if(!empty($GA_ID)){
+            sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
+          }
+    
+          // OPEN NEW CART
+          $cart_obj->CreateCart($_SESSION['user']['public']['id']);
+    
+          // REDIRECT TO THANK YOU PAGE
+          header('Location: /thank-you-for-purchasing');
+          exit();
+        } else{
+          if($error_msg = $pay_obj->GetErrorMessage()){
+            $_SESSION['error'] = $error_msg;
+          } else{
+            $_SESSION['error'] = 'Payment failed. Verify information and try again. ';
+          }
+        }
+      } else{
+        $_SESSION['error'] = 'Database Connection Error. Please try again, otherwise contact us by phone.';
+      }
+    
+      $_SESSION['post'] = $_POST;
+      header('Location: ' . $_SERVER['HTTP_REFERER'] . '#error');
+      exit();
   }
   die('@');
 } else{
