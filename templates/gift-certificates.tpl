@@ -98,7 +98,7 @@
               </div>
               <div class="row">
                 <div class="col-sm-12">
-                  <input type="checkbox" class="form-control" value="Send anonymously" id="anonymous" name="anonymous" />
+                  <input type="checkbox" {if $post.anonymous}checked="checked"{/if} class="form-control" value="Send anonymously" id="anonymous" name="anonymous" />
                   <label for="anonymous">Send anonymously</label>
                 </div>
               </div>
@@ -111,12 +111,12 @@
               </div>
               <div class="row">
                 <div class="col-sm-4 form-group">
-                  <div class="clearl">
-                    <input type="radio" class="form-control" {if !$post.sendtime}checked="checked"{/if} value="now" id="sendnow" name="sendtime" required/>
+                  <div>
+                    <input type="radio" class="form-control" {if !$post.sendtime || $post.sendtime eq 'now'}checked="checked"{/if} value="now" id="sendnow" name="sendtime" required/>
                     <label for="sendnow">Send now</label>
                   </div>
                   <div class="clearl">
-                    <input type="radio" class="form-control" value="Select a day to send" id="selectday" name="sendtime" required/>
+                    <input type="radio" class="form-control" {if $post.sendtime eq 'another-day'}checked="checked"{/if} value="another-day" id="selectday" name="sendtime" required/>
                     <label for="selectday">Select a day to send</label>
                   </div>
                   <div class="clearl">
@@ -125,7 +125,7 @@
                   <br />
 
                   <br />
-                  <input type="text" class="customdate" placeholder="DD/MM/YYYY" id="sendday" name="sendday" />
+                  <input type="text" class="customdate" value="{$post.sendday}" placeholder="DD/MM/YYYY" id="sendday" name="sendday" />
                 </div>
               </div>
               <div class="row customdate" style="display:none">
@@ -205,7 +205,7 @@
 
                 <div class="col-sm-6 form-group">
                   <label class="visible-ie-only" for="cccsv">
-                    Security code<span>*</span> <img src="/images/question-mark.png" alt="What is this?" title="What is this?" data-toggle="tooltip" data-placement="top" /> :
+                    Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :
                   </label>
                   <div>
                     <input type="text" id="cccsv" name="cc[csv]" class="seccode form-control" autocomplete="off" pattern="[0-9]" required/>
@@ -217,9 +217,9 @@
                 <div class="row text-left">
                   <div class="col-sm-12 form-group chkbx">
 	                  <div>
-                          <input class="autor" type="checkbox" id="accept" name="accept" required/>
+                          <input class="autor" {if $post.accept}checked="checked"{/if} type="checkbox" id="accept" name="accept" required/>
                           <label class="autor chklab" for="accept">
-                            I confirm that I have read and agreed to the <a href="/terms-and-conditions">terms &amp; conditions</a>.
+                            I confirm that I have read and agreed to the <a href="/terms-and-conditions" title="View our terms and conditions" target="_blank">terms &amp; conditions</a>.
                           </label>
 	                  </div>
                     <div class="error-msg help-block clearl"></div>
@@ -264,6 +264,9 @@
       }
       $('#fields-wrapper').fadeIn();
     });
+
+	$('[data-toggle="tooltip"]').tooltip()
+
 
     $('input[name="sendtime"]').change(function() {
       if($(this).val() == 'now'){

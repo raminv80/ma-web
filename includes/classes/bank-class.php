@@ -162,6 +162,29 @@ class Bank{
     $this->payment_id = $DBobject->wrappedSqlIdentity();
     return $this->payment_id;
   }
+  
+  /**
+   * Set the user_id, billing_address_id and shipping_address_id values in the current payment record
+   * Array keys: payment_user_id, payment_billing_address_id, payment_shipping_address_id.
+   * @param array $payment
+   * @return boolean
+   */
+  function SetUserAddressIds($payment){
+    global $DBobject;
+  
+    if(!empty($this->payment_id)){
+      $sql = "UPDATE tbl_payment SET payment_user_id = :payment_user_id, payment_billing_address_id = :payment_billing_address_id, payment_shipping_address_id = :payment_shipping_address_id
+  			WHERE payment_id = :payment_id";
+      $params = array(
+          "payment_id" => $this->payment_id,
+          "payment_user_id" => $payment['payment_user_id'],
+          "payment_billing_address_id" => $payment['payment_billing_address_id'],
+          "payment_shipping_address_id" => $payment['payment_shipping_address_id']
+      );
+      return $DBobject->wrappedSql($sql, $params);
+    }
+    return false;
+  }
 
 
   /**
@@ -199,12 +222,15 @@ class Bank{
   function SetInvoiceEmail($paymentId, $emailId){
     global $DBobject;
     
-    $sql = "UPDATE tbl_payment SET payment_invoice_email_id = :email WHERE payment_id = :pid ";
-    $params = array(
-        ":pid" => $paymentId, 
-        ":email" => $emailId 
-    );
-    return $DBobject->wrappedSql($sql, $params);
+    if(!empty($this->payment_id)){
+      $sql = "UPDATE tbl_payment SET payment_invoice_email_id = :email WHERE payment_id = :pid ";
+      $params = array(
+          ":pid" => $paymentId, 
+          ":email" => $emailId 
+      );
+      return $DBobject->wrappedSql($sql, $params);
+    }
+    return false;
   }
 
 

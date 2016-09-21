@@ -28,7 +28,7 @@ table td {
 <br>
 <table>
 	<tr>
-		<td>Hi {$order.user_gname}</td>
+		<td>Hi {$billing.address_name}</td>
 	</tr>
 	<tr>
 		<td><br>{$message}<br>

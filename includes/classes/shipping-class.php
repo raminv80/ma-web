@@ -21,9 +21,9 @@ class ShippingClass {
       $this->methods['Shipping (standard)'] = 0.00;
     }*/
     if($qty > 0){
-      $this->methods['Postage'] = 9.00;
+      $this->methods['Postage & handling'] = 9.00;
     }else{
-      $this->methods['Postage'] = 0.00;
+      $this->methods['Postage & handling'] = 0.00;
     }
   }
 

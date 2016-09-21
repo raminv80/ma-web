@@ -142,10 +142,10 @@
         <div class="contliner">
         <p>Join the community:</p>
         <div id="contsocial">
-          <a href="#"><img src="/images/contact-fb.png" alt="Facebook" /></a>
-          <a href="#"><img src="/images/contact-twitter.png" alt="Twitter" /></a>
-          <a href="#"><img src="/images/contact-yt.png" alt="YouTube" /></a>
-          <a href="#"><img src="/images/contact-insta.png" alt="Instagram" /></a>
+          <a target="_blank" href="https://www.facebook.com/AustraliaMedicAlertFoundation" title="Visit our Facebook page" ><img src="/images/contact-fb.png" alt="Facebook" /></a>
+          <a target="_blank" href="https://twitter.com/MedicAlert_Aust"><img src="/images/contact-twitter.png" alt="Twitter" title="Find us on Twitter"/></a>
+          <a target="_blank" href="https://www.youtube.com/user/MedicAlertFoundation"><img src="/images/contact-yt.png" alt="YouTube" title="Find us on YouTube"/></a>
+          <a target="_blank" href="https://www.instagram.com/medicalert_aust/"><img src="/images/contact-insta.png" alt="Instagram" title="Find us on Instagram"/></a>
         </div>
         </div>
         </div>

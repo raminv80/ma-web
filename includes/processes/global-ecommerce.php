@@ -35,6 +35,9 @@ try{
   $productsOnCart = $cart_obj->GetDataProductsOnCart();
   $SMARTY->assign('productsOnCart', $productsOnCart);
   
+  //Temporary user's addresses
+  $SMARTY->assign('address', $_SESSION['address']);
+  
   //Shipping
   $discountData = $cart_obj->GetDiscountData($cart['cart_discount_code']);
   $shippable = $cart_obj->ShippableCartitems();

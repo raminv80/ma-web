@@ -111,6 +111,35 @@
 				</div>
 			</div>
 
+			<div class="col-sm-12 text-center" id="reminder1">
+				<h3>It looks like you haven’t purchased a new product in a while. </h3>
+				<p>Now is a good time to check that your engraving is legible and the attachments (e.g. jump rings and clasps) are in good condition. If the engraving is difficult to read, or you’d simply like a new piece of jewelry, order a new one below. Replacement attachments can be purchased by calling Membership Services on <a href="tel://1800 88 22 22">1800 88 22 22</a>.</p>
+
+				<div class="row">
+					<div class="col-sm-6 text-center" id="viewup1">
+						<div>
+							<img src="/images/dashboard-exclamation.png" alt="warning" /> <h3 class="inline">Reminder to check your medical ID</h3>
+						</div>
+						<p>If it is not clear to read it is time to purchase a new one.</p>
+						<div>
+							<img src="/images/dashboard-bracelet.png" alt="Check your medical ID" class="img-responsive bracelet" />
+						</div>
+						<p>If it is not clear to read it is time to purchase a new one.</p>
+					</div>
+					<div class="col-sm-6 text-center" id="autor1">
+						<div>
+							<img src="/images/dashboard-prods.png" alt="Latest products" class="img-responsive" />
+						</div>
+						<p class="bold">Our latest products</p>
+					</div>
+					<div class="col-sm-12 text-center">
+						<a href="#"	 class="btn btn-red">Find a new product</a>
+					</div>
+				</div>
+			</div>
+
+
+
 		</div>
 	</div>
 </div>
@@ -158,50 +187,23 @@
 				<h3>Special offers just for you</h3>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-sm-4">
+		<div class="row text-center">
+			<div class="col-sm-4 specials">
 				<a href="#">
-					<img src="/images/dashboard-special1.png" alt="Special product" class="img-responsive" />
+					<img src="/images/ad-dad-gift.jpg" alt="Special product" class="img-responsive" />
 				</a>
-				<div class="sptextout">
-				<div class="specialtext">
-					<h3>STAY PROTECTED every step you take</h3>
-					<p>Stainless Steel Wristband Tag</p>
-				</div>
-				<div class="view">
-					<a href="#">View product ></a>
-				</div>
-				</div>
 			</div>
 
-			<div class="col-sm-4">
+			<div class="col-sm-4 specials">
 				<a href="#">
-					<img src="/images/dashboard-special2.png" alt="Special product" class="img-responsive" />
+					<img src="/images/ad-gorgeous-gold.jpg" alt="Special product" class="img-responsive" />
 				</a>
-				<div class="sptextout">
-				<div class="specialtext">
-					<h3>Gorgeous gold</h3>
-					<p>The gold look has never been so affordable!</p>
-				</div>
-				<div class="view">
-					<a href="#">View product ></a>
-				</div>
-				</div>
 			</div>
 
-			<div class="col-sm-4">
+			<div class="col-sm-4 specials">
 				<a href="#">
-					<img src="/images/dashboard-special3.jpg" alt="Special product" class="img-responsive" />
+					<img src="/images/ad-stay-protected.jpg" alt="Special product" class="img-responsive" />
 				</a>
-				<div class="sptextout">
-				<div class="specialtext">
-					<h3>GIVE DAD THE GIFT OF PROTECTION</h3>
-					<p>Only one week to go! Free express shipping on orders over $50*</p>
-				</div>
-				<div class="view">
-					<a href="#">View product ></a>
-				</div>
-				</div>
 			</div>
 		</div>
 	</div>

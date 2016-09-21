@@ -200,7 +200,7 @@ class Listing {
           $val["id"] = $val['listing_id'];
           $val["published"] = $val['listing_published'];
           $val["preview_url"] = $p_url . self::getUrl($val['listing_parent_id'],$val['listing_published'], $val['listing_url']) ;
-          $val["preview_url"] = preg_match("/^\//",$val["preview_url"])?$val["preview_url"]:'/'.$val["preview_url"];
+          $val["preview_url"] = str_replace('//', '/', $val["preview_url"]);
           $val["url"] = "/admin/edit/{$this->CONFIG_OBJ->url}/{$val['listing_id']}";
           $val["url_delete"] = "/admin/delete/{$this->CONFIG_OBJ->url}/{$val['listing_id']}";
           $val["subs"] = $subs;

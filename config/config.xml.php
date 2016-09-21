@@ -177,7 +177,7 @@
     <pageID>103</pageID>
   </static_page>
   <static_page>
-    <url>corporate-partners</url>
+    <url>member-partners</url>
     <template>corporate-partners.tpl</template>
     <pageID>107</pageID>
   </static_page>

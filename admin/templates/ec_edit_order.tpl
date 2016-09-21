@@ -261,7 +261,7 @@ function sendStatusEmail(TO, PAYMENTID, STATUS){
 	$('#send-btn').addClass('disabled');
 	$.ajax({
 		type: "POST",
-	    url: "/admin/includes/processes/send-email.php",
+	    url: "/admin/includes/processes/processes-send-email.php",
 		cache: false,
 		async: false,
 		data: datastring,

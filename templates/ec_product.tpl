@@ -206,10 +206,10 @@
 						  	<label class="control-label lineno" for="additional-{$attr.attribute_id}-{$var}">Line {$var}</label>
 	                      </div>
 	                      <div class="col-sm-6 col-md-9 col-lg-6">
-						  	<input class="form-control" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}">
+						  	<input class="form-control{if $value[$varName]} hasmaxlength{/if}" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}">
 	                      </div>
 	                      <div class="col-sm-3 col-md-12 col-lg-4 charleft">
-		                      11 characters left
+		                      {if $value[$varName]}{$value[$varName]} characters left{/if}
 	                      </div>
                       </div>
                       {/if}
@@ -353,72 +353,79 @@
     }
     $('.panel-collapse').on('hidden.bs.collapse', toggleIcon);
     $('.panel-collapse').on('shown.bs.collapse', toggleIcon);
+    
 	$(document).ready(function(){
 
-$(window).on('resize', function() {
-setTimeout(function(){
-    var slider = $('.flexslider').data('flexslider');
-    slider.resize();
-}, 1000);
+      $(window).on('resize', function() {
+      setTimeout(function(){
+          var slider = $('.flexslider').data('flexslider');
+          slider.resize();
+      }, 1000);
+      
+      });
 
-});
+    	if (matchMedia) {
+    		var mq = window.matchMedia("(max-width: 992px)");
+    		mq.addListener(WidthChange1);
+    		WidthChange1(mq);
+    	}
 
-	if (matchMedia) {
-		var mq = window.matchMedia("(max-width: 992px)");
-		mq.addListener(WidthChange1);
-		WidthChange1(mq);
-	}
+    	function WidthChange1(mq) {
+    
+    	if (mq.matches) {
+    		$("#prodformbelow").append($("#accordion"));
+    	}
+    	else{
+    		$("#accout").append($("#accordion"));
+    	}
+    
+    	}
 
-	function WidthChange1(mq) {
+		$('#product-form').validate();
 
-	if (mq.matches) {
-		$("#prodformbelow").append($("#accordion"));
-	}
-	else{
-		$("#accout").append($("#accordion"));
-	}
+		var attributes = [];
+		{if $attribute}
+			{foreach $attribute as $attr }
+				var {urlencode data=$attr.attribute_name} = getParameterByName('{urlencode data=$attr.attribute_name}');
+				attributes.push( getParameterByName('{urlencode data=$attr.attribute_name}') );
 
-	}
-
-			$('#product-form').validate();
-
-			var attributes = [];
-			{if $attribute}
-				{foreach $attribute as $attr }
-					var {urlencode data=$attr.attribute_name} = getParameterByName('{urlencode data=$attr.attribute_name}');
-					attributes.push( getParameterByName('{urlencode data=$attr.attribute_name}') );
-
-					$("#{urlencode data=$attr.attribute_name} option[name*='"+ {urlencode data=$attr.attribute_name} +"']").attr("selected", "selected");
-				{/foreach}
-			{/if}
+				$("#{urlencode data=$attr.attribute_name} option[name*='"+ {urlencode data=$attr.attribute_name} +"']").attr("selected", "selected");
+			{/foreach}
+		{/if}
 
 
-
-			$('.hasAttr').change(function(){
-			  BlockAttrOptions(this);
-			  DisplayPrice();
-			});
-
-			$('select.hasAttr').focus(function(){
-			  UnblockSelectOptions(this);
-			});
-
-			$('select.hasAdditional').change(function(){
-			  SetAdditionals($(this).val());
-			});
-
-			//calculatePrice();
-
-			/* ga('ec:addProduct', {
-	 	    'id': '{$product_object_id}',
-	 	    'name': '{$product_name}',
-	 	    'category': '{$product_FullCategoryName}',
-	 	    'brand': '{$product_brand}',
-	 	    'variant': attributes.join('/')
-	 	  });
-	 	  ga('ec:setAction', 'detail'); */
-
+		$('.hasAttr').change(function(){
+		  BlockAttrOptions(this);
+		  DisplayPrice();
 		});
+
+		$('select.hasAttr').focus(function(){
+		  UnblockSelectOptions(this);
+		});
+
+		$('select.hasAdditional').change(function(){
+		  SetAdditionals($(this).val());
+		});
+		
+		$('.hasmaxlength').keyup(function(){
+		  var left = parseInt($(this).attr('maxlength')) - $(this).val().length;
+		  var content = left + ' character' + (left > 1 ? 's' : '') + ' left';
+		  $(this).closest('.row').find('.charleft').html(content);
+		});
+
+		//calculatePrice();
+
+		/* ga('ec:addProduct', {
+ 	    'id': '{$product_object_id}',
+ 	    'name': '{$product_name}',
+ 	    'category': '{$product_FullCategoryName}',
+ 	    'brand': '{$product_brand}',
+ 	    'variant': attributes.join('/')
+ 	  });
+ 	  ga('ec:setAction', 'detail'); */
+
+	});
+	
 $(window).load(function() {
   $('#prodslider .flexslider').flexslider({
     animation: "slide",

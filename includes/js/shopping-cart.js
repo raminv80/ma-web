@@ -542,7 +542,7 @@ function calculateTotal() {
 	}*/
 	//var total = subtotal + fee; 
 	var total = subtotal; 
-	$('#total').html('$'+ total.formatMoney(2, '.', ',') +' <div class="small notbold">AUD (inc. GST)</div>');
+	$('#total').html('$'+ total.formatMoney(2, '.', ','));
 	/*$('#shipMethod').val($('#shippingMethod option:selected').text());*/
 };
 

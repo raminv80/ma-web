@@ -8,9 +8,12 @@ class UserClass{
   public $sessionVars = array(); // All the variables to be stored in session
   private $token = null;
   private $errorMsg = null;
+  protected $DBobj = null; // Database object/connector - WEBSITE ONLY 
 
 
   function __construct(){
+    global $DBobject;
+    $this->DBobj = $DBobject;
     $this->medicAlertApi = new medicAlertApi();
   }
 
@@ -1112,6 +1115,118 @@ class UserClass{
 	function getSessionVars(){
 	  return $this->sessionVars;
 	}
+	
+	
+	/**
+	 * FOR WEBSITE ONLY
+	 * Insert new address in tbl_address and returns address_id
+	 * Require associative array: (address_user_id, address_name, address_telephone, address_mobile, address_line1, address_line2,
+	 address_suburb, address_state, address_country, address_postcode)
+	 * @param array $addressArr
+	 * @return int
+	 */
+	function InsertNewAddress($addressArr){
+      $params = array(
+          ":address_user_id" => $addressArr['address_user_id'], 
+          ":address_name" => (empty($addressArr['address_name'])? '' : $addressArr['address_name']), 
+          ":address_surname" => (empty($addressArr['address_surname'])? '' : $addressArr['address_surname']), 
+          ":address_email" => (empty($addressArr['address_email'])? '' : $addressArr['address_email']), 
+          ":address_telephone" => (empty($addressArr['address_telephone'])? '' : $addressArr['address_telephone']), 
+          ":address_mobile" => (empty($addressArr['address_mobile'])? '' : $addressArr['address_mobile']), 
+          ":address_line1" => (empty($addressArr['address_line1'])? '' : $addressArr['address_line1']), 
+          ":address_line2" => (empty($addressArr['address_line2'])? '' : $addressArr['address_line2']), 
+          ":address_suburb" => (empty($addressArr['address_suburb'])? '' : $addressArr['address_suburb']), 
+          ":address_state" => (empty($addressArr['address_state'])? '' : $addressArr['address_state']), 
+          ":address_country" => (empty($addressArr['address_country'])? '' : $addressArr['address_country']), 
+          ":address_postcode" => (empty($addressArr['address_postcode'])? '' : $addressArr['address_postcode']) 
+      );
+      $sql = "SELECT address_id FROM tbl_address WHERE
+          address_user_id = :address_user_id AND address_name = :address_name AND address_surname = :address_surname AND
+          address_email = :address_email AND address_telephone = :address_telephone AND address_mobile = :address_mobile AND
+          address_line1 = :address_line1 AND address_line2 = :address_line2 AND address_suburb = :address_suburb AND
+          address_state = :address_state AND address_country = :address_country AND address_postcode = :address_postcode AND
+          address_deleted IS NULL";
+      
+      if($res = $this->DBobj->wrappedSql($sql, $params)){
+        $sql = "UPDATE tbl_address SET address_modified = now()  WHERE address_id = :id ";
+        $this->DBobj->wrappedSql($sql, array(':id' => $res[0]['address_id']));
+        return $res[0]['address_id'];
+      } else{
+        $sql = " INSERT INTO tbl_address (
+            address_user_id, address_name, address_surname, address_email, address_telephone, address_mobile, address_line1,
+            address_line2, address_suburb, address_state, address_country, address_postcode,	address_created
+          ) VALUES (
+            :address_user_id, :address_name, :address_surname, :address_email, :address_telephone, :address_mobile, :address_line1,
+            :address_line2, :address_suburb, :address_state, :address_country, :address_postcode,	now()
+          )";
+        
+        if($this->DBobj->wrappedSql($sql, $params)){
+          return $this->DBobj->wrappedSqlIdentity();
+        }
+      }
+      return 0;
+	}
+	
+	
+	/**
+	 * FOR WEBSITE ONLY
+	 * Return array recordset given the address_id
+	 *
+	 * @param int $addressId
+	 * @return array
+	 */
+	function GetAddress($addressId) {
+	
+	  $sql = "SELECT * FROM tbl_address WHERE address_deleted IS NULL AND address_id = :id ";
+	  $res = $this->DBobj->wrappedSql($sql, array(':id' => $addressId) );
+	  return $res[0];
+	}
+
+
+  /**
+   * ONLY FOR GUEST - Insert a new record in tbl_user and return associative array: ('id', 'gname', 'surname', 'email')
+   * On error return associative array: ('error')
+   * Require associative array: ('gname', 'surname', 'password', 'email')
+   *
+   * @param array $user          
+   * @return array
+   */
+  function CreateGuest($user){
+    $temp_str = getPass(time() . '@@' . $user['email'], genRandomString(10));
+    $params = array(
+        ":username" => time() . '@@' . $user['email'], 
+        ":gname" => $user['gname'], 
+        ":surname" => (empty($user['surname'])? '' : $user['surname']), 
+        ":email" => $user['email'], 
+        ":password" => $temp_str, 
+        ":mobile" => $user['mobile'], 
+        ":user_site" => $this->site, 
+        ":email_promo" => (empty($user['want_email_promo'])? 0 : 1), 
+        ":sms_promo" => (empty($user['want_sms_promo'])? 0 : 1), 
+        ":ip" => $_SERVER['REMOTE_ADDR'], 
+        ":browser" => $_SERVER['HTTP_USER_AGENT'] 
+    );
+    
+    $sql = "INSERT INTO tbl_user (user_username, user_gname, user_surname, user_email, user_password, user_mobile, user_site, user_email_promo, user_sms_promo, user_ip, user_browser, user_created)
+					 values ( :username, :gname, :surname, :email, :password, :mobile, :user_site, :email_promo, :sms_promo, :ip, :browser, now() )";
+    if($this->DBobj->wrappedSql($sql, $params)){
+      $userId = $this->DBobj->wrappedSqlIdentity();
+      $this->user_id = $userId;
+      $result = array(
+          "id" => $userId, 
+          "gname" => $user['gname'], 
+          "surname" => $user['surname'], 
+          "email" => $user['email'] 
+      );
+    } else{
+      $this->user_id = 0;
+      $result = array(
+          'error' => 'There was a connection problem. Please, try again!' 
+      );
+    }
+    return $result;
+  }
+	
 
 }
 

@@ -227,6 +227,29 @@ class cart {
     }
     return 0;
   }
+  
+  /**
+   * NORMALLY USED AFTER A SUCCESSFUL PAYMENT AND USER WAS CREATED 
+   * Set the cart_user_id on a closed cart
+   * 
+   * @param int $cartId
+   * @param int $userId
+   * @return boolean
+   */
+  function UpdateUserIdOfClosedCart($cartId, $userId) {
+    global $DBobject;
+  
+    if(!empty($cartId) && !empty($userId)){
+      $sql = "SELECT cart_id FROM tbl_cart WHERE cart_closed_date IS NOT NULL AND cart_id = :cid";
+      if($res = $DBobject->wrappedSql($sql, array(":cid" => $cartId))){
+        $sql = "UPDATE tbl_cart SET cart_user_id = :uid WHERE cart_closed_date IS NOT NULL AND cart_id = :cid";
+        if($DBobject->wrappedSql($sql, array(":uid" => $userId, ":cid" => $cartId))){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   /**
    * Close current cart (or given cart_id) by setting current datetime in cart_closed_date field
@@ -246,6 +269,7 @@ class cart {
 				":id" => $cart_id 
 		) );
 	}
+	
 
   /**
    * Delete current cart (or given cart_id) by seeting current datetime in cart_deleted field
@@ -515,11 +539,11 @@ class cart {
     }
     
     return array(
-        'subtotal'=>$subtotal,
-        'discount'=>$discount,
-    		'discount_error'=>$discount_error,
-        'GST_Taxable'=>$gst_taxable - $discount,
-        'total'=>$subtotal - $discount
+        'subtotal' => $subtotal,
+        'discount' => $discount,
+    	'discount_error' => $discount_error,
+        'GST_Taxable' => $gst_taxable - $discount,
+        'total' => $subtotal - $discount
     );
   }
 
@@ -560,7 +584,7 @@ class cart {
     $res = $DBobject->wrappedSql($sql,array(
         ":id"=>$cartId
     ));
-    return $res[0]['SUM'];
+    return (empty($res[0]['SUM']) ? 0 : $res[0]['SUM']);
   }
 
   /**
@@ -609,6 +633,7 @@ class cart {
           ":product_id" => $product['product_object_id'], 
           ":variant_id" => $product['variant_id'], 
           ":type_id" => $product['product_type_id'], 
+          ":uid" => (empty($product['variant_uid']) ? $product['product_uid'] : $product['variant_uid']), 
           ":product_name" => $product['product_name'], 
           ":product_price" => $product['product_price'], 
           ":qty" => $quantity, 
@@ -617,8 +642,8 @@ class cart {
           ":ip" => $_SERVER['REMOTE_ADDR'], 
           ":browser" => $_SERVER['HTTP_USER_AGENT']
       );
-      $sql = "INSERT INTO tbl_cartitem ( cartitem_cart_id, cartitem_product_id, cartitem_variant_id, cartitem_type_id, cartitem_product_name, cartitem_product_price, cartitem_quantity, cartitem_subtotal, cartitem_product_gst, cartitem_user_ip, cartitem_user_browser, cartitem_created )
-        values( :cid, :product_id, :variant_id, :type_id, :product_name, :product_price, :qty, :subtotal, :product_gst, :ip, :browser, now() )";
+      $sql = "INSERT INTO tbl_cartitem ( cartitem_cart_id, cartitem_product_id, cartitem_variant_id, cartitem_type_id, cartitem_product_uid, cartitem_product_name, cartitem_product_price, cartitem_quantity, cartitem_subtotal, cartitem_product_gst, cartitem_user_ip, cartitem_user_browser, cartitem_created )
+        values( :cid, :product_id, :variant_id, :type_id, :uid, :product_name, :product_price, :qty, :subtotal, :product_gst, :ip, :browser, now() )";
       if($res = $DBobject->wrappedSql($sql, $params)){
         $errorCnt = 0;
         $cartitem_id = $DBobject->wrappedSqlIdentity();

@@ -113,15 +113,15 @@
 			  <div class="row totcost">
 				<div class="col-sm-12">
 		            <div class="row tallrow">
-		              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right mobl">Subtotal</div>
+		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label text-right mobl">Subtotal</div>
 		              <!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
-		              <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr" id="subtotal" data-value="{$totals.total}">${$totals.total|number_format:2:".":","}</div>
+		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr" id="subtotal" data-value="{$totals.total}">${$totals.total|number_format:2:".":","}</div>
 		            </div>
 
 		            {if $totals.discount gt 0}
 		            <div class="row tallrow">
-		              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right mobl">Discount</div>
-		              <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr" id="discount" data-value="{$totals.total}">{if $totals.discount gt 0} <small><b>$-{$totals.discount|number_format:2:".":","}</b></small> {else} $0.00 {/if}</div>
+		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label text-right mobl">Discount</div>
+		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr" id="discount" data-value="{$totals.total}">{if $totals.discount gt 0} <small><b>$-{$totals.discount|number_format:2:".":","}</b></small> {else} $0.00 {/if}</div>
 		            </div>
 					{/if}
 
@@ -129,24 +129,24 @@
 		            <div class="row tallrow">
 		              {foreach $shippingMethods as $k => $v}
 		                <input type="hidden" value="{$v}" name="shipMethod" id="shippingMethod" />
-		                <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">{$k}  <img src="/images/question-mark.png" alt="What is this?" title="What is this?" data-toggle="tooltip" data-placement="top" /> :</div>
-		                <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr">${$v|number_format:2:".":","}</div>
+		                <div class="col-xs-8 col-sm-8 col-md-10 shopping-label text-right  mobl">{$k} <img src="/images/question-mark.png" alt="Please allow approximately 20 working days to receive your order." title="Please allow approximately 20 working days to receive your order." data-toggle="tooltip" data-placement="top" /></div>
+		                <div class="col-xs-4 col-sm-4 col-md-2 num text-right mobr">${$v|number_format:2:".":","}</div>
 		              {/foreach}
 		            </div>
 
 		            <div class="row tallrow">
-		              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">GST inc. in total<br /><span class="subj">(*Subject to GST)</span></div>
-		              <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr">$2.38</div>
+		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label text-right  mobl">GST inc. in total<br /><span class="subj">(*Subject to GST)</span></div>
+		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr">$2.38</div>
 		            </div>
 
 		            <div class="row tots tallrow"><!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
-		              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label bold text-right mobl" id="totall">Total</div>
-		              <div class="col-xs-7 col-sm-4 col-md-2 bold num text-left mobr" id="total">{assign var='newTotal' value=$selectedShippingFee + $totals.total}<div class="bold tots" id="total">${$newTotal|number_format:2:".":","}</div>
+		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label bold text-right mobl" id="totall">Total</div>
+		              <div class="col-xs-5 col-sm-4 col-md-2 bold num text-right mobr" id="total">{assign var='newTotal' value=$selectedShippingFee + $totals.total}<div class="bold tots" id="total">${$newTotal|number_format:2:".":","}</div>
 		              </div>
 		            </div>
 
 		            <div class="row tots tallrow"><!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
-		              <div class="col-xs-12 col-sm-8 col-md-10 shopping-label bold text-right mobl"><a href="#">Edit ></a></div>
+		              <div class="col-xs-12 col-sm-8 col-md-10 shopping-label bold text-right mobl"><a href="/shopping-cart" title="Edit items">Edit ></a></div>
 					</div>
 	            </div>
 				</div>
@@ -160,7 +160,7 @@
 						{$address.B.address_name} {$address.B.address_surname}<br >
 						{$address.B.address_line1}<br >
 						{$address.B.address_suburb} {$address.B.address_state} {$address.B.address_postcode}<br >
-						{$address.B.email}<br >
+						{$address.B.address_email}<br >
 						{$address.B.address_telephone}<br >
 						{/if}
 						</div>
@@ -171,14 +171,14 @@
 						<div id="shipping-summary">
 						{if $address.same_address}
 						<span class="small">Shipping address same as billing address</span><br />
-						{if $comments}Shipping instructions: {$comments}{else}No shipping instructions <br />{/if}
+						{if $address.comments}Shipping instructions: {$address.comments}{else}No shipping instructions <br />{/if}
 						{else}
 						{if $address.S}
 						{$address.S.address_name} {$address.S.address_surname}<br >
 						{$address.S.address_line1}<br >
 						{$address.S.address_suburb} {$address.B.address_state} {$address.B.address_postcode}<br >
 						{$address.S.address_telephone}<br >
-						{if $comments}Shipping instructions: {$comments}{else}No shipping instructions <br />{/if}
+						{if $address.comments}Shipping instructions: {$address.comments}{else}No shipping instructions <br />{/if}
 						{/if}
 						{/if}
 					</div>
@@ -216,12 +216,12 @@
     	  		<div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="street">Address<span>*</span>:</label>
-                      <input id="street" value="{if $address}{$address.B.address_line1}{/if}" name="address[B][address_line1]" type="text" class="billing-req form-control" required="required"  />
+                      <input id="street" value="{if $address}{$address.B.address_line1}{else}{$user.maf.main.user_address}{/if}" name="address[B][address_line1]" type="text" class="billing-req form-control" required="required"  />
 						<div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="suburb">Suburb*:</label>
-                      <input id="suburb" value="{if $address}{$address.B.address_suburb}{else}{$selectedShippingSuburb}{/if}" name="address[B][address_suburb]" type="text" class="billing-req form-control" required="required"  />
+                      <input id="suburb" value="{if $address}{$address.B.address_suburb}{else}{$user.maf.main.user_suburb}{$selectedShippingSuburb}{/if}" name="address[B][address_suburb]" type="text" class="billing-req form-control" required="required"  />
 						<div class="error-msg help-block"></div>
                   </div>
     	  		</div>
@@ -232,14 +232,14 @@
                       <select id="state" name="address[B][address_state]" class="required form-control">
                         <option value="">Please select</option>
                         {foreach $options_state as $value }
-                        <option value="{$value.postcode_state}" {if ($address && $address.B.address_state eq $value.postcode_state) OR $selectedShippingState eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option>
+                        <option value="{$value.postcode_state}" {if ($address && $address.B.address_state eq $value.postcode_state) || (!$address && {$user.maf.main.user_state}) || (!$address && $selectedShippingState eq $value.postcode_state)}selected="selected"{/if}>{$value.postcode_state}</option>
                       {/foreach}
                       </select>
 						<div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="postcode-field">Postcode*:</label>
-                      <input id="postcode-field" value="{if $shippostcode}{$shippostcode}{else}{if $address && $address.B.address_postcode}{$address.B.address_postcode}{/if}{/if}" name="address[B][address_postcode]" pattern="[0-9]" type="text" class="postcode billing-req form-control" required="required" onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
+                      <input id="postcode-field" value="{if $shippostcode}{$shippostcode}{else}{if $address && $address.B.address_postcode}{$address.B.address_postcode}{else}{$user.maf.main.user_postcode}{/if}{/if}" name="address[B][address_postcode]" pattern="[0-9]" type="text" class="postcode billing-req form-control" required="required" onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
 						<div class="error-msg help-block"></div>
                   </div>
     	  		</div>
@@ -247,12 +247,12 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="email">Email*:</label>
-                      <input id="email" value="{if $address && $address.B.email}{$address.B.email}{else}{$user.email}{/if}" name="address[B][email]" type="email" class="billing-req form-control" required="required"  />
+                      <input id="email" value="{if $address && $address.B.address_email}{$address.B.address_email}{else}{$user.email}{/if}" name="address[B][address_email]" type="email" class="billing-req form-control" required="required"  />
 						<div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="phone">Phone*:</label>
-                      <input id="phone" value="{if $address}{$address.B.address_telephone}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required"  />
+                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{$user.maf.main.user_phone_home}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required"  />
 						<div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -264,7 +264,7 @@
 
                     <div class="row">
 	                    <div class="col-sm-12 form-group">
-							<input id="chksame" name="address[chksame]" type="checkbox" checked="checked" onclick="sameAddress();" />
+							<input id="chksame" name="address[same_address]" type="checkbox" checked="checked" onclick="sameAddress();" />
 							<label class="chklab" for="chksame"><span class="bold">Ship items to the above billing address.</span> Please note we cannot ship to PO boxes.</label>
 	                    </div>
                     </div>
@@ -324,7 +324,7 @@
 					<div class="row">
 						<div class="col-sm-12 form-group">
 							<label class="visible-ie-only" for="comments">Shipping instructions <small>(max. 128 characters)</small>:</label>
-							<textarea id="text" name="comments" id="text" maxlength="128" class="form-control">{if $comments}{$comments}{/if}</textarea>
+							<textarea id="text" name="address[comments]" id="text" maxlength="128" class="form-control">{if $address.comments}{$address.comments}{/if}</textarea>
 						</div>
 					</div>
 
@@ -436,7 +436,7 @@
 				  		</div>
 
 				  		<div class="col-sm-6 form-group">
-				  			<label class="visible-ie-only" for="cccsv">Security code<span>*</span> <img src="/images/question-mark.png" alt="What is this?" title="What is this?" data-toggle="tooltip" data-placement="top" /> :</label>
+				  			<label class="visible-ie-only" for="cccsv">Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :</label>
 				  			<div>
 					  			<input type="text" id="cccsv" name="cc[csv]" class="seccode cc-req form-control" autocomplete="off" />
 					  			<img  class="seccode" src="/images/donate-security.jpg" alt="Security code" />
@@ -475,7 +475,7 @@
 				  	<div class="row notice">
 					  	<div class="col-sm-12 text-center">
 					  		<p>Auto-renewal helps protect you by paying your annual membership fee automatically each year by direct debit from your nominated payment method.
-Please confirm your auto-renewal payment method below. The first payment will occur at your next renewal of annual membership.</p>
+                            Please confirm your auto-renewal payment method below. The first payment will occur at your next renewal of annual membership.</p>
 
 							<p>Please update with an alternative credit card if required.</p>
 					  	</div>
@@ -486,7 +486,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 					  	<div class="col-sm-6 text-center">
 					  		<div class="row">
 						  		<div class="col-sm-12 form-group">
-						  			<input class="form-control autor" type="radio" value="Credit card" name="autopayment" id="autocredit" required="" onclick="automethod();">
+						  			<input class="form-control autor" type="radio" value="Credit card" name="autopayment" id="autocredit" onclick="automethod();">
 						  			<label class="autor chkbox" for="autocredit">Credit card</label>
 						  			<div class="error-msg help-block"></div>
 						  		</div>
@@ -495,7 +495,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 					  	<div class="col-sm-6 text-center">
 					  		<div class="row">
 						  		<div class="col-sm-12 form-group">
-						  			<input class="form-control autor" type="radio" value="Direct debit" name="autopayment" id="autodd" required="" onclick="automethod();">
+						  			<input class="form-control autor" type="radio" value="Direct debit" name="autopayment" id="autodd" onclick="automethod();">
 						  			<label class="autor chkbox" for="autodd">Direct debit</label>
 						  			<div class="error-msg help-block"></div>
 						  		</div>
@@ -508,7 +508,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 					  		<div class="row">
 						  		<div class="col-sm-12 form-group">
 						  			<label class="visible-ie-only" for="autocreditno">Card number<span>*</span>:</label>
-						  			<input class="form-control" type="text" name="autocreditno" id="autocreditno" required>
+						  			<input class="form-control auto-cc-req" type="text" name="autocreditno" id="autocreditno" >
 						  			<div class="error-msg help-block"></div>
 						  		</div>
 					  		</div>
@@ -516,7 +516,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 					  		<div class="row">
 						  		<div class="col-sm-12 form-group">
 						  			<label class="visible-ie-only" for="autocreditname">Cardholder name<span>*</span>:</label>
-						  			<input class="form-control" type="text" name="autocreditname" id="autocreditname" required>
+						  			<input class="form-control auto-cc-req" type="text" name="autocreditname" id="autocreditname" >
 						  			<div class="error-msg help-block"></div>
 						  		</div>
 					  		</div>
@@ -526,7 +526,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 						  			<label class="visible-ie-only" for="autocreditexp">Expiry<span>*</span>:</label>
 						  			<div class="row">
 							  		<div class="col-sm-6">
-						  			<select class="form-control" id="autocreditmonth" name="autocreditmonth" class="cc-select-req form-control">
+						  			<select id="autocreditmonth" name="autocreditmonth" class="auto-cc-req form-control">
 			                        <option value="">Month</option>
 			                        <option value="01">1 - Jan</option>
 			                        <option value="02">2 - Feb</option>
@@ -544,7 +544,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 						  			<div class="error-msg help-block"></div>
 							  		</div>
 							  		<div class="col-sm-6">
-				                    <select id="autocredityear" name="autocredityear" class="cc-select-req form-control" >
+				                    <select id="autocredityear" name="autocredityear" class="auto-cc-req form-control" >
 			                       {assign var=thisyear value=$smarty.now|date_format:"%Y"}
 			                       {assign var=numyears value=$thisyear+20}
 			                       <option value="">Year</option>
@@ -562,7 +562,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 						  		<div class="col-sm-12 form-group">
 						  			<label class="visible-ie-only" for="cccsv">Security code<span>*</span>:<a class="small" data-toggle="modal" data-target="#csv-info" href="#"><img src="/images/question-mark.png" alt="What is this?" title="What is this?" /></a></label>
 						  			<div>
-							  			<input type="text" id="cccsv" name="cc[csv]" class="seccode cc-req form-control" autocomplete="off" required />
+							  			<input type="text" id="cccsv" name="cc[csv]" class="seccode auto-cc-req form-control" autocomplete="off" required />
 							  			<img class="seccode" src="/images/donate-security.jpg" alt="Security code" />
 						  			</div>
 						  			<div class="error-msg help-block"></div>
@@ -574,7 +574,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 					  		<div class="row">
 						  		<div class="col-sm-12 form-group">
 						  			<label class="visible-ie-only" for="autobsb">BSB<span>*</span>:</label>
-						  			<input class="form-control" type="text" name="autobsb" id="autobsb" required>
+						  			<input class="form-control auto-dd-req" type="text" name="autobsb" id="autobsb" >
 						  			<div class="error-msg help-block"></div>
 						  		</div>
 					  		</div>
@@ -582,7 +582,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 					  		<div class="row">
 						  		<div class="col-sm-12 form-group">
 						  			<label class="visible-ie-only" for="autoddname">Account holder's name<span>*</span>:</label>
-						  			<input class="form-control" type="text" name="autoddname" id="autoddname" required>
+						  			<input class="form-control auto-dd-req" type="text" name="autoddname" id="autoddname" >
 						  			<div class="error-msg help-block"></div>
 						  		</div>
 					  		</div>
@@ -590,7 +590,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 					  		<div class="row">
 						  		<div class="col-sm-12 form-group">
 						  			<label class="visible-ie-only" for="autoddno">Account number<span>*</span>:</label>
-						  			<input class="form-control" type="text" name="autoddno" id="autoddno" required>
+						  			<input class="form-control auto-dd-req" type="text" name="autoddno" id="autoddno" >
 						  			<div class="error-msg help-block"></div>
 						  		</div>
 					  		</div>
@@ -600,7 +600,7 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 					  	<div class="col-sm-12 text-center">
 					  		<div class="row">
 						  		<div class="col-sm-12 form-group chkbx">
-				                  <input class="autor" type="checkbox" id="accept" name="accept" required/>
+				                  <input class="autor auto-dd-req" type="checkbox" id="accept" name="accept" />
 					                <label class="autor chklab" for="accept">
 					                  I confirm that I have read and agree to the <a href="#">auto-renewal terms &amp; conditions</a> and I wish to register for auto-renewal of my membership.
 					                </label>
@@ -655,11 +655,6 @@ Please confirm your auto-renewal payment method below. The first payment will oc
 {* Place additional javascript here so that it runs after General JS includes *}
 {block name=tail}
 <script src="/includes/js/jquery-ui.js"></script>
-<script>
-/*** Handle jQuery plugin naming conflict between jQuery UI and Bootstrap ***/
-$.widget.bridge('uitooltip', $.ui.tooltip);
-</script>
-
 <script type="text/javascript" src="/includes/js/jquery.selectBoxIt.min.js"></script>
 
 <script type="text/javascript">
@@ -672,7 +667,7 @@ $.widget.bridge('uitooltip', $.ui.tooltip);
 	autorenew();
 
 	$("select").selectBoxIt();
-  $('[data-toggle="tooltip"]').tooltip()
+  	$('[data-toggle="tooltip"]').tooltip();
 
 
     {if $newTotal gt 0.01 }

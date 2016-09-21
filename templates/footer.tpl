@@ -67,16 +67,16 @@
         <div class="col-sm-6" id="socfooter1">
 	      <div>Join the community:</div>
           <div class="socout">
-            <a target="_blank" href="#"><img src="/images/footer-fb.png" alt="Facebook icon" title="Visit our Facebook page" /></a>
+            <a target="_blank" href="https://www.facebook.com/AustraliaMedicAlertFoundation"><img src="/images/footer-fb.png" alt="Facebook icon" title="Visit our Facebook page" /></a>
           </div>
           <div class="socout">
-            <a target="_blank" href="#"><img src="/images/footer-twitter.png" alt="Twitter icon" title="Find us on Twitter" /></a>
+            <a target="_blank" href="https://twitter.com/MedicAlert_Aust"><img src="/images/footer-twitter.png" alt="Twitter icon" title="Find us on Twitter" /></a>
           </div>
           <div class="socout">
-            <a target="_blank" href="#"><img src="/images/footer-yt.png" alt="Youtube icon" title="Find us on YouTube" /></a>
+            <a target="_blank" href="https://www.youtube.com/user/MedicAlertFoundation"><img src="/images/footer-yt.png" alt="Youtube icon" title="Find us on YouTube" /></a>
           </div>
           <div class="socout">
-            <a target="_blank" href="#"><img src="/images/footer-insta.png" alt="Instagram icon" title="Find us on Instagram" /></a>
+            <a target="_blank" href="https://www.instagram.com/medicalert_aust/"><img src="/images/footer-insta.png" alt="Instagram icon" title="Find us on Instagram" /></a>
           </div>
         </div>
         <div class="col-sm-3 col-md-2 col-sm-offset-3 col-md-offset-4" id="socfooter2">

@@ -11,13 +11,15 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
     $SMARTY->unloadFilter('output', 'trimwhitespace');
     try{
       $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
-      $body = $SMARTY->fetch("email/friend-referral.tpl");
       $subject = 'Do you know anything about MedicAlert Foundation?';
       $fromEmail = (string) $CONFIG->company->email_from;
       $to = $_POST['friendemail'];
+      $SMARTY->assign('friend_name', $_POST['friendname']);
+      $SMARTY->assign('user_name', $_POST['name']);
       $COMP = json_encode($CONFIG->company);
       $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
       $from = (string) $CONFIG->company->name;
+      $body = $SMARTY->fetch("email/friend-referral.tpl");
       $sent = sendMail($to, $from, $fromEmail, $subject, $body);
     }catch (Exception $e){
       $error = 'There was an error sending the contact email.';

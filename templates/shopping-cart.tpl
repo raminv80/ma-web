@@ -183,12 +183,12 @@
 	            <div class="row tallrow">
 	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right mobl">Subtotal</div>
 	              <!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
-	              <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr" id="subtotal" data-value="{$totals.total}">${$totals.total|number_format:2:".":","}</div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr" id="subtotal" data-value="{$totals.total}">${$totals.total|number_format:2:".":","}</div>
 	            </div>
 	            {if $totals.discount gt 0}
 	            <div class="row tallrow">
 	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right mobl">Discount</div>
-	              <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr" id="discount" data-value="{$totals.total}">	                  {if $totals.discount gt 0} <small><b>$-{$totals.discount|number_format:2:".":","}</b></small> {else} $0.00 {/if}</div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr" id="discount" data-value="{$totals.total}">	                  {if $totals.discount gt 0} <small><b>$-{$totals.discount|number_format:2:".":","}</b></small> {else} $0.00 {/if}</div>
 	            </div>
 				{/if}
 	            <!-- SHIPPING -->
@@ -197,8 +197,8 @@
 	                <input type="hidden" value="checkout1" name="action" id="action" />
 	              {foreach $shippingMethods as $k => $v}
 	                <input type="hidden" value="{$v}" name="shipMethod" id="shippingMethod" />
-	                <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">{$k}</div>
-	                <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr">${$v|number_format:2:".":","}</div>
+	                <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">{$k} <img src="/images/question-mark.png" alt="Please allow approximately 20 working days to receive your order." title="Please allow approximately 20 working days to receive your order." data-toggle="tooltip" data-placement="top" /> </div>
+	                <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr">${$v|number_format:2:".":","}</div>
 	                {break}
 	              {/foreach}
 	              </form>
@@ -206,12 +206,12 @@
 
 	            <div class="row tallrow">
 	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">GST inc. in total<br /><span class="subj">(*Subject to GST)</span></div>
-	              <div class="col-xs-7 col-sm-4 col-md-2 num text-left mobr">$2.38</div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr">${$totals.GST_Taxable|number_format:2:".":","}</div>
 	            </div>
 
 	            <div class="row tots tallrow"><!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
 	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label bold text-right mobl" id="totall">Total</div>
-	              <div class="col-xs-7 col-sm-4 col-md-2 bold num text-left mobr" id="total"></div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 bold num text-right mobr" id="total"></div>
 	            </div>
 
 
@@ -276,6 +276,7 @@
     });
 
     $('#discount-form').validate();
+    $('[data-toggle="tooltip"]').tooltip();
 
     calculateTotal();
 

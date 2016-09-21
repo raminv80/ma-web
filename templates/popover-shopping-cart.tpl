@@ -1,33 +1,41 @@
 <div id='cart-info' class='cart-info'>
 	<div class='cart-product-summary'>
-		<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-			<tbody>
-			{foreach from=$productsOnCart item=item}
-				<tr>
-					<td><img src='{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}{else}/images/no-image-available.jpg{/if}?height=60' alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" class='cart-overview-image'></td>
-					<td class='cart-product-summary-details'>
-						<a href="{$item.url}"><strong>{$item.cartitem_product_name}</strong></a>
-						<br>Qty: {$item.cartitem_quantity}</td>
-					<td class='cart-product-summary-price'>${$item.cartitem_subtotal|number_format:2:'.':','}</td>
-				</tr>
-			{/foreach}
-			</tbody>
-		</table>
-	</div>
-	<div class='cart-total-price-2'>
-		<table width='100%' cellspacing='0' cellpadding='0'>
-			<tbody>
-				<tr>
-					<td width='120px'>Subtotal</td>
-					<td align='right'><div class='nav-subtotal'><strong>${$subtotal|number_format:2:'.':','}</strong></div></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class='cont-shopping'>
-		<!-- <a href='javascript:void(0)' onclick='closemenu();' class='btn btn-blue pull-left'>Continue shopping</a> -->
-		<a href='/shopping-cart' class='btn btn-blue pull-right'>Checkout</a>
-		<div class='clear'></div>
+		{foreach from=$productsOnCart item=item}
+		<div class="row cartitem">
+			<div class="col-sm-3">
+				<img src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}{else}/images/no-image-available.jpg{/if}?height=38&width=60&crop=1" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" class="cart-overview-image">
+			</div>
+			<div class="col-sm-8 col-sm-offset-1" style="padding-left: 5px; padding-right: 5px; margin-left: 0;">
+				<div class="row">
+					<div class="col-sm-12" style="padding-left: 5px; padding-right: 5px;">
+						<strong>{$item.cartitem_product_name}</strong>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6" style="font-size: 12px;font-weight: 500; padding-left: 5px; padding-right: 5px;">
+							Qty: {$item.cartitem_quantity}
+					</div>
+					<div class="col-sm-6 text-right" style="font-size: 15px;font-weight: bold;color: #555555; padding-left: 5px; padding-right: 5px;">
+							${$item.cartitem_subtotal|number_format:2:'.':','}
+					</div>
+				</div>
+			</div>
+		</div>
+		{/foreach}
+		<div class="row">
+		<div class="col-sm-12">
+			<div style="border-bottom: 2px solid #E7E7E7;color: #555555;border-top: 2px solid #E7E7E7;">
+				<div class="row" style="margin:1px 0; background-color: #F2F2F2; padding: 12px 0;font-size: 14px;">
+					<div class="col-sm-6"> <strong>Subtotal</strong> </div>
+					<div class="col-sm-6" style="font-size: 20px;font-weight:600;text-align:right;">
+						${$subtotal|number_format:2:'.':','}
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		<div class="row" style="padding:10px 0;"> <div class="col-sm-12"> </div> </div>
+		<div class="row"> <div class="col-sm-12 text-right"> <a href="/shopping-cart" class="btn btn-red">Checkout</a> </div> </div>
 	</div>
 </div>
 

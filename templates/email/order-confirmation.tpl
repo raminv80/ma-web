@@ -28,7 +28,7 @@ table td {
 <br>
 <table>
 	<tr>
-		<td>Hi {$user.gname}</td>
+		<td>Hi {$billing.address_name}</td>
 	</tr>
 	<tr>
 		<td>Thank you for purchasing. Your order will be processed by our team and you will receive another email once your package is shipped. Should you have any queries, please contact us.<br>
@@ -132,13 +132,20 @@ table td {
 	</tr>
 	{foreach $orderItems as $item}
 	<tr valign="top" aling="left">
-		<td>{if $item.cartitem_product_gst eq '0'} {assign var=free value=1} *{/if}{$item.cartitem_product_name} 
-			{if $item.attributes} 
-				{foreach $item.attributes as $attr}
-					<small>/ {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</small>
-				{/foreach}
+		<td>{$item.cartitem_product_name}{if $item.cartitem_product_gst eq '1'} {assign var=free value=1} *{/if} 
+			{if $item.product_type_id eq 1} 
+				<div class="attributes">Product code: {$item.cartitem_product_uid}</div>
 			{/if}
-			<br>{$item.cartitem_product_uid}
+            {if $item.attributes}
+              {foreach from=$item.attributes item=attr}
+                <div class="attributes">{$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</div>
+                {if $attr.cartitem_attr_attr_value_additional}  
+                  {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
+                  <div class="attributes">Line {$k}: {$v}</div>
+                  {/foreach}
+                {/if}
+              {/foreach}
+            {/if} 
 		</td>
 		<td width="10%">{$item.cartitem_quantity}</td>
 		<td width="20%">$ {$item.cartitem_product_price|number_format:2:".":","}</td>
