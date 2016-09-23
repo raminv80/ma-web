@@ -27,6 +27,7 @@ unset($_SESSION['notice']); // ASSIGN NOTICE MESSAGES FOR TEMPLATES
 $SMARTY->assign('post', $_SESSION['post']);
 unset($_SESSION['post']); // ASSIGN POST FOR FORM VARIABLES
 $SMARTY->assign('user', $_SESSION['user']['public']); // ASSIGN USER FOR TEMPLATES
+$SMARTY->assign('new_user', $_SESSION['user']['new_user']); // 
 $SMARTY->assign('HTTP_REFERER', rtrim($_SERVER['HTTP_REFERER'],'/'));
 $SMARTY->assign('REQUEST_URI', $REQUEST_URI);
 $_request = htmlclean($_REQUEST);

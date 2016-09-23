@@ -24,14 +24,14 @@
         {$defaultImgArr = ['images/gift-1.jpg', 'images/gift-2.jpg', 'images/gift-3.jpg', 'images/gift-4.jpg']}
         <form id="gift_form" accept-charset="UTF-8" method="post" action="/process/cart" novalidate="novalidate">
           <input type="hidden" name="action" value="quickcheckout" />
-          <input type="hidden" name="product_object_id" value="{$products.product_object_id}" />
+          <input type="hidden" name="product_id" value="{$products.product_object_id}" />
           <input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
           <div class="row">
             {foreach $products.variants as $k => $v} {$price = $v.variant_price} {if $v.variant_specialprice gt 0}{$price = $v.variant_specialprice}{/if} {if $user.id && $v.variant_membersprice gt 0}{$price = $v.variant_membersprice}{/if}
             <div class="col-sm-6 col-md-3">
               <div class="giftoption">
-                <label for="gift-{$v.variant_id}">
-                  <input type="radio" class="all-options{if $v.variant_editableprice eq 1} other-val{/if}" data-value="{$price}" id="gift-{$v.variant_id}" value="{$v.variant_id}" name="variant_id" />
+                <label for="variant-{$v.variant_id}">
+                  <input type="radio" class="all-options{if $v.variant_editableprice eq 1} show-otherval{/if}" data-value="{$price|number_format:0:'.':','}" value="{$v.variant_id}" name="variant_id" id="variant-{$v.variant_id}">
                   <div class="giftopin">
                     <div class="giftopimg">
                       <img src="/{$defaultImgArr.$k}" class="img-responsive" alt="{$v.variant_uid}" title="{$v.variant_uid}" />
@@ -46,6 +46,7 @@
                   </div>
                 </label>
               </div>
+              <input type="hidden" disabled value="{$v.attr_value_id}" name="attr[{$v.attribute_id}][id]" id="attribute_id-{$v.variant_id}" class="variant-attributes"/>
             </div>
             {/foreach}
 
@@ -56,10 +57,10 @@
             <div class="col-sm-12 col-md-8 col-md-offset-2">
               <div class="row">
                 <div class="col-sm-12 form-group" id="otheram">
-                  <label class="visible-ie-only" for="amount">
+                  <label class="visible-ie-only" for="price">
                     Please specify a whole dollar amount<span>*</span>:
                   </label>
-                  <input class="form-control" value="{$post.amount}" type="text" pattern="[0-9]" name="amount" id="amount" required="">
+                  <input class="form-control" value="{$post.price}" type="text" pattern="[0-9]" name="price" id="price" required="">
                   <div class="error-msg help-block"></div>
                 </div>
               </div>
@@ -84,7 +85,7 @@
                   <label class="visible-ie-only" for="sname">
                     Your name<span>*</span>:
                   </label>
-                  <input class="form-control" value="{$post.sname}" type="text" name="sname" id="sname" required="">
+                  <input class="form-control" value="{$post.sname}" type="text" name="name" id="sname" required="">
                   <div class="error-msg help-block"></div>
                 </div>
 
@@ -92,7 +93,7 @@
                   <label class="visible-ie-only" for="semail">
                     Your email<span>*</span>:
                   </label>
-                  <input class="form-control" value="{$post.semail}" type="text" name="semail" id="semail" required="">
+                  <input class="form-control" value="{$post.semail}" type="text" name="email" id="semail" required="">
                   <div class="error-msg help-block"></div>
                 </div>
               </div>
@@ -248,26 +249,23 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
-    $("#sendday").datepicker({
-      dateFormat: "dd/mm/yy"
-    });
-
     $("select").selectBoxIt();
-
-    $("input[name=variant_id]").change(function() {
-      if($("input[name=variant_id]:checked").hasClass('other-val')){
-        $("#otheram").show();
-        $("#amount").val('');
-      }else{
-        $("#amount").val( $("input[name=variant_id]:checked").attr('data-value') );
-        $("#otheram").hide();
-      }
-      $('#fields-wrapper').fadeIn();
+    
+    $('[data-toggle="tooltip"]').tooltip();
+    
+    $("#sendday").datepicker({
+      dateFormat: "dd/mm/yy",
+      minDate: "+1D"
     });
+   
+    $('#gift_form').validate();
 
-	$('[data-toggle="tooltip"]').tooltip()
-
-
+    $('#price').rules("add", {
+      required: true,
+      digits: true,
+      max: 1000
+    });
+    
     $('input[name="sendtime"]').change(function() {
       if($(this).val() == 'now'){
         $(".customdate").hide();
@@ -275,9 +273,7 @@
         $(".customdate").fadeIn();
       }
     });
-
-    $('#gift_form').validate();
-
+    
     $('#ccno').rules("add", {
       creditcard : true,
     });
@@ -285,6 +281,22 @@
     $('#cccsv').rules("add", {
       digits: true,
       minlength: 3
+    });
+    
+    
+    $("input[name=variant_id]").change(function(){
+      //Set attribute
+      $('.variant-attributes').attr('disabled', 'disabled');
+      $('#attribute_id-' + $(this).val()).removeAttr('disabled');
+      
+      if($("input[name=variant_id]:checked").hasClass('show-otherval')){
+        $("#otheram").show();
+        $("#price").val('');
+      }else{
+        $("#price").val( $("input[name=variant_id]:checked").attr('data-value') );
+        $("#otheram").hide();
+      }
+      $('#fields-wrapper').fadeIn();
     });
 
   });

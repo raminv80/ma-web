@@ -172,107 +172,25 @@ a{color:#ed174f;text-decoration: none;}
 		        <tbody>
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 	            <td class="w580" width="580" style="table-layout: fixed;">
-					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Hi {$friend_name}</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px; font-weight: bold;">Your friend {$user_name} thought you might be interested in joining MedicAlert Foundation.
-					</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">MedicAlert membership is essential for anyone with a medical condition, allergy or who takes regular medication that needs to be known in an emergency.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">With your own customised medical ID that’s internationally recognised, plus 24/7 emergency service access to your medical information and exclusive member only offers, there’s never been a better time to join.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">The MedicAlert medical ID offers peace of mind by alerting emergency service and healthcare professionals to your specific needs when it matters most - especially when you can't speak for yourself.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Make sure you’re protected in a medical emergency. Simply head online or give us a call on <a style="color: #ed3361; text-decoration: none;" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a>.</p>
-					<p style="font-weight: bold;font-size: 14px; line-height: 24px;">Remember, for a small annual fee, your membership gives you access to a range of benefits including:</p>
+					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Hi {$name}</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px; font-weight: bold;">Itâ€™s our pleasure to let you know that {$fried_name} has sent you a MedicAlert gift certificate, valued at {$price}!</p>
+                    <p style="font-weight: bold;font-size: 14px; line-height: 26px;">Your gift certificate code is: <span style="font-size: 18px;">{$code}</span></p>
+			       <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To redeem your gift certificate online, follow the steps below:</p> 
+                    <ul>
+                      <li>Visit <a href="{$DOMAIN}">{$DOMAIN}</a></li>
+                      <li>Browse our wide range of products and make your selection.</li>
+                      <li>Enter your gift certificate (shown above) in the discount code and select 'apply' on the checkout page.</li>
+                      <li>Continue to process your payment.</li>
+                    </ul>		
+                    <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Gift certificate can be redeemed either over the phone or at our online shop. You can use it to renew your annual MedicAlert membership, update your current medical ID to one of our latest pieces of jewellery, or purchase an additional piece of jewellery from our extensive range.</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To redeem your gift certificate over the phone, call our Membership Services team on <a style="color: #ed3361; text-decoration: none;" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a> between 9am-5pm ACST Monday - Friday.</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">If you have any questions about your gift certificate or redemption, please do not hesitate to get in touch.</p>
+					
 	            </td>
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 		        </tbody>
 	            </table>
             	</td>
-                </tr>
-
-                <tr>
-                <td class="w640" width="640">
-					<table id="footer1" class="w640" width="640" cellpadding="0" cellspacing="0" border="0">
-					<tbody>
-					<tr><td class="w30" width="30"></td><td class="w580" width="580" height="30"></td><td class="w30" width="30"></td></tr>
-					<tr>
-					<td class="w30" width="30"></td>
-					<td class="w580" width="580" valign="top" bgcolor="#ffffff" style="color:#636363;">
-						<table class="w580" width="580" cellpadding="0" cellspacing="0" border="0" style="font-size: 14px;">
-							<tbody>
-								<tr>
-									<td class="w40" width="40"></td>
-									<td class="w30" width="30"></td>
-									<td class="w130" width="130" align="center" valign="top" style="color: #636363;">
-										<img src="{$DOMAIN}/images/email-icon1.png" width="52" />
-										<div><singleline>Protection for 12 months</singleline></div>
-									</td>
-									<td class="w40" width="40"></td>
-									<td class="w130" width="130" align="center" valign="top" style="color: #636363;">
-										<img src="{$DOMAIN}/images/email-icon2.png" width="52" />
-										<div><singleline>24/7 emergency service access to your medical information</singleline></div>
-									</td>
-									<td class="w40" width="40"></td>
-									<td class="w130" width="130" align="center" valign="top" style="color: #636363;">
-										<img src="{$DOMAIN}/images/email-icon3.png" width="52" />
-										<div><singleline>Exclusive member only offers</singleline></div>
-									</td>
-									<td class="w30" width="30"></td>
-									<td class="w40" width="40"></td>
-								</tr>
-								<tr>
-									<td class="w40" width="40" height="20"></td>
-									<td class="w30" width="30" height="20"></td>
-									<td class="w130" width="130" align="center" height="20">
-									</td>
-									<td class="w40" width="40" height="20"></td>
-									<td class="w130" width="130" align="center" height="20">
-									</td>
-									<td class="w40" width="40" height="20"></td>
-									<td class="w130" width="130" align="center" height="20">
-									</td>
-									<td class="w30" width="30" height="20"></td>
-									<td class="w40" width="40" height="20"></td>
-								</tr>
-								<tr>
-									<td class="w40" width="40"></td>
-									<td class="w30" width="30"></td>
-									<td class="w130" width="130" align="center" valign="top" style="color: #636363;">
-										<img src="{$DOMAIN}/images/email-icon4.png" width="52" />
-										<div><singleline>Unlimited wallet and fridge cards listing your details</singleline></div>
-									</td>
-									<td class="w40" width="40"></td>
-									<td class="w130" width="130" align="center" valign="top" style="color: #636363;">
-										<img src="{$DOMAIN}/images/email-icon5.png" width="52" />
-										<div><singleline>Secure online access to your electronic health record</singleline></div>
-									</td>
-									<td class="w40" width="40"></td>
-									<td class="w130" width="130" align="center" valign="top" style="color: #636363;">
-										<img src="{$DOMAIN}/images/email-icon6.png" width="52" />
-										<div><singleline>Support from our Membership Services team</singleline></div>
-									</td>
-									<td class="w30" width="30"></td>
-									<td class="w40" width="40"></td>
-								</tr>
-								<tr>
-									<td class="w40" width="40" height="20"></td>
-									<td class="w30" width="30" height="20"></td>
-									<td class="w130" width="130" align="center" height="20">
-									</td>
-									<td class="w40" width="40" height="20"></td>
-									<td class="w130" width="130" align="center" height="20">
-									</td>
-									<td class="w40" width="40" height="20"></td>
-									<td class="w130" width="130" align="center" height="20">
-									</td>
-									<td class="w30" width="30" height="20"></td>
-									<td class="w40" width="40" height="20"></td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-					<td class="w30" width="30"></td>
-					</tr>
-					<tr><td class="w30" width="30"></td><td class="w580" width="580" height="30"></td><td class="w30" width="30"></td></tr>
-					</tbody></table>
-				</td>
                 </tr>
 
                 <tr>

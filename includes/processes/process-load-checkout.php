@@ -14,11 +14,6 @@ try{
   $SMARTY->assign('validation',$validation);
   $totals = $cart_obj->CalculateTotal();
   $SMARTY->assign('totals',$totals);
-
-  $sql = "SELECT DISTINCT postcode_state FROM tbl_postcode WHERE postcode_state != 'OTHE' ORDER BY postcode_state";
-  $states = $DBobject->wrappedSql($sql);
-  $SMARTY->assign('options_state',$states);
-  
   
 }catch(exceptionCart $e) {
   $SMARTY->assign('error', $e->getMessage());

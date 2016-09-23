@@ -48,7 +48,7 @@
  <![endif]-->
 {block name=head}{/block}
 
-<!--{if $ga_id}
+{if $ga_id}
 	<script>
 	(function(i,s,o,g,r,a,m){ i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -66,7 +66,7 @@
 
 	ga('send', 'pageview');
 	</script>
-{/if}-->
+{/if}
 
 </head>
 <body>
@@ -79,7 +79,6 @@
 	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>
-	<!--<script type="text/javascript" src="/includes/js/bootstrap-touch-carousel.js"></script>-->
 	<script type="text/javascript" src="/includes/js/custom.js"></script>
 	<script type="text/javascript">
 	if (jQuery.validator) {
@@ -91,6 +90,7 @@
 	      //$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
 	      $(element).closest('.form-group').addClass('has-error');
 	      $(element).closest('form').find('#form-error').html('Error, please check the highlighted fields.').show();
+	      $(element).closest('form').find('.error-textbox').html('Error, please check the highlighted fields.').show();
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
 	      //$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
@@ -98,9 +98,61 @@
           $(element).closest('.form-group').find('.help-block').text('');
 	    },
 	    errorPlacement: function (error, element) {
-   	$(element).closest('.form-group').find('.help-block').text(error.text());
-	    }
+			$(element).closest('.form-group').find('.help-block').text(error.text());
+	    },
+	    submitHandler: function (form) {
+		      $('.error-textbox').hide();
+	    	  var formID = $(form).attr('id');
+	    	  var formCheck = $(form).attr('data-attr-id');
+	    	  if(formCheck == undefined || formCheck == ""){
+	    		  formCheck = $(form).attr('id');
+	    	  }
+	          switch ( formCheck ) {
+	        	case 'form-': 
+	          		break;
+	          		
+	          	default:
+	          		form.submit();
+	          }
+		    }
 	  });
+	  
+	  jQuery.validator.addMethod(
+	 	  		"hasLowercase", 
+	 	  		function(value, element) {
+	 	  		  var validStr = /[a-z]/;
+	 	  		  return value == '' || validStr.test(value)
+	 			}, 
+	 			"Must include at least one lower case character"
+	 	);
+	 	
+	 	jQuery.validator.addMethod(
+	 	  		"hasUppercase", 
+	 	  		function(value, element) {
+	 	  		  var validStr = /[A-Z]/;
+	 	  		  return value == '' || validStr.test(value)
+	 			}, 
+	 			"Must include at least one upper case character"
+	 	);
+
+	 	jQuery.validator.addMethod(
+	 	  		"hasDigit", 
+	 	  		function(value, element) {
+	 	  		  var validStr = /\d/;
+	 	  		  return value == '' || validStr.test(value)
+	 			}, 
+	 			"Must include at least one number/digit"
+	 	);
+
+	 	jQuery.validator.addMethod(
+	 	  		"hasSpecialChar", 
+	 	  		function(value, element) {
+	 	  		  var validStr = /[!@#\$%\^&*)(\-._=+]/;
+	 	  		  return value == '' || validStr.test(value)
+	 			}, 
+	 			"Must include at least one special character: !@#$%^&*)(-._=+"
+	 	);	
+	  
 	}
 	
 	$(document).ready(function(){

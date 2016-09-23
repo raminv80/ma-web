@@ -68,15 +68,17 @@
             {foreach from=$productsOnCart item=item}
             <div id="{$item.cartitem_id}" class="prod-item cartitem">
               <div class="col-xs-3 col-sm-2 col-md-3 text-center">
-                <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?width=150&height=150&crop=1{else}/images/no-image-available.jpg?width=150&height=150&crop=1{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
+                <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?width=120&height=76&crop=1{else}/images/no-image-available.jpg?width=120&height=76&crop=1{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
               </div>
               <div class="col-xs-9 col-sm-3 bluetext valgn">
-                <a href="/{$item.product_url}">{$item.cartitem_product_name}</a> {if $item.attributes } {foreach from=$item.attributes item=attr}
+                <a href="{if $item.cartitem_type_id eq 1}/{$item.product_url}{else}javascript:void(0){/if}">{$item.cartitem_product_name}</a>{if $item.cartitem_product_gst eq '1'} *{/if}
+                {if $item.cartitem_type_id eq 1}<br><small>{$item.cartitem_product_uid}</small>{/if}
+                {if $item.attributes &&  $item.cartitem_type_id neq 2} 
+                {foreach from=$item.attributes item=attr}
                 <div class="attributes">{$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</div>
                 {if $attr.cartitem_attr_attr_value_additional} <a class="eng" href="javascript:void(0)" onclick="if($('.addattr{$attr.cartitem_attr_id}').is(':visible')){ $('.addattr{$attr.cartitem_attr_id}').hide('slow'); $(this).html('Show engraving +'); }else{ $('.addattr{$attr.cartitem_attr_id}').show('slow'); $(this).html('Hide engraving  -'); }">Show engraving +</a> {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
                 <div class="additional-attributes addattr{$attr.cartitem_attr_id}" style="display: none;">Line {$k}: {$v}</div>
-                {/foreach} {/if} {/foreach} {/if} <span class="text-right"> </span> <br>
-                <span class="mini">{$item.cartitem_product_uid}</span>
+                {/foreach} {/if} {/foreach} {/if}
               </div>
               <div class="visible-xs col-xs-3"></div>
               <div class="hidden-xs col-xs-9 col-sm-2 text-center valgn" id="priceunit-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
@@ -98,6 +100,7 @@
           </div>
         </form>
 
+{if $showProductEspecial}
         <div class="row" id="special">
 	        <div class="col-md-3 nopad">
 				<img src="/images/cart-ad2.jpg" class="img-responsive" alt="Special" />
@@ -107,49 +110,40 @@
 				<div class="condn">*Offer only applies to one additional medical ID, must be equal or lesser value.</div>
 	        </div>
 	        <div class="col-sm-3 col-md-2" id="select">
-				<a href="#" class="btn btn-red">Select your <br /> product</a>
+				<a href="/products" title="Select your additional product" class="btn btn-red">Select your <br /> product</a>
 	        </div>
         </div>
-
+{/if}
         <div class="row" id="help">
 	        <div class="col-sm-12 col-md-8 helpl">
-				<h3>Help us to help others</h3>
+			  <form class="form-horizontal" id="product-form" role="form" accept-charset="UTF-8" action="" method="post">
+                <input type="hidden" value="ADDTOCART" name="action" id="action" />
+                <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+                <input type="hidden" value="{$products.product_object_id}" name="product_id" id="product_id" />
+                
+                <h3>Help us to help others</h3>
 				<p>While you’re here, why not make a small donation to our not-for-profit organisation? Just a few dollars can help provide our life-saving service, and allow us to educate Australians about the importance of MedicAlert Foundation. Donations over $2 are tax deductible. </p>
 
 				<h4>Select a donation amount:</h4>
+				{foreach $products.variants as $v}
 				<div class="donbtn">
-				  	<label for="donate25">
-	                    <input type="radio" value="25" name="donate" id="donate25">
-                    	<div id="donate25-btn" class="donate-btn btn btn-grey">$25</div>
+				  	<label for="variant-{$v.variant_id}">
+	                    <input type="radio" value="{$v.variant_id}" data-value="{$v.variant_price}" class="{if $v.variant_editableprice eq 1}show-otherval{/if}" name="variant_id" id="variant-{$v.variant_id}">
+                        <input type="hidden" disabled value="{$v.attr_value_id}" name="attr[{$v.attribute_id}][id]" id="attribute_id-{$v.variant_id}" class="variant-attributes"/>
+                    	<div id="variant-{$v.variant_id}-btn" class="donate-btn btn btn-grey">{if $v.variant_editableprice eq 1}Other{else}${$v.variant_price|number_format:0:'.':','}{/if}</div>
                     </label>
                 </div>
-				<div class="donbtn">
-				  	<label for="donate50">
-	                    <input type="radio" value="50" name="donate" id="donate50">
-                    	<div id="donate50-btn" class="donate-btn btn btn-grey">$50</div>
-                    </label>
-                </div>
-				<div class="donbtn">
-				  	<label for="donate100">
-	                    <input type="radio" value="100" name="donate" id="donate100">
-                    	<div id="donate100-btn" class="donate-btn btn btn-grey">$100</div>
-                    </label>
-                </div>
-				<div class="donbtn">
-				  	<label for="donateother">
-	                    <input type="radio" value="other" name="donate" id="donateother">
-                    	<div id="donateother-btn" class="donate-btn btn btn-grey">Other</div>
-                    </label>
-                </div>
+                {/foreach}
                 <div class="clearl" id="othervalout">
-                    <input type="text" id="otherval" name="otherval" placeholder="Please specify an amount" />
-					<div class="text-center small">
-                    Please only specify a whole dollar amount.
-					</div>
+                  <div class="form-group">
+                    <input type="text" id="otherval" name="price" placeholder="Please specify an amount" required />
+                  <div class="help-block text-center small">Please only specify a whole dollar amount.</div>
+                  </div>
                 </div>
 				<div class="clearl">
-					<a href="#" class="btn btn-red">Add to cart</a>
+                    <button id="prod-submit-btn" type="submit" disabled class="btn btn-red">Add to cart</button>
 				</div>
+                </form>
 	        </div>
 	        <div class="col-sm-4 hidden-xs hidden-sm helpr">
 				<img src="/images/cart-girls.png" class="img-responsive" alt="Help us to help others" />
@@ -182,21 +176,20 @@
 			<div class="col-sm-6 col-md-8">
 	            <div class="row tallrow">
 	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right mobl">Subtotal</div>
-	              <!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
-	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr" id="subtotal" data-value="{$totals.total}">${$totals.total|number_format:2:".":","}</div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr" id="subtotal" data-value="{$totals.subtotal}">${$totals.subtotal|number_format:2:".":","}</div>
 	            </div>
-	            {if $totals.discount gt 0}
-	            <div class="row tallrow">
-	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right mobl">Discount</div>
-	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr" id="discount" data-value="{$totals.total}">	                  {if $totals.discount gt 0} <small><b>$-{$totals.discount|number_format:2:".":","}</b></small> {else} $0.00 {/if}</div>
+	            
+	            <div class="row tallrow"{if $totals.discount eq 0} style="display:none"{/if}>
+	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right mobl"><b>Discount</b></div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr" id="discount" data-value="{$totals.discount}">{if $totals.discount gt 0}<b>-${$totals.discount|number_format:2:".":","}</b>{else} $0.00 {/if}</div>
 	            </div>
-				{/if}
+				
 	            <!-- SHIPPING -->
 	            <div class="row tallrow">
 	              <form class="form-horizontal" id="checkout1-form" accept-charset="UTF-8" action="/process/cart" method="post">
 	                <input type="hidden" value="checkout1" name="action" id="action" />
 	              {foreach $shippingMethods as $k => $v}
-	                <input type="hidden" value="{$v}" name="shipMethod" id="shippingMethod" />
+	                <input type="hidden" value="{$k}" data-value="{$v}" name="selectedMethod" id="shippingMethod" />
 	                <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">{$k} <img src="/images/question-mark.png" alt="Please allow approximately 20 working days to receive your order." title="Please allow approximately 20 working days to receive your order." data-toggle="tooltip" data-placement="top" /> </div>
 	                <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr">${$v|number_format:2:".":","}</div>
 	                {break}
@@ -267,55 +260,73 @@
 {/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
 <script src="/includes/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.selectBoxIt.min.js"></script>
-
 <script type="text/javascript">
   $(document).ready(function() {
+    $("select").selectBoxIt();
+    
+    $('[data-toggle="tooltip"]').tooltip();
+    
+    calculateTotal();
+    
+    
     $('#checkout1-form').validate({
       onkeyup: false,
       onclick: false
     });
-
+    
+    //DONATIONS FORM
+    $('#product-form').validate({
+      submitHandler: function(form) {
+        addCart($(form).attr('id'), true);
+      }
+    });
+    
+    $('#otherval').rules("add", {
+      required: true,
+      digits: true,
+      max: 1000
+    });
+    
     $('#discount-form').validate();
-    $('[data-toggle="tooltip"]').tooltip();
-
-    calculateTotal();
-
+    
     if($('#postcode-field').val()){
       updateShipping();
     }
-
-	$("select").selectBoxIt();
-
-		$("input[name=donate]").change(function()
-		{
-        if ( $("#donateother").is(':checked'))
-            $("#othervalout").show();
-        else
-            $("#othervalout").hide();
-		});
-
+    
     var keyStop = {
       8: ":not(input:text, textarea, input:file, input:password)", // stop backspace = back
       13: "input:text, input:password", // stop enter = submit
-
       end: null
     };
     $(document).bind("keydown", function(event) {
       var selector = keyStop[event.which];
-
+      
       if(selector !== undefined && $(event.target).is(selector)){
         event.preventDefault(); //stop event
       }
       return true;
     });
-
-    $('input[name="donate"]').change(function(){
-      $('.donate-btn').removeClass('active');
-      $('#donate'+ $(this).val()+ '-btn').addClass('active');
+    
+    
+    $('input[name="variant_id"]').change(function(){
+      $('.donate-btn').removeClass('active'); 
+      $('#prod-submit-btn').removeAttr('disabled');
+      
+      //Set attribute
+      $('.variant-attributes').attr('disabled', 'disabled');
+      $('#attribute_id-' + $(this).val()).removeAttr('disabled');
+      
+      //Show/hide/highligth content based on selection
+      $('#variant-' + $(this).val() + '-btn').addClass('active');
+      if($('#variant-' + $(this).val()).hasClass('show-otherval')){
+        $('#othervalout').fadeIn('slow');
+        $('#otherval').val('');
+      }else{
+        $('#othervalout').hide();
+        $('#otherval').val( $('#variant-' + $(this).val()).attr('data-value') );
+      }
     });
   });
-
-
 </script>
 {/block}
 

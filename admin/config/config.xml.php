@@ -570,6 +570,7 @@
           	<reference>listing_name</reference> 
             <parent_id>6</parent_id>
           	<where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
+            <orderby>listing_name</orderby>
           </field>  
           <field> 
           	<name>product_types</name>
@@ -652,15 +653,25 @@
             <name>categories</name>
             <table>tbl_listing</table>
             <id>listing_object_id</id>
+            <parent_id>6</parent_id>
             <reference>listing_name</reference> 
             <where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
+            <orderby>listing_name</orderby>
           </field> 
           <field> 
             <name>products</name>
             <table>tbl_product</table>
             <id>product_object_id</id>
-            <reference>product_name</reference> 
-            <orderby>product_name AND product_published = 1</orderby>
+            <reference>product_name</reference>
+            <where>product_published = 1</where>
+            <orderby>product_name</orderby>
+          </field>
+          <field> 
+            <name>usergroups</name>
+            <table>tbl_usergroup</table>
+            <id>usergroup_id</id>
+            <reference>usergroup_name</reference>
+            <orderby>usergroup_name</orderby>
           </field> 
         </options>
         <log>

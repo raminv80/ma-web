@@ -100,7 +100,7 @@ class ListClass{
           $extraArr[] = (string)$xt;
         }
         $extraStr = !empty($extraArr)? "," . implode(',', $extraArr) : "";
-        $sql = "SELECT {$f->id},{$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''? "AND {$f->where} " : "") . " " . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
+        $sql = "SELECT {$f->id},{$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''? "AND {$f->where} " : "") . ($f->groupby != ''? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
         if($res2 = $DBobject->wrappedSqlGet($sql)){
           $options = array();
           foreach($res2 as $row){
@@ -572,7 +572,7 @@ class ListClass{
       $extraArr[] = (string)$xt;
     }
     $extraStr = !empty($extraArr)? "," . implode(',', $extraArr) : "";
-    $sql = "SELECT {$f->id}, {$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''? "AND {$f->where} " : "") . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
+    $sql = "SELECT {$f->id}, {$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''? "AND {$f->where} " : "") . ($f->groupby != ''? " GROUP BY {$f->groupby} " : ""). ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
         $results[$row["{$f->id}"]]['id'] = $row["{$f->id}"];

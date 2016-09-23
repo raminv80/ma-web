@@ -22,10 +22,23 @@ class Qvalent_REST_PayWayAPI
 
   function Qvalent_REST_PayWayAPI()
   {
-      $this->secretAPIkey = 'T10023_SEC_6es29q2sek6cnvetsrs6h8pkay5um3985djkjv93xm9mf8vruc3enbzd2ek2';
-      $this->publishableAPIkey = 'T10023_PUB_aumgejfq7yd27cbkbypftzg87eht5vf84q3thibxy9wpa7ru44cnfddqrx4f';
-      $this->merchantId = 'TEST';
-      $this->bankAccountId = '0000000A';
+    //LIVE - MAF | old site
+    //$this->secretAPIkey = 'Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k';
+    //$this->publishableAPIkey = 'Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs';
+    //$this->merchantId = '23886963';
+    //$this->bankAccountId = '035213308316A';
+    
+    //DEV - MAF | old site
+    //$this->secretAPIkey = 'T10023_SEC_6es29q2sek6cnvetsrs6h8pkay5um3985djkjv93xm9mf8vruc3enbzd2ek2';
+    //$this->publishableAPIkey = 'T10023_PUB_aumgejfq7yd27cbkbypftzg87eht5vf84q3thibxy9wpa7ru44cnfddqrx4f';
+    //$this->merchantId = 'TEST';
+    //$this->bankAccountId = '0000000A';
+    
+    //DEV - Them (Jeff Miller) | new site
+    $this->secretAPIkey = 'Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k';
+    $this->publishableAPIkey = 'Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs';
+    $this->merchantId = 'TEST';
+    $this->bankAccountId = '0000000A';
   }
   
   /* Generate UUID v4 function:

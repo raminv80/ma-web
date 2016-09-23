@@ -10,7 +10,35 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
    */
   
   switch($_POST["action"]){
-    case 'create':
+    case 'createTemporaryMember':
+      $error = "Error: Missing parameters.";
+      $success = null;
+      $url = null;
+      $_SESSION['user']['new_user'] = '';
+      if(!empty($_POST['gname']) && !empty($_POST['surname']) && !empty($_POST['dob']) && !empty($_POST['gender']) 
+          && !empty($_POST['address']) && !empty($_POST['suburb']) && !empty($_POST['state']) && !empty($_POST['postcode']) && !empty($_POST['mobile']) && !empty($_POST['email']) && !empty($_POST['password'])){
+        
+        $error = "Error: Invalid date of birth (DD/MM/YYYY).";
+        if(validateDate($_POST['dob'])){
+          $excludeArr = array('formToken', 'action', 'redirect');
+          foreach($_POST as $k => $v){
+            if(!in_array($k, $excludeArr)){
+              $_SESSION['user']['new_user'][$k] = $v;
+            }
+          }
+          $error = null;
+          $success = true;
+          $url = empty($_POST['redirect']) ? '/checkout' : $_POST['redirect'];
+        }
+      }
+      echo json_encode(array(
+          'error' => $error,
+          'url' => $url,
+          'success' => $success
+      ));
+      die();
+      
+    case 'create': //NOT BEING USED!!!
       $_POST['want_promo'] = empty($_POST['want_promo'])? 0 : 1;
       SetMemberCampaignMonitor($LIST_ID, $_POST, $_POST['want_promo']);
       

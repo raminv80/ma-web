@@ -380,8 +380,11 @@
     	}
     
     	}
-
-		$('#product-form').validate();
+		$('#product-form').validate({
+          submitHandler: function(form) {
+            addCart($(form).attr('id'));
+          }
+        });
 
 		var attributes = [];
 		{if $attribute}

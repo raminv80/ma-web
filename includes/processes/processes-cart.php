@@ -143,32 +143,43 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       die();
     
     case 'checkout1':
-      $_SESSION['smarty']['selectedShippingPostcode'] = $_POST['postcodefield'];
-      $_SESSION['smarty']['selectedShippingFee'] = $_POST['shipFee'];
-      $_SESSION['smarty']['selectedShipping'] = $_POST['shipMethod'];
-      $_SESSION['smarty']['postageID'] = $_POST['postageID'];
-      
-      $sql = "SELECT * FROM tbl_postcode WHERE postcode_postcode = :postcode";
-      $params = array(
-          ":postcode" => $_POST['postcodefield'] 
-      );
-      $res = $DBobject->wrappedSql($sql, $params);
-      if(!empty($res[0])){
-        $_SESSION['smarty']['selectedShippingState'] = $res[0]['postcode_state'];
-        if(count($res) == 1){
-          $_SESSION['smarty']['selectedShippingSuburb'] = $res[0]['postcode_suburb'];
-        }
+      if(!empty($_POST['postcodefield'])){ // !!!!! MUST BE UPDATED !!!!!
+        /* $_SESSION['smarty']['selectedShippingPostcode'] = $_POST['postcodefield'];
+        $_SESSION['smarty']['selectedShippingFee'] = $_POST['shipFee'];
+        $_SESSION['smarty']['selectedShipping'] = $_POST['shipMethod'];
+        $_SESSION['smarty']['postageID'] = $_POST['postageID'];
+        
+        $sql = "SELECT * FROM tbl_postcode WHERE postcode_postcode = :postcode";
+        $params = array(
+            ":postcode" => $_POST['postcodefield']
+        );
+        $res = $DBobject->wrappedSql($sql, $params);
+        if(!empty($res[0])){
+          $_SESSION['smarty']['selectedShippingState'] = $res[0]['postcode_state'];
+          if(count($res) == 1){
+            $_SESSION['smarty']['selectedShippingSuburb'] = $res[0]['postcode_suburb'];
+          }
+        } */
       }
       $cart_obj = new cart($_SESSION['user']['public']['id']);
-      $productsGA = $cart_obj->getCartitemsByCartId_GA();
-      sendGAEnEcCheckoutStep($GA_ID, $_POST['shipMethod'], $productsGA);
-      if($CONFIG->checkout->attributes()->guest != 'true' && empty($_SESSION['user']['public']['id'])){
-        $_SESSION['redirect'] = "/checkout";
-        header("Location: /login-register");
+      $shippable = $cart_obj->ShippableCartitems();
+      $shipping_obj = new ShippingClass(count($shippable), $cart_obj->GetCurrentFreeShippingDiscountName());
+      $methods = $shipping_obj->getShippingMethods();
+      $_SESSION['shipping']['selectedMethod'] = '';
+      $selectedMethod = unclean($_POST['selectedMethod']);
+      if(array_key_exists($selectedMethod, $methods)){
+        $_SESSION['shipping']['selectedMethod'] = $selectedMethod; 
+        if(!empty($GA_ID)){
+          $productsGA = $cart_obj->getCartitemsByCartId_GA();
+          sendGAEnEcCheckoutStep($GA_ID, $_SESSION['shipping']['selectedMethod'], $productsGA);
+        }
+        header('Location: /checkout');
         die();
       }
-      header('Location: /checkout');
+      $_SESSION['error'] = 'Invalid shipping method.';
+      header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
       die();
+      
     
     case 'checkout2':
       $_SESSION['postageID'] = $_POST['postageID'];
@@ -227,29 +238,29 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $order_cartId = $cart_obj->cart_id;
       $orderNumber = $order_cartId . '-' . date("is");
       
-      if(!empty($_SESSION['address']['B']) && !empty($cart_obj->NumberOfProductsOnCart())){
+      $shippable = $cart_obj->ShippableCartitems();
+      $shipping_obj = new ShippingClass(count($shippable), $cart_obj->GetCurrentFreeShippingDiscountName());
+      $methods = $shipping_obj->getShippingMethods();
+      $shippingValid = (!empty($_SESSION['shipping']['selectedMethod']) && array_key_exists($_SESSION['shipping']['selectedMethod'], $methods))? true : false;
+      /* //Shipping based on postcode  
+       $ship_obj = new ShippingClass();
+       $postage = $ship_obj->getPostageByAddressId($shipID);
+       $methods = $postage['postage_name'];
+       $shippingFee = floatval($postage['postage_price']); */
+      
+      if(!empty($_SESSION['address']['B']) && $shippingValid && !empty($cart_obj->NumberOfProductsOnCart())){
         $billID = 0;
         $shipID = 0;
-        
-        //Indicator for creating new MAF member
-        $createMAF = false;
-        
-        //Indicator for creating guest user
-        $createGuest = false;
         
         //Selected payment method
         $paymentMethod = 'Credit card';
         
-        $ship_obj = new ShippingClass();
-        $postage = $ship_obj->getPostageByAddressId($shipID);
-        $methods = $postage['postage_name'];
-        $shippingFee = floatval($postage['postage_price']);
-        // $methods = $ship_obj->getShippingMethods($cart_obj->NumberOfProductsOnCart());
-        // $shippingFee = floatval($methods["{$_POST['payment']['payment_shipping_method']}"]);
+        //Shipping
+        $shippingFee = floatval($methods[$_SESSION['shipping']['selectedMethod']]);
         
         $totals = $cart_obj->CalculateTotal();
         $chargedAmount = $totals['total'] + $shippingFee;
-        $gst = round(($totals['GST_Taxable'] + $shippingFee) / 11, 2);
+        $gst = round(($totals['GST_Taxable']) / 11, 2);
         $params = array(
             'payment_user_id' => (empty($_SESSION['user']['public']['id']) ? 0 : $_SESSION['user']['public']['id']),
             'payment_billing_address_id' => $billID,
@@ -260,7 +271,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_subtotal' => $totals['subtotal'], 
             'payment_discount' => $totals['discount'], 
             'payment_shipping_fee' => $shippingFee, 
-            'payment_shipping_method' => $methods, 
+            'payment_shipping_method' => $_SESSION['shipping']['selectedMethod'], 
             'payment_shipping_comments' => $_SESSION['address']['comments'], 
             'payment_payee_name' => $_POST['cc']['name'], 
             'payment_charged_amount' => $chargedAmount, 
@@ -302,17 +313,17 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $_SESSION['orderNumber'] = $orderNumber;
           
           
-          
           $userArr = $_SESSION['user']['public'];
           
           $user_obj = new UserClass();
           
           //NEW USER          
-          if(empty($userArr) && $createMAF){//MAF - CREATE NEW MEMBER VIA API 
+          $newMAFMember = $cart_obj->HasMAFProducts();
+          if(empty($userArr) && $newMAFMember){//MAF - CREATE NEW MEMBER VIA API 
           
             
             
-          }elseif(empty($userArr) && $createGuest){ // Create guest user when empty
+          }elseif(empty($userArr) && !$newMAFMember){ // Create guest user when empty
             $guestArr = array(
                 "gname" => $_POST['gname'],
                 "surname" => $_POST['surname'],
@@ -442,7 +453,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           } */
           
           // OPEN NEW CART
-          $cart_obj->CreateCart($_SESSION['user']['public']['id']);
+          $cart_obj->CreateCart();
           
           // REDIRECT TO THANK YOU PAGE
           header('Location: /thank-you-for-purchasing');
@@ -467,32 +478,46 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $_SESSION['error'] = '';
       $_SESSION['post'] = $_POST;
       
-      $cart_obj = new cart($_SESSION['user']['public']['id']);
-      $order_cartId = $cart_obj->cart_id;
-      $orderNumber = $order_cartId . '-' . date("is");
-      
-      $billID = 0;
+      //Check existence of particular fields and init custom process
       $isGiftCertificate = false;
+      if($_POST['product_id'] == 213){ //Gift certificate
+        $isGiftCertificate = true;
+      
+      }elseif($_POST['product_object_id'] == 217){ //Donation
+      
+      }else{
+      
+      }
       
       //Has mandatory field: credit cart details, product_object_id, variant_id
-      if(empty($_POST['honeypot']) && !empty($_POST['timestamp']) && (time() - $_POST['timestamp']) > 3 && !empty($_POST['product_object_id']) && !empty($_POST['variant_id']) && !empty($_POST['cc'])  && !empty($cart_obj->NumberOfProductsOnCart())){
-        $_SESSION['error'] = 'Database Connection Error. Please try again, otherwise contact us by phone.';
-      }
-      
-      //Check existence of particular fields and init custom process 
-      if($_POST['product_object_id'] == 213){ //Gift certificate
-        $isGiftCertificate = true;
-        $_SESSION['error'] = 'FAKE ERROR';
-        
-      }elseif($_POST['product_object_id'] == 217){ //Donation
-        
-      }else{
-        
-      }
-      if(!empty($_SESSION['error'])){
+      if(empty($_POST['honeypot']) && !empty($_POST['timestamp']) && (time() - $_POST['timestamp']) > 3 && !empty($_POST['product_id']) && !empty($_POST['variant_id']) && !empty($_POST['cc'])){
+        $_SESSION['error'] = 'Your session has expired. Please try again, otherwise contact us by phone.';
         header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
         die();
       }
+      
+      //Clear shopping cart
+      $cart_obj = new cart($_SESSION['user']['public']['id']);
+      $cart_obj->DeleteCart();
+      $cart_obj->CreateCart();
+      
+      $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['price'], 1, null, $_POST['variant_id']);
+      $itemsCount = $cart_obj->NumberOfProductsOnCart();
+      if(empty($itemsCount)){
+        $_SESSION['error'] = 'The selected item cannot be added to the shopping cart';
+        header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
+        die();
+      }
+      
+      $order_cartId = $cart_obj->cart_id;
+      $orderNumber = $order_cartId . '-' . date("is");
+      $billID = 0;
+      
+      $billingArr = array(
+          "address_user_id" => 0,
+          "address_name" => $_POST['name'],
+          "address_email" => $_POST['email']
+      );
       
       //Selected payment method
       $paymentMethod = 'Credit card';
@@ -501,7 +526,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
   
       $totals = $cart_obj->CalculateTotal();
       $chargedAmount = $totals['total'] + $shippingFee;
-      $gst = round(($totals['GST_Taxable'] + $shippingFee) / 11, 2);
+      $gst = round(($totals['GST_Taxable']) / 11, 2);
       $params = array(
           'payment_user_id' => (empty($_SESSION['user']['public']['id']) ? 0 : $_SESSION['user']['public']['id']),
           'payment_billing_address_id' => $billID,
@@ -528,7 +553,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $CCdata = array(
           'amount' => $chargedAmount 
       );
-      if(!empty($_POST['cc'])){
+      /* if(!empty($_POST['cc'])){
         $CCdata = array_merge($CCdata, $_POST['cc']);
       }
       $pay_obj->PreparePayment($CCdata);
@@ -545,7 +570,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         }
         header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
         die();
-      }
+      } */
       
       $response = true;
       if($response){
@@ -561,9 +586,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         // Create guest user when empty
         if(empty($userArr)){
           $guestArr = array(
-              "gname" => $_POST['gname'],
-              "surname" => $_POST['surname'],
-              "email" => $_POST['email']
+              "gname" => $billingArr['address_name'],
+              "surname" => '',
+              "email" => $billingArr['address_email']
           );
           $userArr = $user_obj->CreateGuest($guestArr);
         
@@ -573,12 +598,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           //SET THE CART_USER_ID
           $cart_obj->UpdateUserIdOfClosedCart($order_cartId, $userArr['id']);
         }
+        $billingArr['address_user_id'] = $userArr['id'];
         
-        $billingArr = array(
-            "address_user_id" => $_POST['gname'],
-            "address_name" => $_POST['surname'],
-            "address_email" => $_POST['email']
-        );
         $billID = $user_obj->InsertNewAddress($billingArr);
         
         $params = array(
@@ -614,6 +635,24 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           }
         }
         catch(Exception $e){}
+        
+        if($isGiftCertificate){
+          // CREATE GIFT CERTIFICATE
+          
+          try{
+            // SEND GIFT CERTIFICATE
+            $to = $BillingArr['address_email'];
+            // $bcc = 'apolo@them.com.au';
+            $from = (string)$CONFIG->company->name;
+            $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+            $subject = 'Confirmation of your order';
+            $body = $SMARTY->fetch('email/gift-certificate.tpl');
+            if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
+              $pay_obj->SetInvoiceEmail($paymentId, $mailID);
+            }
+          }
+          catch(Exception $e){}
+        }
   
         // SET GOOGLE ANALYTICS - ECOMMERCE
         if(!empty($GA_ID)){
@@ -630,7 +669,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         }
   
         // OPEN NEW CART
-        $cart_obj->CreateCart($_SESSION['user']['public']['id']);
+        $cart_obj->CreateCart();
   
         $_SESSION['post'] = '';
         

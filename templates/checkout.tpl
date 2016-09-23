@@ -91,15 +91,17 @@
             {foreach from=$productsOnCart item=item}
             <div id="{$item.cartitem_id}" class="prod-item cartitem">
               <div class="col-xs-3 col-sm-2 col-md-3 text-center">
-                <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?width=150&height=150&crop=1{else}/images/no-image-available.jpg?width=150&height=150&crop=1{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
+                <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?width=120&height=76&crop=1{else}/images/no-image-available.jpg?width=120&height=76&crop=1{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
               </div>
               <div class="col-xs-9 col-sm-3 bluetext valgn">
-                <a href="/{$item.product_url}">{$item.cartitem_product_name}</a> {if $item.attributes } {foreach from=$item.attributes item=attr}
+                <a href="{if $item.cartitem_type_id eq 1}/{$item.product_url}{else}javascript:void(0){/if}">{$item.cartitem_product_name}</a>{if $item.cartitem_product_gst eq '1'} *{/if}
+                {if $item.cartitem_type_id eq 1}<br><small>{$item.cartitem_product_uid}</small>{/if}
+                {if $item.attributes && $item.cartitem_type_id neq 2} 
+                {foreach from=$item.attributes item=attr}
                 <div class="attributes">{$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</div>
                 {if $attr.cartitem_attr_attr_value_additional} <a class="eng" href="javascript:void(0)" onclick="if($('.addattr{$attr.cartitem_attr_id}').is(':visible')){ $('.addattr{$attr.cartitem_attr_id}').hide('slow'); $(this).html('Show engraving +'); }else{ $('.addattr{$attr.cartitem_attr_id}').show('slow'); $(this).html('Hide engraving  -'); }">Show engraving +</a> {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
                 <div class="additional-attributes addattr{$attr.cartitem_attr_id}" style="display: none;">Line {$k}: {$v}</div>
-                {/foreach} {/if} {/foreach} {/if} <span class="text-right"> </span> <br>
-                <span class="mini">{$item.cartitem_product_uid}</span>
+                {/foreach} {/if} {/foreach} {/if}
               </div>
               <div class="visible-xs col-xs-3"></div>
               <div class="hidden-xs col-xs-9 col-sm-2 text-center valgn" id="priceunit-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
@@ -114,21 +116,17 @@
 				<div class="col-sm-12">
 		            <div class="row tallrow">
 		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label text-right mobl">Subtotal</div>
-		              <!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
-		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr" id="subtotal" data-value="{$totals.total}">${$totals.total|number_format:2:".":","}</div>
+		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr" id="subtotal" data-value="{$totals.subtotal}">${$totals.subtotal|number_format:2:".":","}</div>
 		            </div>
-
-		            {if $totals.discount gt 0}
-		            <div class="row tallrow">
-		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label text-right mobl">Discount</div>
-		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr" id="discount" data-value="{$totals.total}">{if $totals.discount gt 0} <small><b>$-{$totals.discount|number_format:2:".":","}</b></small> {else} $0.00 {/if}</div>
+		            <div class="row tallrow" {if $totals.discount gt 0}style="display:none"{/if}>
+		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label text-right mobl"><b>Discount</b></div>
+		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr" id="discount" data-value="{$totals.discount}">{if $totals.discount gt 0}<b>-${$totals.discount|number_format:2:".":","}</b>{else}$0.00{/if}</div>
 		            </div>
-					{/if}
 
 		            <!-- SHIPPING -->
 		            <div class="row tallrow">
 		              {foreach $shippingMethods as $k => $v}
-		                <input type="hidden" value="{$v}" name="shipMethod" id="shippingMethod" />
+                        <input type="hidden" value="{$k}" data-value="{$v}" name="selectedMethod" id="shippingMethod" />
 		                <div class="col-xs-8 col-sm-8 col-md-10 shopping-label text-right  mobl">{$k} <img src="/images/question-mark.png" alt="Please allow approximately 20 working days to receive your order." title="Please allow approximately 20 working days to receive your order." data-toggle="tooltip" data-placement="top" /></div>
 		                <div class="col-xs-4 col-sm-4 col-md-2 num text-right mobr">${$v|number_format:2:".":","}</div>
 		              {/foreach}
@@ -230,9 +228,9 @@
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="state">State*:</label>
                       <select id="state" name="address[B][address_state]" class="required form-control">
-                        <option value="">Please select</option>
-                        {foreach $options_state as $value }
-                        <option value="{$value.postcode_state}" {if ($address && $address.B.address_state eq $value.postcode_state) || (!$address && {$user.maf.main.user_state}) || (!$address && $selectedShippingState eq $value.postcode_state)}selected="selected"{/if}>{$value.postcode_state}</option>
+                        <option value="">Select an option</option>
+                        {foreach $options_state as $opt }
+                        <option value="{$opt.value}" {if ($address && $address.B.address_state eq $opt.value) || (!$address && {$user.maf.main.user_state_id} eq $opt.value) || (!$address && $selectedShippingState eq $opt.value)}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}
                       </select>
 						<div class="error-msg help-block"></div>
@@ -265,7 +263,7 @@
                     <div class="row">
 	                    <div class="col-sm-12 form-group">
 							<input id="chksame" name="address[same_address]" type="checkbox" checked="checked" onclick="sameAddress();" />
-							<label class="chklab" for="chksame"><span class="bold">Ship items to the above billing address.</span> Please note we cannot ship to PO boxes.</label>
+							<label class="chklab" for="chksame"><span class="bold">Ship items to the above billing address.</span></label>
 	                    </div>
                     </div>
 					<div id="shipping-subform">
@@ -298,9 +296,9 @@
 						<div class="col-sm-6 form-group">
                          <label class="visible-ie-only" for="statesh">State*:</label>
                           <select id="statesh" name="address[S][address_state]" class="shipping-select-req required form-control">
-                            <option value="">Please select</option>
-                            {foreach $options_state as $value }
-                            <option value="{$value.postcode_state}" {if $address && $address.S.address_state eq $value.postcode_state}selected="selected"{/if}>{$value.postcode_state}</option>
+                            <option value="">Select an option</option>
+                            {foreach $options_state as $opt }
+                            <option value="{$opt.value}" {if $address && $address.S.address_state eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                           {/foreach}
                           </select>
 						<div class="error-msg help-block"></div>
@@ -365,13 +363,12 @@
               <div class="row process-cnt">
 	              <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center">
 				  	<input type="hidden" value="placeOrder" name="action" />
-				  	{if $newTotal gt 0.01 }
+				  	{if $newTotal gte 0.01 }
 
-				  	{if $error}
-				  	<div class="row">
-					  	<div class="col-sm-12 error-textbox" id="error">{$error}</div>
+				  	
+				  	<div class="row" {if !$error}style="display:none;"{/if}>
+					  	<div class="col-sm-12 error-textbox" id="form-error">{$error}</div>
 				  	</div>
-				  	{/if}
 
 				  	<div class="row">
 				  		<div class="col-sm-12">
@@ -449,192 +446,167 @@
                 <div class="col-sm-12">
                   No payment details are required.
                 </div>
-                {if $error}
-                  <div class="row" id="error">
-                  	<div class="col-sm-12 error-textbox">{$error}
-                  	</div>
-                  </div>
-                {/if}
               {/if}
               </div>
 
-              <div class="row">
-	              <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew">
+          <div class="row">
+                <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew">
 
-				  	<div class="row">
-					  	<div class="col-sm-12 text-center">
-						  	<h3>Auto renewal of membership (optional)</h3>
-					  	</div>
-				  	</div>
-				  	<div class="row">
-					  	<div class="col-sm-12 text-center">
-						  	<input class="autor" type="checkbox" value="autorenew" name="autorenewal" id="autorenewal" onclick="autorenew();">
-						  	<label class="autor chkbox" for="autorenewal">Stay protected each year: sign up for auto-renewal.</label>
-					  	</div>
-				  	</div>
-				  	<div class="row notice">
-					  	<div class="col-sm-12 text-center">
-					  		<p>Auto-renewal helps protect you by paying your annual membership fee automatically each year by direct debit from your nominated payment method.
+            <div class="row">
+              <div class="col-sm-12 text-center">
+                <h3>Auto renewal of membership (optional)</h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-center">
+                <input class="autor" type="checkbox" value="autorenew" name="autorenewal" id="autorenewal" onclick="autorenew();">
+                <label class="autor chkbox" for="autorenewal">Stay protected each year: sign up for auto-renewal.</label>
+              </div>
+            </div>
+            <div class="row notice">
+              <div class="col-sm-12 text-center">
+                <p>Auto-renewal helps protect you by paying your annual membership fee automatically each year by direct debit from your nominated payment method.
                             Please confirm your auto-renewal payment method below. The first payment will occur at your next renewal of annual membership.</p>
 
-							<p>Please update with an alternative credit card if required.</p>
-					  	</div>
-				  	</div>
-				  	<div id="autorenew-subform">
-
-				  	<div class="row">
-					  	<div class="col-sm-6 text-center">
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<input class="form-control autor" type="radio" value="Credit card" name="autopayment" id="autocredit" onclick="automethod();">
-						  			<label class="autor chkbox" for="autocredit">Credit card</label>
-						  			<div class="error-msg help-block"></div>
-						  		</div>
-					  		</div>
-					  	</div>
-					  	<div class="col-sm-6 text-center">
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<input class="form-control autor" type="radio" value="Direct debit" name="autopayment" id="autodd" onclick="automethod();">
-						  			<label class="autor chkbox" for="autodd">Direct debit</label>
-						  			<div class="error-msg help-block"></div>
-						  		</div>
-					  		</div>
-					  	</div>
-				  	</div>
-
-				  	<div class="row">
-					  	<div class="col-sm-6 text-center" id="autocreditc" style="display: none;">
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<label class="visible-ie-only" for="autocreditno">Card number<span>*</span>:</label>
-						  			<input class="form-control auto-cc-req" type="text" name="autocreditno" id="autocreditno" >
-						  			<div class="error-msg help-block"></div>
-						  		</div>
-					  		</div>
-
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<label class="visible-ie-only" for="autocreditname">Cardholder name<span>*</span>:</label>
-						  			<input class="form-control auto-cc-req" type="text" name="autocreditname" id="autocreditname" >
-						  			<div class="error-msg help-block"></div>
-						  		</div>
-					  		</div>
-
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<label class="visible-ie-only" for="autocreditexp">Expiry<span>*</span>:</label>
-						  			<div class="row">
-							  		<div class="col-sm-6">
-						  			<select id="autocreditmonth" name="autocreditmonth" class="auto-cc-req form-control">
-			                        <option value="">Month</option>
-			                        <option value="01">1 - Jan</option>
-			                        <option value="02">2 - Feb</option>
-			                        <option value="03">3 - Mar</option>
-			                        <option value="04">4 - Apr</option>
-			                        <option value="05">5 - May</option>
-			                        <option value="06">6 - Jun</option>
-			                        <option value="07">7 - Jul</option>
-			                        <option value="08">8 - Aug</option>
-			                        <option value="09">9 - Sep</option>
-			                        <option value="10">10 - Oct</option>
-			                        <option value="11">11 - Nov</option>
-			                        <option value="12">12 - Dec</option>
-									</select>
-						  			<div class="error-msg help-block"></div>
-							  		</div>
-							  		<div class="col-sm-6">
-				                    <select id="autocredityear" name="autocredityear" class="auto-cc-req form-control" >
-			                       {assign var=thisyear value=$smarty.now|date_format:"%Y"}
-			                       {assign var=numyears value=$thisyear+20}
-			                       <option value="">Year</option>
-			                       {for $year=$thisyear to $numyears}
-			                         <option value="{$year}">{$year}</option>
-			                       {/for}
-				                   </select>
-						  			<div class="error-msg help-block"></div>
-							  		</div>
-						  			</div>
-						  		</div>
-					  		</div>
-
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<label class="visible-ie-only" for="cccsv">Security code<span>*</span>:<a class="small" data-toggle="modal" data-target="#csv-info" href="#"><img src="/images/question-mark.png" alt="What is this?" title="What is this?" /></a></label>
-						  			<div>
-							  			<input type="text" id="cccsv" name="cc[csv]" class="seccode auto-cc-req form-control" autocomplete="off" required />
-							  			<img class="seccode" src="/images/donate-security.jpg" alt="Security code" />
-						  			</div>
-						  			<div class="error-msg help-block"></div>
-						  		</div>
-					  		</div>
-					  	</div>
-
-					  	<div class="col-sm-6 col-sm-offset-6 text-center" id="autodirectd" style="display: none;">
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<label class="visible-ie-only" for="autobsb">BSB<span>*</span>:</label>
-						  			<input class="form-control auto-dd-req" type="text" name="autobsb" id="autobsb" >
-						  			<div class="error-msg help-block"></div>
-						  		</div>
-					  		</div>
-
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<label class="visible-ie-only" for="autoddname">Account holder's name<span>*</span>:</label>
-						  			<input class="form-control auto-dd-req" type="text" name="autoddname" id="autoddname" >
-						  			<div class="error-msg help-block"></div>
-						  		</div>
-					  		</div>
-
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<label class="visible-ie-only" for="autoddno">Account number<span>*</span>:</label>
-						  			<input class="form-control auto-dd-req" type="text" name="autoddno" id="autoddno" >
-						  			<div class="error-msg help-block"></div>
-						  		</div>
-					  		</div>
-
-					  	</div>
-
-					  	<div class="col-sm-12 text-center">
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group chkbx">
-				                  <input class="autor auto-dd-req" type="checkbox" id="accept" name="accept" />
-					                <label class="autor chklab" for="accept">
-					                  I confirm that I have read and agree to the <a href="#">auto-renewal terms &amp; conditions</a> and I wish to register for auto-renewal of my membership.
-					                </label>
-						  			<div class="error-msg help-block"></div>
-						  		</div>
-					  		</div>
-					  	</div>
-
-				  	</div>
-				  	</div>
-
-				  	<div class="row">
-					  	<div class="col-sm-12 text-center">
-					  		<div class="row">
-						  		<div class="col-sm-12 form-group">
-						  			<div style="display:none;" id="error-text2"></div>
-
-
-						  			<a class="btn-red btn process-cnt" id="payment-btn" onclick="$('#checkout3-form').submit();">Complete Checkout</a>
-						  		</div>
-					  		</div>
-					  	</div>
-
-				  	</div>
-
-	              </div>
+              
               </div>
-               </div>
+            </div>
+            <div id="autorenew-subform">
+            <div class="row">
+              <div class="col-sm-6 text-center">
+                <div class="row">
+                  <div class="col-sm-12 form-group">
+                    <input class="form-control autor" type="radio" value="cc" name="autopayment" id="autocredit">
+                    <label class="autor chkbox" for="autocredit">Credit card</label>
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 text-center">
+                <div class="row">
+                  <div class="col-sm-12 form-group">
+                    <input class="form-control autor" type="radio" value="dd" name="autopayment" id="autodd">
+                    <label class="autor chkbox" for="autodd">Direct debit</label>
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="auto-cc-wrapper" class="auto-opts" style="display:none;">
+                <div class="row">
+                <div class="col-sm-12">
+                <p>Please update with an alternative credit card if required.</p><br>
+                </div>
+              <div class="col-sm-6 form-group">
+                <label class="visible-ie-only" for="auto-ccno">Card number<span>*</span>:</label>
+                <input type="text" id="auto-ccno" class="auto-cc-req form-control" name="auto-cc[number]" autocomplete="off" />
+                <div class="error-msg help-block"></div>
+              </div>
+
+              <div class="col-sm-6 form-group">
+                <label class="visible-ie-only" for="auto-ccname">Cardholder's name<span>*</span>:</label>
+                <input type="text" id="auto-ccname" class="auto-cc-req form-control" name="auto-cc[name]" autocomplete="off" />
+                <div class="error-msg help-block"></div>
+              </div>
+                   </div>
+
+            <div class="row">
+              <div class="col-sm-6 form-group">
+                <label class="visible-ie-only" for="auto-ccmonth">Expiry<span>*</span>:</label>
+                <div class="row">
+                <div class="col-sm-6">
+                <select id="auto-ccmonth" name="auto-cc[month]" class="auto-cc-req form-control">
+                          <option value="">Month</option>
+                          <option value="01">1 - Jan</option>
+                          <option value="02">2 - Feb</option>
+                          <option value="03">3 - Mar</option>
+                          <option value="04">4 - Apr</option>
+                          <option value="05">5 - May</option>
+                          <option value="06">6 - Jun</option>
+                          <option value="07">7 - Jul</option>
+                          <option value="08">8 - Aug</option>
+                          <option value="09">9 - Sep</option>
+                          <option value="10">10 - Oct</option>
+                          <option value="11">11 - Nov</option>
+                          <option value="12">12 - Dec</option>
+              </select>
+                <div class="error-msg help-block"></div>
+                </div>
+                <div class="col-sm-6">
+                        <select id="auto-ccyear" name="auto-cc[year]" class="auto-cc-req form-control" >
+                         {assign var=thisyear value=$smarty.now|date_format:"%Y"}
+                         {assign var=numyears value=$thisyear+20}
+                         <option value="">Year</option>
+                         {for $year=$thisyear to $numyears}
+                           <option value="{$year}">{$year}</option>
+                         {/for}
+                       </select>
+                <div class="error-msg help-block"></div>
+                </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 form-group">
+                <label class="visible-ie-only" for="auto-cccsv">Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :</label>
+                <div>
+                  <input type="text" id="auto-cccsv" name="auto-cc[csv]" class="seccode auto-cc-req form-control" autocomplete="off" />
+                  <img  class="seccode" src="/images/donate-security.jpg" alt="Security code" />
+                </div>
+                <div class="error-msg help-block"></div>
+              </div>
+                   </div>
+              </div>
+
+              <div class="row auto-opts" id="auto-dd-wrapper" style="display: none;">
+                  <div class="col-sm-offset-3 col-sm-6 form-group">
+                    <label class="visible-ie-only" for="autobsb">BSB<span>*</span>:</label>
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" id="autobsb" >
+                    <div class="error-msg help-block"></div>
+                  </div>
+
+                  <div class="col-sm-offset-3 col-sm-6 form-group">
+                    <label class="visible-ie-only" for="autoddname">Account holder's name<span>*</span>:</label>
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[name]" id="autoddname" >
+                    <div class="error-msg help-block"></div>
+                  </div>
+
+                  <div class="col-sm-offset-3 col-sm-6 form-group">
+                    <label class="visible-ie-only" for="autoddno">Account number<span>*</span>:</label>
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" id="autoddno" >
+                    <div class="error-msg help-block"></div>
+                  </div>
+
+              </div>
+
+              <div id="auto-renewal-conf-wrapper" class="col-sm-12 text-center" style="display:none;">
+                <div class="row">
+                  <div class="col-sm-12 form-group chkbx">
+                          <input class="autor auto-dd-req" type="checkbox" id="accept" name="accept" />
+                          <label class="autor chklab" for="accept">
+                            I confirm that I have read and agree to the <a href="#">auto-renewal terms &amp; conditions</a> and I wish to register for auto-renewal of my membership.
+                          </label>
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-offset-2 col-sm-8 text-center">
+                    <div class="error-textbox" {if !$error}style="display:none;"{/if} id="form-error"></div>
+                    <a class="btn-red btn process-cnt" id="payment-btn" onclick="$('#checkout3-form').submit();">Complete Checkout</a>
+              </div>
+            </div>
+                </div>
+              </div>
             </form>
             </div>
           </div>
         </div>
-      </div>
-  </div>
+      
   <div id="csv-info" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalcsv" aria-hidden="false">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -659,8 +631,19 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#checkout2-form').validate();
-    $('#checkout3-form').validate();
+    $('#checkout2-form').validate({
+      submitHandler: function(form) {
+        checkout2($(form).attr('id'));
+      }
+    });
+    
+    $('#checkout3-form').validate({
+      submitHandler: function(form) {
+        $('#payment-btn').html('Processing...').attr('disabled','disabled');
+      	form.submit();
+      }
+    });
+  		
     updateShipping();
 
     sameAddress();
@@ -697,6 +680,10 @@
     {if $error}
       goCheckout3();
     {/if}
+    
+    $('input[name="autopayment"]').change(function(){
+      automethod();
+    });
   });
 
 
@@ -716,24 +703,29 @@
   }
 
   function automethod(){
-    if($("input[name=autopayment]:checked").val() == 'Credit card'){
-      $('#autodirectd input').removeAttr('required');
-      $('#autocreditc input').attr('required', 'required');
-      $('#autodirectd').hide();
-      $("#autocreditc").show();
+    var option = $('input[name="autopayment"]:checked').val();
+    $('.auto-opts').hide();
+    if(option){
+      $('.auto-'+option+'-req').attr('required', 'required');
+      $('#auto-'+option+'-wrapper').fadeIn();
+      $('#auto-renewal-conf-wrapper').fadeIn();
     }else{
-      $('#autocreditc input').removeAttr('required');
-      $('#autodirectd input').attr('required', 'required');
-      $('#autodirectd').show();
-      $("#autocreditc").hide();
+      $('#auto-renewal-conf-wrapper').hide();
+      $('.auto-cc-req').removeAttr('required');
+      $('.auto-dd-req').removeAttr('required');
     }
   }
 
   function autorenew(){
     if($("#autorenewal").is(':checked')){
       $('#autorenew-subform').show();
+      $('input[name="autopayment"]').attr('required', 'required');
+      automethod();
     }else{
       $('#autorenew-subform').hide();
+      $('input[name="autopayment"]').removeAttr('required');
+      $('.auto-cc-req').removeAttr('required');
+      $('.auto-dd-req').removeAttr('required');
     }
   }
 

@@ -68,7 +68,6 @@
         <name>collections</name>
         <table>tbl_listing</table>
         <id>listing_object_id</id>
-        <value>listing_url</value>
         <reference>listing_name</reference>
         <extra>listing_image</extra>
         <extra>listing_url</extra>
@@ -112,7 +111,6 @@
         <name>reasons</name>
         <table>tbl_reason</table>
         <id>reason_id</id>
-        <value>reason_value</value>
         <reference>reason_name</reference>
         <orderby>reason_order, reason_name</orderby> 
       </field>  
@@ -193,6 +191,9 @@
     <url>donate</url>
     <template>donate.tpl</template>
     <pageID>112</pageID>
+    <process>
+      <file>includes/processes/process-load-donations.php</file>
+    </process>
   </static_page>
   <static_page>
     <url>refer-a-friend</url>
@@ -215,6 +216,22 @@
     <url>login-register</url>
     <template>login-register.tpl</template>
     <pageID>8</pageID>
+    <options> 
+      <field> 
+        <name>options_state</name>
+        <table>tbl_postcode</table>
+        <id>postcode_state_long</id>
+        <reference>postcode_state_long</reference>
+        <orderby>postcode_state_long</orderby> 
+      </field> 
+      <field> 
+        <name>options_hearabout</name>
+        <table>tbl_heardabout</table>
+        <id>heardabout_value</id>
+        <reference>heardabout_value</reference>
+        <orderby>heardabout_order</orderby> 
+      </field>  
+    </options>
   </static_page>
   <static_page>
     <url>my-account</url>
@@ -222,6 +239,9 @@
     <pageID>9</pageID>
     <process>
       <file>includes/processes/process-load-account.php</file>
+    </process>
+    <process>
+      <file>includes/processes/process-load-donations.php</file>
     </process>
   </static_page>
   <static_page>
@@ -231,11 +251,23 @@
     <process>
       <file>includes/processes/process-load-shopping-cart.php</file>
     </process>
+    <process>
+      <file>includes/processes/process-load-donations.php</file>
+    </process>
   </static_page>
   <static_page>
     <url>checkout</url>
     <template>checkout.tpl</template>
     <pageID>13</pageID>
+    <options> 
+      <field> 
+        <name>options_state</name>
+        <table>tbl_postcode</table>
+        <id>postcode_state_long</id>
+        <reference>postcode_state_long</reference>
+        <orderby>postcode_state_long</orderby> 
+      </field> 
+    </options>
     <process>
       <file>includes/processes/process-load-checkout.php</file>
     </process>

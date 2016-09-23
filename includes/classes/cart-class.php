@@ -9,6 +9,7 @@ class cart {
   private $ses_cart_id;
   protected $cart_user_id = null;
   protected $cart_db_user_id = null;
+  protected $cartRecord = array();
   protected $dbProducts = array();
   protected $cartProducts = array();
   protected $enableMerging = false;
@@ -35,6 +36,7 @@ class cart {
       $this->CreateCart();
     }
     $this->SetUserCart();
+    $this->GetDataCart($this->cart_id);
   }
 
   /**
@@ -434,11 +436,12 @@ class cart {
   function GetDataCart($cartId = null) {
     global $DBobject;
     
-    if(empty($cartId)){
-      $cartId = $this->cart_id;
+    if(empty($cartId) && !empty($this->cartRecord)){
+      return $this->cartRecord;
     }
     $sql = "SELECT * FROM tbl_cart WHERE cart_id = :id AND cart_deleted IS NULL AND cart_id <> 0";
     if($res = $DBobject->wrappedSql($sql, array(":id"=>$cartId))){
+      $this->cartRecord = $res[0];
       return $res[0];
     }
     throw new exceptionCart("Cart not found.");
@@ -537,12 +540,11 @@ class cart {
       $discount = $discArr['discount'];
       $discount_error = $discArr['error'];
     }
-    
     return array(
         'subtotal' => $subtotal,
         'discount' => $discount,
     	'discount_error' => $discount_error,
-        'GST_Taxable' => $gst_taxable - $discount,
+        'GST_Taxable' => $gst_taxable,
         'total' => $subtotal - $discount
     );
   }
@@ -564,7 +566,7 @@ class cart {
     $res = $DBobject->wrappedSql($sql,array(
         ":id"=>$cartId
     ));
-    return $res[0]['SUM'];
+    return (empty($res[0]['SUM']) ? 0 : $res[0]['SUM']);
   }
 
   /**
@@ -728,10 +730,9 @@ class cart {
         throw new exceptionCart("<b>{$productName}</b> is out of stock.");
         return false;
       }
-      
       //Set initial product price
-      if(!empty($prod['[variant_editableprice'])){
-        $productPrice = $frontEndPrice;
+      if($prod['variant_editableprice'] == 1){
+        $productPrice = ($frontEndPrice > 1000) ? 1000 : round($frontEndPrice, 0);
       }else{
         $productPrice = $prod['variant_price'];
         if($prod['variant_specialprice'] > 0){
@@ -741,7 +742,6 @@ class cart {
           $productPrice = $prod['variant_membersprice'];
         } 
       }
-      
       $productAttr = array();
       $cnt = 0;
       foreach($attributesArray as $attrId => $valId){
@@ -825,9 +825,10 @@ class cart {
     
     $result = array();
     foreach($qtys as $id=>$qty){
-      $sql = "SELECT cartitem_quantity, cartitem_product_price,cartitem_product_id, product_id
+      $sql = "SELECT cartitem_quantity, cartitem_product_price, cartitem_product_id, product_id, variant_editableprice
       		FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id 
-      		WHERE cartitem_id = :id AND cartitem_deleted IS NULL AND product_deleted IS NULL AND product_published = '1' ";
+            LEFT JOIN tbl_variant ON variant_id = cartitem_variant_id 
+      		WHERE cartitem_id = :id AND cartitem_deleted IS NULL AND product_deleted IS NULL AND variant_deleted IS NULL AND product_published = '1'";
       
       if($res = $DBobject->wrappedSql($sql,array(
           ":id"=>$id
@@ -836,8 +837,11 @@ class cart {
         if($qty != $res[0]['cartitem_quantity']){
           $attrs = $this->GetAttributesIdsOnCartitem($id);
           $DBproduct = $this->GetProductCalculation($res[0]['cartitem_product_id'], $attrs, $qty);
-          $subtotal = $DBproduct['product_price'] * $qty;
+          $price = ($res[0]['variant_editableprice'] == 1) ? $res[0]['cartitem_product_price'] : $DBproduct['product_price'];
+          $subtotal = $price * $qty;
           $pricemodifier = "";
+          
+          //Set product bulk discount
           $sql = "SELECT * FROM tbl_productqty WHERE productqty_variant_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";
           $params = array(
               ":qty"=>$qty,
@@ -851,17 +855,17 @@ class cart {
             }
           }
           $params = array(
-              ":id"=>$id,
-              ":qty"=>$qty,
-              ":subtotal"=>$subtotal,
-              ":price"=>$DBproduct['product_price']
+              ":id" => $id,
+              ":qty" => $qty,
+              ":subtotal" => $subtotal,
+              ":price" => $price
           );
           $sql = "UPDATE tbl_cartitem SET cartitem_quantity = :qty, cartitem_subtotal = :subtotal, cartitem_modified = now(), cartitem_product_price = :price
 	                		WHERE cartitem_id = :id";
           if($DBobject->wrappedSql($sql,$params)){
             $result['subtotals'][$id] = $subtotal;
             $result['pricemodifier'][$id] = $pricemodifier;
-            $result['priceunits'][$id] = $DBproduct['product_price'];
+            $result['priceunits'][$id] = $price;
           }
         }
       }
@@ -1089,7 +1093,21 @@ function ApplyDiscountCode($code, $cartId = null) {
 		return false;
 	}
 	
-
+	/**
+	 * Return a record give a code.
+	 * @return array
+	 */
+	function GetCurrentFreeShippingDiscountName() {
+	  global $DBobject;
+	
+	  $sql = "SELECT discount_shipping FROM tbl_discount
+	    	WHERE discount_deleted IS NULL AND discount_published = 1 AND (CURDATE() BETWEEN discount_start_date AND discount_END_date) AND discount_code = :id ";
+	  if($res = $DBobject->wrappedSql($sql, array(":id" => $this->cartRecord['cart_discount_code']))){
+	    return $res[0]['discount_shipping'];
+	  }
+	  return '';
+	}
+	
 	/**
 	 * Return a record give a code.
 	 * @return array
@@ -1315,6 +1333,33 @@ function ApplyDiscountCode($code, $cartId = null) {
   		}
   	}
   	return $result;
+  }
+  
+  
+  /**
+   * ONLY FOR MAF
+   * Return true when the cart has MAF product, in other words not only donations and/or gift certificates 
+   * @return boolean
+   */
+  function HasMAFProducts($cartId = null){
+    global $DBobject;
+    
+    if(empty($cartId)){
+      $cartId = $this->cart_id;
+    }
+    $params = array(":id" => $cartId);
+    
+    //gift certificates and/or donations product_object_id
+    $notDonationGift = "AND cartitem_product_id != 213 AND cartitem_product_id != 217";
+    
+    $sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id";
+    if($res = $DBobject->wrappedSql($sql, $params)){
+      $sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> '0' {$notDonationGift} AND cartitem_cart_id = :id";
+      if($res2 = $DBobject->wrappedSql($sql, $params)){
+        return true;
+      }
+    }
+    return false;  
   }
   
   

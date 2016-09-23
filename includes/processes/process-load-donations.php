@@ -1,8 +1,8 @@
 <?php
 global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 
-// Gift certificate object id
-$productObjId = 213; 
+// Donations object id
+$productObjId = 217; 
 
 $products = array();
 try{

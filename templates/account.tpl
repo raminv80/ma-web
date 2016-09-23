@@ -213,7 +213,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 text-center">
-				<h3>For just $32 a year, your MedicAlert membership gives you:</h3>
+				<h3>For just {$CONFIG_VARS.membership_fee} a year, your MedicAlert membership gives you:</h3>
 			</div>
 		</div>
 		<div class="row">

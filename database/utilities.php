@@ -1464,3 +1464,9 @@ function geocode($city){
 	return $geoloc['results'][0]['geometry']['location'];
 }
 
+
+function validateDate($date, $format = 'd/m/Y'){
+  $d = DateTime::createFromFormat($format, $date);
+  return $d && $d->format($format) === $date;
+}
+
