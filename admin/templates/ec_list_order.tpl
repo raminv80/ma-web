@@ -34,7 +34,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{include file='orders.tpl'}
+			{include file='ec_orders.tpl'}
 		</tbody>
 	</table>
 </div>

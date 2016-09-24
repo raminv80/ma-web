@@ -8,20 +8,35 @@
 // Copyright 2015 THEM Advertising.
 // -------------------------------------------------------------------------
 
-class Qvalent_REST_PayWayAPI
-{
+class Qvalent_REST_PayWayAPI extends Bank {
+
   const SECRET = 1;
   const PUBLISHABLE = 2;
   
   const URL = 'https://api.payway.com.au/rest/v1/';
 
-  var $secretAPIkey;
-  var $publishableAPIkey;
-  var $merchantId;
-  var $bankAccountId;
+  protected $secretAPIkey;
+  protected $publishableAPIkey;
+  protected $merchantId;
+  protected $bankAccountId;
+  protected $isDirecDebit = false;
+  protected $recurrentPayment = false;
+  protected $bsb;
+  protected $accountnumber;
+  protected $accountname;
+  protected $address = array();
+  protected $responseObj;
 
-  function Qvalent_REST_PayWayAPI()
-  {
+  function __construct($data){
+    parent::__construct($data);
+
+    $this->secretAPIkey = $data['settings']->secretkey;
+    $this->publishableAPIkey = $data['settings']->publishableakey;
+    $this->merchantId = $data['settings']->merchantid;
+    $this->bankAccountId = $data['settings']->bankAccountid;
+    
+    $this->address = $data['address'];
+    
     //LIVE - MAF | old site
     //$this->secretAPIkey = 'Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k';
     //$this->publishableAPIkey = 'Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs';
@@ -33,13 +48,144 @@ class Qvalent_REST_PayWayAPI
     //$this->publishableAPIkey = 'T10023_PUB_aumgejfq7yd27cbkbypftzg87eht5vf84q3thibxy9wpa7ru44cnfddqrx4f';
     //$this->merchantId = 'TEST';
     //$this->bankAccountId = '0000000A';
-    
-    //DEV - Them (Jeff Miller) | new site
-    $this->secretAPIkey = 'Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k';
-    $this->publishableAPIkey = 'Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs';
-    $this->merchantId = 'TEST';
-    $this->bankAccountId = '0000000A';
   }
+  
+  function Submit(){
+    return parent::Submit();
+  }
+  
+  function PreparePayment($data){
+    if(!empty($data['method']) && $data['method'] == 'dd'){
+      $this->isDirecDebit = true;
+      $this->amount = $data['amount'];
+      $this->bsb = $data['bsb'];
+      $this->accountnumber = $data['number'];
+      $this->accountname = $data['name'];
+      
+    }else{
+      parent::PreparePayment($data);
+    }
+    $this->recurrentPayment = empty($data['autorenewal']) ? false : true;
+  }
+  
+  
+  /**
+   * Submit payment request and return result
+   */
+  protected function SubmitPayment(){
+    try{
+      if($this->isDirecDebit){
+        $response = $this->CreateDirectDebitSingleUseToken($this->bsb, $this->accountnumber, $this->accountname);
+      }else{
+        $response = $this->CreateCreditCardSingleUseToken($this->cc_number, $this->cc_name, $this->cc_cvc, $this->cc_expiry_month, $this->cc_expiry_year);
+      }
+      $singleUseTokenId = $response->singleUseTokenId;
+      //MISSING TOKEN
+      if(empty($singleUseTokenId)){
+        $err = array();
+        foreach($response->data as $r){
+          $err[] = "{$r->fieldName}: {$r->message}";
+        }
+        $this->errorMsg .= implode("<br>", $err);
+        return false;
+      }
+      
+      //GET CONTACT INFORMATION FOR THIS CUSTOMER
+      $contactArr = array(
+          "name" => $this->address['fullname'],
+          "email" => $this->address['email'],
+          "phone" => preg_replace("/[^0-9]/", "", $this->address['phone']),
+          "street1" => $this->address['address'],
+          "street2" => $this->address['address2'],
+          "city" => $this->address['suburb'],
+          "state" => $this->address['state'],
+          "postcode" => $this->address['postcode']
+      );
+      //CREATE TEMPORARY CUSTOMER
+      $WestpacCustomer = $this->CreateCustomer($singleUseTokenId, $this->payment_transactionno, $contactArr);
+      //MISSING CUSTOMER NUMBER
+      if(empty($WestpacCustomer->customerNumber)){
+        $err = array();
+        foreach($WestpacCustomer->data as $r){
+          $err[] = "{$r->fieldName}: {$r->message}";
+        }
+        $this->errorMsg .= implode("<br>", $err);
+        return false;
+      }
+      
+      $paymentArr = array(
+          "customerNumber" => $WestpacCustomer->customerNumber,
+          "transactionType" => "payment",
+          "principalAmount" => number_format($this->amount, 2, '.', ''),
+          "orderNumber" => $this->payment_transactionno
+      );
+      $this->responseObj = $this->CreateTransaction($paymentArr);
+      
+      //GET RESPONSE FIELDS
+      $this->response['summary_code']         = $this->responseObj->responseCode;
+      $this->response['code']                 = $this->responseObj->status;
+      $this->response['msg']                  = $this->responseObj->responseText;
+      $this->response['receipt_no']           = $this->responseObj->receiptNumber;
+      $this->response['settlementdate']       = $this->responseObj->settlementDate;
+      $this->response['transactiondate']      = $this->responseObj->transactionDateTime;
+      $this->response['cardscheme']           = $this->responseObj->creditCard->cardScheme;
+      $this->response['payment_response']     = json_encode($this->responseObj);
+      
+      switch($this->response['code']){
+        case 'approved':
+        case 'approved*':{
+          $this->response['payment_status'] = 'A';
+          $this->payment_success = true;
+          break;
+        }
+        
+        case 'declined':{
+          $this->response['payment_status'] = 'F';
+          $this->payment_success = false;
+          $this->errorMsg .= "TRANSACTION DECLINED: Response code({$this->response['code']}) - {$this->response['msg']}<br>";
+          break;
+        }
+  
+        case 'suspended':{
+          $this->response['payment_status'] = 'F';
+          $this->payment_success = false;
+          $this->errorMsg .= "TRANSACTION DECLINED - Contact your bank for more information.<br>";
+          break;
+        }  
+        
+        default:{
+          $this->response['payment_status'] = 'F';
+          $this->payment_success = false;
+          $this->errorMsg .= "TRANSACTION FAILED: Response code({$this->response['code']}) - {$this->response['msg']}<br>";
+          break;
+        }
+      }
+      
+      if(!$this->recurrentPayment || !$this->payment_success){
+        //DELETE TEMPORARY CUSTOMER
+        $this->DeleteCustomer($WestpacCustomer->customerNumber);
+        return true;
+      }
+      
+      //STORE AUTORENEW RECORD
+      $this->autorenewRecord = array(
+          "bank_customer_id" => $WestpacCustomer->customerNumber,
+          "method" => $this->responseObj->paymentMethod,
+          "singletoken" => $singleUseTokenId
+      );
+      return true;
+      
+    }catch (Exception $e){
+      $this->errorMsg .= "BANK CONNECTION ERROR: {$e}<br>";
+      return false;
+    }
+  }
+  
+
+  
+
+  
+  
   
   /* Generate UUID v4 function:
    * UUID is used for idempotency-key passed in header of all cUrl requests,
@@ -192,8 +338,6 @@ class Qvalent_REST_PayWayAPI
     $xml_customer["cityName"]=$contact['city'];
     $xml_customer["state"]=$this->CheckState($contact['state']);
     $xml_customer["postalCode"]=$contact['postcode'];
-
-    
     return $xml_customer;
   }
 

@@ -33,6 +33,21 @@
     <password>OTwFwL?pSnR+</password> 
     <dbname>them_db01</dbname> 
   </database> 
+  <payment_gateway>
+    <payway>
+      <!-- DEV -->
+      <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey>
+      <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey>
+      <merchantid>TEST</merchantid>
+      <bankAccountid>0000000A</bankAccountid>
+      <!-- LIVE  -->
+<!--       <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey> -->
+<!--       <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey> -->
+<!--       <merchantid>23886963</merchantid> -->
+<!--       <bankAccountid>035213308316A</bankAccountid> -->
+    </payway>
+  </payment_gateway>
+  
   <page_strut>
     <type>1</type>
     <depth>2</depth>

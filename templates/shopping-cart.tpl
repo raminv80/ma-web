@@ -128,7 +128,7 @@
 				{foreach $products.variants as $v}
 				<div class="donbtn">
 				  	<label for="variant-{$v.variant_id}">
-	                    <input type="radio" value="{$v.variant_id}" data-value="{$v.variant_price}" class="{if $v.variant_editableprice eq 1}show-otherval{/if}" name="variant_id" id="variant-{$v.variant_id}">
+	                    <input type="radio" value="{$v.variant_id}" data-value="{$v.variant_price|number_format:0:'.':','}" class="{if $v.variant_editableprice eq 1}show-otherval{/if}" name="variant_id" id="variant-{$v.variant_id}">
                         <input type="hidden" disabled value="{$v.attr_value_id}" name="attr[{$v.attribute_id}][id]" id="attribute_id-{$v.variant_id}" class="variant-attributes"/>
                     	<div id="variant-{$v.variant_id}-btn" class="donate-btn btn btn-grey">{if $v.variant_editableprice eq 1}Other{else}${$v.variant_price|number_format:0:'.':','}{/if}</div>
                     </label>
@@ -199,7 +199,7 @@
 
 	            <div class="row tallrow">
 	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">GST inc. in total<br /><span class="subj">(*Subject to GST)</span></div>
-	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr">${$totals.GST_Taxable|number_format:2:".":","}</div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr" id="GST_Taxable">${$totals.GST_Taxable|number_format:2:".":","}</div>
 	            </div>
 
 	            <div class="row tots tallrow"><!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->

@@ -279,32 +279,33 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_method' => $paymentMethod 
         );
         
+        //require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
         require_once 'includes/classes/PayWay.php';
         $pay_obj = new PayWay();
         $response = false;
         
         $paymentId = $pay_obj->StorePaymentRecord($params);
         
-        /*
-         * $CCdata = array('amount'=>$chargedAmount);
-         * if(!empty($_POST['cc'])){
-         * $CCdata = array_merge($CCdata, $_POST['cc']);
-         * }
-         * $pay_obj->PreparePayment($CCdata);
-         *
-         * try{
-         * $response = $pay_obj->Submit();
-         * $paymentId = $paypalObj->GetPaymentId();
-         * }catch(Exception $e){
-         * if ($error_msg = $pay_obj->GetErrorMessage()) {
-         * $_SESSION['error'] = $error_msg;
-         * } else {
-         * $_SESSION['error'] = 'Payment failed (on submit). Verify information and try again. ';
-         * }
-         * header('Location: '.$_SERVER['HTTP_REFERER'].'#form-error');
-         * exit;
-         * }
-         */
+       /*  
+          $CCdata = array('amount'=>$chargedAmount);
+          if(!empty($_POST['cc'])){
+          $CCdata = array_merge($CCdata, $_POST['cc']);
+          }
+          $pay_obj->PreparePayment($CCdata);
+         
+          try{
+          $response = $pay_obj->Submit();
+          $paymentId = $paypalObj->GetPaymentId();
+          }catch(Exception $e){
+          if ($error_msg = $pay_obj->GetErrorMessage()) {
+         $_SESSION['error'] = $error_msg;
+          } else {
+          $_SESSION['error'] = 'Payment failed (on submit). Verify information and try again. ';
+          }
+          header('Location: '.$_SERVER['HTTP_REFERER'].'#form-error');
+          exit;
+          }
+          */
         $response = true;
         if($response){
           // PAYMENT SUCCESS
@@ -320,7 +321,13 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           //NEW USER          
           $newMAFMember = $cart_obj->HasMAFProducts();
           if(empty($userArr) && $newMAFMember){//MAF - CREATE NEW MEMBER VIA API 
-          
+            $guestArr = array(
+                "id" => $order_cartId,
+                "gname" => $_POST['gname'],
+                "surname" => $_POST['surname'],
+                "email" => $_POST['email']
+            );
+            //================================================= CHANGE THIS!!! =========================
             
             
           }elseif(empty($userArr) && !$newMAFMember){ // Create guest user when empty
@@ -483,7 +490,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       if($_POST['product_id'] == 213){ //Gift certificate
         $isGiftCertificate = true;
       
-      }elseif($_POST['product_object_id'] == 217){ //Donation
+      }elseif($_POST['product_id'] == 217){ //Donation
       
       }else{
       
@@ -492,7 +499,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       //Has mandatory field: credit cart details, product_object_id, variant_id
       if(empty($_POST['honeypot']) && !empty($_POST['timestamp']) && (time() - $_POST['timestamp']) > 3 && !empty($_POST['product_id']) && !empty($_POST['variant_id']) && !empty($_POST['cc'])){
         $_SESSION['error'] = 'Your session has expired. Please try again, otherwise contact us by phone.';
-        header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
+        header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error-1');
         die();
       }
       
@@ -638,6 +645,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         
         if($isGiftCertificate){
           // CREATE GIFT CERTIFICATE
+          
           
           try{
             // SEND GIFT CERTIFICATE

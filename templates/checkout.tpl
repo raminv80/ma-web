@@ -134,7 +134,7 @@
 
 		            <div class="row tallrow">
 		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label text-right  mobl">GST inc. in total<br /><span class="subj">(*Subject to GST)</span></div>
-		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr">$2.38</div>
+		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr" id="GST_Taxable">${$totals.GST_Taxable|number_format:2:".":","}</div>
 		            </div>
 
 		            <div class="row tots tallrow"><!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
