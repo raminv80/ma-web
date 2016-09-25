@@ -200,12 +200,12 @@
     	  		<div class="row">
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="name1">First Name<span>*</span>:</label>
-    					<input class="form-control" value="{if $address & $address.B.address_name}{$address.B.address_name}{else}{$user.gname}{/if}" type="text" name="address[B][address_name]" id="name1" required="">
+    					<input class="form-control" value="{if $address & $address.B.address_name}{$address.B.address_name}{else}{if $user.gname}{$user.gname}{else}{$new_user.gname}{/if}{/if}" type="text" name="address[B][address_name]" id="name1" required="">
 						<div class="error-msg help-block"></div>
     				</div>
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="surname1">Surname<span>*</span>:</label>
-    					<input class="form-control" value="{if $address && $address.B.address_surname}{$address.B.address_surname}{else}{$user.surname}{/if}" type="text" name="address[B][address_surname]" id="surname1" required="">
+    					<input class="form-control" value="{if $address && $address.B.address_surname}{$address.B.address_surname}{else}{if $user.surname}{$user.surname}{else}{$new_user.surname}{/if}{/if}" type="text" name="address[B][address_surname]" id="surname1" required="">
 						<div class="error-msg help-block"></div>
     				</div>
     			</div>
@@ -214,12 +214,12 @@
     	  		<div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="street">Address<span>*</span>:</label>
-                      <input id="street" value="{if $address}{$address.B.address_line1}{else}{$user.maf.main.user_address}{/if}" name="address[B][address_line1]" type="text" class="billing-req form-control" required="required"  />
+                      <input id="street" value="{if $address}{$address.B.address_line1}{else}{if $user.maf.main.user_address}{$user.maf.main.user_address}{else}{$new_user.address}{/if}{/if}" name="address[B][address_line1]" type="text" class="billing-req form-control" required="required"  />
 						<div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="suburb">Suburb*:</label>
-                      <input id="suburb" value="{if $address}{$address.B.address_suburb}{else}{$user.maf.main.user_suburb}{$selectedShippingSuburb}{/if}" name="address[B][address_suburb]" type="text" class="billing-req form-control" required="required"  />
+                      <input id="suburb" value="{if $address}{$address.B.address_suburb}{else}{if $user.maf.main.user_suburb}{$user.maf.main.user_suburb}{else}{$new_user.suburb}{/if}{$selectedShippingSuburb}{/if}" name="address[B][address_suburb]" type="text" class="billing-req form-control" required="required"  />
 						<div class="error-msg help-block"></div>
                   </div>
     	  		</div>
@@ -229,15 +229,17 @@
                     <label class="visible-ie-only" for="state">State*:</label>
                       <select id="state" name="address[B][address_state]" class="required form-control">
                         <option value="">Select an option</option>
+                        {$cur_state = $selectedShippingState}
+                        {if $address}{$cur_state = $address.B.state}{else}{if $user.maf.main.user_state_id}{$cur_state = $user.maf.main.user_state_id}{else}{$cur_state = $new_user.state}{/if}{/if}
                         {foreach $options_state as $opt }
-                        <option value="{$opt.value}" {if ($address && $address.B.address_state eq $opt.value) || (!$address && {$user.maf.main.user_state_id} eq $opt.value) || (!$address && $selectedShippingState eq $opt.value)}selected="selected"{/if}>{$opt.value}</option>
+                        <option value="{$opt.value}" {if $cur_state eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}
                       </select>
 						<div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="postcode-field">Postcode*:</label>
-                      <input id="postcode-field" value="{if $shippostcode}{$shippostcode}{else}{if $address && $address.B.address_postcode}{$address.B.address_postcode}{else}{$user.maf.main.user_postcode}{/if}{/if}" name="address[B][address_postcode]" pattern="[0-9]" type="text" class="postcode billing-req form-control" required="required" onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
+                      <input id="postcode-field" value="{if $shippostcode}{$shippostcode}{else}{if $address && $address.B.address_postcode}{$address.B.address_postcode}{else}{if $user.maf.main.user_postcode}{$user.maf.main.user_postcode}{else}{$new_user.postcode}{/if}{/if}{/if}" name="address[B][address_postcode]" pattern="[0-9]" type="text" class="postcode billing-req form-control" required="required" onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
 						<div class="error-msg help-block"></div>
                   </div>
     	  		</div>
@@ -245,12 +247,12 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="email">Email*:</label>
-                      <input id="email" value="{if $address && $address.B.address_email}{$address.B.address_email}{else}{$user.email}{/if}" name="address[B][address_email]" type="email" class="billing-req form-control" required="required"  />
+                      <input id="email" value="{if $address && $address.B.address_email}{$address.B.address_email}{else}{if $user.email}{$user.email}{else}{$new_user.email}{/if}{/if}" name="address[B][address_email]" type="email" class="billing-req form-control" required="required"  />
 						<div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="phone">Phone*:</label>
-                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{$user.maf.main.user_phone_home}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required"  />
+                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{if $user.maf.main.user_phone_home}{$user.maf.main.user_phone_home}{else}{$new_user.mobile}{/if}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required"  />
 						<div class="error-msg help-block"></div>
                   </div>
                 </div>

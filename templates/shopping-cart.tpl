@@ -83,17 +83,23 @@
               <div class="visible-xs col-xs-3"></div>
               <div class="hidden-xs col-xs-9 col-sm-2 text-center valgn" id="priceunit-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
               <div class="col-xs-9 col-xs-offset-3 col-sm-2 col-sm-offset-0 col-md-1 quant text-center valgn mobl">
+                {if $item.product_fixed_qty neq 1}
                 <select id="quantity" class="quantity" name="qty[{$item.cartitem_id}]">
                   {assign var='max' value=10} {if $max lt $item.cartitem_quantity} {assign var='max' value=$item.cartitem_quantity} {/if} {for $opt=1 to $max}
                   <option value="{$opt}" {if $item.cartitem_quantity eq $opt}selected{/if}>{$opt}</option>
                   {/for}
                 </select>
+                {else}
+                  {$item.cartitem_quantity}
+                {/if}
                 <div id="qty-discount-{$item.cartitem_id}">{if $item.productqty_modifier.productqty_modifier neq 0}(-{$item.productqty_modifier.productqty_modifier|number_format:2:".":','|rtrim:'0'|rtrim:'.'}%){/if}</div>
               </div>
               <div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0 text-center valgn mobl" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
               <div class="col-xs-3 col-sm-1 text-center valgn">
+                {if $item.product_unremovable neq 1}
                 <a class="hidden-xs hidden-sm remove" href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');">Remove</a>
                 <a class="remove visible-xs visible-sm" href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');"><img src="/images/cart-bin.png" alt="Remove" title="Remove" /></a>
+                {/if}
               </div>
             </div>
             {/foreach}

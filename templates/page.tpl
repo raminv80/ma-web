@@ -94,7 +94,7 @@
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
 	      //$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
-	      $(element).closest('.form-group').removeClass('has-error');
+	      $(element).closest('.form-group').removeClass('has-error'); console.log(element);
           $(element).closest('.form-group').find('.help-block').text('');
 	    },
 	    errorPlacement: function (error, element) {

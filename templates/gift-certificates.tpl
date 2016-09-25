@@ -85,7 +85,7 @@
                   <label class="visible-ie-only" for="sname">
                     Your name<span>*</span>:
                   </label>
-                  <input class="form-control" value="{$post.sname}" type="text" name="name" id="sname" required="">
+                  <input class="form-control" value="{$post.name}" type="text" name="name" id="sname" required="">
                   <div class="error-msg help-block"></div>
                 </div>
 
@@ -93,7 +93,7 @@
                   <label class="visible-ie-only" for="semail">
                     Your email<span>*</span>:
                   </label>
-                  <input class="form-control" value="{$post.semail}" type="text" name="email" id="semail" required="">
+                  <input class="form-control" value="{$post.email}" type="text" name="email" id="semail" required="">
                   <div class="error-msg help-block"></div>
                 </div>
               </div>

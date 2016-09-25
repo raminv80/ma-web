@@ -173,7 +173,7 @@ a{color:#ed174f;text-decoration: none;}
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 	            <td class="w580" width="580" style="table-layout: fixed;">
 					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Hi {$name}</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px; font-weight: bold;">It’s our pleasure to let you know that {$fried_name} has sent you a MedicAlert gift certificate, valued at {$price}!</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px; font-weight: bold;">It's our pleasure to let you know that {$fried_name} has sent you a MedicAlert gift certificate, valued at {$price}!</p>
                     <p style="font-weight: bold;font-size: 14px; line-height: 26px;">Your gift certificate code is: <span style="font-size: 18px;">{$code}</span></p>
 			       <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To redeem your gift certificate online, follow the steps below:</p> 
                     <ul>
@@ -183,7 +183,7 @@ a{color:#ed174f;text-decoration: none;}
                       <li>Continue to process your payment.</li>
                     </ul>		
                     <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Gift certificate can be redeemed either over the phone or at our online shop. You can use it to renew your annual MedicAlert membership, update your current medical ID to one of our latest pieces of jewellery, or purchase an additional piece of jewellery from our extensive range.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To redeem your gift certificate over the phone, call our Membership Services team on <a style="color: #ed3361; text-decoration: none;" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a> between 9am-5pm ACST Monday - Friday.</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To redeem your gift certificate over the phone, call our Membership Services team on <a style="color: #ed3361; text-decoration: none;" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a> between 8.30am-5.30pm ACST Monday - Friday.</p>
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">If you have any questions about your gift certificate or redemption, please do not hesitate to get in touch.</p>
 					
 	            </td>

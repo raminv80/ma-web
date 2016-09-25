@@ -177,6 +177,7 @@
           <div class="form-group{if $product_type_id eq 1 && $attr.attribute_type neq 1} attr-hidden{/if}" style="{if $product_type_id eq 1 && $attr.attribute_type neq 1}display:none{/if}">
             <div class="col-sm-12">
               <label for="{urlencode data=$attr.attribute_name}" class="control-label">{$attr.attribute_name}</label>
+              <div class="help-block"></div>
               {if $attr.attribute_type eq 1}
               <div class="attrtype1_name">Select one</div>
                 {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
@@ -218,7 +219,7 @@
 	                      <div class="col-sm-12">
 						  	<label>Need help with engraving?</label>
 						  	<p>Simply click &quot;add to cart&quot; and proceed through payment. One of our friendly team members will be then get in touch with you.</p>
-						  	<a href="#">Engraving tips ></a>
+						  	<a href="/faqs">Engraving tips ></a>
 	                      </div>
                       </div>
                     </div>
@@ -235,26 +236,15 @@
 
           <div class="form-group">
   	        <div class="prodprice col-sm-12">
-              <div style="display: inline; color: #ff0000" id="error-text"></div>
-              {foreach $variants as $variant}
-                <div class="variant-panels" id="variant-{$variant.variant_id}-panel" style="display:none">
-                {if $variant.variant_instock eq 1}
-                  <!--<div class="form-group">
-                    <label for="address_state_1" class="col-sm-2 control-label">Qty: </label>
-                    <div class="col-sm-2">
-                      <input type="text" value="1" name="quantity" id="quantity" class="form-control unsigned-int gt-zero" pattern="[0-9]" >
-                    </div>
-                  </div>-->
-                    <div class="prodaddcart">
-                      <button class="btn btn-red" type="submit">Add to Cart</button>
-                    </div>
-                {else}
-                  <div style="display: inline; color: #ff0000">Out of stock</div>
-                {/if}
+              <div class="text-danger" id="error-text"></div>
+                <div class="text-danger text-center variant-outofstocks {foreach $variants as $variant}{if $variant.variant_instock neq 1} variant-{$variant.variant_id}-outofstock{/if}{/foreach}" style="display:none"><b>Sorry, this item is out of stock</b></div>
+                <div class="prodaddcart">
+                  <button class="btn btn-red variant-addbtns {foreach $variants as $variant}{if $variant.variant_instock eq 1} variant-{$variant.variant_id}-addbtn{/if}{/foreach}" type="submit">Add to Cart</button>
                 </div>
-              {/foreach}
+              
             </div>
           </div>
+          
           {if $product_type_id eq 1}
           <div class="form-group">
 	          <div class="col-sm-12" id="bottombox">
@@ -381,6 +371,8 @@
     
     	}
 		$('#product-form').validate({
+		  onkeyup: false,
+		  onclick: false,
           submitHandler: function(form) {
             addCart($(form).attr('id'));
           }
@@ -446,9 +438,9 @@ $(window).load(function() {
       return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 4 : 6;
     }
 
-    $(function() {
+   /*  $(function() {
       SyntaxHighlighter.all();
-    });
+    }); */
 
 
     $window.load(function() {
@@ -586,7 +578,8 @@ $(window).load(function() {
 	  //Display selected variant-price
 	  $('.variant-prices').hide();
 	  $('#price').val('0');
-	  $('.variant-panels').hide();
+	  $('.variant-outofstocks').hide();
+	  /* $('.variant-addbtns').attr('disabled', 'disabled'); */
 	  $('#'+variantElem).fadeIn('slow');
 	  $('#variant_id').val('0');
 	  $('.prodcode').html('');
@@ -595,7 +588,8 @@ $(window).load(function() {
 	  if(variantElem != 'variant-'){
 	    var price = $('#'+variantElem).find('.selected-price').attr('data-value');
 	    $('#price').val(price);
-	    $('#'+variantElem+'-panel').fadeIn();
+	    $('.'+variantElem+'-outofstock').fadeIn();
+	    /* $('.'+variantElem+'-addbtn').removeAttr('disabled'); */
 	    $('#variant_id').val(variantElem.replace('variant-', ''));
 	    $('.prodcode').html('Product code: ' + $('#'+variantElem).attr('data-uid'));
 	  }
