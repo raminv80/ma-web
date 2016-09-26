@@ -83,18 +83,18 @@
           </div>
 		  <div class="row headings">
           	<div class="col-sm-5 col-md-6">Items</div>
-		  	<div class="hidden-xs col-xs-3 col-sm-2 text-center">Price</div>
-		  	<div class="hidden-xs col-xs-3 col-sm-2 col-md-1 text-center">Quantity</div>
-		  	<div class="hidden-xs col-xs-3 col-sm-2 text-center">Total</div>
+		  	<div class="hidden-xs col-xs-3 col-sm-2 col-md-2 text-center">Price</div>
+		  	<div class="hidden-xs col-xs-3 col-sm-2 col-md-2 text-center">Quantity</div>
+		  	<div class="hidden-xs col-xs-3 col-sm-2 col-md-2 text-center">Total</div>
 		  </div>
           <div class="row tallbox">
             {foreach from=$productsOnCart item=item}
             <div id="{$item.cartitem_id}" class="prod-item cartitem">
-              <div class="col-xs-3 col-sm-2 col-md-3 text-center">
+              <div class="col-xs-3 col-sm-2 col-md-2 text-center">
                 <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?width=120&height=76&crop=1{else}/images/no-image-available.jpg?width=120&height=76&crop=1{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
               </div>
-              <div class="col-xs-9 col-sm-3 bluetext valgn">
-                <a href="{if $item.cartitem_type_id eq 1}/{$item.product_url}{else}javascript:void(0){/if}">{$item.cartitem_product_name}</a>{if $item.cartitem_product_gst eq '1'} *{/if}
+              <div class="col-xs-9 col-sm-3 col-md-4 bluetext valgn">
+                <a href="{if $item.cartitem_type_id eq 1}/{$item.product_url}{else}javascript:void(0){/if}">{$item.cartitem_product_name}{if $item.cartitem_type_id eq 3} - {$item.variant_name}{/if}</a>{if $item.cartitem_product_gst eq '1'} *{/if}
                 {if $item.cartitem_type_id eq 1}<br><small>{$item.cartitem_product_uid}</small>{/if}
                 {if $item.attributes && $item.cartitem_type_id neq 2} 
                 {foreach from=$item.attributes item=attr}
@@ -104,9 +104,9 @@
                 {/foreach} {/if} {/foreach} {/if}
               </div>
               <div class="visible-xs col-xs-3"></div>
-              <div class="hidden-xs col-xs-9 col-sm-2 text-center valgn" id="priceunit-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
-              <div class="col-xs-9 col-xs-offset-3 col-sm-2 col-sm-offset-0 col-md-1 quant text-center valgn mobl">
-			  	{$item.cartitem_quantity}
+              <div class="hidden-xs col-xs-9 col-sm-2 col-md-2 text-center valgn" id="priceunit-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
+              <div class="col-xs-9 col-xs-offset-3 col-sm-2 col-sm-offset-0 col-md-2 quant text-center valgn mobl">
+			  	<span class="visible-xs">{$item.cartitem_quantity} x ${$item.cartitem_product_price|number_format:2:".":","}</span><span class="hidden-xs">{$item.cartitem_quantity}</span>
               </div>
               <div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0 text-center valgn mobl" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
             </div>

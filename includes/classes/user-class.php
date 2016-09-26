@@ -64,6 +64,9 @@ class UserClass{
           ":email" => $user['email'], 
           ":password" => $temp_str, 
           ":mobile" => $user['mobile'], 
+          ":dob" => $user['dob'],
+          ":gender" => $user['gender'],
+          ":heardabout" => $user['heardabout'],
           ":user_site" => $this->site, 
           ":email_promo" => (empty($user['want_email_promo'])? 0 : 1), 
           ":sms_promo" => (empty($user['want_sms_promo'])? 0 : 1), 
@@ -71,8 +74,8 @@ class UserClass{
           ":browser" => $_SERVER['HTTP_USER_AGENT'] 
       );
       
-      $sql = "INSERT INTO tbl_user (user_username, user_gname, user_surname, user_email, user_password, user_mobile, user_site, user_email_promo, user_sms_promo, user_ip, user_browser, user_created)
-					 values ( :username, :gname, :surname, :email, :password, :mobile, :user_site, :email_promo, :sms_promo, :ip, :browser, now() )";
+      $sql = "INSERT INTO tbl_user (user_username, user_gname, user_surname, user_email, user_password, user_mobile, user_dob, user_gender, user_heardabout, user_site, user_email_promo, user_sms_promo, user_ip, user_browser, user_created)
+					 values ( :username, :gname, :surname, :email, :password, :mobile, :dob, :gender, :heardabout, :user_site, :email_promo, :sms_promo, :ip, :browser, now() )";
       if($this->DBobj->wrappedSql($sql, $params)){
         $userId = $this->DBobj->wrappedSqlIdentity();
         $this->SetUnsubscribeToken($userId);
@@ -106,34 +109,37 @@ class UserClass{
   function CreateGuest($user){
     $temp_str = getPass(time() . '@@' . $user['email'], genRandomString(10));
     $params = array(
-        ":username" => time() . '@@' . $user['email'],
-        ":gname" => $user['gname'],
-        ":surname" => (empty($user['surname'])? '' : $user['surname']),
-        ":email" => $user['email'],
-        ":password" => $temp_str,
+        ":username" => time() . '@@' . $user['email'], 
+        ":gname" => $user['gname'], 
+        ":surname" => (empty($user['surname'])? '' : $user['surname']), 
+        ":email" => $user['email'], 
+        ":password" => $temp_str, 
         ":mobile" => $user['mobile'],
-        ":user_site" => $this->site,
-        ":email_promo" => (empty($user['want_email_promo'])? 0 : 1),
-        ":sms_promo" => (empty($user['want_sms_promo'])? 0 : 1),
-        ":ip" => $_SERVER['REMOTE_ADDR'],
-        ":browser" => $_SERVER['HTTP_USER_AGENT']
+        ":dob" => $user['dob'],
+        ":gender" => $user['gender'],
+        ":heardabout" => $user['heardabout'],
+        ":user_site" => $this->site, 
+        ":email_promo" => (empty($user['want_email_promo'])? 0 : 1), 
+        ":sms_promo" => (empty($user['want_sms_promo'])? 0 : 1), 
+        ":ip" => $_SERVER['REMOTE_ADDR'], 
+        ":browser" => $_SERVER['HTTP_USER_AGENT'] 
     );
-  
-    $sql = "INSERT INTO tbl_user (user_username, user_gname, user_surname, user_email, user_password, user_mobile, user_site, user_email_promo, user_sms_promo, user_ip, user_browser, user_created)
-					 values ( :username, :gname, :surname, :email, :password, :mobile, :user_site, :email_promo, :sms_promo, :ip, :browser, now() )";
+    
+    $sql = "INSERT INTO tbl_user (user_username, user_gname, user_surname, user_email, user_password, user_mobile, user_dob, user_gender, user_heardabout, user_site, user_email_promo, user_sms_promo, user_ip, user_browser, user_created)
+					 values ( :username, :gname, :surname, :email, :password, :mobile, :dob, :gender, :heardabout, :user_site, :email_promo, :sms_promo, :ip, :browser, now() )";
     if($this->DBobj->wrappedSql($sql, $params)){
       $userId = $this->DBobj->wrappedSqlIdentity();
       $this->user_id = $userId;
       $result = array(
-          "id" => $userId,
-          "gname" => $user['gname'],
-          "surname" => $user['surname'],
-          "email" => $user['email']
+          "id" => $userId, 
+          "gname" => $user['gname'], 
+          "surname" => $user['surname'], 
+          "email" => $user['email'] 
       );
     } else{
       $this->user_id = 0;
       $result = array(
-          'error' => 'There was a connection problem. Please, try again!'
+          'error' => 'There was a connection problem. Please, try again!' 
       );
     }
     return $result;

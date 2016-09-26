@@ -272,7 +272,7 @@
                     <label for="hearabout" class="visible-ie-only">
                       How did you hear about us?<span>*</span>:
                     </label>
-                    <select class="form-control" id="hearabout" name="hearabout" required>
+                    <select class="form-control" id="hearabout" name="heardabout" required>
                       <option value="">Select an option</option>
                       {foreach $options_hearabout as $opt}
                       <option value="{$opt.value}" {if $new_user.hearabout eq $opt.value}selected="selected"{/if}>{$opt.value}</option>

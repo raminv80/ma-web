@@ -235,11 +235,10 @@ class medicAlertApi {
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (memberCreate)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
-			//mail("cmsemails@them.com.au", "MedicAlert Members system Error", "An error occured");
 			throw $e;
 		}
 		
-		if(empty($response) || empty($response['memberShipNumber'])){
+		if(empty($response)){
 		 $body = "DATETIME: ".date("dd/mm/yy HH:i:s");
 		  $body.= "TIME: ".time();
 		  $body.= "URL: ".self::SERVER . '/member_create.php'."<br/>";
@@ -418,8 +417,8 @@ class medicAlertApi {
 	 */
 	private function _processRequest($url, $params)
 	{
-	  $_SESSION['curl']['url']=$url;
-	  $_SESSION['curl']['params']=$params;
+	  //$_SESSION['curl']['url']=$url;
+	  //$_SESSION['curl']['params']=$params;
 		// create the curl resource
 		$ch = curl_init();
 
@@ -483,18 +482,10 @@ class medicAlertApi {
 		if (200 == $httpCode && !empty($response)) {
 			return $response;
 		} else if( 401 == $httpCode ) {
-		  $_SESSION['sessionToken'] = "";
-		  unset($_SESSION['sessionToken']);
-		  $_SESSION['update'] = "";
-		  unset($_SESSION['update']);
 			throw new exceptionMedicAlertApiNotAuthenticated();
 		} else if( 404 == $httpCode ) {
 			throw new exceptionMedicAlertNotFound();
 		} else if( 407 == $httpCode ) {
-		  $_SESSION['sessionToken'] = "";
-		  unset($_SESSION['sessionToken']);
-		  $_SESSION['update'] = "";
-		  unset($_SESSION['update']);
 			throw new exceptionMedicAlertApiSessionExpired();
 		} else if( 408 == $httpCode ) {
 			throw new exceptionMedicAlertTransferTimeout();
@@ -512,8 +503,8 @@ class medicAlertApi {
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (processRequest)','".clean("".curl_error($ch))."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
 			//mail("cmsemails@them.com.au", "MedicAlert Members system Error", "Server unknown error - {$httpCode}");
-			$_SESSION['SERVER_ERROR'] = '<img src="/images/exclamation.jpg" />&nbsp;&nbsp;<span class="invalid-login">The Member server returned an unexpected error. Please try again later.</span>';
-			header('Location:/Membership/Members_Area');
+			//$_SESSION['SERVER_ERROR'] = '<img src="/images/exclamation.jpg" />&nbsp;&nbsp;<span class="invalid-login">The Member server returned an unexpected error. Please try again later.</span>';
+			header('Location:/404');
 			die();
 			//throw new exceptionMedicAlertApi();
 		}

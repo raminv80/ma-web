@@ -220,10 +220,10 @@ class UserClass{
 	/**
 	 * Build new member array based on details entered
 	 */
-	function buildNewMemberMedicAlertArray(){
+	private function buildNewMemberMedicAlertArray($_data){
 	
 		// Website record
-		$this->memberRecord['initialPassword']						= $_SESSION['register']['user_login_password'];
+		$this->memberRecord['initialPassword']						= $_data['password'];
 		$this->memberRecord['joinCategory']							= medicAlertApi::JOIN_CATEGORY_OTHER;
 		$this->memberRecord['memberJoinDate']						= date('d M Y');
 		$this->memberRecord['accountBalance'] 						= '0.00';
@@ -231,60 +231,59 @@ class UserClass{
 		$this->memberRecord['membership']['membershipTypeId']		= '3';
 		//$this->memberRecord['membership']['RenewalDate']			= '';
 	
-		$this->memberRecord['details']['title']						= sentence_case(htmlclean($_SESSION['register']['user_title']));
-		$this->memberRecord['details']['firstName']					= sentence_case(htmlclean($_SESSION['register']['user_firstname']));
-		$this->memberRecord['details']['middleName']				= sentence_case(htmlclean($_SESSION['register']['user_middlename']));
-		$this->memberRecord['details']['surname']					= sentence_case(htmlclean($_SESSION['register']['user_lastname']));
-		$this->memberRecord['details']['nickName']					= sentence_case(htmlclean($_SESSION['register']['user_nickname']));
-		$this->memberRecord['details']['dateOfBirth']				= (htmlclean($_SESSION['register']['user_dob']));
-		$this->memberRecord['details']['gender']					= sentence_case(htmlclean($_SESSION['register']['user_gender']));
-		$this->memberRecord['details']['phoneHome']					= sentence_case(htmlclean($_SESSION['register']['user_phone_home']));
-		$this->memberRecord['details']['phoneWork']					= sentence_case(htmlclean($_SESSION['register']['user_phone_work']));
-		$this->memberRecord['details']['phoneMobile']				= sentence_case(htmlclean($_SESSION['register']['user_mobile']));
-		$this->memberRecord['details']['emailAddress']				= (htmlclean($_SESSION['register']['user_email']));
-		$this->memberRecord['details']['emergencyInformation']		= sentence_case(htmlclean($_SESSION['em']['emergencyInfo']));
-		$this->memberRecord['details']['donorEye']					= htmlclean($_SESSION['register']['user_donorEye']);
-		$this->memberRecord['details']['donorHeart']				= htmlclean($_SESSION['register']['user_donorHeart']);
-		$this->memberRecord['details']['donorKidney']				= htmlclean($_SESSION['register']['user_donorKidney']);
-		$this->memberRecord['details']['donorFreeText']				= sentence_case(htmlclean($_SESSION['register']['user_donorFreeText']));
-		//$this->memberRecord['details']['receiveMarketingMaterial']	= ($_SESSION['register']['check_newsletter']?'':'t');
-		$this->memberRecord['details']['correspondenceType']		= htmlclean($_SESSION['register']['correspondenceType']);
-		$this->memberRecord['details']['organDonor']				= (htmlclean($_SESSION['medic']['organ_donor']));
-		$this->memberRecord['details']['howDidYouHear']				= sentence_case(htmlclean($_SESSION['register']['user_heardabout']));
+		$this->memberRecord['details']['title']						= '';
+		$this->memberRecord['details']['firstName']					= ucwords(strtolower($_data['gname']));
+		$this->memberRecord['details']['middleName']				= '';
+		$this->memberRecord['details']['surname']					= ucwords(strtolower($_data['surname']));
+		$this->memberRecord['details']['nickName']					= '';
+		$this->memberRecord['details']['dateOfBirth']				= $_data['db_dob'];
+		$this->memberRecord['details']['gender']					= ucwords(strtolower($_data['gender']));
+		$this->memberRecord['details']['phoneHome']					= '';
+		$this->memberRecord['details']['phoneWork']					= '';
+		$this->memberRecord['details']['phoneMobile']				= $_data['mobile'];
+		$this->memberRecord['details']['emailAddress']				= $_data['email'];
+		$this->memberRecord['details']['emergencyInformation']		= '';
+		$this->memberRecord['details']['donorEye']					= '';
+		$this->memberRecord['details']['donorHeart']				= '';
+		$this->memberRecord['details']['donorKidney']				= '';
+		$this->memberRecord['details']['donorFreeText']				= '';
+		//$this->memberRecord['details']['receiveMarketingMaterial']	= '';
+		$this->memberRecord['details']['correspondenceType']		= '';
+		$this->memberRecord['details']['organDonor']				= '';
+		$this->memberRecord['details']['howDidYouHear']				= '';
 	
-		$this->memberRecord['address']['address']					= sentence_case(htmlclean($_SESSION['register']['user_address']));
-		$this->memberRecord['address']['suburb']					= sentence_case(htmlclean($_SESSION['register']['user_suburb']));
-		$this->memberRecord['address']['postCode']					= (htmlclean($_SESSION['register']['user_postcode']));
-		//$this->memberRecord['address']['state']						= getState(clean($_SESSION['register']['user_state_id']));
-		$this->memberRecord['address']['state']						= (htmlclean($_SESSION['register']['user_state_id']));
+		$this->memberRecord['address']['address']					= ucwords(strtolower($_data['address']));
+		$this->memberRecord['address']['suburb']					= ucwords(strtolower($_data['suburb']));
+		$this->memberRecord['address']['postCode']					= $_data['postcode'];
+		$this->memberRecord['address']['state']						= $_data['state'];
 		$this->memberRecord['address']['country']					= 'Australia';
 	
-		$this->memberRecord['blood']['bloodGroup']					= htmlclean($_SESSION['medic']['blood_group']);
+		$this->memberRecord['blood']['bloodGroup']					= '';
 	
-		$this->memberRecord['emergencyContact']['relationship']		= sentence_case(htmlclean($_SESSION['em']['contact_relationship']));
-		$this->memberRecord['emergencyContact']['name']				= sentence_case(htmlclean($_SESSION['em']['contact_name']));
-		$this->memberRecord['emergencyContact']['address']			= sentence_case(htmlclean($_SESSION['em']['contact_address']));
-		$this->memberRecord['emergencyContact']['suburb']			= sentence_case(htmlclean($_SESSION['em']['contact_suburb']));
-		$this->memberRecord['emergencyContact']['postCode']			= htmlclean($_SESSION['em']['contact_postcode']);
-		$this->memberRecord['emergencyContact']['state']			= htmlclean($_SESSION['em']['contact_state_id']);
-		$this->memberRecord['emergencyContact']['country']			= 'Australia';
-		$this->memberRecord['emergencyContact']['phoneHome']		= htmlclean($_SESSION['em']['contact_phone_home']);
-		$this->memberRecord['emergencyContact']['phoneWork']		= htmlclean($_SESSION['em']['contact_phone_work']);
-		$this->memberRecord['emergencyContact']['phoneMobile']		= htmlclean($_SESSION['em']['contact_mobile']);
+		$this->memberRecord['emergencyContact']['relationship']		= '';
+		$this->memberRecord['emergencyContact']['name']				= '';
+		$this->memberRecord['emergencyContact']['address']			= '';
+		$this->memberRecord['emergencyContact']['suburb']			= '';
+		$this->memberRecord['emergencyContact']['postCode']			= '';
+		$this->memberRecord['emergencyContact']['state']			= '';
+		$this->memberRecord['emergencyContact']['country']			= '';
+		$this->memberRecord['emergencyContact']['phoneHome']		= '';
+		$this->memberRecord['emergencyContact']['phoneWork']		= '';
+		$this->memberRecord['emergencyContact']['phoneMobile']		= '';
 	
-		$this->memberRecord['doctor']['doctorName']					= sentence_case(htmlclean($_SESSION['doc']['name']));
-		$this->memberRecord['doctor']['medicalCentreName']			= sentence_case(htmlclean($_SESSION['doc']['medical_centre']));
-		$this->memberRecord['doctor']['fileNumber']					= (htmlclean($_SESSION['medic']['file_no']));
-		$this->memberRecord['doctor']['address']					= sentence_case(htmlclean($_SESSION['doc']['address']));
-		$this->memberRecord['doctor']['suburb']						= sentence_case(htmlclean($_SESSION['doc']['suburb']));
-		$this->memberRecord['doctor']['postCode']					= sentence_case(htmlclean($_SESSION['doc']['postcode']));
-		$this->memberRecord['doctor']['state']						= htmlclean($_SESSION['doc']['state_id']);
-		$this->memberRecord['doctor']['country']					= 'Australia';
-		$this->memberRecord['doctor']['phoneNumber']				= htmlclean($_SESSION['doc']['phone']);
+		$this->memberRecord['doctor']['doctorName']					= '';
+		$this->memberRecord['doctor']['medicalCentreName']			= '';
+		$this->memberRecord['doctor']['fileNumber']					= '';
+		$this->memberRecord['doctor']['address']					= '';
+		$this->memberRecord['doctor']['suburb']						= '';
+		$this->memberRecord['doctor']['postCode']					= '';
+		$this->memberRecord['doctor']['state']						= '';
+		$this->memberRecord['doctor']['country']					= '';
+		$this->memberRecord['doctor']['phoneNumber']				= '';
 		
-		$this->memberRecord['conditions']							= htmlclean($_SESSION['medic']['conditions']);
-		$this->memberRecord['allergies']							= htmlclean($_SESSION['medic']['allergies']);
-		$this->memberRecord['medications']							= htmlclean($_SESSION['medic']['medications']);
+		$this->memberRecord['conditions']							= '';
+		$this->memberRecord['allergies']							= '';
+		$this->memberRecord['medications']							= '';
 	
 		$this->memberRecord['attributes'][0]['id']					= '7';
 		$this->memberRecord['attributes'][0]['text']				= 'Allergies Authenticated';
@@ -300,20 +299,20 @@ class UserClass{
 		$this->memberRecord['attributes'][3]['value']				= '';
 		$this->memberRecord['attributes'][4]['id']					= '8';
 		$this->memberRecord['attributes'][4]['text']				= 'How did you hear about MedicAlert?';
-		$this->memberRecord['attributes'][4]['value']				= htmlclean($_SESSION['register']['user_heardabout']);
+		$this->memberRecord['attributes'][4]['value']				= $_data['heardabout'];
 		//NEW FIELDS 08/05/2014
 		$this->memberRecord['attributes'][5]['id']					= '10';
 		$this->memberRecord['attributes'][5]['text']				= 'DVA Gold Card Number';
-		$this->memberRecord['attributes'][5]['value']				= htmlclean($_SESSION['register']['dvagoldcard']);
+		$this->memberRecord['attributes'][5]['value']				= '';
 		$this->memberRecord['attributes'][6]['id']					= '12';
 		$this->memberRecord['attributes'][6]['text']				= 'Health Fund Name';
-		$this->memberRecord['attributes'][6]['value']				= htmlclean($_SESSION['register']['healthfundname']);
+		$this->memberRecord['attributes'][6]['value']				= '';
 		$this->memberRecord['attributes'][7]['id']					= '13';
 		$this->memberRecord['attributes'][7]['text']				= 'Health Fund Number';
-		$this->memberRecord['attributes'][7]['value']				= htmlclean($_SESSION['register']['healthfundnumber']);
+		$this->memberRecord['attributes'][7]['value']				= '';
 		$this->memberRecord['attributes'][8]['id']					= '14';
 		$this->memberRecord['attributes'][8]['text']				= 'Individual Health Identifier (eHealth)';
-		$this->memberRecord['attributes'][8]['value']				= htmlclean($_SESSION['register']['ehealth']);
+		$this->memberRecord['attributes'][8]['value']				= '';
 		
 	}
 	
@@ -334,26 +333,26 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['pendingUpdate']							= '1';
 		$this->memberRecord['webSiteRecord']['pendingUpdateDate']						= date('d/m/Y',time());
 	
-		$this->memberRecord['webSiteRecord']['details']['title']						= sentence_case(htmlclean($_SESSION['update']['user_title']));
-		$this->memberRecord['webSiteRecord']['details']['firstName']					= sentence_case(htmlclean($_SESSION['update']['user_firstname']));
-		$this->memberRecord['webSiteRecord']['details']['middleName']					= sentence_case(htmlclean($_SESSION['update']['user_middlename']));
-		$this->memberRecord['webSiteRecord']['details']['surname']						= sentence_case(htmlclean($_SESSION['update']['user_lastname']));
-		$this->memberRecord['webSiteRecord']['details']['nickName']						= sentence_case(htmlclean($_SESSION['update']['user_nickname']));
+		$this->memberRecord['webSiteRecord']['details']['title']						= ucwords(strtolower($_SESSION['update']['user_title']));
+		$this->memberRecord['webSiteRecord']['details']['firstName']					= ucwords(strtolower($_SESSION['update']['user_firstname']));
+		$this->memberRecord['webSiteRecord']['details']['middleName']					= ucwords(strtolower($_SESSION['update']['user_middlename']));
+		$this->memberRecord['webSiteRecord']['details']['surname']						= ucwords(strtolower($_SESSION['update']['user_lastname']));
+		$this->memberRecord['webSiteRecord']['details']['nickName']						= ucwords(strtolower($_SESSION['update']['user_nickname']));
 		$this->memberRecord['webSiteRecord']['details']['dateOfBirth']					= (htmlclean($_SESSION['update']['user_dob']));
-		$this->memberRecord['webSiteRecord']['details']['gender']						= sentence_case(htmlclean($_SESSION['update']['user_gender']));
+		$this->memberRecord['webSiteRecord']['details']['gender']						= ucwords(strtolower($_SESSION['update']['user_gender']));
 		$this->memberRecord['webSiteRecord']['details']['phoneHome']					= htmlclean($_SESSION['update']['user_phone_home']);
 		$this->memberRecord['webSiteRecord']['details']['phoneWork']					= htmlclean($_SESSION['update']['user_phone_work']);
 		$this->memberRecord['webSiteRecord']['details']['phoneMobile']					= htmlclean($_SESSION['update']['user_mobile']);
 		$this->memberRecord['webSiteRecord']['details']['emailAddress']					= htmlclean($_SESSION['update']['user_email']);
-		$this->memberRecord['webSiteRecord']['details']['emergencyInformation']			= sentence_case(htmlclean($_SESSION['em']['emergencyInfo']));
+		$this->memberRecord['webSiteRecord']['details']['emergencyInformation']			= ucwords(strtolower($_SESSION['em']['emergencyInfo']));
 		$this->memberRecord['webSiteRecord']['details']['isOrganDonor']					= htmlclean($_SESSION['update']['user_donor']);
 		$this->memberRecord['webSiteRecord']['details']['donorFreeText']				= sentence_case($_SESSION['update']['user_donorFreeText']);
 		//$this->memberRecord['webSiteRecord']['details']['receiveMarketingMaterial']		= ($_SESSION['update']['check_newsletter']? '':'t');
 		$this->memberRecord['webSiteRecord']['details']['correspondenceType']			= htmlclean($_SESSION['update']['correspondenceType']);
 		//$this->memberRecord['webSiteRecord']['details']['preferedPaymentMethod']			= $_SESSION['update']['user_preferedPaymentMethod'];
 		
-		$this->memberRecord['webSiteRecord']['address']['address']						= sentence_case(htmlclean($_SESSION['update']['user_address']));
-		$this->memberRecord['webSiteRecord']['address']['suburb']						= sentence_case(htmlclean($_SESSION['update']['user_suburb']));
+		$this->memberRecord['webSiteRecord']['address']['address']						= ucwords(strtolower($_SESSION['update']['user_address']));
+		$this->memberRecord['webSiteRecord']['address']['suburb']						= ucwords(strtolower($_SESSION['update']['user_suburb']));
 		$this->memberRecord['webSiteRecord']['address']['postCode']						= htmlclean($_SESSION['update']['user_postcode']);
 		$this->memberRecord['webSiteRecord']['address']['state']						= htmlclean($_SESSION['update']['user_state_id']);
 		$this->memberRecord['webSiteRecord']['address']['country']						= 'Australia';
@@ -362,10 +361,10 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['blood']['bloodType']						= htmlclean($_SESSION['medic']['blood_group']);
 		$this->memberRecord['webSiteRecord']['blood']['otherInfo']						= htmlclean($_SESSION['medic']['blood_group']);
 	
-		$this->memberRecord['webSiteRecord']['emergencyContact']['relationship']		= sentence_case(htmlclean($_SESSION['em']['contact_relationship']));
-		$this->memberRecord['webSiteRecord']['emergencyContact']['name']				= sentence_case(htmlclean($_SESSION['em']['contact_name']));
-		$this->memberRecord['webSiteRecord']['emergencyContact']['address']				= sentence_case(htmlclean($_SESSION['em']['contact_address']));
-		$this->memberRecord['webSiteRecord']['emergencyContact']['suburb']				= sentence_case(htmlclean($_SESSION['em']['contact_suburb']));
+		$this->memberRecord['webSiteRecord']['emergencyContact']['relationship']		= ucwords(strtolower($_SESSION['em']['contact_relationship']));
+		$this->memberRecord['webSiteRecord']['emergencyContact']['name']				= ucwords(strtolower($_SESSION['em']['contact_name']));
+		$this->memberRecord['webSiteRecord']['emergencyContact']['address']				= ucwords(strtolower($_SESSION['em']['contact_address']));
+		$this->memberRecord['webSiteRecord']['emergencyContact']['suburb']				= ucwords(strtolower($_SESSION['em']['contact_suburb']));
 		$this->memberRecord['webSiteRecord']['emergencyContact']['postCode']			= htmlclean($_SESSION['em']['contact_postcode']);
 		$this->memberRecord['webSiteRecord']['emergencyContact']['state']				= htmlclean($_SESSION['em']['contact_state_id']);
 		$this->memberRecord['webSiteRecord']['emergencyContact']['country']				= 'Australia';
@@ -373,10 +372,10 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneWork']			= htmlclean($_SESSION['em']['contact_phone_work']);
 		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneMobile']			= htmlclean($_SESSION['em']['contact_mobile']);
 	
-		$this->memberRecord['webSiteRecord']['doctor']['doctorName']					= sentence_case(htmlclean($_SESSION['doc']['name']));
-		$this->memberRecord['webSiteRecord']['doctor']['medicalCentreName']				= sentence_case(htmlclean($_SESSION['doc']['medical_centre']));
-		$this->memberRecord['webSiteRecord']['doctor']['address']						= sentence_case(htmlclean($_SESSION['doc']['address']));
-		$this->memberRecord['webSiteRecord']['doctor']['suburb']						= sentence_case(htmlclean($_SESSION['doc']['suburb']));
+		$this->memberRecord['webSiteRecord']['doctor']['doctorName']					= ucwords(strtolower($_SESSION['doc']['name']));
+		$this->memberRecord['webSiteRecord']['doctor']['medicalCentreName']				= ucwords(strtolower($_SESSION['doc']['medical_centre']));
+		$this->memberRecord['webSiteRecord']['doctor']['address']						= ucwords(strtolower($_SESSION['doc']['address']));
+		$this->memberRecord['webSiteRecord']['doctor']['suburb']						= ucwords(strtolower($_SESSION['doc']['suburb']));
 		$this->memberRecord['webSiteRecord']['doctor']['postCode']						= htmlclean($_SESSION['doc']['postcode']);
 		$this->memberRecord['webSiteRecord']['doctor']['state']							= htmlclean($_SESSION['doc']['state_id']);
 		$this->memberRecord['webSiteRecord']['doctor']['country']						= 'Australia';
@@ -1168,6 +1167,44 @@ class UserClass{
 	}
 	
 	
+	
+	/**
+	 * Create new MAF member, returns new member's id 
+	 * @return int
+	 */
+	function CreateMember($_data){
+	  $this->errorMsg = null;
+	  try{
+	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authenticationRecord = json_decode($authJSONResponse, true);
+	    $this->token = $authenticationRecord['sessionToken'];
+	  }
+	  catch(Exception $e){
+	    $this->errorMsg = "Invalid API membership number/password.";
+	  }
+	
+	  // set up the create member record
+	  $this->buildNewMemberMedicAlertArray($_data);
+	
+	  // json encode it
+	  $t_arr = unclean($this->memberRecord);
+	  $memberCreateRecord = json_encode($t_arr);
+	
+	  try{
+        // create a new member in the database (this returns the membership number)
+        $memberCreateResult = json_decode($this->medicAlertApi->memberCreate($this->token, $memberCreateRecord), true);
+	  }
+	  catch(Exception $e){
+	    $this->errorMsg = "Error while creating new member. {$e}";
+	  }
+	  
+	  // log out of the API (as we are logged in as the MA-WEBSITE user
+	  $this->medicAlertApi->logout($this->token);
+		
+	  return (empty($memberCreateResult['memberShipNumber']) ? 0 : $memberCreateResult['memberShipNumber']);
+	}
+	
+	
 	/**
 	 * FOR WEBSITE ONLY
 	 * Return array recordset given the address_id
@@ -1199,7 +1236,10 @@ class UserClass{
         ":surname" => (empty($user['surname'])? '' : $user['surname']), 
         ":email" => $user['email'], 
         ":password" => $temp_str, 
-        ":mobile" => $user['mobile'], 
+        ":mobile" => $user['mobile'],
+        ":dob" => $user['db_dob'],
+        ":gender" => $user['gender'],
+        ":heardabout" => $user['heardabout'],
         ":user_site" => $this->site, 
         ":email_promo" => (empty($user['want_email_promo'])? 0 : 1), 
         ":sms_promo" => (empty($user['want_sms_promo'])? 0 : 1), 
@@ -1207,8 +1247,8 @@ class UserClass{
         ":browser" => $_SERVER['HTTP_USER_AGENT'] 
     );
     
-    $sql = "INSERT INTO tbl_user (user_username, user_gname, user_surname, user_email, user_password, user_mobile, user_site, user_email_promo, user_sms_promo, user_ip, user_browser, user_created)
-					 values ( :username, :gname, :surname, :email, :password, :mobile, :user_site, :email_promo, :sms_promo, :ip, :browser, now() )";
+    $sql = "INSERT INTO tbl_user (user_username, user_gname, user_surname, user_email, user_password, user_mobile, user_dob, user_gender, user_heardabout, user_site, user_email_promo, user_sms_promo, user_ip, user_browser, user_created)
+					 values ( :username, :gname, :surname, :email, :password, :mobile, :dob, :gender, :heardabout, :user_site, :email_promo, :sms_promo, :ip, :browser, now() )";
     if($this->DBobj->wrappedSql($sql, $params)){
       $userId = $this->DBobj->wrappedSqlIdentity();
       $this->user_id = $userId;

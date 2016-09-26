@@ -67,11 +67,11 @@
           <div class="row tallbox">
             {foreach from=$productsOnCart item=item}
             <div id="{$item.cartitem_id}" class="prod-item cartitem">
-              <div class="col-xs-3 col-sm-2 col-md-3 text-center">
+              <div class="col-xs-3 col-sm-2 col-md-2 text-center">
                 <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?width=120&height=76&crop=1{else}/images/no-image-available.jpg?width=120&height=76&crop=1{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
               </div>
-              <div class="col-xs-9 col-sm-3 bluetext valgn">
-                <a href="{if $item.cartitem_type_id eq 1}/{$item.product_url}{else}javascript:void(0){/if}">{$item.cartitem_product_name}</a>{if $item.cartitem_product_gst eq '1'} *{/if}
+              <div class="col-xs-9 col-sm-3 col-md-4 bluetext valgn">
+                <a href="{if $item.cartitem_type_id eq 1}/{$item.product_url}{else}javascript:void(0){/if}">{$item.cartitem_product_name}{if $item.cartitem_type_id eq 3} - {$item.variant_name}{/if}</a>{if $item.cartitem_product_gst eq '1'} *{/if}
                 {if $item.cartitem_type_id eq 1}<br><small>{$item.cartitem_product_uid}</small>{/if}
                 {if $item.attributes &&  $item.cartitem_type_id neq 2} 
                 {foreach from=$item.attributes item=attr}
@@ -81,16 +81,17 @@
                 {/foreach} {/if} {/foreach} {/if}
               </div>
               <div class="visible-xs col-xs-3"></div>
-              <div class="hidden-xs col-xs-9 col-sm-2 text-center valgn" id="priceunit-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
+              <div class="hidden-xs col-xs-9 col-sm-2 col-md-2 text-center valgn" id="priceunit-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>
               <div class="col-xs-9 col-xs-offset-3 col-sm-2 col-sm-offset-0 col-md-1 quant text-center valgn mobl">
                 {if $item.product_fixed_qty neq 1}
-                <select id="quantity" class="quantity" name="qty[{$item.cartitem_id}]">
-                  {assign var='max' value=10} {if $max lt $item.cartitem_quantity} {assign var='max' value=$item.cartitem_quantity} {/if} {for $opt=1 to $max}
-                  <option value="{$opt}" {if $item.cartitem_quantity eq $opt}selected{/if}>{$opt}</option>
-                  {/for}
-                </select>
+                  <select id="quantity" class="quantity" name="qty[{$item.cartitem_id}]">
+                    {assign var='max' value=10} {if $max lt $item.cartitem_quantity} {assign var='max' value=$item.cartitem_quantity} {/if} {for $opt=1 to $max}
+                    <option value="{$opt}" {if $item.cartitem_quantity eq $opt}selected{/if}>{$opt}</option>
+                    {/for}
+                  </select>
+                  <span class="visible-xs"> x ${$item.cartitem_product_price|number_format:2:".":","}</span>
                 {else}
-                  {$item.cartitem_quantity}
+                  <span class="visible-xs">{$item.cartitem_quantity} x ${$item.cartitem_product_price|number_format:2:".":","}</span><span class="hidden-xs">{$item.cartitem_quantity}</span>
                 {/if}
                 <div id="qty-discount-{$item.cartitem_id}">{if $item.productqty_modifier.productqty_modifier neq 0}(-{$item.productqty_modifier.productqty_modifier|number_format:2:".":','|rtrim:'0'|rtrim:'.'}%){/if}</div>
               </div>

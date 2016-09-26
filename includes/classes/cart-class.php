@@ -390,7 +390,8 @@ class cart {
     $cart_arr = array();
     
     $sql = "SELECT * FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id
-      WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id AND product_published = 1 AND product_deleted IS NULL";
+        LEFT JOIN tbl_variant ON variant_id = cartitem_variant_id
+      WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id AND product_published = 1 AND product_deleted IS NULL AND variant_deleted IS NULL";
     $res = $DBobject->wrappedSql($sql, array(":id" => $cartId));
     foreach($res as $p){
       
@@ -618,7 +619,7 @@ class cart {
     $price = floatval($price);
     $message = '';
    
-    $product = $this->GetProductCalculation($productId, $attributesArr, $quantity, $price);
+    $product = $this->GetProductCalculation($productId, $attributesArr, $quantity, $price, $variantId);
     //It will return exception if product is not available    
 
     
@@ -696,7 +697,7 @@ class cart {
    * @param array $attributesArray          
    * @return array
    */
-  function GetProductCalculation($product_id, $attributesArray = array(), $qty=0, $frontEndPrice = 0) {
+  function GetProductCalculation($product_id, $attributesArray = array(), $qty=0, $frontEndPrice = 0, $variant_id = 0) {
     global $DBobject;
 
     $params = array(':oid' => $product_id);
@@ -716,7 +717,11 @@ class cart {
       $params[":val{$cnt}"] = $valId['id'];
       $cnt++;
     }
-    if(!empty($sqlAttrArr)){
+    if(empty($sqlAttrArr)){
+      $sqlAttrStr = 'AND variant_id = :variant_id';
+      $params[":variant_id"] = $variant_id;
+      $cnt++;
+    }else{
       $sqlAttrStr = 'AND (' . implode(' OR ', $sqlAttrArr) . ' )';
     }
     
@@ -825,7 +830,7 @@ class cart {
     
     $result = array();
     foreach($qtys as $id=>$qty){
-      $sql = "SELECT cartitem_quantity, cartitem_product_price, cartitem_product_id, product_id, variant_editableprice
+      $sql = "SELECT cartitem_quantity, cartitem_product_price, cartitem_product_id, product_id, variant_editableprice, cartitem_variant_id
       		FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id 
             LEFT JOIN tbl_variant ON variant_id = cartitem_variant_id 
       		WHERE cartitem_id = :id AND cartitem_deleted IS NULL AND product_deleted IS NULL AND variant_deleted IS NULL AND product_published = '1'";
@@ -836,7 +841,7 @@ class cart {
         
         if($qty != $res[0]['cartitem_quantity']){
           $attrs = $this->GetAttributesIdsOnCartitem($id);
-          $DBproduct = $this->GetProductCalculation($res[0]['cartitem_product_id'], $attrs, $qty);
+          $DBproduct = $this->GetProductCalculation($res[0]['cartitem_product_id'], $attrs, $qty, $res[0]['cartitem_product_price'], $res[0]['cartitem_variant_id']);
           $price = ($res[0]['variant_editableprice'] == 1) ? $res[0]['cartitem_product_price'] : $DBproduct['product_price'];
           $subtotal = $price * $qty;
           $pricemodifier = "";
@@ -887,7 +892,7 @@ class cart {
     if($res = $DBobject->wrappedSql($sql, array(":id" => $this->cart_id))){
       foreach($res as $item){
         $attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
-        $DBproduct = $this->GetProductCalculation($item['cartitem_product_id'], $attrs, $item['cartitem_quantity'], $item['cartitem_product_price']);
+        $DBproduct = $this->GetProductCalculation($item['cartitem_product_id'], $attrs, $item['cartitem_quantity'], $item['cartitem_product_price'], $item['cartitem_variant_id']);
         
         if($DBproduct['error']){
           $message[] = $DBproduct['error_message'];
@@ -910,7 +915,6 @@ class cart {
         }
       }
     }
-    
     return $message;
   }
 
@@ -1178,11 +1182,11 @@ function ApplyDiscountCode($code, $cartId = null) {
    * @param int $position          
    * @return array
    */
-  function getProductInfo_GA($productId, $AttributesArr, $quantity = 0, $parentId = 0, $coupon = null, $position = 0) {
+  function getProductInfo_GA($productId, $AttributesArr, $quantity = 0, $parentId = 0, $coupon = null, $position = 0, $variantId = 0) {
   	global $DBobject;
   
   	$result = array();
-  	$product = $this->GetProductCalculation($productId,$AttributesArr,$quantity);
+  	$product = $this->GetProductCalculation($productId, $AttributesArr, $quantity, 0, $variantId);
   	
   	if(!$product['error']){
   		
@@ -1326,13 +1330,40 @@ function ApplyDiscountCode($code, $cartId = null) {
   	if($res = $DBobject->wrappedSql($sql, $params)){
   		foreach($res as $item){
   			$attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
-  			$DBproduct = $this->GetProductCalculation($item['cartitem_product_id'],$attrs,$item['cartitem_quantity']);
+  			$DBproduct = $this->GetProductCalculation($item['cartitem_product_id'], $attrs, $item['cartitem_quantity'], $item['cartitem_product_price'], $item['cartitem_variant_id']);
   			if(!empty($DBproduct['product_weight'])){
   				$result +=  floatval($DBproduct['product_weight']) * $item['cartitem_quantity'];
   			}
   		}
   	}
   	return $result;
+  }
+  
+  
+  /**
+   * Checks whether or not the cart has a given product_id and or variant_id
+   * 
+   * @param int $_productId
+   * @param int $_variant_id
+   * @return boolean
+   */
+  function hasProductInCart($_productId, $_variant_id = 0){
+    global $DBobject;
+  
+    $params = array(
+        ':id' => $this->cart_id,
+        ':pid' => $_productId
+    );
+    $vstr = '';
+    if(!empty($_variant_id)){
+      $params[':vid'] = $_variant_id;
+      $vstr = 'AND cartitem_variant_id = :vid';
+    }
+    $sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id != 0 AND cartitem_cart_id = :id AND cartitem_product_id = :pid {$vstr}";
+  	if($res = $DBobject->wrappedSql($sql, $params)){
+  	  return $res[0]['cartitem_id'];
+  	}
+  	return false;
   }
   
   
@@ -1360,6 +1391,23 @@ function ApplyDiscountCode($code, $cartId = null) {
       }
     }
     return false;  
+  }
+  
+  
+  /**
+   * ONLY FOR MAF
+   * Return current year "Member Service Fee" record given the product_object_id (defaul value: 255)
+   * @return boolean
+   */
+  function GetCurrentMAF_MSF($_productId = 225){
+    global $DBobject;
+  
+    $sql = "SELECT * FROM tbl_product LEFT JOIN tbl_variant ON variant_product_id = product_id
+        WHERE product_deleted IS NULL AND product_published = 1 AND variant_deleted IS NULL AND variant_published = 1 AND variant_name LIKE :thisyear AND product_object_id = :id";
+    if($res = $DBobject->wrappedSql($sql, array(':id' => $_productId, ':thisyear' => '%'.date(Y).'%'))){
+      return $res[0];
+    }
+    return false;
   }
   
   

@@ -238,6 +238,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $order_cartId = $cart_obj->cart_id;
       $orderNumber = $order_cartId . '-' . date("is");
       
+      $loggedIn = (empty($_SESSION['user']['public']['id']) && empty($_SESSION['user']['new_user'])) ? false : true;
+      
       $shippable = $cart_obj->ShippableCartitems();
       $shipping_obj = new ShippingClass(count($shippable), $cart_obj->GetCurrentFreeShippingDiscountName());
       $methods = $shipping_obj->getShippingMethods();
@@ -248,7 +250,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
        $methods = $postage['postage_name'];
        $shippingFee = floatval($postage['postage_price']); */
       
-      if(!empty($_SESSION['address']['B']) && $shippingValid && !empty($cart_obj->NumberOfProductsOnCart())){
+      if($loggedIn && !empty($_SESSION['address']['B']) && $shippingValid && !empty($cart_obj->NumberOfProductsOnCart())){
         $billID = 0;
         $shipID = 0;
         
@@ -313,38 +315,38 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $pay_obj->SetOrderStatus($paymentId);
           $_SESSION['orderNumber'] = $orderNumber;
           
-          
           $userArr = $_SESSION['user']['public'];
           
           $user_obj = new UserClass();
           
           //NEW USER          
           $newMAFMember = $cart_obj->HasMAFProducts();
-          if(empty($userArr) && $newMAFMember){//MAF - CREATE NEW MEMBER VIA API 
-            $guestArr = array(
-                "id" => $order_cartId,
-                "gname" => $_POST['gname'],
-                "surname" => $_POST['surname'],
-                "email" => $_POST['email']
-            );
-            //================================================= CHANGE THIS!!! =========================
-            
-            
-          }elseif(empty($userArr) && !$newMAFMember){ // Create guest user when empty
-            $guestArr = array(
-                "gname" => $_POST['gname'],
-                "surname" => $_POST['surname'],
-                "email" => $_POST['email']
-            );
-            $userArr = $user_obj->CreateGuest($guestArr);
+          //MAF - Create new member
+          if(empty($userArr) && $newMAFMember){
+            $MAFMemberId = $user_obj->CreateMember($_SESSION['user']['new_user']);
+            if(empty($MAFMemberId)){
+              //create guest user when failed
+              $newMAFMember = false;
+            }else{
+              saveInLog('member-create', 'external', $MAFMemberId, $_SESSION['user']['new_user']['state']);
+              $userArr = array(
+                  "id" => $MAFMemberId,
+                  "gname" => $_SESSION['user']['new_user']['gname'],
+                  "surname" => $_SESSION['user']['new_user']['surname'],
+                  "email" => $_SESSION['user']['new_user']['email']
+              );
+            }
+          }
+          //Create guest user
+          if(empty($userArr) && !$newMAFMember){ 
+            $userArr = $user_obj->CreateGuest($_SESSION['user']['new_user']);
           
             //CHANGE USER_ID ONLY FOR MAF!!!!
             $userArr['id'] = $userArr['id'] * -1;
-          
-            //SET THE CART_USER_ID
-            $cart_obj->UpdateUserIdOfClosedCart($order_cartId, $userArr['id']);
           }
           
+          //SET THE CART_USER_ID
+          $cart_obj->UpdateUserIdOfClosedCart($order_cartId, $userArr['id']);
           
           
           if($_SESSION['address']['wantpromo'] && FALSE){ // !!!! DISABLED !!!!!!!!!!!!!!!!!!!
@@ -382,6 +384,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           );
           $pay_obj->SetUserAddressIds($params);
           
+          $SMARTY->unloadFilter('output', 'trimwhitespace');
           try{
             // SEND CONFIRMATION EMAIL
             $billing = $user_obj->GetAddress($billID);
@@ -398,11 +401,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $COMP = json_encode($CONFIG->company);
             $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
             
-            // COMMMENTED UNTIL GO LIVE TO PREVENT STORES GETTING TESTING EMAILS
-            /*
-             * $bcc = $res[0]['location_bcc_recipient'];
-             * $to = empty($res[0]['location_order_recipient'])?"online@them.com.au":$res[0]['location_order_recipient'];
-             */
+         
             $to = $_SESSION['address']['B']['address_email'];
             // $bcc = 'apolo@them.com.au';
             $from = (string)$CONFIG->company->name;
@@ -497,7 +496,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       }
       
       //Has mandatory field: credit cart details, product_object_id, variant_id
-      if(empty($_POST['honeypot']) && !empty($_POST['timestamp']) && (time() - $_POST['timestamp']) > 3 && !empty($_POST['product_id']) && !empty($_POST['variant_id']) && !empty($_POST['cc'])){
+      if(!empty($_POST['honeypot']) || empty($_POST['timestamp']) || (time() - $_POST['timestamp']) < 4 || empty($_POST['product_id']) || empty($_POST['variant_id']) || !empty($_POST['cc'])){
         $_SESSION['error'] = 'Your session has expired. Please try again, otherwise contact us by phone.';
         header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error-1');
         die();
@@ -616,6 +615,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         );
         $pay_obj->SetUserAddressIds($params);
         
+        $SMARTY->unloadFilter('output', 'trimwhitespace');
         try{
           // SEND CONFIRMATION EMAIL
           $order = $cart_obj->GetDataCart($order_cartId);
@@ -631,7 +631,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $COMP = json_encode($CONFIG->company);
           $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
           
-          $to = $BillingArr['address_email'];
+          $to = $billingArr['address_email'];
           // $bcc = 'apolo@them.com.au';
           $from = (string)$CONFIG->company->name;
           $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
@@ -648,7 +648,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           
           
           try{
-            // SEND GIFT CERTIFICATE
+            // SEND GIFT CERTIFICATE TO RECIPIENT
             $to = $BillingArr['address_email'];
             // $bcc = 'apolo@them.com.au';
             $from = (string)$CONFIG->company->name;

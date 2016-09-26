@@ -26,6 +26,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
               $_SESSION['user']['new_user'][$k] = $v;
             }
           }
+          $_SESSION['user']['new_user']['db_dob'] = date_format(date_create_from_format('d/m/Y', $_SESSION['user']['new_user']['dob']), 'Y-m-d');
           $error = null;
           $success = true;
           $url = empty($_POST['redirect']) ? '/checkout' : $_POST['redirect'];
