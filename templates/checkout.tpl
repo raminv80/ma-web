@@ -230,7 +230,7 @@
                       <select id="state" name="address[B][address_state]" class="required form-control">
                         <option value="">Select an option</option>
                         {$cur_state = $selectedShippingState}
-                        {if $address}{$cur_state = $address.B.state}{else}{if $user.maf.main.user_state_id}{$cur_state = $user.maf.main.user_state_id}{else}{$cur_state = $new_user.state}{/if}{/if}
+                        {if $address}{$cur_state = $address.B.address_state}{else}{if $user.maf.main.user_state_id}{$cur_state = $user.maf.main.user_state_id}{else}{$cur_state = $new_user.state}{/if}{/if}
                         {foreach $options_state as $opt }
                         <option value="{$opt.value}" {if $cur_state eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}
@@ -367,10 +367,6 @@
 				  	<input type="hidden" value="placeOrder" name="action" />
 				  	{if $newTotal gte 0.01 }
 
-				  	
-				  	<div class="row" {if !$error}style="display:none;"{/if}>
-					  	<div class="col-sm-12 error-textbox" id="form-error">{$error}</div>
-				  	</div>
 
 				  	<div class="row">
 				  		<div class="col-sm-12">
@@ -598,7 +594,7 @@
 
             <div class="row">
               <div class="col-sm-offset-2 col-sm-8 text-center">
-                    <div class="error-textbox" {if !$error}style="display:none;"{/if} id="form-error"></div>
+                    <div class="error-textbox" {if !$error}style="display:none;"{/if} id="form-error">{$error}</div>
                     <a class="btn-red btn process-cnt" id="payment-btn" onclick="$('#checkout3-form').submit();">Complete Checkout</a>
               </div>
             </div>

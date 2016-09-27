@@ -37,11 +37,11 @@ class Bank{
     global $DBobject;
     $this->DBobj = empty($data['database'])? $DBobject : $data['database'];
     
-    $this->live_url = $data['settings']->payment_gateway->live_url;
-    $this->test_url = $data['settings']->payment_gateway->test_url;
-    $this->url_to_use = ($data['settings']->payment_gateway->live == true)? $this->live_url : $this->test_url;
-    $this->merchant_id = $data['settings']->payment_gateway->merchant_id;
-    $this->merchant_password = $data['settings']->payment_gateway->merchant_password;
+    $this->live_url = $data['settings']->live_url;
+    $this->test_url = $data['settings']->test_url;
+    $this->url_to_use = ($data['settings']->live == true)? $this->live_url : $this->test_url;
+    $this->merchant_id = $data['settings']->merchant_id;
+    $this->merchant_password = $data['settings']->merchant_password;
     
     $this->order_info = $data['initPayment'];
     $this->payment_transactionno = $data['initPayment']['payment_transaction_no'];
@@ -137,7 +137,7 @@ class Bank{
         "payment_user_id" => $payment['payment_user_id'], 
         "payment_billing_address_id" => $payment['payment_billing_address_id'], 
         "payment_shipping_address_id" => $payment['payment_shipping_address_id'], 
-        "payment_status" => $this->response['payment_status'], 
+        "payment_status" => (empty($this->response['payment_status']) ? 'P' : $this->response['payment_status']), 
         "payment_subtotal" => $payment['payment_subtotal'], 
         "payment_discount" => $payment['payment_discount'], 
         "payment_shipping_fee" => $payment['payment_shipping_fee'], 

@@ -209,6 +209,20 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $ssum .= 'No shipping instructions <br />';
       }
       
+      if(!empty($_POST['address']['wantpromo'])){
+        try{
+          require_once 'includes/createsend/csrest_subscribers.php';
+          $wrap = new CS_REST_Subscribers('ef8adc9395331188758415b1785e6c81', '060d24d9003a77b06b95e7c47691975b'); // !!!! UPDATE CREATESEND LIST CODE !!!!!
+          $cs_result = $wrap->add(array(
+              'EmailAddress' => $_POST['address']['B']['address_email'],
+              'Name' => $_POST['address']['B']['address_name'],
+              'CustomFields' => array(),
+              "Resubscribe" => "true"
+          ));
+        }
+        catch(Exception $e){}
+      }
+      
       echo json_encode(array(
           'response' => true, 
           'billing' => $bsum, 
@@ -267,7 +281,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_user_id' => (empty($_SESSION['user']['public']['id']) ? 0 : $_SESSION['user']['public']['id']),
             'payment_billing_address_id' => $billID,
             'payment_shipping_address_id' => $shipID,
-            'payment_status' => 'A', 
+            'payment_status' => 'P', 
             'payment_transaction_no' => $orderNumber, 
             'payment_cart_id' => $order_cartId, 
             'payment_subtotal' => $totals['subtotal'], 
@@ -281,34 +295,42 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_method' => $paymentMethod 
         );
         
-        //require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
-        require_once 'includes/classes/PayWay.php';
-        $pay_obj = new PayWay();
+        //require_once 'includes/classes/PayWay.php';
+        //$pay_obj = new PayWay();
+        //$paymentId = $pay_obj->StorePaymentRecord($params);
+        
+        $bankSettingsArr = array(
+            'initPayment' => $params,
+            'settings' => $CONFIG->payment_gateway->payway,
+            'address' => $_SESSION['address']['B']
+        );
+        
+        require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
+        $pay_obj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
         $response = false;
         
-        $paymentId = $pay_obj->StorePaymentRecord($params);
-        
-       /*  
-          $CCdata = array('amount'=>$chargedAmount);
-          if(!empty($_POST['cc'])){
+        $CCdata = array(
+            'amount' => $chargedAmount
+        );
+        if(!empty($_POST['cc'])){
           $CCdata = array_merge($CCdata, $_POST['cc']);
-          }
-          $pay_obj->PreparePayment($CCdata);
-         
-          try{
+        }
+        $pay_obj->PreparePayment($CCdata);
+        
+        try{
           $response = $pay_obj->Submit();
-          $paymentId = $paypalObj->GetPaymentId();
-          }catch(Exception $e){
-          if ($error_msg = $pay_obj->GetErrorMessage()) {
-         $_SESSION['error'] = $error_msg;
-          } else {
-          $_SESSION['error'] = 'Payment failed (on submit). Verify information and try again. ';
+          $paymentId = $pay_obj->GetPaymentId();
+        }
+        catch(Exception $e){
+          if($error_msg = $pay_obj->GetErrorMessage()){
+            $_SESSION['error'] = $error_msg;
+          } else{
+            $_SESSION['error'] = 'Payment failed (on submit). Verify information and try again. '.$e;
           }
-          header('Location: '.$_SERVER['HTTP_REFERER'].'#form-error');
-          exit;
-          }
-          */
-        $response = true;
+          header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
+          exit();
+        }
+          
         if($response){
           // PAYMENT SUCCESS
           $cart_obj->CloseCart();
@@ -320,13 +342,13 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $user_obj = new UserClass();
           
           //NEW USER          
-          $newMAFMember = $cart_obj->HasMAFProducts();
+          $hasMAFProd = $cart_obj->HasMAFProducts();
           //MAF - Create new member
-          if(empty($userArr) && $newMAFMember){
+          if(empty($userArr) && $hasMAFProd){
             $MAFMemberId = $user_obj->CreateMember($_SESSION['user']['new_user']);
             if(empty($MAFMemberId)){
               //create guest user when failed
-              $newMAFMember = false;
+              $hasMAFProd = false;
             }else{
               saveInLog('member-create', 'external', $MAFMemberId, $_SESSION['user']['new_user']['state']);
               $userArr = array(
@@ -335,10 +357,25 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                   "surname" => $_SESSION['user']['new_user']['surname'],
                   "email" => $_SESSION['user']['new_user']['email']
               );
+              try{
+                //Send welcome email
+                $SMARTY->assign('user', $userArr);
+                $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+                $COMP = json_encode($CONFIG->company);
+                $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+                $to = $userArr['email'];
+                $from = (string)$CONFIG->company->name;
+                $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+                $subject = 'MedicAlert Foundation Registration';
+                $body = $SMARTY->fetch('email/welcome.tpl');
+                sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+              }
+              catch(Exception $e){}
+              
             }
           }
           //Create guest user
-          if(empty($userArr) && !$newMAFMember){ 
+          if(empty($userArr) && !$hasMAFProd){ 
             $userArr = $user_obj->CreateGuest($_SESSION['user']['new_user']);
           
             //CHANGE USER_ID ONLY FOR MAF!!!!
@@ -348,22 +385,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           //SET THE CART_USER_ID
           $cart_obj->UpdateUserIdOfClosedCart($order_cartId, $userArr['id']);
           
-          
-          if($_SESSION['address']['wantpromo'] && FALSE){ // !!!! DISABLED !!!!!!!!!!!!!!!!!!!
-            $promo = 1;
-            try{
-              require_once 'includes/createsend/csrest_subscribers.php';
-              $wrap = new CS_REST_Subscribers('', '060d24d9003a77b06b95e7c47691975b'); // !!!! UPDATE CREATESEND LIST CODE !!!!!
-              $cs_result = $wrap->add(array(
-                  'EmailAddress' => $values['email'],
-                  'Name' => $values['gname'] . ' ' . $values['surname'],
-                  'CustomFields' => array(),
-                  "Resubscribe" => "true"
-              ));
-            }
-            catch(Exception $e){}
-          }
-         
           
           // SAVE BILLING AND SHIPPING ADDRESS
           $billID = $user_obj->InsertNewAddress(array_merge(array(
@@ -387,6 +408,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $SMARTY->unloadFilter('output', 'trimwhitespace');
           try{
             // SEND CONFIRMATION EMAIL
+            $SMARTY->assign('hasMAFProd', $hasMAFProd);
             $billing = $user_obj->GetAddress($billID);
             $SMARTY->assign('billing', $billing);
             $shipping = $user_obj->GetAddress($shipID);
@@ -401,12 +423,11 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $COMP = json_encode($CONFIG->company);
             $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
             
-         
             $to = $_SESSION['address']['B']['address_email'];
             // $bcc = 'apolo@them.com.au';
             $from = (string)$CONFIG->company->name;
             $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-            $subject = 'Confirmation of your order';
+            $subject = 'Payment | Order confirmation';
             $body = $SMARTY->fetch('email/order-confirmation.tpl');
             if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
               $pay_obj->SetInvoiceEmail($paymentId, $mailID);
@@ -415,6 +436,35 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           catch(Exception $e){
             die($e);
           }
+          
+          //PROCESS AUTO-RENEWAL
+          if(!empty($_POST['autorenewal'])){
+            $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
+            if(!empty($_POST['autopayment']) && $_POST['autopayment'] == 'dd'){
+              $autorenewArr = $_POST['auto-dd'];
+            }else{
+              $autorenewArr = $_POST['auto-cc'];
+            }
+            $autorenewArr['method'] = $_POST['autopayment'];
+            $autorenewObj->PreparePayment($autorenewArr);
+            $autorenewObj->CreateCustomerOnly();
+            
+            try{
+              //Send auto-renewal email
+              $SMARTY->assign('user', $userArr);
+              $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+              $COMP = json_encode($CONFIG->company);
+              $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+              $to = $userArr['email'];
+              $from = (string)$CONFIG->company->name;
+              $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+              $subject = 'Auto Renewal Subscription';
+              $body = $SMARTY->fetch('email/autorenewal.tpl');
+              sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+            }
+            catch(Exception $e){}
+          }
+          
           
           // SET GOOGLE ANALYTICS - ECOMMERCE
           if(!empty($GA_ID)){

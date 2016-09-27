@@ -20,6 +20,16 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
      $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
      $mail->Port = 587;    */                                 // TCP port to connect to
 
+    /** ============= UNCOMMENT THE COMMENTED LINES AND VICE VERSA WHEN LIVE =============== **/
+    $mail->addAddress('apolo@them.com.au');
+    $mail->Subject = "[TEST - {$to}] " . $subject;
+//     $toArr = explode(',',$to);
+//     foreach($toArr as $m){
+//       $mail->addAddress($m);
+//     }
+//     $mail->Subject = $subject;
+    /** ============= ------------------------------------------------------ =============== **/
+    
     $header_arr = explode("\r\n", $headers);
     foreach ($header_arr as $val){
       $content = explode(":", $val, 2);
@@ -45,11 +55,7 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
         }
       }
     }
-    $toArr = explode(',',$to);
-    foreach($toArr as $m){
-      $mail->addAddress($m);
-    }
-    $mail->Subject = $subject;
+    
     $mail->Body    = $body;
     
     //Attachments

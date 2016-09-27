@@ -14,7 +14,7 @@
 		<state>SA</state>
 		<postcode>5063</postcode>
     </address>
-    <phone>08 82738401</phone>
+    <phone>(+61) 882 738 401</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
     <email>enquiry@medicalert.org.au</email>

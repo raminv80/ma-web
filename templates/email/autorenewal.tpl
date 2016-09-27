@@ -503,12 +503,16 @@ a {
                       <td class="w30" width="30" style="table-layout: fixed;"></td>
                       <td class="w580" width="580" style="table-layout: fixed;">
                         <p style="font-size: 28px; line-height: 40px; color: #ed174f; font-weight: bold;">Hi {$user.gname}</p>
-                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">It's our pleasure to welcome you as a new MedicAlert&reg; member.</p>
-                        <p style="margin-bottom: 20px; font-size: 18px; line-height: 24px; color: #ed174f; font-weight: bold;">Your membership number is {$user.id}.</p>
+                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">Your request for automatic renewal of your annual MedicAlert membership has been accepted.</p>
                         <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">
-                          So that we can process your order as quickly as possible, please make sure you have provided your medical conditions, allergies, medications and emergency contact details in your membership profile. You can do this by logging into the <a style="color: #ed174f; text-decoration: none;" href="{$DOMAIN}/my-account">Members' Area</a>.
+                          Your annual membership fee will now be automatically debited from your nominated account on the due date each year. You will receive an email receipt acknowledging this payment once your transaction is processed.
                         </p>
-                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px; font-weight: bold;">Please note: your order cannot be processed until you have completed your membership profile.</p>
+                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">
+                          We will also send you an annual reminder to check your personal and medical details are up to date. This will help us to provide emergency services with the most accurate information about your conditions when seconds count.
+                        </p>
+                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">
+                          If you'd like to update your details now, please visit the Members' Area.
+                        </p>
                       </td>
                       <td class="w30" width="30" style="table-layout: fixed;"></td>
                     </tbody>
@@ -521,60 +525,20 @@ a {
               </tr>
               <tr>
                 <td class="w640" width="640">
-                  <table class="w640" width="640" cellpadding="0" cellpadding="0" border="0">
-                    <tbody>
-                      <tr>
-                        <td class="w30" width="30"></td>
-                        <td class="w580" width="580"><hr style="border-color: #efefef;" /></td>
-                        <td class="w30" width="30"></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <table class="w640" width="640" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td class="w30" width="30"></td>
+                    <td align="center" bgcolor="#ffffff" class="w580" width="580">
+                      <a class="butlink" href="/my-account?utm_source=website&utm_medium=email&utm_campaign=autoresponse" target="_blank" style="font-size: 16px; color: #ed174f; text-decoration: none; text-decoration: none; -webkit-border-radius: 3px; padding: 15px 25px; border: 3px solid #ed174f; display: inline-block; font-weight: bold;">Update your profile</a>
+                      </td>
+                    <td class="w30" width="30"></td>
+                  </tr>
+                </table>
                 </td>
               </tr>
               <tr>
                 <td class="w640" width="640" height="20"></td>
               </tr>
-
-              <tr>
-                <td class="w640" width="640">
-                  <table class="w640" width="640" cellpadding="0" cellpadding="0" border="0">
-                    <tbody>
-                      <tr>
-                        <td class="w30" width="30"></td>
-                        <td class="w580" width="580">
-                          <p style="font-size: 16px; line-height: 20px; color: #ed174f; font-weight: bold; font-family: Calibri, Arial, sans-serif;">What happens next?</p>
-                          <p style="font-size: 14px; line-height: 20px; font-weight: 300; font-family: Calibri, Arial, sans-serif;">Our Membership Services team will review your details and may recommend adding further medical information to your new medical ID before it's processed.</p>
-                          <p style="font-size: 14px; line-height: 20px; font-weight: 300; font-family: Calibri, Arial, sans-serif;">Once your order is processed, a membership pack including your medical ID and membership cards will be posted to you. Please allow 20 working days to receive your order.</p>
-                        </td>
-                        <td class="w30" width="30"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-
-              <tr>
-                <td class="w640" width="640" height="20"></td>
-              </tr>
-              <tr>
-                <td class="w640" width="640">
-                  <table class="w640" width="640" cellpadding="0" cellpadding="0" border="0">
-                    <tbody>
-                      <tr>
-                        <td class="w30" width="30"></td>
-                        <td class="w580" width="580"><hr style="border-color: #efefef;" /></td>
-                        <td class="w30" width="30"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <td class="w640" width="640" height="20"></td>
-              </tr>
-
-
               <tr>
                 <td class="w640" width="640">
                   <table class="w640" width="640" cellpadding="0" cellpadding="0" border="0">
@@ -582,9 +546,8 @@ a {
                       <tr>
                         <td class="w30" width="30"></td>
                         <td class="w580" width="580">
-                          <p style="font-size: 16px; line-height: 20px; color: #ed174f; font-weight: bold;">Managing your membership</p>
-                          <p style="font-size: 14px; line-height: 20px; font-weight: 300;">
-                            You can easily manage your membership via the <a style="color: #ed174f; text-decoration: none;" href="{$DOMAIN}/my-account">Members' Area</a>. Here you're able to:
+                          <p style="font-size: 14px; line-height: 20px;">
+                            You can unsubscribe from auto-renewals at any time by contacting your financial institution, or calling Membership Services.
                           </p>
                         </td>
                         <td class="w30" width="30"></td>
@@ -593,51 +556,9 @@ a {
                   </table>
                 </td>
               </tr>
-
-              <tr>
-                <td class="w640" width="640">
-                  <table class="w640" width="640" cellpadding="0" cellpadding="0" border="0">
-                    <tbody>
-                      <tr>
-                        <td class="w30" width="30"></td>
-                        <td class="w130" width="130" align="center" valign="top"><img class="w60 steps" width="60" src="{$DOMAIN}/images/email/step1.png" alt="" />
-                          <p style="font-size: 14px; line-height: 16px; font-weight: 300;">View and update your personal profile</p></td>
-                        <td class="w30" width="30"></td>
-                        <td class="w130" width="130" align="center" valign="top"><img class="w60 steps" width="60" src="{$DOMAIN}/images/email/step2.png" alt="" />
-                          <p style="font-size: 14px; line-height: 16px; font-weight: 300;">Purchase a new medical ID product</p></td>
-                        <td class="w30" width="30"></td>
-                        <td class="w130" width="130" align="center" valign="top"><img class="w60 steps" width="60" src="{$DOMAIN}/images/email/step3.png" alt="" />
-                          <p style="font-size: 14px; line-height: 16px; font-weight: 300;">Pay your annual fee online</p></td>
-                        <td class="w30" width="30"></td>
-                        <td class="w130" width="130" align="center" valign="top"><img class="w60 steps" width="60" src="{$DOMAIN}/images/email/step4.png" alt="" />
-                          <p style="font-size: 14px; line-height: 16px; font-weight: 300;">Access exclusive member only offers</p></td>
-                        <td class="w30" width="30"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-
               <tr>
                 <td class="w640" width="640" height="20"></td>
               </tr>
-              <tr>
-                <td class="w640" width="640">
-                  <table class="w640" width="640" cellpadding="0" cellpadding="0" border="0">
-                    <tbody>
-                      <tr>
-                        <td class="w30" width="30"></td>
-                        <td class="w580" width="580"><hr style="border-color: #efefef;" /></td>
-                        <td class="w30" width="30"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <td class="w640" width="640" height="20"></td>
-              </tr>
-
               <tr>
                 <td class="w640" width="640" height="30"></td>
               </tr>

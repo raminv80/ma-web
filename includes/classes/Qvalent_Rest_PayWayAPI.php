@@ -30,10 +30,10 @@ class Qvalent_REST_PayWayAPI extends Bank {
   function __construct($data){
     parent::__construct($data);
 
-    $this->secretAPIkey = $data['settings']->secretkey;
-    $this->publishableAPIkey = $data['settings']->publishableakey;
-    $this->merchantId = $data['settings']->merchantid;
-    $this->bankAccountId = $data['settings']->bankAccountid;
+    $this->secretAPIkey = (string) $data['settings']->secretkey;
+    $this->publishableAPIkey = (string) $data['settings']->publishableakey;
+    $this->merchantId = (string) $data['settings']->merchantid;
+    $this->bankAccountId = (string) $data['settings']->bankAccountid;
     
     $this->address = $data['address'];
     
@@ -75,8 +75,16 @@ class Qvalent_REST_PayWayAPI extends Bank {
   protected function SubmitPayment(){
     try{
       if($this->isDirecDebit){
+        if(empty($this->bsb) || empty($this->accountnumber) || empty($this->accountname)){
+          $this->errorMsg .= "Please verify your direct debit details.<br>";
+          return false;
+        }
         $response = $this->CreateDirectDebitSingleUseToken($this->bsb, $this->accountnumber, $this->accountname);
       }else{
+        if(empty($this->cc_number) || empty($this->cc_name) || empty($this->cc_cvc) || empty($this->cc_expiry_month) || empty($this->cc_expiry_year)){
+          $this->errorMsg .= "Please verify your credit cart details.<br>";
+          return false;
+        }
         $response = $this->CreateCreditCardSingleUseToken($this->cc_number, $this->cc_name, $this->cc_cvc, $this->cc_expiry_month, $this->cc_expiry_year);
       }
       $singleUseTokenId = $response->singleUseTokenId;
@@ -167,7 +175,7 @@ class Qvalent_REST_PayWayAPI extends Bank {
         return true;
       }
       
-      //STORE AUTORENEW RECORD
+      //STORE IN TEMPORARY AUTORENEW RECORD
       $this->autorenewRecord = array(
           "bank_customer_id" => $WestpacCustomer->customerNumber,
           "method" => $this->responseObj->paymentMethod,
@@ -182,7 +190,71 @@ class Qvalent_REST_PayWayAPI extends Bank {
   }
   
 
+  /**
+   * Create a bank customer 
+   */
+  public function CreateCustomerOnly(){
+    try{
+      if($this->isDirecDebit){
+        if(empty($this->bsb) || empty($this->accountnumber) || empty($this->accountname)){
+          $this->errorMsg .= "Please verify your direct debit details.<br>";
+          return false;
+        }
+        $response = $this->CreateDirectDebitSingleUseToken($this->bsb, $this->accountnumber, $this->accountname);
+      }else{
+        if(empty($this->cc_number) || empty($this->cc_name) || empty($this->cc_cvc) || empty($this->cc_expiry_month) || empty($this->cc_expiry_year)){
+          $this->errorMsg .= "Please verify your credit cart details.<br>";
+          return false;
+        }
+        $response = $this->CreateCreditCardSingleUseToken($this->cc_number, $this->cc_name, $this->cc_cvc, $this->cc_expiry_month, $this->cc_expiry_year);
+      }
+      $singleUseTokenId = $response->singleUseTokenId;
+      //MISSING TOKEN
+      if(empty($singleUseTokenId)){
+        $err = array();
+        foreach($response->data as $r){
+          $err[] = "{$r->fieldName}: {$r->message}";
+        }
+        $this->errorMsg .= implode("<br>", $err);
+        return false;
+      }
   
+      //GET CONTACT INFORMATION FOR THIS CUSTOMER
+      $contactArr = array(
+          "name" => $this->address['fullname'],
+          "email" => $this->address['email'],
+          "phone" => preg_replace("/[^0-9]/", "", $this->address['phone']),
+          "street1" => $this->address['address'],
+          "street2" => $this->address['address2'],
+          "city" => $this->address['suburb'],
+          "state" => $this->address['state'],
+          "postcode" => $this->address['postcode']
+      );
+      //CREATE TEMPORARY CUSTOMER
+      $WestpacCustomer = $this->CreateCustomer($singleUseTokenId, $this->payment_transactionno, $contactArr);
+      //MISSING CUSTOMER NUMBER
+      if(empty($WestpacCustomer->customerNumber)){
+        $err = array();
+        foreach($WestpacCustomer->data as $r){
+          $err[] = "{$r->fieldName}: {$r->message}";
+        }
+        $this->errorMsg .= implode("<br>", $err);
+        return false;
+      }
+  
+      //STORE IN TEMPORARY AUTORENEW RECORD
+      $this->autorenewRecord = array(
+          "bank_customer_id" => $WestpacCustomer->customerNumber,
+          "method" => $this->responseObj->paymentMethod,
+          "singletoken" => $singleUseTokenId
+      );
+      return true;
+  
+    }catch (Exception $e){
+      $this->errorMsg .= "BANK CONNECTION ERROR: {$e}<br>";
+      return false;
+    }
+  }
 
   
   

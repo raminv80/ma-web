@@ -14,7 +14,7 @@
 		<state>SA</state>
 		<postcode>5063</postcode>
     </address>
-    <phone>08 82738401</phone>
+    <phone>(+61) 882 738 401</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
     <email>enquiry@medicalert.org.au</email>
@@ -38,7 +38,7 @@
       <!-- DEV -->
       <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey>
       <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey>
-      <merchantid>TEST</merchantid>
+      <merchantid>23886963</merchantid>
       <bankAccountid>0000000A</bankAccountid>
       <!-- LIVE  -->
 <!--       <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey> -->
