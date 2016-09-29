@@ -436,6 +436,10 @@ border:px solid #FFFFFF; -webkit-border-radius: px; -moz-border-radius: px;borde
   max-width: 100%;
 }
 
+#Edit_Record .radio input[type=radio] {
+  margin-left: 0px; 
+}
+
 @media (min-width: 768px) {
   #navbtn {
     display: block;

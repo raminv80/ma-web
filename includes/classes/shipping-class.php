@@ -7,8 +7,7 @@ class ShippingClass {
 
 
   function __construct($qty = 0, $freeShippingStr = ''){
-    $this->freeShippingStr = $freeShippingStr;
-    
+    $this->freeShippingStr = unclean($freeShippingStr);
     /* if(($qty > 0) && ($qty < 3)){
       $this->methods['Shipping (standard)'] = 4.95;
       $this->methods['Shipping (express)'] = 6.95;
@@ -37,7 +36,7 @@ class ShippingClass {
     if(!empty($this->freeShippingStr)){
       $newMethods = array();
       $hasFreeShip = false;
-      foreach($this->methods as $method => $value){
+      foreach($this->methods as $method => $value){ 
         if($this->freeShippingStr == $method){
           $newMethods["$method"] = 0.00;
           $hasFreeShip = true;

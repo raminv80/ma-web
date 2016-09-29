@@ -200,7 +200,7 @@ function logError($trace, $err, $sql = false) {
 }
 
 
-function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $adminId = 0){
+function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $adminId = 0, $notsendid = 0){
   global $DBobject;
   try{
     if(is_readable($_SERVER['DOCUMENT_ROOT'].'/database/safemail.php')){	require_once 'database/safemail.php';}
@@ -219,26 +219,33 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $a
   $headers .= "Bcc: cmsemails@them.com.au".(!empty($bcc)?",".$bcc:"")."\r\n";
 
   $mailSent = 0;
-  try{
-    $verify = false;
-    $sql = "SELECT count(email_id) as cnt FROM tbl_email_queue WHERE email_sent = 1 AND email_modified BETWEEN DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND NOW() ";
-    if($resc = $DBobject->executeSQL($sql)){
-      $verify = ($resc[0]['cnt'] >= 480)? false : true;
-    }
-
-    if(function_exists("SafeMail") && $verify){
-      $sql = "SELECT email_id FROM tbl_email_queue WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND NOW() LIMIT 5";
-      $params = array(
-          ":ip"=>$_SERVER['REMOTE_ADDR']
-      );
-      $res = $DBobject->executeSQL($sql,$params);
-      if(count($res) < 5 || !empty($_SESSION['user']['admin']) ){
-        $mailSent = SafeMail($to, $subject, $body, $headers, '-f '. $fromEmail);
-      }else{
-        $mailSent= -1;
+  if(empty($notsendid)){
+    //Process immediately
+    try{
+      $verify = false;
+      $sql = "SELECT count(email_id) as cnt FROM tbl_email_queue WHERE email_sent = 1 AND email_modified BETWEEN DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND NOW() ";
+      if($resc = $DBobject->executeSQL($sql)){
+        $verify = ($resc[0]['cnt'] >= 480)? false : true;
       }
-    }
-  }catch(Exception $e){}
+  
+      if(function_exists("SafeMail") && $verify){
+        $sql = "SELECT email_id FROM tbl_email_queue WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND NOW() LIMIT 5";
+        $params = array(
+            ":ip"=>$_SERVER['REMOTE_ADDR']
+        );
+        $res = $DBobject->executeSQL($sql,$params);
+        if(count($res) < 5 || !empty($_SESSION['user']['admin']) ){
+          $mailSent = SafeMail($to, $subject, $body, $headers, '-f '. $fromEmail);
+        }else{
+          $mailSent= -1;
+        }
+      }
+    }catch(Exception $e){}
+  
+  }else{
+    //put in the queue with an id
+    $mailSent = $notsendid;
+  }
 
   try{
     $sql = "INSERT INTO tbl_email_queue (email_to, email_from, email_from_email, email_header, email_subject, email_content,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
@@ -358,57 +365,61 @@ function sendBulkMail(){
   return false;
 }
 
-function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachments=null, $userId = 0, $adminId = 0){
+function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachments=null, $userId = 0, $adminId = 0, $notsendid = 0){
   global $DBobject;
   try{
     if(is_readable($_SERVER['DOCUMENT_ROOT'].'/database/safemail.php')){	require_once 'database/safemail.php';}
   }catch (Exception $e){}
 
   $mailSent = 0;
-  try{
-    if(!empty($attachments)) {
-      if(!is_array($attachments)) {
-        $attachments = array($attachments);
+  if(empty($notsendid)){
+    //Process immediately
+    try{
+      if(!empty($attachments)) {
+        if(!is_array($attachments)) {
+          $attachments = array($attachments);
+        }
       }
-    }
-     
-    if(!empty($to) && !empty($subject) && !empty($body) ){
-  	   /* To send HTML mail, you can set the Content-type header. */
-  	   $headers  = "MIME-Version: 1.0\r\n";
-  	   $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-  	   $headers .= "X-Priority: 3\r\n";
-  	   $headers .= "X-Mailer: PHP". phpversion() ."\r\n";
-
-  	   /* additional headers */
-  	   $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
-  	   $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
-  	   $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-  	   $headers .= "Bcc: cmsemails@them.com.au\r\n";
-
-  	   $verify = false;
-  	   $sql = "SELECT count(email_id) as cnt FROM tbl_email_queue WHERE email_sent = 1 AND email_modified BETWEEN DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND NOW() ";
-  	   if($resc = $DBobject->executeSQL($sql)){
-  	     $verify = ($resc[0]['cnt'] >= 480)? false : true;
-  	   }
-
-  	   if(function_exists("SafeMail") && $verify){
-  	     $sql = "SELECT email_id FROM tbl_email_queue WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND NOW() LIMIT 5";
-  	     $params = array(
-  	         ":ip"=>$_SERVER['REMOTE_ADDR']
-  	     );
-  	     $res = $DBobject->executeSQL($sql,$params);
-  	     if(count($res) < 5 || !empty($_SESSION['user']['admin']) ){
-  	       $mailSent = SafeMail($to, $subject, $body, $headers, '-f '. $fromEmail, $attachments);
-  	     }else{
-  	       $mailSent= -1;
-  	     }
-  	   }
-
-  	   	
-    }
-
-  }catch(Exception $e){}
-
+       
+      if(!empty($to) && !empty($subject) && !empty($body) ){
+    	   /* To send HTML mail, you can set the Content-type header. */
+    	   $headers  = "MIME-Version: 1.0\r\n";
+    	   $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+    	   $headers .= "X-Priority: 3\r\n";
+    	   $headers .= "X-Mailer: PHP". phpversion() ."\r\n";
+  
+    	   /* additional headers */
+    	   $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
+    	   $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
+    	   $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
+    	   $headers .= "Bcc: cmsemails@them.com.au\r\n";
+  
+    	   $verify = false;
+    	   $sql = "SELECT count(email_id) as cnt FROM tbl_email_queue WHERE email_sent = 1 AND email_modified BETWEEN DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND NOW() ";
+    	   if($resc = $DBobject->executeSQL($sql)){
+    	     $verify = ($resc[0]['cnt'] >= 480)? false : true;
+    	   }
+  
+    	   if(function_exists("SafeMail") && $verify){
+    	     $sql = "SELECT email_id FROM tbl_email_queue WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND NOW() LIMIT 5";
+    	     $params = array(
+    	         ":ip"=>$_SERVER['REMOTE_ADDR']
+    	     );
+    	     $res = $DBobject->executeSQL($sql,$params);
+    	     if(count($res) < 5 || !empty($_SESSION['user']['admin']) ){
+    	       $mailSent = SafeMail($to, $subject, $body, $headers, '-f '. $fromEmail, $attachments);
+    	     }else{
+    	       $mailSent= -1;
+    	     }
+    	   }
+      }
+    }catch(Exception $e){}
+    
+  }else{
+    //put in the queue with an id
+    $mailSent = $notsendid;
+  }
+  
   try{
     $headers = '';
     $sql = "INSERT INTO tbl_email_queue (email_to, email_from, email_from_email, email_header, email_subject, email_content,email_file,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES

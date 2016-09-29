@@ -337,8 +337,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $pay_obj->SetOrderStatus($paymentId);
           $_SESSION['orderNumber'] = $orderNumber;
           
-          $userArr = $_SESSION['user']['public'];
+          //Init email details
+          $SMARTY->unloadFilter('output', 'trimwhitespace');
+          $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+          $COMP = json_encode($CONFIG->company);
+          $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
           
+          //Init user details
+          $userArr = $_SESSION['user']['public'];
           $user_obj = new UserClass();
           
           //NEW USER          
@@ -360,9 +366,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               try{
                 //Send welcome email
                 $SMARTY->assign('user', $userArr);
-                $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
-                $COMP = json_encode($CONFIG->company);
-                $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
                 $to = $userArr['email'];
                 $from = (string)$CONFIG->company->name;
                 $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
@@ -405,7 +408,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           );
           $pay_obj->SetUserAddressIds($params);
           
-          $SMARTY->unloadFilter('output', 'trimwhitespace');
+          
           try{
             // SEND CONFIRMATION EMAIL
             $SMARTY->assign('hasMAFProd', $hasMAFProd);
@@ -419,9 +422,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $SMARTY->assign('payment', $payment);
             $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
             $SMARTY->assign('orderItems', $orderItems);
-            $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
-            $COMP = json_encode($CONFIG->company);
-            $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
             
             $to = $_SESSION['address']['B']['address_email'];
             // $bcc = 'apolo@them.com.au';
@@ -447,14 +447,15 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             }
             $autorenewArr['method'] = $_POST['autopayment'];
             $autorenewObj->PreparePayment($autorenewArr);
-            $autorenewObj->CreateCustomerOnly();
+            if($autorenewObj->CreateCustomerOnly()){
+              $customerArr = $autorenewObj->GetBankCustomerRecord();
+              $customerArr['user_id'] = $userArr['id'];
+              $autorenewObj->StoreAutoRenew($customerArr);
+            }
             
             try{
               //Send auto-renewal email
               $SMARTY->assign('user', $userArr);
-              $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
-              $COMP = json_encode($CONFIG->company);
-              $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
               $to = $userArr['email'];
               $from = (string)$CONFIG->company->name;
               $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
@@ -696,6 +697,23 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         if($isGiftCertificate){
           // CREATE GIFT CERTIFICATE
           
+          $newDiscountArr = array(
+              ":code" => $_data['code'],
+              ":name" => $_data['name'],
+              ":description" => $_data['description'],
+              ":amount" => $_data['amount'],
+              ":isPercentage" => (empty($_data['isPercentage']) ? 0 : 1),
+              ":listing_id" => $_data['listing_id'],
+              ":product_id" => $_data['product_id'],
+              ":usergroup_id" => $_data['usergroup_id'],
+              ":user_id" => $_data['user_id'],
+              ":shipping" => $_data['shipping'],
+              ":start_date" => $_data['start_date'],
+              ":end_date" => $_data['end_date'],
+              ":isUnlimited" => (empty($_data['isUnlimited']) ? 0 : 1),
+              ":fixed_time" => (empty($_data['isUnlimited']) ? $_data['fixed_time'] : 0),
+              ":isPublished" => (empty($_data['isPublished']) ? 0 : 1),
+          );
           
           try{
             // SEND GIFT CERTIFICATE TO RECIPIENT

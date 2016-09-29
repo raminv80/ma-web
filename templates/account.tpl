@@ -6,7 +6,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-				<h2>Welcome back, Owen</h2>
+				<h2>Welcome back, Owen</h2><div><a href="/process/user?logout=true" title="Click to log out">Log out</a></div>
 			</div>
 		</div>
 	</div>

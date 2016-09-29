@@ -1105,7 +1105,7 @@ function ApplyDiscountCode($code, $cartId = null) {
 	  global $DBobject;
 	
 	  $sql = "SELECT discount_shipping FROM tbl_discount
-	    	WHERE discount_deleted IS NULL AND discount_published = 1 AND (CURDATE() BETWEEN discount_start_date AND discount_END_date) AND discount_code = :id ";
+	    	WHERE discount_deleted IS NULL AND discount_published = 1 AND ((discount_start_date >= CURDATE() AND discount_end_date IS NULL)  OR (CURDATE() BETWEEN discount_start_date AND discount_end_date)) AND discount_code = :id ";
 	  if($res = $DBobject->wrappedSql($sql, array(":id" => $this->cartRecord['cart_discount_code']))){
 	    return $res[0]['discount_shipping'];
 	  }
@@ -1119,14 +1119,46 @@ function ApplyDiscountCode($code, $cartId = null) {
 	function GetDiscountData($code) {
 		global $DBobject;
 	
-		$sql = "SELECT *  FROM tbl_discount
-	    			WHERE discount_code = :id AND discount_deleted IS NULL";
-	
-		$res = $DBobject->wrappedSql ( $sql, array (
-				":id" => $code
-		) );
-	
+		$sql = "SELECT *  FROM tbl_discount WHERE discount_code = :id AND discount_deleted IS NULL";
+		$res = $DBobject->wrappedSql($sql, array(":id" => $code));
 		return $res[0];
+	}
+	
+	/**
+	 * Insert a new discount code
+	 *
+	 * @param array $_data
+	 * @return int
+	 */
+	function CreateDiscountCode($_data){
+	  global $DBobject;
+	  
+	  $params = array(
+	      ":discount_code" => $_data['code'],
+	      ":discount_name" => $_data['name'],
+	      ":discount_description" => $_data['description'],
+	      ":discount_amount" => $_data['amount'],
+	      ":discount_amount_percentage" => (empty($_data['isPercentage']) ? 0 : 1),
+	      ":discount_listing_id" => $_data['listing_id'],
+	      ":discount_product_id" => $_data['product_id'],
+	      ":discount_usergroup_id" => $_data['usergroup_id'],
+	      ":discount_user_id" => $_data['user_id'],
+	      ":discount_shipping" => $_data['shipping'],
+	      ":discount_start_date" => $_data['start_date'],
+	      ":discount_end_date" => $_data['end_date'],
+	      ":discount_unlimited_use" => (empty($_data['isUnlimited']) ? 0 : 1),
+	      ":discount_fixed_time" => (empty($_data['isUnlimited']) ? $_data['fixed_time'] : 0),
+	      ":discount_published" => (empty($_data['isPublished']) ? 0 : 1),
+	  );
+	
+	  $sql = "INSERT INTO tbl_discount (discount_code, discount_name, discount_description, discount_amount, discount_amount_percentage, discount_listing_id,
+	      discount_product_id, discount_user_id, discount_shipping, discount_start_date, discount_end_date, discount_unlimited_use, discount_fixed_time, discount_published, discount_created)
+			values (:discount_code, :discount_name, :discount_description, :discount_amount, :discount_amount_percentage, :discount_listing_id,
+	      :discount_product_id, :discount_user_id, :discount_shipping, :discount_start_date, :discount_end_date, :discount_unlimited_use, :discount_fixed_time, :discount_published, NOW())";
+	  if($DBobject->wrappedSql($sql, $params)){
+	    return $DBobject->wrappedSqlIdentity();
+	  }
+	  return 0;
 	}
 
   /**

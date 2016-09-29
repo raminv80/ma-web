@@ -48,9 +48,9 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_discount_amount">Amount*</label>
+              <label class="col-sm-3 control-label" for="id_discount_amount">Amount</label>
               <div class="col-sm-9">
-                <input class="form-control double" type="text" value="{$fields.discount_amount}" name="field[1][tbl_discount][{$cnt}][discount_amount]" id="id_discount_amount" required>
+                <input class="form-control double" type="text" value="{$fields.discount_amount}" name="field[1][tbl_discount][{$cnt}][discount_amount]" id="id_discount_amount" >
                 <div class="col-sm-2">
                   <input type="radio" name="field[1][tbl_discount][{$cnt}][discount_amount_percentage]" id="id_discount_amount_percentage1" value="0" {if $fields.discount_amount_percentage eq 0}checked{/if}>
                   $ AUD
@@ -60,6 +60,14 @@
                   % Percentage
                 </div>
                 <span class="help-block"></span>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_discount_shipping">Free shipping</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{$fields.discount_shipping}" name="field[1][tbl_discount][{$cnt}][discount_shipping]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.discount_shipping}checked="checked" {/if} 
+                onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('Postage & handling') }else{ $(this).parent().children('.value').val('') }" id="id_discount_shipping">
               </div>
             </div>
             <div class="row form-group">
@@ -117,12 +125,12 @@
               <div class="col-sm-9">
                 <div class="radio">
                   <input type="radio" name="field[1][tbl_discount][{$cnt}][discount_unlimited_use]" onclick="$('#id_discount_fixed_time').hide();" id="id_discount_unlimited_use1" value="1" {if $fields.discount_unlimited_use eq 1}checked{/if}>
-                  Unlimited use
+                  <label for="id_discount_unlimited_use1">Unlimited use</label>
                 </div>
                 <div class="radio">
                   <input type="radio" name="field[1][tbl_discount][{$cnt}][discount_unlimited_use]" onclick="$('#id_discount_fixed_time').show();" id="id_discount_unlimited_use2" value="0" {if $fields.discount_unlimited_use eq 0}checked{/if}>
-                  Fixed time use
-                  <input {if $fields.discount_unlimited_use eq 1}style="display: none;" {/if} class="form-control number" type="text" value="{if $fields.discount_fixed_time}{$fields.discount_fixed_time}{else}1{/if}" name="field[1][tbl_discount][{$cnt}][discount_fixed_time]" id="id_discount_fixed_time">
+                  <label for="id_discount_unlimited_use2">Fixed time use</label>
+                  <input {if $fields.discount_unlimited_use eq 1}style="display: none;" {/if} class="form-control number" type="text" value="{if $fields.discount_fixed_time}{$fields.discount_fixed_time}{else}1{/if}" name="field[1][tbl_discount][{$cnt}][discount_fixed_time]" id="id_discount_fixed_time" >
                 </div>
               </div>
             </div>
@@ -134,6 +142,7 @@
 								</div>
 							</div>
 						{/if} -->
+            
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_discount_published">Active</label>
               <div class="col-sm-5">

@@ -82,22 +82,6 @@ while(true){
       break 2;
     }
   }
-   
-  /**
-   * ***** Goes to search ******
-   */
-  foreach($CONFIG->search as $sp){
-    if($sp->url == $_request['arg1']){
-      $template = loadPage($sp);
-  	  $file = (string)$sp->file;
-  	  if(file_exists($file)){ 
-  	    include ($file); 
-  	  }else{ 
-  	    searchcms($_REQUEST); 
-  	  }
-	  break 2;
-    }
-  }
 
   /**
    * ***** Listing pages here ******

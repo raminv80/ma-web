@@ -150,7 +150,7 @@ class Qvalent_REST_PayWayAPI extends Bank {
         case 'declined':{
           $this->response['payment_status'] = 'F';
           $this->payment_success = false;
-          $this->errorMsg .= "TRANSACTION DECLINED: Response code({$this->response['code']}) - {$this->response['msg']}<br>";
+          $this->errorMsg .= "TRANSACTION DECLINED: {$this->response['msg']}<br>";
           break;
         }
   
@@ -164,7 +164,7 @@ class Qvalent_REST_PayWayAPI extends Bank {
         default:{
           $this->response['payment_status'] = 'F';
           $this->payment_success = false;
-          $this->errorMsg .= "TRANSACTION FAILED: Response code({$this->response['code']}) - {$this->response['msg']}<br>";
+          $this->errorMsg .= "TRANSACTION FAILED: {$this->response['msg']}<br>";
           break;
         }
       }
@@ -245,7 +245,7 @@ class Qvalent_REST_PayWayAPI extends Bank {
       //STORE IN TEMPORARY AUTORENEW RECORD
       $this->autorenewRecord = array(
           "bank_customer_id" => $WestpacCustomer->customerNumber,
-          "method" => $this->responseObj->paymentMethod,
+          "method" => ($this->isDirecDebit ? 'bankAccount' : 'creditCard'),
           "singletoken" => $singleUseTokenId
       );
       return true;
