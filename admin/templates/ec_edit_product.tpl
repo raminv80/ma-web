@@ -61,7 +61,7 @@
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_name">Name*</label>
               <div class="col-sm-5">
-                <input class="form-control" type="text" value="{$fields.product_name}" name="field[1][tbl_product][{$cnt}][product_name]" id="id_product_name" onchange="seturl(this.value);" required>
+                <input class="form-control" maxlength="68" type="text" value="{$fields.product_name}" name="field[1][tbl_product][{$cnt}][product_name]" id="id_product_name" onchange="seturl(this.value);" required>
                 <span class="help-block"></span>
               </div>
             </div>

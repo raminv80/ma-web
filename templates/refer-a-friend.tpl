@@ -38,7 +38,7 @@
     			</div>
     			<div class="row">
     				<div class="col-sm-6 form-group">
-    				  <label class="visible-ie-only" for="memberno">Membership numner:</label>
+    				  <label class="visible-ie-only" for="memberno">Membership number:</label>
     				  <input class="form-control" value="{$post.memberno}" type="text" name="memberno" id="memberno">
 						<div class="error-msg help-block"></div>
     				</div>

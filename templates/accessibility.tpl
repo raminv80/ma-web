@@ -24,6 +24,7 @@
         </div>
         <div class="col-sm-8 col-sm-offset-2 text-center">
           {$listing_content2}
+          
         </div>
      </div>
      <div class="row" id="contopt">
@@ -47,16 +48,32 @@
 				<img src="/images/access-hours.png" alt="Office hours" class="img-responsive" />
 				<div class="grey-text">
 					<div class="bold">Office hours</div>
-					<div>Monday - Friday, 9am - 5pm (ACST)</div>
+					<div>Monday - Friday, 8:30am - 5:30pm (ACST)</div>
 				</div>
 			</div>
      </div>
+     
   </div>
 </div>
 
-<div id="orangebox" class="visible-xs">
-
+{if $listing_content3 || $listing_content4}
+<div>
+<div class="container">
+    <br>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        {$listing_content3}
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        {$listing_content4}
+      </div>
+    </div>
+  </div>
 </div>
+{/if}
 {/block}
 
 {block name=tail}

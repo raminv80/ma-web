@@ -30,6 +30,10 @@ if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
     $orderItems = $cart_obj->GetDataProductsOnCart($order[0]["payment_cart_id"]);
     $SMARTY->assign('orderItems', $orderItems);
     
+
+    $discount = $cart_obj->GetDiscountData($order[0]['cart_discount_code']);
+    $SMARTY->assign('discount', $discount);
+    
     $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
     $COMP = json_encode($CONFIG->company);
     $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
@@ -40,7 +44,7 @@ if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
       $from = (string)$CONFIG->company->name;
       $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
       $subject = 'Test - email template';
-      print_r(sendMail($to, $from, $fromEmail, $subject, $body, $bcc), true);
+      sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
     }else{
       echo $body;
     }

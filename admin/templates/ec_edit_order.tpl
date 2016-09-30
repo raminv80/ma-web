@@ -10,14 +10,18 @@
 					<td><b>Order placed:</b></td>
 					<td class="text-center">{$fields.cart_closed_date|date_format:"%e %B %Y"}</td>
 				</tr>
-				<tr>
+	{* COMMENTED OUT FOR MAF	
+    		<tr>
+        
 					<td><b>User's detail:</b></td>
 					<td class="text-center">{$fields.user.0.user_gname} {$fields.user.0.user_surname} / {$fields.user.0.user_email}</td>
+          
 					<td><b>Payment status:</b></td>
 					<td class="text-center {if $fields.payment.0.payment_status eq 'A'}text-success{else}text-danger{/if}"> 
 						<b>{if $fields.payment.0.payment_status eq 'P'}PENDING{elseif $fields.payment.0.payment_status eq 'A'}APPROVED{elseif $fields.payment.0.payment_status eq 'R'}REFUNDED{elseif $fields.payment.0.payment_status eq 'C'}CANCELLED{else}{$fields.payment.0.payment_status}{/if}</b>
 					</td>
 				</tr>
+        *}
 				<tr>
 					<td><b>Shipping method:</b></td>
 					<td class="text-center">{$fields.payment.0.payment_shipping_method}</td>
@@ -26,7 +30,7 @@
 				</tr>
 				<tr>
 					<td><b>Billing address:</b></td>
-					<td class="text-center">{$fields.payment.0.billing_address.0.address_name}</td>
+					<td class="text-center">{$fields.payment.0.billing_address.0.address_name} {$fields.payment.0.billing_address.0.address_surname}</td>
 					<td class="text-center" colspan="2">
 						{$fields.payment.0.billing_address.0.address_line1} 
 						{$fields.payment.0.billing_address.0.address_line2} 
@@ -41,7 +45,7 @@
 				</tr>
 				<tr>
 					<td><b>Shipping address:</b></td>
-					<td class="text-center"><strong>{$fields.payment.0.shipping_address.0.address_name}</strong></td>
+					<td class="text-center"><strong>{$fields.payment.0.shipping_address.0.address_name} {$fields.payment.0.shipping_address.0.address_surname}</strong></td>
 					<td class="text-center" colspan="2">
 						<strong>
 						{$fields.payment.0.shipping_address.0.address_line1} 
@@ -109,7 +113,7 @@
 					<td class="text-right">(${$totalExclGST|number_format:2:".":","})</td>
 				</tr>
 				<tr>
-					<td colspan="2"><small>(*) GST Free item.</small></td>
+					<td colspan="2"><small>{* COMMENTED OUT (*) GST Free item. *}</small></td>
 					<td class="text-right">Incl. GST</td>
 					<td class="text-right">(${$fields.payment.0.payment_gst|number_format:2:".":","})</td>
 				</tr>
@@ -140,6 +144,7 @@
 	</form>
 </div>
 
+{* COMMENTED OUT FOR MAF
 <div class="row">
 	<form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
 		{if $cnt eq ""}{assign var=cnt value=0}{/if} 
@@ -187,7 +192,7 @@
 		</div>
 	</form>
 </div>
-
+*}
 
 {include file='jquery-validation.tpl'}
 

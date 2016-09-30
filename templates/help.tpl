@@ -62,7 +62,7 @@
                       <select class="selectlist-medium" id="nature_enquiry" name="nature_enquiry" required>
                             <option value="">Please select</option>
                           {foreach $reasons as $ha}
-                            <option value="{$ha.value}" {if $post.nature_enquiry eq $ha.value} selected="selected"{/if}>{$ha.value}</option>
+                            <option value="{$ha.id}" {if $post.nature_enquiry eq $ha.value} selected="selected"{/if}>{$ha.value}</option>
                           {/foreach}
                       </select>
 						<div class="error-msg help-block"></div>
@@ -136,7 +136,7 @@
         <div class="contline">
           <img src="/images/contact-time.png" alt="Location" />
         <div class="cont-text">
-        <p>Office hours:<br>Monday - Friday, 9am - 5pm CST</p>
+        <p>Office hours:<br>Monday - Friday, 8:30am - 5:30pm CST</p>
         </div>
         </div>
         <div class="contline">

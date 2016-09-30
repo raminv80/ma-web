@@ -53,6 +53,10 @@ class ProductClass extends ListClass {
         $t_data = $this->LoadAssociated($a,$res[0]["{$a->linkfield}"]);
         $SMARTY->assign("{$a->name}", unclean($t_data));
       }
+      
+      //Set cookie
+      $this->SetCookieRecentView();
+      
     }else{
       return null;
     }
@@ -172,12 +176,17 @@ class ProductClass extends ListClass {
     $result['image'] = '';
   
     //Check all variants
-    $sql = "SELECT tbl_variant.* FROM tbl_product LEFT JOIN tbl_variant ON variant_product_id = product_id
+    $sql = "SELECT tbl_variant.*, product_id FROM tbl_product LEFT JOIN tbl_variant ON variant_product_id = product_id
         WHERE product_deleted IS NULL AND product_published = 1 AND product_object_id = :id AND variant_deleted IS NULL AND variant_published = 1";
     $params = array(":id" => $productObjId);
     if($res = $DBobject->wrappedSql($sql, $params)){
       foreach($res as $r){
-        $price = ($r['variant_specialprice'] > 0) ? $r['variant_specialprice'] : $r['variant_price'];
+        $price = $r['variant_price'];
+        if($r['variant_specialprice'] > 0){
+          $price = $r['variant_specialprice'];
+          $result['sale']['flag'] = 1;
+          $result['sale']['variants'][] = $r['variant_id'];
+        }
         if($price < $result['price']['min']){
           $result['price']['min'] = $price;
         }
@@ -197,11 +206,20 @@ class ProductClass extends ListClass {
           $result['new']['variants'][] = $r['variant_id'];
         }
   
+        //Create materials array
+        $sql = "SELECT pmaterial_name, pmaterial_id FROM tbl_pmateriallink LEFT JOIN tbl_pmaterial ON pmaterial_id = pmateriallink_record_id 
+            WHERE pmateriallink_deleted IS NULL AND pmaterial_deleted IS NULL AND pmateriallink_product_id = :id GROUP BY pmaterial_id";
+        if($attr = $DBobject->wrappedSql($sql, array(":id" => $r['product_id']))){
+          foreach($attr as $a){
+            $result['materials'][$a['pmaterial_id']] = $a['pmaterial_name'];
+          }
+        }
+        
         //Create attributes array
         $sql = "SELECT tbl_productattr.*, attribute_name, attribute_type, attr_value_name, attr_value_image FROM tbl_productattr
             LEFT JOIN tbl_attribute ON attribute_id = productattr_attribute_id
             LEFT JOIN tbl_attr_value ON attr_value_id = productattr_attr_value_id
-            WHERE productattr_deleted IS NULL AND productattr_variant_id = :id";
+            WHERE productattr_deleted IS NULL AND productattr_variant_id = :id GROUP BY attr_value_id";
         if($attr = $DBobject->wrappedSql($sql, array(":id" => $r['variant_id']))){
           foreach($attr as $a){
             $result['has_attributes'][$a['productattr_attribute_id']][$a['productattr_attr_value_id']]['values'] = array('attribute_name' => $a['attribute_name'], 'attribute_name' => $a['attribute_name'], 'attr_value_name' => $a['attr_value_name'], 'attr_value_image' => $a['attr_value_image']);
@@ -219,5 +237,87 @@ class ProductClass extends ListClass {
       }
     }
     return $result;
+  }
+  
+  
+  protected function SetCookieRecentView(){
+  
+    try{
+      $name = 'prdarr';
+      $maxValues = 16;
+      $valuesArr = array();
+      
+      //Has product cookie
+      if(!empty($_COOKIE[$name])){
+        $tempvaluesArr = explode('.', $_COOKIE[$name]);
+        
+        //Clean values
+        foreach($tempvaluesArr as $v){
+          $nval = hexdec($v);
+          if(is_numeric($nval)){
+            $valuesArr[] = dechex($nval); 
+          }
+        }
+      }
+      
+      //Remove product_object_id if it's in array
+      $newValue = dechex($this->ID);
+      if(in_array($newValue, $valuesArr)){
+        $valuesArr = array_diff($valuesArr, array($newValue));
+      }
+      
+      //Insert product_object_id 
+      if(count($valuesArr) <= $maxValues){
+        $valuesArr[] = $newValue;
+      }
+      
+      $value =  implode('.', $valuesArr);
+      
+      // SET COOKIE
+      $_SECURE_COOKIE = false;
+      if($_SERVER['SERVER_PORT'] == 443 || !empty($_SERVER['HTTPS'])){
+        $_SECURE_COOKIE = true; /* IF HTTPs TURN THIS ON */
+      }
+      
+      $currentCookieParams = session_get_cookie_params();
+      
+      setcookie($name, // name
+          $value, // value
+          (time() + (60 * 60 * 24 * 365)), //1 year - expires at end of session
+          $currentCookieParams['path'], // path
+          $currentCookieParams['domain'], // domain
+          $_SECURE_COOKIE, // secure
+          true) // httponly: Only accessible via http. Not accessible to javascript
+          ;
+      
+    } catch (Exception $e) {}
+    return false;
+  }
+  
+  
+  
+  function GetRecentViewProduct(){
+    global $DBobject;
+    
+    $name = 'prdarr';
+    $results = array();
+    if(!empty($_COOKIE[$name])){
+      $tempvaluesArr = explode('.', $_COOKIE[$name]);
+      
+      foreach($tempvaluesArr as $v){
+        $nval = hexdec($v);
+        if(is_numeric($nval)){
+          $sql = "SELECT product_object_id, product_name, product_url, product_brand, product_meta_description, product_associate1 FROM tbl_product
+            WHERE product_deleted IS NULL AND product_published = 1 AND product_object_id = :id";
+          if($products = $DBobject->wrappedSql($sql, array(':id' => $nval))){
+            foreach($products as &$p){
+              $p['general_details'] = $this->GetProductGeneralDetails($p['product_object_id']);
+              $results[] = $p;
+            }
+          }
+        }
+      }
+    }
+    return array_reverse($results);
   }
 }

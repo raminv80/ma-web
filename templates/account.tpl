@@ -98,7 +98,7 @@
 						<div>
 							<img src="/images/dashboard-viewupdate.png" alt="View / update your profile" class="img-responsive" />
 						</div>
-						<a href="#" class="btn btn-red">View / update your profile</a>
+						<a href="/update-your-details" class="btn btn-red">View / update your profile</a>
 					</div>
 					<div class="col-sm-6 text-center" id="autor">
 						<div>

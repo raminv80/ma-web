@@ -15,6 +15,17 @@
     </div>
   </div>
 </div>
+<div id="cost-grey">
+  <div class="container">
+ 	 <div class="row">
+ 	 	<div class="col-sm-12 col-md-8 col-md-offset-2 text-center">
+	 	 	<h3>Before you submit your enquiry</h3>
+	 	 	<p>We may already have the answer to your question. View our Frequently Asked Questions to see if you can find what you're looking for.</p>
+	 	 	<a href="/faqs" class="btn btn-red">View FAQs</a>
+ 	 	</div>
+ 	 </div>
+  </div>
+</div>
 <div id="contact">
   <div class="container">
  	 <div class="row">
@@ -60,7 +71,7 @@
                       <select class="selectlist-medium" id="nature_enquiry" name="nature_enquiry" required>
                             <option value="">Please select</option>
                           {foreach $reasons as $ha}
-                            <option value="{$ha.value}" {if $post.nature_enquiry eq $ha.value} selected="selected"{/if}>{$ha.value}</option>
+                            <option value="{$ha.id}" {if $post.nature_enquiry eq $ha.value} selected="selected"{/if}>{$ha.value}</option>
                           {/foreach}
                       </select>
 						<div class="error-msg help-block"></div>
@@ -134,7 +145,7 @@
         <div class="contline">
           <img src="/images/contact-time.png" alt="Location" />
         <div class="cont-text">
-        <p>Office hours:<br>Monday - Friday, 9am - 5pm CST</p>
+        <p>Office hours:<br>Monday - Friday, 8:30am - 5:30pm CST</p>
         </div>
         </div>
         <div class="contline">

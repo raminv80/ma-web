@@ -29,7 +29,7 @@
           <div class="prodcat">
             <a href="{$listing_url}/{$item.listing_url}" title="View {$item.listing_name} Products">
               <div class="imgcont">
-                <img src="{if $item.listing_image neq ''}{$item.listing_image}?width=800&height=360&crop=1{else}/images/no-image-available.png{/if}" alt="{$item.listing_name}" title="{$item.listing_name}" class="img-responsive">
+                <img src="{if $item.listing_image neq ''}{$item.listing_image}{else}/images/no-image-available.png{/if}?width=800&height=360&crop=1" alt="{$item.listing_name}" title="{$item.listing_name}" class="img-responsive">
               </div>
               <div class="prodcat-txt prodlt">
                 Shop <span>{$item.listing_name}</span>
@@ -41,144 +41,68 @@
       </div>
       {/if}
     </div>
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-sm-12 text-center">
         <div class="btn btn-red" id="showall">Show all collections</div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 
-
+{if $popular_products}
 <div id="popular">
   <div class="container">
     <div class="row">
       <div class="col-sm-12 text-center">
+      <br><br>
         <h2>Popular Products</h2>
       </div>
     </div>
 
+
     <div class="row">
       <div id="popslide" class="flexslider">
         <ul class="slides">
-          <li>
-
-            <div class="prod">
-              <a href="#"> <img src="/images/pop1.jpg?width=757&height=484&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-              <div class="prod-labels"></div>
-              <div class="prod-info">
-                <div class="prod-name">
-                  <a href="#"> Stainless steel expanda band </a>
-                </div>
-                <div class="prod-price">$47</div>
-                <div class="colours">
-                  Available colours
-                  <div class="colourbox"></div>
-                </div>
-                <div class="prod-wishlist">
-                  <img src="/images/prod-wishlist.png" alt="Wishlist" />
-                </div>
-              </div>
-            </div>
-          </li>
-
+		{foreach $popular_products as $item}
           <li>
             <div class="prod">
-              <a href="#"> <img src="/images/pop2.jpg?width=757&height=484&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-              <div class="prod-labels"></div>
-              <div class="prod-info">
-                <div class="prod-name">
-                  <a href="#"> Stainless steel expanda band </a>
-                </div>
-                <div class="prod-price">$47</div>
-                <div class="colours">
-                  Available colours
-                  <div class="colourbox"></div>
-                </div>
-                <div class="prod-wishlist">
-                  <img src="/images/prod-wishlist.png" alt="Wishlist" />
-                </div>
-              </div>
+              	<a href="/{$item.product_url}"> <img src="{$item.general_details.image}?width=770&height=492&crop=1" alt="{$item.product_name} image" class="img-responsive" title="{$item.product_name} image" />
+				</a>
+				<div class="prod-labels">
+		        	{if $item.general_details.limitedstock.flag eq 1}
+					<div class="prod-label btn btn-white">Limited stock</div>
+					{/if}
+					{if $item.general_details.new.flag eq 1}
+					<div class="prod-label btn btn-white">New</div>
+					{/if}
+					{if $item.general_details.sale.flag eq 1}
+					<div class="prod-label btn btn-red">Sale</div>
+					{/if}
+				</div>
+				<div class="prod-info">
+                	<div class="prod-name">
+					<a href="/{$item.product_url}">{$item.product_name}</a>
+					</div>
+					<div class="prod-price">${$item.general_details.price.min|number_format:0:'.':','}{if $item.general_details.price.min neq $item.general_details.price.max} - ${$item.general_details.price.max|number_format:0:'.':','}{/if}</div>
+					{if $item.general_details.has_attributes.2}
+					<div class="colours">Available colours
+						<div class="colourbox">
+						{foreach $item.general_details.has_attributes.2 as $colour}
+						<img src="{$colour.values.attr_value_image}?height=22&width=22" alt="{$colour.values.attr_value_name}" title="{$colour.values.attr_value_name}" />
+						{/foreach}
+					</div>
+					</div>
+					{/if}
+				<div class="prod-wishlist"><img src="/images/prod-wishlist.png" alt="Wishlist"></div>
             </div>
           </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop3.jpg?width=757&height=484&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-              <div class="prod-labels">
-                <div class="prod-label btn btn-white">New</div>
-                <div class="prod-label btn btn-red">Sale</div>
-              </div>
-              <div class="prod-info">
-                <div class="prod-name">
-                  <a href="#"> Stainless steel expanda band </a>
-                </div>
-                <div class="prod-price">$47</div>
-                <div class="colours">
-                  Available colours
-                  <div class="colourbox"></div>
-                </div>
-                <div class="prod-wishlist">
-                  <img src="/images/prod-wishlist.png" alt="Wishlist" />
-                </div>
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop4.jpg?width=757&height=484&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-              <div class="prod-labels">
-                <div class="prod-label btn btn-white">New</div>
-              </div>
-              <div class="prod-info">
-                <div class="prod-name">
-                  <a href="#"> Stainless steel expanda band </a>
-                </div>
-                <div class="prod-price">$47</div>
-                <div class="colours">
-                  Available colours
-                  <div class="colourbox"></div>
-                </div>
-                <div class="prod-wishlist">
-                  <img src="/images/prod-wishlist.png" alt="Wishlist" />
-                </div>
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop1.jpg?width=757&height=484&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-              <div class="prod-labels">
-                <div class="prod-label btn btn-white">New</div>
-                <div class="prod-label btn btn-red">Sale</div>
-              </div>
-              <div class="prod-info">
-                <div class="prod-name">
-                  <a href="#"> Stainless steel expanda band </a>
-                </div>
-                <div class="prod-price">$47</div>
-                <div class="colours">
-                  Available colours
-                  <div class="colourbox"></div>
-                </div>
-                <div class="prod-wishlist">
-                  <img src="/images/prod-wishlist.png" alt="Wishlist" />
-                </div>
-              </div>
-            </div>
-          </li>
+		{/foreach}
         </ul>
       </div>
     </div>
   </div>
 </div>
+{/if}
 
 <div id="categ-bot" class="hidden-xs">
   <div class="container">
@@ -212,6 +136,7 @@
     });
   });
 
+
   (function() {
 
     // store the slider in a local variable
@@ -222,10 +147,6 @@
       return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 2 : 4;
     }
 
-    $(function() {
-      SyntaxHighlighter.all();
-    });
-
     $window.load(function() {
       $('.flexslider').flexslider({
         animation: "slide",
@@ -234,8 +155,10 @@
         itemWidth: 210,
         itemMargin: 20,
         minItems: getGridSize(), // use function to pull in initial value
-        maxItems: getGridSize()
-      // use function to pull in initial value
+        maxItems: getGridSize(),
+		start: function(slider){
+			flexslider = slider;
+		}
       });
     });
 

@@ -8,6 +8,14 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
     $sent = 0;
     $file_name = '';
     
+    $contact_email = "";
+    if($_POST['nature_enquiry']){
+      $sql = "SELECT `reason_name`,`reason_email` FROM `tbl_reason` WHERE `reason_id`= :reason_id AND `reason_deleted` IS NULL";
+      $res = $DBobject->wrappedSql($sql, array("reason_id"=>$_POST['nature_enquiry']));
+      $nature_enquiry = $res[0]['reason_name'];
+      $contact_email = $res[0]['reason_email'];
+    }
+    
     // SAVE FILE FUNCTIONS (Accepts Image types)
     /* try{
       if(!empty($_FILES["file"]["name"])){
@@ -71,7 +79,11 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         $body = $buf;
         $subject = 'Website ' . $_POST['form_name'];
         $fromEmail = (string)$CONFIG->company->email_from;
-        $to = (string)$CONFIG->company->email_contact;
+        if($contact_email){
+          $to = $contact_email;
+        }else{
+          $to = (string)$CONFIG->company->email_contact;
+        }
         $COMP = json_encode($CONFIG->company);
         $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
         $from = (string)$CONFIG->company->name;
@@ -143,6 +155,16 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
       
       if(!empty($GA_ID)){
         sendGAEvent($GA_ID, 'Enquiry', 'Submitted', $_POST['form_name']);
+      }
+      
+      if(strtolower($_POST['form_name']) == "help"){
+        header("Location: /thank-you-for-your-enquiry");
+        die();
+      }
+      
+      if(strtolower($_POST['form_name']) == "share your story"){
+        header("Location: /thank-you-for-sharing-your-story");
+        die();
       }
       
       header("Location: /thank-you");

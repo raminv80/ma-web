@@ -40,12 +40,13 @@
 						{call name=render_list items=$menuitems['top-header']['list'] ismobile=0}
 					</ul>
 				</nav>
+
 			</div>
 			<div class="hidden-xs hidden-sm col-sm-3 text-right" id="call">
-				<a href="tel:1800 88 22 22">
+				<a href="tel:{$COMPANY.toll_free}">
 					<div class="callout">
 						Call Membership Services
-						<div class="phno">1800 88 22 22</div>
+						<div class="phno">{$COMPANY.toll_free}</div>
 					</div>
 					<img src="/images/header-phone.png" alt="Phone" />
 				</a>
@@ -63,6 +64,7 @@
 		  	<div class="hidden-md hidden-lg">
 			<nav class="collapse navbar-collapse" id="mobile-navbar">
 				<ul class="nav navbar-nav">
+                  <li class=""><a title="Call Membership Services" href="tel:{$COMPANY.toll_free}"><small>Membership Services: {$COMPANY.toll_free}</small></a></li>
 					{call name=render_list items=$menuitems['mobile-header']['list'] ismobile=0}
 				</ul>
 			</nav>
@@ -94,7 +96,7 @@
 				<div id="cart" class="dropdown">
 					<a href="/shopping-cart" class="dropdown-toggle" id="cart-hover"> <img src="/images/cart.svg" alt="Shopping Cart" class="visible-xs visible-sm" /> <img src="/images/header-basket.png" alt="Shopping Cart" class="hidden-xs hidden-sm" /> <span style="" class="nav-itemNumber">{$itemNumber}</span>
 					</a>
-					<ul class="dropdown-menu" id="shop-cart-btn">{include file='popover-shopping-cart.tpl'}
+					<ul class="dropdown-menu" id="shop-cart-btn">{include file='ec_popover-shopping-cart.tpl'}
 					</ul>
 				</div>
 				</div>

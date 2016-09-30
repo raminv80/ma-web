@@ -1,7 +1,14 @@
 {block name=body}
-
 <div id="proddet">
   <div class="container">
+    <div class="row" id="cart-notification" style="display:none;">
+      <div class="col-sm-12">
+        <div class="alert alert-info fade in text-center">
+          <button class="close" aria-hidden="true" onclick="$('#cart-notification').fadeOut()" type="button">&times;</button>
+          <strong></strong>
+        </div>
+      </div>
+    </div>
     <div class="row" id="productout">
 	  <div class="col-sm-12">
         <div id="back">
@@ -117,7 +124,7 @@
               </div>
               {if $product_type_id eq 1}
               <div class="memfee">
-              + {$CONFIG_VARS.membership_fee} membership fee (new members only). <a href="#" class="price">Learn more ></a>
+              + {$CONFIG_VARS.membership_fee} membership fee (new members only). <a href="/cost" title="Learn more" class="price">Learn more ></a>
               </div>
               {/if}
             </div>
@@ -224,7 +231,7 @@
           <div class="form-group">
 	          <div class="col-sm-12" id="bottombox">
 		          <h5>When you purchase your first medical ID you are also becoming a MedicAlert member</h5>
-				  <p>From the moment you join, and each year you renew your membership, you’ll get access to a range of valuable benefits that could help save your life. <a href="#">Learn more ></a></p>
+				  <p>From the moment you join, and each year you renew your membership, you’ll get access to a range of valuable benefits that could help save your life. <a href="/benefits-of-membership" title="Learn more">Learn more ></a></p>
 	          </div>
           </div>
           {/if}
@@ -416,11 +423,6 @@ $(window).load(function() {
     function getGridSize() {
       return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 4 : 6;
     }
-
-   /*  $(function() {
-      SyntaxHighlighter.all();
-    }); */
-
 
     $window.load(function() {
       $('#popslide').flexslider({

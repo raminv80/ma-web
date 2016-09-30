@@ -707,34 +707,46 @@ class cart {
     $res = $DBobject->wrappedSql($sql, $params);
     $productName = $res[0]['product_name'];
     
-    $sqlAttrArr = array();
-    $sqlAttrStr = '';
-    $cnt = 0;
-    // expected array to get "array(array('attribute_id' => 'attr_value_id'))"
-    foreach($attributesArray as $attrId => $valId){ 
-      $sqlAttrArr[] = "( productattr_attribute_id = :attr{$cnt} AND productattr_attr_value_id = :val{$cnt} )"; 
-      $params[":attr{$cnt}"] = $attrId;
-      $params[":val{$cnt}"] = $valId['id'];
-      $cnt++;
-    }
-    if(empty($sqlAttrArr)){
-      $sqlAttrStr = 'AND variant_id = :variant_id';
-      $params[":variant_id"] = $variant_id;
-      $cnt++;
-    }else{
-      $sqlAttrStr = 'AND (' . implode(' OR ', $sqlAttrArr) . ' )';
-    }
+    $params[":variant_id"] = $variant_id;
     
     // --------------- GET BASE PRODUCT INFO --------------------
-    $sql = "SELECT COUNT(product_id) AS CNT, tbl_product.*, tbl_variant.* FROM tbl_product LEFT JOIN tbl_variant ON variant_product_id = product_id LEFT JOIN tbl_productattr ON productattr_variant_id = variant_id 
-        WHERE product_object_id = :oid AND product_deleted IS NULL AND product_published = 1 AND variant_deleted IS NULL AND variant_published = 1 AND productattr_deleted IS NULL {$sqlAttrStr} GROUP BY product_object_id, variant_id";
-    $res = $DBobject->wrappedSql($sql, $params);
-    if(!empty($res) && $cnt == $res[0]['CNT']){
+    $sql = "SELECT tbl_product.*, tbl_variant.* FROM tbl_product LEFT JOIN tbl_variant ON variant_product_id = product_id  
+        WHERE product_deleted IS NULL AND product_published = 1 AND variant_deleted IS NULL AND product_object_id = :oid AND variant_id = :variant_id GROUP BY product_object_id, variant_id";
+    if($res = $DBobject->wrappedSql($sql, $params)){
       $prod = $res[0];
+      
+      //Check variant and attributes
+      $totalAttr = count($attributesArray);
+      $attrCnt = 0;
+      //expected array to get "array(array('attribute_id' => 'attr_value_id'))"
+      foreach($attributesArray as $attrId => $valId){
+        $params2 = array(
+            ':variant_id' => $variant_id,
+            ':attr' => $attrId,
+            ':val' => $valId['id']
+        );
+        $sql = "SELECT productattr_id FROM tbl_productattr WHERE productattr_deleted IS NULL AND productattr_variant_id = :variant_id AND productattr_attribute_id = :attr AND productattr_attr_value_id = :val";
+        if($DBobject->wrappedSql($sql, $params2)){
+          $attrCnt++;
+        }
+      }
+      
+      if($attrCnt != $attrCnt){
+        throw new exceptionCart("<b>{$productName}</b> cannot be found.");
+        return false;
+      }
+      
+      
+      if(empty($prod['variant_published'])){
+        throw new exceptionCart("<b>{$productName}</b> is no longer available.");
+        return false;
+      }
+      
       if(empty($prod['variant_instock'])){
         throw new exceptionCart("<b>{$productName}</b> is out of stock.");
         return false;
       }
+      
       //Set initial product price
       if($prod['variant_editableprice'] == 1){
         $productPrice = ($frontEndPrice > 1000) ? 1000 : round($frontEndPrice, 0);
@@ -791,7 +803,7 @@ class cart {
       $this->dbProducts[$product_id] = $prod;
       return $prod;
     }
-    throw new exceptionCart("<b>{$productName}</b> is not longer available.");
+    throw new exceptionCart("<b>{$productName}</b> is no longer available.");
   }
 
   /**

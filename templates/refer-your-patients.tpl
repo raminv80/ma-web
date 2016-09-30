@@ -39,9 +39,9 @@
   <div class="container">
  	 <div class="row">
 		<div class="col-md-offset-1 col-md-10 text-center" id="sharestory">
-    	 	<form id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us" novalidate="novalidate">
+    	 	<form id="contact_form" accept-charset="UTF-8" method="post" action="/process/resource-contact" novalidate="novalidate">
         	    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-        	  	<input type="hidden" value="Order resource pack" name="form_name" id="form_name" />
+        	  	<input type="hidden" value="Refer your patient" name="form_name" id="form_name" />
     			<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
     	  		<div class="row">
     				<div class="col-sm-6 form-group">
@@ -138,7 +138,7 @@
     			</div>
     			<div class="row">
     				<div class="col-sm-12 form-group text-left">
-						<input type="checkbox" value="Yes" {if !$post || $post.resource_pack}checked="checked"{/if}name="resource_pack" id="resourcepack" />
+						<input type="checkbox" {if !$post || $post.resource_pack}checked="checked"{/if}name="resource_pack" id="resourcepack" />
 						<label class="visible-ie-only" for="resourcepack">I need a resource pack</label>
 						<div class="error-msg help-block"></div>
 						<!-- <div>(Resource pack contains 1 x A3 poster, a supply of Membership catalogues, Code of Conduct booklet and a sample membership card)</div> -->

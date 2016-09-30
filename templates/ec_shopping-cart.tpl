@@ -170,7 +170,7 @@
 	                  <input class="form-control" type="text" placeholder="ENTER CODE" id="promo" value="{if $post}{$post.discount_code}{else}{$cart.cart_discount_code}{/if}" name="discount_code" required/>
 	                  <div class="error-msg help-block"></div>
                       <div>
-	                    {if $error}<span class="invalid">{$error}</span>{else}<small><b>{$cart.cart_discount_description}</b></small>{/if}
+	                    {if $error}<span class="invalid">{$error}</span>{else}<small><b></b></small>{/if}
 	                  </div>
 	                </div>
 	                <div class="col-xs-12">
@@ -206,7 +206,7 @@
 
 	            <div class="row tallrow">
 	              <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">GST inc. in total<br /><span class="subj">(*Subject to GST)</span></div>
-	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr" id="GST_Taxable">${$totals.GST_Taxable|number_format:2:".":","}</div>
+	              <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr" id="GST_Taxable">(${$totals.GST_Taxable|number_format:2:".":","})</div>
 	            </div>
 
 	            <div class="row tots tallrow"><!-- The following SUBTOTAL value was intentionally changed to TOTAL  -->
@@ -250,7 +250,7 @@
             <button class="btn btn-red process-cnt" type="button" onclick="$('#checkout1-form').submit();">Continue</button>
           </div>
           <div class="col-sm-6 col-md-3 col-sm-offset-6 col-md-offset-9 text-center" id="belowbtn">
-            Please note that the MedicAlert membership fee of {$CONFIG_VARS.membership_fee} will be added to your cart if you are joining or you renewal is due.<br />See the <a href="#">benefits of membership</a>.
+            Please note that the MedicAlert membership fee of {$CONFIG_VARS.membership_fee} will be added to your cart if you are joining or you renewal is due.<br />See the <a href="/benefits-of-membership">benefits of membership</a>.
           </div>
         </div>
         <br />

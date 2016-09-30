@@ -714,7 +714,7 @@ body, td {
                                               {if $payment.payment_discount gt 0}
                                               <tr>
                                                 <td class="w30" width="30"></td>
-                                                <td style="font-size: 16px; font-weight: bold; text-align: right;" width="410" class="w410">Discount&nbsp;&nbsp;</td>
+                                                <td style="font-size: 12px; text-align: right;" width="410" class="w410"><div style="font-size: 16px; font-weight: bold;">Discount&nbsp;&nbsp;</div> {if $discount.discount_name}({$discount.discount_name}: {$discount.discount_code})&nbsp;&nbsp;{/if}</td>
                                                 <td style="font-size: 16px; text-align: right;" width="170" class="w170">&nbsp;-${$payment.payment_discount|number_format:2:".":","}</td>
                                                 <td class="w30" width="30"></td>
                                               </tr>

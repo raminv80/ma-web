@@ -146,6 +146,15 @@
     <url>help</url>
     <template>help.tpl</template>
     <pageID>108</pageID>
+    <options> 
+      <field> 
+        <name>reasons</name>
+        <table>tbl_reason</table>
+        <id>reason_id</id>
+        <reference>reason_name</reference>
+        <orderby>reason_order, reason_name</orderby> 
+      </field>  
+    </options>
   </static_page>
   <static_page>
     <url>emergency-personnel</url>
@@ -169,7 +178,7 @@
   </static_page>
   <static_page>
     <url>thank-you-for-purchasing</url>
-    <template>checkout-complete.tpl</template>
+    <template>ec_checkout-complete.tpl</template>
     <pageID>7</pageID>
   </static_page>
   <static_page>
@@ -272,7 +281,7 @@
   </static_page>
   <static_page>
     <url>shopping-cart</url>
-    <template>shopping-cart.tpl</template>
+    <template>ec_shopping-cart.tpl</template>
     <pageID>12</pageID>
     <process>
       <file>includes/processes/process-load-shopping-cart.php</file>
@@ -283,7 +292,7 @@
   </static_page>
   <static_page>
     <url>checkout</url>
-    <template>checkout.tpl</template>
+    <template>ec_checkout.tpl</template>
     <pageID>13</pageID>
     <options> 
       <field> 
@@ -489,6 +498,11 @@
   <process>
     <url>process/contact-us</url>
     <file>includes/processes/processes-contactus.php</file>
+    <return_url></return_url>
+  </process>
+  <process>
+    <url>process/resource-contact</url>
+    <file>includes/processes/processes-resource-pack.php</file>
     <return_url></return_url>
   </process>
   <process>

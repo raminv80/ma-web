@@ -66,7 +66,7 @@
 						<a role="button" data-toggle="collapse" data-parent="#accordion2" href="#narrow" aria-expanded="true" aria-controls="narrow">
 							<i class="more-less glyphicon glyphicon-plus"></i>
 							<div class="head-text">
-								<div class="head-title"><span class="visible-xs visible-sm">Filter {count($products)} product{if count($products) gt 1}s{/if}</span><span class="hidden-xs hidden-sm">Narrow your results</span></div>
+								<div class="head-title"><span id="prodcnt-mob" class="visible-xs visible-sm">Filter {count($products)} product{if count($products) gt 1}s{/if}</span><span class="hidden-xs hidden-sm">Narrow your results</span></div>
 							</div>
 						</a>
 					</h4>
@@ -90,7 +90,7 @@
 						        {foreach $ptypes as $k => $v}
 						          {if $v.cnt gt 0} {/if}
 						          <div class="">
-						            <input type="checkbox" id="ptype{$k}" name="ptype[]" value="{$k}"> <label for="ptype{$k}">{$v.name}</label> ({$v.cnt} item{if $v.cnt gt 1}s{/if})
+						            <input type="checkbox" id="ptype{$k}" name="ptype[]" class="iso-filter" value="type-{$k}"> <label for="ptype{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
 						          </div>
 						        {/foreach}
 							</div>
@@ -112,7 +112,7 @@
                     {foreach $pmaterials as $k => $v}
                       {if $v.cnt gt 0} {/if}
                       <div class="">
-                        <input type="checkbox" id="pmaterial{$k}" name="pmaterial[]" value="{$k}"> <label for="material{$k}">{$v.name}</label> ({$v.cnt} item{if $v.cnt gt 1}s{/if})
+                        <input type="checkbox" id="pmaterial{$k}" name="pmaterial[]" class="iso-filter" value="material-{$k}"> <label for="pmaterial{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
                       </div>
                     {/foreach}
               </div>
@@ -134,7 +134,7 @@
                     {foreach $attributes.2.values as $k => $v}
                       {if $v.cnt gt 0} {/if}
                       <div class="">
-                        <input type="checkbox" id="colour{$k}" name="colour[]" value="{$k}"> <label for="colour{$k}">{$v.name}</label> ({$v.cnt} item{if $v.cnt gt 1}s{/if})
+                        <input type="checkbox" id="colour{$k}" name="colour[]" class="iso-filter" value="attrval-{$k}"> <label for="colour{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
                       </div>
                     {/foreach}
               </div>
@@ -156,12 +156,12 @@
                     {foreach $prices as $k => $v}
                       {if $v.cnt gt 0} {/if}
                       <div class="">
-                        <input type="checkbox" id="price{$k}" name="price[]" value="{$v.value}"> <label for="price{$k}">{$v.name}</label> ({$v.cnt} item{if $v.cnt gt 1}s{/if})
+                        <input type="checkbox" id="price{$k}" name="price[]" class="iso-filter" value="range-{$v.value}"> <label for="price{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
                       </div>
                     {/foreach}
               </div>
             </div>
-            
+
 					</div>
 				</div>
 		</div>
@@ -195,7 +195,7 @@
 		        <select id="sort">
 			        <option value="">Please select</option>
 			        <option value="price-low-high">Price (low to high)</option>
-			        <option value="price-high-low">Price (hight to low)</option>
+			        <option value="price-high-low">Price (high to low)</option>
 		        </select>
 	        </div>
         </div>
@@ -213,7 +213,7 @@
   </div>
 </div>
 
-
+{if $recent_products}
 <div id="recent">
   <div class="container">
     <div class="row">
@@ -221,64 +221,23 @@
         <h2>Recently viewed items</h2>
       </div>
     </div>
-
     <div class="row">
       <div id="popslide" class="flexslider">
         <ul class="slides">
+          {foreach $recent_products as $item}
           <li>
             <div class="prod">
-              <a href="#"> <img src="/images/pop1.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
+              <a href="/{$item.product_url}" title="{$item.product_name}"> <img src="{if $item.general_details.image}{$item.general_details.image}{else}/images/no-image-available.png{/if}?width=568&height=363&crop=1" alt="{$item.product_name}" class="img-responsive" />
               </a>
             </div>
           </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop2.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop3.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop4.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop1.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop1.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop2.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
+          {/foreach}
         </ul>
       </div>
     </div>
   </div>
 </div>
-
+{/if}
 <div id="categ-bot" class="hidden-xs">
   <div class="container">
     <div class="row">
@@ -305,6 +264,8 @@
 <script src="/includes/js/jquery-ui.js"></script>
 <script src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
+<script src="/includes/js/isotope.pkgd.min.js"></script>
+
 <script type="text/javascript">
 	function toggleIcon(e) {
         $(e.target)
@@ -316,10 +277,26 @@
     $('.panel-collapse').on('shown.bs.collapse', toggleIcon);
 
   $(document).ready(function() {
-    $("#showall").click(function() {
+    
+    
+   /*  $("#showall").click(function() {
       $(this).hide();
       $("#product-list #categorycontainer .prodcatout").css("display", "block !important");
-    });
+    }); */
+
+  $("#products-wrapper").isotope({
+	  itemSelector: '.prodout',
+	  layoutMode: 'fitRows',
+	  getSortData: {
+		  price: function( itemElem ) { // function
+			var pr = ($( itemElem ).find('.prod-price').text().replace (/,/g, "").match(/\d+\.\d+|\d+\b|\d+(?=\w)/g) || [] );
+			pr1= pr.map(function (v) { return +v; } ).shift();
+			return pr1;
+		}
+	  }
+   });
+
+    refreshFiltersCount();
 
     $("select").selectBoxIt();
 
@@ -328,8 +305,62 @@
 		    $(this).collapse("toggle");
 		});
 	}
+    
+    $('.iso-filter').click(function(){
+      filterOptions();
+    });
   });
 
+  function filterOptions(){
+    var classesStr = '';
+    //Check all values
+    $('.iso-filter:checked').each(function(){
+      classesStr += '.' + $(this).val();
+    });
+    
+    var $grid = $("#products-wrapper").isotope({
+   	  itemSelector: '.prodout',
+   	  layoutMode: 'fitRows',
+   	  filter: (classesStr ? classesStr: '.show-all')
+    });
+    
+    
+    $grid.on( 'arrangeComplete', function( event, filteredItems ) {
+      //Update product count
+      $('#prodcnt').html('<span>' + filteredItems.length + '</span> product' + (filteredItems.length > 1 ? 's' : ''));
+      $('#prodcnt-mob').html('Filter ' + filteredItems.length + ' product' + (filteredItems.length > 1 ? 's' : ''));
+      
+      refreshFiltersCount();
+    });
+    
+  }
+  function refreshFiltersCount(){
+    $('.iso-filter').each(function(){
+      var cnt = $('.prodout.' + $(this).val() + ':visible').length;
+      if( cnt > 0){
+        $(this).removeAttr('disabled');
+      }else{
+        $(this).attr('disabled', 'disabled');
+      }
+      $(this).parent().find('.cnt-value').html(cnt + ' item' + (cnt > 1 ? 's' : ''));
+    });
+  }
+  
+  //REFRESH ISOTOPE WHEN SCROLLING UP/DOWN
+  var minLastView = $(document).height();
+  var maxLastView = 0;
+  $(window).scroll(function() {
+    var curHeight = $(window).scrollTop() + $(window).height();
+    if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 500){
+      minLastView = curHeight;
+      $("#products-wrapper").isotope('reloadItems' ).isotope();
+    }
+    if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 500){
+      maxLastView = curHeight;
+      $("#products-wrapper").isotope('reloadItems' ).isotope();
+    }
+ });
+  
   (function() {
 
     // store the slider in a local variable
@@ -340,9 +371,15 @@
       return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 4 : 6;
     }
 
-    $(function() {
-      SyntaxHighlighter.all();
-    });
+    $("#sort").change(function(){
+	    var str=$("#sort option:selected" ).val();
+	    if(str == 'price-low-high'){
+		    $("#products-wrapper").isotope({ sortBy: "price",sortAscending: true } );
+		}
+		else{
+		    $("#products-wrapper").isotope({ sortBy: "price",  sortAscending: false } );
+		}
+	});
 
 
     $window.load(function() {

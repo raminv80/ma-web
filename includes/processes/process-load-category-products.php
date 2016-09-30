@@ -15,7 +15,7 @@ try{
 
   //LOAD PRODUCT TYPES
   $ptypes = array();
-  $sql = "SELECT ptype_id, ptype_name FROM tbl_ptype WHERE ptype_deleted IS NULL";
+  $sql = "SELECT ptype_id, ptype_name FROM tbl_ptype WHERE ptype_deleted IS NULL ORDER BY ptype_order, ptype_name";
   if($res = $DBobject->wrappedSql($sql, $paramsType)){
     foreach($res as $r){
       $ptypes[$r['ptype_id']]['name'] = $r['ptype_name'];
@@ -27,7 +27,7 @@ try{
   
   //LOAD PRODUCT MATERIALS
   $pmaterials = array();
-  $sql = "SELECT pmaterial_id, pmaterial_name FROM tbl_pmaterial WHERE pmaterial_deleted IS NULL";
+  $sql = "SELECT pmaterial_id, pmaterial_name FROM tbl_pmaterial WHERE pmaterial_deleted IS NULL ORDER BY pmaterial_order, pmaterial_name";
   if($res = $DBobject->wrappedSql($sql, $paramsType)){
     foreach($res as $r){
       $pmaterials[$r['pmaterial_id']]['name'] = $r['pmaterial_name'];
@@ -41,7 +41,7 @@ try{
   $attributes = array();
   $sql = "SELECT attribute_id, attribute_name, attr_value_id, attr_value_name FROM tbl_attribute
       LEFT JOIN tbl_attr_value ON attr_value_attribute_id = attribute_id
-      WHERE attribute_deleted IS NULL AND attribute_type = 1 AND attr_value_deleted IS NULL";
+      WHERE attribute_deleted IS NULL AND attribute_type = 1 AND attr_value_deleted IS NULL AND attr_value_flag1 = 1 ORDER BY attr_value_order, attr_value_name";
   if($res = $DBobject->wrappedSql($sql, $paramsType)){
     foreach($res as $r){
       $attributes[$r['attribute_id']]['name'] = $r['attribute_name'];
@@ -53,12 +53,12 @@ try{
   
   //LOAD PRICE FILTERS
   $prices = array(
-      array('name' => 'Sale items only', 'cnt' => 0, 'value' => 'sale'),
-      array('name' => '$0 - $50', 'cnt' => 0, 'value' => '0-50'),
-      array('name' => '$51 - $100', 'cnt' => 0, 'value' => '51-100'),
-      array('name' => '$101 - $200', 'cnt' => 0, 'value' => '101-200'),
-      array('name' => '$201 - $400', 'cnt' => 0, 'value' => '201-400'),
-      array('name' => '$401 plus', 'cnt' => 0, 'value' => '401-99999')
+      array('name' => 'Sale items only', 'cnt' => 0, 'value' => 'sale', 'min' => 0, 'max' => 0),
+      array('name' => '$0 - $50', 'cnt' => 0, 'value' => '0-50', 'min' => 0, 'max' => 50),
+      array('name' => '$51 - $100', 'cnt' => 0, 'value' => '51-100', 'min' => 51, 'max' => 100),
+      array('name' => '$101 - $200', 'cnt' => 0, 'value' => '101-200', 'min' => 101, 'max' => 200),
+      array('name' => '$201 - $400', 'cnt' => 0, 'value' => '201-400', 'min' => 201, 'max' => 400),
+      array('name' => '$401 plus', 'cnt' => 0, 'value' => '401-99999', 'min' => 401, 'max' => 99999)
   );
   $SMARTY->assign('prices', $prices);
 
@@ -69,17 +69,27 @@ try{
   
   //LOAD PRODUCTS
   $prodObj = new ProductClass('', $CONFIG->product_page);
-  $sql = "SELECT product_object_id, product_name, product_url, product_brand, product_meta_description FROM tbl_product LEFT JOIN tbl_productcat ON productcat_product_id = product_id
+  $sql = "SELECT product_object_id, product_name, product_url, product_brand, product_meta_description, product_associate1 FROM tbl_product LEFT JOIN tbl_productcat ON productcat_product_id = product_id
   WHERE product_deleted IS NULL AND productcat_deleted IS NULL AND product_published = 1 AND productcat_listing_id = :id {$whereSQL} ORDER BY product_order, product_name";
   $params = array_merge(array('id' => $SMARTY->getTemplateVars('listing_object_id')), $baseParams);
   if($products = $DBobject->wrappedSql($sql, $params)){
     foreach($products as &$p){
       
       $p['general_details'] = $prodObj->GetProductGeneralDetails($p['product_object_id']);
+      
+      //Set price range
+      foreach($prices as $pr){
+        if($p['general_details']['price']['min'] >= $pr['min'] && $p['general_details']['price']['min'] <= $pr['max']){
+          $p['price_range'] = $pr['value'];
+          break;
+        }
+      }
     }
   }
   $SMARTY->assign('products', $products);
   
+  $recentProducts = $prodObj->GetRecentViewProduct();
+  $SMARTY->assign('recent_products', (count($recentProducts) > 4) ? $recentProducts : '');
   
 }catch(exceptionCart $e) {
   $SMARTY->assign('error', $e->getMessage());

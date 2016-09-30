@@ -15,7 +15,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $SMARTY->assign('productsOnCart', $productsOnCart);
         $SMARTY->assign('itemNumber', $itemsCount);
         $SMARTY->assign('subtotal', $subtotal);
-        $popoverShopCart = $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+        $popoverShopCart = $SMARTY->fetch('templates/ec_popover-shopping-cart.tpl');
         
       }catch(exceptionCart $e){
         $error = $e->getMessage();
@@ -47,7 +47,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $SMARTY->assign('itemNumber', $itemsCount);
       $SMARTY->assign('subtotal', $totals['subtotal']);
       $SMARTY->assign('cart', $cart);
-      $popoverShopCart = $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+      $popoverShopCart = $SMARTY->fetch('templates/ec_popover-shopping-cart.tpl');
       sendGAEnEcAction($GA_ID, 'remove', $productGA);
       echo json_encode(array(
           'product' => $productGA, 
@@ -77,7 +77,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $SMARTY->assign('itemNumber', $itemsCount);
       $SMARTY->assign('subtotal', $totals['subtotal']);
       $SMARTY->assign('cart', $cart);
-      $popoverShopCart = $SMARTY->fetch('templates/popover-shopping-cart.tpl');
+      $popoverShopCart = $SMARTY->fetch('templates/ec_popover-shopping-cart.tpl');
       echo json_encode(array(
           'itemsCount' => $itemsCount, 
           'subtotals' => $subtotals, 
@@ -421,6 +421,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $SMARTY->assign('shipping', $shipping);
             $order = $cart_obj->GetDataCart($order_cartId);
             $SMARTY->assign('order', $order);
+            $discount = $cart_obj->GetDiscountData($order['cart_discount_code']);
+            $SMARTY->assign('discount', $discount);
             $payment = $pay_obj->GetPaymentRecord($paymentId);
             $SMARTY->assign('payment', $payment);
             $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
@@ -555,14 +557,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         if(!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['rname']) && !empty($_POST['remail'])){
           $missingFields = false;
           $isGiftCertificate = true;
-          $thankyouPage = '/thank-you-for-purchasing';
+          $thankyouPage = '/thank-you-for-purchasing-a-gift-certificate';
         }
       
       }elseif($_POST['product_id'] == 217){ //Donation
         if(!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['lastname']) && !empty($_POST['postcode'])){
           $missingFields = false;
           $hasDonation = true;
-          $thankyouPage = '/thank-you-for-purchasing';
+          $thankyouPage = '/thank-you-for-your-donation';
         }
       }else{
         $thankyouPage = '/thank-you-for-purchasing';
