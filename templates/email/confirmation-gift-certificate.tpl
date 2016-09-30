@@ -156,20 +156,9 @@ a{color:#ed174f;text-decoration: none;}
 		        <tbody>
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 	            <td class="w580" width="580" style="table-layout: fixed;">
-					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Hi {$name}</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">It's our pleasure to let you know that {if $sender_name}{$sender_name}{else}a secret friend{/if} has sent you a MedicAlert gift certificate, valued at ${$amount}!</p>
-                    <p style="font-weight: bold;font-size: 14px; line-height: 26px;">Your gift certificate code is: <span style="font-size: 18px;">{$code}</span></p>
-			       <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To redeem your gift certificate online, follow the steps below:</p> 
-                    <ul>
-                      <li>Visit <a href="{$DOMAIN}">{$DOMAIN}</a></li>
-                      <li>Browse our wide range of products and make your selection.</li>
-                      <li>Enter your gift certificate (shown above) in the discount code and select 'apply' on the checkout page.</li>
-                      <li>Continue to process your payment.</li>
-                    </ul>		
-                    <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Gift certificate can be redeemed either over the phone or at our online shop. You can use it to renew your annual MedicAlert membership, update your current medical ID to one of our latest pieces of jewellery, or purchase an additional piece of jewellery from our extensive range.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To redeem your gift certificate over the phone, call our Membership Services team on <a style="color: #ed3361; text-decoration: none;" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a> between 8.30am-5.30pm ACST Monday - Friday.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">If you have any questions about your gift certificate or redemption, please do not hesitate to get in touch.</p>
-					
+					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Hi {$sender_name}</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px; font-weight: bold;">Thank you once again for your recent MedicAlert gift certificate purchase. Your gift certificate has now been delivered to {$recipient_name} - {$recipient_email}.</p>
+                    <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">If you have any questions about your gift certificate purchase in the meantime, please contact our Membership Services team on {$COMPANY.toll_free} between 8.3am - 5.30pm ACST Monday - Friday.</p>
 	            </td>
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 		        </tbody>

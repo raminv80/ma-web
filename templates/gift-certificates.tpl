@@ -31,7 +31,7 @@
             <div class="col-sm-6 col-md-3">
               <div class="giftoption">
                 <label for="variant-{$v.variant_id}">
-                  <input type="radio" class="all-options{if $v.variant_editableprice eq 1} show-otherval{/if}" data-value="{$price|number_format:0:'.':','}" value="{$v.variant_id}" name="variant_id" id="variant-{$v.variant_id}">
+                  <input type="radio" {if $post.variant_id eq $v.variant_id}checked="checked"{/if} class="all-options{if $v.variant_editableprice eq 1} show-otherval{/if}" data-value="{$price|number_format:0:'.':','}" value="{$v.variant_id}" name="variant_id" id="variant-{$v.variant_id}">
                   <div class="giftopin">
                     <div class="giftopimg">
                       <img src="/{$defaultImgArr.$k}" class="img-responsive" alt="{$v.variant_uid}" title="{$v.variant_uid}" />
@@ -227,7 +227,7 @@
                   </div>
                 </div>
               <div style="height: 0; overflow: hidden;">
-                <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1">
+                <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1" autocomplete="off" >
               </div>
               <div class="row error-msg" id="form-error" {if !$error}style="display: none"{/if}>{$error}</div>
               <div class="row">

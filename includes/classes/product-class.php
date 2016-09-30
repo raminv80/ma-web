@@ -211,8 +211,9 @@ class ProductClass extends ListClass {
       }
       
       //Get hero image
+      // Removed - AND (gallery_variant_id IS NULL OR gallery_variant_id = 0) to display image
       $sql = "SELECT gallery_link FROM tbl_gallery LEFT JOIN tbl_product ON product_id = gallery_product_id
-          WHERE gallery_deleted IS NULL AND (gallery_variant_id IS NULL OR gallery_variant_id = 0) AND product_deleted IS NULL AND product_published = 1 AND product_object_id = :id ORDER BY gallery_order LIMIT 1";
+          WHERE gallery_deleted IS NULL AND product_deleted IS NULL AND product_published = 1 AND product_object_id = :id ORDER BY gallery_variant_id ASC LIMIT 1";
       if($res2 = $DBobject->wrappedSql($sql, $params)){
         $result['image'] = $res2[0]['gallery_link'];
       }

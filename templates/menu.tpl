@@ -79,11 +79,17 @@
 			</div>
 			<div class="col-xs-12 col-sm-12 visible-xs visible-sm" id="mobsearch">
 				<div id="mobin">
-					<input type="text" id="search" placeholder="I'm looking for..." /><input type="image" src="/images/mob-header-search.png" alt="Search" />
+					<form id="searchbox" name="searchbox" action="/search" method="get">
+						<input type="text" id="search" name="q" placeholder="I'm looking for..." /><input type="image" src="/images/mob-header-search.png" alt="Search" />
+					</form>
 				</div>
 			</div>
 			<div class="col-sm-2 hidden-xs hidden-sm" id="headactions">
-				<a href="#" id="wishlist"><img src="/images/header-wishlist.png" alt="Wishlist" /></a>
+				<div id="sb-search" class="sb-search">
+						<span class="sb-icon-search"><img src="/images/header-search.png" alt="Search" /></span>
+						<span class="sb-icon-close"><img src="/images/close.png" alt="Close" /></span>
+				</div>
+
 				<div id="cartout">
 				<div id="cart" class="dropdown">
 					<a href="/shopping-cart" class="dropdown-toggle" id="cart-hover"> <img src="/images/cart.svg" alt="Shopping Cart" class="visible-xs visible-sm" /> <img src="/images/header-basket.png" alt="Shopping Cart" class="hidden-xs hidden-sm" /> <span style="" class="nav-itemNumber">{$itemNumber}</span>
@@ -92,7 +98,7 @@
 					</ul>
 				</div>
 				</div>
-				<a href="#" id="wishlist"><img src="/images/header-search.png" alt="Search" /></a>
+				<a href="#" id="wishlist"><img src="/images/header-wishlist.png" alt="Wishlist" /></a>
 			</div>
 		</div>
 	</div>

@@ -277,11 +277,19 @@ body, td {
                       </tr>
                       <tr>
                         <td class="w640" width="640" style="font-family: Arial, sans-serif; font-size: 14px; line-height: 24px; text-align: left;">
-                          {if $message}
-                            {$message}
-                          {else}
-                          <p>Your MedicAlert product order has been placed and will be processed by our Membership Services team. Please allow 20 working days to receive your order (if no adjustments required).Below is a summary of your order. Please retain this as proof of purchase.</p>
-                            {$additional_message}
+                          {if $hasMAFProd}
+                            <p>Your MedicAlert product order has been placed and will be processed by our Membership Services team. Please allow 20 working days to receive your order (if no adjustments required).Below is a summary of your order. Please retain this as proof of purchase.</p>
+                              {$additional_message}
+                          {/if}
+                          {if $hasDonation}
+                            <p>Thank you for your recent donation to MedicAlert Foundation. Your generous support will assist us in maintaining vital training programs for healthcare professionals, ensuring they are aware that they should always check for MedicAlert identification jewellery in an emergency. This will allow them to provide the most accurate diagnosis and best possible treatment when seconds count.</p>
+                          {/if}
+                          {if $isGiftCertificate}
+                            <p>Thank you for your recent MedicAlert gift certificate purchase.</p>
+                            <p>Your generous gift will help ensure {$recipient_name} stays protected with an active MedicAlert membership, or with one of our internationally recognised MedicAlert medical IDs.</p>
+                            <p>Your gift certificate has been scheduled for delivery to {$recipient_email}{if $send_date} at 9:00am (CST) on {$send_date|date_format:"%d/%m/%Y"}{/if}.</p>
+                            <p>We will send you a delivery confirmation email {if $send_date}on the day of delivery to verify this has been sent.{else}in the next few minutes.{/if}</p>
+                            <p>If you have any questions about your gift certificate purchase in the meantime, please contact our Membership Services team on {$COMPANY.toll_free} between 8.3am - 5.30pm ACST Monday - Friday.</p>
                           {/if}
                         </td>
                       </tr>
@@ -711,12 +719,14 @@ body, td {
                                                 <td class="w30" width="30"></td>
                                               </tr>
                                               {/if}
+                                              {if $payment.payment_shipping_fee gt 0}
                                               <tr>
                                                 <td class="w30" width="30"></td>
-                                                <td style="font-size: 16px; font-weight: bold; text-align: right;" width="410" class="w410">Postage&nbsp;&nbsp;</td>
-                                                <td style="font-size: 16px; text-align: right;" width="170" class="w170">&nbsp;{if $payment.payment_shipping_fee eq '0.00'}FREE{else}$ {$payment.payment_shipping_fee|number_format:2:".":","}{/if}</td>
+                                                <td style="font-size: 16px; font-weight: bold; text-align: right;" width="410" class="w410">Postage &amp; handling</td>
+                                                <td style="font-size: 16px; text-align: right;" width="170" class="w170">&nbsp;$ {$payment.payment_shipping_fee|number_format:2:".":","}</td>
                                                 <td class="w30" width="30"></td>
                                               </tr>
+                                              {/if}
                                               <tr>
                                                 <td class="w30" width="30"></td>
                                                 <td style="font-size: 12px; text-align: right;" width="410" class="w410"><div style="font-size: 16px; font-weight: bold;">GST inc. in total&nbsp;&nbsp;</div> (Subject to GST)*&nbsp;&nbsp;</td>
@@ -812,7 +822,7 @@ body, td {
                                               <tr>
                                                 <td class="w30" width="30"></td>
                                                 <td style="font-size: 16px; font-weight: bold;" width="300" class="w300">Amount:</td>
-                                                <td align="right" style="font-size: 16px;" width="280" class="w280">{$payment.payment_charged_amount|number_format:2:".":","}</td>
+                                                <td align="right" style="font-size: 16px;" width="280" class="w280">${$payment.payment_charged_amount|number_format:2:".":","}</td>
                                                 <td class="w30" width="30"></td>
                                               </tr>
                                             </table>

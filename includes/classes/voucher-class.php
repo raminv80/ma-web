@@ -25,17 +25,20 @@ class Voucher{
   function CreateVoucher($_data){
     $params = array(
         ":voucher_payment_id" => $_data['payment_id'],
+        ":voucher_code" => $_data['code'],
         ":voucher_name" => $_data['name'],
         ":voucher_email" => $_data['email'],
         ":voucher_recipientname" => $_data['recipientname'],
         ":voucher_recipientemail" => $_data['recipientemail'],
         ":voucher_amount" => $_data['amount'],
-        ":voucher_sent_date" => $_data['sent_date'],
-        ":voucher_email_id" => $_data['email_id']
+        ":voucher_start_date" => $_data['start_date'],
+        ":voucher_end_date" => $_data['end_date'],
+        ":voucher_code_email_id" => (empty($_data['code_email_id']) ? 0 : $_data['code_email_id']),
+        ":voucher_confirmation_email_id" => (empty($_data['confirmation_email_id']) ? 0 : $_data['confirmation_email_id'])
     );
   
-    $sql = "INSERT INTO tbl_voucher (voucher_payment_id, voucher_name, voucher_email, voucher_recipientname, voucher_recipientemail, voucher_amount, voucher_sent_date, voucher_email_id, voucher_created)
-			values (:voucher_payment_id, :voucher_name, :voucher_email, :voucher_recipientname, :voucher_recipientemail, :voucher_amount, :voucher_sent_date, :voucher_email_id, NOW())";
+    $sql = "INSERT INTO tbl_voucher (voucher_payment_id, voucher_code, voucher_name, voucher_email, voucher_recipientname, voucher_recipientemail, voucher_amount, voucher_start_date, voucher_end_date, voucher_code_email_id, voucher_confirmation_email_id, voucher_created)
+			values (:voucher_payment_id, :voucher_code, :voucher_name, :voucher_email, :voucher_recipientname, :voucher_recipientemail, :voucher_amount, :voucher_start_date, :voucher_end_date, :voucher_code_email_id, :voucher_confirmation_email_id, NOW())";
     if($this->DBobj->wrappedSql($sql, $params)){
       $this->voucherId = $this->DBobj->wrappedSqlIdentity();
       return $this->voucherId;
@@ -55,7 +58,7 @@ class Voucher{
       $this->voucherId = $_id;
     }
     if(empty($this->voucherRecord)){
-      $sql = "SELECT * FROM tbl_voucher LEFT JOIN tbl_email_queue ON email_id = voucher_email_id WHERE voucher_deleted IS NULL AND email_deleted IS NULL AND voucher_id = :id";
+      $sql = "SELECT * FROM tbl_voucher LEFT JOIN tbl_email_queue ON email_id = voucher_code_email_id WHERE voucher_deleted IS NULL AND email_deleted IS NULL AND voucher_id = :id";
       if($res = $this->DBobj->wrappedSql($sql, array(":id" => $this->voucherId))){
         $this->voucherRecord = $res[0];
       }
@@ -83,6 +86,25 @@ class Voucher{
     return false;
   }
   
+
+  /**
+   * Update voucher email ids
+   *
+   * @param int $_id
+   * @return boolean
+   */
+  function SetVoucherEmailIds($_recipientEmailId, $_senderEmailId, $_id = null){
+    if(!empty($_id)){
+      $this->voucherId = $_id;
+    }
+    $sql = "UPDATE tbl_voucher SET voucher_code_email_id = :rid, voucher_confirmation_email_id = :sid WHERE voucher_id = :id";
+    if($this->DBobj->wrappedSql($sql, array(":id" => $this->voucherId, ":rid" => $_recipientEmailId, ":sid" => $_senderEmailId))){
+      $this->voucherRecord = array();
+      $this->voucherId = 0;
+      return true;
+    }
+    return false;
+  }
   
   /**
    * Update voucher_redeemed

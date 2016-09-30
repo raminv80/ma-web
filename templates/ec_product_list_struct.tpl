@@ -1,5 +1,5 @@
 {block name=product_struct}
-<div class="col-sm-6 col-md-4" itemscope itemtype="http://schema.org/Product">
+<div class="col-sm-6 col-lg-4 prodout" itemscope itemtype="http://schema.org/Product">
 	<div class="prod">
 	<a href="/{$item.product_url}">
 		<img src="{$item.general_details.image}?width=770&height=492&crop=1" alt="{$item.product_name} image" class="img-responsive prodimg" title="{$item.product_name} image">
@@ -23,6 +23,7 @@
 	</div>
 	</div>
 </div>
+{* COMMENTED OUT ============== REMEMBER TO MOVE IT ================
 <script type="application/ld+json">
 {
   "@context": "http://schema.org/",
@@ -44,4 +45,5 @@
   }
 }
 </script>
+====================================================== *}
 {/block}

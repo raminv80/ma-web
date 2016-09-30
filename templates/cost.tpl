@@ -29,7 +29,7 @@
 
 			<div class="col-sm-3 text-center">
 				<img src="/images/cost-medicalid.png" alt="Medical ID" class="img-responsive" />
-				<div class="cost-text">Medical ID with free engraving – starting from <span>$35</span></div>
+				<div class="cost-text">Medical ID with free engraving – starting from <span>{$CONFIG_VARS['medical_id_price']}</span></div>
 			</div>
 			<div class="col-sm-1 text-center">
 
@@ -43,7 +43,7 @@
 			</div>
 			<div class="col-sm-3 text-center">
 				<img src="/images/cost-post.png" alt="Postage" class="img-responsive" />
-				<div class="cost-text">Postage – from <span>$</span></div>
+				<div class="cost-text">Postage – from <span>{$CONFIG_VARS['postage']}</span></div>
 			</div>
 
 			</div>
@@ -51,8 +51,8 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-12 text-center">
-				<a href="#" class="btn btn-red">View benefits</a>
-				<a href="#" class="btn btn-white">View products</a>
+				<a href="/benefits-of-membership" class="btn btn-red">View benefits</a>
+				<a href="/products" class="btn btn-red">View products</a>
 			</div>
 		</div>
 	</div>
@@ -74,17 +74,8 @@
 			<div class="col-md-8 col-md-offset-2 text-center">
 				{$listing_content3}
 
-				<div class="row">
-					<div class="col-sm-4 helpimg text-center"><img src="/images/cost-hbf.jpg" class="img-responsive" alt="HBS" /></div>
-					<div class="col-sm-4 helpimg text-center"><img src="/images/cost-cbhs.jpg" class="img-responsive" alt="CBHS" /></div>
-					<div class="col-sm-4 helpimg text-center"><img src="/images/cost-aca.jpg" class="img-responsive" alt="ACA Health" /></div>
-				</div>
-				<br />
-				<p>To see what you’re covered for, please contact your health fund provider.</p>
 
-				<p>Bupa members receive this exclusive offer:</p>
-					<img src="/images/cost-bupa.jpg" class="img-responsive hidden-xs" alt="Bupa offer" />
-					<img src="/images/mob-bupa.jpg" class="img-responsive visible-xs" alt="Bupa offer" />
+				{$listing_content4}
 				<br />
 				<br />
 				<div class="row">
@@ -93,7 +84,7 @@
 					</div>
 
 					<div class="col-sm-8 text-left" id="vet-text">
-						DVA Gold Card holders can also receive rebates on their annual membership fees and stainless steel medical IDs. <a href="#">Contact us</a> to find out more.
+						DVA Gold Card holders can also receive rebates on their annual membership fees and stainless steel medical IDs. <a href="/contact-us">Contact us</a> to find out more.
 					</div>
 				</div>
 			</div>

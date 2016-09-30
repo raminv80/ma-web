@@ -1133,28 +1133,31 @@ function ApplyDiscountCode($code, $cartId = null) {
 	function CreateDiscountCode($_data){
 	  global $DBobject;
 	  
+	  if(empty($_data['code']) || empty($_data['name']) || empty($_data['start_date'])){
+	    return 0;
+	  }
 	  $params = array(
 	      ":discount_code" => $_data['code'],
 	      ":discount_name" => $_data['name'],
 	      ":discount_description" => $_data['description'],
-	      ":discount_amount" => $_data['amount'],
+	      ":discount_amount" => (empty($_data['amount']) ? 0 : $_data['amount']),
 	      ":discount_amount_percentage" => (empty($_data['isPercentage']) ? 0 : 1),
-	      ":discount_listing_id" => $_data['listing_id'],
-	      ":discount_product_id" => $_data['product_id'],
-	      ":discount_usergroup_id" => $_data['usergroup_id'],
-	      ":discount_user_id" => $_data['user_id'],
+	      ":discount_listing_id" => (empty($_data['listing_id']) ? 0 : $_data['listing_id']),
+	      ":discount_product_id" => (empty($_data['product_id']) ? 0 : $_data['product_id']),
+	      ":discount_usergroup_id" => (empty($_data['usergroup_id']) ? 0 : $_data['usergroup_id']),
+	      ":discount_user_id" => (empty($_data['user_id']) ? 0 : $_data['user_id']),
 	      ":discount_shipping" => $_data['shipping'],
 	      ":discount_start_date" => $_data['start_date'],
-	      ":discount_end_date" => $_data['end_date'],
+	      ":discount_end_date" => (empty($_data['end_date']) ? null : $_data['end_date']),
 	      ":discount_unlimited_use" => (empty($_data['isUnlimited']) ? 0 : 1),
-	      ":discount_fixed_time" => (empty($_data['isUnlimited']) ? $_data['fixed_time'] : 0),
+	      ":discount_fixed_time" => (empty($_data['isUnlimited'] && !empty($_data['fixed_time'])) ? $_data['fixed_time'] : 0),
 	      ":discount_published" => (empty($_data['isPublished']) ? 0 : 1),
 	  );
 	
 	  $sql = "INSERT INTO tbl_discount (discount_code, discount_name, discount_description, discount_amount, discount_amount_percentage, discount_listing_id,
-	      discount_product_id, discount_user_id, discount_shipping, discount_start_date, discount_end_date, discount_unlimited_use, discount_fixed_time, discount_published, discount_created)
+	      discount_product_id, discount_usergroup_id, discount_user_id, discount_shipping, discount_start_date, discount_end_date, discount_unlimited_use, discount_fixed_time, discount_published, discount_created)
 			values (:discount_code, :discount_name, :discount_description, :discount_amount, :discount_amount_percentage, :discount_listing_id,
-	      :discount_product_id, :discount_user_id, :discount_shipping, :discount_start_date, :discount_end_date, :discount_unlimited_use, :discount_fixed_time, :discount_published, NOW())";
+	      :discount_product_id, :discount_usergroup_id, :discount_user_id, :discount_shipping, :discount_start_date, :discount_end_date, :discount_unlimited_use, :discount_fixed_time, :discount_published, NOW())";
 	  if($DBobject->wrappedSql($sql, $params)){
 	    return $DBobject->wrappedSqlIdentity();
 	  }

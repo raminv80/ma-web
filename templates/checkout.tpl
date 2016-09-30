@@ -118,7 +118,7 @@
 		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label text-right mobl">Subtotal</div>
 		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr" id="subtotal" data-value="{$totals.subtotal}">${$totals.subtotal|number_format:2:".":","}</div>
 		            </div>
-		            <div class="row tallrow" {if $totals.discount gt 0}style="display:none"{/if}>
+		            <div class="row tallrow" {if $totals.discount eq 0}style="display:none"{/if}>
 		              <div class="col-xs-7 col-sm-8 col-md-10 shopping-label text-right mobl"><b>Discount</b></div>
 		              <div class="col-xs-5 col-sm-4 col-md-2 num text-right mobr" id="discount" data-value="{$totals.discount}">{if $totals.discount gt 0}<b>-${$totals.discount|number_format:2:".":","}</b>{else}$0.00{/if}</div>
 		            </div>

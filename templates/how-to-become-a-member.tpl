@@ -26,7 +26,7 @@
 
 			<div class="col-sm-3 text-center ">
 				<img src="/images/join-1.png" alt="Choose your medical ID " class="img-responsive" />
-				<div class="cost-text"><span>1.</span> Choose your medical ID from our <a href="/products">product range</a>. Prices start from just $35</div>
+				<div class="cost-text"><span>1.</span> Choose your medical ID from our <a href="/products">product range</a>. Prices start from just {$CONFIG_VARS['medical_id_price']}</div>
 			</div>
 			<div class="hidden-xs col-sm-1 text-center">
 				<img src="/images/join-arrow.png" alt="Arrow" />
@@ -50,7 +50,7 @@
 			<div class="col-sm-12 text-center">
 				<br />
 				{$listing_content2}
-				<a href="#" class="btn btn-red">Find a product</a>
+				<a href="/products" class="btn btn-red">Find a product</a>
 			</div>
 		</div>
 	</div>
@@ -81,7 +81,7 @@
 					<span class="bold">Call</span><br />
                   <a class="tel" href="tel:{$COMPANY.toll_free}" title="Click to call">{$COMPANY.toll_free}</a>
                    <br />
-					between 9 - 5 pm ACST
+					between 8.30am - 5.30pm ACST
 				</div>
 			</div>
 			<div class="col-sm-3 text-center ways">

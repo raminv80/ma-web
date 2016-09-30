@@ -88,8 +88,8 @@
 					<tr>
 						<th>Services and Benefits</th>
 						<th class="text-center border">MedicAlert Foundation</th>
-						<th class="text-center">Other ID providers</th>
-						<th class="text-center">Pharmacy IDs</th>
+						<th class="text-center border">Other ID providers</th>
+						<th class="text-center border">Pharmacy IDs</th>
 					</tr>
 					<tr>
 						<td colspan="4" class="section">The organisation</td>

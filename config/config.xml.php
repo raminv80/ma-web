@@ -27,6 +27,14 @@
     <name>membership_fee</name>
     <value>$32</value>
   </global_variables>  
+  <global_variables>
+    <name>medical_id_price</name>
+    <value>$35</value>
+  </global_variables>
+  <global_variables>
+    <name>postage</name>
+    <value>$9</value>
+  </global_variables>    
   <database> 
     <host>122.201.97.172</host> 
     <user>them_usr01</user> 

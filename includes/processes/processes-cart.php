@@ -274,6 +274,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         //Shipping
         $shippingFee = floatval($methods[$_SESSION['shipping']['selectedMethod']]);
         
+        //MAF - CHECK FOR DONATION
+        $hasDonation = $cart_obj->hasProductInCart(217);
+        
         $totals = $cart_obj->CalculateTotal();
         $chargedAmount = $totals['total'] + $shippingFee;
         $gst = round(($totals['GST_Taxable']) / 11, 2);
@@ -389,7 +392,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $cart_obj->UpdateUserIdOfClosedCart($order_cartId, $userArr['id']);
           
           
-          // SAVE BILLING AND SHIPPING ADDRESS
+          //SAVE BILLING AND SHIPPING ADDRESS
           $billID = $user_obj->InsertNewAddress(array_merge(array(
               'address_user_id' => $userArr['id']
           ), $_SESSION['address']['B']));
@@ -408,10 +411,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           );
           $pay_obj->SetUserAddressIds($params);
           
-          
           try{
             // SEND CONFIRMATION EMAIL
             $SMARTY->assign('hasMAFProd', $hasMAFProd);
+            $SMARTY->assign('hasDonation', $hasDonation);
             $billing = $user_obj->GetAddress($billID);
             $SMARTY->assign('billing', $billing);
             $shipping = $user_obj->GetAddress($shipID);
@@ -534,22 +537,41 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
     case 'quickcheckout':
       $_SESSION['error'] = '';
       $_SESSION['post'] = $_POST;
+      $missingFields = true;
       
       //Check existence of particular fields and init custom process
       $isGiftCertificate = false;
       if($_POST['product_id'] == 213){ //Gift certificate
-        $isGiftCertificate = true;
+        if($_POST['sendtime'] == 'now'){
+          $sendDate = '';
+        }elseif($_POST['sendtime'] == 'another-day' && !empty($_POST['sendday']) && validateDate($_POST['sendday'])){
+          $sendDate = date_format(date_create_from_format('d/m/Y', $_POST['sendday']), 'Y-m-d');
+        }else{
+          $_SESSION['error'] = "Error: Invalid date of birth (DD/MM/YYYY).";
+          header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
+          die();
+        }
+        
+        if(!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['rname']) && !empty($_POST['remail'])){
+          $missingFields = false;
+          $isGiftCertificate = true;
+          $thankyouPage = '/thank-you-for-purchasing';
+        }
       
       }elseif($_POST['product_id'] == 217){ //Donation
-      
+        if(!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['lastname']) && !empty($_POST['postcode'])){
+          $missingFields = false;
+          $hasDonation = true;
+          $thankyouPage = '/thank-you-for-purchasing';
+        }
       }else{
-      
+        $thankyouPage = '/thank-you-for-purchasing';
       }
       
       //Has mandatory field: credit cart details, product_object_id, variant_id
-      if(!empty($_POST['honeypot']) || empty($_POST['timestamp']) || (time() - $_POST['timestamp']) < 4 || empty($_POST['product_id']) || empty($_POST['variant_id']) || !empty($_POST['cc'])){
+      if($missingFields || !empty($_POST['honeypot']) || empty($_POST['timestamp']) || (time() - $_POST['timestamp']) < 4 || empty($_POST['product_id']) || empty($_POST['variant_id']) || empty($_POST['cc'])){
         $_SESSION['error'] = 'Your session has expired. Please try again, otherwise contact us by phone.';
-        header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error-1');
+        header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
         die();
       }
       
@@ -572,8 +594,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       
       $billingArr = array(
           "address_user_id" => 0,
-          "address_name" => $_POST['name'],
-          "address_email" => $_POST['email']
+          "address_name" => $_POST['name'] ,
+          "address_surname" => $_POST['lastname'],
+          "address_email" => $_POST['email'],
+          "address_postcode" => (empty($_POST['postcode']) ? null : ' '. $_POST['postcode'])
       );
       
       //Selected payment method
@@ -602,40 +626,49 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           'payment_method' => $paymentMethod
       );
       
-      require_once 'includes/classes/PayWay.php';
-      $pay_obj = new PayWay();
-      $response = false;
-  
-      $paymentId = $pay_obj->StorePaymentRecord($params);
-      $CCdata = array(
-          'amount' => $chargedAmount 
+      $bankSettingsArr = array(
+          'initPayment' => $params,
+          'settings' => $CONFIG->payment_gateway->payway,
+          'address' => $billingArr
       );
-      /* if(!empty($_POST['cc'])){
+      
+      require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
+      $pay_obj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
+      $response = false;
+      
+      $CCdata = array(
+          'amount' => $chargedAmount
+      );
+      if(!empty($_POST['cc'])){
         $CCdata = array_merge($CCdata, $_POST['cc']);
       }
       $pay_obj->PreparePayment($CCdata);
       
       try{
         $response = $pay_obj->Submit();
-        $paymentId = $paypalObj->GetPaymentId();
+        $paymentId = $pay_obj->GetPaymentId();
       }
       catch(Exception $e){
         if($error_msg = $pay_obj->GetErrorMessage()){
           $_SESSION['error'] = $error_msg;
         } else{
-          $_SESSION['error'] = 'Payment failed (on submit). Please verify the payment details and try again. ';
+          $_SESSION['error'] = 'Payment failed (on submit). Verify information and try again. '.$e;
         }
         header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
-        die();
-      } */
+        exit();
+      }
       
-      $response = true;
       if($response){
         // PAYMENT SUCCESS
         $cart_obj->CloseCart();
         $pay_obj->SetOrderStatus($paymentId);
         $_SESSION['orderNumber'] = $orderNumber;
   
+        //Init email details
+        $SMARTY->unloadFilter('output', 'trimwhitespace');
+        $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+        $COMP = json_encode($CONFIG->company);
+        $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
 
         $user_obj = new UserClass();
         $userArr = $_SESSION['user']['public'];
@@ -644,17 +677,18 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         if(empty($userArr)){
           $guestArr = array(
               "gname" => $billingArr['address_name'],
-              "surname" => '',
+              "surname" => $billingArr['address_surname'],
               "email" => $billingArr['address_email']
           );
           $userArr = $user_obj->CreateGuest($guestArr);
         
           //CHANGE USER_ID ONLY FOR MAF!!!!
           $userArr['id'] = $userArr['id'] * -1;
-          
-          //SET THE CART_USER_ID
-          $cart_obj->UpdateUserIdOfClosedCart($order_cartId, $userArr['id']);
         }
+        
+        //SET THE CART_USER_ID
+        $cart_obj->UpdateUserIdOfClosedCart($order_cartId, $userArr['id']);
+        
         $billingArr['address_user_id'] = $userArr['id'];
         
         $billID = $user_obj->InsertNewAddress($billingArr);
@@ -666,70 +700,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         );
         $pay_obj->SetUserAddressIds($params);
         
-        $SMARTY->unloadFilter('output', 'trimwhitespace');
-        try{
-          // SEND CONFIRMATION EMAIL
-          $order = $cart_obj->GetDataCart($order_cartId);
-          $billing = $user_obj->GetAddress($billID);
-          $SMARTY->assign('billing', $billing);
-          $SMARTY->assign('shipping', $billing);
-          $SMARTY->assign('order', $order);
-          $payment = $pay_obj->GetPaymentRecord($paymentId);
-          $SMARTY->assign('payment', $payment);
-          $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
-          $SMARTY->assign('orderItems', $orderItems);
-          $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
-          $COMP = json_encode($CONFIG->company);
-          $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
-          
-          $to = $billingArr['address_email'];
-          // $bcc = 'apolo@them.com.au';
-          $from = (string)$CONFIG->company->name;
-          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-          $subject = 'Confirmation of your order';
-          $body = $SMARTY->fetch('email/order-confirmation.tpl');
-          if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
-            $pay_obj->SetInvoiceEmail($paymentId, $mailID);
-          }
-        }
-        catch(Exception $e){}
-        
-        if($isGiftCertificate){
-          // CREATE GIFT CERTIFICATE
-          
-          $newDiscountArr = array(
-              ":code" => $_data['code'],
-              ":name" => $_data['name'],
-              ":description" => $_data['description'],
-              ":amount" => $_data['amount'],
-              ":isPercentage" => (empty($_data['isPercentage']) ? 0 : 1),
-              ":listing_id" => $_data['listing_id'],
-              ":product_id" => $_data['product_id'],
-              ":usergroup_id" => $_data['usergroup_id'],
-              ":user_id" => $_data['user_id'],
-              ":shipping" => $_data['shipping'],
-              ":start_date" => $_data['start_date'],
-              ":end_date" => $_data['end_date'],
-              ":isUnlimited" => (empty($_data['isUnlimited']) ? 0 : 1),
-              ":fixed_time" => (empty($_data['isUnlimited']) ? $_data['fixed_time'] : 0),
-              ":isPublished" => (empty($_data['isPublished']) ? 0 : 1),
-          );
-          
-          try{
-            // SEND GIFT CERTIFICATE TO RECIPIENT
-            $to = $BillingArr['address_email'];
-            // $bcc = 'apolo@them.com.au';
-            $from = (string)$CONFIG->company->name;
-            $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-            $subject = 'Confirmation of your order';
-            $body = $SMARTY->fetch('email/gift-certificate.tpl');
-            if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
-              $pay_obj->SetInvoiceEmail($paymentId, $mailID);
-            }
-          }
-          catch(Exception $e){}
-        }
-  
         // SET GOOGLE ANALYTICS - ECOMMERCE
         if(!empty($GA_ID)){
           sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
@@ -743,14 +713,122 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
           sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
         }
-  
+        
         // OPEN NEW CART
         $cart_obj->CreateCart();
+        
+        
+        try{
+          // SEND CONFIRMATION EMAIL
+          $SMARTY->assign('isGiftCertificate', $isGiftCertificate);
+          $SMARTY->assign('recipient_name', $_POST['rname']);
+          $SMARTY->assign('recipient_email', $_POST['remail']);
+          $SMARTY->assign('send_date', $sendDate);
+          $SMARTY->assign('hasDonation', $hasDonation);
+          $billing = $user_obj->GetAddress($billID);
+          $SMARTY->assign('billing', $billing);
+          $shipping = $user_obj->GetAddress($shipID);
+          $SMARTY->assign('shipping', $shipping);
+          $order = $cart_obj->GetDataCart($order_cartId);
+          $SMARTY->assign('order', $order);
+          $payment = $pay_obj->GetPaymentRecord($paymentId);
+          $SMARTY->assign('payment', $payment);
+          $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
+          $SMARTY->assign('orderItems', $orderItems);
+        
+          $to = $userArr['email'];
+          // $bcc = 'apolo@them.com.au';
+          $from = (string)$CONFIG->company->name;
+          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+          $subject = 'Payment | Order confirmation';
+          $body = $SMARTY->fetch('email/order-confirmation.tpl');
+          if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
+            $pay_obj->SetInvoiceEmail($paymentId, $mailID);
+          }
+        }
+        catch(Exception $e){
+          die($e);
+        }
+        
+        if($isGiftCertificate){
+          // CREATE GIFT CERTIFICATE
+          try{
+            include_once 'includes/classes/voucher-class.php';
+            $voucherObj = new Voucher();
+            $attempt = 0;
+            $validCode = false;
+            while($attempt < 80 && !$validCode){
+              $attempt++;
+              $codeStr = $voucherObj->GenerateVoucherCode();
+              if(empty($cart_obj->GetDiscountData($codeStr))){
+                $validCode = true;
+              }
+            }
+            if($validCode){
+              $startDate = empty($sendDate) ? date('Y-m-d') : $sendDate;
+              $endDate = date('Y-m-d', strtotime($startDate . ' + 1 year'));
+              $newVoucherArr = array(
+                  "payment_id" => $paymentId,
+                  "code" => $codeStr,
+                  "name" => $_POST['name'],
+                  "email" => $_POST['email'],
+                  "recipientname" => $_POST['rname'],
+                  "recipientemail" => $_POST['remail'],
+                  "amount" => $chargedAmount,
+                  "start_date" => $startDate,
+                  "end_date" => $endDate
+              );
+              if($voucherId = $voucherObj->CreateVoucher($newVoucherArr)){
+              
+                $newDiscountArr = array(
+                    "code" => $codeStr,
+                    "name" => "Gift certificate ($voucherId)",
+                    "description" => "Gift certificate ($voucherId) - Order no. {$orderNumber}",
+                    "amount" => $chargedAmount,
+                    "start_date" => $startDate,
+                    "end_date" => $endDate,
+                    "fixed_time" => 1,
+                    "isPublished" => 1,
+                );
+                if($discountId = $cart_obj->CreateDiscountCode($newDiscountArr)){
+                  if(empty($sendDate)){
+                    // SEND GIFT CERTIFICATE TO RECIPIENT
+                    $to = $_POST['remail'];
+                    $SMARTY->assign('name', $_POST['rname']);
+                    $SMARTY->assign('sender_name', (empty($_POST['anonymous']) ? $_POST['name'] : ''));
+                    $SMARTY->assign('code', $codeStr);
+                    $SMARTY->assign('amount', $chargedAmount);
+                    $from = (string)$CONFIG->company->name;
+                    $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+                    $subject = 'Someone has sent you a MedicAlert gift certificate';
+                    $body = $SMARTY->fetch('email/gift-certificate.tpl');
+                    $mailID_recipient = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+                    
+                    // SEND GIFT CERTIFICATE TO SENDER
+                    $to = $_POST['email'];
+                    $SMARTY->assign('sender_name', $_POST['name']);
+                    $from = (string)$CONFIG->company->name;
+                    $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+                    $subject = 'Your MedicAlert gift certificate was sent';
+                    $body = $SMARTY->fetch('email/confirmation-gift-certificate.tpl');
+                    $mailID_sender = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+                    
+                    $voucherObj->SetVoucherEmailIds($mailID_recipient, $mailID_sender);
+                  }
+                }
+              }
+            }
+            
+          }
+          catch(Exception $e){
+            die(var_dump($e));
+          }
+        }
   
         $_SESSION['post'] = '';
         
         // REDIRECT TO THANK YOU PAGE
-        header('Location: /thank-you-for-purchasing');
+        header('Location: '. $thankyouPage);
         die();
       } else{
         if($error_msg = $pay_obj->GetErrorMessage()){
@@ -759,8 +837,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $_SESSION['error'] = 'Payment failed. Verify information and try again. ';
         }
       }
-    
-    
       
       header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
       die();

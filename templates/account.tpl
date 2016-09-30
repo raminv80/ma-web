@@ -42,7 +42,7 @@
 					<img src="/images/dashboard-warning.png" alt="Warning" /> <span class="warning">Your membership has expired</span>
 					<div class="days">7</div>
 					<div>days overdue</div>
-					<a href="#" class="btn btn-red">Renew now</a>
+					<a href="/quick-renew" class="btn btn-red">Renew now</a>
 				</div>
 			</div>
 			<div class="col-sm-6 col-md-5 col-lg-4">
@@ -104,7 +104,7 @@
 						<div>
 							<img src="/images/dashboard-autorenew.png" alt="Register for auto-renewals" class="img-responsive" />
 						</div>
-						<a href="#" class="btn btn-red">Register for auto-renewals</a>
+						<a href="/auto-renewal" class="btn btn-red">Register for auto-renewals</a>
 
 						<p>Take the hassle out of remembering to pay your annual MedicAlert membership with auto-renewals. By setting up Direct Debit payments from your nominated bank account, you can rest assured knowing you’ll always be protected.</p>
 					</div>
@@ -133,7 +133,7 @@
 						<p class="bold">Our latest products</p>
 					</div>
 					<div class="col-sm-12 text-center">
-						<a href="#"	 class="btn btn-red">Find a new product</a>
+						<a href="/products"	 class="btn btn-red">Find a new product</a>
 					</div>
 				</div>
 			</div>
@@ -169,7 +169,7 @@
 			</div>
 			<div class="col-xs-6 col-sm-3 col-md-2 text-center prod">
 					<div class="find">
-						<a href="#">
+						<a href="/products">
 							<img src="/images/dashboard-plus.png" alt="Find a new product" class="img-responsive" />
 							<div>Find a new product</div>
 						</a>
@@ -332,7 +332,7 @@
 		<div class="row">
 			<div class="col-sm-12 text-center">
 				<h3>If someone you know could benefit from a MedicAlert membership, don’t wait until it’s too late to tell them about it.</h3>
-				<a href="#" class="btn btn-red">Refer a friend</a>
+				<a href="/refer-a-friend" class="btn btn-red">Refer a friend</a>
 			</div>
 		</div>
 	</div>

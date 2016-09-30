@@ -38,73 +38,48 @@
         </div>
 
 		<div id="accout">
+		<div id="accordion">
         {if $product_description}
-        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-          <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingOne">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-					<i class="more-less glyphicon glyphicon-minus"></i>
-					<div class="head-text">
-						<div class="head-title">Description</div>
-					</div>
-	            </a>
-              </h4>
-            </div>
-            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">{$product_description}</div>
-            </div>
-          </div>
-          {/if} {if $pwarranty_description}
-          <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingTwo">
-              <h4 class="panel-title">
-                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-					<i class="more-less glyphicon glyphicon-plus"></i>
-					<div class="head-text">
-						<div class="head-title">Warranty</div>
-					</div>
-                </a>
-              </h4>
-            </div>
-            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-              <div class="panel-body">{$pwarranty_description}</div>
-            </div>
-          </div>
-          {/if} {if count($pcarelinks) gt 0}
-          <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingThree">
-              <h4 class="panel-title">
-                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-	             	<i class="more-less glyphicon glyphicon-plus"></i>
-					<div class="head-text">
-						<div class="head-title">Care &amp; cleaning</div>
-					</div>
-	            </a>
-              </h4>
-            </div>
-            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-              <div class="panel-body">{foreach $pcarelinks as $care}{$care.pcare_description}{/foreach}</div>
-            </div>
-          </div>
-          {/if} {if $pdelivery_description}
-          <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingFour">
-              <h4 class="panel-title">
-                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-					<i class="more-less glyphicon glyphicon-plus"></i>
-					<div class="head-text">
-						<div class="head-title">Delivery &amp; returns</div>
-					</div>
-	            </a>
-              </h4>
-            </div>
-            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-              <div class="panel-body">{$pdelivery_description}</div>
-            </div>
-          </div>
-        </div>
-          {/if}
+			<h3>
+				<div class="head-text">
+					<div class="head-title">Description</div>
+				</div>
+			</h3>
+			<div>
+				{$product_description}
+			</div>
+		{/if}
+        {if $pwarranty_description}
+			<h3>
+				<div class="head-text">
+					<div class="head-title">Warranty</div>
+				</div>
+			</h3>
+			<div>
+				{$pwarranty_description}
+			</div>
+		{/if}
+        {if count($pcarelinks) gt 0}
+			<h3>
+				<div class="head-text">
+					<div class="head-title">Care &amp; cleaning</div>
+				</div>
+			</h3>
+			<div>
+				{foreach $pcarelinks as $care}{$care.pcare_description}{/foreach}
+			</div>
+		{/if}
+		{if $pdelivery_description}
+			<h3>
+				<div class="head-text">
+					<div class="head-title">Delivery &amp; returns</div>
+				</div>
+			</h3>
+			<div>
+				{$pdelivery_description}
+			</div>
+		{/if}
+		</div>
         </div>
       </div>
       <div class="col-sm-12 col-md-5" id="prodright">
@@ -124,7 +99,7 @@
                 {$price = $variant.variant_price}
                 {if $variant.variant_specialprice gt 0}{$price = $variant.variant_specialprice}{/if}
                 {if $user.id && $variant.variant_membersprice gt 0}{$price = $variant.variant_membersprice}{/if}
-                <div class="variant-prices variants" id="variant-{$variant.variant_id}" style="display:none" data-uid="{$variant.variant_uid}">
+                <div class="variant-prices variants specialprice" id="variant-{$variant.variant_id}" style="display:none" data-uid="{$variant.variant_uid}">
                   {if $user.id && $variant.variant_membersprice gt 0}
                     <div>$<span>{$variant.variant_price|number_format:0:'.':','}</span></div>
                     <div><b>Members Price:</b> $<span class="selected-price" data-value="{$variant.variant_membersprice}">{$variant.variant_membersprice|number_format:0:'.':','}</span></div>
@@ -175,7 +150,7 @@
 
           {foreach $attributes as $attr}
           <div class="form-group{if $product_type_id eq 1 && $attr.attribute_type neq 1} attr-hidden{/if}" style="{if $product_type_id eq 1 && $attr.attribute_type neq 1}display:none{/if}">
-            <div class="col-sm-12">
+            <div class="col-sm-12" id="{if $attr.attribute_name eq 'Colour'}colbox{/if}">
               <label for="{urlencode data=$attr.attribute_name}" class="control-label">{$attr.attribute_name}</label>
               <div class="help-block"></div>
               {if $attr.attribute_type eq 1}
@@ -241,10 +216,10 @@
                 <div class="prodaddcart">
                   <button class="btn btn-red variant-addbtns {foreach $variants as $variant}{if $variant.variant_instock eq 1} variant-{$variant.variant_id}-addbtn{/if}{/foreach}" type="submit">Add to Cart</button>
                 </div>
-              
+
             </div>
           </div>
-          
+
           {if $product_type_id eq 1}
           <div class="form-group">
 	          <div class="col-sm-12" id="bottombox">
@@ -334,16 +309,20 @@
 <script src="/includes/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
-<script type="text/javascript">
-	function toggleIcon(e) {
-        $(e.target)
-            .prev('.panel-heading')
-            .find(".more-less")
-            .toggleClass('glyphicon-plus glyphicon-minus');
-    }
-    $('.panel-collapse').on('hidden.bs.collapse', toggleIcon);
-    $('.panel-collapse').on('shown.bs.collapse', toggleIcon);
-    
+<script>
+  $( function() {
+    var icons = {
+      header: "glyphicon glyphicon-plus",
+      activeHeader: "glyphicon glyphicon-minus"
+    };
+    $( "#accordion" ).accordion({
+      icons: icons,
+	  heightStyle: "content",
+      collapsible: true
+    });
+  } );
+
+
 	$(document).ready(function(){
 
       $(window).on('resize', function() {
@@ -351,7 +330,7 @@
           var slider = $('.flexslider').data('flexslider');
           slider.resize();
       }, 1000);
-      
+
       });
 
     	if (matchMedia) {
@@ -361,14 +340,14 @@
     	}
 
     	function WidthChange1(mq) {
-    
+
     	if (mq.matches) {
     		$("#prodformbelow").append($("#accordion"));
     	}
     	else{
     		$("#accout").append($("#accordion"));
     	}
-    
+
     	}
 		$('#product-form').validate({
 		  onkeyup: false,
@@ -401,7 +380,7 @@
 		$('select.hasAdditional').change(function(){
 		  SetAdditionals($(this).val());
 		});
-		
+
 		$('.hasmaxlength').keyup(function(){
 		  var left = parseInt($(this).attr('maxlength')) - $(this).val().length;
 		  var content = left + ' character' + (left > 1 ? 's' : '') + ' left';
@@ -420,7 +399,7 @@
  	  ga('ec:setAction', 'detail'); */
 
 	});
-	
+
 $(window).load(function() {
   $('#prodslider .flexslider').flexslider({
     animation: "slide",

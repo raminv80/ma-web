@@ -186,7 +186,7 @@
       <div class="col-sm-7">
         <h2>More than just medical identification jewellery</h2>
         <p>When you purchase a genuine MedicAlert medical ID, you also invest in a vital MedicAlert membership. This gives you access to a range of exclusive benefits.</p>
-        <a href="#" class="btn btn-red">Learn more</a>
+        <a href="/benefits-of-membership" class="btn btn-red">Learn more</a>
       </div>
     </div>
   </div>
@@ -196,7 +196,7 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12 text-center">
-        <a href="#">More than just medical identification jewellery <span>+</span></a>
+        <a href="/benefits-of-membership">More than just medical identification jewellery <span>+</span></a>
       </div>
     </div>
   </div>
@@ -211,21 +211,21 @@
       $("#product-list #categorycontainer .prodcatout").css("display", "block !important");
     });
   });
-  
+
   (function() {
-    
+
     // store the slider in a local variable
     var $window = $(window), flexslider;
-    
+
     // tiny helper function to add breakpoints
     function getGridSize() {
       return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 2 : 4;
     }
-    
+
     $(function() {
       SyntaxHighlighter.all();
     });
-    
+
     $window.load(function() {
       $('.flexslider').flexslider({
         animation: "slide",
@@ -238,11 +238,11 @@
       // use function to pull in initial value
       });
     });
-    
+
     // check grid size on resize event
     $window.resize(function() {
       var gridSize = getGridSize();
-      
+
       flexslider.vars.minItems = gridSize;
       flexslider.vars.maxItems = gridSize;
     });

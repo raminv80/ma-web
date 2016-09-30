@@ -45,8 +45,9 @@
 				{if $cnt > 4}
 					<div class="row" id="seemore">
 						<div class="col-sm-12 text-center" id="showmore">
+						<a href="javascript:void(0)" class="btn btn-red">
 						Show more
-							<img src="/images/down-arrow.png" alt="">
+						</a>
 						</div>
 					</div>
 				{/if}
