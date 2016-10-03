@@ -37,5 +37,27 @@
 #cartmain #special #select {
     padding: 23px 15px;
 }
+#specialoffer .sptextout .specialtext{
+	min-height: 123px;
+}
+
+#giftgrey #gift_form .giftoption .giftoptext p {
+    height: 190px;
+}
+
+#foot1 ul#footmenu li.baselevel>div{height: 59px;}
+
+.emergency-grey .videoWrapper iframe{
+	height: 350px;
+}
+
+#products-wrapper .prodout:nth-child(3n+1){
+	clear: none;
+}
+
+#products-wrapper .prodout:nth-child(2n+1){
+	clear: both;
+	float: left;
+}
 
 }

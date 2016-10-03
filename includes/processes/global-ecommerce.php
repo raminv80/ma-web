@@ -34,6 +34,8 @@ try{
   $SMARTY->assign('cart', $cart);
   $itemNumber = $cart_obj->NumberOfProductsOnCart();
   $SMARTY->assign('itemNumber', $itemNumber);
+  $discount = $cart_obj->GetDiscountData($cart['cart_discount_code']);
+  $SMARTY->assign('discount', $discount);
   $subtotal = $cart_obj->GetSubtotal();
   $SMARTY->assign('subtotal', $subtotal);
   $productsOnCart = $cart_obj->GetDataProductsOnCart();
@@ -42,11 +44,6 @@ try{
   //Temporary user's addresses
   $SMARTY->assign('address', $_SESSION['address']);
   
-  //Shipping
-  $SMARTY->assign('shipping', $_SESSION['shipping']);
-  $shippable = $cart_obj->ShippableCartitems();
-  $shipping_obj = new ShippingClass(count($shippable), $cart_obj->GetCurrentFreeShippingDiscountName());
-  $SMARTY->assign('shippingMethods', $shipping_obj->getShippingMethods());
 }
 catch(exceptionCart $e){
   $SMARTY->assign('error', $e->getMessage());

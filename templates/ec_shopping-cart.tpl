@@ -30,10 +30,14 @@
 <div id="maincart">
   <div class="container">
     <div class="row">
-	  <div class="col-sm-12 col-md-10 col-md-offset-1">
-		  <img src="/images/cart-ad.jpg" class="img-responsive hidden-xs" alt="Stay protected every step you take" />
-		  <img src="/images/cart-admob.jpg" class="img-responsive visible-xs" alt="Stay protected every step you take" />
-	  </div>
+    {if $banner}
+      <div class="col-sm-12 col-md-10 col-md-offset-1">
+        <a href="{$banner.0.banner_link}" {if $banner.0.banner_link|strstr:"http"} target="_blank"{/if} title="{$banner.0.banner_name}">
+          <img src="{$banner.0.banner_image1}" alt="{$banner.0.banner_name}" class="img-responsive hidden-xs" />
+          <img src="{$banner.0.banner_image2}" alt="{$banner.0.banner_name}" class="img-responsive visible-xs" />
+        </a>
+      </div>
+      {/if}
       <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" id="checkout">
         <h1>Your cart</h1>
       </div>
@@ -170,7 +174,7 @@
 	                  <input class="form-control" type="text" placeholder="ENTER CODE" id="promo" value="{if $post}{$post.discount_code}{else}{$cart.cart_discount_code}{/if}" name="discount_code" required/>
 	                  <div class="error-msg help-block"></div>
                       <div>
-	                    {if $error}<span class="invalid">{$error}</span>{else}<small><b></b></small>{/if}
+	                    {if $error}<span class="invalid">{$error}</span>{else}<small><b>{if $discount.discount_name}'{$discount.discount_name}' has been successfully applied.{/if}</b></small>{/if}
 	                  </div>
 	                </div>
 	                <div class="col-xs-12">

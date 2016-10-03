@@ -32,6 +32,7 @@
 
 #mobsearch{
 	padding: 10px 15px;
+	width: 100%;
 
 	#mobin{
 	    float: left;
@@ -743,7 +744,7 @@ tr.tabopts {
 }
 
 #greyblock1{
-	&.login{
+	&.login, &.dashboard{
 		.benefits{
 			clear: both;
 			width: 100%;
@@ -788,6 +789,146 @@ tr.tabopts {
 #checkoutcont .checkform{width: auto;}
 #checkoutcont input[type='checkbox']{float: none; display: inline;}
 #checkoutcont label.chklab{float: none; display: inline;width: auto;}
+#account #accinfo {margin-top: 30px;}
+#account #renewal #autor{    border-top: 1px dashed #535353;
+    padding-top: 30px;
+    margin-top: 30px;
+    border-left: none;}
 
+#popprod .prod{
+	margin-bottom: 20px;
+}
+#giftgrey #gift_form label{
+	width: 100%;
+}
+
+#giftgrey #gift_form .giftoption .giftoptext p {
+    height: auto;
+}
+
+#giftgrey #gift_form label{
+	width: 100%;
+}
+
+#giftgrey #gift_form label[for="sendnow"],#giftgrey #gift_form label[for="selectday"]{
+	width: auto;
+	display: inline-block;
+}
+
+#giftgrey #gift_form label[for="anonymous"], #giftgrey #gift_form label[for="sendnow"], #giftgrey #gift_form label[for="accept"]{
+	width: 90%;
+}
+
+#giftgrey #gift_form #sendnow{
+	display: inline-block;
+}
+
+#specialoffer .sptextout{
+	margin-bottom: 30px;
+}
+
+#donate{
+	padding-bottom: 30px;
+}
+
+#account #reminder1 #autor1 {
+    border-top: 1px dashed #535353;
+    padding-top: 30px;
+    border-left: none;
+}
+
+#specialoffer .specials{
+	width: auto;
+    margin-bottom: 15px;
+}
+
+#easyrefer .or{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+#free-resource h3{
+	margin-top: 20px;
+}
+
+#free-resource{
+	text-align: center;
+
+	li{
+		text-align: left;
+	}
+
+	img{
+		display: inline-block;
+	}
+}
+
+#contact #sharestory{
+	.btn{
+		width: 100%;
+		padding: 12px 50px;
+		max-width: 300px;
+	}
+}
+
+#shop-cart-btn{
+	display: none !important;
+}
+
+#collection-left .panel-default .panel-heading.subhead{
+	padding: 8px 0;
+}
+
+#who-needs h3.ui-accordion-header .head-text{
+	width: 70%;
+}
+
+#searchcont .searchresults{
+	text-align: center;
+}
+
+#searchcont #resno{
+	margin-top: 35px;
+}
+
+#cost-grey .autorenew .col-sm-4{
+	clear: both;
+    padding-bottom: 40px;
+
+	img{
+		margin-right: 10px;
+	}
+
+	.cost-text{
+		text-align: left;
+	}
+}
+
+#cost-grey .renew .benefits{
+    clear: both;
+    width: 300px;
+    margin-bottom: 10px;
+    margin: 0 auto;
+    float: none;
+    min-height: 70px;
+
+    p{
+		float: left;
+		margin-left: 10px;
+		text-align: left;
+		width: 210px;
+    }
+}
+
+.emergency-grey .videoWrapper iframe{
+	height: auto;
+	min-height: 200px;
+}
+
+#products-wrapper .prodout{
+	clear: both;
+	float: left;
+	width: 100%;
+}
 
 }

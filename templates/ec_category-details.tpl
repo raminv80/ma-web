@@ -28,7 +28,8 @@
   </div>
 </div>
 
-
+{$product_cnt = 0}
+{if $products && count($products)}{$product_cnt = count($products)}{/if}
 <div id="prodcatdet">
   <div class="container">
     <div class="row">
@@ -51,7 +52,7 @@
 				<div id="collections" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collections">
 					<div class="panel-body">
 						{foreach $collections as $c}
-						<div class="">
+						<div class="collection-opts">
 						<a href="/products/{$c.listing_url}" title="Click to view collection">{$c.listing_name}</a> ({$c.cnt} item{if $c.cnt gt 1}s{/if})
 						</div>
 						{/foreach}
@@ -66,7 +67,7 @@
 						<a role="button" data-toggle="collapse" data-parent="#accordion2" href="#narrow" aria-expanded="true" aria-controls="narrow">
 							<i class="more-less glyphicon glyphicon-plus"></i>
 							<div class="head-text">
-								<div class="head-title"><span id="prodcnt-mob" class="visible-xs visible-sm">Filter {count($products)} product{if count($products) gt 1}s{/if}</span><span class="hidden-xs hidden-sm">Narrow your results</span></div>
+								<div class="head-title"><span id="prodcnt-mob" class="visible-xs visible-sm">Filter {$product_cnt} product{if $product_cnt gt 1}s{/if}</span><span class="hidden-xs hidden-sm">Narrow your results</span></div>
 							</div>
 						</a>
 					</h4>
@@ -188,7 +189,7 @@
         <!-- PRODUCTS -->
         <div class="row" id="products-head">
 	        <div class="col-md-6 hidden-xs hidden-sm" id="prodcnt">
-		        <span>{count($products)}</span> product{if count($products) gt 1}s{/if}
+		        <span>{$product_cnt}</span> product{if $product_cnt gt 1}s{/if}
 	        </div>
 	        <div class="col-md-6 text-right">
 		        <div class="sortlab">Sort by:</div>
@@ -339,8 +340,10 @@
       var cnt = $('.prodout.' + $(this).val() + ':visible').length;
       if( cnt > 0){
         $(this).removeAttr('disabled');
+        $(this).parent().fadeIn('slow');
       }else{
         $(this).attr('disabled', 'disabled');
+        $(this).parent().fadeOut();
       }
       $(this).parent().find('.cnt-value').html(cnt + ' item' + (cnt > 1 ? 's' : ''));
     });

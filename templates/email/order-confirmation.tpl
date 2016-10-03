@@ -723,7 +723,7 @@ body, td {
                                               <tr>
                                                 <td class="w30" width="30"></td>
                                                 <td style="font-size: 16px; font-weight: bold; text-align: right;" width="410" class="w410">Postage &amp; handling</td>
-                                                <td style="font-size: 16px; text-align: right;" width="170" class="w170">&nbsp;$ {$payment.payment_shipping_fee|number_format:2:".":","}</td>
+                                                <td style="font-size: 16px; text-align: right;" width="170" class="w170">&nbsp;${$payment.payment_shipping_fee|number_format:2:".":","}</td>
                                                 <td class="w30" width="30"></td>
                                               </tr>
                                               {/if}

@@ -1131,7 +1131,10 @@ function ApplyDiscountCode($code, $cartId = null) {
 	function GetDiscountData($code) {
 		global $DBobject;
 	
-		$sql = "SELECT *  FROM tbl_discount WHERE discount_code = :id AND discount_deleted IS NULL";
+		if(empty($code)){
+		  return array();
+		}
+		$sql = "SELECT *  FROM tbl_discount WHERE discount_code = :id AND discount_deleted IS NULL LIMIT 1";
 		$res = $DBobject->wrappedSql($sql, array(":id" => $code));
 		return $res[0];
 	}

@@ -24,6 +24,12 @@ try{
   $totals = $cart_obj->CalculateTotal();
   $SMARTY->assign('totals',$totals);
   
+  //Shipping
+  $SMARTY->assign('shipping', $_SESSION['shipping']);
+  $shippable = $cart_obj->ShippableCartitems();
+  $shipping_obj = new ShippingClass(count($shippable), $cart_obj->GetCurrentFreeShippingDiscountName());
+  $SMARTY->assign('shippingMethods', $shipping_obj->getShippingMethods());
+  
 }catch(exceptionCart $e) {
   $SMARTY->assign('error', $e->getMessage());
 }

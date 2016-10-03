@@ -124,6 +124,7 @@
 
 #mobsearch{
 	padding: 10px 15px;
+	width: 100%;
 
 	#search{
     float: left;
@@ -309,7 +310,27 @@
 	margin: 9px 0 5px;
 }
 
+#products-wrapper .prodout:nth-child(3n+1){
+	clear: none;
+}
+
+#products-wrapper .prodout:nth-child(2n+1){
+	clear: both;
+	float: left;
+}
+
+.emergency-grey .videoWrapper iframe{height: 266px;}
+#account #daysrenew .warning {font-size: 20px;}
+#account #accinfo{font-size: 17px;}
+#specialoffer .sptextout .specialtext h3{font-size: 25px;}
+#specialoffer .sptextout .specialtext{min-height: 155px;}
+#giftgrey #gift_form .giftoption .giftoptext p {height: 95px;}
+#account #reminder1 h3 {font-size: 21px;}
+#account #reminder1 #autor1{border-left: none;}
+#account #reminder1 #viewup1{    border-right: 1px dashed #535353;}
+
 #product-list #categorycontainer .prodcatout .prodcat .imgcont{min-height: 99px;}
 #product-list #categorycontainer .prodcatout:nth-child(1) .prodcat .imgcont, #product-list #categorycontainer .prodcatout:nth-child(2) .prodcat .imgcont{min-height: 155px;}
-
+#shop-cart-btn{display: none !important;}
+#foot1 ul#footmenu li.baselevel>div{height: 59px;}
 }

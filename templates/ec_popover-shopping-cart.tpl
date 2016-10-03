@@ -1,5 +1,6 @@
 <div id='cart-info' class='cart-info'>
 	<div class='cart-product-summary'>
+    {if $productsOnCart}
 		{foreach from=$productsOnCart item=item}
 		<div class="row cartitem">
 			<div class="col-sm-3">
@@ -36,7 +37,18 @@
 		</div>
 		<div class="row" style="padding:10px 0;"> <div class="col-sm-12"> </div> </div>
 		<div class="row"> <div class="col-sm-12 text-right"> <a href="/shopping-cart" class="btn btn-red">Checkout</a> </div> </div>
-	</div>
+    {else}
+    	 <div class="row">
+        <div class="col-sm-12">
+          <div style="border-bottom: 2px solid #E7E7E7;color: #555555;border-top: 2px solid #E7E7E7;">
+            <div class="row" style="margin:1px 0; background-color: #F2F2F2; padding: 12px 0;font-size: 14px;">
+              <div class="col-sm-12 text-center"> <strong>Your shopping cart is empty.</strong> </div>
+            </div>
+          </div>
+    </div>
+    </div>
+  {/if}
+  </div>
 </div>
 
 <script>
