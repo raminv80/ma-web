@@ -56,7 +56,8 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" id="checkout">
-        <h1>Delivery</h1>
+        <h1 class="checkout2">Delivery</h1>
+        <h1 class="checkout3" style="display: none;">Payment</h1>
       </div>
     </div>
   </div>

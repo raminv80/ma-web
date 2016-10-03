@@ -27,7 +27,7 @@ try{
   $results['pages'] = SearchListing($str);
   $results['products'] = SearchProduct($str);
   
-  $SMARTY->assign('count',$count);
+  $SMARTY->assign('count', count($results['pages']) + count($results['products']));
   $SMARTY->assign('results',$results);
   $SMARTY->assign('exists',array());
   

@@ -243,6 +243,9 @@
 			}
 		}
 	}
+    .panel-default .panel-collapse label {
+      line-height: 25px;
+    }
 }
 
 #prodcatdet .sortlab{
@@ -317,6 +320,9 @@
 #products-wrapper .prodout:nth-child(2n+1){
 	clear: both;
 	float: left;
+}
+#autocomplete-search-results{
+ /*  margin-top: 50px; */
 }
 
 .emergency-grey .videoWrapper iframe{height: 266px;}

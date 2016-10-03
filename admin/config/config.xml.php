@@ -106,6 +106,13 @@
           <reference>listing_name</reference> 
           <where>listing_parent_flag = 1 AND listing_type_id = 1 AND listing_published = 1</where> 
         </field> 
+        <field> 
+          <name>banners</name>
+          <table>tbl_banner</table>
+          <id>banner_id</id>
+          <reference>banner_name</reference> 
+          <orderby>banner_name</orderby> 
+        </field> 
       </options>
       <log>
       	<table>tbl_listing</table>
@@ -124,6 +131,8 @@
       <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="103">edit_page_faqs.tpl</custom_template>
       <custom_template field="listing_object_id" value="107">edit_page_corporate-partners.tpl</custom_template>
+      <custom_template field="listing_object_id" value="12">ec_edit_page_shopping-cart.tpl</custom_template>
+      <custom_template field="listing_object_id" value="13">ec_edit_page_checkout.tpl</custom_template>
   	</section>
     
     <section level="1">

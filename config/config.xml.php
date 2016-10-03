@@ -283,6 +283,12 @@
     <url>shopping-cart</url>
     <template>ec_shopping-cart.tpl</template>
     <pageID>12</pageID>
+    <associated>
+      <name>banner</name>
+      <table>tbl_banner</table>
+      <linkfield>listing_associate1</linkfield>
+      <field>banner_id</field>
+    </associated>
     <process>
       <file>includes/processes/process-load-shopping-cart.php</file>
     </process>
@@ -474,6 +480,20 @@
         <table>tbl_productassoc</table>
         <linkfield>product_id</linkfield>
         <field>productassoc_product_id</field>
+        <limit>4</limit>
+        <extends>
+          <table>tbl_product</table>
+          <linkfield>productassoc_product_object_id</linkfield>
+          <field>product_object_id</field>
+        </extends> 
+        <associated>
+          <name>gallery</name>
+          <table>tbl_gallery</table>
+          <linkfield>product_id</linkfield>
+          <field>gallery_product_id</field>
+          <orderby>gallery_order</orderby>
+          <limit>1</limit>
+        </associated>
       </associated>
     </table>
     <template>ec_product.tpl</template>
@@ -490,6 +510,11 @@
     <file>includes/processes/processes-cart.php</file>
     <return_url></return_url>
   </process>  
+  <process>
+    <url>process/autocomplete</url>
+    <file>includes/processes/processes-autocomplete.php</file>
+    <return_url></return_url>
+  </process>
   <process>
     <url>process/user</url>
     <file>includes/processes/processes-user-maf.php</file>

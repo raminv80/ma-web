@@ -19,7 +19,7 @@
 				<div class="row">
 				{assign var='cnt' value=0}
 				{foreach $data.2 as $da} {assign var='cnt' value=$cnt+1}
-				<div class="col-sm-12 newsout" data-sort="{$cnt}" data-{$da.listing_schedule_start_date|date_format:"%B-%Y"}="1" data-all="1" {foreach $da.linkedcats as $cat}data-{$cat.news_category_value}="1"{/foreach}>
+				<div class="col-sm-12 newsout"{if $cnt > 5} style="display:none;"{/if} data-sort="{$cnt}" data-{$da.listing_schedule_start_date|date_format:"%B-%Y"}="1" data-all="1" {foreach $da.linkedcats as $cat}data-{$cat.news_category_value}="1"{/foreach}>
 					<div class="newsres">
 						<div class="row">
 							<div class="col-sm-6">
@@ -42,10 +42,10 @@
 
 				<div class="row" id="hidden-newscont" style="display: none;">
 				</div>
-				{if $cnt > 4}
+				{if $cnt > 5}
 					<div class="row" id="seemore">
 						<div class="col-sm-12 text-center" id="showmore">
-						<a href="javascript:void(0)" class="btn btn-red">
+						<a href="javascript:void(0)" onclick="$(this).hide();$('.newsout:hidden').fadeIn('slow');" class="btn btn-red">
 						Show more
 						</a>
 						</div>

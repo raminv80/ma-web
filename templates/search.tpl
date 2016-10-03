@@ -24,7 +24,7 @@
     <div class="row">
 	    <div class="col-xs-4 col-sm-9">
 		    <div id="resno">
-			    <span class="bold">98</span> results
+			    <span class="bold">{$count}</span> result{if $count gt 1}s{/if}
 		    </div>
 	    </div>
 	    <div class="col-xs-8 col-sm-3 text-right">
@@ -39,10 +39,10 @@
     <div class="row" id="resbox">
         {if $results.pages OR $results.products} {assign var=count value=0} {assign var=page value=1}
         {foreach $results.products as $item} {assign var=count value=$count+1}
-        <div class="col-xs-12 result product" data-all="1" data-agent="1">
-          <div><img class="img-responsive" src="{$item.gallery.0.gallery_link}?width=154&height=98&crop=1" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}"></div>
+        <div class="col-xs-12 result product" {if $count > 4}style="display:none"{/if} data-all="1" data-agent="1">
+          <div><img class="img-responsive" src="{if $item.gallery.0.gallery_link}{$item.gallery.0.gallery_link}{else}/images/no-image-available.png{/if}?width=154&height=96&crop=1" alt="{$item.product_name}" title="{$item.product_name}"></div>
           <div class="resulttitle">
-            <a href="/{$item.cache_url}"><h3>{if $item.product_seo_title}{$item.product_seo_title}{else}{$item.product_name}{/if}</h3></a>
+            <a href="/{$item.cache_url}"><h3>{$item.product_name}</h3></a>
           </div>
           <div class="resultlink">
             <a href="/{$item.cache_url}">{$DOMAIN}/{$item.cache_url}</a>
@@ -53,13 +53,14 @@
         <div class="col-sm-12">
 	    <div class="row seemoresearch">
 	      <div class="col-sm-12 text-center result product">
-	        <div class="showmoresearch"><a href="javascipt:void(0)">Load more</a></div>
+	        <div class="showmoresearch"><a href="javascipt:void(0)" onclick="$('.result.product:hidden').fadeIn();">Load more</a></div>
 	      </div>
 	    </div>
         </div>
 	    {/if}
+        {assign var=count value=0}
         {foreach $results.pages as $item} {assign var=count value=$count+1}
-        <div class="col-xs-12 result page" data-all="1" data-{urlencode data=$item.type_name}="1">
+        <div class="col-xs-12 result page" {if $count > 4}style="display:none"{/if} data-all="1" data-{urlencode data=$item.type_name}="1">
           <div class="resulttitle">
             <a href="/{$item.cache_url}"><h3>{if $item.listing_seo_title}{$item.listing_seo_title}{else}{$item.listing_name}{/if}</h3></a>
           </div>
@@ -74,7 +75,7 @@
         <div class="col-sm-12">
 	    <div class="row seemoresearch">
 	      <div class="col-sm-12 text-center result page">
-	        <div class="showmoresearch"><a href="javascipt:void(0)">Load more</a></div>
+	        <div class="showmoresearch"><a href="javascipt:void(0)" onclick="$('.result.page:hidden').fadeIn();">Load more</a></div>
 	      </div>
 	    </div>
         </div>

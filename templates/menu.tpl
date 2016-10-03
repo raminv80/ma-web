@@ -82,7 +82,7 @@
 			<div class="col-xs-12 col-sm-12 visible-xs visible-sm" id="mobsearch">
 				<div id="mobin">
 					<form id="searchbox" name="searchbox" action="/search" method="get">
-						<input type="text" id="search" name="q" placeholder="I'm looking for..." /><input type="image" src="/images/mob-header-search.png" alt="Search" />
+						<input type="text" id="search" onkeyup="RunAutocomplete()" name="q" placeholder="I'm looking for..." /><input type="image" src="/images/mob-header-search.png" alt="Search" />
 					</form>
 				</div>
 			</div>
@@ -102,7 +102,12 @@
 				</div>
 				<a href="#" id="wishlist"><img src="/images/header-wishlist.png" alt="Wishlist" /></a>
 			</div>
-		</div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div id="autocomplete-search-results"></div>
+      </div>
+    </div>
 	</div>
 </div>
 {$donotshow = [1,7,12,13]}

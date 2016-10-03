@@ -28,10 +28,10 @@
 			<div class="flexslider">
 			  <ul class="slides">
 			  	{assign var='count' value=0}
-			  	{if !empty($gallery)}
+			  	{if $gallery}
 			  	{foreach $gallery as $image }
 			    <li data-thumb="{$image.gallery_link}?width=100&height=100&crop=1">
-					<img src="{$image.gallery_link}?width=757&height=484&crop=1" title="{$image.gallery_title}" alt="{$image.gallery_alt_tag}" class="img-responsive">
+					<img src="{$image.gallery_link}?width=757&height=484&crop=1" title="{$image.gallery_title}" alt="{$image.gallery_alt_tag}" class="img-responsive img-variant-{$image.gallery_variant_id}">
 			    </li>
 				{assign var='count' value=$count+1}
 				{/foreach}
@@ -42,6 +42,17 @@
 				{/if}
 			  </ul>
 			</div>
+        </div>
+        <div id="carousel" class="flexslider hidden-xs hidden-sm">
+          <ul class="slides">
+            {if $gallery}
+			  	{foreach $gallery as $image }
+			    <li>
+					<img src="{$image.gallery_link}?width=757&height=484&crop=1" title="{$image.gallery_title}" alt="{$image.gallery_alt_tag}" class="img-responsive img-variant-{$image.gallery_variant_id}">
+			    </li>
+				{/foreach}
+            {/if}
+          </ul>
         </div>
 
 		<div id="accout">
@@ -165,7 +176,7 @@
                 {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   <div class="attrtype1">
 				  	<label for="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}">
-	                    <input type="radio" onclick="$(this).closest('.form-group').find('.attrtype1_name').html($(this).attr('data-name'));$('.attr-hidden').show();" data-name="{$value.attr_value_name}" class="mainAttr hasAttr updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}" value="{$value.attr_value_id}" name="attr[{$attr.attribute_id}][id]" id="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}" required="required">
+	                    <input type="radio" {if count($prdattrValuesArr[$attr.attribute_id]) eq 1}checked="checked"{/if} onclick="" data-name="{$value.attr_value_name}" class="image-selector mainAttr hasAttr updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}" value="{$value.attr_value_id}" name="attr[{$attr.attribute_id}][id]" id="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}" required="required">
                     	<img src="{$value.attr_value_image}?width=50&height=50&crop=1" title="{$value.attr_value_name}" alt="{$value.attr_value_name}">
                     </label>
                   </div>
@@ -242,7 +253,7 @@
     </div>
   </div>
 </div>
-{if $product_type_id eq 1}
+{if $product_type_id eq 1 && $productassoc}
 <div id="recent">
   <div class="container">
     <div class="row">
@@ -252,57 +263,18 @@
     </div>
 
     <div class="row">
-      <div id="popslide" class="flexslider">
+      <div id="relatedslide" class="flexslider">
         <ul class="slides">
-          <li>
+          {foreach $productassoc as $item}
+          {if $item.gallery && $item.gallery.0.gallery_link}
+            <li>
             <div class="prod">
-              <a href="#"> <img src="/images/pop1.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
+              <a href="/{$item.product_url}"> <img src="{$item.gallery.0.gallery_link}?width=568&height=363&crop=1" alt="{$item.product_name}" title="{$item.product_name}" class="img-responsive" />
               </a>
             </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop2.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop3.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop4.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop1.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-             </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop1.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
-          <li>
-            <div class="prod">
-              <a href="#"> <img src="/images/pop2.jpg?width=568&height=363&crop=1" alt="Popular product 1" class="img-responsive" />
-              </a>
-            </div>
-          </li>
-
+            </li>
+          {/if}
+          {/foreach}
         </ul>
       </div>
     </div>
@@ -393,7 +365,17 @@
 		  var content = left + ' character' + (left > 1 ? 's' : '') + ' left';
 		  $(this).closest('.row').find('.charleft').html(content);
 		});
+		
+		
+		$('.image-selector').click(function(){
+		  $(this).closest('.form-group').find('.attrtype1_name').html($(this).attr('data-name'));
+		  $('.attr-hidden').show();
+		});
 
+		if($('.image-selector:checked')){
+		  $('.image-selector:checked').trigger('click');
+		}
+		
 		//calculatePrice();
 
 		/* ga('ec:addProduct', {
@@ -408,9 +390,22 @@
 	});
 
 $(window).load(function() {
+  $('#carousel.flexslider').flexslider({
+    animation: "slide",
+    controlNav: false,
+    animationLoop: true,
+    slideshow: false,
+    itemWidth: 110,
+    itemMargin: 20,
+    asNavFor: '#prodslider .flexslider'
+  });
+  
   $('#prodslider .flexslider').flexslider({
     animation: "slide",
-    controlNav: "thumbnails"
+    controlNav: false,
+    animationLoop: true,
+    slideshow: true,
+    sync: "#carousel.flexslider"
   });
 });
 
@@ -421,11 +416,29 @@ $(window).load(function() {
 
     // tiny helper function to add breakpoints
     function getGridSize() {
-      return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 4 : 6;
+      var maxItem = $('#relatedslide .prod').length;
+      var supported = (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 4 : 6;
+      if(maxItem && maxItem < supported){
+        var value = 16.66 * maxItem;
+        $('#relatedslide').css('max-width', value+'%');
+      }else{
+        $('#relatedslide').css('max-width', 'initial');
+      }
+      
+	  return (maxItem > supported ? supported : maxItem); 
+      //return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 4 : 6;
     }
 
     $window.load(function() {
-      $('#popslide').flexslider({
+      var maxItem = $('#relatedslide .prod').length;
+      if(maxItem && maxItem < 6){
+        var value = 16.66 * maxItem;
+        $('#relatedslide').css('max-width', value+'%');
+        $('#relatedslide').css('margin', '0 auto 60px auto');
+        $('#recent .flex-direction-nav').hide();
+      }
+      
+      $('#relatedslide').flexslider({
         animation: "slide",
         controlNav: false,
         animationLoop: false,

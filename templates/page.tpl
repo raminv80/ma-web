@@ -164,7 +164,19 @@
 		    	$('#search-form').submit();
 		    }
 		});
-
+		$('.sb-icon-search').click(function() {
+		 	setTimeout(function() {
+		    $('#search').focus();
+      		}, 1000);	
+		  });
+		
+		$('#search').blur(function(){
+		  if(!$('#autocomplete-search-results').is(":focus")){
+		  setTimeout(function() {
+		    $('#autocomplete-search-results').fadeOut('slow');
+      		}, 1000);
+		  }
+		});
 
 		$('#cart').hover(function() {
 		  $(this).find('.dropdown-menu:hidden').fadeIn(200);
