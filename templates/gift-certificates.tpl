@@ -220,7 +220,7 @@
 	                  <div>
                           <input class="autor" {if $post.accept}checked="checked"{/if} type="checkbox" id="accept" name="accept" required/>
                           <label class="autor chklab" for="accept">
-                            I confirm that I have read and agreed to the <a href="/terms-and-conditions" title="View our terms and conditions" target="_blank">terms &amp; conditions</a>.
+                            I confirm that I have read and agreed to the <a href="/terms-and-conditions#gift-certificates" title="View our terms and conditions" target="_blank">terms &amp; conditions</a>.
                           </label>
 	                  </div>
                     <div class="error-msg help-block clearl"></div>
@@ -250,14 +250,14 @@
   $(document).ready(function() {
 
     $("select").selectBoxIt();
-    
+
     $('[data-toggle="tooltip"]').tooltip();
-    
+
     $("#sendday").datepicker({
       dateFormat: "dd/mm/yy",
       minDate: "+1D"
     });
-   
+
     $('#gift_form').validate();
 
     $('#price').rules("add", {
@@ -265,7 +265,7 @@
       digits: true,
       max: 1000
     });
-    
+
     $('input[name="sendtime"]').change(function() {
       if($(this).val() == 'now'){
         $(".customdate").hide();
@@ -273,7 +273,7 @@
         $(".customdate").fadeIn();
       }
     });
-    
+
     $('#ccno').rules("add", {
       creditcard : true,
     });
@@ -282,13 +282,15 @@
       digits: true,
       minlength: 3
     });
-    
-    
+
+
     $("input[name=variant_id]").change(function(){
       //Set attribute
       $('.variant-attributes').attr('disabled', 'disabled');
       $('#attribute_id-' + $(this).val()).removeAttr('disabled');
-      
+      $('#giftgrey .giftoptext a.btn').html('Select');
+      $(this).parents('.giftoption').find('.giftoptext a.btn').html('Selected');
+
       if($("input[name=variant_id]:checked").hasClass('show-otherval')){
         $("#otheram").show();
         $("#price").val('');

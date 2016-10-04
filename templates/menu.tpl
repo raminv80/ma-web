@@ -64,7 +64,7 @@
 		  	<div class="hidden-md hidden-lg">
 			<nav class="collapse navbar-collapse" id="mobile-navbar">
 				<ul class="nav navbar-nav">
-                  <li class=""><a title="Call Membership Services" href="tel:{$COMPANY.toll_free}"><small>Membership Services: {$COMPANY.toll_free}</small></a></li>
+                  <li class=""><a title="Call Membership Services" href="tel:{$COMPANY.toll_free}"><img src="/images/m-call-icon.png" alt="Call us" />Membership Services</a></li>
 					{call name=render_list items=$menuitems['mobile-header']['list'] ismobile=0}
 				</ul>
 			</nav>
@@ -82,7 +82,7 @@
 			<div class="col-xs-12 col-sm-12 visible-xs visible-sm" id="mobsearch">
 				<div id="mobin">
 					<form id="searchbox" name="searchbox" action="/search" method="get">
-						<input type="text" id="search" onkeyup="RunAutocomplete()" name="q" placeholder="I'm looking for..." /><input type="image" src="/images/mob-header-search.png" alt="Search" />
+						<input autocomplete="off" type="text" id="search" onkeyup="RunAutocomplete()" name="q" placeholder="I'm looking for..." /><input type="image" src="/images/mob-header-search.png" alt="Search" />
 					</form>
 				</div>
 			</div>

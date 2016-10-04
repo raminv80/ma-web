@@ -158,6 +158,7 @@ a{color:#ed174f;text-decoration: none;}
 	            <td class="w580" width="580" style="table-layout: fixed;">
 					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Hi {$name}</p>
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">It's our pleasure to let you know that {if $sender_name}{$sender_name}{else}a secret friend{/if} has sent you a MedicAlert gift certificate, valued at ${$amount}!</p>
+                    {if $custom_message}<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">&quot;<i>{$custom_message}</i>&quot;</p>{/if}
                     <p style="font-weight: bold;font-size: 14px; line-height: 26px;">Your gift certificate code is: <span style="font-size: 18px;">{$code}</span></p>
 			       <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To redeem your gift certificate online, follow the steps below:</p> 
                     <ul>

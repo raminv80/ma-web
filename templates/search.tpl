@@ -53,7 +53,7 @@
         <div class="col-sm-12">
 	    <div class="row seemoresearch">
 	      <div class="col-sm-12 text-center result product">
-	        <div class="showmoresearch"><a href="javascipt:void(0)" onclick="$('.result.product:hidden').fadeIn();">Load more</a></div>
+	        <div class="showmoresearch"><a href="javascipt:void(0)" onclick="$('.result.product:hidden').fadeIn();">Load more products</a></div>
 	      </div>
 	    </div>
         </div>
@@ -75,7 +75,7 @@
         <div class="col-sm-12">
 	    <div class="row seemoresearch">
 	      <div class="col-sm-12 text-center result page">
-	        <div class="showmoresearch"><a href="javascipt:void(0)" onclick="$('.result.page:hidden').fadeIn();">Load more</a></div>
+	        <div class="showmoresearch"><a href="javascipt:void(0)" onclick="$('.result.page:hidden').fadeIn();">Load more pages</a></div>
 	      </div>
 	    </div>
         </div>

@@ -31,7 +31,9 @@
             </div>
           {/foreach}
       </div>
+      <div class="col-sm-12 col-md-8 col-md-offset-2"><br>{$listing_content2}</div>
     </div>
+    
   </div>
 </div>
 {/block}

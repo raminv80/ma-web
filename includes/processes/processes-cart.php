@@ -776,6 +776,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                   "email" => $_POST['email'],
                   "recipientname" => $_POST['rname'],
                   "recipientemail" => $_POST['remail'],
+                  "message" => $_POST['message'],
                   "amount" => $chargedAmount,
                   "start_date" => $startDate,
                   "end_date" => $endDate
@@ -800,6 +801,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                     $SMARTY->assign('sender_name', (empty($_POST['anonymous']) ? $_POST['name'] : ''));
                     $SMARTY->assign('code', $codeStr);
                     $SMARTY->assign('amount', $chargedAmount);
+                    $SMARTY->assign('custom_message', $_POST['message']);
                     $from = (string)$CONFIG->company->name;
                     $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
                     $subject = 'Someone has sent you a MedicAlert gift certificate';

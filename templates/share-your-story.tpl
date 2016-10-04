@@ -52,7 +52,7 @@
     			<div class="row">
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="membership_no">Membership number:</label>
-    				  <input class="form-control" value="{$post.membership_no}" type="text" name="membership_no" id="membership_no" >
+    				  <input class="form-control" value="{if $post.membership_no}{$post.membership_no}{else}{$user.id}{/if}" type="text" name="membership_no" id="membership_no" >
 						<div class="error-msg help-block"></div>
     				</div>
 

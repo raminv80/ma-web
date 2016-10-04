@@ -49,7 +49,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
       if(!empty($GA_ID)){
         sendGAEvent($GA_ID, 'Refer a friend', 'Submitted', $sent);
       }
-      header("Location: /thank-you-for-referring-a-friend ");
+      header("Location: /thank-you-for-referring-a-friend");
       die();
     }
   } else{

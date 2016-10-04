@@ -227,7 +227,7 @@
 				<img src="/images/dashboard-prods.png" alt="Products" class="img-responsive" />
 			</div>
 			<div class="col-sm-10 col-sm-offset-1 text-center">
-				<a href="#" class="btn btn-red">View more</a>
+				<a href="/products" title="Click to view our product range" class="btn btn-red">View more</a>
 			</div>
 		</div>
 	</div>

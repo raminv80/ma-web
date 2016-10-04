@@ -9254,6 +9254,7 @@ select option:disabled {
 
   #autocomplete-search-results {
     width: 89vw;
+    position: relative;
     /* margin-top: 50px; */ } }
 @media (min-width: 768px) and (max-width: 991px) {
   #navbar-collapse-2 {
@@ -9503,6 +9504,7 @@ select option:disabled {
     float: left; }
 
   #autocomplete-search-results {
+    position: relative;
     /*  margin-top: 50px; */ }
 
   .emergency-grey .videoWrapper iframe {

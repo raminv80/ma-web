@@ -171,7 +171,7 @@
 		  });
 		
 		$('#search').blur(function(){
-		  if(!$('#autocomplete-search-results').is(":focus")){
+		  if(!$('#autocomplete-search-results').is(":focus") && $(window).width() > 992){
 		  setTimeout(function() {
 		    $('#autocomplete-search-results').fadeOut('slow');
       		}, 1000);

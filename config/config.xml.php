@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true" staging="true">
+<config debug="false" staging="true">
   <domain></domain>
   <google_analytics>
     <id>UA-</id>
@@ -245,6 +245,16 @@
     <template>refer-your-patients.tpl</template>
     <pageID>105</pageID>
   </static_page>
+  <static_page>
+    <url>quick-renew</url>
+    <template>quick-renew.tpl</template>
+    <pageID>222</pageID>
+  </static_page>
+  <static_page>
+    <url>update-my-profile</url>
+    <template>update-my-profile.tpl</template>
+    <pageID>219</pageID>
+  </static_page>
   
   <!-- ECOMMERCE  -->
   <static_page>
@@ -367,6 +377,8 @@
     </table>
     <template>testimonials.tpl</template>
   </listing_page>
+  
+  <!-- <template typeid="6">landing-page.tpl</template>  -->
   
   <listing_page name="products">
     <url>products</url>

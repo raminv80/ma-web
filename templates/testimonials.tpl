@@ -25,7 +25,7 @@
           <div class="testrestext">
             <div class="h5">{$da.listing_name}</div>
             <div class="testloc">{$da.listing_content1}</div>
-            <div class="testtext">{$da.listing_content2|truncate:90:"..."}</div>
+            <div class="testtext">{$da.listing_content2|truncate:80:"..."}</div>
             <a href="{$REQUEST_URI}/{$da.listing_url}" class="readart"> Read my story ></a>
           </div>
         </div>
@@ -51,7 +51,7 @@
 			<div class="col-sm-12 text-center">
 				<h3>If you have your own MedicAlert story to tell, we’d love to hear from you. </h3>
 
-				<a href="#" class="btn btn-red">Share your story</a>
+				<a href="/share-your-story" class="btn btn-red">Share your story</a>
 			</div>
 		</div>
 	</div>

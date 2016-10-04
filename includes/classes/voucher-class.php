@@ -30,6 +30,7 @@ class Voucher{
         ":voucher_email" => $_data['email'],
         ":voucher_recipientname" => $_data['recipientname'],
         ":voucher_recipientemail" => $_data['recipientemail'],
+        ":voucher_message" => $_data['message'],
         ":voucher_amount" => $_data['amount'],
         ":voucher_start_date" => $_data['start_date'],
         ":voucher_end_date" => $_data['end_date'],
@@ -37,8 +38,8 @@ class Voucher{
         ":voucher_confirmation_email_id" => (empty($_data['confirmation_email_id']) ? 0 : $_data['confirmation_email_id'])
     );
   
-    $sql = "INSERT INTO tbl_voucher (voucher_payment_id, voucher_code, voucher_name, voucher_email, voucher_recipientname, voucher_recipientemail, voucher_amount, voucher_start_date, voucher_end_date, voucher_code_email_id, voucher_confirmation_email_id, voucher_created)
-			values (:voucher_payment_id, :voucher_code, :voucher_name, :voucher_email, :voucher_recipientname, :voucher_recipientemail, :voucher_amount, :voucher_start_date, :voucher_end_date, :voucher_code_email_id, :voucher_confirmation_email_id, NOW())";
+    $sql = "INSERT INTO tbl_voucher (voucher_payment_id, voucher_code, voucher_name, voucher_email, voucher_recipientname, voucher_recipientemail, voucher_message, voucher_amount, voucher_start_date, voucher_end_date, voucher_code_email_id, voucher_confirmation_email_id, voucher_created)
+			values (:voucher_payment_id, :voucher_code, :voucher_name, :voucher_email, :voucher_recipientname, :voucher_recipientemail, :voucher_message, :voucher_amount, :voucher_start_date, :voucher_end_date, :voucher_code_email_id, :voucher_confirmation_email_id, NOW())";
     if($this->DBobj->wrappedSql($sql, $params)){
       $this->voucherId = $this->DBobj->wrappedSqlIdentity();
       return $this->voucherId;

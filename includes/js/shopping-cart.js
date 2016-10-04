@@ -468,6 +468,8 @@ function RunAutocomplete(){
     console.log('AJAX error:'+errorThrown);
     }
   });
+ }else{
+   $('#autocomplete-search-results').hide();
  }
 }
 var autocomplete;

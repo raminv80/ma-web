@@ -102,10 +102,10 @@
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2 text-center">
 				<br />
-				*Please download <a href="#">a membership application form</a> and complete your details to join by post, email or fax.
+				*Please download <a href="/uploads/documents/maf_membership_form.pdf" target="_blank" title="Click to download the membership application form">a membership application form</a> and complete your details to join by post, email or fax.
 				<br />
 				<br />
-				<a href="#" class="btn btn-red">Download form</a>
+				<a href="/uploads/documents/maf_membership_form.pdf" target="_blank" title="Click to download the membership application form" class="btn btn-red">Download form</a>
 				<br />
 				<br />
 				{$listing_content4}
