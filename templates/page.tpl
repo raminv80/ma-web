@@ -14,11 +14,11 @@
 {/if}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<title>{$product_name|ucfirst}{$listing_seo_title}</title>
+<title>{$product_seo_title}{$listing_seo_title}</title>
 <link href="/images/favicon.png" type="image/png" rel="shortcut icon">
 
 <!-- for Facebook -->
-<meta property="og:title" content="{if $listing_share_title || $product_share_title}{$listing_share_title}{$product_share_title}{else}{$product_name|ucfirst}{$listing_seo_title}{/if}" />
+<meta property="og:title" content="{if $listing_share_title || $product_share_title}{$listing_share_title}{$product_share_title}{else}{$product_seo_title}{$listing_seo_title}{/if}" />
 <meta property="og:type" content="article" />
 <meta property="og:image" content="{$DOMAIN}{if $listing_share_image || $product_share_image}{$listing_share_image}{$product_share_image}{elseif $gallery && $gallery.0.gallery_link}{$gallery.0.gallery_link}{elseif $listing_image}{$listing_image}{else}/images/logo.png{/if}"/>
 <meta property="og:url" content="{$DOMAIN}{$REQUEST_URI}" />
@@ -27,14 +27,14 @@
 <!-- for Twitter -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="">
-<meta name="twitter:title" content="{if $listing_share_title || $product_share_title}{$listing_share_title}{$product_share_title}{else}{$product_name|ucfirst}{$listing_seo_title}{/if}" />
+<meta name="twitter:title" content="{if $listing_share_title || $product_share_title}{$listing_share_title}{$product_share_title}{else}{$product_seo_title}{$listing_seo_title}{/if}" />
 <meta name="twitter:description" content="{if $listing_share_text || $product_share_text}{$listing_share_text}{$product_share_text}{else}{$product_meta_description}{$listing_meta_description}{/if}" />
 <meta name="twitter:creator" content="@THEMAdvertising">
 <meta name="twitter:image:src" content="{$DOMAIN}{if $listing_share_image || $product_share_image}{$listing_share_image}{$product_share_image}{elseif $gallery && $gallery.0.gallery_link}{$gallery.0.gallery_link}{elseif $listing_image}{$listing_image}{else}/images/logo.png{/if}"/>
 <meta name="twitter:domain" content="{$DOMAIN}">
 
 <!-- Schema.org -->
-<meta itemprop="name" content="{$product_name|ucfirst}{$listing_seo_title}">
+<meta itemprop="name" content="{$product_seo_title}{$listing_seo_title}">
 <meta itemprop="description" content="{$product_meta_description} {$listing_meta_description}">
 <meta itemprop="image" content="{$DOMAIN}/images/logo.png">
 

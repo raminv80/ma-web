@@ -6,7 +6,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-				<h2>Welcome back, Owen</h2><div><a href="/process/user?logout=true" title="Click to log out">Log out</a></div>
+				<h2>Welcome back, {$user.gname}</h2><div><a href="/process/user?logout=true" title="Click to log out">Log out</a></div>
 			</div>
 		</div>
 	</div>
@@ -39,10 +39,16 @@
 		<div class="row">
 			<div class="col-sm-6 col-md-7 col-lg-8">
 				<div id="daysrenew" class=" text-center">
-					<img src="/images/dashboard-warning.png" alt="Warning" /> <span class="warning">Your membership has expired</span>
-					<div class="days">7</div>
+                    {$renewalDate = $user.maf.main.user_RenewalDate}
+                    {if $renewalDate gt $smarty.now|date_format:"%Y-%m-%d"}
+			         <img src="/images/dashboard-warning.png" alt="active" /> <span class="warning">Your are protected</span>
+                    <div><br>You have <strong>{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'} days</strong> until your reward is due.</div>
+                    {else}		
+                    <img src="/images/dashboard-warning.png" alt="Warning" /> <span class="warning">Your membership has expired</span>
+					<div class="days">{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'}</div>
 					<div>days overdue</div>
-					<a href="/quick-renew" class="btn btn-red">Renew now</a>
+					<a href="/quick-renew" title="Click to renew your membership" class="btn btn-red">Renew now</a>
+                    {/if}
 				</div>
 			</div>
 			<div class="col-sm-6 col-md-5 col-lg-4">
@@ -52,7 +58,7 @@
 							<img src="/images/dashboard-name.png" alt="Account" /> Member name
 						</div>
 						<div class="col-xs-4 col-sm-4">
-							Owen Smith
+							{$user.maf.main.user_firstname} {$user.maf.main.user_lastname}
 						</div>
 					</div>
 					<div class="accrow">
@@ -60,7 +66,7 @@
 							<img src="/images/dashboard-memberno.png" alt="Account" /> Member number
 						</div>
 						<div class="col-xs-4 col-sm-4">
-							2222
+							{$user.maf.main.user_id}
 						</div>
 					</div>
 					<div class="accrow">
@@ -68,7 +74,7 @@
 							<img src="/images/dashboard-membersince.png" alt="Account" /> Member since
 						</div>
 						<div class="col-xs-4 col-sm-4">
-							21/04/2010
+                            {$user.maf.main.user_memberJoinDate|date_format:"%d/%m/%Y"}
 						</div>
 					</div>
 					<div class="accrow">
@@ -76,7 +82,7 @@
 							<img src="/images/dashboard-renewal.png" alt="Account" /> Your next renewal is due
 						</div>
 						<div class="col-xs-4 col-sm-4">
-							21/04/2016
+                          {$user.maf.main.user_RenewalDate|date_format:"%d/%m/%Y"}
 						</div>
 					</div>
 					<div class="accrow">
@@ -98,13 +104,13 @@
 						<div>
 							<img src="/images/dashboard-viewupdate.png" alt="View / update your profile" class="img-responsive" />
 						</div>
-						<a href="/update-your-details" class="btn btn-red">View / update your profile</a>
+						<a href="/update-my-profile" title="Click to update profile" class="btn btn-red">View / update your profile</a>
 					</div>
 					<div class="col-sm-6 text-center" id="autor">
 						<div>
 							<img src="/images/dashboard-autorenew.png" alt="Register for auto-renewals" class="img-responsive" />
 						</div>
-						<a href="/auto-renewal" class="btn btn-red">Register for auto-renewals</a>
+						<a href="/register-for-auto-renewal" title="Click to register for auto-renewals" class="btn btn-red">Register for auto-renewals</a>
 
 						<p>Take the hassle out of remembering to pay your annual MedicAlert membership with auto-renewals. By setting up Direct Debit payments from your nominated bank account, you can rest assured knowing you’ll always be protected.</p>
 					</div>

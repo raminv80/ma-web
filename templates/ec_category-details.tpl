@@ -74,7 +74,7 @@
 				</div>
 				<div id="narrow" class="panel-collapse collapse" role="tabpanel" aria-labelledby="narrow">
 					<div class="panel-body">
-
+                        <a href="javascript:void(0)" onclick="ResetFilters()">Reset filters</a>
 						<!---Type-->
 						<div class="panel-heading subhead" role="tab" id="accordion3">
 							<h4 class="panel-title">
@@ -406,6 +406,11 @@
       flexslider.vars.maxItems = gridSize;
     });
   }());
+  
+  function ResetFilters(){
+    $('.iso-filter:checked').removeAttr('checked');
+    filterOptions();
+  }
 </script>
 {/block}
 

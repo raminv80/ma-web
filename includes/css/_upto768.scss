@@ -574,7 +574,7 @@ tr.tabopts {
       line-height: 25px;
     }
 }
- 
+
 #prodcatdet .sortlab{
 	float: left;
 	line-height: 45px;
@@ -939,4 +939,22 @@ tr.tabopts {
   position: relative;
   /* margin-top: 50px; */
 }
+
+
+#updateprof{
+	margin-top: 0;
+}
+
+#updateprof .ui-accordion-content{
+	padding: 40px 20px;
+}
+
+#updateprof .ui-accordion-content .form-group{
+	clear: both;
+	float: left;
+	width: 100%;
+}
+
+#updateprof .btn-red{margin-bottom: 15px;}
+
 }

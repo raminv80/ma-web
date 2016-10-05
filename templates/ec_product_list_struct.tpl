@@ -24,7 +24,7 @@
         <div class="colours">Available colours
 			<div class="colourbox">
             {foreach $item.general_details.has_attributes.2 as $colour}  
-              <img src="{$colour.values.attr_value_image}?height=22&width=22" alt="{$colour.values.attr_value_name}" title="{$colour.values.attr_value_name}" />
+              <img src="{if $colour.values.attr_value_image}{$colour.values.attr_value_image}{else}/images/undefined-colour.png{/if}?height=22&width=22" alt="{$colour.values.attr_value_name}" title="{$colour.values.attr_value_name}" />
             {/foreach}
 			</div>
 		</div>
