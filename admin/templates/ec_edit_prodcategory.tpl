@@ -1,6 +1,11 @@
-{block name=body} {* Define the function *} {function name=options_list level=0} {foreach $opts as $opt} {if $fields.listing_object_id neq $opt.id}
-<option value="{$opt.id}" {if  $selected eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
-{if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1 selected=$selected} {/if} {/if} {/foreach} {/function}
+{block name=body} {* Define the function *} 
+{function name=options_list level=0}
+  {foreach $opts as $opt}
+    {if ($ignore && $ignore eq $opt.id) || ($ignoregroupid && $ignoregroupvalue eq $opt.extra.$ignoregroupid)}{continue}{/if}
+    <option value="{$opt.id}" {if  $selected eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
+    {if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1 selected=$selected} {/if}
+  {/foreach}
+{/function}
 
 <div class="row">
   <div class="col-sm-12">
@@ -92,6 +97,12 @@
               </div>
             </div>
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_order">Order</label>
+              <div class="col-sm-5">
+                <input class="form-control number" type="text" value="{$fields.listing_order}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
+              </div>
+            </div>
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="listing_image">
                 Image<br>
                 <small>Size: 800px Wide x 440px Tall</small>
@@ -113,14 +124,8 @@
               <div class="col-sm-5">
                 <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate1]" id="id_listing_associate1">
                   <option value="0">None</option>
-                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate1}
+                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate1 ignoregroupid=banner_flag1 ignoregroupvalue=1}
                 </select>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_order">Order</label>
-              <div class="col-sm-5">
-                <input class="form-control number" type="text" value="{$fields.listing_order}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
               </div>
             </div>
           </div>

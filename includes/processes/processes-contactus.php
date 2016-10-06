@@ -73,6 +73,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         $buf .= '<h2>Website ' . $_POST['form_name'] . '</h2>';
         foreach($_POST as $name => $var){
           if(!in_array($name, $banned)){
+            $name = (strtolower($_POST['form_name']) == 'share your story' && $name == 'enquiry') ? 'Story' : $name;
             $buf .= '<br/><b>' . ucwords(str_replace('_', ' ', $name)) . ': </b> <br/> ' . $var . '<br/>';
           }
         }

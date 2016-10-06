@@ -7407,6 +7407,8 @@ a {
     #proddet #prodslider ul.slides {
       background: #f8f8f9;
       min-height: 309px; }
+  #proddet #carousel.flexslider .slides .flex-active-slide img {
+    border: 1px solid #e9003b; }
   #proddet .flex-control-thumbs li {
     width: auto;
     margin-right: 10px; }
@@ -8076,27 +8078,34 @@ a {
     #account #accinfo .accrow a {
       color: #e9003b;
       font-weight: bold; }
-  #account #accinfo #password-form {
-    margin-top: 15px; }
-    #account #accinfo #password-form label {
-      font-weight: normal;
-      width: 100%;
-      text-align: center; }
-      #account #accinfo #password-form label span {
-        color: #e9003b; }
-        #account #accinfo #password-form label span.bold {
-          font-weight: bold;
-          color: #212221; }
-    #account #accinfo #password-form input[type="text"], #account #accinfo #password-form input[type="email"] {
-      height: 40px;
-      border-radius: 0; }
-    #account #accinfo #password-form .showhide {
-      position: absolute;
-      top: 35px;
-      right: 24px; }
-    #account #accinfo #password-form .passnote {
-      margin-top: 10px;
-      font-style: italic; }
+  #account #accinfo #password-form label {
+    font-weight: bold;
+    width: 100%;
+    text-align: center; }
+    #account #accinfo #password-form label span {
+      color: #e9003b; }
+      #account #accinfo #password-form label span.bold {
+        font-weight: bold;
+        color: #212221; }
+  #account #accinfo #password-form .form-group {
+    margin-bottom: 0; }
+  #account #accinfo #password-form input[type="text"], #account #accinfo #password-form input[type="email"] {
+    height: 40px;
+    border-radius: 0; }
+  #account #accinfo #password-form .showhide {
+    position: absolute;
+    top: 35px;
+    right: 24px; }
+  #account #accinfo #password-form .passnote {
+    margin-top: 10px;
+    font-style: italic; }
+  #account #accinfo #password-form .btn-red {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    color: #ffffff; }
+    #account #accinfo #password-form .btn-red:hover {
+      color: #e9003b; }
 #account #renewal {
   border-top: 1px solid #dedede;
   padding-top: 50px;

@@ -73,16 +73,14 @@
                 </span> <a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('banner_image2','','');">Select File</a> <a href="javascript:void(0);" class="btn btn-info" onclick="$('#banner_image2_link').val('');$('#banner_image2_path').html('None');">Remove File</a>
               </div>
             </div>
-            {* COMMENTED OUT UNTIL REQUIRED 
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="banner_flag1">Featured</label>
+              <label class="col-sm-3 control-label" for="banner_flag1">Members only</label>
               <div class="col-sm-5">
                 <input type="hidden" value="{if $fields.banner_flag1 eq 1}1{else}0{/if}" name="field[1][tbl_banner][{$cnt}][banner_flag1]" class="value">
                 <input class="chckbx" type="checkbox" {if $fields.banner_flag1 eq 1} checked="checked" {/if}
                    onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="banner_flag1">
               </div>
             </div>
-            *}
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="banner_order">Order</label>
               <div class="col-sm-5">

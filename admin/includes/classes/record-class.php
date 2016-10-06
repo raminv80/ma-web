@@ -180,7 +180,7 @@ class Record{
   }
 
 
-  function getAssociated($a, $id){
+  function getAssociated($a, $id, $_checkInlist = false){
     global $SMARTY, $DBobject;
     $results = array();
     
@@ -204,7 +204,13 @@ class Record{
         }
         
         foreach($a->associated as $as){
-          $r_array["{$as->name}"] = $this->getAssociated($as, $row["{$as->linkfield}"]);
+          if($_checkInlist){
+            if($as->attributes()->inlist){ 
+              $r_array["{$as->name}"] = $this->getAssociated($as, $row["{$as->linkfield}"]);
+            }
+          }else{
+            $r_array["{$as->name}"] = $this->getAssociated($as, $row["{$as->linkfield}"]);
+          }
         }
         $results[] = $r_array;
       }
@@ -276,7 +282,7 @@ class Record{
         
         foreach($this->CONFIG->table->associated as $a){
           if($a->attributes()->inlist){
-            $val["{$a->name}"] = $this->getAssociated($a, $val["{$a->linkfield}"]);
+            $val["{$a->name}"] = $this->getAssociated($a, $val["{$a->linkfield}"], true);
           }
         }
         $records[$val["{$this->ID}"]] = $val;

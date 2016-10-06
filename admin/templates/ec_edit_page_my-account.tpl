@@ -1,4 +1,5 @@
-{block name=body} {* Define the function *} 
+{block name=body} 
+{* Define the function *} 
 {function name=options_list level=0}
   {foreach $opts as $opt}
     {if ($ignore && $ignore eq $opt.id) || ($ignoregroupid && $ignoregroupvalue eq $opt.extra.$ignoregroupid)}{continue}{/if}
@@ -130,11 +131,29 @@
               </div>
             </div> -->
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_associate1">Banner ad</label>
+              <label class="col-sm-3 control-label" for="id_listing_associate1">Banner ad 1</label>
               <div class="col-sm-5">
                 <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate1]" id="id_listing_associate1">
                   <option value="0">None</option>
                   {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate1 ignoregroupid=banner_flag1 ignoregroupvalue=0}
+                </select>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_associate2">Banner ad 2</label>
+              <div class="col-sm-5">
+                <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate2]" id="id_listing_associate2">
+                  <option value="0">None</option>
+                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate2 ignoregroupid=banner_flag1 ignoregroupvalue=0}
+                </select>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_associate3">Banner ad 3</label>
+              <div class="col-sm-5">
+                <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate3]" id="id_listing_associate3">
+                  <option value="0">None</option>
+                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate3 ignoregroupid=banner_flag1 ignoregroupvalue=0}
                 </select>
               </div>
             </div>

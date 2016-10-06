@@ -1811,6 +1811,11 @@ a {
 			min-height: 309px;
 		}
 	}
+	#carousel.flexslider{
+	 .slides .flex-active-slide img{
+	   border: 1px solid $red;
+	 }
+	}
 
 	.flex-control-thumbs li{
 		width: auto;
@@ -2911,10 +2916,8 @@ a {
 		}
 
 		#password-form{
-			margin-top: 15px;
-
 			label{
-				font-weight: normal;
+				font-weight: bold;
 				width: 100%;
 				text-align: center;
 
@@ -2926,6 +2929,10 @@ a {
 						color: $black;
 					}
 				}
+			}
+
+			.form-group{
+				margin-bottom: 0;
 			}
 
 			input[type="text"], input[type="email"]{
@@ -2942,6 +2949,17 @@ a {
 			.passnote{
 				margin-top: 10px;
 				font-style: italic;
+			}
+
+			.btn-red{
+				margin-top: 10px;
+				margin-bottom: 10px;
+				width: 100%;
+				color: $white;
+
+				&:hover{
+					color: $red;
+				}
 			}
 		}
 	}

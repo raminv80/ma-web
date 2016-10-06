@@ -110,7 +110,8 @@
           <name>banners</name>
           <table>tbl_banner</table>
           <id>banner_id</id>
-          <reference>banner_name</reference> 
+          <reference>banner_name</reference>
+          <extra>banner_flag1</extra> 
           <orderby>banner_name</orderby> 
         </field> 
       </options>
@@ -131,6 +132,7 @@
       <custom_template field="listing_object_id" value="95">edit_page_who-needs-membership.tpl</custom_template>
       <custom_template field="listing_object_id" value="103">edit_page_faqs.tpl</custom_template>
       <custom_template field="listing_object_id" value="107">edit_page_corporate-partners.tpl</custom_template>
+      <custom_template field="listing_object_id" value="9">ec_edit_page_my-account.tpl</custom_template>
       <custom_template field="listing_object_id" value="12">ec_edit_page_shopping-cart.tpl</custom_template>
       <custom_template field="listing_object_id" value="13">ec_edit_page_checkout.tpl</custom_template>
   	</section>
@@ -522,7 +524,7 @@
       	<id>product_id</id>
       	<field>product_name</field>
       	<deleted>product_deleted</deleted>
-        <associated> 
+        <associated inlist="true"> 
           <name>variants</name>
           <table>tbl_variant</table>
           <linkfield>product_id</linkfield>
@@ -736,7 +738,7 @@
           <linkfield>cart_id</linkfield>
           <field>payment_cart_id</field> 
           <where>payment_status = 'A'</where>
-          <associated> 
+          <associated inlist="true"> 
             <id>order_id</id>
             <name>order</name>
             <table>tbl_order</table>

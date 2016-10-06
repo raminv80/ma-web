@@ -86,13 +86,22 @@ class Listing {
         }
         $listing_f['options']["{$f->name}"] = $this->getOptionsCatTree($f,$parentID);
       }else{
+        $ext = array();
+        foreach($f->extra as $r){
+          $ext[] = $r;
+        }
         $pre = str_replace("tbl_","",$f->table);
-        $sql = "SELECT {$f->id},{$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+        $sql = "SELECT {$f->id},{$f->reference}" . (empty($ext)? '' : ',' . implode(',', $ext)) . " FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
         if($res = $DBobject->wrappedSqlGet($sql)){
           foreach($res as $key=>$row){
+            $extra = array();
+            foreach($ext as $r){
+              $extra["{$r}"] = $row["{$r}"];
+            }
             $listing_f['options']["{$f->name}"][] = array(
                 'id'=>$row["{$f->id}"],
-                'value'=>$row["{$f->reference}"]
+                'value'=>$row["{$f->reference}"], 
+                'extra' => $extra 
             );
           }
         }

@@ -55,6 +55,14 @@
           </ul>
         </div>
 
+		<div id="imgholder" style="display: none;">
+            {if $gallery}
+			  	{foreach $gallery as $image }
+					<img src="{$image.gallery_link}?width=757&height=484&crop=1" title="{$image.gallery_title}" alt="{$image.gallery_alt_tag}" class="img-responsive img-variant-{$image.gallery_variant_id}">
+				{/foreach}
+            {/if}
+		</div>
+
 		<div id="accout">
 		<div id="accordion">
         {if $product_description}
@@ -177,7 +185,7 @@
                   <div class="attrtype1">
 				  	<label for="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}">
 	                    <input type="radio" {if count($prdattrValuesArr[$attr.attribute_id]) eq 1}checked="checked"{/if} onclick="" data-name="{$value.attr_value_name}" class="image-selector mainAttr hasAttr updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}" value="{$value.attr_value_id}" name="attr[{$attr.attribute_id}][id]" id="{urlencode data=$attr.attribute_name|cat:'_'|cat:$value.attr_value_name}" required="required">
-                    	<img src="{$value.attr_value_image}?width=50&height=50&crop=1" title="{$value.attr_value_name}" alt="{$value.attr_value_name}">
+                    	<img src="{$value.attr_value_image}?width=50&height=50&crop=1" data-var="" title="{$value.attr_value_name}" alt="{$value.attr_value_name}">
                     </label>
                   </div>
                 {/foreach}
@@ -289,6 +297,12 @@
 <script type="text/javascript" src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
 <script>
+jQuery.fn.outerHTML = function(s) {
+    return s
+        ? this.before(s).remove()
+        : jQuery("<p>").append(this.eq(0).clone()).html();
+};
+
   $( function() {
     var icons = {
       header: "glyphicon glyphicon-plus",
@@ -365,8 +379,59 @@
 		  var content = left + ' character' + (left > 1 ? 's' : '') + ' left';
 		  $(this).closest('.row').find('.charleft').html(content);
 		});
-		
-		
+
+
+		$(".image-selector").change(function() {
+			while ($('#prodslider .flexslider').data('flexslider').count > 0){
+				$('#prodslider .flexslider').data('flexslider').removeSlide(0);
+			}
+			while ($('#carousel').data('flexslider').count > 0){
+				$('#carousel').data('flexslider').removeSlide(0);
+			}
+
+	  	$("#imgholder img").each(function(){
+			var classes=$(this).attr('class');
+			var class1=classes.replace('img-responsive ','');
+			var class1=class1.substring(4,class1.length);
+			if($("#prodright input[type='radio'].image-selector:checked").hasClass(class1)){
+				html=$(this)[0].outerHTML;
+				saved1 = $('<li>'+html+'</li>');
+				$('#prodslider .flexslider').data('flexslider').addSlide($(saved1));
+				/*$('#carousel').data('flexslider').addSlide($(saved1));*/
+			}
+			$('#prodslider .flexslider').flexslider(0);
+			/*$('#carousel').flexslider(0);*/
+		});
+
+	  	$("#imgholder img").each(function(){
+			var classes=$(this).attr('class');
+			var class1=classes.replace('img-responsive ','');
+			var class1=class1.substring(4,class1.length);
+			if($("#prodright input[type='radio'].image-selector:checked").hasClass(class1)){
+				html=$(this)[0].outerHTML;
+				saved1 = $('<li>'+html+'</li>');
+				/*$('#prodslider .flexslider').data('flexslider').addSlide($(saved1));*/
+				$('#carousel').data('flexslider').addSlide($(saved1));
+			}
+			/*$('#prodslider .flexslider').flexslider(0);*/
+			$('#carousel').flexslider(0);
+		});
+
+  	/*$("#slideholder img.img-"+variant).each(function(){
+		html=$(this)[0].outerHTML;
+  	saved1 = $('<li>'+html+'</li>');
+		$('#slider').data('flexslider').addSlide($(saved1));
+	});
+	$("#slideholder img.img-"+variant).each(function(){
+		html=$(this)[0].outerHTML;
+  	saved1 = $('<li>'+html+'</li>');
+		$('#slider2').data('flexslider').addSlide($(saved1));
+	});
+	$('#slider').flexslider(0);
+	$('#slider2').flexslider(0);*/
+		});
+
+
 		$('.image-selector').click(function(){
 		  $(this).closest('.form-group').find('.attrtype1_name').html($(this).attr('data-name'));
 		  $('.attr-hidden').show();
@@ -375,7 +440,7 @@
 		if($('.image-selector:checked')){
 		  $('.image-selector:checked').trigger('click');
 		}
-		
+
 		//calculatePrice();
 
 		/* ga('ec:addProduct', {
@@ -399,7 +464,7 @@ $(window).load(function() {
     itemMargin: 20,
     asNavFor: '#prodslider .flexslider'
   });
-  
+
   $('#prodslider .flexslider').flexslider({
     animation: "slide",
     controlNav: false,
@@ -424,8 +489,8 @@ $(window).load(function() {
       }else{
         $('#relatedslide').css('max-width', 'initial');
       }
-      
-	  return (maxItem > supported ? supported : maxItem); 
+
+	  return (maxItem > supported ? supported : maxItem);
       //return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 4 : 6;
     }
 
@@ -437,7 +502,7 @@ $(window).load(function() {
         $('#relatedslide').css('margin', '0 auto 60px auto');
         $('#recent .flex-direction-nav').hide();
       }
-      
+
       $('#relatedslide').flexslider({
         animation: "slide",
         controlNav: false,

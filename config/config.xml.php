@@ -282,6 +282,27 @@
     <url>my-account</url>
     <template>account.tpl</template>
     <pageID>9</pageID>
+    <associated>
+      <name>banner1</name>
+      <table>tbl_banner</table>
+      <linkfield>listing_associate1</linkfield>
+      <field>banner_id</field>
+      <where>banner_flag1 = '1'</where>
+    </associated>
+     <associated>
+      <name>banner2</name>
+      <table>tbl_banner</table>
+      <linkfield>listing_associate2</linkfield>
+      <field>banner_id</field>
+      <where>banner_flag1 = '1'</where>
+    </associated>
+     <associated>
+      <name>banner3</name>
+      <table>tbl_banner</table>
+      <linkfield>listing_associate3</linkfield>
+      <field>banner_id</field>
+      <where>banner_flag1 = '1'</where>
+    </associated>
     <process>
       <file>includes/processes/process-load-account.php</file>
     </process>
@@ -298,6 +319,7 @@
       <table>tbl_banner</table>
       <linkfield>listing_associate1</linkfield>
       <field>banner_id</field>
+      <where>banner_flag1 != '1'</where>
     </associated>
     <process>
       <file>includes/processes/process-load-shopping-cart.php</file>
@@ -400,6 +422,7 @@
         <table>tbl_banner</table>
         <linkfield>listing_associate1</linkfield>
         <field>banner_id</field>
+        <where>banner_flag1 != '1'</where>
       </associated>
       <template>ec_category-details.tpl</template> 
     </table>
