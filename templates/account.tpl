@@ -43,7 +43,7 @@
                     {if $renewalDate gt $smarty.now|date_format:"%Y-%m-%d"}
 			         <img src="/images/dashboard-warning.png" alt="active" /> <span class="warning">Your are protected</span>
                     <div><br>You have <strong>{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'} days</strong> until your reward is due.</div>
-                    {else}		
+                    {else}
                     <img src="/images/dashboard-warning.png" alt="Warning" /> <span class="warning">Your membership has expired</span>
 					<div class="days">{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'}</div>
 					<div>days overdue</div>
@@ -87,9 +87,33 @@
 					</div>
 					<div class="accrow">
 						<div class="col-sm-12">
-							<img src="/images/dashboard-password.png" alt="Account" /> <a href="#">Update my password</a>
+							<img src="/images/dashboard-password.png" alt="Account" /> <a href="javascript:void(0)" onclick="$('#password-form').show('slow');">Update my password</a>
 						</div>
-
+					</div>
+					<div class="accrow" id="password-form" style="display: none;">
+						<form id="pass_form" accept-charset="UTF-8" method="post" action="/process/" novalidate="novalidate">
+						<input type="hidden" name="formToken" id="formToken" value="{$token}" />
+						<input type="hidden" value="Share your story" name="pass_form" id="pass_form" />
+						<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
+						<div class="col-sm-12 form-group">
+						    <label for="pass" class="control-label bold">Current Password:<span>*</span></label>
+							<input class="form-control showpassword" type="password" id="password1" name="pass" autocomplete="off" required />
+							<a class="showhide" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[type=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[type=text]').get(0).type='password';$(this).html('Show'); }">Show</a>
+							<span class="help-block"></span>
+						</div>
+						<div class="col-sm-12 form-group">
+						    <label for="newpassword" class="control-label bold">New Password:<span>*</span></label>
+							<input class="form-control showpassword" type="password" id="newpassword" name="newpassword" autocomplete="off" required />
+							<a class="showhide" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[type=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[type=text]').get(0).type='password';$(this).html('Show'); }">Show</a>
+							<span class="help-block"></span>
+						</div>
+						<div class="col-sm-12">
+							<div class="passnote">Note: Your password must be at least 8 characters in length and contain at least 1 numeral and both upper and lower case letters.</div>
+						</div>
+						<div class="col-sm-12">
+							 <button type="submit" class="btn btn-red">Update password</a>
+						</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -104,13 +128,13 @@
 						<div>
 							<img src="/images/dashboard-viewupdate.png" alt="View / update your profile" class="img-responsive" />
 						</div>
-						<a href="/update-my-profile" title="Click to update profile" class="btn btn-red">View / update your profile</a>
+						<a href="/update-my-profile" class="btn btn-red">View / update your profile</a>
 					</div>
 					<div class="col-sm-6 text-center" id="autor">
 						<div>
 							<img src="/images/dashboard-autorenew.png" alt="Register for auto-renewals" class="img-responsive" />
 						</div>
-						<a href="/register-for-auto-renewal" title="Click to register for auto-renewals" class="btn btn-red">Register for auto-renewals</a>
+						<a href="/auto-renewal" class="btn btn-red">Register for auto-renewals</a>
 
 						<p>Take the hassle out of remembering to pay your annual MedicAlert membership with auto-renewals. By setting up Direct Debit payments from your nominated bank account, you can rest assured knowing you’ll always be protected.</p>
 					</div>
@@ -174,12 +198,9 @@
 				</a>
 			</div>
 			<div class="col-xs-6 col-sm-3 col-md-2 text-center prod">
-					<div class="find">
 						<a href="/products">
-							<img src="/images/dashboard-plus.png" alt="Find a new product" class="img-responsive" />
-							<div>Find a new product</div>
+							<img src="/images/dashboard-findnew.png" class="img-responsive" alt="Find a new product" title="Find a new product" />
 						</a>
-					</div>
 			</div>
 		</div>
 	</div>
@@ -397,6 +418,8 @@
 $(document).ready(function(){
 
 	 	$('#contact_form').validate();
+
+	 	$('#pass_form').validate();
 
 	 	$('#postcode').rules("add", {
 			digits: true,
