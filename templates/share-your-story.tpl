@@ -27,25 +27,25 @@
     	  		<div class="row">
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="name">Full name<span>*</span>:</label>
-    					<input class="form-control" value="{$post.name}" type="text" name="name" id="name" required="">
+    					<input class="form-control" value="{if $post.name}{$post.name}{else}{$user.gname} {$user.surname}{/if}" type="text" name="name" id="name" required="">
 						<div class="error-msg help-block"></div>
     				</div>
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="email">Email<span>*</span>:</label>
-    					<input class="form-control" value="{$post.email}" type="email" name="email" id="email" required="">
+    					<input class="form-control" value="{if $post.email}{$post.email}{else}{$user.email}{/if}" type="email" name="email" id="email" required="">
 						<div class="error-msg help-block"></div>
     				</div>
     			</div>
     			<div class="row">
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="phone">Phone<span>*</span>:</label>
-    				  <input class="form-control" value="{$post.phone}" type="text" name="phone" id="phone" required="">
+    				  <input class="form-control" value="{if $post.phone}{$post.phone}{else}{$user.maf.main.user_mobile}{/if}" type="text" name="phone" id="phone" required="">
 						<div class="error-msg help-block"></div>
     				</div>
 
                     <div class="col-sm-6 form-group">
                       <label class="visible-ie-only" for="postcode">Postcode<span>*</span>:</label>
-                      <input class="form-control" value="{$post.postcode}" maxlength="4" type="text" name="postcode" id="postcode"  required="">
+                      <input class="form-control" value="{if $post.postcode}{$post.postcode}{else}{$user.maf.main.user_postcode}{/if}" maxlength="4" type="text" name="postcode" id="postcode"  required="">
 						<div class="error-msg help-block"></div>
                     </div>
     			</div>

@@ -37,7 +37,7 @@
 			<div class="col-sm-12 text-center">
 				<h3>If you have your own MedicAlert story to tell, we’d love to hear from you. </h3>
 
-				<a href="#" class="btn btn-red">Share your story</a>
+				<a href="/share-your-story" class="btn btn-red">Share your story</a>
 			</div>
 		</div>
 	</div>

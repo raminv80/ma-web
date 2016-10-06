@@ -287,27 +287,27 @@
       <table>tbl_banner</table>
       <linkfield>listing_associate1</linkfield>
       <field>banner_id</field>
-      <where>banner_flag1 = '1'</where>
     </associated>
      <associated>
       <name>banner2</name>
       <table>tbl_banner</table>
       <linkfield>listing_associate2</linkfield>
       <field>banner_id</field>
-      <where>banner_flag1 = '1'</where>
     </associated>
      <associated>
       <name>banner3</name>
       <table>tbl_banner</table>
       <linkfield>listing_associate3</linkfield>
       <field>banner_id</field>
-      <where>banner_flag1 = '1'</where>
     </associated>
     <process>
       <file>includes/processes/process-load-account.php</file>
     </process>
     <process>
       <file>includes/processes/process-load-donations.php</file>
+    </process>
+    <process>
+      <file>includes/processes/process-load-popular-products.php</file>
     </process>
   </static_page>
   <static_page>

@@ -370,28 +370,32 @@
 <script src="/includes/js/jquery-ui.js"></script>
 <script src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript">
- 
+ jQuery.validator.addMethod("validDate", function(value, element) {
+        return this.optional(element) || /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/.test(value);
+    }, "Please enter a valid date");
+
   $(document).ready(function() {
     $("select").selectBoxIt();
-    
+
     $('#login-form').validate({
       submitHandler: function(form) {
         SubmitLoginRegisterForm($(form).attr('id'));
       }
     });
-    
+
     $('#register-form').validate({
       submitHandler: function(form) {
         SubmitLoginRegisterForm($(form).attr('id'));
       }
     });
-    
+
 
 	$('#reset-pass-form').validate({
       onkeyup: false,
       onclick: false,
       submitHandler: function(form) {
         $('body').css('cursor', 'wait');
+        $('#' + form).find('.error-alert').hide();
         var datastring = $('#' + form).serialize();
         $.ajax({
           type: "POST",
@@ -426,19 +430,20 @@
         });
       }
     });
-    
+
     $("#dob").datepicker({
       dateFormat: "dd/mm/yy",
       changeMonth: true,
       changeYear: true,
-      yearRange: "-100:+0", 
+      yearRange: "-100:+0",
       maxDate: "-1D"
     });
-    
+
     $('#dob').rules("add", {
-      required: true
+      required: true,
+      validDate: true
     });
-    
+
     $('#confirm_email').rules("add", {
       required: true,
       equalTo: '#reg-email',
@@ -446,7 +451,7 @@
         equalTo: "The emails you have entered do not match. Please check them."
       }
     });
-    
+
     $('#mobile').rules("add", {
       required: true,
       minlength: 10,
@@ -456,7 +461,7 @@
         equalTo: "Please verify your mobile number"
       }
     });
-    
+
     $('#password').rules("add", {
       minlength: 8,
       hasLowercase: true,
@@ -464,9 +469,10 @@
       hasDigit: true
     });
   });
-  
+
   function SubmitLoginRegisterForm(FORM) {
     $('body').css('cursor', 'wait');
+    $('#' + FORM).find('.error-alert').hide();
     var datastring = $('#' + FORM).serialize();
     $.ajax({
       type: "POST",
@@ -510,7 +516,7 @@
    var msg = obj.message;
    var login_url = obj.login_url;
    var error = obj.error;
-  
+
    if(login_url){
    if(obj.new_window){
    var left = ($(window).width() / 2) - (500 / 2), top = ($(window).height() / 2) - (270 / 2), popup = window.open(login_url, "Login_with_Facebook", "width=500, height=270, top=" + top + ", left=" + left);
@@ -528,7 +534,7 @@
    console.log('AJAX error');
    }
    });
-  
+
    } */
 
   function redirectWin(url) {

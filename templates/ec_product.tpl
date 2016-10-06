@@ -266,7 +266,12 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12 text-center">
+      {foreach $productassoc as $item}
+          {if $item.gallery && $item.gallery.0.gallery_link}
         <h2>Members also purchased</h2>
+        {/if}
+        {break}
+      {/foreach}
       </div>
     </div>
 
@@ -382,40 +387,44 @@ jQuery.fn.outerHTML = function(s) {
 
 
 		$(".image-selector").change(function() {
+		  	$('#carousel.flexslider').flexslider(0);
+		  	$('#prodslider .flexslider').flexslider(0);
 			while ($('#prodslider .flexslider').data('flexslider').count > 0){
 				$('#prodslider .flexslider').data('flexslider').removeSlide(0);
 			}
-			while ($('#carousel').data('flexslider').count > 0){
-				$('#carousel').data('flexslider').removeSlide(0);
+			while ($('#carousel.flexslider').data('flexslider').count > 0){
+				$('#carousel.flexslider').data('flexslider').removeSlide(0);
 			}
 
-	  	$("#imgholder img").each(function(){
+	  	$("#imgholder img").each(function(index, element){
 			var classes=$(this).attr('class');
 			var class1=classes.replace('img-responsive ','');
 			var class1=class1.substring(4,class1.length);
 			if($("#prodright input[type='radio'].image-selector:checked").hasClass(class1)){
 				html=$(this)[0].outerHTML;
 				saved1 = $('<li>'+html+'</li>');
-				$('#prodslider .flexslider').data('flexslider').addSlide($(saved1));
-				/*$('#carousel').data('flexslider').addSlide($(saved1));*/
+				$('#carousel.flexslider').data('flexslider').addSlide($(saved1));
 			}
-			$('#prodslider .flexslider').flexslider(0);
-			/*$('#carousel').flexslider(0);*/
 		});
+	  	
+	  	$("#imgholder img").each(function(index, element){
+	  			var classes=$(this).attr('class');
+	  			var class1=classes.replace('img-responsive ','');
+	  			var class1=class1.substring(4,class1.length);
+	  			if($("#prodright input[type='radio'].image-selector:checked").hasClass(class1)){
+	  				html=$(this)[0].outerHTML;
+	  				saved1 = $('<li>'+html+'</li>');
+	  				$('#prodslider .flexslider').data('flexslider').addSlide($(saved1));
+	  			}
+	  		});
+	  	
+	  	$('#carousel.flexslider .slides li').click(function(){
+	  	  var curSlide = $( "#carousel.flexslider .slides li" ).index( this );
+	  	  $('#prodslider .flexslider').flexslider(curSlide);
+	  	});
+	  	
+	  	
 
-	  	$("#imgholder img").each(function(){
-			var classes=$(this).attr('class');
-			var class1=classes.replace('img-responsive ','');
-			var class1=class1.substring(4,class1.length);
-			if($("#prodright input[type='radio'].image-selector:checked").hasClass(class1)){
-				html=$(this)[0].outerHTML;
-				saved1 = $('<li>'+html+'</li>');
-				/*$('#prodslider .flexslider').data('flexslider').addSlide($(saved1));*/
-				$('#carousel').data('flexslider').addSlide($(saved1));
-			}
-			/*$('#prodslider .flexslider').flexslider(0);*/
-			$('#carousel').flexslider(0);
-		});
 
   	/*$("#slideholder img.img-"+variant).each(function(){
 		html=$(this)[0].outerHTML;
@@ -458,7 +467,7 @@ $(window).load(function() {
   $('#carousel.flexslider').flexslider({
     animation: "slide",
     controlNav: false,
-    animationLoop: true,
+    animationLoop: false,
     slideshow: false,
     itemWidth: 110,
     itemMargin: 20,
@@ -468,8 +477,8 @@ $(window).load(function() {
   $('#prodslider .flexslider').flexslider({
     animation: "slide",
     controlNav: false,
-    animationLoop: true,
-    slideshow: true,
+    animationLoop: false,
+    slideshow: false,
     sync: "#carousel.flexslider"
   });
 });
@@ -680,6 +689,8 @@ $(window).load(function() {
 	}, []);
 	  return result;
 	}
+	
+	
 </script>
 
 {/block}

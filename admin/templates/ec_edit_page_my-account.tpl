@@ -31,8 +31,8 @@
           <input type="hidden" value="{if $typeID}{$typeID}{else}1{/if}" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
           <input type="hidden" value="{if $fields.listing_published}{$fields.listing_published}{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published">
           <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" id="listing_parent_flag">
-          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" id="listing_display_menu">
-          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_membersonly]" id="listing_membersonly">
+          <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" id="listing_display_menu">
+          <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_membersonly]" id="listing_membersonly">
           <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_noindex]" id="listing_noindex">
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
         </div>
@@ -135,7 +135,7 @@
               <div class="col-sm-5">
                 <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate1]" id="id_listing_associate1">
                   <option value="0">None</option>
-                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate1 ignoregroupid=banner_flag1 ignoregroupvalue=0}
+                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate1}
                 </select>
               </div>
             </div>
@@ -144,7 +144,7 @@
               <div class="col-sm-5">
                 <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate2]" id="id_listing_associate2">
                   <option value="0">None</option>
-                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate2 ignoregroupid=banner_flag1 ignoregroupvalue=0}
+                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate2}
                 </select>
               </div>
             </div>
@@ -153,7 +153,7 @@
               <div class="col-sm-5">
                 <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate3]" id="id_listing_associate3">
                   <option value="0">None</option>
-                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate3 ignoregroupid=banner_flag1 ignoregroupvalue=0}
+                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate3}
                 </select>
               </div>
             </div>

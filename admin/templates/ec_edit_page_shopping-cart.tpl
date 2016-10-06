@@ -134,7 +134,7 @@
               <div class="col-sm-5">
                 <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate1]" id="id_listing_associate1">
                   <option value="0">None</option>
-                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate1 ignoregroupid=banner_flag1 ignoregroupvalue=0}
+                  {call name=options_list opts=$fields.options.banners selected=$fields.listing_associate1 ignoregroupid=banner_flag1 ignoregroupvalue=1}
                 </select>
               </div>
             </div>

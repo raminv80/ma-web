@@ -30,6 +30,9 @@ try{
   $shipping_obj = new ShippingClass(count($shippable), $cart_obj->GetCurrentFreeShippingDiscountName());
   $SMARTY->assign('shippingMethods', $shipping_obj->getShippingMethods());
   
+  //Has donation
+  $SMARTY->assign('hasDonation', $cart_obj->hasProductInCart(217));
+  
 }catch(exceptionCart $e) {
   $SMARTY->assign('error', $e->getMessage());
 }

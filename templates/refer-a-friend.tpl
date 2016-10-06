@@ -27,12 +27,12 @@
     	  		<div class="row">
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="name">Your name<span>*</span>:</label>
-    					<input class="form-control" value="{$post.name}" type="text" name="name" id="name" required="">
+    					<input class="form-control" value="{if $post.name}{$post.name}{else}{$user.gname} {$user.surname}{/if}" type="text" name="name" id="name" required="">
 						<div class="error-msg help-block"></div>
     				</div>
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="email">Your email<span>*</span>:</label>
-    					<input class="form-control" value="{$post.email}" type="email" name="email" id="email" required="">
+    					<input class="form-control" value="{if $post.email}{$post.email}{else}{$user.email}{/if}" type="email" name="email" id="email" required="">
 						<div class="error-msg help-block"></div>
     				</div>
     			</div>

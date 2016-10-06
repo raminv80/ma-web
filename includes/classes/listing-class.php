@@ -77,7 +77,6 @@ class ListClass{
       
       $p_data = $this->LoadParents($res[0]['listing_parent_id'], 1);
       $SMARTY->assign("listing_parent", unclean($p_data));
-      
       foreach($this->CONFIG_OBJ->table->associated as $a){
         $t_data = $this->LoadAssociated($a, $res[0]["{$a->linkfield}"]);
         $SMARTY->assign("{$a->name}", unclean($t_data));

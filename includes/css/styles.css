@@ -7822,7 +7822,10 @@ a {
           background: #e9003b;
           color: #ffffff; }
       #cartmain #help .helpl #othervalout {
-        display: none; }
+        display: none;
+        margin-left: 15px; }
+        #cartmain #help .helpl #othervalout .form-group {
+          margin-bottom: 0px; }
         #cartmain #help .helpl #othervalout #otherval {
           margin-top: 3px;
           width: 250px;
@@ -8078,6 +8081,19 @@ a {
     #account #accinfo .accrow a {
       color: #e9003b;
       font-weight: bold; }
+  #account #accinfo #password-form .alert-danger {
+    color: #e9003b;
+    margin-bottom: 10px;
+    border: 1px solid #e9003b;
+    padding: 10px;
+    display: inline-block;
+    background: #fff;
+    margin: 0 0 25px;
+    width: 100%;
+    background-color: lightpink;
+    font-weight: bold; }
+    #account #accinfo #password-form .alert-danger button.close {
+      display: none; }
   #account #accinfo #password-form label {
     font-weight: bold;
     width: 100%;
@@ -8552,6 +8568,13 @@ select option:disabled {
       margin-right: 30px; }
     #updateprof .ui-accordion-content .bold {
       font-weight: bold; }
+
+#donate #help .helpl #othervalout #otherval {
+  margin-left: 15px; }
+#donate #help .helpl #othervalout .form-group {
+  margin-bottom: 0px; }
+#donate #help .helpl #othervalout .help-block {
+  padding-left: 15px; }
 
 @media (max-width: 992px) {
   .navbar-header {
@@ -9340,7 +9363,10 @@ select option:disabled {
     width: 100%; }
 
   #updateprof .btn-red {
-    margin-bottom: 15px; } }
+    margin-bottom: 15px; }
+
+  #cartmain #help .helpl #othervalout, #donate #help .helpl #othervalout {
+    margin-left: 0px; } }
 @media (min-width: 768px) and (max-width: 991px) {
   #navbar-collapse-2 {
     background: #ffffff;

@@ -125,7 +125,7 @@
 	        </div>
         </div>
 {/if}
-        <div class="row" id="help">
+        <div class="row" id="help" {if $hasDonation}style="display:none;"{/if}>
 	        <div class="col-sm-12 col-md-8 helpl">
 			  <form class="form-horizontal" id="product-form" role="form" accept-charset="UTF-8" action="" method="post">
                 <input type="hidden" value="ADDTOCART" name="action" id="action" />

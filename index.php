@@ -214,13 +214,14 @@ function loadPage($_conf){
   }else{
     if(!empty($CONFIG->page_strut)){
       $struct = $CONFIG->page_strut;
-      foreach($_conf->associated as $a){
+      $confArr = (array)$_conf; 
+      foreach($confArr['associated'] as $a){
         $domdict = dom_import_simplexml($struct->table);
         $domcat  = dom_import_simplexml($a);
         $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
         $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
       }
-      foreach($_conf->options as $o){
+      foreach($confArr['options'] as $o){
       	if(!empty($struct->table->options)){
       		foreach($o->field as $of){
       			$domdict = dom_import_simplexml($struct->table->options);
@@ -235,7 +236,7 @@ function loadPage($_conf){
       		$domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
       	}
       }
-      foreach($_conf->extends as $e){
+      foreach($confArr['extends'] as $e){
         $domdict = dom_import_simplexml($struct->table);
         $domcat  = dom_import_simplexml($e);
         $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document

@@ -2488,7 +2488,12 @@ a {
 
 			#othervalout{
 				display: none;
-
+				margin-left: 15px;
+                
+                .form-group{
+					   margin-bottom: 0px;
+				}
+				
 				#otherval{
 					margin-top: 3px;
 					width: 250px;
@@ -2916,6 +2921,22 @@ a {
 		}
 
 		#password-form{
+		    .alert-danger{
+        	    color: $red;
+        		margin-bottom: 10px;
+        		border: 1px solid $red;
+        		padding: 10px;
+        		display: inline-block;
+        		background: #fff;
+        		margin: 0 0 25px;
+        		width: 100%;
+        		background-color: lightpink;
+        		font-weight: bold;
+        
+        		button.close{
+        			display: none;
+        		}
+        	}
 			label{
 				font-weight: bold;
 				width: 100%;
@@ -3631,7 +3652,17 @@ select option:disabled {
 		}
 	}
 }
-
+#donate #help .helpl #othervalout {
+  #otherval {
+    margin-left:15px;
+  }
+  .form-group {
+    margin-bottom: 0px;
+  }
+  .help-block{
+      padding-left: 15px;
+  }
+}
 
 @media (max-width: 992px) {
     .navbar-header {

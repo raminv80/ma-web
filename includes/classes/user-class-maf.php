@@ -445,9 +445,13 @@ class UserClass{
 		$user['user_membershipTypeText']	= $this->getMembershipTypeText($userData['dataBaseRecord']['membership']['membershipTypeId']);
 		$user['user_RenewalDate']			= date("Y-m-d", strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
 		$user['user_RenewalMonth']			= date("F", strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
-		$user['preferedPaymentMethod']	= $userData['dataBaseRecord']['details']['preferedPaymentMethod'];
+		$user['preferedPaymentMethod']	    = $userData['dataBaseRecord']['details']['preferedPaymentMethod'];
 		
 		$user['WestpacCustomerNo']     = $userData['dataBaseRecord']['WestpacCustomerNo'];
+		
+		$user['auto_billing_active']          = $userData['dataBaseRecord']['details']['autoBilling'];
+		$user['auto_billing_method']          = $userData['dataBaseRecord']['details']['autoBillingMethod'];
+		$user['auto_billing_register_date']   = $userData['dataBaseRecord']['details']['autoBillingAcceptDate'];
 		
 		$user = stripslashes_deep($user);
 		return $user;
@@ -617,87 +621,26 @@ class UserClass{
 	}
 	
 	
-	function processUpdatePassword(){
+	function UpdatePassword($_token, $_currentpwd, $_newpwd){
 		try{
-			if($_SESSION['update']['user_newpassword'] != ""){
-				$password_error = false;
-				try{
-					$results = $this->medicAlertApi->updatePassWord($this->token, $_SESSION['update']['user_currentpassword'], $_SESSION['update']['user_newpassword']);
-				}catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
-					// incorrect password
-					$password_error = true;
-					$_SESSION['Errors'] = '<ul><li>Incorrect password, password could not be updated because current password does not match.</li></ul>';
-				}
-				
-				if(!$password_error){
-					$_SESSION['Notice'] = "Password successfully updated";
-
-					$_SESSION['temp_user']['user_id'] = $_SESSION['user']['user_id'];
-					$_SESSION['temp_user']['user_newpassword'] = $_SESSION['update']['user_newpassword'];
-					
-					// and log the user out
-					$this->medicAlertApi->logOut($this->token);
-					$_SESSION['user']['user_id'] = $_SESSION['temp_user']['user_id'];
-					// log in using the new password
-					$authenticationRecord = json_decode($this->medicAlertApi->authenticate($_SESSION['user']['user_id'], $_SESSION['temp_user']['user_newpassword']), true);
-					$this->token = $authenticationRecord['sessionToken'];
-					
-					$_SESSION['temp_user'] = "";
-					
-					if($authenticationRecord != "" && $this->token != ""){
-	
-						try{
-							$memberRecord = json_decode($this->medicAlertApi->memberRetrieve($this->token), true);
-						}catch(exceptionMedicAlertApiNotAuthenticated $e){
-							$_SESSION['user'] = null; unset($_SESSION['user']);
-							header("Location: /Membership/Members_Area"); die();
-						}catch(exceptionMedicAlertApiSessionExpired $e){
-							$_SESSION['user'] = null; unset($_SESSION['user']);
-							header("Location: /Membership/Members_Area"); die();
-						}catch(exceptionMedicAlertApi $e){
-							header("Location: /404"); die();
-						}
-	
-						$this->initSessionVars();
-						if($this->isInactiveMember()){
-							$_SESSION['user'] = '';
-							$_SESSION = null;
-							session_destroy();
-							session_start();
-							$_SESSION['user_inactive'] = true;
-							// log out of the API
-							try{
-								$this->medicAlertApi->logout($this->token);
-							}catch(exceptionMedicAlertApiNotAuthenticated $e){
-								$_SESSION['user'] = null; unset($_SESSION['user']);
-								header("Location: /Membership/Members_Area"); die();
-							}catch(exceptionMedicAlertApiSessionExpired $e){
-								$_SESSION['user'] = null; unset($_SESSION['user']);
-								header("Location: /Membership/Members_Area"); die();
-							}catch(exceptionMedicAlertApi $e){
-								header("Location: /404"); die();
-							}
-						}else{
-							$_SESSION['user'] = $this->getUserArray($memberRecord, $_REQUEST['username']);
-						}
-					}
-				}
+			if($results = $this->medicAlertApi->updatePassWord($_token, $_currentpwd, $_newpwd)){
+			  //Password successfully updated
+			  return true;
 			}
 			
-			$sql = "INSERT INTO tbl_update (update_member_no, update_ip, update_post) VALUES ('{$_SESSION['user']['user_id']}', '{$_SERVER['REMOTE_ADDR']}','processUpdatePassword')";
-			//$sql = "INSERT INTO tbl_update (update_member_no, update_ip) VALUES ('{$_SESSION['user']['user_id']}', '{$_SERVER['REMOTE_ADDR']}')";
-			wrappedSqlInsert($sql);
-			
-		}catch(exceptionMedicAlertApiNotAuthenticated $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApiSessionExpired $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApi $e){
-			header("Location: /404"); die();
+		}catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
+		  $this->errorMsg = "Incorrect password, password could not be updated because current password does not match.";
 		}
-		return $password_error;
+		catch(exceptionMedicAlertApiNotAuthenticated $e){
+		  $this->errorMsg = "API error: {$e}";
+		}
+		catch(exceptionMedicAlertApiSessionExpired $e){
+		  $this->errorMsg = "API error: {$e}";
+		}
+		catch(exceptionMedicAlertApi $e){
+		  $this->errorMsg = "API error: {$e}";
+		}
+		return false;
 	}
 	
 	

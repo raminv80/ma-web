@@ -108,6 +108,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
             $error = null;
             $success = true;
             $url = empty($_POST['redirect']) ? $_SERVER['HTTP_REFERER'] : $_POST['redirect'];
+            saveInLog('member-login', 'external', $_SESSION['user']['public']['id']);
           }
         }else{
           $error = $user_obj->getErrorMsg();
@@ -188,18 +189,55 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       die();
     
     case 'updatePassword':
-      $user_obj = new UserClass();
-      $data = array_merge($_POST, array(
-          'email' => $_SESSION['user']['public']['email'] 
-      ));
-      $res = $user_obj->UpdatePassword($data);
-      if($res['error']){
-        $_SESSION['error'] = $res['error'];
-        header("Location: " . $_SERVER['HTTP_REFERER'] . "#error");
-      } else{
-        $_SESSION['notice'] = $res['success'];
-        header("Location: " . $_SERVER['HTTP_REFERER'] . "#notice");
+      $error = "Your session has expired.";
+      $success = null;
+      $refresh = true;
+      if(!empty($_SESSION['user']['public']['maf'])){
+        $refresh = null;
+        $error = "Error: Missing parameters.";
+        if(!empty($_POST['current']) && !empty($_POST['new'])){
+          try {
+            $error = "Incorrect current password.";
+            $user_obj = new UserClass();
+            if($user_obj->UpdatePassword($_SESSION['user']['public']['maf']['token'], $_POST['current'], $_POST['new'])){
+              //Password updated
+              saveInLog('password-update', 'external', $_SESSION['user']['public']['id']);
+              $memberId = $_SESSION['user']['public']['id'];
+              //Log out
+              $user_obj->logOut($_SESSION['user']['public']['maf']['token']);
+              $_SESSION['user']['public'] = null;
+              //Login with new password
+              if($user_obj->authenticate($memberId, $_POST['new'])){
+                $error = "Error: no data.";
+                if($_SESSION['user']['public']['maf'] = $user_obj->getSessionVars()){
+                  $_SESSION['user']['public']['id'] = $_SESSION['user']['public']['maf']['main']['user_id'];
+                  $_SESSION['user']['public']['gname'] = $_SESSION['user']['public']['maf']['main']['user_firstname'];
+                  $_SESSION['user']['public']['surname'] = $_SESSION['user']['public']['maf']['main']['user_lastname'];
+                  $_SESSION['user']['public']['email'] = $_SESSION['user']['public']['maf']['main']['user_email'];
+                  $error = null;
+                  $success = 'Your password has been updated.';
+                }
+              }else{
+                $error = $user_obj->getErrorMsg();
+              }
+            }else{
+              $error = $user_obj->getErrorMsg();
+            }
+          }catch(Exception $e){
+            $error = $e;
+          }
+        }
       }
+      if(!empty($error) && preg_match('/API error/', $error)){
+        $_SESSION['user']['public'] = null;
+        $error = 'Your session has expired.<br>This page will be reloaded in 5 secs.';
+        $refresh = true;
+      }
+      echo json_encode(array(
+          'error' => $error,
+          'refresh' => $refresh,
+          'success' => $success
+      ));
       die();
     
     case 'unsubscribe':
@@ -255,9 +293,17 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
 $redirect = $_SERVER['HTTP_REFERER'];
 if($_GET["logout"]){
   $user_obj = new UserClass();
+  saveInLog('member-logout', 'external', $_SESSION['user']['public']['id'], $_SESSION['user']['public']['maf']['token']);
   $user_obj->logOut($_SESSION['user']['public']['maf']['token']);
   $_SESSION['user']['public'] = null;
   session_regenerate_id();
+  if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
+  header('Location: ' . $redirect);
+  die();
+}
+if($_GET["logout-maf"]){
+  $user_obj = new UserClass();
+  $user_obj->logOut($_SESSION['user']['public']['maf']['token']);
   if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
   header('Location: ' . $redirect);
   die();
