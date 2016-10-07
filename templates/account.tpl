@@ -48,7 +48,10 @@
                     <img src="/images/dashboard-warning.png" alt="Warning" /> <span class="warning">Your membership has expired</span>
 					<div class="days">{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'}</div>
 					<div>days overdue</div>
-					<a href="/quick-renew" title="Click to renew your membership" class="btn btn-red">Renew now</a>
+                    {/if}
+                    {if $user.maf.main.renew eq 't'}
+                    <br>
+                    <a href="/quick-renew" title="Click to renew your membership" class="btn btn-red">Renew now</a>
                     {/if}
 				</div>
 			</div>

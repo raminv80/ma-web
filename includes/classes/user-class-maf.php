@@ -452,6 +452,28 @@ class UserClass{
 		$user['auto_billing_active']          = $userData['dataBaseRecord']['details']['autoBilling'];
 		$user['auto_billing_method']          = $userData['dataBaseRecord']['details']['autoBillingMethod'];
 		$user['auto_billing_register_date']   = $userData['dataBaseRecord']['details']['autoBillingAcceptDate'];
+
+		//Calculate date difference between renewal date and today
+		$renewalDate = date_create_from_format('Y-m-d', $user['user_RenewalDate']);
+		$today = new DateTime();
+		$interval = $renewalDate->diff($today);
+		$year_diff = ceil(floatval($interval->format('%R%y.%m%d')));
+		$day_diff = floatval($interval->format('%R%a'));
+		
+		//Verify if member requires reactivation
+		$user['reactivation'] = 'f';
+		if($year_diff > 1){
+		  //Add reactivation fee when year difference is greater than 2
+		  $user['reactivation'] = 't';
+		}
+		
+		//Verify if member can renew the membership
+		$user['renew'] = 'f';
+		
+	    if($day_diff >= -30 && $user['auto_billing_active'] != 't'){
+		  //Allow renew before 30 days of renewal date
+		  $user['renew'] = 't';
+		}
 		
 		$user = stripslashes_deep($user);
 		return $user;
@@ -1217,4 +1239,5 @@ function stripslashes_deep($value){
   $value = is_array($value) ? array_map('stripslashes_deep', $value) : stripslashes($value);
   return $value;
 }
+
 ?>

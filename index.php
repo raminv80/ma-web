@@ -221,7 +221,7 @@ function loadPage($_conf){
         $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
         $domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
       }
-      foreach($confArr['options'] as $o){
+      foreach($_conf->options as $o){
       	if(!empty($struct->table->options)){
       		foreach($o->field as $of){
       			$domdict = dom_import_simplexml($struct->table->options);

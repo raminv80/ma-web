@@ -255,7 +255,7 @@
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="phone">Phone*:</label>
-                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{if $user.maf.main.user_phone_home}{$user.maf.main.user_phone_home}{else}{$new_user.mobile}{/if}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required"  />
+                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{if $user.maf.main.user_mobile}{$user.maf.main.user_mobile}{else}{$new_user.mobile}{/if}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required"  />
 						<div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -451,7 +451,8 @@
               </div>
 
           <div class="row">
-                <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew">
+                
+                <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew" {if $user.maf.main.auto_billing_active eq 't'}style="display:none"{/if}>
 
             <div class="row">
               <div class="col-sm-12 text-center">
@@ -585,7 +586,7 @@
                   <div class="col-sm-12 form-group chkbx">
                           <input class="autor auto-dd-req" type="checkbox" id="accept" name="accept" />
                           <label class="autor chklab" for="accept">
-                            I confirm that I have read and agree to the <a href="#">auto-renewal terms &amp; conditions</a> and I wish to register for auto-renewal of my membership.
+                            I confirm that I have read and agree to the <a href="/terms-and-conditions#auto-renewal" target="_blank" title="Click to view our terms and conditions">auto-renewal terms &amp; conditions</a> and I wish to register for auto-renewal of my membership.
                           </label>
                     <div class="error-msg help-block"></div>
                   </div>
@@ -602,7 +603,6 @@
               </div>
             </div>
                 </div>
-              </div>
             </form>
             </div>
           </div>

@@ -19,7 +19,7 @@ try{
   } */
   
   $cart_obj = new cart($_SESSION['user']['public']['id']);
-  $validation = $cart_obj->ValidateCart();
+  $validation = $cart_obj->ValidateCart($_SESSION['user']['public']);
   $SMARTY->assign('validation',$validation);
   $totals = $cart_obj->CalculateTotal();
   $SMARTY->assign('totals',$totals);

@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true">
+<config debug="true" staging="true">
   <domain></domain>
   <google_analytics>
     <id>UA-</id>
@@ -250,6 +250,9 @@
     <url>quick-renew</url>
     <template>quick-renew.tpl</template>
     <pageID>222</pageID>
+    <process>
+      <file>includes/processes/process-load-quick-renew.php</file>
+    </process>
   </static_page>
   <static_page>
     <url>update-my-profile</url>

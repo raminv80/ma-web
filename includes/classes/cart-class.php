@@ -895,10 +895,40 @@ class cart {
    *
    * @return array
    */
-  function ValidateCart() {
+  function ValidateCart($_memberArr = array()) {
     global $DBobject;
     
     $message = array();
+    
+    //VALIDATE MAF MEMBERS
+    $addMSF = false;
+    $addReactivationFee = false;
+    $hasMAFProd = $this->HasMAFProducts();
+    if(empty($_memberArr['id']) && $hasMAFProd){
+      //Add "member service fee - current_year" when member is not logged in
+      $addMSF = true;
+    }elseif(!empty($_memberArr['maf'])){
+      //Existing member
+      $addMSF = ($_memberArr['maf']['main']['renew'] == 't') ? true : false;
+      $addReactivationFee = ($_memberArr['maf']['main']['reactivation'] == 't') ? true : false;
+    }
+    
+    //Add/remove MAF membership fee
+    $msfArr = $this->GetCurrentMAF_MSF(225);
+    $membershipFeeCartitemId  = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
+    if($addMSF && empty($membershipFeeCartitemId)){
+      $this->AddToCart($msfArr['product_object_id'], array(), 0, 1, null, $msfArr['variant_id']);
+    }elseif(!$addMSF && !empty($membershipFeeCartitemId)){
+      $this->RemoveFromCart($membershipFeeCartitemId);
+    }
+    //Add/remove MAF reactivation fee
+    $reactivationCartitemId = $this->hasProductInCart(225, 16);
+    if($addReactivationFee && empty($reactivationCartitemId)){
+      $this->AddToCart(225, array(), 0, 1, null, 16);
+    }elseif(!$addReactivationFee && !empty($reactivationCartitemId)){
+      $this->RemoveFromCart($reactivationCartitemId);
+    }
+    //END OF VALIDATE MAF MEMBERS
     
     $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id = :id";
     if($res = $DBobject->wrappedSql($sql, array(":id" => $this->cart_id))){
@@ -1446,7 +1476,7 @@ function ApplyDiscountCode($code, $cartId = null) {
   
   /**
    * ONLY FOR MAF
-   * Return current year "Member Service Fee" record given the product_object_id (defaul value: 255)
+   * Return current year "Member Service Fee" record given the product_object_id (defaul value: 225)
    * @return boolean
    */
   function GetCurrentMAF_MSF($_productId = 225){
@@ -1461,6 +1491,25 @@ function ApplyDiscountCode($code, $cartId = null) {
   }
   
   
+  /**
+   * ONLY FOR MAF
+   * Remove all non membership fee service cartitems from the current cart
+   * @return boolean
+   */
+  function RemoveNonMembershipFeeCartitems(){
+    global $DBobject;
+  
+    $params = array(":id" => $this->cart_id);
+  
+    //Member Service Fee - product object id
+    $whereSQL = "AND cartitem_product_id != 225";
+  
+    $sql = "UPDATE tbl_cartitem SET cartitem_deleted = NOW() WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_cart_id = :id {$whereSQL}";
+    if($res = $DBobject->wrappedSql($sql, $params)){
+      return true;
+    }
+    return false;
+  }
   
 //   /**
 //    * Return array with Favourite products given the user_id

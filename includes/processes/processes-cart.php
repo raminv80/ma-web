@@ -456,19 +456,19 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $customerArr = $autorenewObj->GetBankCustomerRecord();
               $customerArr['user_id'] = $userArr['id'];
               $autorenewObj->StoreAutoRenew($customerArr);
-            }
             
-            try{
-              //Send auto-renewal email
-              $SMARTY->assign('user', $userArr);
-              $to = $userArr['email'];
-              $from = (string)$CONFIG->company->name;
-              $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-              $subject = 'Auto Renewal Subscription';
-              $body = $SMARTY->fetch('email/autorenewal.tpl');
-              sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+              try{
+                //Send auto-renewal email
+                $SMARTY->assign('user', $userArr);
+                $to = $userArr['email'];
+                $from = (string)$CONFIG->company->name;
+                $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+                $subject = 'Auto Renewal Subscription';
+                $body = $SMARTY->fetch('email/autorenewal.tpl');
+                sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+              }
+              catch(Exception $e){}
             }
-            catch(Exception $e){}
           }
           
           
@@ -698,7 +698,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $params = array(
             'payment_user_id' => $userArr['id'],
             'payment_billing_address_id' => $billID,
-            'payment_shipping_address_id' => $billID
+            'payment_shipping_address_id' => 0
         );
         $pay_obj->SetUserAddressIds($params);
         
@@ -842,6 +842,303 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         }
       }
       
+      header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
+      die();
+      
+      
+    case 'quick-renew':
+      $cart_obj = new cart($_SESSION['user']['public']['id']);
+      $order_cartId = $cart_obj->cart_id;
+      $orderNumber = $order_cartId . '-' . date("is");
+      $cart_obj->RemoveNonMembershipFeeCartitems();
+      
+      if(!empty($_SESSION['user']['public']['maf']) && !empty($cart_obj->NumberOfProductsOnCart())){
+        $billID = 0;
+        $shipID = 0;
+    
+        //Selected payment method
+        $paymentMethod = 'Credit card';
+    
+        //Shipping
+        $shippingFee = 0;
+    
+        $totals = $cart_obj->CalculateTotal();
+        $chargedAmount = $totals['total'] + $shippingFee;
+        $gst = round(($totals['GST_Taxable']) / 11, 2);
+        $params = array(
+            'payment_user_id' => (empty($_SESSION['user']['public']['id']) ? 0 : $_SESSION['user']['public']['id']),
+            'payment_billing_address_id' => $billID,
+            'payment_shipping_address_id' => $shipID,
+            'payment_status' => 'P',
+            'payment_transaction_no' => $orderNumber,
+            'payment_cart_id' => $order_cartId,
+            'payment_subtotal' => $totals['subtotal'],
+            'payment_discount' => $totals['discount'],
+            'payment_shipping_fee' => $shippingFee,
+            'payment_shipping_method' => '',
+            'payment_shipping_comments' => '',
+            'payment_payee_name' => $_POST['cc']['name'],
+            'payment_charged_amount' => $chargedAmount,
+            'payment_gst' => $gst,
+            'payment_method' => $paymentMethod
+        );
+    
+        $billingArr = array(
+            "address_user_id" => 0,
+            "address_name" => $_SESSION['user']['public']['gname'],
+            "address_surname" => $_SESSION['user']['public']['surname'],
+            "address_email" => $_SESSION['user']['public']['email'],
+            "address_telephone" => $_SESSION['user']['public']['maf']['main']['user_mobile'],
+            "address_line1" => $_SESSION['user']['public']['maf']['main']['user_address'],
+            "address_suburb" => $_SESSION['user']['public']['maf']['main']['user_suburb'],
+            "address_state" => $_SESSION['user']['public']['maf']['main']['user_state_id'],
+            "address_postcode" => $_SESSION['user']['public']['maf']['main']['user_postcode']
+        );
+        
+        $bankSettingsArr = array(
+            'initPayment' => $params,
+            'settings' => $CONFIG->payment_gateway->payway,
+            'address' => $billingArr
+        );
+    
+        require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
+        $pay_obj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
+        $response = false;
+    
+        $CCdata = array(
+            'amount' => $chargedAmount
+        );
+        if(!empty($_POST['cc'])){
+          $CCdata = array_merge($CCdata, $_POST['cc']);
+        }
+        $pay_obj->PreparePayment($CCdata);
+    
+        try{
+          $response = $pay_obj->Submit();
+          $paymentId = $pay_obj->GetPaymentId();
+        }
+        catch(Exception $e){
+          if($error_msg = $pay_obj->GetErrorMessage()){
+            $_SESSION['error'] = $error_msg;
+          } else{
+            $_SESSION['error'] = 'Payment failed (on submit). Verify information and try again. '.$e;
+          }
+          header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
+          exit();
+        }
+    
+        if($response){
+          // PAYMENT SUCCESS
+          $cart_obj->CloseCart();
+          $pay_obj->SetOrderStatus($paymentId);
+          $_SESSION['orderNumber'] = $orderNumber;
+    
+          //Init email details
+          $SMARTY->unloadFilter('output', 'trimwhitespace');
+          $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+          $COMP = json_encode($CONFIG->company);
+          $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+    
+          //Init user details
+          $userArr = $_SESSION['user']['public'];
+          $user_obj = new UserClass();
+    
+          //SET THE CART_USER_ID
+          $cart_obj->UpdateUserIdOfClosedCart($order_cartId, $userArr['id']);
+    
+          $billingArr['address_user_id'] = $userArr['id'];
+          
+          $billID = $user_obj->InsertNewAddress($billingArr);
+    
+          $params = array(
+              'payment_user_id' => $userArr['id'],
+              'payment_billing_address_id' => $billID,
+              'payment_shipping_address_id' => 0
+          );
+          $pay_obj->SetUserAddressIds($params);
+    
+          try{
+            // SEND CONFIRMATION EMAIL
+            $SMARTY->assign('hasMAFProd', $hasMAFProd);
+            $billing = $user_obj->GetAddress($billID);
+            $SMARTY->assign('billing', $billing);
+            $order = $cart_obj->GetDataCart($order_cartId);
+            $SMARTY->assign('order', $order);
+            $discount = $cart_obj->GetDiscountData($order['cart_discount_code']);
+            $SMARTY->assign('discount', $discount);
+            $payment = $pay_obj->GetPaymentRecord($paymentId);
+            $SMARTY->assign('payment', $payment);
+            $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
+            $SMARTY->assign('orderItems', $orderItems);
+    
+            $to = $userArr['email'];
+            // $bcc = 'apolo@them.com.au';
+            $from = (string)$CONFIG->company->name;
+            $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+            $subject = 'Payment | Order confirmation';
+            $body = $SMARTY->fetch('email/order-confirmation.tpl');
+            if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
+              $pay_obj->SetInvoiceEmail($paymentId, $mailID);
+            }
+          }
+          catch(Exception $e){
+            die($e);
+          }
+    
+          //PROCESS AUTO-RENEWAL
+          if(!empty($_POST['autorenewal'])){
+            $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
+            if(!empty($_POST['autopayment']) && $_POST['autopayment'] == 'dd'){
+              $autorenewArr = $_POST['auto-dd'];
+            }else{
+              $autorenewArr = $_POST['auto-cc'];
+            }
+            $autorenewArr['method'] = $_POST['autopayment'];
+            $autorenewObj->PreparePayment($autorenewArr);
+            if($autorenewObj->CreateCustomerOnly()){
+              $customerArr = $autorenewObj->GetBankCustomerRecord();
+              $customerArr['user_id'] = $userArr['id'];
+              $autorenewObj->StoreAutoRenew($customerArr);
+    
+              try{
+                //Send auto-renewal email
+                $SMARTY->assign('user', $userArr);
+                $to = $userArr['email'];
+                $from = (string)$CONFIG->company->name;
+                $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+                $subject = 'Auto Renewal Subscription';
+                $body = $SMARTY->fetch('email/autorenewal.tpl');
+                sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+              }
+              catch(Exception $e){}
+            }
+          }
+    
+    
+          // SET GOOGLE ANALYTICS - ECOMMERCE
+          if(!empty($GA_ID)){
+            sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
+    
+            $totalsGA = array(
+                'id' => $order_cartId,
+                'total' => $chargedAmount,
+                'tax' => $gst,
+                'shipping' => $shippingFee,
+                'coupon' => $order['cart_discount_code']
+            );
+            $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
+            sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
+          }
+    
+          // SET USED DISCOUNT CODE
+          if($order['cart_discount_code']){
+            $cart_obj->SetUsedDiscountCode($order['cart_discount_code']);
+            $discountData = $cart_obj->GetDiscountData($order['cart_discount_code']);
+            if($discountData['discount_unlimited_use'] == '0'){
+              try{
+                // SEND NOTIFICATION EMAIL
+                $SMARTY->assign('user', $userArr);
+                $SMARTY->assign('discount', $discountData);
+                $buffer = $SMARTY->fetch('email-discount.tpl');
+                $to = "apolo@them.com.au";
+                $bcc = "";
+                $from = str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+                $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+                $subject = 'A discount code has been used.';
+                $body = $buffer;
+                $mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+              }
+              catch(Exception $e){}
+            }
+          }
+    
+          // OPEN NEW CART
+          $cart_obj->CreateCart();
+    
+          // REDIRECT TO THANK YOU PAGE
+          header('Location: /thank-you-for-purchasing');
+          die();
+        } else{
+          if($error_msg = $pay_obj->GetErrorMessage()){
+            $_SESSION['error'] = $error_msg;
+          } else{
+            $_SESSION['error'] = 'Payment failed. Verify information and try again. ';
+          }
+        }
+      } else{
+        $_SESSION['error'] = 'Database Connection Error. Please try again, otherwise contact us by phone.'.$cart_obj->NumberOfProductsOnCart();
+      }
+    
+      $_SESSION['post'] = $_POST;
+      header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
+      die();
+      
+      
+    case 'auto-renewal':
+      $_SESSION['error'] = '';
+      $_SESSION['post'] = $_POST;
+    
+      //Has mandatory field
+      if(empty($_SESSION['user']['public']['maf']) || !empty($_POST['honeypot']) || empty($_POST['timestamp']) || (time() - $_POST['timestamp']) < 4 || empty($_POST['autopayment']) || (empty($_POST['auto-dd']) && empty($_POST['auto-cc'])) ){
+        $_SESSION['error'] = 'Your session has expired. Please try again, otherwise contact us by phone.';
+        header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
+        die();
+      }
+      
+      $billingArr = array(
+          "address_user_id" => 0,
+          "address_name" => $_SESSION['user']['public']['gname'],
+          "address_surname" => $_SESSION['user']['public']['surname'],
+          "address_email" => $_SESSION['user']['public']['email'],
+          "address_telephone" => $_SESSION['user']['public']['maf']['main']['user_mobile'],
+          "address_line1" => $_SESSION['user']['public']['maf']['main']['user_address'],
+          "address_suburb" => $_SESSION['user']['public']['maf']['main']['user_suburb'],
+          "address_state" => $_SESSION['user']['public']['maf']['main']['user_state_id'],
+          "address_postcode" => $_SESSION['user']['public']['maf']['main']['user_postcode']
+      );
+      
+      $bankSettingsArr = array(
+          'settings' => $CONFIG->payment_gateway->payway,
+          'address' => $billingArr
+      );
+      
+      $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
+      if(!empty($_POST['autopayment']) && $_POST['autopayment'] == 'dd'){
+        $autorenewArr = $_POST['auto-dd'];
+      }else{
+        $autorenewArr = $_POST['auto-cc'];
+      }
+      $autorenewArr['method'] = $_POST['autopayment'];
+      $autorenewObj->PreparePayment($autorenewArr);
+      
+      if($autorenewObj->CreateCustomerOnly()){
+        $customerArr = $autorenewObj->GetBankCustomerRecord();
+        $customerArr['user_id'] = $_SESSION['user']['public']['id'];
+        $autorenewObj->StoreAutoRenew($customerArr);
+        
+        try{
+          //Send auto-renewal email
+          $SMARTY->assign('user', $_SESSION['user']['public']);
+          $to = $_SESSION['user']['public']['email'];
+          $from = (string)$CONFIG->company->name;
+          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+          $subject = 'Auto Renewal Subscription';
+          $body = $SMARTY->fetch('email/autorenewal.tpl');
+          sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+        }
+        catch(Exception $e){}
+        
+        // REDIRECT TO THANK YOU PAGE
+        header('Location: /thank-you-for-registering-auto-renewal');
+      
+      } else{
+        if($error_msg = $autorenewObj->GetErrorMessage()){
+          $_SESSION['error'] = $error_msg;
+        } else{
+          $_SESSION['error'] = 'Payment failed. Verify information and try again. ';
+        }
+      }
+    
       header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
       die();
   }

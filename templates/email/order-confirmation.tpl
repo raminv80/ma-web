@@ -426,7 +426,7 @@ body, td {
                                               <tr>
                                                 <td class="w30" width="30"></td>
                                                 <td style="font-size: 16px; font-weight: bold;" width="300" class="w300">Name:</td>
-                                                <td align="right" style="font-size: 16px;" width="280" class="w280">{$shipping.address_name}</td>
+                                                <td align="right" style="font-size: 16px;" width="280" class="w280">{$shipping.address_name} {$shipping.address_surname}</td>
                                                 <td class="w30" width="30"></td>
                                               </tr>
                                             </table>

@@ -3681,6 +3681,37 @@ select option:disabled {
     padding: 50px 0;
 }
 
+.video-wrapper iframe{
+    max-width: 100%;
+}
+
+.payment-autorenew{
+	    clear: both;
+		padding: 20px 15px;
+		background: $light-grey;
+		float: left;
+		width: 100%;
+		margin-bottom: 50px;
+
+		.notice{
+			padding: 20px 0;
+		}
+
+		.autorenew{
+			border-top: 1px solid $medium-grey;
+			padding-top: 30px;
+			margin-top: 30px;
+		}
+
+		.autor{
+			float: none;
+			display: inline;
+			font-weight: bold;
+			width: auto;
+			height: auto;
+		}
+}
+
 @media (max-width: 992px) {
     .navbar-header {
         float: left;
