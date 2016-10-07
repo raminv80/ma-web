@@ -135,7 +135,38 @@
       <custom_template field="listing_object_id" value="9">ec_edit_page_my-account.tpl</custom_template>
       <custom_template field="listing_object_id" value="12">ec_edit_page_shopping-cart.tpl</custom_template>
       <custom_template field="listing_object_id" value="13">ec_edit_page_checkout.tpl</custom_template>
+      <custom_template field="listing_object_id" value="222">ec_edit_page_autorenewal.tpl</custom_template>
+      <custom_template field="listing_object_id" value="650">ec_edit_page_autorenewal.tpl</custom_template>
   	</section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>landing-page</url>
+      <title>Landing Pages</title>
+      <type>LISTING</type>
+      <type_id>6</type_id>
+      <associated>
+        <name>tags</name>
+        <table>tbl_tag</table>
+        <linkfield>listing_id</linkfield>
+        <field>tag_object_id</field>
+        <where>tag_object_table = 'tbl_listing'</where> 
+      </associated>
+      <associated> 
+        <name>gallery</name>
+        <table>tbl_gallery</table>
+        <linkfield>listing_id</linkfield>
+        <field>gallery_listing_id</field> 
+        <orderby>gallery_order ASC</orderby>
+      </associated>
+      <log>
+        <table>tbl_listing</table>
+        <id>listing_id</id>
+        <field>listing_object_id</field>
+      </log>
+      <list_template>list.tpl</list_template>
+      <edit_template>edit_landing_page.tpl</edit_template>
+    </section>
     
     <section level="1">
       <showlist>FALSE</showlist>

@@ -100,14 +100,14 @@ class Qvalent_REST_PayWayAPI extends Bank {
       
       //GET CONTACT INFORMATION FOR THIS CUSTOMER
       $contactArr = array(
-          "name" => $this->address['fullname'],
-          "email" => $this->address['email'],
-          "phone" => preg_replace("/[^0-9]/", "", $this->address['phone']),
-          "street1" => $this->address['address'],
-          "street2" => $this->address['address2'],
-          "city" => $this->address['suburb'],
-          "state" => $this->address['state'],
-          "postcode" => $this->address['postcode']
+          "name" => $this->address['address_name'] . ' ' . $this->address['address_surname'],
+          "email" => $this->address['address_email'],
+          "phone" => preg_replace("/[^0-9]/", "", $this->address['address_telephone']),
+          "street1" => $this->address['address_line1'],
+          "street2" => $this->address['address_line2'],
+          "city" => $this->address['address_suburb'],
+          "state" => $this->address['address_state'],
+          "postcode" => $this->address['address_postcode']
       );
       //CREATE TEMPORARY CUSTOMER
       $WestpacCustomer = $this->CreateCustomer($singleUseTokenId, $this->payment_transactionno, $contactArr);
@@ -221,14 +221,14 @@ class Qvalent_REST_PayWayAPI extends Bank {
   
       //GET CONTACT INFORMATION FOR THIS CUSTOMER
       $contactArr = array(
-          "name" => $this->address['fullname'],
-          "email" => $this->address['email'],
-          "phone" => preg_replace("/[^0-9]/", "", $this->address['phone']),
-          "street1" => $this->address['address'],
-          "street2" => $this->address['address2'],
-          "city" => $this->address['suburb'],
-          "state" => $this->address['state'],
-          "postcode" => $this->address['postcode']
+          "name" => $this->address['address_name'] . ' ' . $this->address['address_surname'],
+          "email" => $this->address['address_email'],
+          "phone" => preg_replace("/[^0-9]/", "", $this->address['address_telephone']),
+          "street1" => $this->address['address_line1'],
+          "street2" => $this->address['address_line2'],
+          "city" => $this->address['address_suburb'],
+          "state" => $this->address['address_state'],
+          "postcode" => $this->address['address_postcode']
       );
       //CREATE TEMPORARY CUSTOMER
       $WestpacCustomer = $this->CreateCustomer($singleUseTokenId, $this->payment_transactionno, $contactArr);

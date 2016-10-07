@@ -78,9 +78,10 @@
       <orderby>additional_category, additional_order, additional_name</orderby>
     </associated>
     </table>
-    <template>standardpage.tpl</template>
+    <template typeid="1">standardpage.tpl</template>
+    <template typeid="6">landing-page.tpl</template> 
     <process>
-      <file>includes/processes/load-products.php</file>
+      <file>includes/processes/process-load-popular-products.php</file>
     </process>
   </page_strut>
   <index_page>
@@ -255,6 +256,11 @@
     <template>update-my-profile.tpl</template>
     <pageID>219</pageID>
   </static_page>
+  <static_page>
+    <url>register-for-auto-renewal</url>
+    <template>register-for-auto-renewal.tpl</template>
+    <pageID>650</pageID>
+  </static_page>
   
   <!-- ECOMMERCE  -->
   <static_page>
@@ -399,8 +405,6 @@
     </table>
     <template>testimonials.tpl</template>
   </listing_page>
-  
-  <!-- <template typeid="6">landing-page.tpl</template>  -->
   
   <listing_page name="products">
     <url>products</url>

@@ -8576,6 +8576,17 @@ select option:disabled {
 #donate #help .helpl #othervalout .help-block {
   padding-left: 15px; }
 
+#landing-page-middle img {
+  margin-bottom: 10px;
+  display: inline-block; }
+#landing-page-middle h3 {
+  font-size: 24px;
+  margin-bottom: 20px; }
+
+.grey-bg-area {
+  background: #eaebec;
+  padding: 50px 0; }
+
 @media (max-width: 992px) {
   .navbar-header {
     float: left; }
