@@ -10,131 +10,36 @@
     <div class="row">
       <div class="col-md-8 col-md-offset-2 text-center">
         <h1>{$listing_name}</h1>
-        {if $user.maf.main.renew eq 't'}{$listing_content1}{else}{$listing_content2}{/if}
+        {if $user.maf.main.autoBilling neq 't'}{$listing_content1}{else}{$listing_content2}{/if}
       </div>
     </div>
   </div>
 </div>
 
-{if $user.maf.main.renew eq 't'}
+{if $user.maf.main.autoBilling neq 't'}
 <div id="giftgrey">
   <div class="container">
     <div class="row">
       <div class="col-sm-12 text-center">
         <h2>Payment information</h2>
         <br>
-        {foreach from=$productsOnCart item=item}
-          <h4>{$item.cartitem_product_name} - {$item.variant_name}: &nbsp;&nbsp; ${$item.cartitem_product_price|number_format:0:'.':','}</h4>
-        {/foreach}
-        <h3><b>Total ${$totals.total|number_format:2:'.':','}</b></h3>
+        <p>Please confirm your auto-renewal payment method below:</p>
         
         <form id="quickrenew_form" class="payment-autorenew" accept-charset="UTF-8" method="post" action="/process/cart" novalidate="novalidate">
-          <input type="hidden" name="action" value="quick-renew" />
+          <input type="hidden" name="action" value="auto-renewal" />
           <input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
           <div class="row">
             <div class="col-sm-12 col-md-8 col-md-offset-2">
               <div class="fields-wrapper">
                 <div class="row">
-                  <div class="col-sm-12 form-group">
-                    <br>Payment accepted: <img src="/images/gift-cards.jpg" alt="Payment accepted" title="Payment accepted" id="accepted" />
-                  </div>
-                </div>
-  
-                <div class="row">
-                  <div class="col-sm-6 form-group">
-                    <label class="visible-ie-only" for="ccno">
-                      Card number<span>*</span>:
-                    </label>
-                    <input type="text" id="ccno" class="form-control copycc" name="cc[number]" autocomplete="off" required />
-                    <div class="error-msg help-block"></div>
-                  </div>
-  
-                  <div class="col-sm-6 form-group">
-                    <label class="visible-ie-only" for="ccname">
-                      Cardholder's name<span>*</span>:
-                    </label>
-                    <input type="text" id="ccname" class="form-control copycc" name="cc[name]" autocomplete="off" required />
-                    <div class="error-msg help-block"></div>
-                  </div>
-                </div>
-  
-                <div class="row">
-                  <div class="col-sm-6 form-group">
-                    <label class="visible-ie-only" for="ccmonth">
-                      Expiry<span>*</span>:
-                    </label>
-                    <div class="row">
-                      <div class="col-sm-6">
-                        <select id="ccmonth" name="cc[month]" class="form-control copycc" required>
-                          <option value="">Month</option>
-                          <option value="01">1 - Jan</option>
-                          <option value="02">2 - Feb</option>
-                          <option value="03">3 - Mar</option>
-                          <option value="04">4 - Apr</option>
-                          <option value="05">5 - May</option>
-                          <option value="06">6 - Jun</option>
-                          <option value="07">7 - Jul</option>
-                          <option value="08">8 - Aug</option>
-                          <option value="09">9 - Sep</option>
-                          <option value="10">10 - Oct</option>
-                          <option value="11">11 - Nov</option>
-                          <option value="12">12 - Dec</option>
-                        </select>
-                        <div class="error-msg help-block"></div>
-                      </div>
-                      <div class="col-sm-6">
-                        <select id="ccyear" name="cc[year]" class="cc-select-req form-control copycc">
-                          {assign var=thisyear value=$smarty.now|date_format:"%Y"} {assign var=numyears value=$thisyear+20}
-                          <option value="">Year</option>
-                          {for $year=$thisyear to $numyears}
-                          <option value="{$year}">{$year}</option>
-                          {/for}
-                        </select>
-                        <div class="error-msg help-block"></div>
-                      </div>
-                    </div>
-                  </div>
-  
-                  <div class="col-sm-6 form-group">
-                    <label class="visible-ie-only" for="cccsv">
-                      Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :
-                    </label>
-                    <div>
-                      <input type="text" id="cccsv" name="cc[csv]" class="seccode form-control copycc" autocomplete="off" pattern="[0-9]" maxlength="4" required/>
-                      <img class="seccode" src="/images/donate-security.jpg" alt="Security code" />
-                    </div>
-                    <div class="error-msg help-block"></div>
-                  </div>
-                </div>
-                <div class="row">
                 
-                <div class="col-sm-12 text-center autorenew" {if $user.maf.main.autoBilling eq 't'}style="display:none"{/if}>
-
-            <div class="row">
-              <div class="col-sm-12 text-center">
-                <h3>Auto renewal of membership (optional)</h3>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12 text-center">
-                <input class="autor" type="checkbox" value="autorenew" name="autorenewal" id="autorenewal" onclick="autorenew();">
-                <label class="autor chkbox" for="autorenewal">Stay protected each year: sign up for auto-renewal.</label>
-              </div>
-            </div>
-            <div class="row notice">
-              <div class="col-sm-12 text-center">
-                <p>Auto-renewal helps protect you by paying your annual membership fee automatically each year by direct debit from your nominated payment method.
-                            Please confirm your auto-renewal payment method below. The first payment will occur at your next renewal of annual membership.</p>
-
-              
-              </div>
-            </div>
+                <div class="col-sm-12 text-center autorenew" >
             <div id="autorenew-subform">
             <div class="row">
               <div class="col-sm-6 text-center">
                 <div class="row">
                   <div class="col-sm-12 form-group">
-                    <input class="form-control autor" type="radio" value="cc" name="autopayment" id="autocredit">
+                    <input class="form-control autor" {if $post.autopayment eq 'cc'}checked="checked"{/if} type="radio" value="cc" name="autopayment" id="autocredit" required>
                     <label class="autor chkbox" for="autocredit">Credit card</label>
                     <div class="error-msg help-block"></div>
                   </div>
@@ -143,7 +48,7 @@
               <div class="col-sm-6 text-center">
                 <div class="row">
                   <div class="col-sm-12 form-group">
-                    <input class="form-control autor" type="radio" value="dd" name="autopayment" id="autodd">
+                    <input class="form-control autor" {if $post.autopayment eq 'dd'}checked="checked"{/if} type="radio" value="dd" name="autopayment" id="autodd" required>
                     <label class="autor chkbox" for="autodd">Direct debit</label>
                     <div class="error-msg help-block"></div>
                   </div>
@@ -154,11 +59,12 @@
             <div id="auto-cc-wrapper" class="auto-opts" style="display:none;">
                 <div class="row">
                 <div class="col-sm-12">
-                <p>Please update with an alternative credit card if required.</p><br>
+                <p>Payment accepted: <img src="/images/gift-cards.jpg" alt="Payment accepted" title="Payment accepted" id="accepted" /></p>
+                <br>
                 </div>
               <div class="col-sm-6 form-group">
                 <label class="visible-ie-only" for="auto-ccno">Card number<span>*</span>:</label>
-                <input type="text" id="auto-ccno" class="auto-cc-req form-control" name="auto-cc[number]" autocomplete="off" />
+                <input type="text" id="auto-ccno" class="auto-cc-req form-control" name="auto-cc[number]" autocomplete="off"/>
                 <div class="error-msg help-block"></div>
               </div>
 
@@ -261,7 +167,7 @@
               <div class="row">
                 <div class="col-sm-12 text-center">
                 <br>
-                  <input type="submit" value="Pay now" class="btn-red btn" id="fbsub">
+                  <input type="submit" value="Register now" class="btn-red btn" id="fbsub">
                 </div>
               </div>
             </div>
@@ -286,23 +192,17 @@
     $('#quickrenew_form').validate();
 
     
-    $('#ccno').rules("add", {
+    $('#auto-ccno').rules("add", {
       creditcard : true,
     });
 
-    $('#cccsv').rules("add", {
+    $('#auto-cccsv').rules("add", {
       digits: true,
       minlength: 3
     });
     
-    $('#auto-ccno').rules("add", {
-      creditcard : true,
-    });
-    
     $("select").selectBoxIt();
     
-    autorenew();
-
     $('input[name="autopayment"]').change(function(){
       automethod();
     });
@@ -336,17 +236,5 @@
     }
   }
 
-  function autorenew(){
-    if($("#autorenewal").is(':checked')){
-      $('#autorenew-subform').show();
-      $('input[name="autopayment"]').attr('required', 'required');
-      automethod();
-    }else{
-      $('#autorenew-subform').hide();
-      $('input[name="autopayment"]').removeAttr('required');
-      $('.auto-cc-req').removeAttr('required');
-      $('.auto-dd-req').removeAttr('required');
-    }
-  }
 </script>
 {/block}

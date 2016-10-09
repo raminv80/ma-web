@@ -253,16 +253,34 @@
     <process>
       <file>includes/processes/process-load-quick-renew.php</file>
     </process>
+    <process>
+      <file>includes/processes/process-check-MAF-login.php</file>
+    </process>
   </static_page>
   <static_page>
     <url>update-my-profile</url>
     <template>update-my-profile.tpl</template>
     <pageID>219</pageID>
+    <options> 
+      <field> 
+        <name>options_state</name>
+        <table>tbl_postcode</table>
+        <id>postcode_state_long</id>
+        <reference>postcode_state_long</reference>
+        <orderby>postcode_state_long</orderby> 
+      </field>
+    </options>
+    <process>
+      <file>includes/processes/process-check-MAF-login.php</file>
+    </process>
   </static_page>
   <static_page>
     <url>register-for-auto-renewal</url>
     <template>register-for-auto-renewal.tpl</template>
     <pageID>650</pageID>
+    <process>
+      <file>includes/processes/process-check-MAF-login.php</file>
+    </process>
   </static_page>
   
   <!-- ECOMMERCE  -->

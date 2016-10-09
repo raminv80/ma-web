@@ -436,7 +436,7 @@
 				  		<div class="col-sm-6 form-group">
 				  			<label class="visible-ie-only" for="cccsv">Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :</label>
 				  			<div>
-					  			<input type="text" id="cccsv" name="cc[csv]" class="seccode cc-req form-control" autocomplete="off" />
+					  			<input type="text" id="cccsv" name="cc[csv]" class="seccode cc-req form-control" autocomplete="off" pattern="[0-9]" maxlength="4"  />
 					  			<img  class="seccode" src="/images/donate-security.jpg" alt="Security code" />
 				  			</div>
 					  		<div class="error-msg help-block"></div>
@@ -452,7 +452,7 @@
 
           <div class="row">
                 
-                <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew" {if $user.maf.main.auto_billing_active eq 't'}style="display:none"{/if}>
+                <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew" {if $user.maf.main.autoBilling eq 't'}style="display:none"{/if}>
 
             <div class="row">
               <div class="col-sm-12 text-center">
@@ -552,7 +552,7 @@
               <div class="col-sm-6 form-group">
                 <label class="visible-ie-only" for="auto-cccsv">Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :</label>
                 <div>
-                  <input type="text" id="auto-cccsv" name="auto-cc[csv]" class="seccode auto-cc-req form-control" autocomplete="off" />
+                  <input type="text" id="auto-cccsv" name="auto-cc[csv]" class="seccode auto-cc-req form-control" autocomplete="off" pattern="[0-9]" maxlength="4" />
                   <img  class="seccode" src="/images/donate-security.jpg" alt="Security code" />
                 </div>
                 <div class="error-msg help-block"></div>
@@ -584,7 +584,7 @@
               <div id="auto-renewal-conf-wrapper" class="col-sm-12 text-center" style="display:none;">
                 <div class="row">
                   <div class="col-sm-12 form-group chkbx">
-                          <input class="autor auto-dd-req" type="checkbox" id="accept" name="accept" />
+                          <input class="autor auto-cc-req auto-dd-req" type="checkbox" id="accept" name="accept" />
                           <label class="autor chklab" for="accept">
                             I confirm that I have read and agree to the <a href="/terms-and-conditions#auto-renewal" target="_blank" title="Click to view our terms and conditions">auto-renewal terms &amp; conditions</a> and I wish to register for auto-renewal of my membership.
                           </label>
@@ -664,6 +664,10 @@
       digits: true,
       minlength: 3
     });
+    
+    $('#auto-ccno').rules("add", {
+      creditcard : true,
+    });
 
     {/if}
 
@@ -706,14 +710,27 @@
   function automethod(){
     var option = $('input[name="autopayment"]:checked').val();
     $('.auto-opts').hide();
+    $('.auto-cc-req').removeAttr('required');
+    $('.auto-dd-req').removeAttr('required');
     if(option){
       $('.auto-'+option+'-req').attr('required', 'required');
       $('#auto-'+option+'-wrapper').fadeIn();
       $('#auto-renewal-conf-wrapper').fadeIn();
+      if(option == 'cc'){
+        $('.copycc').each(function(){
+          elementID = $(this).attr('id');
+          elementName = $(this).attr('name');
+          elementVal = $(this).val();
+          elementNode = $(this).prop('nodeName');
+          if(elementNode == 'SELECT'){
+            $('select#auto-' + elementID).data("selectBox-selectBoxIt").selectOption(elementVal);            
+          }else{
+            $('input[name="auto-' + elementName + '"]').val(elementVal);  
+          }
+        });
+      }
     }else{
       $('#auto-renewal-conf-wrapper').hide();
-      $('.auto-cc-req').removeAttr('required');
-      $('.auto-dd-req').removeAttr('required');
     }
   }
 

@@ -142,13 +142,13 @@
 				<p>It’s important to keep your MedicAlert membership up to date so we can continue to help protect you in an emergency. Don’t wait until it’s too late.  </p>
 
 				<div class="row">
-					<div class="col-sm-{if $user.maf.main.auto_billing_active eq 't'}12{else}6{/if} text-center" id="viewup">
+					<div class="col-sm-{if $user.maf.main.autoBilling eq 't'}12{else}6{/if} text-center" id="viewup">
 						<div>
 							<img src="/images/dashboard-viewupdate.png" alt="View / update your profile" class="img-responsive" />
 						</div>
 						<a href="/update-my-profile" title="Click to view/update your profile " class="btn btn-red">View / update your profile</a>
 					</div>
-          {if $user.maf.main.auto_billing_active eq 'f'}
+          {if $user.maf.main.autoBilling eq 'f'}
 					<div class="col-sm-6 text-center" id="autor">
 						<div>
 							<img src="/images/dashboard-autorenew.png" alt="Register for auto-renewals" class="img-responsive" />

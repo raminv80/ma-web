@@ -1,10 +1,11 @@
 {block name="head"}
+<!-- <link href="/includes/css/jquery-ui.css" rel="stylesheet" media="screen"> -->
 {/block} {block name=body}
 <div id="headgrey">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-				<h2>Welcome back, Owen</h2><div><a href="/process/user?logout=true" title="Click to log out">Log out</a></div>
+				<h2>Welcome back, {$user.gname}</h2><div><a href="/process/user?logout=true" title="Click to log out">Log out</a></div>
 			</div>
 		</div>
 	</div>
@@ -58,10 +59,10 @@
 		                    </label>
 		                    <select class="selectlist-medium" id="title" name="title" required>
 			                    <option value="">Please select</option>
-			                    <option value="Mr.">Mr.</option>
-			                    <option value="Mrs.">Mrs.</option>
-			                    <option value="Miss">Miss</option>
-			                    <option value="Dr.">Dr.</option>
+			                    <option value="Mr" {if $user.maf.update.user_title eq 'Mr'}selected="selected"{/if}>Mr</option>
+			                    <option value="Mrs" {if $user.maf.update.user_title eq 'Mrs'}selected="selected"{/if}>Mrs</option>
+			                    <option value="Miss" {if $user.maf.update.user_title eq 'Miss'}selected="selected"{/if}>Miss</option>
+			                    <option value="Dr" {if $user.maf.update.user_title eq 'Dr'}selected="selected"{/if}>Dr</option>
 		                    </select>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
@@ -70,7 +71,7 @@
 		                    <label for="gname" class="visible-ie-only">
 		                      First Name<span>*</span>:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.gname}{/if}" class="form-control" id="gname" name="gname" required>
+		                    <input type="text" value="{$user.maf.update.user_firstname}" class="form-control" id="gname" name="user_firstname" required>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -78,16 +79,16 @@
 		                <div class="row">
 		                  <div class="col-sm-6 form-group">
 		                    <label for="middlename" class="visible-ie-only">
-		                      Middle Name<span>*</span>:
+		                      Middle Name:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.middlename}{/if}" class="form-control" id="middlename" name="middlename" required>
+		                    <input type="text" value="{$user.maf.update.user_middlename}" class="form-control" id="middlename" name="user_middlename">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                  <div class="col-sm-6 form-group">
 		                    <label for="surname" class="visible-ie-only">
 		                      Last Name<span>*</span>:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.surname}{/if}" class="form-control" id="surname" name="surname" required>
+		                    <input type="text" value="{$user.maf.update.user_lastname}" class="form-control" id="surname" name="user_lastname" required>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -97,7 +98,7 @@
 		                    <label for="address" class="visible-ie-only">
 		                      Address<span>*</span>:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.address}{/if}" class="form-control" id="address" name="address" required>
+		                    <input type="text" value="{$user.maf.update.user_address}" class="form-control" id="address" name="user_address" required>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 
@@ -105,7 +106,7 @@
 		                    <label for="suburb" class="visible-ie-only">
 		                      Suburb<span>*</span>:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.suburb}{/if}" class="form-control" id="suburb" name="suburb" required>
+		                    <input type="text" value="{$user.maf.update.user_suburb}" class="form-control" id="suburb" name="user_suburb" required>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -115,10 +116,10 @@
 		                    <label for="state" class="visible-ie-only">
 		                      State<span>*</span>:
 		                    </label>
-		                    <select class="selectlist-medium" id="state" name="state" required>
+		                    <select class="selectlist-medium" id="state" name="user_state_id" required>
 		                      <option value="">Select an option</option>
 		                      {foreach $options_state as $opt}
-		                      <option value="{$opt.value}" {if $new_user.state eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
+		                      <option value="{$opt.value}" {if $user.maf.update.user_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
 		                      {/foreach}
 		                    </select>
 		                    <div class="error-msg help-block"></div>
@@ -128,7 +129,7 @@
 		                    <label for="postcode" class="visible-ie-only">
 		                      Postcode<span>*</span>:
 		                    </label>
-		                    <input type="text" maxlength="4" value="{if $new_user}{$new_user.postcode}{/if}" class="form-control" id="postcode" name="postcode" pattern="[0-9]" required>
+		                    <input type="text" maxlength="4" value="{$user.maf.update.user_postcode}" class="form-control" id="postcode" name="user_postcode" pattern="[0-9]" required>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -138,7 +139,7 @@
 		                    <label for="email" class="visible-ie-only">
 		                      Email<span>*</span>:
 		                    </label>
-		                    <input type="email" value="{if $new_user}{$new_user.email}{/if}" class="form-control" id="reg-email" name="email" required>
+		                    <input type="email" value="{$user.maf.update.user_email}" class="form-control" id="reg-email" name="user_email" required>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 
@@ -146,7 +147,7 @@
 		                    <label for="homephone" class="visible-ie-only">
 		                      Home phone:
 		                    </label>
-		                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.homephone}{/if}" class="form-control" id="homephone" name="homephone" pattern="[0-9]">
+		                    <input type="text" maxlength="10" value="{$user.maf.update.user_phone_home}" class="form-control" id="homephone" name="user_phone_home" pattern="[0-9]">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -156,15 +157,15 @@
 		                    <label for="workphone" class="visible-ie-only">
 		                      Work phone:
 		                    </label>
-		                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.workphone}{/if}" class="form-control" id="workphone" name="workphone" pattern="[0-9]">
+		                    <input type="text" maxlength="10" value="{$user.maf.update.user_phone_work}" class="form-control" id="workphone" name="user_phone_work" pattern="[0-9]">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 
 		                  <div class="col-sm-6 form-group">
 		                    <label for="mobile" class="visible-ie-only">
-		                      Mobile:
+		                      Mobile<span>*</span>:
 		                    </label>
-		                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control" id="mobile" name="mobile" pattern="[0-9]">
+		                    <input type="text" maxlength="10" value="{$user.maf.update.user_mobile}" class="form-control" id="mobile" name="user_mobile" pattern="[0-9]" required>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -174,11 +175,10 @@
 		                    <label for="preferred" class="visible-ie-only">
 		                      Preferred correspondence<span>*</span>:
 		                    </label>
-		                    <select class="selectlist-medium" id="preferred" name="preferred" required>
+		                    <select class="selectlist-medium" id="preferred" name="correspondenceType" required>
 		                      <option value="">Select an option</option>
-		                      <option value="Email">Email</option>
-		                      <option value="Phone call">Phone call</option>
-		                      <option value="Post">Post</option>
+		                      <option value="Email" {if $user.maf.update.correspondenceType neq 'Post'}selected="selected"{/if}>Email</option>
+		                      <option value="Post" {if $user.maf.update.correspondenceType eq 'Post'}selected="selected"{/if}>Post</option>
 		                    </select>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
@@ -187,7 +187,8 @@
 		                    <label for="dob" class="visible-ie-only">
 		                      Date of birth<span>*</span>:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.dob}{/if}" placeholder="DD/MM/YYYY" class="form-control" id="dob" name="dob" required>
+                        <input type="hidden" value="{$user.maf.update.user_dob}" name="user_dob" id="user_dob">
+                        <input type="text" value="{$user.maf.update.user_dob|date_format:'%d/%m/%Y'}" placeholder="DD/MM/YYYY" class="form-control" id="dob" name="dob" onchange="setDateValue('user_dob',this.value);" required>
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -205,7 +206,7 @@
 		                    <label for="emername" class="visible-ie-only">
 		                      Name:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.emername}{/if}" class="form-control" id="emername" name="emername">
+		                    <input type="text" value="{$user.maf.em.contact_name}" class="form-control" id="emername" name="contact_name">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 
@@ -213,7 +214,7 @@
 		                    <label for="emerrel" class="visible-ie-only">
 		                      Relationship:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.emerrel}{/if}" class="form-control" id="emerrel" name="emerrel">
+		                    <input type="text" value="{$user.maf.em.contact_relationship}" class="form-control" id="emerrel" name="contact_relationship">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -222,7 +223,7 @@
 		                    <label for="emeraddress" class="visible-ie-only">
 		                      Address:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.emeraddress}{/if}" class="form-control" id="emeraddress" name="emeraddress">
+		                    <input type="text" value="{$user.maf.em.contact_address}" class="form-control" id="emeraddress" name="contact_address">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 
@@ -230,7 +231,7 @@
 		                    <label for="emersuburb" class="visible-ie-only">
 		                      Suburb:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.emersuburb}{/if}" class="form-control" id="emersuburb" name="emersuburb">
+		                    <input type="text" value="{$user.maf.em.contact_suburb}" class="form-control" id="emersuburb" name="contact_suburb">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -240,10 +241,10 @@
 		                    <label for="emerstate" class="visible-ie-only">
 		                      State:
 		                    </label>
-		                    <select class="selectlist-medium" id="emerstate" name="emerstate">
+		                    <select class="selectlist-medium" id="emerstate" name="contact_state_id">
 		                      <option value="">Select an option</option>
 		                      {foreach $options_state as $opt}
-		                      <option value="{$opt.value}" {if $new_user.emerstate eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
+		                      <option value="{$opt.value}" {if $user.maf.em.contact_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
 		                      {/foreach}
 		                    </select>
 		                    <div class="error-msg help-block"></div>
@@ -253,7 +254,7 @@
 		                    <label for="emerpostcode" class="visible-ie-only">
 		                      Postcode:
 		                    </label>
-		                    <input type="text" maxlength="4" value="{if $new_user}{$new_user.emerpostcode}{/if}" class="form-control" id="emerpostcode" name="emerpostcode" pattern="[0-9]" >
+		                    <input type="text" maxlength="4" value="{$user.maf.em.contact_postcode}" class="form-control" id="emerpostcode" name="contact_postcode" pattern="[0-9]" >
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -263,14 +264,14 @@
 		                    <label for="emerhomephone" class="visible-ie-only">
 		                      Home phone:
 		                    </label>
-		                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.emerhomephone}{/if}" class="form-control" id="emerhomephone" name="emerhomephone" pattern="[0-9]">
+		                    <input type="text" maxlength="10" value="{$user.maf.em.contact_phone_home}" class="form-control" id="emerhomephone" name="contact_phone_home" pattern="[0-9]">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                  <div class="col-sm-6 form-group">
 		                    <label for="emerworkphone" class="visible-ie-only">
 		                      Work phone:
 		                    </label>
-		                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.emerworkphone}{/if}" class="form-control" id="emerworkphone" name="emerworkphone" pattern="[0-9]">
+		                    <input type="text" maxlength="10" value="{$user.maf.em.contact_phone_work}" class="form-control" id="emerworkphone" name="contact_phone_work" pattern="[0-9]">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -280,7 +281,7 @@
 		                    <label for="emermobile" class="visible-ie-only">
 		                      Mobile:
 		                    </label>
-		                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.emermobile}{/if}" class="form-control" id="emermobile" name="emermobile" pattern="[0-9]" >
+		                    <input type="text" maxlength="10" value="{$user.maf.em.contact_mobile}" class="form-control" id="emermobile" name="contact_mobile" pattern="[0-9]" >
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -297,7 +298,7 @@
 		                    <label for="docname" class="visible-ie-only">
 		                      Name:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.docname}{/if}" class="form-control" id="docname" name="docname">
+		                    <input type="text" value="{$user.maf.doc.doc_name}" class="form-control" id="docname" name="doc_name">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 
@@ -305,7 +306,7 @@
 		                    <label for="docmedcentre" class="visible-ie-only">
 		                      Medical centre:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.docmedcentre}{/if}" class="form-control" id="docmedcentre" name="docmedcentre">
+		                    <input type="text" value="{$user.maf.doc.doc_medical_centre}" class="form-control" id="docmedcentre" name="doc_medical_centre">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -314,7 +315,7 @@
 		                    <label for="docaddress" class="visible-ie-only">
 		                      Address:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.docaddress}{/if}" class="form-control" id="docaddress" name="docaddress">
+		                    <input type="text" value="{$user.maf.doc.doc_address}" class="form-control" id="docaddress" name="doc_address">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 
@@ -322,7 +323,7 @@
 		                    <label for="docsuburb" class="visible-ie-only">
 		                      Suburb:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.docsuburb}{/if}" class="form-control" id="docsuburb" name="docsuburb">
+		                    <input type="text" value="{$user.maf.doc.doc_suburb}" class="form-control" id="docsuburb" name="doc_suburb">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -332,10 +333,10 @@
 		                    <label for="docstate" class="visible-ie-only">
 		                      State:
 		                    </label>
-		                    <select class="selectlist-medium" id="docstate" name="docstate">
+		                    <select class="selectlist-medium" id="docstate" name="doc_state_id">
 		                      <option value="">Select an option</option>
 		                      {foreach $options_state as $opt}
-		                      <option value="{$opt.value}" {if $new_user.docstate eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
+		                      <option value="{$opt.value}" {if $user.maf.doc.doc_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
 		                      {/foreach}
 		                    </select>
 		                    <div class="error-msg help-block"></div>
@@ -345,7 +346,7 @@
 		                    <label for="docpostcode" class="visible-ie-only">
 		                      Postcode:
 		                    </label>
-		                    <input type="text" maxlength="4" value="{if $new_user}{$new_user.docpostcode}{/if}" class="form-control" id="docpostcode" name="docpostcode" pattern="[0-9]">
+		                    <input type="text" maxlength="4" value="{$user.maf.doc.doc_postcode}" class="form-control" id="docpostcode" name="doc_postcode" pattern="[0-9]">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -355,14 +356,14 @@
 		                    <label for="docphone" class="visible-ie-only">
 		                      Phone:
 		                    </label>
-		                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.docphone}{/if}" class="form-control" id="docphone" name="docphone" pattern="[0-9]" >
+		                    <input type="text" maxlength="10" value="{$user.maf.doc.doc_phone}" class="form-control" id="docphone" name="doc_phone" pattern="[0-9]" >
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                  <div class="col-sm-6 form-group">
 		                    <label for="docfileno" class="visible-ie-only">
 		                      File No. (if known):
 		                    </label>
-		                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.docfileno}{/if}" class="form-control" id="docfileno" name="docfileno" pattern="[0-9]">
+		                    <input type="text" maxlength="10" value="{$user.maf.doc.doc_file_no}" class="form-control" id="docfileno" name="doc_file_no" pattern="[0-9]">
 		                    <div class="error-msg help-block"></div>
 		                  </div>
 		                </div>
@@ -377,17 +378,17 @@
 						<div class="row">
 							<div class="col-sm-12 form-group">
 							<p class="text-left">It is recommended that you officially register your donation decision on the <a href="#" target="_blank">Australian Organ Donor Register</a>, and discuss your decision with your family.</p>
-							<input type="radio" name="organdonation" id="organdonationy" class="form-control" value="Yes" />
+							<input type="radio" name="user_donor" id="organdonationy" class="form-control" value="Yes" {if $user.maf.update.user_donor eq 't'}checked="checked"{/if}/>
 		                    <label for="organdonationy" class="radiolab visible-ie-only">Yes</label>
 
-							<input type="radio" name="organdonation" id="organdonationn" class="form-control" value="No" />
+							<input type="radio" name="user_donor" id="organdonationn" class="form-control" value="No" {if $user.maf.update.user_donor eq 'f'}checked="checked"{/if} />
 		                    <label for="organdonationn" class="radiolab visible-ie-only">No</label>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-12 form-group">
 								<label for="organotherinfo" class="visible-ie-only">Other Info:</label>
-								<textarea id="organotherinfo" name="organotherinfo" class="form-control">{$new_user.organotherinfo}</textarea>
+								<textarea id="organotherinfo" name="user_donorFreeText" class="form-control">{$user.maf.update.user_donorFreeText}</textarea>
 							</div>
 						</div>
 					</div>
@@ -402,14 +403,16 @@
 						<div class="row">
 							<div class="col-sm-6 col-sm-offset-3 form-group">
 								<label for="bloodgroup" class="visible-ie-only">Blood group:</label>
-								<select class="selectlist-medium" id="bloodgroup" name="bloodgroup">
+								<select class="selectlist-medium" id="bloodgroup" name="blood_group">
 									<option value="">Select an option</option>
-									<option value="A+">A+</option>
-									<option value="A">A</option>
-									<option value="A-">A-</option>
-									<option value="B+">B+</option>
-									<option value="B">B</option>
-									<option value="B-">B-</option>
+                  					<option value="O+" {if $user.maf.medic.blood_group eq 'O+'}checked="checked"{/if}>O+</option>
+                                    <option value="O-" {if $user.maf.medic.blood_group eq 'O-'}checked="checked"{/if}>O-</option>
+                                    <option value="A+" {if $user.maf.medic.blood_group eq 'A+'}checked="checked"{/if}>A+</option>
+									<option value="A-" {if $user.maf.medic.blood_group eq 'A-'}checked="checked"{/if}>A-</option>
+									<option value="B+" {if $user.maf.medic.blood_group eq 'B+'}checked="checked"{/if}>B+</option>
+									<option value="B-" {if $user.maf.medic.blood_group eq 'B-'}checked="checked"{/if}>B-</option>
+                                    <option value="AB+" {if $user.maf.medic.blood_group eq 'AB+'}checked="checked"{/if}>AB+</option>
+                                    <option value="AB-" {if $user.maf.medic.blood_group eq 'AB-'}checked="checked"{/if}>AB-</option>
 								</select>
 							</div>
 						</div>
@@ -512,7 +515,7 @@
 		                    <label for="dva" class="visible-ie-only">
 		                      DVA gold card number:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.dva}{/if}" class="form-control" id="dva" name="dva">
+		                    <input type="text" value="{$user.maf.dva}" class="form-control" id="dva" name="dva">
 		                    <div class="error-msg help-block"></div>
 							</div>
 						</div>
@@ -521,7 +524,7 @@
 		                    <label for="healthfundname" class="visible-ie-only">
 		                      Health fund name:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.healthfundname}{/if}" class="form-control" id="healthfundname" name="healthfundname">
+		                    <input type="text" value="{$user.maf.healthfundname}" class="form-control" id="healthfundname" name="healthfundname">
 		                    <div class="error-msg help-block"></div>
 							</div>
 						</div>
@@ -530,7 +533,7 @@
 		                    <label for="healthfundno" class="visible-ie-only">
 		                      Health fund number:
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.healthfundno}{/if}" class="form-control" id="healthfundno" name="healthfundno">
+		                    <input type="text" value="{$user.maf.healthfundno}" class="form-control" id="healthfundno" name="healthfundno">
 		                    <div class="error-msg help-block"></div>
 							</div>
 						</div>
@@ -539,7 +542,7 @@
 		                    <label for="healthid" class="visible-ie-only">
 		                      Individual health identifier:  <img src="/images/question-mark.png" alt="Health identifier information" title="Health identifier information" data-toggle="tooltip" data-placement="top" />
 		                    </label>
-		                    <input type="text" value="{if $new_user}{$new_user.healthid}{/if}" class="form-control" id="healthid" name="healthid">
+		                    <input type="text" value="{$user.maf.healthid}" class="form-control" id="healthid" name="healthid">
 		                    <div class="error-msg help-block"></div>
 							</div>
 						</div>
@@ -650,7 +653,7 @@
       yearRange: "-100:+0",
       maxDate: "-1D"
     });
-
+    
     $('#dob').rules("add", {
       required: true
     });
@@ -727,6 +730,15 @@
   function redirectWin(url) {
     window.location.replace(url);
   }
+  
+  function convert_to_mysql_date_format(str){
+   	var dateArr = str.split("/");
+   	return dateArr[2]+'-'+dateArr[1]+'-'+dateArr[0]; 
+   }
+   	
+   function setDateValue(id,date){
+   	$("#"+id).val( convert_to_mysql_date_format(date) );
+   }
 </script>
 {/literal} {/block}
 

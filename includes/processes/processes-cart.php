@@ -336,6 +336,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           
         if($response){
           // PAYMENT SUCCESS
+          
+          //check if shopping cart has "MAF - Member service fee"
+          $MAFSetActivePending = $cart_obj->hasProductInCart(225);
+          
           $cart_obj->CloseCart();
           $pay_obj->SetOrderStatus($paymentId);
           $_SESSION['orderNumber'] = $orderNumber;
@@ -345,6 +349,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
           $COMP = json_encode($CONFIG->company);
           $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+          $from = (string)$CONFIG->company->name;
+          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
           
           //Init user details
           $userArr = $_SESSION['user']['public'];
@@ -358,8 +364,24 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             if(empty($MAFMemberId)){
               //create guest user when failed
               $hasMAFProd = false;
+              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Create member', "Member email:  {$_SESSION['user']['new_user']['email']} <br>". $user_obj->getErrorMsg());
             }else{
               saveInLog('member-create', 'external', $MAFMemberId, $_SESSION['user']['new_user']['state']);
+              //Login MAF member
+              if($user_obj->authenticate($MAFMemberId, $_SESSION['user']['new_user']['password'])){
+                if($_SESSION['user']['public']['maf'] = $user_obj->getSessionVars()){
+                  $_SESSION['user']['public']['id'] = $_SESSION['user']['public']['maf']['main']['user_id'];
+                  $_SESSION['user']['public']['gname'] = $_SESSION['user']['public']['maf']['main']['user_firstname'];
+                  $_SESSION['user']['public']['surname'] = $_SESSION['user']['public']['maf']['main']['user_lastname'];
+                  $_SESSION['user']['public']['email'] = $_SESSION['user']['public']['maf']['main']['user_email'];
+                  $error = null;
+                  $success = true;
+                  $url = empty($_POST['redirect']) ? $_SERVER['HTTP_REFERER'] : $_POST['redirect'];
+                  saveInLog('member-login', 'external', $_SESSION['user']['public']['id']);
+                }
+              }else{
+                sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Login after creation', "Member id:  {$MAFMemberId} <br>". $user_obj->getErrorMsg());
+              }
               $userArr = array(
                   "id" => $MAFMemberId,
                   "gname" => $_SESSION['user']['new_user']['gname'],
@@ -370,8 +392,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                 //Send welcome email
                 $SMARTY->assign('user', $userArr);
                 $to = $userArr['email'];
-                $from = (string)$CONFIG->company->name;
-                $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
                 $subject = 'MedicAlert Foundation Registration';
                 $body = $SMARTY->fetch('email/welcome.tpl');
                 sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
@@ -430,8 +450,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             
             $to = $_SESSION['address']['B']['address_email'];
             // $bcc = 'apolo@them.com.au';
-            $from = (string)$CONFIG->company->name;
-            $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
             $subject = 'Payment | Order confirmation';
             $body = $SMARTY->fetch('email/order-confirmation.tpl');
             if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
@@ -443,6 +461,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           }
           
           //PROCESS AUTO-RENEWAL
+          $setAutoRenewal = false;
           if(!empty($_POST['autorenewal'])){
             $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
             if(!empty($_POST['autopayment']) && $_POST['autopayment'] == 'dd'){
@@ -456,18 +475,30 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $customerArr = $autorenewObj->GetBankCustomerRecord();
               $customerArr['user_id'] = $userArr['id'];
               $autorenewObj->StoreAutoRenew($customerArr);
-            
+              $setAutoRenewal = true;
+              //Register for auto-renewal and change member status to "active pending"
+              if(!$user_obj->setAutoRenewal($_SESSION['user']['public']['maf']['token'], $customerArr)){
+                sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set auto-renewal (1)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+                $setAutoRenewal = false;
+              }
               try{
                 //Send auto-renewal email
                 $SMARTY->assign('user', $userArr);
                 $to = $userArr['email'];
-                $from = (string)$CONFIG->company->name;
-                $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-                $subject = 'Auto Renewal Subscription';
+                $subject = 'Auto-renewal Subscription';
                 $body = $SMARTY->fetch('email/autorenewal.tpl');
                 sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
               }
               catch(Exception $e){}
+            }else{
+              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (1)', "Member id:  {$userArr['id']} <br>". $autorenewObj->GetErrorMessage());
+            }
+          }
+          
+          //Change member status to "active pending"
+          if($MAFSetActivePending && !empty($_SESSION['user']['public']['maf'] && !$setAutoRenewal)){
+            if(!$user_obj->setPendingStatus($_SESSION['user']['public']['maf']['token'], $_SESSION['user']['public']['id'])){
+              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set active-pending (1)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
             }
           }
           
@@ -499,8 +530,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                 $buffer = $SMARTY->fetch('email-discount.tpl');
                 $to = "apolo@them.com.au";
                 $bcc = "";
-                $from = str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-                $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
                 $subject = 'A discount code has been used.';
                 $body = $buffer;
                 $mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
@@ -671,6 +700,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
         $COMP = json_encode($CONFIG->company);
         $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+        $from = (string)$CONFIG->company->name;
+        $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
 
         $user_obj = new UserClass();
         $userArr = $_SESSION['user']['public'];
@@ -740,8 +771,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         
           $to = $userArr['email'];
           // $bcc = 'apolo@them.com.au';
-          $from = (string)$CONFIG->company->name;
-          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
           $subject = 'Payment | Order confirmation';
           $body = $SMARTY->fetch('email/order-confirmation.tpl');
           if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
@@ -802,8 +831,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                     $SMARTY->assign('code', $codeStr);
                     $SMARTY->assign('amount', $chargedAmount);
                     $SMARTY->assign('custom_message', $_POST['message']);
-                    $from = (string)$CONFIG->company->name;
-                    $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
                     $subject = 'Someone has sent you a MedicAlert gift certificate';
                     $body = $SMARTY->fetch('email/gift-certificate.tpl');
                     $mailID_recipient = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
@@ -811,8 +838,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                     // SEND GIFT CERTIFICATE TO SENDER
                     $to = $_POST['email'];
                     $SMARTY->assign('sender_name', $_POST['name']);
-                    $from = (string)$CONFIG->company->name;
-                    $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
                     $subject = 'Your MedicAlert gift certificate was sent';
                     $body = $SMARTY->fetch('email/confirmation-gift-certificate.tpl');
                     $mailID_sender = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
@@ -927,8 +952,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           exit();
         }
     
-        if($response){
-          // PAYMENT SUCCESS
+        if($response){ // PAYMENT SUCCESS
+        	
           $cart_obj->CloseCart();
           $pay_obj->SetOrderStatus($paymentId);
           $_SESSION['orderNumber'] = $orderNumber;
@@ -938,6 +963,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
           $COMP = json_encode($CONFIG->company);
           $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+          $from = (string)$CONFIG->company->name;
+          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
     
           //Init user details
           $userArr = $_SESSION['user']['public'];
@@ -973,8 +1000,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
     
             $to = $userArr['email'];
             // $bcc = 'apolo@them.com.au';
-            $from = (string)$CONFIG->company->name;
-            $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
             $subject = 'Payment | Order confirmation';
             $body = $SMARTY->fetch('email/order-confirmation.tpl');
             if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
@@ -986,6 +1011,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           }
     
           //PROCESS AUTO-RENEWAL
+          $setAutoRenewal = false;
           if(!empty($_POST['autorenewal'])){
             $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
             if(!empty($_POST['autopayment']) && $_POST['autopayment'] == 'dd'){
@@ -999,22 +1025,33 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $customerArr = $autorenewObj->GetBankCustomerRecord();
               $customerArr['user_id'] = $userArr['id'];
               $autorenewObj->StoreAutoRenew($customerArr);
-    
+              $setAutoRenewal = true;
+              //Register for auto-renewal and change member status to "active pending"
+              if(!$user_obj->setAutoRenewal($_SESSION['user']['public']['maf']['token'], $customerArr)){
+                sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set auto-renewal (2)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+                $setAutoRenewal = false;
+              }
               try{
                 //Send auto-renewal email
                 $SMARTY->assign('user', $userArr);
                 $to = $userArr['email'];
-                $from = (string)$CONFIG->company->name;
-                $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-                $subject = 'Auto Renewal Subscription';
+                $subject = 'Auto-renewal Subscription';
                 $body = $SMARTY->fetch('email/autorenewal.tpl');
                 sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
               }
               catch(Exception $e){}
+            }else{
+              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (2)', "Member id:  {$userArr['id']} <br>". $autorenewObj->GetErrorMessage());
             }
           }
-    
-    
+          
+          //Change member status to "active pending"
+          if(!$setAutoRenewal){
+            if(!$user_obj->setPendingStatus($_SESSION['user']['public']['maf']['token'], $_SESSION['user']['public']['id'])){
+              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set active-pending (2)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+            }
+          }
+          
           // SET GOOGLE ANALYTICS - ECOMMERCE
           if(!empty($GA_ID)){
             sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
@@ -1042,8 +1079,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                 $buffer = $SMARTY->fetch('email-discount.tpl');
                 $to = "apolo@them.com.au";
                 $bcc = "";
-                $from = str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-                $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
                 $subject = 'A discount code has been used.';
                 $body = $buffer;
                 $mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
@@ -1066,7 +1101,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           }
         }
       } else{
-        $_SESSION['error'] = 'Database Connection Error. Please try again, otherwise contact us by phone.'.$cart_obj->NumberOfProductsOnCart();
+        $_SESSION['error'] = 'Database Connection Error. Please try again, otherwise contact us by phone.';
       }
     
       $_SESSION['post'] = $_POST;
@@ -1097,11 +1132,23 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           "address_postcode" => $_SESSION['user']['public']['maf']['main']['user_postcode']
       );
       
+      $user_obj = new UserClass();
+      $userArr = $_SESSION['user']['public'];
+      
       $bankSettingsArr = array(
           'settings' => $CONFIG->payment_gateway->payway,
           'address' => $billingArr
       );
       
+      //Init email details
+      $SMARTY->unloadFilter('output', 'trimwhitespace');
+      $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
+      $COMP = json_encode($CONFIG->company);
+      $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+      $from = (string)$CONFIG->company->name;
+      $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+      
+      require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
       $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
       if(!empty($_POST['autopayment']) && $_POST['autopayment'] == 'dd'){
         $autorenewArr = $_POST['auto-dd'];
@@ -1115,14 +1162,15 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $customerArr = $autorenewObj->GetBankCustomerRecord();
         $customerArr['user_id'] = $_SESSION['user']['public']['id'];
         $autorenewObj->StoreAutoRenew($customerArr);
-        
+        //Register for auto-renewal and change member status to "active pending"
+        if(!$user_obj->setAutoRenewal($_SESSION['user']['public']['maf']['token'], $customerArr)){
+          sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set auto-renewal (3)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+        }
         try{
           //Send auto-renewal email
-          $SMARTY->assign('user', $_SESSION['user']['public']);
+          $SMARTY->assign('user', $userArr);
           $to = $_SESSION['user']['public']['email'];
-          $from = (string)$CONFIG->company->name;
-          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
-          $subject = 'Auto Renewal Subscription';
+          $subject = 'Auto-renewal Subscription';
           $body = $SMARTY->fetch('email/autorenewal.tpl');
           sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
         }
@@ -1130,8 +1178,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         
         // REDIRECT TO THANK YOU PAGE
         header('Location: /thank-you-for-registering-auto-renewal');
+        die();
       
       } else{
+        sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (3)', "Member id:  {$userArr['id']} <br>". $autorenewObj->GetErrorMessage());
         if($error_msg = $autorenewObj->GetErrorMessage()){
           $_SESSION['error'] = $error_msg;
         } else{

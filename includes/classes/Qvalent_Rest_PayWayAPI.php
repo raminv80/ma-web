@@ -230,8 +230,12 @@ class Qvalent_REST_PayWayAPI extends Bank {
           "state" => $this->address['address_state'],
           "postcode" => $this->address['address_postcode']
       );
+      
+      $this->payment_transactionno = substr($singleUseTokenId, 20);
+      
       //CREATE TEMPORARY CUSTOMER
       $WestpacCustomer = $this->CreateCustomer($singleUseTokenId, $this->payment_transactionno, $contactArr);
+      
       //MISSING CUSTOMER NUMBER
       if(empty($WestpacCustomer->customerNumber)){
         $err = array();

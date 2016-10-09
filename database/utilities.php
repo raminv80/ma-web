@@ -446,6 +446,36 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
   return false;
 }
 
+function sendErrorMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
+  global $DBobject;
+  try{
+    if(is_readable($_SERVER['DOCUMENT_ROOT'].'/database/safemail.php')){	require_once 'database/safemail.php';}
+  }catch (Exception $e){}
+
+  /* To send HTML mail, you can set the Content-type header. */
+  $headers  = "MIME-Version: 1.0\r\n";
+  $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+  $headers .= "X-Priority: 3\r\n";
+  $headers .= "X-Mailer: PHP". phpversion() ."\r\n";
+
+  /* additional headers */
+  $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
+  $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
+  $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
+  $headers .= "Bcc: cmsemails@them.com.au".(!empty($bcc)?",".$bcc:"")."\r\n";
+
+  $mailSent = 0;
+  try{
+    if(function_exists("SafeMail")){
+      $mailSent = SafeMail($to, "ERROR: $subject", $body, $headers, '-f '. $fromEmail);
+    }
+    $filename = $_SERVER['DOCUMENT_ROOT'].'/debug_log.txt';
+    $body = time(). PHP_EOL . $body . PHP_EOL;
+    file_put_contents($filename, $body, FILE_APPEND | LOCK_EX);
+    
+  }catch(Exception $e){}
+  return $mailSent;
+}
 
 function preparehtmlmail($html) {
 

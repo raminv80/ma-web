@@ -48,7 +48,7 @@ class UserClass{
       $this->errorMsg = "Sorry, you have been locked out of your account.<br>You will have to call us on 1800 88 22 22 (Mon-Fri, 9am-5pm CST) to unlock your account.";
     }
     
-    if(empty($this->errorMsg) && $this->initSessionVars()){
+    if(empty($this->errorMsg) && $this->setSessionVars($this->token)){
       if($this->isInactiveMember()){
         // log out of the API
         $this->logOut($this->token);
@@ -91,14 +91,15 @@ class UserClass{
 
   /**
    * Initialise the member details array in the session based on the retrieved member record.
+   * ALSO IT'S USED FOR CHECKING THE MEMBER LOGIN STATUS 
    * This session array is used to prefill the update personal/medical details form.
    */
-  function initSessionVars(){
+  function setSessionVars($_token){
     $this->errorMsg = null;
     try{
-      $this->memberRecordJSONResponse = $this->medicAlertApi->memberRetrieve($this->token);
+      $this->memberRecordJSONResponse = $this->medicAlertApi->memberRetrieve($_token);
       $this->memberRecord = json_decode($this->memberRecordJSONResponse, true);
-      $this->memberRecord = stripslashes_deep($this->memberRecord);
+      //$this->memberRecord = stripslashes_deep($this->memberRecord);
     }
     catch(exceptionMedicAlertApiNotAuthenticated $e){
       $this->errorMsg = "API error: {$e}";
@@ -113,9 +114,9 @@ class UserClass{
     if(empty($this->errorMsg) && !empty($this->memberRecord)){
       $this->sessionVars['pending_update'] = false;
       
-      $this->sessionVars['token'] = $this->token;
+      $this->sessionVars['token'] = $_token;
       
-      $this->sessionVars['main'] = $this->getUserArray($this->memberRecord, $userName);
+      $this->sessionVars['main'] = $this->getUserArray($this->memberRecord);
       
       $this->sessionVars['update']['user_title'] = $this->memberRecord['dataBaseRecord']['details']['title'];
       $this->sessionVars['update']['user_firstname'] = $this->memberRecord['dataBaseRecord']['details']['firstName'];
@@ -131,12 +132,13 @@ class UserClass{
       $this->sessionVars['update']['user_phone_home'] = $this->memberRecord['dataBaseRecord']['details']['phoneHome'];
       $this->sessionVars['update']['user_phone_work'] = $this->memberRecord['dataBaseRecord']['details']['phoneWork'];
       $this->sessionVars['update']['user_mobile'] = $this->memberRecord['dataBaseRecord']['details']['phoneMobile'];
-      $this->sessionVars['update']['user_dob'] = $this->formatDateToForward($this->memberRecord['dataBaseRecord']['details']['dateOfBirth']);
+      $this->sessionVars['update']['user_dob'] = $this->memberRecord['dataBaseRecord']['details']['dateOfBirth'];
       $this->sessionVars['update']['user_gender'] = $this->memberRecord['dataBaseRecord']['details']['gender'];
       $this->sessionVars['update']['receiveMarketingMaterial'] = $this->memberRecord['dataBaseRecord']['details']['receiveMarketingMaterial'];
       $this->sessionVars['update']['correspondenceType'] = $this->memberRecord['dataBaseRecord']['details']['correspondenceType'];
       $this->sessionVars['update']['preferedPaymentMethod'] = $this->memberRecord['dataBaseRecord']['details']['preferedPaymentMethod'];
       $this->sessionVars['update']['user_heardabout'] = $this->memberRecord['dataBaseRecord']['attributes'][4]['value'];
+     
       $this->sessionVars['update']['user_donor'] = $this->memberRecord['dataBaseRecord']['details']['isOrganDonor'];
       $this->sessionVars['update']['user_donorFreeText'] = "";
       if($this->memberRecord['dataBaseRecord']['details']['donorEye'] == 't'){
@@ -166,21 +168,22 @@ class UserClass{
       $this->sessionVars['em']['contact_phone_work'] = $this->memberRecord['dataBaseRecord']['emergencyContact']['phoneWork'];
       $this->sessionVars['em']['contact_mobile'] = $this->memberRecord['dataBaseRecord']['emergencyContact']['phoneMobile'];
       
-      $this->sessionVars['doc']['name'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['doctorName']);
-      $this->sessionVars['doc']['medical_centre'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['medicalCentreName']);
-      $this->sessionVars['doc']['address'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['address']);
-      $this->sessionVars['doc']['suburb'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['suburb']);
-      $this->sessionVars['doc']['postcode'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['postCode']);
-      $this->sessionVars['doc']['state_id'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['state']);
-      $this->sessionVars['doc']['country'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['country']);
-      $this->sessionVars['doc']['phone'] = $this->memberRecord['dataBaseRecord']['doctor']['phoneNumber'];
+      $this->sessionVars['doc']['doc_name'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['doctorName']);
+      $this->sessionVars['doc']['doc_medical_centre'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['medicalCentreName']);
+      $this->sessionVars['doc']['doc_address'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['address']);
+      $this->sessionVars['doc']['doc_suburb'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['suburb']);
+      $this->sessionVars['doc']['doc_postcode'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['postCode']);
+      $this->sessionVars['doc']['doc_state_id'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['state']);
+      $this->sessionVars['doc']['doc_country'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['country']);
+      $this->sessionVars['doc']['doc_phone'] = $this->memberRecord['dataBaseRecord']['doctor']['phoneNumber'];
+      $this->sessionVars['doc']['doc_file_no'] = $this->memberRecord['dataBaseRecord']['doctor']['fileNumber'];
       
       $this->sessionVars['medic']['conditions'] = $this->memberRecord['dataBaseRecord']['conditions'];
       $this->sessionVars['medic']['allergies'] = $this->memberRecord['dataBaseRecord']['allergies'];
       $this->sessionVars['medic']['medications'] = $this->memberRecord['dataBaseRecord']['medications'];
       $this->sessionVars['medic']['other'] = '';
       $this->sessionVars['medic']['records'] = '';
-      $this->sessionVars['medic']['file_no'] = $this->memberRecord['dataBaseRecord']['doctor']['fileNumber'];
+      
       $this->sessionVars['medic']['blood_group'] = $this->memberRecord['dataBaseRecord']['blood']['bloodGroup'];
       
       // $this->sessionVars['profileImage'] = $this->memberRecord['dataBaseRecord']['profileImage'];
@@ -190,6 +193,8 @@ class UserClass{
       foreach($this->memberRecord['dataBaseRecord']['attributes'] as $at){
         $this->sessionVars['attributes']["{$at['id']}"] = $at['value'];
       }
+      
+      $this->sessionVars = stripslashes_deep($this->sessionVars);
       return true;
     }
     return false;
@@ -320,7 +325,7 @@ class UserClass{
 	/**
 	 * Build update member array based on details entered
 	 */
-	function buildUpdateMemberMedicAlertArray(){
+	function buildUpdateMemberMedicAlertArray($_data){
 	
 		$check = false;
 		// Website record
@@ -333,28 +338,28 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['pendingUpdate']							= '1';
 		$this->memberRecord['webSiteRecord']['pendingUpdateDate']						= date('d/m/Y',time());
 	
-		$this->memberRecord['webSiteRecord']['details']['title']						= ucwords(strtolower($_SESSION['update']['user_title']));
-		$this->memberRecord['webSiteRecord']['details']['firstName']					= ucwords(strtolower($_SESSION['update']['user_firstname']));
-		$this->memberRecord['webSiteRecord']['details']['middleName']					= ucwords(strtolower($_SESSION['update']['user_middlename']));
-		$this->memberRecord['webSiteRecord']['details']['surname']						= ucwords(strtolower($_SESSION['update']['user_lastname']));
-		$this->memberRecord['webSiteRecord']['details']['nickName']						= ucwords(strtolower($_SESSION['update']['user_nickname']));
-		$this->memberRecord['webSiteRecord']['details']['dateOfBirth']					= (htmlclean($_SESSION['update']['user_dob']));
-		$this->memberRecord['webSiteRecord']['details']['gender']						= ucwords(strtolower($_SESSION['update']['user_gender']));
-		$this->memberRecord['webSiteRecord']['details']['phoneHome']					= htmlclean($_SESSION['update']['user_phone_home']);
-		$this->memberRecord['webSiteRecord']['details']['phoneWork']					= htmlclean($_SESSION['update']['user_phone_work']);
-		$this->memberRecord['webSiteRecord']['details']['phoneMobile']					= htmlclean($_SESSION['update']['user_mobile']);
-		$this->memberRecord['webSiteRecord']['details']['emailAddress']					= htmlclean($_SESSION['update']['user_email']);
-		$this->memberRecord['webSiteRecord']['details']['emergencyInformation']			= ucwords(strtolower($_SESSION['em']['emergencyInfo']));
-		$this->memberRecord['webSiteRecord']['details']['isOrganDonor']					= htmlclean($_SESSION['update']['user_donor']);
-		$this->memberRecord['webSiteRecord']['details']['donorFreeText']				= sentence_case($_SESSION['update']['user_donorFreeText']);
-		//$this->memberRecord['webSiteRecord']['details']['receiveMarketingMaterial']		= ($_SESSION['update']['check_newsletter']? '':'t');
-		$this->memberRecord['webSiteRecord']['details']['correspondenceType']			= htmlclean($_SESSION['update']['correspondenceType']);
-		//$this->memberRecord['webSiteRecord']['details']['preferedPaymentMethod']			= $_SESSION['update']['user_preferedPaymentMethod'];
-		
-		$this->memberRecord['webSiteRecord']['address']['address']						= ucwords(strtolower($_SESSION['update']['user_address']));
-		$this->memberRecord['webSiteRecord']['address']['suburb']						= ucwords(strtolower($_SESSION['update']['user_suburb']));
-		$this->memberRecord['webSiteRecord']['address']['postCode']						= htmlclean($_SESSION['update']['user_postcode']);
-		$this->memberRecord['webSiteRecord']['address']['state']						= htmlclean($_SESSION['update']['user_state_id']);
+		$this->memberRecord['webSiteRecord']['details']['title']						= ucwords(strtolower($_data['user_title']));
+		$this->memberRecord['webSiteRecord']['details']['firstName']					= ucwords(strtolower($_data['user_firstname']));
+		$this->memberRecord['webSiteRecord']['details']['middleName']					= ucwords(strtolower($_data['user_middlename']));
+		$this->memberRecord['webSiteRecord']['details']['surname']						= ucwords(strtolower($_data['user_lastname']));
+		$this->memberRecord['webSiteRecord']['details']['nickName']						= ucwords(strtolower($_data['user_nickname']));
+		$this->memberRecord['webSiteRecord']['details']['dateOfBirth']					= $_data['user_dob'];
+		$this->memberRecord['webSiteRecord']['details']['gender']						= ucwords(strtolower($_data['user_gender']));
+		$this->memberRecord['webSiteRecord']['details']['phoneHome']					= $_data['user_phone_home'];
+		$this->memberRecord['webSiteRecord']['details']['phoneWork']					= $_data['user_phone_work'];
+		$this->memberRecord['webSiteRecord']['details']['phoneMobile']					= $_data['user_mobile'];
+		$this->memberRecord['webSiteRecord']['details']['emailAddress']					= $_data['user_email'];
+		$this->memberRecord['webSiteRecord']['details']['emergencyInformation']			= ucwords(strtolower($_data['em']['emergencyInfo']));
+		$this->memberRecord['webSiteRecord']['details']['isOrganDonor']					= $_data['user_donor'];
+		$this->memberRecord['webSiteRecord']['details']['donorFreeText']				= sentence_case($_data['user_donorFreeText']);
+		//$this->memberRecord['webSiteRecord']['details']['receiveMarketingMaterial']		= ($_data['check_newsletter']? '':'t');
+		$this->memberRecord['webSiteRecord']['details']['correspondenceType']			= $_data['correspondenceType'];
+		//$this->memberRecord['webSiteRecord']['details']['preferedPaymentMethod']			= $_data['user_preferedPaymentMethod'];
+	
+		$this->memberRecord['webSiteRecord']['address']['address']						= ucwords(strtolower($_data['user_address']));
+		$this->memberRecord['webSiteRecord']['address']['suburb']						= ucwords(strtolower($_data['user_suburb']));
+		$this->memberRecord['webSiteRecord']['address']['postCode']						= htmlclean($_data['user_postcode']);
+		$this->memberRecord['webSiteRecord']['address']['state']						= htmlclean($_data['user_state_id']);
 		$this->memberRecord['webSiteRecord']['address']['country']						= 'Australia';
 		
 		$this->memberRecord['webSiteRecord']['blood']['bloodGroup']						= htmlclean($_SESSION['medic']['blood_group']);
@@ -403,26 +408,25 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['attributes'] = array();
 		$this->memberRecord['webSiteRecord']['attributes'][0]['id']					= '10';
 		$this->memberRecord['webSiteRecord']['attributes'][0]['text']				= 'DVA Gold Card Number';
-		$this->memberRecord['webSiteRecord']['attributes'][0]['value']				= htmlclean($_SESSION['update']['dvagoldcard']);
+		$this->memberRecord['webSiteRecord']['attributes'][0]['value']				= htmlclean($_data['dvagoldcard']);
 		$this->memberRecord['webSiteRecord']['attributes'][1]['id']					= '12';
 		$this->memberRecord['webSiteRecord']['attributes'][1]['text']				= 'Health Fund Name';
-		$this->memberRecord['webSiteRecord']['attributes'][1]['value']				= htmlclean($_SESSION['update']['healthfundname']);
+		$this->memberRecord['webSiteRecord']['attributes'][1]['value']				= htmlclean($_data['healthfundname']);
 		$this->memberRecord['webSiteRecord']['attributes'][2]['id']					= '13';
 		$this->memberRecord['webSiteRecord']['attributes'][2]['text']				= 'Health Fund Number';
-		$this->memberRecord['webSiteRecord']['attributes'][2]['value']				= htmlclean($_SESSION['update']['healthfundnumber']);
+		$this->memberRecord['webSiteRecord']['attributes'][2]['value']				= htmlclean($_data['healthfundnumber']);
 		$this->memberRecord['webSiteRecord']['attributes'][3]['id']					= '14';
 		$this->memberRecord['webSiteRecord']['attributes'][3]['text']				= 'Individual Health Identifier (eHealth)';
-		$this->memberRecord['webSiteRecord']['attributes'][3]['value']				= htmlclean($_SESSION['update']['ehealth']);
+		$this->memberRecord['webSiteRecord']['attributes'][3]['value']				= htmlclean($_data['ehealth']);
 	}
 	
 	
 	/**
 	 * Build and return the user array after login
 	 * @param array $userData
-	 * @param string $membershipNumber
 	 * @return array 
 	 */
-	function getUserArray($userData, $userName){
+	function getUserArray($userData){
 		
 		$user = array();
 		$user['user_id']					= $userData['dataBaseRecord']['memberShipNumber'];
@@ -447,11 +451,13 @@ class UserClass{
 		$user['user_RenewalMonth']			= date("F", strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
 		$user['preferedPaymentMethod']	    = $userData['dataBaseRecord']['details']['preferedPaymentMethod'];
 		
-		$user['WestpacCustomerNo']     = $userData['dataBaseRecord']['WestpacCustomerNo'];
+		$user['WestpacCustomerNo']          = $userData['dataBaseRecord']['WestpacCustomerNo'];
 		
-		$user['auto_billing_active']          = $userData['dataBaseRecord']['details']['autoBilling'];
-		$user['auto_billing_method']          = $userData['dataBaseRecord']['details']['autoBillingMethod'];
-		$user['auto_billing_register_date']   = $userData['dataBaseRecord']['details']['autoBillingAcceptDate'];
+		$user['autoBilling']                = $userData['dataBaseRecord']['details']['autoBilling'];
+		$user['autoBillingMethod']          = $userData['dataBaseRecord']['details']['autoBillingMethod'];
+		$user['autoBillingAcceptDate']      = $userData['dataBaseRecord']['details']['autoBillingAcceptDate'];
+		$user['autoBillingIp']              = $userData['dataBaseRecord']['details']['autoBillingIp'];
+		$user['autoBillingBankCustomerNo']  = $userData['dataBaseRecord']['details']['autoBillingBankCustomerNo'];
 
 		//Calculate date difference between renewal date and today
 		$renewalDate = date_create_from_format('Y-m-d', $user['user_RenewalDate']);
@@ -470,7 +476,7 @@ class UserClass{
 		//Verify if member can renew the membership
 		$user['renew'] = 'f';
 		
-	    if($day_diff >= -30 && $user['auto_billing_active'] != 't'){
+	    if($day_diff >= -30 && $user['autoBilling'] != 't'){
 		  //Allow renew before 30 days of renewal date
 		  $user['renew'] = 't';
 		}
@@ -499,38 +505,52 @@ class UserClass{
 	}
 	
 	
-	function setPendingStatus(){
-		try{
-			$TMPmemberRecordJSONResponse = $this->medicAlertApi->memberRetrieve($this->token);
-			$TMPmemberRecord = json_decode($TMPmemberRecordJSONResponse, true);
-		}catch(exceptionMedicAlertApiNotAuthenticated $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApiSessionExpired $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApi $e){
-			header("Location: /404"); die();
-		}
-		$TMPmemberRecord['webSiteRecord']['status']['statusTypeId'] = medicAlertApi::STATUS_ACTIVE_PENDING;
-		$_SESSION['user']['user_status'] = medicAlertApi::STATUS_ACTIVE_PENDING;
-		try{
-		  if($TMPmemberRecord['dataBaseRecord']['memberShipNumber'] !== $_SESSION['user']['user_id']){
-		    $this->medicAlertApi->logOut($this->token);
-		    header("Location: /Membership/Members_Area"); die();
-		  }else{
-			  $memberUpdated = $this->medicAlertApi->memberUpdate($this->token, json_encode($TMPmemberRecord));
-			  $this->refreshUserArray();
+	function setPendingStatus($_token, $_memberId){
+		if($this->setSessionVars($_token)){
+		  $this->memberRecord['webSiteRecord']['status']['statusTypeId'] = medicAlertApi::STATUS_ACTIVE_PENDING;
+		  try{
+		    if($this->memberRecord['dataBaseRecord']['memberShipNumber'] !== $_memberId){
+		      $this->logOut($_token);
+		    }else{
+		      $memberUpdated = $this->medicAlertApi->memberUpdate($_token, json_encode($this->memberRecord));
+		      return true;
+		    }
+		  }catch(exceptionMedicAlertApiNotAuthenticated $e){
+		    $this->errorMsg = "API error: {$e}";
+		  }catch(exceptionMedicAlertApiSessionExpired $e){
+		    $this->errorMsg = "API error: {$e}";
+		  }catch(exceptionMedicAlertApi $e){
+		    $this->errorMsg = "API error: {$e}";
 		  }
-		}catch(exceptionMedicAlertApiNotAuthenticated $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApiSessionExpired $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApi $e){
-			header("Location: /404"); die();
 		}
+		return false;
+	}
+	
+	
+	function setAutoRenewal($_token, $_data){
+	  if($this->setSessionVars($_token)){
+	    $this->memberRecord['webSiteRecord']['status']['statusTypeId'] = medicAlertApi::STATUS_ACTIVE_PENDING;
+	    $this->memberRecord['webSiteRecord']['details']['autoBilling']                  = 't';
+	    $this->memberRecord['webSiteRecord']['details']['autoBillingMethod']            = (($_data['method'] == 'bankAccount') ? 'Directdebit' : 'Creditcard') ;
+	    $this->memberRecord['webSiteRecord']['details']['autoBillingAcceptDate']        = date('Y-m-d');
+	    $this->memberRecord['webSiteRecord']['details']['autoBillingIp']                = $_SERVER['REMOTE_ADDR'];
+	    $this->memberRecord['webSiteRecord']['details']['autoBillingBankCustomerNo']    = $_data['bank_customer_id'];
+	    try{
+	      if($this->memberRecord['dataBaseRecord']['memberShipNumber'] !== $_data['user_id']){
+	        $this->logOut($_token);
+	      }else{
+	        $memberUpdated = $this->medicAlertApi->memberUpdate($_token, json_encode($this->memberRecord));
+	        return true;
+	      }
+	    }catch(exceptionMedicAlertApiNotAuthenticated $e){
+	      $this->errorMsg = "API error: {$e}";
+	    }catch(exceptionMedicAlertApiSessionExpired $e){
+	      $this->errorMsg = "API error: {$e}";
+	    }catch(exceptionMedicAlertApi $e){
+	      $this->errorMsg = "API error: {$e}";
+	    }
+	  }
+	  return false;
 	}
 	
 	
@@ -566,7 +586,7 @@ class UserClass{
   					$authenticationRecord = json_decode($this->medicAlertApi->authenticate($_SESSION['user']['user_id'], $_SESSION['update']['user_newpassword']), true);
   					$this->token = $authenticationRecord['sessionToken'];
   					$memberRecord = json_decode($this->medicAlertApi->memberRetrieve($this->token), true);
-  					$_SESSION['user'] = $this->getUserArray($memberRecord, $_REQUEST['username']);
+  					$_SESSION['user'] = $this->getUserArray($memberRecord);
   				}
   			}
   			
@@ -666,27 +686,6 @@ class UserClass{
 	}
 	
 	
-	/**
-	 * Refreshes the user array
-	 */
-	function refreshUserArray(){
-		try{
-			$this->memberAuthJSONResponse = $this->medicAlertApi->memberRetrieve($this->token);
-			if($this->memberAuthJSONResponse != ''){
-				$user_data = json_decode($this->memberAuthJSONResponse, true);
-				$_SESSION['user'] = $this->getUserArray($user_data, $_SESSION['user']['user_username']);
-			}
-		}catch(exceptionMedicAlertApiNotAuthenticated $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApiSessionExpired $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApi $e){
-			header("Location: /404"); die();
-		}
-	}
-	
 	
 	/**
 	 * Formats the date of birth from YYYY-MM-DD to DD-MM-YYYY
@@ -702,20 +701,6 @@ class UserClass{
 		
 	}
 	
-	
-	/**
-	 * Formats the date of birth from DD-MM-YYYY to YYYY-MM-DD
-	 * @param string $date
-	 * @return string
-	 */
-	function formatDateToBackwards($date){
-		
-		$formattedDate = substr($date, 6, 4).'-';
-		$formattedDate.= substr($date, 3, 2).'-';
-		$formattedDate.= substr($date, 0, 2);
-		return $formattedDate;
-		
-	}
 	
 	
 	/**
@@ -1077,6 +1062,15 @@ class UserClass{
 	 * @return array
 	 */
 	function getSessionVars(){
+	  return $this->sessionVars;
+	}
+
+	
+	/**
+	 * The variables and values to save in session
+	 * @return array
+	 */
+	function isLoggedIn(){
 	  return $this->sessionVars;
 	}
 	
