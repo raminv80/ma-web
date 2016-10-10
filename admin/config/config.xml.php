@@ -137,6 +137,7 @@
       <custom_template field="listing_object_id" value="13">ec_edit_page_checkout.tpl</custom_template>
       <custom_template field="listing_object_id" value="222">ec_edit_page_autorenewal.tpl</custom_template>
       <custom_template field="listing_object_id" value="650">ec_edit_page_autorenewal.tpl</custom_template>
+      <custom_template field="listing_object_id" value="219">ec_edit_page_update-my-profile.tpl</custom_template>
   	</section>
     
     <section level="1">

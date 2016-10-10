@@ -459,8 +459,8 @@ class medicAlertApi {
 		
 // 		try {
 // 			if($url == "https://api.medicalert.org.au/member_update.php"){
-// 				$sql = "INSERT INTO tbl_error (user_id,error_description, error_trace, error_ip) 
-// 								VALUES (".$_SESSION['user']['user_id'].",'".print_r($params, true)."','".print_r($response,true) ."- HTTP-CODE:".$httpCode."','{$_SERVER['REMOTE_ADDR']}')";
+// 				$sql = "INSERT INTO tbl_error (error_user_id,error_description, error_trace, error_ip) 
+// 								VALUES (".$_SESSION['user']['error_user_id'].",'".print_r($params, true)."','".print_r($response,true) ."- HTTP-CODE:".$httpCode."','{$_SERVER['REMOTE_ADDR']}')";
 // 				$this->DBobj->wrappedSql($sql);
 // 			}
 // 		} catch (Exception $e) {

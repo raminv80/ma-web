@@ -91,6 +91,13 @@
 	      $(element).closest('.form-group').addClass('has-error');
 	      $(element).closest('form').find('#form-error').html('Error, please check the highlighted fields.').show();
 	      $(element).closest('form').find('.error-textbox').html('Error, please check the highlighted fields.').show();
+	      if($('#accordion.validateaccordion')){
+	        var setopt = $('div.acc-body').index( $(element).closest('div.acc-body') );
+	        $('#accordion').accordion( "option", "active", setopt );
+	          $('html,body').animate({
+	 	        		scrollTop : $(element).offset().top
+	 	        	});
+	      }
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
 	      //$(element).closest('.form-group').removeClass('has-error').addClass('has-success');

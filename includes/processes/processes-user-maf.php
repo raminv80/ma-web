@@ -39,59 +39,6 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       ));
       die();
       
-    case 'create': //NOT BEING USED!!!
-      $_POST['want_promo'] = empty($_POST['want_promo'])? 0 : 1;
-      SetMemberCampaignMonitor($LIST_ID, $_POST, $_POST['want_promo']);
-      
-      $user_obj = new UserClass();
-      $_POST['username'] = $_POST['email'];
-      $res = $user_obj->Create($_POST);
-      if($res['error']){
-        echo json_encode(array(
-            'error' => $res['error'], 
-            'url' => null 
-        ));
-      } else{
-        $_SESSION['user']['public'] = $res;
-        $cart_obj = new cart($_SESSION['user']['public']['id']);
-        $url = $_SERVER['HTTP_REFERER'];
-        if($_POST['redirect']){
-          $url = $_POST['redirect'];
-        }
-        
-        try{
-          // SEND CONFIRMATION EMAIL
-          $SMARTY->assign("DOMAIN", 'http://' . $HTTP_HOST);
-          $COMP = json_encode($CONFIG->company);
-          $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
-          $SMARTY->assign("name", $res['gname']);
-          $SMARTY->assign("username", $_POST['email']);
-          $SMARTY->assign("password", $_POST['password']);
-          
-          $buffer = $SMARTY->fetch('email/welcome.tpl');
-          $to = $_SESSION['user']['public']['email'];
-          $from = (string)$CONFIG->company->name;
-          $fromEmail = "noreply@" . str_replace("www.", "", $HTTP_HOST);
-          $subject = "{$from} | New Membership";
-          $body = $buffer;
-          $mailID = sendMail($to, $from, $fromEmail, $subject, $body, null, $res['id']);
-        }
-        catch(Exception $e){
-          echo json_encode(array(
-              'error' => null, 
-              'emailerror' => $e, 
-              'success' => true 
-          ));
-        }
-        
-        echo json_encode(array(
-            'error' => null, 
-            'url' => $url, 
-            'username' => $_SESSION['user']['public']['email'] 
-        ));
-      }
-      die();
-    
     case 'login':
       $error = "Error: Missing parameters.";
       $success = null;
@@ -121,7 +68,88 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       ));
       die();
       
-    
+      
+    case 'update-profile':
+      $error = "Error(1): Your session has expired.";
+      $success = null;
+      $url = null;
+      $user_obj = new UserClass();
+      if($loginCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token'])){
+        
+        if($user_obj->isLifetimeMember($_SESSION['user']['public']['maf']['main']['user_membershipType']) || 
+            (!$user_obj->isPendingMember($_SESSION['user']['public']['maf']['main']['user_status_db']) 
+                && $user_obj->isAnnualMember($_SESSION['user']['public']['maf']['main']['user_membershipType']) 
+                && ($user_obj->isUnfinancialMember($_SESSION['user']['public']['maf']['main']['user_status_db']) 
+                    || $user_obj->isPastRenewalMonth($_SESSION['user']['public']['maf']['main']['user_RenewalDate']) >= 1)) ){
+          $_SESSION['user']['public']['pending_update'] = $_POST;
+          $url = '/shopping-cart';
+          
+        }else{
+          $_SESSION['user']['public']['pending_update'] = null;
+          
+          //Pre-process array fields
+          if(!empty($_POST['conditions'])){
+            $_POST['conditions'] = $user_obj->formatProfileArrayField($_POST['conditions'], $_SESSION['user']['public']['maf']['update']['conditions']);
+          }
+          if(!empty($_POST['allergies'])){
+            $_POST['allergies'] = $user_obj->formatProfileArrayField($_POST['allergies'], $_SESSION['user']['public']['maf']['update']['allergies']);
+          }
+          if(!empty($_POST['medications'])){
+            $_POST['medications'] = $user_obj->formatProfileArrayField($_POST['medications'], $_SESSION['user']['public']['maf']['update']['medications']);
+          }
+          
+          //Update profile
+          if($user_obj->processUpdate($_SESSION['user']['public']['maf']['token'], $_POST)){
+            saveInLog('member-profile-update', 'external', $_SESSION['user']['public']['id']);
+            $error = null;
+            $success = 'Your details were successfully submitted.';
+            try {
+              //Send notification
+              $SMARTY->unloadFilter('output', 'trimwhitespace');
+              $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
+              $subject = 'Update Member Profile';
+              $fromEmail = (string) $CONFIG->company->email_from;
+              $to = $_POST['user_email'];
+              $SMARTY->assign('user_name', $_POST['user_firstname']);
+              $COMP = json_encode($CONFIG->company);
+              $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
+              $from = (string) $CONFIG->company->name;
+              $body = $SMARTY->fetch("email/profile-update.tpl");
+              $sent = sendMail($to, $from, $fromEmail, $subject, $body);
+            }catch(Exception $e){}
+            
+          }else{
+            $error = $user_obj->getErrorMsg();
+          }
+        }
+      }else{
+        $_SESSION['user']['public'] = null;
+      }
+      echo json_encode(array(
+          'error' => $error,
+          'success' => $success,
+          'url' => $url
+      ));
+      die();
+   
+      
+    case 'print-profile':
+      $error = "Error(2): Your session has expired.";
+      $template = null;
+      $user_obj = new UserClass();
+      if($loginCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token'])){
+        $template = $user_obj->printProfile("http://{$_SERVER['HTTP_HOST']}/includes/print", $_SESSION['user']['public']['maf']['main'], $_SESSION['user']['public']['maf']['update']);
+        saveInLog('member-print-profile', 'external', $_SESSION['user']['public']['id']);
+        $error = null;
+      }else{
+        $_SESSION['user']['public'] = null;
+      }
+      echo json_encode(array(
+          'error' => $error,
+          'template' => $template
+      ));
+      die();
+      
     case 'resetPasswordToken':
       $member = new UserClass();
       $success = null;
@@ -257,40 +285,11 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       header("Location: " . $_SERVER['HTTP_REFERER'] . "#error");
       die();
     
-    case 'updateDetails':
-      $user_obj = new UserClass();
-      $data = array_merge($_POST, array(
-          'user_id' => $_SESSION['user']['public']['id'] 
-      ));
-      $promo = 0;
-      $data['user_want_promo'] = empty($_POST['user_want_promo'])? 0 : 1;
-      SetMemberCampaignMonitor($LIST_ID, $data, $data['user_want_promo']);
-      
-      $res = $user_obj->UpdateDetails($data);
-      if($user_obj->InsertNewAddress(array_merge(array(
-          'address_user_id' => $_SESSION['user']['public']['id'], 
-          'address_name' => $_POST['user_gname'], 
-          'address_surname' => $_POST['user_surname'] 
-      ), $_POST))){
-        $addressArr = $user_obj->GetUsersAddresses($_SESSION['user']['public']['id']);
-        $_SESSION['user']['public']['address'] = array(
-            "S" => $addressArr[0], 
-            "same_address" => true 
-        );
-      }
-      
-      if(empty($res['error'])){
-        $_SESSION['user']['public'] = $res['user_record'];
-        $_SESSION['notice'] = $res['success'];
-        header("Location: " . $_SERVER['HTTP_REFERER'] . "#notice");
-      } else{
-        $_SESSION['error'] = $res['error'];
-        header("Location: " . $_SERVER['HTTP_REFERER'] . "#error");
-      }
-      die();
+ 
   }
 }
 $redirect = $_SERVER['HTTP_REFERER'];
+
 if($_GET["logout"]){
   $user_obj = new UserClass();
   saveInLog('member-logout', 'external', $_SESSION['user']['public']['id'], $_SESSION['user']['public']['maf']['token']);
@@ -301,13 +300,23 @@ if($_GET["logout"]){
   header('Location: ' . $redirect);
   die();
 }
-if($_GET["logout-maf"]){
+
+if(!empty($_GET["action"] == 'getfile') && !empty($_GET["fid"]) && is_numeric($_GET["fid"])){
   $user_obj = new UserClass();
-  $user_obj->logOut($_SESSION['user']['public']['maf']['token']);
-  if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
-  header('Location: ' . $redirect);
+  if($fileArr = $user_obj->getMembersFile($_SESSION['user']['public']['maf']['token'], $_GET['fid'])){
+    saveInLog('member-file-download', 'external', $_GET['fid'], $_SESSION['user']['public']['id']);
+    header('Content-type: '.$fileArr['fileMimeType']);
+    header('Content-disposition: attachment; filename="'. str_replace(' ', '_', $fileArr['fileName']) .'"');
+    $file = base64_decode($fileArr['base64Data']);
+    echo $file;
+  }else{
+    $_SESSION['error'] = $user_obj->getErrorMsg();
+    if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
+    header('Location: ' . $redirect . '#error');
+  }
   die();
 }
+
 $_SESSION['error'] = 'Your session has expired.';
 if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
 header('Location: ' . $redirect . '#error');

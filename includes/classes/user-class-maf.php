@@ -115,85 +115,9 @@ class UserClass{
       $this->sessionVars['pending_update'] = false;
       
       $this->sessionVars['token'] = $_token;
-      
       $this->sessionVars['main'] = $this->getUserArray($this->memberRecord);
-      
-      $this->sessionVars['update']['user_title'] = $this->memberRecord['dataBaseRecord']['details']['title'];
-      $this->sessionVars['update']['user_firstname'] = $this->memberRecord['dataBaseRecord']['details']['firstName'];
-      $this->sessionVars['update']['user_middlename'] = $this->memberRecord['dataBaseRecord']['details']['middleName'];
-      $this->sessionVars['update']['user_lastname'] = $this->memberRecord['dataBaseRecord']['details']['surname'];
-      $this->sessionVars['update']['user_nickname'] = $this->memberRecord['dataBaseRecord']['details']['nickName'];
-      $this->sessionVars['update']['user_email'] = $this->memberRecord['dataBaseRecord']['details']['emailAddress'];
-      $this->sessionVars['update']['user_address'] = $this->memberRecord['dataBaseRecord']['address']['address'];
-      $this->sessionVars['update']['user_suburb'] = $this->memberRecord['dataBaseRecord']['address']['suburb'];
-      $this->sessionVars['update']['user_state_id'] = $this->memberRecord['dataBaseRecord']['address']['state'];
-      $this->sessionVars['update']['user_state'] = $this->memberRecord['dataBaseRecord']['address']['state'];
-      $this->sessionVars['update']['user_postcode'] = $this->memberRecord['dataBaseRecord']['address']['postCode'];
-      $this->sessionVars['update']['user_phone_home'] = $this->memberRecord['dataBaseRecord']['details']['phoneHome'];
-      $this->sessionVars['update']['user_phone_work'] = $this->memberRecord['dataBaseRecord']['details']['phoneWork'];
-      $this->sessionVars['update']['user_mobile'] = $this->memberRecord['dataBaseRecord']['details']['phoneMobile'];
-      $this->sessionVars['update']['user_dob'] = $this->memberRecord['dataBaseRecord']['details']['dateOfBirth'];
-      $this->sessionVars['update']['user_gender'] = $this->memberRecord['dataBaseRecord']['details']['gender'];
-      $this->sessionVars['update']['receiveMarketingMaterial'] = $this->memberRecord['dataBaseRecord']['details']['receiveMarketingMaterial'];
-      $this->sessionVars['update']['correspondenceType'] = $this->memberRecord['dataBaseRecord']['details']['correspondenceType'];
-      $this->sessionVars['update']['preferedPaymentMethod'] = $this->memberRecord['dataBaseRecord']['details']['preferedPaymentMethod'];
-      $this->sessionVars['update']['user_heardabout'] = $this->memberRecord['dataBaseRecord']['attributes'][4]['value'];
-     
-      $this->sessionVars['update']['user_donor'] = $this->memberRecord['dataBaseRecord']['details']['isOrganDonor'];
-      $this->sessionVars['update']['user_donorFreeText'] = "";
-      if($this->memberRecord['dataBaseRecord']['details']['donorEye'] == 't'){
-        $this->sessionVars['update']['user_donorFreeText'] .= "Eye, ";
-      }
-      if($this->memberRecord['dataBaseRecord']['details']['donorHeart'] == 't'){
-        $this->sessionVars['update']['user_donorFreeText'] .= "Heart, ";
-      }
-      if($this->memberRecord['dataBaseRecord']['details']['donorKidney'] == 't'){
-        $this->sessionVars['update']['user_donorFreeText'] .= "Kidney, ";
-      }
-      if($this->memberRecord['dataBaseRecord']['details']['donorAny'] == 't'){
-        $this->sessionVars['update']['user_donorFreeText'] .= "Any, ";
-      }
-      $this->sessionVars['update']['user_donorFreeText'] .= unclean($this->memberRecord['dataBaseRecord']['details']['donorFreeText']);
-      $this->sessionVars['update']['check_newsletter'] = $this->memberRecord['dataBaseRecord']['details']['receiveMarketingMaterial'];
-      
-      $this->sessionVars['em']['emergencyInfo'] = unclean($this->memberRecord['dataBaseRecord']['details']['emergencyInformation']);
-      $this->sessionVars['em']['contact_name'] = $this->memberRecord['dataBaseRecord']['emergencyContact']['name'];
-      $this->sessionVars['em']['contact_relationship'] = $this->memberRecord['dataBaseRecord']['emergencyContact']['relationship'];
-      $this->sessionVars['em']['contact_address'] = unclean($this->memberRecord['dataBaseRecord']['emergencyContact']['address']);
-      $this->sessionVars['em']['contact_suburb'] = unclean($this->memberRecord['dataBaseRecord']['emergencyContact']['suburb']);
-      $this->sessionVars['em']['contact_postcode'] = unclean($this->memberRecord['dataBaseRecord']['emergencyContact']['postCode']);
-      $this->sessionVars['em']['contact_state_id'] = unclean($this->memberRecord['dataBaseRecord']['emergencyContact']['state']);
-      $this->sessionVars['em']['contact_country'] = unclean($this->memberRecord['dataBaseRecord']['emergencyContact']['country']);
-      $this->sessionVars['em']['contact_phone_home'] = $this->memberRecord['dataBaseRecord']['emergencyContact']['phoneHome'];
-      $this->sessionVars['em']['contact_phone_work'] = $this->memberRecord['dataBaseRecord']['emergencyContact']['phoneWork'];
-      $this->sessionVars['em']['contact_mobile'] = $this->memberRecord['dataBaseRecord']['emergencyContact']['phoneMobile'];
-      
-      $this->sessionVars['doc']['doc_name'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['doctorName']);
-      $this->sessionVars['doc']['doc_medical_centre'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['medicalCentreName']);
-      $this->sessionVars['doc']['doc_address'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['address']);
-      $this->sessionVars['doc']['doc_suburb'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['suburb']);
-      $this->sessionVars['doc']['doc_postcode'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['postCode']);
-      $this->sessionVars['doc']['doc_state_id'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['state']);
-      $this->sessionVars['doc']['doc_country'] = unclean($this->memberRecord['dataBaseRecord']['doctor']['country']);
-      $this->sessionVars['doc']['doc_phone'] = $this->memberRecord['dataBaseRecord']['doctor']['phoneNumber'];
-      $this->sessionVars['doc']['doc_file_no'] = $this->memberRecord['dataBaseRecord']['doctor']['fileNumber'];
-      
-      $this->sessionVars['medic']['conditions'] = $this->memberRecord['dataBaseRecord']['conditions'];
-      $this->sessionVars['medic']['allergies'] = $this->memberRecord['dataBaseRecord']['allergies'];
-      $this->sessionVars['medic']['medications'] = $this->memberRecord['dataBaseRecord']['medications'];
-      $this->sessionVars['medic']['other'] = '';
-      $this->sessionVars['medic']['records'] = '';
-      
-      $this->sessionVars['medic']['blood_group'] = $this->memberRecord['dataBaseRecord']['blood']['bloodGroup'];
-      
-      // $this->sessionVars['profileImage'] = $this->memberRecord['dataBaseRecord']['profileImage'];
-      $this->sessionVars['attachments']['medicalRecordFiles'] = $this->memberRecord['dataBaseRecord']['attachments']['medicalRecordFiles'];
-      $this->sessionVars['attachments']['otherFiles'] = $this->memberRecord['dataBaseRecord']['attachments']['otherFiles'];
-      
-      foreach($this->memberRecord['dataBaseRecord']['attributes'] as $at){
-        $this->sessionVars['attributes']["{$at['id']}"] = $at['value'];
-      }
-      
+      $this->sessionVars['pending'] = $this->buildMemberProfileArray($this->memberRecord['webSiteRecord']);
+      $this->sessionVars['update'] = $this->buildMemberProfileArray($this->memberRecord['dataBaseRecord']);
       $this->sessionVars = stripslashes_deep($this->sessionVars);
       return true;
     }
@@ -344,52 +268,52 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['details']['surname']						= ucwords(strtolower($_data['user_lastname']));
 		$this->memberRecord['webSiteRecord']['details']['nickName']						= ucwords(strtolower($_data['user_nickname']));
 		$this->memberRecord['webSiteRecord']['details']['dateOfBirth']					= $_data['user_dob'];
-		$this->memberRecord['webSiteRecord']['details']['gender']						= ucwords(strtolower($_data['user_gender']));
+		//$this->memberRecord['webSiteRecord']['details']['gender']						= ucwords(strtolower($_data['user_gender']));
 		$this->memberRecord['webSiteRecord']['details']['phoneHome']					= $_data['user_phone_home'];
 		$this->memberRecord['webSiteRecord']['details']['phoneWork']					= $_data['user_phone_work'];
 		$this->memberRecord['webSiteRecord']['details']['phoneMobile']					= $_data['user_mobile'];
 		$this->memberRecord['webSiteRecord']['details']['emailAddress']					= $_data['user_email'];
-		$this->memberRecord['webSiteRecord']['details']['emergencyInformation']			= ucwords(strtolower($_data['em']['emergencyInfo']));
+		$this->memberRecord['webSiteRecord']['details']['emergencyInformation']			= $_data['emergencyInfo'];
 		$this->memberRecord['webSiteRecord']['details']['isOrganDonor']					= $_data['user_donor'];
-		$this->memberRecord['webSiteRecord']['details']['donorFreeText']				= sentence_case($_data['user_donorFreeText']);
+		$this->memberRecord['webSiteRecord']['details']['donorFreeText']				= $_data['user_donorFreeText'];
 		//$this->memberRecord['webSiteRecord']['details']['receiveMarketingMaterial']		= ($_data['check_newsletter']? '':'t');
 		$this->memberRecord['webSiteRecord']['details']['correspondenceType']			= $_data['correspondenceType'];
 		//$this->memberRecord['webSiteRecord']['details']['preferedPaymentMethod']			= $_data['user_preferedPaymentMethod'];
 	
 		$this->memberRecord['webSiteRecord']['address']['address']						= ucwords(strtolower($_data['user_address']));
 		$this->memberRecord['webSiteRecord']['address']['suburb']						= ucwords(strtolower($_data['user_suburb']));
-		$this->memberRecord['webSiteRecord']['address']['postCode']						= htmlclean($_data['user_postcode']);
-		$this->memberRecord['webSiteRecord']['address']['state']						= htmlclean($_data['user_state_id']);
+		$this->memberRecord['webSiteRecord']['address']['postCode']						= $_data['user_postcode'];
+		$this->memberRecord['webSiteRecord']['address']['state']						= $_data['user_state_id'];
 		$this->memberRecord['webSiteRecord']['address']['country']						= 'Australia';
 		
-		$this->memberRecord['webSiteRecord']['blood']['bloodGroup']						= htmlclean($_SESSION['medic']['blood_group']);
-		$this->memberRecord['webSiteRecord']['blood']['bloodType']						= htmlclean($_SESSION['medic']['blood_group']);
-		$this->memberRecord['webSiteRecord']['blood']['otherInfo']						= htmlclean($_SESSION['medic']['blood_group']);
+		$this->memberRecord['webSiteRecord']['blood']['bloodGroup']						= $_data['blood_group'];
+		$this->memberRecord['webSiteRecord']['blood']['bloodType']						= $_data['blood_group'];
+		$this->memberRecord['webSiteRecord']['blood']['otherInfo']						= $_data['blood_group'];
 	
-		$this->memberRecord['webSiteRecord']['emergencyContact']['relationship']		= ucwords(strtolower($_SESSION['em']['contact_relationship']));
-		$this->memberRecord['webSiteRecord']['emergencyContact']['name']				= ucwords(strtolower($_SESSION['em']['contact_name']));
-		$this->memberRecord['webSiteRecord']['emergencyContact']['address']				= ucwords(strtolower($_SESSION['em']['contact_address']));
-		$this->memberRecord['webSiteRecord']['emergencyContact']['suburb']				= ucwords(strtolower($_SESSION['em']['contact_suburb']));
-		$this->memberRecord['webSiteRecord']['emergencyContact']['postCode']			= htmlclean($_SESSION['em']['contact_postcode']);
-		$this->memberRecord['webSiteRecord']['emergencyContact']['state']				= htmlclean($_SESSION['em']['contact_state_id']);
+		$this->memberRecord['webSiteRecord']['emergencyContact']['relationship']		= ucwords(strtolower($_data['contact_relationship']));
+		$this->memberRecord['webSiteRecord']['emergencyContact']['name']				= ucwords(strtolower($_data['contact_name']));
+		$this->memberRecord['webSiteRecord']['emergencyContact']['address']				= ucwords(strtolower($_data['contact_address']));
+		$this->memberRecord['webSiteRecord']['emergencyContact']['suburb']				= ucwords(strtolower($_data['contact_suburb']));
+		$this->memberRecord['webSiteRecord']['emergencyContact']['postCode']			= $_data['contact_postcode'];
+		$this->memberRecord['webSiteRecord']['emergencyContact']['state']				= $_data['contact_state_id'];
 		$this->memberRecord['webSiteRecord']['emergencyContact']['country']				= 'Australia';
-		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneHome']			= htmlclean($_SESSION['em']['contact_phone_home']);
-		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneWork']			= htmlclean($_SESSION['em']['contact_phone_work']);
-		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneMobile']			= htmlclean($_SESSION['em']['contact_mobile']);
+		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneHome']			= $_data['contact_phone_home'];
+		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneWork']			= $_data['contact_phone_work'];
+		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneMobile']			= $_data['contact_mobile'];
 	
-		$this->memberRecord['webSiteRecord']['doctor']['doctorName']					= ucwords(strtolower($_SESSION['doc']['name']));
-		$this->memberRecord['webSiteRecord']['doctor']['medicalCentreName']				= ucwords(strtolower($_SESSION['doc']['medical_centre']));
-		$this->memberRecord['webSiteRecord']['doctor']['address']						= ucwords(strtolower($_SESSION['doc']['address']));
-		$this->memberRecord['webSiteRecord']['doctor']['suburb']						= ucwords(strtolower($_SESSION['doc']['suburb']));
-		$this->memberRecord['webSiteRecord']['doctor']['postCode']						= htmlclean($_SESSION['doc']['postcode']);
-		$this->memberRecord['webSiteRecord']['doctor']['state']							= htmlclean($_SESSION['doc']['state_id']);
+		$this->memberRecord['webSiteRecord']['doctor']['doctorName']					= ucwords(strtolower($_data['doc_name']));
+		$this->memberRecord['webSiteRecord']['doctor']['medicalCentreName']				= ucwords(strtolower($_data['doc_medical_centre']));
+		$this->memberRecord['webSiteRecord']['doctor']['address']						= ucwords(strtolower($_data['doc_address']));
+		$this->memberRecord['webSiteRecord']['doctor']['suburb']						= ucwords(strtolower($_data['doc_suburb']));
+		$this->memberRecord['webSiteRecord']['doctor']['postCode']						= $_data['doc_postcode'];
+		$this->memberRecord['webSiteRecord']['doctor']['state']							= $_data['doc_state_id'];
 		$this->memberRecord['webSiteRecord']['doctor']['country']						= 'Australia';
-		$this->memberRecord['webSiteRecord']['doctor']['phoneNumber']					= htmlclean($_SESSION['doc']['phone']);
-		$this->memberRecord['webSiteRecord']['doctor']['fileNumber']					= htmlclean($_SESSION['medic']['file_no']);
+		$this->memberRecord['webSiteRecord']['doctor']['phoneNumber']					= $_data['doc_phone'];
+		$this->memberRecord['webSiteRecord']['doctor']['fileNumber']					= $_data['doc_file_no'];
 
-		$this->memberRecord['webSiteRecord']['conditions']								= htmlclean($_SESSION['medic']['conditions']);
-		$this->memberRecord['webSiteRecord']['allergies']								= htmlclean($_SESSION['medic']['allergies']);
-		$this->memberRecord['webSiteRecord']['medications']								= htmlclean($_SESSION['medic']['medications']);
+		$this->memberRecord['webSiteRecord']['conditions']								= $_data['conditions'];
+		$this->memberRecord['webSiteRecord']['allergies']								= $_data['allergies'];
+		$this->memberRecord['webSiteRecord']['medications']								= $_data['medications'];
 	
 		/* $this->memberRecord['webSiteRecord']['attributes'][0]['id']					= '7';
 		$this->memberRecord['webSiteRecord']['attributes'][0]['text']					= 'Allergies Authenticated';
@@ -408,16 +332,16 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['attributes'] = array();
 		$this->memberRecord['webSiteRecord']['attributes'][0]['id']					= '10';
 		$this->memberRecord['webSiteRecord']['attributes'][0]['text']				= 'DVA Gold Card Number';
-		$this->memberRecord['webSiteRecord']['attributes'][0]['value']				= htmlclean($_data['dvagoldcard']);
+		$this->memberRecord['webSiteRecord']['attributes'][0]['value']				= $_data['dvagoldcard'];
 		$this->memberRecord['webSiteRecord']['attributes'][1]['id']					= '12';
 		$this->memberRecord['webSiteRecord']['attributes'][1]['text']				= 'Health Fund Name';
-		$this->memberRecord['webSiteRecord']['attributes'][1]['value']				= htmlclean($_data['healthfundname']);
+		$this->memberRecord['webSiteRecord']['attributes'][1]['value']				= $_data['healthfundname'];
 		$this->memberRecord['webSiteRecord']['attributes'][2]['id']					= '13';
 		$this->memberRecord['webSiteRecord']['attributes'][2]['text']				= 'Health Fund Number';
-		$this->memberRecord['webSiteRecord']['attributes'][2]['value']				= htmlclean($_data['healthfundnumber']);
+		$this->memberRecord['webSiteRecord']['attributes'][2]['value']				= $_data['healthfundnumber'];
 		$this->memberRecord['webSiteRecord']['attributes'][3]['id']					= '14';
 		$this->memberRecord['webSiteRecord']['attributes'][3]['text']				= 'Individual Health Identifier (eHealth)';
-		$this->memberRecord['webSiteRecord']['attributes'][3]['value']				= htmlclean($_data['ehealth']);
+		$this->memberRecord['webSiteRecord']['attributes'][3]['value']				= $_data['ehealth'];
 	}
 	
 	
@@ -429,6 +353,7 @@ class UserClass{
 	function getUserArray($userData){
 		
 		$user = array();
+		$user['locked']                     = $userData['webSiteRecord']['pendingUpdate'];
 		$user['user_id']					= $userData['dataBaseRecord']['memberShipNumber'];
 		$user['user_firstname']				= $userData['dataBaseRecord']['details']['firstName'];
 		$user['user_lastname']				= $userData['dataBaseRecord']['details']['surname'];
@@ -439,15 +364,16 @@ class UserClass{
 		$user['user_state_id']				= $userData['dataBaseRecord']['address']['state'];
 		$user['user_postcode']				= $userData['dataBaseRecord']['address']['postCode'];
 		$user['user_phone_home']			= $userData['dataBaseRecord']['details']['phoneHome'];
-		$user['user_mobile']				= $userData['dataBaseRecord']['details']['phoneMobile'];
+		$user['user_mobile']				= str_replace(' ', '', $userData['dataBaseRecord']['details']['phoneMobile']);
 		
+		$user['user_status_db']             = $userData['dataBaseRecord']['status']['statusTypeId'];
 		//$user['user_status']				= $userData['dataBaseRecord']['status']['statusTypeId']; // Had to change this because we need to track pending status of renewal paid members
 		$user['user_status']				= $userData['webSiteRecord']['status']['statusTypeId'];
 		$user['user_memberJoinDate']		= $userData['dataBaseRecord']['memberJoinDate'];
 		$user['user_accountBalance']		= $userData['dataBaseRecord']['accountBalance'];
 		$user['user_membershipType']		= $userData['dataBaseRecord']['membership']['membershipTypeId'];
 		$user['user_membershipTypeText']	= $this->getMembershipTypeText($userData['dataBaseRecord']['membership']['membershipTypeId']);
-		$user['user_RenewalDate']			= date("Y-m-d", strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
+		$user['user_RenewalDate']			= date('Y-m-d', strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
 		$user['user_RenewalMonth']			= date("F", strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
 		$user['preferedPaymentMethod']	    = $userData['dataBaseRecord']['details']['preferedPaymentMethod'];
 		
@@ -554,112 +480,23 @@ class UserClass{
 	}
 	
 	
-	function processUpdate(){
+	function processUpdate($_token, $_data){
 		try{
+          $this->buildUpdateMemberMedicAlertArray($_data);
+          $t_arr = unclean($this->memberRecord);
+          if($memberUpdated = $this->medicAlertApi->memberUpdate($_token, json_encode($t_arr))){
+            return true;
+          }
+          $this->errorMsg = "Unknown error. Please contact us.";
 		  
-		  $TMPmemberRecordJSONResponse = $this->medicAlertApi->memberRetrieve($this->token);
-		  $TMPmemberRecord = json_decode($TMPmemberRecordJSONResponse, true);
-		  if($TMPmemberRecord['dataBaseRecord']['memberShipNumber'] !== $_SESSION['user']['user_id']){
-		    $this->medicAlertApi->logOut($this->token);
-		    header("Location: /Membership/Members_Area"); die();
-		  }else{
-		  
-  			$this->buildUpdateMemberMedicAlertArray();
-  			
-  			$t_arr = unclean($this->memberRecord);
-  			$memberUpdated = $this->medicAlertApi->memberUpdate($this->token, json_encode($t_arr));
-  			
-  			if($_SESSION['update']['user_newpassword'] != ""){
-  				$password_error = false;
-  				// update the password (using the proper password)
-  				try{
-  					$results = $this->medicAlertApi->updatePassWord($this->token, $_SESSION['update']['user_currentpassword'], $_SESSION['update']['user_newpassword']);
-  				}catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
-  					// incorrect password
-  					$password_error = true;
-  					$_SESSION['Errors'] = '<ul><li>Incorrect password, password not updated.</li></ul>';
-  				}
-  				if(!$password_error){
-  					// and log the user out
-  					$this->medicAlertApi->logOut($this->token);
-  					// log in using the new password
-  					$authenticationRecord = json_decode($this->medicAlertApi->authenticate($_SESSION['user']['user_id'], $_SESSION['update']['user_newpassword']), true);
-  					$this->token = $authenticationRecord['sessionToken'];
-  					$memberRecord = json_decode($this->medicAlertApi->memberRetrieve($this->token), true);
-  					$_SESSION['user'] = $this->getUserArray($memberRecord);
-  				}
-  			}
-  			
-  			try{
-  				$memberShipNumber = clean($_SESSION['user']['user_id']);
-  				$state = clean($_SESSION['user']['user_state_id']);
-  				$sql = "INSERT INTO tbl_userlog (userlog_action,userlog_memberno,userlog_state,userlog_ip) VALUES ('UPDATE','{$memberShipNumber}','{$state}','{$_SERVER['REMOTE_ADDR']}')";
-  				wrappedSqlInsert($sql);
-  			}catch(Exception $e){}
-  			
-  			try{
-  				$sql = "INSERT INTO tbl_update (update_member_no, update_ip) VALUES ('{$_SESSION['user']['user_id']}', '{$_SERVER['REMOTE_ADDR']}')";
-  				wrappedSqlInsert($sql);
-  			}catch(Exception $e){}
-
-  			/**** EMAIL GOES HERE TO INFORM ABOUT changes taking time ****/
-  			$name = $this->memberRecord['webSiteRecord']['details']['firstName'];
-  			/*$body = "<html>
-  					<head>
-  	 				<style>
-  					body { font-family:calibri,Helvetica,sans-serif; font-size:13px; line-height:18px; }
-  					table {width:600px;}
-  					table th, table td { padding:3px; text-align:left;}
-  					table th { text-align:left; background-color:#f3f3f3; line-height:25px;  }
-  					table td { text-align:left; }
-  					</style>
-  					</head>
-  					<body>
-  					<table>
-  					<tr align='left'>
-  						<td>Hi {$name}</td>
-  					</tr>
-  					<tr align='left'>
-  						<td>
-  						Thank you for submitting the changes to your profile. You will receive a confirmation email once our Membership Services team has reviewed and updated your profile.  
-  	<br><br>
-  	This email is automatically generated. Please do not reply to this email. 
-  	<br><br>
-  	If you have any queries please call Membership Services on CALL 1800 88 22 22 (Monday to Friday, 9am - 5pm CST), or email enquiry@medicalert.org.au.
-  	<br><br>					
-  						</td>
-  					</tr>
-  					</table>
-  					<table> <tr align='left'>
-  			    	<td>Best regards<br><br>
-  					Membership Services Team<br><br>
-  	
-  					MedicAlert Foundation<br>
-  					Level 1,210 Greenhill Road<br>
-  	                Eastwood SA 5063<br>
-  	                CALL: 1800 88 22 22<br>
-  	                FAX: 1800 64 32 59<br>
-  					</td>
-  			    	</tr></table>";*/
-  			$body = mb_convert_encoding(file_get_contents($_SERVER['DOCUMENT_ROOT'].'/email-templates/update-profile.html'),'HTML-ENTITIES','UTF-8');
-  			if($body) {
-  				$body = str_replace('[firstname]',$name,$body);
-  			}
-  			//$to = $_SESSION['checkout']['billing']['email'];
-  			//$to= 'nijesh@them.com.au';
-  			$to = $_SESSION["user"]["user_email"];
-  			$subject = "Update Member Profile";
-  			sendMail($to, 'MedicAlert Foundation', 'donotreply@medicalert.org.au', $subject, $body);
-		  }
 		}catch(exceptionMedicAlertApiNotAuthenticated $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
+          $this->errorMsg = "API error: {$e}";
 		}catch(exceptionMedicAlertApiSessionExpired $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
+          $this->errorMsg = "API error: {$e}";
 		}catch(exceptionMedicAlertApi $e){
-			header("Location: /404"); die();
+          $this->errorMsg = "API error: {$e}";
 		}
+		return false;
 	}
 	
 	
@@ -846,61 +683,18 @@ class UserClass{
 	}
 	
 	
-	/**
-	 * Redirect member after update based on membership type
-	 */
-	function redirectUpdatedMember(){
-  	$goMobile = '';
-  	if($_POST['mobile-site'] == 1){
-  	  $goMobile = '/mobile';
-  	}
-		
-		if($this->isAnnualMember()){
-				if(!$this->isPendingMember() && ($this->isUnfinancialMember() || $this->isPastRenewalMonth() >= 1)){
-					// User is unfinacial, redirect to fees payment page
-					header("Location:{$goMobile}/Membership/Fees_Payment");
-					die();
-				}elseif($this->isPendingMember()){
-					// User already has updates pending, redirect to error page
-					header("Location:{$goMobile}/Membership/View_Personal_Medical_Details");
-					die();
-				}else{
-					//echo 'member not active, unfinancial, or pending'; 
-					header("Location:{$goMobile}/Membership/View_Personal_Medical_Details");
-					die();
-				}
-
-		}elseif($this->isLifetimeMember()){
-				
-				if(!isset($cart_obj)){
-					$cart_obj = new cart();
-				}
-				$product_id = $_SESSION['lifetime_membership_update_pid'];
-				$quantity = '1';
-				$row = GetRow('tbl_product', 'product_id = "'.clean($product_id).'"');
-				$price = $row['product_price'];
-				$res = $cart_obj->AddToCart($product_id, $row['product_name'], $row['product_product_category_id'], $price, $quantity, 0, "", 0, 0, "", "", "");
-				header("Location:{$goMobile}/Checkout");
-				die();
-		}else{
-				// unsupported member type
-				header("Location:{$goMobile}/Membership/View_Personal_Medical_Details");
-				die();
-		}
-
-	}
 	
 	
 	/**
 	 * Determines if the member is a lifetime (pay as you go) member or not
 	 * @return boolean
 	 */
-	function isLifetimeMember(){
+	function isLifetimeMember($_user_membershipType){
 
-		if(	$_SESSION['user']['user_membershipType'] == medicAlertApi::MEMBERSHIP_GRANDFATHER ||
-			$_SESSION['user']['user_membershipType'] == medicAlertApi::MEMBERSHIP_BUSINESS ||
-			$_SESSION['user']['user_membershipType'] == medicAlertApi::MEMBERSHIP_LIFETIME ||
-			$_SESSION['user']['user_membershipType'] == medicAlertApi::MEMBERSHIP_BENOVOLENT ){
+		if(	$_user_membershipType == medicAlertApi::MEMBERSHIP_GRANDFATHER ||
+			$_user_membershipType == medicAlertApi::MEMBERSHIP_BUSINESS ||
+			$_user_membershipType == medicAlertApi::MEMBERSHIP_LIFETIME ||
+			$_user_membershipType == medicAlertApi::MEMBERSHIP_BENOVOLENT ){
 			return true;
 		}else{
 			return false;
@@ -913,11 +707,11 @@ class UserClass{
 	 * Determines if the member is an annual (annual renewal) member or not
 	 * @return boolean
 	 */
-	function isAnnualMember(){
+	function isAnnualMember($_user_membershipType){
 		
-		if(	$_SESSION['user']['user_membershipType'] == medicAlertApi::MEMBERSHIP_CLICKOVER ||
-			$_SESSION['user']['user_membershipType'] == medicAlertApi::MEMBERSHIP_ANNUAL ||
-			$_SESSION['user']['user_membershipType'] == medicAlertApi::MEMBERSHIP_BENOVOLENT_ANNUAL ){
+		if(	$_user_membershipType == medicAlertApi::MEMBERSHIP_CLICKOVER ||
+			$_user_membershipType == medicAlertApi::MEMBERSHIP_ANNUAL ||
+			$_user_membershipType == medicAlertApi::MEMBERSHIP_BENOVOLENT_ANNUAL ){
 			return true;
 		}else{
 			return false;
@@ -930,9 +724,9 @@ class UserClass{
 	 * Determines if the member status is active or not
 	 * @return boolean
 	 */
-	function isActiveMember(){
+	function isActiveMember($_statusTypeId){
 	
-		if($this->memberRecord['dataBaseRecord']['status']['statusTypeId'] == medicAlertApi::STATUS_ACTIVE){
+		if($_statusTypeId == medicAlertApi::STATUS_ACTIVE){
 			return true;
 		}else{
 			return false;
@@ -944,11 +738,11 @@ class UserClass{
 	 * Determines if the member status is active or not
 	 * @return boolean
 	 */
-	function isInactiveMember(){
+	function isInactiveMember($_statusTypeId){
 	
-		if($this->memberRecord['dataBaseRecord']['status']['statusTypeId'] == medicAlertApi::STATUS_UNCLAIMED
-		|| $this->memberRecord['dataBaseRecord']['status']['statusTypeId'] == medicAlertApi::STATUS_NO_LONGER_REQUIRED
-		|| $this->memberRecord['dataBaseRecord']['status']['statusTypeId'] == medicAlertApi::STATUS_DECEASED){
+		if($_statusTypeId == medicAlertApi::STATUS_UNCLAIMED
+		|| $_statusTypeId == medicAlertApi::STATUS_NO_LONGER_REQUIRED
+		|| $_statusTypeId == medicAlertApi::STATUS_DECEASED){
 			return true;
 		}else{
 			return false;
@@ -960,9 +754,9 @@ class UserClass{
 	 * Determines if the member status is unfinancial or not
 	 * @return boolean
 	 */
-	function isUnfinancialMember(){
+	function isUnfinancialMember($_statusTypeId){
 
-		if($this->memberRecord['dataBaseRecord']['status']['statusTypeId'] == medicAlertApi::STATUS_UNFINANCIAL || $this->memberRecord['webSiteRecord']['status']['statusTypeId'] == medicAlertApi::STATUS_UNFINANCIAL ){
+		if($_statusTypeId == medicAlertApi::STATUS_UNFINANCIAL || $this->memberRecord['webSiteRecord']['status']['statusTypeId'] == medicAlertApi::STATUS_UNFINANCIAL ){
 			return true;
 		}else{
 			return false;
@@ -989,11 +783,11 @@ class UserClass{
 	 * Determines if the member status is unfinancial or not
 	 * @return boolean
 	 */
-	function isPastRenewalMonth(){
-		$renewal_year = date("Y", strtotime($this->memberRecord['dataBaseRecord']['membership']['RenewalDate']));
+	function isPastRenewalMonth($_renewalDate){
+		$renewal_year = date("Y", strtotime($_renewalDate));
 		$current_year = date("Y", time());
 		$year_diff = ($current_year - $renewal_year) * 12; //Number of years difference times 12 months in a year to get difference in months
-		$renewal_month = date("m", strtotime($this->memberRecord['dataBaseRecord']['membership']['RenewalDate']));
+		$renewal_month = date("m", strtotime($_renewalDate));
 		$current_month = date("m", time());
 		$month_diff = $current_month - $renewal_month + 1;
 		$diff = $year_diff + $month_diff;
@@ -1009,10 +803,8 @@ class UserClass{
 	 * Determines if the member status is pending or not
 	 * @return boolean
 	 */
-	function isPendingMember(){
-
-		//if($_SESSION['user']['user_status'] == medicAlertApi::STATUS_ACTIVE_PENDING){ // from dataBaseRecord
-		if($this->memberRecord['dataBaseRecord']['status']['statusTypeId'] == medicAlertApi::STATUS_ACTIVE_PENDING || $this->memberRecord['webSiteRecord']['status']['statusTypeId'] == medicAlertApi::STATUS_ACTIVE_PENDING){ // from webSiteRecord
+	function isPendingMember($_statusTypeId){
+		if($_statusTypeId == medicAlertApi::STATUS_ACTIVE_PENDING){ 
 			return true;
 		}else{
 			return false;
@@ -1067,13 +859,419 @@ class UserClass{
 
 	
 	/**
-	 * The variables and values to save in session
+	 * retrieve file for member
 	 * @return array
 	 */
-	function isLoggedIn(){
-	  return $this->sessionVars;
+	function getMembersFile($_token, $_fileId){
+  	  $this->errorMsg = null;
+      $fileArr = array();
+      try{
+        $memberFileRecord = $this->medicAlertApi->fileRetrieve($_token, $_fileId);
+        $fileArr = json_decode($memberFileRecord, TRUE);
+      }
+      catch(exceptionMedicAlertApiNotAuthenticated $e){
+        $this->errorMsg = "API error: {$e}";
+      }
+      catch(exceptionMedicAlertApiSessionExpired $e){
+        $this->errorMsg = "API error: {$e}";
+      }
+      catch(exceptionMedicAlertApi $e){
+        $this->errorMsg = "API error: {$e}";
+      }
+      return $fileArr;
 	}
 	
+	
+	private function buildMemberProfileArray($_data){
+	  $resArr = array();
+	  $resArr['user_title'] = $_data['details']['title'];
+	  $resArr['user_firstname'] = $_data['details']['firstName'];
+	  $resArr['user_middlename'] = $_data['details']['middleName'];
+	  $resArr['user_lastname'] = $_data['details']['surname'];
+	  $resArr['user_nickname'] = $_data['details']['nickName'];
+	  $resArr['user_email'] = $_data['details']['emailAddress'];
+	  $resArr['user_address'] = $_data['address']['address'];
+	  $resArr['user_suburb'] = $_data['address']['suburb'];
+	  $resArr['user_state_id'] = $_data['address']['state'];
+	  $resArr['user_state'] = $_data['address']['state'];
+	  $resArr['user_postcode'] = $_data['address']['postCode'];
+	  $resArr['user_phone_home'] = $_data['details']['phoneHome'];
+	  $resArr['user_phone_work'] = $_data['details']['phoneWork'];
+	  $resArr['user_mobile'] = $_data['details']['phoneMobile'];
+	  $resArr['user_dob'] = $_data['details']['dateOfBirth'];
+	  $resArr['user_gender'] = $_data['details']['gender'];
+	  $resArr['receiveMarketingMaterial'] = $_data['details']['receiveMarketingMaterial'];
+	  $resArr['correspondenceType'] = $_data['details']['correspondenceType'];
+	  $resArr['preferedPaymentMethod'] = $_data['details']['preferedPaymentMethod'];
+	  $resArr['user_heardabout'] = $_data['attributes'][4]['value'];
+	   
+	  $resArr['user_donor'] = $_data['details']['isOrganDonor'];
+	  $resArr['user_donorFreeText'] = "";
+	  if($_data['details']['donorEye'] == 't'){
+	    $resArr['user_donorFreeText'] .= "Eye, ";
+	  }
+	  if($_data['details']['donorHeart'] == 't'){
+	    $resArr['user_donorFreeText'] .= "Heart, ";
+	  }
+	  if($_data['details']['donorKidney'] == 't'){
+	    $resArr['user_donorFreeText'] .= "Kidney, ";
+	  }
+	  if($_data['details']['donorAny'] == 't'){
+	    $resArr['user_donorFreeText'] .= "Any, ";
+	  }
+	  $resArr['user_donorFreeText'] .= unclean($_data['details']['donorFreeText']);
+	  $resArr['check_newsletter'] = $_data['details']['receiveMarketingMaterial'];
+	  
+	  $resArr['emergencyInfo'] = unclean($_data['details']['emergencyInformation']);
+	  $resArr['contact_name'] = $_data['emergencyContact']['name'];
+	  $resArr['contact_relationship'] = $_data['emergencyContact']['relationship'];
+	  $resArr['contact_address'] = unclean($_data['emergencyContact']['address']);
+	  $resArr['contact_suburb'] = unclean($_data['emergencyContact']['suburb']);
+	  $resArr['contact_postcode'] = unclean($_data['emergencyContact']['postCode']);
+	  $resArr['contact_state_id'] = unclean($_data['emergencyContact']['state']);
+	  $resArr['contact_country'] = unclean($_data['emergencyContact']['country']);
+	  $resArr['contact_phone_home'] = $_data['emergencyContact']['phoneHome'];
+	  $resArr['contact_phone_work'] = $_data['emergencyContact']['phoneWork'];
+	  $resArr['contact_mobile'] = str_replace(' ', '', $_data['emergencyContact']['phoneMobile']);
+	  
+	  $resArr['doc_name'] = unclean($_data['doctor']['doctorName']);
+	  $resArr['doc_medical_centre'] = unclean($_data['doctor']['medicalCentreName']);
+	  $resArr['doc_address'] = unclean($_data['doctor']['address']);
+	  $resArr['doc_suburb'] = unclean($_data['doctor']['suburb']);
+	  $resArr['doc_postcode'] = unclean($_data['doctor']['postCode']);
+	  $resArr['doc_state_id'] = unclean($_data['doctor']['state']);
+	  $resArr['doc_country'] = unclean($_data['doctor']['country']);
+	  $resArr['doc_phone'] = $_data['doctor']['phoneNumber'];
+	  $resArr['doc_file_no'] = $_data['doctor']['fileNumber'];
+	  
+	  $resArr['conditions'] = $_data['conditions'];
+	  $resArr['allergies'] = $_data['allergies'];
+	  $resArr['medications'] = $_data['medications'];
+	  $resArr['other'] = '';
+	  $resArr['records'] = '';
+	  
+	  $resArr['blood_group'] = $_data['blood']['bloodGroup'];
+	  
+	  // $resArr['profileImage'] = $_data['profileImage'];
+	  $resArr['medicalRecordFiles'] = $_data['attachments']['medicalRecordFiles'];
+	  $resArr['otherFiles'] = $_data['attachments']['otherFiles'];
+	  
+	  foreach($_data['attributes'] as $at){
+	    $resArr['attributes']["{$at['id']}"] = $at['value'];
+	  }
+	  return $resArr;
+	}
+	
+	
+	function formatProfileArrayField($_newArr, $_existingArr = array()){
+	  $resArr = array();
+	  $temp = array();
+	  $existingArr = array();
+	  
+	  foreach($_existingArr as $value){
+	    $existingArr[] = $value['value'];
+	  }
+	  
+	  foreach($_newArr as $value){
+	    if(empty($value)){ continue; }
+	
+	    $t_ar = preg_split("/\\r\\n|\\r|\\n|;|,/",$value);
+	    foreach($t_ar as $t_v){
+	      $t_value = unclean($t_v);
+	      if(empty($t_value)){ continue; }
+	      if(in_array($t_value, $existingArr)){
+	        $temp[] = $t_value;
+	        $resArr[] 	= array("status" =>  medicAlertApi::CMA_EXISTING, "value" => $t_v);
+	      }else{
+	        $temp[] = $t_value;
+	        $resArr[] 	= array("status" => medicAlertApi::CMA_NEW, "value" => $t_v);
+	      }
+	    }
+	  }
+	  foreach($existingArr as $value){
+	    if(in_array($value, $temp)){
+	    }else{
+	      $resArr[] = array("status" => medicAlertApi::CMA_DELETED, "value" => $value);
+	    }
+	  }
+	  return $resArr;
+	}
+	
+	
+	function printProfile($_resourcesPath, $_mainData, $_data){
+	  $conditions = array();
+	  foreach($_data['conditions'] as $rec){
+	    $conditions[] = $rec['value'];
+	  }
+	  $allergies = array();
+	  foreach($_data['allergies'] as $rec){
+	    $allergies[] = $rec['value'];
+	  }
+	  $medications = array();
+	  foreach($_data['medications'] as $rec){
+	    $medications[] = $rec['value'];
+	  }
+	  
+	  $buf = '<!DOCTYPE html>
+        		<html>
+        		<head>
+        			<meta charset="utf-8" />
+        			<title>Member Information</title>
+        			<!--[if IE]>
+        				<script src="'.$_resourcesPath.'/html5shiv.js"></script>
+        			<![endif]-->
+        			<link type="text/css" href="'.$_resourcesPath.'/print_styles.css" rel="stylesheet">
+        		</head>
+        		<body>
+        		<div id="print"><a href="javascript:void(0);" onclick="window.print();" style="color:#ED174F">PRINT</a></div>
+        <div id="logo"><img src="'.$_resourcesPath.'/medic-alert-logo.jpg" style="width: 70%;" /></div>
+        <div class="clear"></div>
+        	  
+        <div class="header">
+        	<h1 class="left">Member <br />Information</h1>
+            <div class="member-info right">
+            	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+                	<tr valign="top">
+                    	<td class="title" width="38%">Member Number</td>
+                    	<td class="data">'.unclean($_mainData['user_id']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Membership Type</td>
+                    	<td class="data">'.unclean($_mainData['user_membershipTypeText']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title last">Renewal Date</td>
+                    	<td class="data last">'.unclean(date('d M Y', strtotime($_mainData['user_RenewalDate']))).'</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="clear"></div>
+        </div>
+        	  
+        <div class="data-container">
+        	<div class="left">
+            	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+                	<tr valign="top">
+                    	<th colspan="2">Your personal information</th>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Title:</td>
+                    	<td>'.unclean($_data['user_title']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">First Name:</td>
+                    	<td>'.unclean($_data['user_firstname']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Middle Name:</td>
+                    	<td>'.unclean($_data['user_middlename']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Last Name:</td>
+                    	<td>'.unclean($_data['user_lastname']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Email Address:</td>
+                    	<td>'.unclean($_data['user_email']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Street Address:</td>
+                    	<td>'.unclean($_data['user_address']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Suburb:</td>
+                    	<td>'.unclean($_data['user_suburb']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">State:</td>
+                    	<td>'.unclean($_data['user_state']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Postcode:</td>
+                    	<td>'.unclean($_data['user_postcode']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Home Phone:</td>
+                    	<td>'.unclean($_data['user_phone_home']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Work Phone:</td>
+                    	<td>'.unclean($_data['user_phone_work']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Mobile Phone:</td>
+                    	<td>'.unclean($_data['user_mobile']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Date of Birth:</td>
+                    	<td>'.unclean($_data['user_dob']).'</td>
+                    </tr>
+                </table>
+            </div>
+        	  
+            <div class="right">
+            	<table cellpadding="0" cellspacing="0" border="0" width="100%">
+                	<tr valign="top">
+                    	<th colspan="2">Emergency contact</th>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title" width="45%">Name:</td>
+                    	<td>'.unclean($_data['contact_name']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Relationship:</td>
+                    	<td>'.unclean($_data['contact_relationship']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Street Address:</td>
+                    	<td>'.unclean($_data['contact_address']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Suburb:</td>
+                    	<td>'.unclean($_data['contact_suburb']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">State:</td>
+                    	<td>'.unclean($_data['contact_state_id']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Postcode:</td>
+                    	<td>'.unclean($_data['contact_postcode']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Home Phone:</td>
+                    	<td>'.unclean($_data['contact_phone_home']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Work Phone:</td>
+                    	<td>'.unclean($_data['contact_phone_work']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Mobile Phone:</td>
+                    	<td>'.unclean($_data['contact_mobile']).'</td>
+                    </tr>
+                </table>
+        	  
+            	<table cellpadding="0" cellspacing="0" border="0" width="100%" class="doctor">
+                	<tr valign="top">
+                    	<th colspan="2">Doctor contact</th>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title" width="45%">Name:</td>
+                    	<td>'.unclean($_SESSION['doc']['name']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Medical Centre:</td>
+                    	<td><span class="title">'.unclean($_SESSION['doc']['medical_centre']).'</span></td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Street Address:</td>
+                    	<td>'.unclean($_SESSION['doc']['address']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Suburb:</td>
+                    	<td>'.unclean($_SESSION['doc']['suburb']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">State:</td>
+                    	<td>'.unclean($_SESSION['doc']['state_id']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Postcode:</td>
+                    	<td>'.unclean($_SESSION['doc']['postcode']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">Phone:</td>
+                    	<td>'.unclean($_SESSION['doc']['phone']).'</td>
+                    </tr>
+                	<tr valign="top">
+                    	<td class="title">File Number:</td>
+                    	<td><span class="title">'.unclean($_data['file_no']).'</span></td>
+                    </tr>
+                </table>
+            </div>
+        	  
+            <div class="clear"></div>
+        	  
+            <br><br>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr valign="top">
+                    <th colspan="2">Your medical information</th>
+                </tr>
+                <tr valign="top">
+                    <td class="title" width="15%">Medical Conditions:</td>
+                    <td>'.implode(", ", $conditions ).'</td>
+                </tr>
+                <tr valign="top">
+                    <td class="title" width="15%">Allergies:</td>
+                    <td>'.implode(", ", $allergies ).'</td>
+                </tr>
+                <tr valign="top">
+                    <td class="title" width="15%">Medications:</td>
+                    <td>'.implode(", ", $medications ).'</td>
+                </tr>
+                <tr valign="top">
+                    <td class="title" width="15%">Emergency Information:</td>
+                    <td>'.unclean($_data['emergencyInfo']).'</td>
+                </tr>
+                <tr valign="top">
+                    <td class="title" width="15%">Blood Type:</td>
+                    <td>'.unclean($_data['blood_group']).'</td>
+                </tr>
+            </table>
+            <br><br>
+        	  
+        	  
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr valign="top">
+                    <th colspan="8">Organ/Tissue Donation</th>
+                </tr>
+                <tr valign="top">
+                    <td class="title" width="10%">Donor Status:</td>
+                    <td>'.($_data['user_donor'] == 't' ? 'Yes':'No').'</td>
+                    <td class="title" width="10%">&nbsp;</td>
+                    <td class="title" width="10%">Other Info:</td>
+                    <td><div class="donor_free_text">'.unclean($_data['user_donorFreeText']).'</div></td>
+                </tr>
+            </table>
+            <br><br>
+        	  
+        	  
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr valign="top">
+                    <th>Medical authentication <span>(this is optional but highly recommended)</span></th>
+                </tr>
+                <tr valign="top">
+                	<td>
+                	  <div class="notice">
+                		Your immediate protection is our highest priority and MedicAlert Foundation understands that it is not always convenient to obtain your healthcare provider\'s signature to authenticate your medical information immediately. Please consider having this information confirmed the next time you visit your doctor. MedicAlert Foundation reserves the right to request specific healthcare provider authentication for individual medical conditions at the time of joining.
+                	  </div>
+                	  <div class="clear"></div>
+                      <div class="left">
+                        	<span style="color:#ED174F;">Doctor/Healthcare Provider</span> &mdash; To the best of my ability I believe that the medical information provided is current and correct.<br>
+                        	<br>
+                    		<span style="color:#ED174F;">Profession:</span>
+        	  
+                      </div>
+                      <div class="right">
+                      	<div class="signature">Doctor/healthcare provider\'s signature</div>
+                      </div>
+                      <div class="clear"></div>
+                      <div class="date">Date<img src="'.$_resourcesPath.'/date.jpg" /></div>
+                  </td>
+                </tr>
+            </table>
+        </div>
+        	  
+        <div class="footer">
+        	<strong>MEMBERSHIP SERVICES CALL 1800 88 22 22</strong> (Mon-Fri, 9am to 5pm CST)
+            <div class="clear"></div>
+        </div>
+        	  
+        </body>
+        </html>';
+	  return $buf;
+	}
 	
 	/**
 	 * FOR WEBSITE ONLY

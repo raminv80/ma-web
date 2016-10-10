@@ -1359,7 +1359,8 @@ a {
 			line-height: 28px;
 
 			.head-title{
-				font-weight: bold;
+				font-weight: normal;
+				font-size: 24px;
 			}
 
 			.shortdesc{
@@ -1381,8 +1382,10 @@ a {
 
 	.qa-wrapper{
 		.question{
-			color: $red;
+			color: $dark-grey;
 			margin-bottom: 15px;
+			font-size: 18px;
+			font-weight: bold;
 		}
 
 		.answer{

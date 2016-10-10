@@ -224,6 +224,14 @@
     </process>
   </static_page>
   <static_page>
+    <url>survey</url>
+    <template>survey.tpl</template>
+    <pageID>661</pageID>
+    <process>
+      <file>includes/processes/process-load-survey.php</file>
+    </process>
+  </static_page>
+  <static_page>
     <url>donate</url>
     <template>donate.tpl</template>
     <pageID>112</pageID>

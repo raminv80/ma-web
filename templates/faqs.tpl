@@ -19,8 +19,8 @@
     <div class="row">
       <div class="col-sm-12">
 	  <div id="accordion">
-      {$addcats = []}{foreach $additionals as $ad}{if !$ad.additional_category|in_array:$addcats}{$addcats[] = $ad.additional_category}{/if}{/foreach}
-	  {assign var='cnt' value=0}
+	  {$addcats = ['Membership and service questions', 'Product questions', 'Medical questions', 'Other questions']}  
+      {assign var='cnt' value=0}
       {foreach $addcats as $cat}
       {assign var='cnt' value=$cnt+1}
 			<h3>

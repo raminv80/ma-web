@@ -1,4 +1,13 @@
-{block name=body}
+{block name=body} 
+{* Define the function *} 
+{function name=options_list level=0}
+  {foreach $opts as $opt}
+    {if ($ignore && $ignore eq $opt.id) || ($ignoregroupid && $ignoregroupvalue eq $opt.extra.$ignoregroupid)}{continue}{/if}
+    <option value="{$opt.id}" {if  $selected eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
+    {if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1 selected=$selected} {/if}
+  {/foreach}
+{/function}
+
 <div class="row">
   <div class="col-sm-12">
     <form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
@@ -22,9 +31,9 @@
           <input type="hidden" value="{if $typeID}{$typeID}{else}1{/if}" name="field[1][tbl_listing][{$cnt}][listing_type_id]" id="listing_type_id">
           <input type="hidden" value="{if $fields.listing_published}{$fields.listing_published}{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published">
           <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" id="listing_parent_flag">
-          <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" id="listing_display_menu">
-          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_membersonly]" id="listing_membersonly">
-          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_noindex]" id="listing_noindex">
+          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" id="listing_display_menu">
+          <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_membersonly]" id="listing_membersonly">
+          <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_noindex]" id="listing_noindex">
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
         </div>
       </div>
@@ -41,10 +50,10 @@
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
         <!-- <li><a href="#images" data-toggle="tab">Images</a></li> -->
-        <li><a href="#additional" data-toggle="tab">Q&amp;A</a></li>
+        <!-- <li><a href="#additional" data-toggle="tab">Additional</a></li> -->
         <!-- <li><a href="#files" data-toggle="tab">Files</a></li> -->
         <!-- <li><a href="#tags" data-toggle="tab">Tags</a></li> -->
-        <li><a href="#share" data-toggle="tab">Social Sharing</a></li>
+        <!-- <li><a href="#share" data-toggle="tab">Social Sharing</a></li> -->
         <li><a href="#log" data-toggle="tab">Log</a></li>
       </ul>
 
@@ -104,6 +113,12 @@
               </div>
             </div>
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_title">Title</label>
+              <div class="col-sm-5">
+                <input class="form-control" maxlength="500" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title">
+              </div>
+            </div>
+           <!--  <div class="row form-group">
               <label class="col-sm-3 control-label" for="listing_image">
                 Header Image<br> <small>Size: 1960px Wide x 345px Tall <br>("None" for default image)
                 </small>
@@ -113,17 +128,17 @@
                 <span class="file-view" id="listing_image_path"> {if $fields.listing_image}<a href="{$fields.listing_image}" target="_blank">View</a>{else}None{/if}
                 </span> <a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('listing_image','','');">Select File</a> <a href="javascript:void(0);" class="btn btn-info" onclick="$('#listing_image_link').val('');$('#listing_image_path').html('None');">Remove File</a>
               </div>
-            </div>
+            </div> -->
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_title">Title</label>
+              <label class="col-sm-3 control-label" for="id_listing_content1">Content (unlocked)</label>
               <div class="col-sm-5">
-                <input class="form-control" maxlength="500" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content1">Content</label>
+              <label class="col-sm-3 control-label" for="id_listing_content2">Content (locked)</label>
               <div class="col-sm-5">
-                <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea>
               </div>
             </div>
           </div>
@@ -171,7 +186,7 @@
         <!--===+++===+++===+++===+++===+++ ADDITIONAL TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="additional">
           <div class="form" id="additionals-wrapper">
-          {$addcats = ['Membership and service questions', 'Product questions', 'Medical questions', 'Other questions']}
+          {$addcats = ['category one', 'category two']}
           {assign var='additionalno' value=0}
           {assign var='addName' value='Question'}
           {assign var='addDescriptionName' value=''}
