@@ -18,9 +18,12 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
   if($res = $DBobject->wrappedSql($sql, array(":surveytoken_token"=>$survey_token))){
     
     if($res[0]['surveytoken_status'] == 0){
-      
-      $upsql = "UPDATE tbl_surveytoken SET surveytoken_status = 1 WHERE surveytoken_token = :surveytoken_token";
-      $DBobject->wrappedSql($upsql, array(":surveytoken_token"=>$survey_token));
+      try {
+        $upsql = "UPDATE tbl_surveytoken SET surveytoken_status = 1 WHERE surveytoken_token = :surveytoken_token";
+        $DBobject->wrappedSql($upsql, array(":surveytoken_token"=>$survey_token));
+      }catch (Exception $e){
+        $error = 'There was an unexpected error updating your survey token.';
+      }
       
       foreach ($_POST['questionid'] as $key=>$quesid){
         array_push($insert,"(:token{$key},:question_id{$key},:answer{$key}, NOW())");
@@ -37,9 +40,8 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         $DBobject->wrappedSql($sql, $params);
       
         header("Location: /thank-you-for-taking-a-survey");
-      }
-      catch(Exception $e){
-        $error = 'There was an unexpected error saving your enquiry.';
+      }catch(Exception $e){
+        $error = 'There was an unexpected error saving your survey.';
       }
     }else{
       header("Location: /thank-you-for-taking-a-survey");

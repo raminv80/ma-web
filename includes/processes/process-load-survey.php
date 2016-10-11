@@ -8,7 +8,7 @@ try{
 
   $SMARTY->assign('verifytoken', false);
   
-  $csql = "SELECT surveytoken_status FROM tbl_surveytoken WHERE surveytoken_token = :surveytoken_token";
+  $csql = "SELECT surveytoken_status, surveytoken_question_type_id FROM tbl_surveytoken WHERE surveytoken_token = :surveytoken_token";
   
   if($cres = $DBobject->wrappedSql($csql,array(":surveytoken_token"=>$_GET['token']))){
     
@@ -16,12 +16,19 @@ try{
       $SMARTY->assign('verifytoken', false);
     }else{
       $SMARTY->assign('verifytoken', true);
-      
-
       $SMARTY->assign('surveytoken', $_GET['token']);
       
-      $sql = "SELECT * FROM tbl_question WHERE question_deleted IS NULL ORDER BY question_order ASC";
-      if($res = $DBobject->wrappedSql($sql)){
+      $param = array();
+      $where = " AND question_type_id = :question_type_id ";
+      $param[":question_type_id"]=1;
+      
+      if (!empty($cres[0]['surveytoken_question_type_id'])){
+        $where = " AND question_type_id = :question_type_id ";
+        $param[":question_type_id"]=$cres[0]['surveytoken_question_type_id'];
+      }
+      
+      $sql = "SELECT * FROM tbl_question WHERE question_deleted IS NULL {$where} ORDER BY question_order ASC";
+      if($res = $DBobject->wrappedSql($sql,$param)){
       
         foreach ($res as $q){
       

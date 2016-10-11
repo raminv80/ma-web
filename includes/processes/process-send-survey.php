@@ -4,7 +4,7 @@ global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 
 try{
   
-  $surveytoken = genRandomString(10).$_POST['timestamp'];
+  $surveytoken = genRandomString(10).time();
   $sql = "INSERT INTO tbl_surveytoken (surveytoken_user_id, surveytoken_token, surveytoken_created) VALUES
       (:surveytoken_user_id, :surveytoken_token, NOW())";
   
@@ -16,9 +16,9 @@ try{
     $from = (string)$CONFIG->company->name;
     $bcc = null;
     
-    $body = "<p>Hi</p>
+    echo $body = "<p>Hi</p>
       <p>Please click on link below in order to take our survey.</p>
-      <p><a href='".$_SERVER['HTTP_HOST']."/survey?token={$surveytoken}'>MedicAlert survey</a></p>
+      <p><a href='http://".$_SERVER['HTTP_HOST']."/survey?token={$surveytoken}'>MedicAlert survey</a></p>
           <p>Thank you,</p>
           <p>".(string)$CONFIG->company->name."</p>";
     
