@@ -100,7 +100,7 @@
 					</ul>
 				</div>
 				</div>
-				<a href="#" id="wishlist"><img src="/images/header-wishlist.png" alt="Wishlist" /></a>
+				<a href="/my-wish-list" title="Wish list" id="wishlist"><img src="/images/header-wishlist.png" alt="Wishlist" /></a>
 			</div>
     </div>
     <div class="row">
@@ -116,7 +116,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-10">
-        Don't wait until it's too late. <a class="link" href="/quick-renew" title="Click to renew now">Renew your annual MedicAlert membership</a> today and stay protected in a medical emergency.
+        Don't wait until it's too late. <a class="link" href="/quick-renew" title="Click to renew now">Renew your annual MedicAlert membership</a> today and stay protected in an  emergency.
       </div>
       <div class="col-md-2">
         <a href="/quick-renew" class="btn btn-red pull-right" title="Click to renew now">Renew now</a>

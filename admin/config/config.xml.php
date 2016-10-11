@@ -138,6 +138,7 @@
       <custom_template field="listing_object_id" value="222">ec_edit_page_autorenewal.tpl</custom_template>
       <custom_template field="listing_object_id" value="650">ec_edit_page_autorenewal.tpl</custom_template>
       <custom_template field="listing_object_id" value="219">ec_edit_page_update-my-profile.tpl</custom_template>
+      <custom_template field="listing_object_id" value="239">ec_edit_page_my-account.tpl</custom_template><!-- wish list -->
   	</section>
     
     <section level="1">

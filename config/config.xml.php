@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true" staging="true">
+<config debug="false" staging="true">
   <domain></domain>
   <google_analytics>
     <id>UA-</id>
@@ -290,6 +290,32 @@
       <file>includes/processes/process-check-MAF-login.php</file>
     </process>
   </static_page>
+  <static_page>
+    <url>my-wish-list</url>
+    <template>ec_wish-list.tpl</template>
+    <pageID>239</pageID>
+    <associated>
+      <name>banner1</name>
+      <table>tbl_banner</table>
+      <linkfield>listing_associate1</linkfield>
+      <field>banner_id</field>
+    </associated>
+     <associated>
+      <name>banner2</name>
+      <table>tbl_banner</table>
+      <linkfield>listing_associate2</linkfield>
+      <field>banner_id</field>
+    </associated>
+     <associated>
+      <name>banner3</name>
+      <table>tbl_banner</table>
+      <linkfield>listing_associate3</linkfield>
+      <field>banner_id</field>
+    </associated>
+    <process>
+      <file>includes/processes/process-load-wish-list.php</file>
+    </process>
+  </static_page>
   
   <!-- ECOMMERCE  -->
   <static_page>
@@ -466,9 +492,6 @@
       <file>includes/processes/process-load-category-products.php</file>
     </process>
     <process>
-      <file>includes/processes/process-load-viewed-products.php</file>
-    </process>
-    <process>
       <file>includes/processes/process-load-popular-products.php</file>
     </process>
   </listing_page>
@@ -607,7 +630,17 @@
     <url>process/load-more</url>
     <file>includes/processes/load-more.php</file>
     <return_url></return_url>
-  </process>	 	
+  </process>	
+  <process>
+    <url>process/survey</url>
+    <file>includes/processes/process-save-survey.php</file>
+    <return_url></return_url>
+  </process> 	
+  <process>
+    <url>process/sendsurvey</url>
+    <file>includes/processes/process-send-survey.php</file>
+    <return_url></return_url>
+  </process>  
 
   <smartytemplate_config>
     <templates>/templates</templates>

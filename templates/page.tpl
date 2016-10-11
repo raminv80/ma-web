@@ -91,9 +91,9 @@
 	      $(element).closest('.form-group').addClass('has-error');
 	      $(element).closest('form').find('#form-error').html('Error, please check the highlighted fields.').show();
 	      $(element).closest('form').find('.error-textbox').html('Error, please check the highlighted fields.').show();
-	      if($('#accordion.validateaccordion')){
+	      if($('#accordion.validateaccordion').length){
 	        var setopt = $('div.acc-body').index( $(element).closest('div.acc-body') );
-	        $('#accordion').accordion( "option", "active", setopt );
+	        $('#accordion.validateaccordion').accordion( "option", "active", setopt );
 	          $('html,body').animate({
 	 	        		scrollTop : $(element).offset().top
 	 	        	});

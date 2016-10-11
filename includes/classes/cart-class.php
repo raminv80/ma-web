@@ -1511,116 +1511,98 @@ function ApplyDiscountCode($code, $cartId = null) {
     return false;
   }
   
-//   /**
-//    * Return array with Favourite products given the user_id
-//    *
-//    * @param int $userId          
-//    * @return array
-//    */
-//   function GetFavouritesByUser($userId) {
-//     global $DBobject;
-    
-//     $cart_arr = array();
-    
-//     $sql = "SELECT * FROM tbl_favourite LEFT JOIN tbl_product ON product_object_id = favourite_product_object_id 
-//     			WHERE product_deleted IS NULL AND product_published = 1 AND favourite_deleted IS NULL AND favourite_user_id = :uid";
-    
-//     if($res = $DBobject->wrappedSql($sql,array(
-//         ":uid"=>$userId
-//     ))){
-//       foreach($res as $item){
-//         $cart_arr[$item['product_id']] = $item;
-//         $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery 
-// 					WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_ishero DESC";
-//         $cart_arr[$item['product_id']]['gallery'] = $DBobject->wrappedSql($sql,array(
-//             ':id'=>$item['product_id']
-//         ));
-        
-//         $sql = "SELECT cache_url FROM cache_tbl_product WHERE cache_published = 1 AND cache_deleted IS NULL AND cache_record_id = :id";
-//         $res2 = $DBobject->wrappedSql($sql,array(
-//             ':id'=>$item['product_object_id']
-//         ));
-//         $cart_arr[$item['product_id']]['cache_url'] = $res2[0]['cache_url'];
-//       }
-//     }
-//     return $cart_arr;
-//   }
 
-//   /**
-//    * Return array with product_object_id associated to an user_id
-//    *
-//    * @param int $userId
-//    * @return array
-//    */
-//   function GetFavouritesObjIdsByUser($userId) {
-//   	global $DBobject;
-  
-//   	$cart_arr = array();
-//  	if(!empty($userId)){
-//   	$sql ="SELECT favourite_product_object_id FROM tbl_favourite WHERE favourite_deleted IS NULL AND favourite_user_id = :favourite_user_id";
-//   	if($res = $DBobject->wrappedSql($sql, array(':favourite_user_id'=>$userId))){
-//   		foreach($res as $r){
-//   			$cart_arr[] = $r['favourite_product_object_id'];
-//   		}
-//   	}
-//		}
-//   	return $cart_arr;
-//   }
-  
-//   /**
-//    * Add Favourite products for user, given the user_id and product_object_id
-//    *
-//    * @param int $userId          
-//    * @param int $productObjId          
-//    * @return int / boolean
-//    */
-//   function AddFavourite($userId, $productObjId) {
-//     global $DBobject;
-    
-//     $params = array(
-//         ":uid"=>$userId,
-//         ":pid"=>$productObjId
-//     );
-//     $sql = "SELECT favourite_id FROM tbl_favourite WHERE favourite_user_id = :uid AND favourite_product_object_id = :pid AND favourite_deleted IS NULL";
-//     if($res = $DBobject->wrappedSql($sql,$params)){
-//       return $res[0]['favourite_id'];
-//     }
-//     $sql = " INSERT INTO tbl_favourite (
-// 								favourite_user_id,
-//     						favourite_product_object_id,
-//         				favourite_created
-// 								)
-// 							VALUES (
-// 								:uid,
-// 								:pid,
-//         				now()
-// 							)";
-//     return $DBobject->wrappedSql($sql,$params);
-//   }
 
-//   /**
-//    * Delete a favourite product given the user_id and product_object_id
-//    *
-//    * @param unknown $data          
-//    * @return array
-//    */
-//   function DeleteFavourite($userId, $productObjId) {
-//     global $DBobject;
+  /**
+   * Return wish list - array with product_object_id
+   *
+   * @return array
+   */
+  function GetWishList() {
+  	global $DBobject;
+  
+  	$resArr = array();
+  	$sql ="SELECT wishlist_product_object_id FROM tbl_wishlist WHERE wishlist_deleted IS NULL AND wishlist_user_id = :wishlist_user_id ORDER BY wishlist_modified DESC";
+  	if($res = $DBobject->wrappedSql($sql, array(':wishlist_user_id' => $this->cart_user_id))){
+      foreach($res as $r){
+        $resArr[] = $r['wishlist_product_object_id'];
+      }
+  	}
+  	return $resArr;
+  }
+  
+  /**
+   * Add product to wish list
+   *
+   * @param int $_productObjId
+   * @param string $_cookie [optional]              
+   * @return int
+   */
+  function AddProductWishList($_productObjId, $_cookie = ''){
+    global $DBobject;
     
-//     $params = array(
-//         ":uid"=>$userId,
-//         ":pid"=>$productObjId
-//     );
-//     $sql = "UPDATE tbl_favourite SET favourite_deleted = now()
-//                     WHERE favourite_user_id = :uid AND favourite_product_object_id = :pid";
+    if((!empty($this->cart_user_id) || !empty($_cookie)) && !empty($_productObjId)){
+      $params1 = array(
+          ":kid" => $this->cart_user_id,
+          ":pid" => $_productObjId
+      );
+      $whereSql = 'AND wishlist_user_id = :kid';
+      if(empty($this->cart_user_id)){
+        $params1[':kid'] = $_cookie;
+        $whereSql = 'AND wishlist_cookie = :kid';
+      }
+      
+      $sql = "SELECT wishlist_id FROM tbl_wishlist WHERE wishlist_deleted IS NULL AND wishlist_product_object_id = :pid {$whereSql}";
+      if($res = $DBobject->wrappedSql($sql, $params1)){
+        return $res[0]['wishlist_id'];
+      }
+      
+      $params2 = array(
+          ":uid" => $this->cart_user_id,
+          ":pid" => $_productObjId,
+          ":cid" => $_cookie,
+      );
+      $sql = "INSERT INTO tbl_wishlist (wishlist_user_id, wishlist_product_object_id, wishlist_cookie, wishlist_created)
+							VALUES (:uid, :pid, :cid, NOW())";
+      if($DBobject->wrappedSql($sql,$params2)){
+        return $DBobject->wrappedSqlIdentity();
+      }
+    }
+    throw new exceptionCart("You cannot add this product to your wish list.");
+    return 0;
+  }
+
+  
+  /**
+   * Delete a product from wishlist 
+   *
+   * @param int $_productObjId 
+   * @param string $_cookie [optional]         
+   * @return boo
+   */
+  function DeleteProductWishList($_productObjId, $_cookie = ''){
+    global $DBobject;
     
-//     if($DBobject->wrappedSql($sql,$params)){
-//       return array(
-//           'success'=>'The product was removed from your favourite list.'
-//       );
-//     }
-//     return array(
-//         'error'=>'There was a connection problem. Please, try again!'
-//     );
-//   }
+    if((!empty($this->cart_user_id) || !empty($_cookie)) && !empty($_productObjId)){
+      $params = array(
+          ":kid" => $this->cart_user_id,
+          ":pid" => $_productObjId
+      );
+      $whereSql = 'AND wishlist_user_id = :kid';
+      if(empty($this->cart_user_id)){
+        $params[':kid'] = $_cookie;
+        $whereSql = 'AND wishlist_cookie = :kid';
+      }
+      
+      $sql = "UPDATE tbl_wishlist SET wishlist_deleted = NOW()
+        WHERE wishlist_deleted IS NULL AND wishlist_product_object_id = :pid {$whereSql}";
+      if($res = $DBobject->wrappedSql($sql, $params)){
+        return true;
+      }
+      
+    }
+    throw new exceptionCart("You cannot remove this product from your wish list.");
+    return false;
+    
+  }
 }

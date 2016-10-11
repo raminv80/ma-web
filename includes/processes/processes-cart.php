@@ -99,33 +99,47 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       ));
       die();
     
-    case 'addFavourite':
-      $logged = false;
-      $success = false;
+    case 'addProductWishList':
+      $url = '/login-register';
+      $success = null;
       if(!empty($_SESSION['user']['public']['id'])){
-        $logged = true;
+        $url = null;
         $cart_obj = new cart($_SESSION['user']['public']['id']);
-        if($res = $cart_obj->AddFavourite($_SESSION['user']['public']['id'], $_POST['productObjId'])){
-          $success = true;
+        try{
+          if($cart_obj->AddProductWishList($_POST['product_object_id'])){
+            $error = null;
+            $success = true;
+          }
+        }catch(exceptionCart $e){
+          $error = $e->getMessage();
         }
       }
       echo json_encode(array(
+          'error' => $error, 
           'success' => $success, 
-          'logged' => $logged 
+          'url' => $url 
       ));
       die();
     
-    case 'deleteFavourite':
-      $logged = false;
+    case 'deleteProductWishList':
+      $url = '/login-register';
+      $success = null;
       if(!empty($_SESSION['user']['public']['id'])){
-        $logged = true;
+        $url = null;
         $cart_obj = new cart($_SESSION['user']['public']['id']);
-        $res = $cart_obj->DeleteFavourite($_SESSION['user']['public']['id'], $_POST['productObjId']);
+        try{
+          if($cart_obj->DeleteProductWishList($_POST['product_object_id'])){
+            $error = null;
+            $success = true;
+          }
+        }catch(exceptionCart $e){
+          $error = $e->getMessage();
+        }
       }
       echo json_encode(array(
-          'error' => $res['error'], 
-          'success' => $res['success'], 
-          'logged' => $logged 
+          'error' => $error, 
+          'success' => $success, 
+          'url' => $url 
       ));
       die();
     

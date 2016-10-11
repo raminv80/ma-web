@@ -113,7 +113,7 @@
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>Part of a worldwide network of MedicAlert affiliates in 40 countries that provide a personal medical emergency identification system to protect and save lives.</td>
+						<td>Part of a worldwide network of MedicAlert affiliates in 40 countries that provide a personal emergency identification system to protect and save lives.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>

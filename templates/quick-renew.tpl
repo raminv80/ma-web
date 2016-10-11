@@ -219,19 +219,19 @@
               <div class="row auto-opts" id="auto-dd-wrapper" style="display: none;">
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autobsb">BSB<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" id="autobsb" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="7" id="autobsb" >
                     <div class="error-msg help-block"></div>
                   </div>
 
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autoddname">Account holder's name<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[name]" id="autoddname" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[name]" autocomplete="off" maxlength="80" id="autoddname" >
                     <div class="error-msg help-block"></div>
                   </div>
 
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autoddno">Account number<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" id="autoddno" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" autocomplete="off" maxlength="10" id="autoddno" >
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -298,6 +298,11 @@
     $('#auto-ccno').rules("add", {
       creditcard : true,
     });
+    
+    $('#autoddno').rules("add", {
+      digits: true
+    });
+    
     
     $("select").selectBoxIt();
     

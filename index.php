@@ -50,7 +50,9 @@ while(true){
   $haystack = $_request["arg1"];
   if(preg_match("/^{$needle}/", $haystack)){
     foreach($CONFIG->process as $sp){
-      if($sp->url == $_request['arg1']){ $file = (string)$sp->file; include ($file); }
+      if($sp->url == $_request['arg1']){ 
+        $file = (string)$sp->file; include ($file); 
+      }
     }
     die();
   }

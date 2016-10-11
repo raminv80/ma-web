@@ -41,6 +41,10 @@ try{
   $productsOnCart = $cart_obj->GetDataProductsOnCart();
   $SMARTY->assign('productsOnCart', $productsOnCart);
   
+  //Wish list
+  $wishlist = $cart_obj->GetWishList();
+  $SMARTY->assign('wishlist', $wishlist);
+  
   //Temporary user's addresses
   $SMARTY->assign('address', $_SESSION['address']);
   

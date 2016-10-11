@@ -24,7 +24,7 @@
 	  </div>
       <div class="col-sm-12 col-md-7" id="prodleft">
         <div id="prodslider" >
-			<div class="prod-wishlist"><a href="#"><img src="/images/prod-wishlist.png" alt="Wishlist" draggable="false"></a></div>
+			<div class="prod-wishlist"><a href="javascript:void(0)" title="Your wish list" data-pid="{$product_object_id}" class="prodwishlist prodwishlist-{$product_object_id}{if $product_object_id|in_array:$wishlist} active{/if}"><img src="/images/prod-wishlist.png" alt="Wishlist" draggable="false"></a></div>
 			<div class="flexslider">
 			  <ul class="slides">
 			  	{assign var='count' value=0}

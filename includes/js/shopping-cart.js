@@ -438,6 +438,89 @@ Number.prototype.formatMoney = function(c, d, t) {
 };
 
 
+
+
+/***************** WISH LIST  *******************/
+$('.prodwishlist').click(function() {
+  var ID = $(this).attr('data-pid'); 
+  if($(this).hasClass('active')){
+    deleteProductWishList(ID);
+  }else{
+    addProductWishList(ID);
+  }
+});
+
+var RunningWishList = false;
+
+function addProductWishList(ID) {
+  if(RunningWishList || !ID){ return false; }
+  RunningWishList = true;
+  $('body').css('cursor', 'wait');
+  $.ajax({
+    type: "POST",
+    url: "/process/cart",
+    cache: false,
+    data: "action=addProductWishList&product_object_id=" + ID,
+    dataType: "json",
+    success: function(obj) {
+      try{
+        if(obj.url){
+          window.location.href = obj.url;
+        }else if(obj.success){
+          $('.prodwishlist-'+ID).addClass('active');
+        }else if(obj.error){
+          
+        }
+        RunningWishList = false;
+      }catch(err){
+        console.log('TRY-CATCH error');
+        RunningWishList = false;
+      }
+      $('body').css('cursor', 'default');
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      $('body').css('cursor', 'default');
+      console.log('AJAX error:' + errorThrown);
+    }
+  });
+}
+
+
+function deleteProductWishList(ID) {
+  if(RunningWishList || !ID){ return false; }
+  RunningWishList = true;
+  $('body').css('cursor', 'wait');
+  $.ajax({
+    type: "POST",
+    url: "/process/cart",
+    cache: false,
+    data: "action=deleteProductWishList&product_object_id=" + ID,
+    dataType: "json",
+    success: function(obj) {
+      try{
+        if(obj.url){
+          window.location.href = obj.url;
+        }else if(obj.success){
+          $('.prodwishlist-'+ID).removeClass('active');
+        }else if(obj.error){
+          
+        }
+        RunningWishList = false;
+      }catch(err){
+        console.log('TRY-CATCH error');
+        RunningWishList = false;
+      }
+      $('body').css('cursor', 'default');
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      $('body').css('cursor', 'default');
+      console.log('AJAX error:' + errorThrown);
+    }
+  });
+}
+
+
+/******************* AUTOCOMPLETE SEARCH  *******************/
 var ajaxtimestamp = null;
 function RunAutocomplete(){
  $('body').css('cursor', 'wait');
