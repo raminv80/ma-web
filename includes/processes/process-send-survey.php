@@ -18,9 +18,9 @@ try{
   $inssql = "INSERT INTO tbl_surveytoken (surveytoken_user_id, surveytoken_token, surveytoken_useremail, surveytoken_question_type_id, surveytoken_created) VALUES
       (:surveytoken_user_id, :surveytoken_token, :surveytoken_useremail, :surveytoken_question_type_id, NOW())";
   
-  if($res=$DBobject->wrappedSql($inssql, array(":surveytoken_user_id"=>$_SESSION['user']['public']['id'], 
+  if($res=$DBobject->wrappedSql($inssql, array(":surveytoken_user_id"=>($_SESSION['user']['public']['id'])?$_SESSION['user']['public']['id']:2222, 
       ":surveytoken_token"=>$surveytoken, 
-      ":surveytoken_useremail"=>$_SESSION['user']['public']['email'],
+      ":surveytoken_useremail"=>($_SESSION['user']['public']['email'])?$_SESSION['user']['public']['email']:"nijesh@gmail.com",
       ":surveytoken_question_type_id" => $question_type_id
   ))){
     //$to = $user.email;
@@ -39,5 +39,5 @@ try{
     $sent = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
   }
 }catch(Exception $e){
-  echo $error = 'There was an error sending a survey.';
+  echo $error = "There was an error sending a survey {$e}.";
 }

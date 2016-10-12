@@ -48,7 +48,7 @@ try{
       
       $answers = array();
       
-      $sql = "SELECT * FROM tbl_qoption WHERE qoption_delete IS NULL";
+      $sql = "SELECT * FROM tbl_qoption WHERE qoption_deleted IS NULL";
       if($res = $DBobject->wrappedSql($sql)){
       
         foreach ($res as $a){
