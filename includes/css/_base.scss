@@ -1875,8 +1875,18 @@ a {
 	}
 
 	#product-form{
-		a{
-			color: $black;
+		.custom-input-field{
+		  width: 48%;
+		  display: inline-block;
+		  margin-right: 10px;
+		  margin-bottom: 10px;
+		}
+		.custom-field-description{
+		  display: inline-block;
+		  
+		  a{
+		    color: $black;
+		  }
 		}
 	}
 
@@ -2492,11 +2502,11 @@ a {
 			#othervalout{
 				display: none;
 				margin-left: 15px;
-                
+
                 .form-group{
 					   margin-bottom: 0px;
 				}
-				
+
 				#otherval{
 					margin-top: 3px;
 					width: 250px;
@@ -2935,7 +2945,7 @@ a {
         		width: 100%;
         		background-color: lightpink;
         		font-weight: bold;
-        
+
         		button.close{
         			display: none;
         		}
@@ -3676,7 +3686,7 @@ select option:disabled {
     font-size: 24px;
     margin-bottom: 20px;
   }
-  
+
 }
 
 .grey-bg-area{
@@ -3713,6 +3723,60 @@ select option:disabled {
 			width: auto;
 			height: auto;
 		}
+}
+
+#surveycont{
+	padding-bottom: 50px;
+
+	h1{
+		font-size: 36px;
+		font-weight: bold;
+		margin: 0 0 30px;
+	}
+
+	.bold{
+		font-weight: bold;
+	}
+
+	label{
+		font-weight: normal;
+		margin-left: 10px;
+		margin-bottom: 0;
+	}
+
+	p{
+		margin-bottom: 5px;
+	}
+
+	input[type="radio"]{
+		float: left;
+		width: auto;
+		height: 18px;
+	}
+
+	.questiondiv{
+		p.opt{
+			display: inline-block;
+			margin-right: 20px;
+		}
+	}
+
+	textarea{
+		height: 150px;
+	}
+
+	input[type="checkbox"] {
+    float: left;
+    width: auto;
+    height: 18px;
+	}
+}
+
+#wish-list{
+  #products-wrapper{
+        border-bottom: initial;
+        margin-bottom: 20px;
+  }
 }
 
 @media (max-width: 992px) {

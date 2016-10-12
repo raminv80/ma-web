@@ -319,6 +319,11 @@
   
   <!-- ECOMMERCE  -->
   <static_page>
+    <url>login</url>
+    <template>login.tpl</template>
+    <pageID>665</pageID>
+  </static_page>
+  <static_page>
     <url>login-register</url>
     <template>login-register.tpl</template>
     <pageID>8</pageID>
@@ -636,6 +641,11 @@
     <file>includes/processes/process-save-survey.php</file>
     <return_url></return_url>
   </process> 	
+  <process>
+    <url>process/print-profile</url>
+    <file>includes/processes/process-print-profile.php</file>
+    <return_url></return_url>
+  </process> 
   <process>
     <url>process/sendsurvey</url>
     <file>includes/processes/process-send-survey.php</file>

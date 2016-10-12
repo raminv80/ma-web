@@ -24,7 +24,7 @@
 	  </div>
       <div class="col-sm-12 col-md-7" id="prodleft">
         <div id="prodslider" >
-			<div class="prod-wishlist"><a href="javascript:void(0)" title="Your wish list" data-pid="{$product_object_id}" class="prodwishlist prodwishlist-{$product_object_id}{if $product_object_id|in_array:$wishlist} active{/if}"><img src="/images/prod-wishlist.png" alt="Wishlist" draggable="false"></a></div>
+			<div class="prod-wishlist"><a href="javascript:void(0)" title="Your wish list" data-pid="{$product_object_id}" class="prodwishlist prodwishlist-{$product_object_id}{if $product_object_id|in_array:$wishlist} active{/if}"><img src="/images/prod-wishlist{if $product_object_id|in_array:$wishlist}-selected{/if}.png" alt="Wishlist" draggable="false"></a></div>
 			<div class="flexslider">
 			  <ul class="slides">
 			  	{assign var='count' value=0}
@@ -54,6 +54,7 @@
             {/if}
           </ul>
         </div>
+        <div class="text-center visible-xs visible-sm"><small>Slide to see more images</small></div>
 
 		<div id="imgholder" style="display: none;">
             {if $gallery}
@@ -158,10 +159,12 @@
                   {if $prdattr.productattr_attr_value_id eq $value.attr_value_id}
                     {if !$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id]['attr_value_id']}
                       {$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id] = $value}
-                      {* HACK FOR MAF TO CHANGE THE COLOUR IMAGE *}
+                      {* HACK TO DISPLAY THE VARIANT IMAGE AS COLOUR *}
+                       {* COMMENTED OUT !!! 
                         {foreach $gallery as $g}
                           {if $g.gallery_variant_id eq $variant.variant_id}{$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id]['attr_value_image'] = $g.gallery_link}{break}{/if}
                         {/foreach}
+                        *}
                       {* END OF HACK *}
                     {/if}
                     {$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id]['variants'][] = $variant.variant_id}
@@ -175,6 +178,7 @@
 
 
           {foreach $attributes as $attr}
+          {if !$prdattrValuesArr[$attr.attribute_id]}{continue}{/if}
           <div class="form-group{if $product_type_id eq 1 && $attr.attribute_type neq 1} attr-hidden{/if}" style="{if $product_type_id eq 1 && $attr.attribute_type neq 1}display:none{/if}">
             <div class="col-sm-12" id="{if $attr.attribute_name eq 'Colour'}colbox{/if}">
               <label for="{urlencode data=$attr.attribute_name}" class="control-label">{$attr.attribute_name}</label>
@@ -190,12 +194,22 @@
                   </div>
                 {/foreach}
               {else}
-              <select id="{urlencode data=$attr.attribute_name}" name="attr[{$attr.attribute_id}][id]" class="form-control required notMainAttr hasAttr{if $attr.attribute_type eq 2} hasAdditional{/if}" required="required">
+              {$displaySelect = 1}
+              {if $attr.attribute_type eq 0 && count($prdattrValuesArr[$attr.attribute_id]) eq 1}
+                {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
+                  {if $value.attr_value_flag1 eq 1}
+                    <input type="text" class="form-control custom-input-field" maxlength="8" name="attr[{$attr.attribute_id}][additional][0]" id="additional-{$value.attr_value_id}-0" required="required">
+                    {$displaySelect = 0}
+                  {/if}
+                {/foreach}
+              {/if}
+              <select {if $displaySelect eq 0}style="display:none;"{/if} id="{urlencode data=$attr.attribute_name}" name="attr[{$attr.attribute_id}][id]" class="form-control required notMainAttr hasAttr{if $attr.attribute_type eq 2} hasAdditional{/if}" required="required">
                 <option value="" class="defaultAttr updateprice{foreach $prdattrArr[$attr.attribute_id] as $vr} variant-{$vr}{/foreach}" >Select one</option>
                 {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
-                  <option value="{$value.attr_value_id}" class="updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}">{$value.attr_value_name}</option>
+                  <option value="{$value.attr_value_id}" {if count($prdattrValuesArr[$attr.attribute_id]) eq 1}selected="selected"{/if} class="updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}">{$value.attr_value_name}</option>
                 {/foreach}
               </select>
+              
                 {if $attr.attribute_type eq 2}
                   {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   <div class="additionals" id="additional-{$value.attr_value_id}" style="display:none;">
@@ -208,7 +222,7 @@
 						  	<label class="control-label lineno" for="additional-{$attr.attribute_id}-{$var}">Line {$var}</label>
 	                      </div>
 	                      <div class="col-sm-6 col-md-9 col-lg-6">
-						  	<input class="form-control{if $value[$varName]} hasmaxlength{/if}" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}">
+						  	<input type="text" class="form-control{if $value[$varName]} hasmaxlength{/if}" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}">
 	                      </div>
 	                      <div class="col-sm-3 col-md-12 col-lg-4 charleft">
 		                      {if $value[$varName]}{$value[$varName]} characters left{/if}
@@ -369,6 +383,7 @@ jQuery.fn.outerHTML = function(s) {
 		$('.hasAttr').change(function(){
 		  BlockAttrOptions(this);
 		  DisplayPrice();
+		  DisplayAdditionalWhenValid();
 		});
 
 		$('select.hasAttr').focus(function(){
@@ -384,6 +399,8 @@ jQuery.fn.outerHTML = function(s) {
 		  var content = left + ' character' + (left > 1 ? 's' : '') + ' left';
 		  $(this).closest('.row').find('.charleft').html(content);
 		});
+		
+		DisplayAdditionalWhenValid();
 
 
 		$(".image-selector").change(function() {
@@ -426,18 +443,7 @@ jQuery.fn.outerHTML = function(s) {
 	  	
 
 
-  	/*$("#slideholder img.img-"+variant).each(function(){
-		html=$(this)[0].outerHTML;
-  	saved1 = $('<li>'+html+'</li>');
-		$('#slider').data('flexslider').addSlide($(saved1));
-	});
-	$("#slideholder img.img-"+variant).each(function(){
-		html=$(this)[0].outerHTML;
-  	saved1 = $('<li>'+html+'</li>');
-		$('#slider2').data('flexslider').addSlide($(saved1));
-	});
-	$('#slider').flexslider(0);
-	$('#slider2').flexslider(0);*/
+  	
 		});
 
 
@@ -671,7 +677,22 @@ $(window).load(function() {
 	  }
 	}
 
-
+	function DisplayAdditionalWhenValid(){
+	  if($('select.hasAdditional').length){
+	    if($('select.hasAdditional').closest('form').valid()){
+	      $('select.hasAdditional').each(function(){
+	        var ID = $(this).val();
+            if(ID){
+              SetAdditionals(ID);
+            }
+          }); 
+		}
+	    $('select.hasAdditional').closest('form').find('.form-group.has-error .help-block').text('');
+	    $('select.hasAdditional').closest('form').find('.form-group.has-error').removeClass('has-error');
+	  }
+	}
+	
+	
 	function getParameterByName(name) {
 		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),

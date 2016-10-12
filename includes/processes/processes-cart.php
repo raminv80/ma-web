@@ -100,7 +100,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       die();
     
     case 'addProductWishList':
-      $url = '/login-register';
+      $url = '/login';
       $success = null;
       if(!empty($_SESSION['user']['public']['id'])){
         $url = null;
@@ -122,7 +122,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       die();
     
     case 'deleteProductWishList':
-      $url = '/login-register';
+      $url = '/login';
       $success = null;
       if(!empty($_SESSION['user']['public']['id'])){
         $url = null;
@@ -260,8 +260,20 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           'same' => $_POST['address']['same_address'] 
       ));
       die();
+      
     
     case 'placeOrder':
+      
+      $user_obj = new UserClass();
+      if(!empty($_SESSION['user']['public']['id'])){
+        $loginMAFCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token']);
+        if(!$loginMAFCheck){
+          $_SESSION['user']['public'] = null;
+          header("Location: /login");
+          die();
+        }
+      }
+      
       $cart_obj = new cart($_SESSION['user']['public']['id']);
       $order_cartId = $cart_obj->cart_id;
       $orderNumber = $order_cartId . '-' . date("is");
@@ -368,7 +380,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           
           //Init user details
           $userArr = $_SESSION['user']['public'];
-          $user_obj = new UserClass();
           
           //NEW USER          
           $hasMAFProd = $cart_obj->HasMAFProducts();
@@ -384,13 +395,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               //Login MAF member
               if($user_obj->authenticate($MAFMemberId, $_SESSION['user']['new_user']['password'])){
                 if($_SESSION['user']['public']['maf'] = $user_obj->getSessionVars()){
-                  $_SESSION['user']['public']['id'] = $_SESSION['user']['public']['maf']['main']['user_id'];
+                  $_SESSION['user']['public']['id'] = $MAFMemberId;
                   $_SESSION['user']['public']['gname'] = $_SESSION['user']['public']['maf']['main']['user_firstname'];
                   $_SESSION['user']['public']['surname'] = $_SESSION['user']['public']['maf']['main']['user_lastname'];
                   $_SESSION['user']['public']['email'] = $_SESSION['user']['public']['maf']['main']['user_email'];
-                  $error = null;
-                  $success = true;
-                  $url = empty($_POST['redirect']) ? $_SERVER['HTTP_REFERER'] : $_POST['redirect'];
                   saveInLog('member-login', 'external', $_SESSION['user']['public']['id']);
                 }
               }else{
@@ -477,6 +485,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           //PROCESS AUTO-RENEWAL
           $setAutoRenewal = false;
           if(!empty($_POST['autorenewal'])){
+            $bankSettingsArr = array(
+                'settings' => $CONFIG->payment_gateway->payway,
+                'address' => $billing
+            );
             $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
             if(!empty($_POST['autopayment']) && $_POST['autopayment'] == 'dd'){
               $autorenewArr = $_POST['auto-dd'];
@@ -886,6 +898,16 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       
       
     case 'quick-renew':
+      $user_obj = new UserClass();
+      if(!empty($_SESSION['user']['public']['id'])){
+        $loginMAFCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token']);
+        if(!$loginMAFCheck){
+          $_SESSION['user']['public'] = null;
+          header("Location: /login");
+          die();
+        }
+      }
+      
       $cart_obj = new cart($_SESSION['user']['public']['id']);
       $order_cartId = $cart_obj->cart_id;
       $orderNumber = $order_cartId . '-' . date("is");
@@ -923,7 +945,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         );
     
         $billingArr = array(
-            "address_user_id" => 0,
+            "address_user_id" => $_SESSION['user']['public']['id'],
             "address_name" => $_SESSION['user']['public']['gname'],
             "address_surname" => $_SESSION['user']['public']['surname'],
             "address_email" => $_SESSION['user']['public']['email'],
@@ -982,7 +1004,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
     
           //Init user details
           $userArr = $_SESSION['user']['public'];
-          $user_obj = new UserClass();
     
           //SET THE CART_USER_ID
           $cart_obj->UpdateUserIdOfClosedCart($order_cartId, $userArr['id']);
@@ -1127,6 +1148,16 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $_SESSION['error'] = '';
       $_SESSION['post'] = $_POST;
     
+      $user_obj = new UserClass();
+      if(!empty($_SESSION['user']['public']['id'])){
+        $loginMAFCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token']);
+        if(!$loginMAFCheck){
+          $_SESSION['user']['public'] = null;
+          header("Location: /login");
+          die();
+        }
+      }
+      
       //Has mandatory field
       if(empty($_SESSION['user']['public']['maf']) || !empty($_POST['honeypot']) || empty($_POST['timestamp']) || (time() - $_POST['timestamp']) < 4 || empty($_POST['autopayment']) || (empty($_POST['auto-dd']) && empty($_POST['auto-cc'])) ){
         $_SESSION['error'] = 'Your session has expired. Please try again, otherwise contact us by phone.';
@@ -1135,7 +1166,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       }
       
       $billingArr = array(
-          "address_user_id" => 0,
+          "address_user_id" => $_SESSION['user']['public']['id'],
           "address_name" => $_SESSION['user']['public']['gname'],
           "address_surname" => $_SESSION['user']['public']['surname'],
           "address_email" => $_SESSION['user']['public']['email'],
@@ -1146,7 +1177,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           "address_postcode" => $_SESSION['user']['public']['maf']['main']['user_postcode']
       );
       
-      $user_obj = new UserClass();
       $userArr = $_SESSION['user']['public'];
       
       $bankSettingsArr = array(

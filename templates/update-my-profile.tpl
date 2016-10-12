@@ -39,7 +39,7 @@
     <div id="update-profile-wrapper">
       <div class="row">
         <div class="col-sm-12 col-md-10 col-md-offset-1 text-center">
-          <a href="javascript:void(0)" onclick="PrintProfile()" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my profile</a>
+          <a href="/process/print-profile" target="_blank" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my profile</a>
 
           <form id="update-profile-form" role="form" accept-charset="UTF-8" action="" method="post">
             <input type="hidden" value="update-profile" name="action" id="action" />
@@ -585,7 +585,7 @@
             {if !$user.maf.main.locked}
             <div class="row">
               <div class="col-sm-10 col-sm-offset-1">
-                <br /> <a href="javascript:void(0)" onclick="PrintProfile()" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my profile</a> <br />
+                <br /> <a href="/process/print-profile" target="_blank" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my profile</a> <br />
                 {$listing_content1}
               </div>
             </div>
@@ -738,33 +738,6 @@
     });
   }
   
-  function PrintProfile(){
-    $('body').css('cursor', 'wait');
-    $.ajax({
-      type: "POST",
-      url: "/process/user",
-      cache: false,
-      data: 'action=print-profile&formToken='+$('#formToken').val(),
-      dataType: "json",
-      success: function(obj) {
-        try{
-          if(obj.template){
-            window.open().document.write(obj.template);
-          }else if(obj.error){
-            location.reload();
-          }
-        }catch(err){
-          console.log('TRY-CATCH error');
-        }
-        $('body').css('cursor', 'default');
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        $('body').css('cursor', 'default');
-        console.log('AJAX error:' + errorThrown);
-      }
-    });
-  }
-
   function redirectWin(url) {
     window.location.replace(url);
   }

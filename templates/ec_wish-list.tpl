@@ -4,20 +4,32 @@
 {/block} {block name=body}
 
 
+<div id="pagehead">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center">
+        <h1>{$listing_name}</h1>
+        {$listing_content1}
+      </div>
+    </div>
+  </div>
+</div>
 
-
-{$product_cnt = 0}
 
 <div id="wish-list">
   <div class="container">
     <div class="row" id="products-wrapper">
+         <div class="col-sm-12 text-center" id="noproducts" {if $products}style="display:none;"{/if}>You still haven't selected any products.</div>
           {if $products}
           {foreach $products as $item}
             {include file='ec_product_list_struct.tpl'}
           {/foreach}
-          {else}
-            <div class="col-sm-12">You still haven't selected any products.</div>
           {/if}
+    </div>
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <a href="/products" title="Click to view our full product range" class="btn-red btn">Shop now</a>
+      </div>
     </div>
   </div>
 </div>
@@ -25,6 +37,9 @@
 {if $banner1 || $banner2 || $banner3}
 <div id="specialoffer">
   <div class="container">
+  <br>
+  <hr>
+  <br>
     <div class="row">
       <div class="col-sm-12 text-center">
         <h3>Special offers just for you</h3>
@@ -69,17 +84,25 @@
     
   $("#products-wrapper").isotope({
 	  itemSelector: '.prodout',
-	  layoutMode: 'fitRows',
-	  getSortData: {
-		  price: function( itemElem ) { // function
-			var pr = ($( itemElem ).find('.prod-price').text().replace (/,/g, "").match(/\d+\.\d+|\d+\b|\d+(?=\w)/g) || [] );
-			pr1= pr.map(function (v) { return +v; } ).shift();
-			return pr1;
-		}
-	  }
+	  layoutMode: 'fitRows'
    });
     
   });
+  
+//REFRESH ISOTOPE WHEN SCROLLING UP/DOWN
+  var minLastView = $(document).height();
+  var maxLastView = 0;
+  $(window).scroll(function() {
+    var curHeight = $(window).scrollTop() + $(window).height();
+    if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 500){
+      minLastView = curHeight;
+      $("#products-wrapper").isotope('reloadItems' ).isotope();
+    }
+    if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 500){
+      maxLastView = curHeight;
+      $("#products-wrapper").isotope('reloadItems' ).isotope();
+    }
+ });
 </script>
 {/block}
 

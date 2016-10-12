@@ -27,6 +27,14 @@
       </div>
     </div>
     <div class="row form-group">
+      <label class="col-sm-3 control-label" for="attr_value_flag1_{$attrvalueno}">Front-end editable</label>
+      <div class="col-sm-5">
+        <input type="hidden" value="{if $attr_value.attr_value_flag1 eq 1}1{else}0{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_flag1]" class="value">
+        <input class="chckbx" type="checkbox" {if $attr_value.attr_value_flag1 eq 1} checked="checked" {/if}
+           onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="attr_value_flag1_{$attrvalueno}">
+      </div>
+    </div>
+    <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_description_{$attrvalueno}">Description</label>
       <div class="col-sm-4">
         <textarea class="tinymce{if !$attr_value.attr_value_id}{$attrvalueno}{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_description]" id="attr_value_description_{$attrvalueno}" >{$attr_value.attr_value_description}</textarea>
@@ -49,6 +57,26 @@
         >Remove File</a>
       </div>
     </div>
+    <div class="row form-group">
+      <label class="col-sm-3 control-label" for="attr_value_flag1_{$attrvalueno}">Parent</label>
+      <div class="col-sm-5">
+        <input type="hidden" value="{if $attr_value.attr_value_flag1 eq 1}1{else}0{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_flag1]" class="value">
+        <input class="chckbx" type="checkbox" {if $attr_value.attr_value_flag1 eq 1} checked="checked" {/if}
+           onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="attr_value_flag1_{$attrvalueno}">
+      </div>
+    </div>
+    {* PENDING TO DO
+    <div class="row form-group">
+      <label class="col-sm-3 control-label" for="attr_value_associates{$attrvalueno}">Parents</label>
+      <input type="hidden" value="{$attr_value.attr_value_associates}" id="hidden-attr_value_associates{$attrvalueno}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_associates]" class="json-value">
+      <div class="col-sm-5 multiselect-json">
+        <div>
+          <a href="javascript:void(0);" class="btn btn-info" onclick="LoadAttrParentSelect($(this))">Edit</a>
+        </div>
+        <select class="form-control" multiple="multiple" name="" onchange="multiselectToJSON($(this))" id="attr_value_associates{$attrvalueno}">
+        </select>
+      </div>
+    </div>*}
     {elseif $attrtype eq '2'}
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_var1_{$attrvalueno}">Engraving line 1</label>

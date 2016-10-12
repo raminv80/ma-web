@@ -1,230 +1,255 @@
-{block name=login}
-<!--	<header>
-		<div id="headout" class="headerbg">
-				<div id="videobox">
-					<div class="container">
-						<div class="row-fluid">
-							<div class="span7">
-					  			{include file='breadcrumbs.tpl'}
-					  			<h3 class="toptitle">{$product_name}</h3>
-				  			</div>
-						</div>
-					</div>
-				</div>
-			</div>
-	</header> -->
-	<div class="container">
-		<div class="col-sm-5">
-			
-			<!-- LOGIN SECTION  -->
-			<div class="row" id="login">
-				<div class="row error-msg" id="login-form-error"></div>
-			
-				<div class="row text-right">
-					<a href="javascript:void(0)" class="sign-in" onclick="$('#register').show('slow');$('#login').hide('slow');" >Create an account</a>
-				</div>
-				<h3>Existing Customer</h3>
-				<form class="form-horizontal" id="login-form" role="form" accept-charset="UTF-8" action="" method="post">
-					<input type="hidden" value="login" name="action" id="action" /> 
-					<input type="hidden" value="" name="redirect" class="redirect" /> 
-					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-					<div class="form-group">
-					    <label for="email" class="col-sm-2 control-label">Email</label>
-					    <div class="col-sm-10">
-					      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="email" name="email" required>
-					      	<span class="help-block"></span>
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="password" class="col-sm-2 control-label">Password</label>
-					    <div class="col-sm-10">
-					    	<input type="password" value="" class="form-control" id="pass" name="pass" required>
-					    	<span class="help-block"></span>
-						</div>
-						<span class="form-help-block"><a href="javascript:void(0)" onclick="$('#reset-pass').show('slow');$('#login').hide('slow');">Forgot your password?</a></span>
-					</div>
-				 	<div class="form-group">
-				    	<div class="col-sm-offset-1 col-sm-10">
-				      		<button type="submit" class="btn btn-primary">Log In</button>
-				    	</div>
-				  	</div>
-				</form>
-				{if $allowGuest}
-					<hr class="or-separator">
-					<div class="row">
-						<a href="/store/checkout" class="btn btn-info" >Continue as Guest</a>
-					</div>
-				{/if}
-				<hr class="or-separator">
-				<div class="row" id="social-login">
-					 <form id="facebook-form" action="/process/user" method="post">
-						<input type="hidden" value="FBlogin" name="action" id="action" /> <!--  onclick="$('#facebook-form').submit();" -->
-						<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-						<input type="hidden" value="" name="redirect" class="redirect" /> 
-						<a href='javascript:void(0)' onclick="FBlogin();"><img src="/images/loginFB.gif" alt="login with facebook"></a>
-					</form> 
-					<!--<fb:login-button autologoutlink="true" data-scope="email, user_birthday, user_location" >Log In with Facebook</fb:login-button>
-					-->
-				</div>
-				
-			</div>
-			
-	                <!-- RESET PASSWORD SECTION - Hidden by default -->
-			<div class="row" id="reset-pass" style="display:none;">
-				<div class="row error-msg" id="reset-pass-form-error"></div>
-				<div class="row success-msg" id="reset-pass-form-success"></div>
-				<div class="row">
-					<h3>Reset password</h3>
-				</div>
-				<form class="form-horizontal" id="reset-pass-form" role="form" accept-charset="UTF-8" action="" method="post">
-					<input type="hidden" value="resetPassword" name="action" id="action" /> 
-					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-					<div class="form-group">
-					    <label for="email" class="col-sm-2 control-label">Email</label>
-					    <div class="col-sm-10">
-					      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="email" name="email" required>
-							<span class="help-block"></span>
-						</div>
-					</div>
-					<div class="col-sm-offset-1 col-sm-10" >
-						<a href="javascript:void(0)" class="btn btn-default" onclick="$('#reset-pass').hide('slow');$('#login').show('slow');" >Back</a>
-		                <button type="submit" class="btn btn-primary">Submit</button>
-					</div>
-				</form>
-			</div>
-			
-			<!-- REGISTER SECTION - Hidden by default -->
-			<div class="row" id="register" style="display:none;">
-				<div class="row error-msg" id="register-form-error"></div>
-				<div class="row">
-					<h3>Create an account</h3>
-				</div>
-				<form class="form-horizontal" id="register-form" role="form" accept-charset="UTF-8" action="" method="post">
-					<input type="hidden" value="create" name="action" id="action" /> 
-					<input type="hidden" value="" name="redirect" class="redirect" /> 
-					<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-					<div class="form-group">
-					    <label for="gname" class="col-sm-3 control-label">Given Name</label>
-					    <div class="col-sm-9">
-					      	<input type="text" value="{if $post}{$post.gname}{/if}" class="form-control" id="gname" name="gname" required>
-							<span class="help-block"></span>
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="surname" class="col-sm-3 control-label">Surname</label>
-					    <div class="col-sm-9">
-					      	<input type="text" value="{if $post}{$post.surname}{/if}" class="form-control" id="surname" name="surname" required>
-							<span class="help-block"></span>
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="email" class="col-sm-3 control-label">Email</label>
-					    <div class="col-sm-9">
-					      	<input type="email" value="{if $post}{$post.email}{/if}" class="form-control" id="reg-email" name="email" required>
-							<span class="help-block"></span>
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="confirm_email" class="col-sm-3 control-label">Re-enter Email</label>
-					    <div class="col-sm-9">
-					      	<input type="text" value="{if $post}{$post.confirm_email}{/if}" class="form-control" id="confirm_email" name="confirm_email" required>
-							<span class="help-block"></span>
-						</div>
-					</div>
-					<div class="form-group">
-					    <label for="password" class="col-sm-3 control-label">Password</label>
-					    <div class="col-sm-9">
-					    	<input type="password" value="" class="form-control" id="password" name="password" required>
-				    		<span class="help-block"></span>
-				    	</div>
-					</div>
-					<div class="form-group">
-					    <label for="confirm_password" class="col-sm-3 control-label">Re-enter Password</label>
-					    <div class="col-sm-9">
-					    	<input type="password" value="" class="form-control" id="confirm_password" name="confirm_password" required>
-							<span class="help-block"></span>
-						</div>
-					</div>
-				 	<div class="form-group">
-				    	<div class="col-sm-offset-2 col-sm-10">
-				    		<a href="javascript:void(0)" class="btn btn-default" onclick="$('#register').hide('slow');$('#login').show('slow');" >Back</a>
-				      		<button type="submit" class="btn btn-primary">Sign Up</button>
-				    	</div>
-				  	</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
-	<script type="text/javascript">
-		$(document).ready(function(){
+{block name="head"}
+<link href="/includes/css/jquery-ui.css" rel="stylesheet" media="screen">
+{/block} {block name=body}
+<div id="maincart">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" id="checkout">
+        <h1>{if $listing_title}{$listing_title}{else}{$listing_name}{/if}</h1>
+      </div>
+    </div>
+  </div>
+</div>
 
-			$('#login-form').validate();
-			$('#register-form').validate();
-			$('#reset-pass-form').validate({
-				onkeyup: false,
-				onclick: false
-			});
-			
-			$('#confirm_password').rules("add", {
-			      required: true,
-			      equalTo: '#password',
-			      messages: {
-			        equalTo: "The passwords you have entered do not match. Please check them."
-			      }
-			 });
+<div id="carttext">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-10 col-md-offset-1 text-center">{$listing_content1}</div>
+    </div>
+  </div>
+</div>
 
-			$('#confirm_email').rules("add", {
-			      required: true,
-			      equalTo: '#reg-email',
-			      messages: {
-			        equalTo: "The emails you have entered do not match. Please check them."
-			      }
-			 }); 
-		});
-		
-		
-		function FBlogin(){
-			var datastring = $("#facebook-form").serialize();
-			$.ajax({
-				type: "POST",
-			    url: "/process/user",
-				cache: false,
-				data: datastring,
-				dataType: "html",
-			    success: function(data) {
-			    	try{
-			    		var obj = $.parseJSON(data);
-					 	var msg = obj.message;
-					 	var login_url = obj.login_url;  
-					 	var error = obj.error;  
+<div id="logincont">
+  <div class="container">
+    <div class="row">
+      <!-- LOGIN SECTION  -->
+      <div class="col-sm-offset-3 col-sm-6" id="login">
+        <div id="loginin">
+          <div class="row">
+            <div class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2  text-center">
+              <div id="login">
+                <form class="form-horizontal" id="login-form" data-attr-id="login-form" role="form" accept-charset="UTF-8" action="" method="post">
+                  <input type="hidden" value="login" name="action" id="action" />
+                  <input type="hidden" value="{$redirect}" name="redirect" class="redirect" />
+                  <input type="hidden" name="formToken" id="formToken" value="{$token}" />
 
-					 	if (login_url) {
-					 		if (obj.new_window) {
-						 		var left  = ($(window).width()/2)-(500/2),
-						 	    	top   = ($(window).height()/2)-(270/2),
-						 	     	popup = window.open (login_url, "Login_with_Facebook", "width=500, height=270, top="+top+", left="+left);
-					 		} else {
-					 			window.location.href = login_url;
-							}    
-						}else if (msg && error) {
-						 	alert (msg);
-					 	}
-					}catch(err){
-						console.log('TRY-CATCH error');
-					}
-			    },
-				error: function(){
-					console.log('AJAX error');
-	          	}
-			});
-			
-		}
+                  <div class="row">
+                    <div class="col-sm-12 form-group">
+                      <label for="username" class="visible-ie-only">Membership Number</label>
+                      <input type="text" value="" class="form-control" id="username" name="username" required>
+                      <div class="error-msg help-block"></div>
+                    </div>
+                  </div>
 
-		function redirectWin(url) {
-			window.location.replace(url);
-		}
-		
-		
-	</script>
-{/block} 
+                  <div class="row">
+                    <div class="col-sm-12 form-group">
+                      <label for="password" class="visible-ie-only">Password</label>
+                      <input class="form-control showpassword" type="password" id="password1" name="pass" autocomplete="off" required />
+                      <a class="showhide" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[type=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[type=text]').get(0).type='password';$(this).html('Show'); }">Show</a>
+                      <div class="error-msg help-block"></div>
+                      <span class="form-help-block col-sm-12"><a href="javascript:void(0)" onclick="$('#reset-email').val($('#email').val());$('#reset-pass').show('slow');">Forgot your password?</a></span>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="error-alert" style="display: none;">
+                      <div class="alert alert-danger fade in ">
+                        <button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.error-alert').fadeOut('slow');">&times;</button>
+                        <strong></strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-12 form-group">
+                      <div class="col-sm-offset-2 col-sm-8">
+                        <button type="submit" class="btn btn-red">Log In</button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div id="reset-pass" class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2 text-center" style="display: none;">
+              <!-- RESET PASSWORD SECTION - Hidden by default -->
+              <h3 id="reset-pass-title">Reset password</h3>
+              <form class="form-horizontal" id="reset-pass-form" data-attr-id="reset-pass-form" role="form" accept-charset="UTF-8" action="" method="post">
+                <input type="hidden" value="resetPasswordToken" name="action" id="action" />
+                <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+
+                <div class="row">
+                  <div class="col-sm-12 form-group">
+                    <label for="email" class="control-label">Email</label>
+                    <input type="email" value="" class="form-control" id="reset-email" name="email" required>
+                    <span class="help-block"></span>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-offset-3 error-alert" style="display: none;">
+                    <div class="alert alert-danger fade in ">
+                      <button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.error-alert').fadeOut('slow');">&times;</button>
+                      <strong></strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-offset-3 success-alert" style="display: none;">
+                    <div class="alert alert-success fade in ">
+                      <button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.success-alert').fadeOut('slow');">&times;</button>
+                      <strong></strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-12 form-group">
+                    <div class="col-sm-12">
+                      <button type="submit" class="btn btn-red">Reset Password</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+
+</div>
+
+<div id="greyblock1" class="login">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <p class="bigtxt">For just {$CONFIG_VARS.membership_fee} a year, your MedicAlert membership gives you:</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 text-center benefits">
+        <img src="/images/benefit1.png" alt="Protection for 12 months" class="img-responsive" />
+        <p>Protection for 12 months</p>
+      </div>
+      <div class="col-sm-4 text-center benefits">
+        <img src="/images/benefit2.png" alt="24/7 emergency service access to your medical information" class="img-responsive" />
+        <p>24/7 emergency service access to your medical information</p>
+      </div>
+      <div class="col-sm-4 text-center benefits">
+        <img src="/images/benefit3.png" alt="Exclusive member only offers" class="img-responsive" />
+        <p>Exclusive member only offers</p>
+      </div>
+      <div class="col-sm-4 text-center benefits">
+        <img src="/images/benefit4.png" alt="Unlimited wallet and fridge cards listing your details" class="img-responsive" />
+        <p>Unlimited wallet and fridge cards listing your details</p>
+      </div>
+      <div class="col-sm-4 text-center benefits">
+        <img src="/images/benefit5.png" alt="Secure online access to your electronic health record " class="img-responsive" />
+        <p>Secure online access to your electronic health record</p>
+      </div>
+      <div class="col-sm-4 text-center benefits">
+        <img src="/images/benefit6.png" alt="Support from our Membership Services team" class="img-responsive" />
+        <p>Support from our Membership Services team</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail} {literal}
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+    $('#login-form').validate({
+      submitHandler: function(form) {
+        SubmitLoginRegisterForm($(form).attr('id'));
+      }
+    });
+
+	$('#reset-pass-form').validate({
+      onkeyup: false,
+      onclick: false,
+      submitHandler: function(form) {
+        $('body').css('cursor', 'wait');
+        $('#' + form).find('.error-alert').hide();
+        var datastring = $('#' + form).serialize();
+        $.ajax({
+          type: "POST",
+          url: "/process/user",
+          cache: false,
+          data: datastring,
+          dataType: "json",
+          success: function(obj) {
+            try{
+              if(obj.error){
+                $('#' + form).find('.success-alert').hide();
+                $('#' + form).find('.error-alert').find('strong').html(obj.error);
+                $('#' + form).find('.error-alert').fadeIn('slow');
+              }else{
+                $('#' + form).find('.error-alert').hide();
+                $('#' + form).find('.success-alert').find('strong').html(obj.success);
+                $('#' + form).find('.success-alert').fadeIn('slow');
+                $('#' + form).find('.form-group').hide();
+                $('#reset-pass-title').hide();
+              }
+            }catch(err){
+              console.log('TRY-CATCH error');
+            }
+            $('body').css('cursor', 'default');
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            $('#' + form).find('.error-alert').find('strong').html('Undefined error.<br>Please refresh the page and try again or <a href="/contact-us">contact us</a>.');
+            $('#' + form).find('.error-alert').fadeIn('slow');
+            $('body').css('cursor', 'default');
+            console.log('AJAX error:' + errorThrown);
+          }
+        });
+      }
+    });
+
+
+  });
+
+  function SubmitLoginRegisterForm(FORM) {
+    $('body').css('cursor', 'wait');
+    $('#' + FORM).find('.error-alert').hide();
+    var datastring = $('#' + FORM).serialize();
+    $.ajax({
+      type: "POST",
+      url: "/process/user",
+      cache: false,
+      data: datastring,
+      dataType: "json",
+      success: function(obj) {
+        try{
+          if(obj.success && obj.url){
+            window.location.href = obj.url;
+          }else if(obj.error){
+            $('#' + FORM).find('.error-alert').find('strong').html(obj.error);
+            $('#' + FORM).find('.error-alert').fadeIn('slow');
+          }
+        }catch(err){
+          console.log('TRY-CATCH error');
+        }
+        $('body').css('cursor', 'default');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        $('#' + FORM).find('.error-alert').find('strong').html('Undefined error');
+        $('#' + FORM).find('.error-alert').fadeIn('slow');
+        $('body').css('cursor', 'default');
+        console.log('AJAX error:' + errorThrown);
+      }
+    });
+  }
+
+</script>
+{/literal} {/block}
+
+
+
+

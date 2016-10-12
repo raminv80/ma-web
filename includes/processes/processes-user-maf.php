@@ -56,6 +56,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
             $success = true;
             $url = empty($_POST['redirect']) ? $_SERVER['HTTP_REFERER'] : $_POST['redirect'];
             saveInLog('member-login', 'external', $_SESSION['user']['public']['id']);
+            $_SESSION['user']['new_user'] = null;
           }
         }else{
           $error = $user_obj->getErrorMsg();
@@ -132,23 +133,6 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       ));
       die();
    
-      
-    case 'print-profile':
-      $error = "Error(2): Your session has expired.";
-      $template = null;
-      $user_obj = new UserClass();
-      if($loginCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token'])){
-        $template = $user_obj->printProfile("http://{$_SERVER['HTTP_HOST']}/includes/print", $_SESSION['user']['public']['maf']['main'], $_SESSION['user']['public']['maf']['update']);
-        saveInLog('member-print-profile', 'external', $_SESSION['user']['public']['id']);
-        $error = null;
-      }else{
-        $_SESSION['user']['public'] = null;
-      }
-      echo json_encode(array(
-          'error' => $error,
-          'template' => $template
-      ));
-      die();
       
     case 'resetPasswordToken':
       $member = new UserClass();

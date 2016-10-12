@@ -422,7 +422,7 @@
             $('body').css('cursor', 'default');
           },
           error: function(jqXHR, textStatus, errorThrown) {
-            $('#' + form).find('.error-alert').find('strong').html('Undefined error');
+            $('#' + form).find('.error-alert').find('strong').html('Undefined error.<br>Please refresh the page and try again or <a href="/contact-us">contact us</a>.');
             $('#' + form).find('.error-alert').fadeIn('slow');
             $('body').css('cursor', 'default');
             console.log('AJAX error:' + errorThrown);

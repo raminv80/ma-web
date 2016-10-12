@@ -20,7 +20,6 @@ class Qvalent_REST_PayWayAPI extends Bank {
   protected $merchantId;
   protected $bankAccountId;
   protected $isDirecDebit = false;
-  protected $recurrentPayment = false;
   protected $bsb;
   protected $accountnumber;
   protected $accountname;
@@ -65,7 +64,6 @@ class Qvalent_REST_PayWayAPI extends Bank {
     }else{
       parent::PreparePayment($data);
     }
-    $this->recurrentPayment = empty($data['autorenewal']) ? false : true;
   }
   
   
@@ -169,19 +167,8 @@ class Qvalent_REST_PayWayAPI extends Bank {
         }
       }
       
-      if(!$this->recurrentPayment || !$this->payment_success){
-        //DELETE TEMPORARY CUSTOMER
-        $this->DeleteCustomer($WestpacCustomer->customerNumber);
-        return true;
-      }
-      
-      //STORE IN TEMPORARY AUTORENEW RECORD
-      $this->autorenewRecord = array(
-          "bank_customer_id" => $WestpacCustomer->customerNumber,
-          "method" => $this->responseObj->paymentMethod,
-          "singletoken" => $singleUseTokenId
-      );
-      return true;
+      //DELETE TEMPORARY CUSTOMER
+      $this->DeleteCustomer($WestpacCustomer->customerNumber);
       
     }catch (Exception $e){
       $this->errorMsg .= "BANK CONNECTION ERROR: {$e}<br>";
@@ -231,10 +218,8 @@ class Qvalent_REST_PayWayAPI extends Bank {
           "postcode" => $this->address['address_postcode']
       );
       
-      $this->payment_transactionno = substr($singleUseTokenId, 20);
-      
       //CREATE TEMPORARY CUSTOMER
-      $WestpacCustomer = $this->CreateCustomer($singleUseTokenId, $this->payment_transactionno, $contactArr);
+      $WestpacCustomer = $this->CreateCustomer($singleUseTokenId, $this->address['address_user_id'], $contactArr);
       
       //MISSING CUSTOMER NUMBER
       if(empty($WestpacCustomer->customerNumber)){

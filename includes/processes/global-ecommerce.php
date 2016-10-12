@@ -2,7 +2,8 @@
 global $CONFIG, $SMARTY, $DBobject, $GA_ID, $REQUEST_URI;
 
 // **************** REDIRECT SECTION
-$loginUrl = '/login-register';
+$loginUrl = '/login';
+$loginRegisterUrl = '/login-register';
 $checkoutUrl = '/checkout';
 $membersAreaUrl = '/my-account';
 
@@ -16,12 +17,12 @@ if((!empty($SMARTY->getTemplateVars('listing_membersonly')) && $REQUEST_URI != $
     || ($REQUEST_URI == $checkoutUrl && empty($_SESSION['user']['public']['id']) && empty($_SESSION['user']['new_user']))
   ){
   $_SESSION['redirect'] = $REQUEST_URI;
-  header('Location: ' . $loginUrl);
+  header('Location: ' . (($REQUEST_URI == $checkoutUrl)? $loginRegisterUrl : $loginUrl));
   die();
 }
 
 //Redirect to member's area when logged in
-if($REQUEST_URI == $loginUrl && !empty($_SESSION['user']['public']['id'])){
+if(($REQUEST_URI == $loginUrl || $REQUEST_URI == $loginRegisterUrl) && !empty($_SESSION['user']['public']['id'])){
   header('Location: ' . $membersAreaUrl);
   die();
 }

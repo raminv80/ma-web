@@ -97,12 +97,21 @@
               <div class="col-xs-9 col-sm-3 col-md-4 bluetext valgn">
                 <a href="{if $item.cartitem_type_id eq 1}/{$item.product_url}{else}javascript:void(0){/if}">{$item.cartitem_product_name}{if $item.cartitem_type_id eq 3} - {$item.variant_name}{/if}</a>{if $item.cartitem_product_gst eq '1'} *{/if}
                 {if $item.cartitem_type_id eq 1}<br><small>{$item.cartitem_product_uid}</small>{/if}
-                {if $item.attributes && $item.cartitem_type_id neq 2} 
+                {if $item.attributes &&  $item.cartitem_type_id neq 2} 
                 {foreach from=$item.attributes item=attr}
-                <div class="attributes">{$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</div>
-                {if $attr.cartitem_attr_attr_value_additional} <a class="eng" href="javascript:void(0)" onclick="if($('.addattr{$attr.cartitem_attr_id}').is(':visible')){ $('.addattr{$attr.cartitem_attr_id}').hide('slow'); $(this).html('Show engraving +'); }else{ $('.addattr{$attr.cartitem_attr_id}').show('slow'); $(this).html('Hide engraving  -'); }">Show engraving +</a> {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
-                <div class="additional-attributes addattr{$attr.cartitem_attr_id}" style="display: none;">Line {$k}: {$v}</div>
-                {/foreach} {/if} {/foreach} {/if}
+                <div class="attributes">
+                  {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name} 
+                  {if $attr.cartitem_attr_attr_value_additional && $attr.cartitem_attr_attribute_id eq 1} 
+                    ({foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}<span>{$v}</span>{/foreach}) 
+                  {/if}  
+                 </div>
+                {if $attr.cartitem_attr_attr_value_additional && $attr.cartitem_attr_attribute_id eq 4} 
+                  <a class="eng" href="javascript:void(0)" onclick="if($('.addattr{$attr.cartitem_attr_id}').is(':visible')){ $('.addattr{$attr.cartitem_attr_id}').hide('slow'); $(this).html('Show engraving +'); }else{ $('.addattr{$attr.cartitem_attr_id}').show('slow'); $(this).html('Hide engraving  -'); }">Show engraving +</a> 
+                  {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
+                  <div class="additional-attributes addattr{$attr.cartitem_attr_id}" style="display: none;">Line {$k}: {$v}</div>
+                  {/foreach} 
+                {/if} 
+                {/foreach} {/if}
               </div>
               <div class="visible-xs col-xs-3"></div>
               <div class="hidden-xs col-xs-9 col-sm-2 col-md-2 text-center valgn" id="priceunit-{$item.cartitem_id}">${$item.cartitem_product_price|number_format:2:".":","}</div>

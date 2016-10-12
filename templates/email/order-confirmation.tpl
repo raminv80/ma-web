@@ -666,7 +666,13 @@ body, td {
                                           <td style="font-size: 16px;padding: 10px 0;" width="300" class="w300">
                                             <div style="font-weight: bold;">{$item.cartitem_product_name}{if $item.product_type_id eq 3} - {$item.variant_name}{/if}{if $item.cartitem_product_gst eq '1'} {assign var=free value=1} *{/if}</div> {if $item.product_type_id eq 1}
                                             <div class="attributes" style="font-size: 14px;">Product code: {$item.cartitem_product_uid}</div> {if $item.attributes} {foreach from=$item.attributes item=attr}
-                                            <div class="attributes" style="font-size: 14px;">{$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</div> {if $attr.cartitem_attr_attr_value_additional} {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
+                                            <div class="attributes" style="font-size: 14px;">
+                                              {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}
+                                              {if $attr.cartitem_attr_attr_value_additional && $attr.cartitem_attr_attribute_id eq 1} 
+                                                ({foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}<span>{$v}</span>{/foreach}) 
+                                              {/if} 
+                                            </div>
+                                            {if $attr.cartitem_attr_attr_value_additional && $attr.cartitem_attr_attribute_id eq 4} {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
                                             <div class="attributes" style="font-size: 14px;">Engraving Line {$k}: {$v}</div> {/foreach} {/if} {/foreach} {/if} {/if}
                                           </td>
                                           <td align="center" style="font-size: 16px; vertical-align: top;padding: 10px 0;" width="85" class="w85">{$item.cartitem_quantity}</td>

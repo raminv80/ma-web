@@ -2,6 +2,16 @@
 global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 
 try{
+  $user_obj = new UserClass();
+  if(!empty($_SESSION['user']['public']['id'])){
+    $loginMAFCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token']);
+    if(!$loginMAFCheck){
+      $_SESSION['user']['public'] = null;
+      header("Location: /login");
+      die();
+    }
+  }
+  
   $cart_obj = new cart($_SESSION['user']['public']['id']);
   if($cart_obj->NumberOfProductsOnCart() < 1){
     header("Location: /shopping-cart");

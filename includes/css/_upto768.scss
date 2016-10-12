@@ -962,6 +962,17 @@ tr.tabopts {
   margin-left: 0px;  
 }
 
+
+#proddet #product-form{
+		.custom-input-field{
+		  width: 100%;
+		  display: block;
+		}
+		.custom-field-description{
+		  display: block;
+		}
+}
+
 }
 
 @media (max-width:480px){

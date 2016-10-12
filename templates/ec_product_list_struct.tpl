@@ -23,13 +23,16 @@
     	{if $item.general_details.has_attributes.2}	
         <div class="colours">Available colours
 			<div class="colourbox">
+             {$max = 0}
             {foreach $item.general_details.has_attributes.2 as $colour}  
+              {$max = $max+1}
+              {if $max gt 8}{break}{/if}
               <img src="{if $colour.values.attr_value_image}{$colour.values.attr_value_image}{else}/images/undefined-colour.png{/if}?height=22&width=22" alt="{$colour.values.attr_value_name}" title="{$colour.values.attr_value_name}" />
             {/foreach}
 			</div>
 		</div>
         {/if}
-		<div class="prod-wishlist"><a href="javascript:void(0)" title="Your wish list" data-pid="{$item.product_object_id}" class="prodwishlist prodwishlist-{$item.product_object_id}{if $item.product_object_id|in_array:$wishlist} active{/if}"><img src="/images/prod-wishlist.png" alt="Wishlist"></a></div>
+		<div class="prod-wishlist"><a href="javascript:void(0)" title="Your wish list" data-pid="{$item.product_object_id}" class="prodwishlist prodwishlist-{$item.product_object_id}{if $item.product_object_id|in_array:$wishlist} active{/if}"><img src="/images/prod-wishlist{if $item.product_object_id|in_array:$wishlist}-selected{/if}.png" alt="Wishlist"></a></div>
 	</div>
 	</div>
 </div>

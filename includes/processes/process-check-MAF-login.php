@@ -2,7 +2,7 @@
 global $CONFIG, $SMARTY, $DBobject, $GA_ID, $REQUEST_URI;
 try{
   //Check if member still logged in
-  $loginUrl = '/login-register';
+  $loginUrl = '/login';
   $user_obj = new UserClass();
   
   $loginCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token']);
