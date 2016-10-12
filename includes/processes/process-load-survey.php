@@ -1,14 +1,12 @@
 <?php
 global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 
-
-
 $questions = array();
 try{
 
   $SMARTY->assign('verifytoken', false);
   
-  $csql = "SELECT surveytoken_status, surveytoken_question_type_id FROM tbl_surveytoken WHERE surveytoken_token = :surveytoken_token";
+  $csql = "SELECT surveytoken_id, surveytoken_status, surveytoken_question_type_id FROM tbl_surveytoken WHERE surveytoken_token = :surveytoken_token";
   
   if($cres = $DBobject->wrappedSql($csql,array(":surveytoken_token"=>$_GET['token']))){
     
@@ -16,7 +14,7 @@ try{
       $SMARTY->assign('verifytoken', false);
     }else{
       $SMARTY->assign('verifytoken', true);
-      $SMARTY->assign('surveytoken', $_GET['token']);
+      $SMARTY->assign('surveytoken_id', $cres[0]['surveytoken_id']);
       
       $param = array();
       $where = " AND question_type_id = :question_type_id ";
@@ -38,7 +36,10 @@ try{
             $questions[$typeid] = array();
           }
       
-          array_push($questions[$typeid], array($q[question_id],$q['question_question'],$q['question_qoption_group_id'],$q['question_mandatory']));
+          array_push($questions[$typeid], array("question_id"=>$q['question_id'],
+              "question"=>$q['question_question'],
+              "option_group_id"=>$q['question_qoption_group_id'],
+              "is_mandatory"=>$q['question_mandatory']));
         }
       
       }
@@ -58,7 +59,7 @@ try{
             $answers[$typeid] = array();
           }
       
-          array_push($answers[$typeid], $a['qoption_option']);
+          array_push($answers[$typeid], array("option_id"=>$a['qoption_id'],"option"=>$a['qoption_option']));
         }
       
       }

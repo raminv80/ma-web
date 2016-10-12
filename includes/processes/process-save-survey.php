@@ -5,30 +5,28 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
 
   global $SMARTY, $DBobject, $CONFIG, $GA_ID;
   
-  
-  $user_id = '2222';
-  
   $params = array();
   $insert = array();
   
-  $survey_token = $_POST['surveytoken'];
+  $surveytoken_id = $_POST['surveytoken-id'];
   
-  $sql = "SELECT * FROM tbl_surveytoken WHERE surveytoken_token = :surveytoken_token";
+  $sql = "SELECT * FROM tbl_surveytoken WHERE surveytoken_id = :surveytoken_id";
 
-  if($res = $DBobject->wrappedSql($sql, array(":surveytoken_token"=>$survey_token))){
+  if($res = $DBobject->wrappedSql($sql, array(":surveytoken_id"=>$surveytoken_id))){
     
     if($res[0]['surveytoken_status'] == 0){
       try {
-        $upsql = "UPDATE tbl_surveytoken SET surveytoken_status = 1 WHERE surveytoken_token = :surveytoken_token";
-        $DBobject->wrappedSql($upsql, array(":surveytoken_token"=>$survey_token));
+        $upsql = "UPDATE tbl_surveytoken SET surveytoken_status = 1 WHERE surveytoken_id = :surveytoken_id";
+        $DBobject->wrappedSql($upsql, array(":surveytoken_id"=>$surveytoken_id));
       }catch (Exception $e){
         $error = 'There was an unexpected error updating your survey token.';
       }
       
       foreach ($_POST['questionid'] as $key=>$quesid){
-        array_push($insert,"(:token{$key},:question_id{$key},:answer{$key}, NOW())");
+        array_push($insert,"(:token{$key},:question_id{$key},:answerid{$key},:answer{$key}, NOW())");
         $params[":token{$key}"] = $survey_token;
         $params[":question_id{$key}"] = $quesid;
+        $params[":answerid{$key}"] = (empty($_POST['answerid'][$key]))?"":$_POST['answerid'][$key];
         $params[":answer{$key}"] = (empty($_POST['answer'][$key]))?"":$_POST['answer'][$key];
       }
       
@@ -36,7 +34,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
       // SAVE IN DATABASE
       
       try{
-        $sql = "INSERT INTO tbl_survey (survey_token,survey_question_id,survey_answer,survey_created) VALUES ".$ins;
+        $sql = "INSERT INTO tbl_survey (survey_token,survey_question_id,survey_qoption_id,survey_answer,survey_created) VALUES ".$ins;
         $DBobject->wrappedSql($sql, $params);
       
         header("Location: /thank-you-for-taking-a-survey");
