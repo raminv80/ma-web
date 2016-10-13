@@ -529,7 +529,7 @@ a {
                   <tr>
                     <td class="w30" width="30"></td>
                     <td align="center" bgcolor="#ffffff" class="w580" width="580">
-                      <a class="butlink" href="{$DOMAIN}/my-account?utm_source=website&utm_medium=email&utm_campaign=autoresponse" target="_blank" style="font-size: 16px; color: #ed174f; text-decoration: none; text-decoration: none; -webkit-border-radius: 3px; padding: 15px 25px; border: 3px solid #ed174f; display: inline-block; font-weight: bold;">Update your profile</a>
+                      <a class="butlink" href="{$DOMAIN}/update-my-profile?utm_source=website&utm_medium=email&utm_campaign=autoresponse" target="_blank" style="font-size: 16px; color: #ed174f; text-decoration: none; text-decoration: none; -webkit-border-radius: 3px; padding: 15px 25px; border: 3px solid #ed174f; display: inline-block; font-weight: bold;">Update your profile</a>
                       </td>
                     <td class="w30" width="30"></td>
                   </tr>

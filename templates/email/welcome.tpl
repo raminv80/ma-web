@@ -584,7 +584,7 @@ a {
                         <td class="w580" width="580">
                           <p style="font-size: 16px; line-height: 20px; color: #ed174f; font-weight: bold;">Managing your membership</p>
                           <p style="font-size: 14px; line-height: 20px; font-weight: 300;">
-                            You can easily manage your membership via the <a style="color: #ed174f; text-decoration: none;" href="{$DOMAIN}/my-account">Members' Area</a>. Here you're able to:
+                            You can easily manage your membership via the <a style="color: #ed174f; text-decoration: none;" href="{$DOMAIN}/update-my-profile">Members' Area</a>. Here you're able to:
                           </p>
                         </td>
                         <td class="w30" width="30"></td>

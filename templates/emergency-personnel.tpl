@@ -20,10 +20,6 @@
         <div class="col-sm-8 col-sm-offset-2 text-center">
           {$listing_content2}
         </div>
-        <div class="col-sm-12 text-center">
-          <p>For more information, you can download a free training kit.</p>
-          <p><a href="/uploads/documents/medicalert_foundation_first_responders_training_kit.pdf" target="_blank" class="btn-red btn">DOWNLOAD TRAINING KIT</a></p>
-        </div>
      </div>
    </div>
 </div>
@@ -31,7 +27,7 @@
    <div class="container">
      <div class="row">
         <div class="col-sm-12 text-center">
-	      <h3>Order your free resouce pack</h3>
+	      <h3>Order your free resource pack</h3>
         </div>
 		<div class="col-md-offset-1 col-md-10 text-center" id="sharestory">
     	 	<form id="contact_form" accept-charset="UTF-8" method="post" action="/process/resource-contact" novalidate="novalidate">

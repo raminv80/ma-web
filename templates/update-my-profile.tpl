@@ -506,7 +506,8 @@
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3 form-group">
                     <label for="healthid" class="visible-ie-only">
-                      Individual health identifier: <img src="/images/question-mark.png" alt="Health identifier information" title="Health identifier information" data-toggle="tooltip" data-placement="top" />
+                      Individual health identifier: <img src="/images/question-mark.png" alt="Health identifier information" title="Note: An Individual Health Identifier (IHI) number is your numerical identifier that uniquely identifies each individual in the Australian healthcare system (my health record).
+The IHI is part of the government e-health initiative developed to enhance the way information is exchanged, shared and managed in the Australian health sector." data-toggle="tooltip" data-placement="top" />
                     </label>
                     <input type="text" value="{$user.maf.update.attributes.14}" class="form-control" id="healthid" name="ehealth">
                     <div class="error-msg help-block"></div>

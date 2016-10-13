@@ -11,13 +11,14 @@
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-md-8 col-md-offset-2 text-center">
+      <div class="col-md-12 text-center">
         <h1>{$listing_name}</h1>
         <div class="col-sm-12 text-center">
-        <p>You're all done! Order number <span class="bold">{$orderNumber}</span> is being processed. 
-        <br>A receipt has been generated and sent to your nominated email address.</p>
-        <br><br>
+        {if $orderNumber}<p style="color:#e9003b">Your order ID is: {$orderNumber}</p>{/if}
+        <br>
         {$listing_content1}
+        <br>
+        <a class="btn-red btn" title="UPDATE MY MEMBERSHIP PROFILE" href="/update-my-profile">COMPLETE MY MEMBERSHIP PROFILE</a>
       </div>
       </div>
     </div>
