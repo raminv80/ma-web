@@ -125,19 +125,19 @@
               <div class="row auto-opts" id="auto-dd-wrapper" style="display: none;">
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autobsb">BSB<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" id="autobsb" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="6" pattern="[0-9]" id="autobsb" >
                     <div class="error-msg help-block"></div>
                   </div>
 
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autoddname">Account holder's name<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[name]" id="autoddname" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[name]" autocomplete="off" maxlength="80" id="autoddname" >
                     <div class="error-msg help-block"></div>
                   </div>
 
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autoddno">Account number<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" id="autoddno" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" autocomplete="off" maxlength="9" pattern="[0-9]" id="autoddno" >
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -200,6 +200,16 @@
       digits: true,
       minlength: 3
     });
+    
+    $('#autoddno').rules("add", {
+      digits: true
+    });
+    
+    $('#autobsb').rules("add", {
+      digits: true,
+      minlength: 6
+    });
+    
     
     $("select").selectBoxIt();
     

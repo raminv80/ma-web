@@ -30,11 +30,22 @@ try{
     $from = (string)$CONFIG->company->name;
     $bcc = null;
     
-    echo $body = "<p>Hi</p>
-      <p>Please click on link below in order to take our survey.</p>
-      <p><a href='http://".$_SERVER['HTTP_HOST']."/survey?token={$surveytoken}'>MedicAlert survey</a></p>
-          <p>Thank you,</p>
-          <p>".(string)$CONFIG->company->name."</p>";
+    if($question_type_id == 1){
+      $message1 = "Thank you for your recent purchase.";
+      $message2 = "MedicAlert values your feedback, so we can continue to improve this process, 
+          we would appreciate it if you could spare just a few minutes to let us know about your experience.";
+    }else if($question_type_id == 2){
+
+      $message1 = "Thank you for keeping your member profile up-to-date.";
+      $message2 = "So we can continue to improve this process, we would appreciate it if you could spare just a few minutes to let us know about your experience.";
+    }
+
+    $SMARTY->assign('message1', $message1);
+    $SMARTY->assign('message2', $message2);
+    $SMARTY->assign('surveytoken', $surveytoken);
+    
+
+    echo $body = $SMARTY->fetch('email/email-survey.tpl');
     
     $sent = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
   }

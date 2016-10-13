@@ -57,7 +57,7 @@ class Qvalent_REST_PayWayAPI extends Bank {
     if(!empty($data['method']) && $data['method'] == 'dd'){
       $this->isDirecDebit = true;
       $this->amount = $data['amount'];
-      $this->bsb = $data['bsb'];
+      $this->bsb = substr_replace($data['bsb'], '-', -3, 0); //Format: 000-000 
       $this->accountnumber = $data['number'];
       $this->accountname = $data['name'];
       

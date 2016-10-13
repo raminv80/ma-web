@@ -395,13 +395,13 @@
 				  	<div class="row">
 				  		<div class="col-sm-6 form-group">
 				  			<label class="visible-ie-only" for="ccno">Card number<span>*</span>:</label>
-				  			<input type="text" id="ccno" class="cc-req form-control" name="cc[number]" autocomplete="off" />
+				  			<input type="text" id="ccno" class="cc-req form-control copycc" name="cc[number]" autocomplete="off" />
 				  			<div class="error-msg help-block"></div>
 				  		</div>
 
 				  		<div class="col-sm-6 form-group">
 				  			<label class="visible-ie-only" for="ccname">Cardholder's name<span>*</span>:</label>
-				  			<input type="text" id="ccname" class="cc-req form-control" name="cc[name]" autocomplete="off" />
+				  			<input type="text" id="ccname" class="cc-req form-control copycc" name="cc[name]" autocomplete="off" />
 				  			<div class="error-msg help-block"></div>
 				  		</div>
                    </div>
@@ -411,7 +411,7 @@
 				  			<label class="visible-ie-only" for="ccmonth">Expiry<span>*</span>:</label>
 				  			<div class="row">
 					  		<div class="col-sm-6">
-				  			<select id="ccmonth" name="cc[month]" class="cc-select-req form-control">
+				  			<select id="ccmonth" name="cc[month]" class="cc-select-req form-control copycc">
 	                        <option value="">Month</option>
 	                        <option value="01">1 - Jan</option>
 	                        <option value="02">2 - Feb</option>
@@ -429,7 +429,7 @@
 				  			<div class="error-msg help-block"></div>
 					  		</div>
 					  		<div class="col-sm-6">
-		                    <select id="ccyear" name="cc[year]" class="cc-select-req form-control" >
+		                    <select id="ccyear" name="cc[year]" class="cc-select-req form-control copycc" >
 	                       {assign var=thisyear value=$smarty.now|date_format:"%Y"}
 	                       {assign var=numyears value=$thisyear+20}
 	                       <option value="">Year</option>
@@ -445,7 +445,7 @@
 				  		<div class="col-sm-6 form-group">
 				  			<label class="visible-ie-only" for="cccsv">Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :</label>
 				  			<div>
-					  			<input type="text" id="cccsv" name="cc[csv]" class="seccode cc-req form-control" autocomplete="off" pattern="[0-9]" maxlength="4"  />
+					  			<input type="text" id="cccsv" name="cc[csv]" class="seccode cc-req form-control copycc" autocomplete="off" pattern="[0-9]" maxlength="4"  />
 					  			<img  class="seccode" src="/images/donate-security.jpg" alt="Security code" />
 				  			</div>
 					  		<div class="error-msg help-block"></div>
@@ -454,14 +454,15 @@
                </div>
               {else}
                 <div class="col-sm-12">
-                  No payment details are required.
+                  <h3>No payment details are required.</h3>
+                  <br>
                 </div>
               {/if}
               </div>
 
           <div class="row">
                 
-                <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew" {if $user.maf.main.autoBilling eq 't'}style="display:none"{/if}>
+                <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew" {if $user.maf.main.autoBilling eq 't' || $newTotal eq 0}style="display:none"{/if}>
 
             <div class="row">
               <div class="col-sm-12 text-center">

@@ -198,7 +198,7 @@
               {if $attr.attribute_type eq 0 && count($prdattrValuesArr[$attr.attribute_id]) eq 1}
                 {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   {if $value.attr_value_flag1 eq 1}
-                    <input type="text" class="form-control custom-input-field" maxlength="8" name="attr[{$attr.attribute_id}][additional][0]" id="additional-{$value.attr_value_id}-0" required="required">
+                    <input type="text" class="form-control hasAttr custom-input-field" maxlength="8" name="attr[{$attr.attribute_id}][additional][0]" id="additional-{$value.attr_value_id}-0" autocomplete="off" required="required">
                     {$displaySelect = 0}
                   {/if}
                 {/foreach}
@@ -382,15 +382,15 @@ jQuery.fn.outerHTML = function(s) {
 
 		$('.hasAttr').change(function(){
 		  BlockAttrOptions(this);
-		  DisplayPrice();
 		  DisplayAdditionalWhenValid();
+		  DisplayPrice();
 		});
 
 		$('select.hasAttr').focus(function(){
 		  UnblockSelectOptions(this);
 		});
 
-		$('select.hasAdditional').change(function(){
+		$('.hasAdditional').change(function(){
 		  SetAdditionals($(this).val());
 		});
 
@@ -401,6 +401,7 @@ jQuery.fn.outerHTML = function(s) {
 		});
 		
 		DisplayAdditionalWhenValid();
+		DisplayPrice();
 
 
 		$(".image-selector").change(function() {
@@ -678,17 +679,17 @@ $(window).load(function() {
 	}
 
 	function DisplayAdditionalWhenValid(){
-	  if($('select.hasAdditional').length){
-	    if($('select.hasAdditional').closest('form').valid()){
-	      $('select.hasAdditional').each(function(){
+	  if($('.hasAdditional').length){
+	    if($('.hasAdditional').closest('form').valid()){
+	      $('.hasAdditional').each(function(){
 	        var ID = $(this).val();
             if(ID){
               SetAdditionals(ID);
             }
           }); 
 		}
-	    $('select.hasAdditional').closest('form').find('.form-group.has-error .help-block').text('');
-	    $('select.hasAdditional').closest('form').find('.form-group.has-error').removeClass('has-error');
+	    $('.hasAdditional').closest('form').find('.form-group.has-error .help-block').text('');
+	    $('.hasAdditional').closest('form').find('.form-group.has-error').removeClass('has-error');
 	  }
 	}
 	

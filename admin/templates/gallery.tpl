@@ -72,7 +72,7 @@
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="gallery_order_{$imageno}">Order</label>
       <div class="col-sm-5">
-        <input class="form-control number" type="number" value="{$images.gallery_order}" name="field[10][tbl_gallery][{$imageno}][gallery_order]" id="gallery_order_{$imageno}">
+        <input class="form-control number" type="number" value="{if $images.gallery_order}{$images.gallery_order}{else}999{/if}" name="field[10][tbl_gallery][{$imageno}][gallery_order]" id="gallery_order_{$imageno}">
       </div>
     </div>
   </div>

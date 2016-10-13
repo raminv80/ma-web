@@ -24,7 +24,7 @@
           <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_display_menu]">
           <input type="hidden" value="999" name="field[1][tbl_listing][{$cnt}][listing_order]">
           <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_noindex]">
-          <input type="hidden" value="1" name="field[1][tbl_listing][{$cnt}][listing_membersonly]">
+          <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_membersonly]">
           <input type="hidden" value="{$rootParentID}" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
           <!-- Extended table -->

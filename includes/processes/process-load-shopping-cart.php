@@ -33,6 +33,10 @@ try{
   //Has donation
   $SMARTY->assign('hasDonation', $cart_obj->hasProductInCart(217));
   
+  //Has stainless steel product - display special
+  $SMARTY->assign('showProductEspecial', $cart_obj->HasStainlessSteel());
+  
+  
 }catch(exceptionCart $e) {
   $SMARTY->assign('error', $e->getMessage());
 }

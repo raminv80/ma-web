@@ -85,12 +85,12 @@ class Bank{
   function Submit(){
     // Check to see if we have all the necessary details
     $this->payment_success = false;
-    if(empty($this->amount) && (empty($this->cc_number) || empty($this->cc_expiry_month) || empty($this->cc_expiry_year) || empty($this->cc_cvc) || empty($this->cc_name))){
+    if(!empty($this->amount) && (empty($this->cc_number) || empty($this->cc_expiry_month) || empty($this->cc_expiry_year) || empty($this->cc_cvc) || empty($this->cc_name))){
       $this->errors = true;
       $this->errorMsg = 'PAYMENT ERROR: Missing payment details.';
-    } elseif(!empty($this->amount) && floatval($this->amount) < 0.009 && empty($this->cc_number) && empty($this->cc_expiry_month) && empty($this->cc_expiry_year) && empty($this->cc_cvc) && empty($this->cc_name)){
+    } elseif(floatval($this->amount) < 0.009 && empty($this->cc_number) && empty($this->cc_expiry_month) && empty($this->cc_expiry_year) && empty($this->cc_cvc) && empty($this->cc_name)){
       $this->StorePaymentRecord();
-      $this->response['msg'] = 'FREE SAMPLE';
+      $this->response['msg'] = 'No payment required';
       $this->response['payment_status'] = 'A';
       $this->payment_success = true;
       $this->SetResponsePaymentRecord();

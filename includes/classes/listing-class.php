@@ -123,6 +123,14 @@ class ListClass{
       }
     }
     
+
+    foreach($this->CONFIG_OBJ->template as $t){
+      if(!empty($res[0]['listing_type_id']) && $t->attributes()->typeid == $res[0]['listing_type_id'] && $t->attributes()->pageObjectId == $res[0]['listing_object_id']){
+        $template = $t;
+        break;
+      }
+    }
+    
     if(empty($data) && !empty($this->CONFIG_OBJ->table->template) && ($tree_ID == $this->ID)){
       $template = $this->CONFIG_OBJ->table->template;
       foreach($this->CONFIG_OBJ->table->template as $t){

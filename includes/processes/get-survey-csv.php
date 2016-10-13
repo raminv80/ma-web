@@ -6,6 +6,12 @@ global $DBobject;
 
 if($_SERVER['REMOTE_ADDR'] != '150.101.230.130') die('Restricted area');
 
+$sql = "SELECT product_description FROM tbl_product WHERE product_id = 10";
+if($res = $DBobject->wrappedSql($sql)){
+  echo $res[0]['product_description'];
+}
+
+/*
 date_default_timezone_set('Australia/Adelaide');
 
   $wheresql ='';
@@ -69,6 +75,7 @@ date_default_timezone_set('Australia/Adelaide');
   
  
   $res = unclean($result);
+  */
   /*
   print_r($res);
   echo "<br>";
@@ -76,6 +83,7 @@ date_default_timezone_set('Australia/Adelaide');
   var_dump($res);
   echo "</pre>";
   */
+/*
   $csv = AssociativeArrayToCSV($res);
         
   $filename="Medicalert_survey_{$startDate}_{$endtDate}.csv";
@@ -84,3 +92,4 @@ date_default_timezone_set('Australia/Adelaide');
   header("Content-type: text/x-csv");
   header("Content-Disposition: attachment; filename=".$filename);
   echo $csv;
+  */

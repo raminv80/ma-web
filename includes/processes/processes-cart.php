@@ -546,10 +546,13 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           
           // SET USED DISCOUNT CODE
           if($order['cart_discount_code']){
-            $cart_obj->SetUsedDiscountCode($order['cart_discount_code']);
-            $discountData = $cart_obj->GetDiscountData($order['cart_discount_code']);
-            if($discountData['discount_unlimited_use'] == '0'){
-              try{
+            try{
+              include_once 'includes/classes/voucher-class.php';
+              $voucherObj = new Voucher();
+              $voucherObj->RedeemVoucher($order['cart_discount_code']);
+              $cart_obj->SetUsedDiscountCode($order['cart_discount_code']);
+              $discountData = $cart_obj->GetDiscountData($order['cart_discount_code']);
+              if($discountData['discount_unlimited_use'] == '0'){
                 // SEND NOTIFICATION EMAIL
                 $SMARTY->assign('user', $userArr);
                 $SMARTY->assign('discount', $discountData);
@@ -560,8 +563,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                 $body = $buffer;
                 $mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
               }
-              catch(Exception $e){}
-            }
+            }catch(Exception $e){}
           }
           
           // LOG OUT GUEST USER
@@ -840,7 +842,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               
                 $newDiscountArr = array(
                     "code" => $codeStr,
-                    "name" => "Gift certificate ($voucherId)",
+                    "name" => "Gift certificate",
                     "description" => "Gift certificate ($voucherId) - Order no. {$orderNumber}",
                     "amount" => $chargedAmount,
                     "start_date" => $startDate,
@@ -912,6 +914,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $order_cartId = $cart_obj->cart_id;
       $orderNumber = $order_cartId . '-' . date("is");
       $cart_obj->RemoveNonMembershipFeeCartitems();
+      $cart_obj->RemoveDiscountCode();
       
       if(!empty($_SESSION['user']['public']['maf']) && !empty($cart_obj->NumberOfProductsOnCart())){
         $billID = 0;
@@ -1100,26 +1103,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             );
             $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
             sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
-          }
-    
-          // SET USED DISCOUNT CODE
-          if($order['cart_discount_code']){
-            $cart_obj->SetUsedDiscountCode($order['cart_discount_code']);
-            $discountData = $cart_obj->GetDiscountData($order['cart_discount_code']);
-            if($discountData['discount_unlimited_use'] == '0'){
-              try{
-                // SEND NOTIFICATION EMAIL
-                $SMARTY->assign('user', $userArr);
-                $SMARTY->assign('discount', $discountData);
-                $buffer = $SMARTY->fetch('email-discount.tpl');
-                $to = "apolo@them.com.au";
-                $bcc = "";
-                $subject = 'A discount code has been used.';
-                $body = $buffer;
-                $mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
-              }
-              catch(Exception $e){}
-            }
           }
     
           // OPEN NEW CART

@@ -1534,6 +1534,10 @@ a {
 		margin-bottom: 30px;
 	}
 
+	img{
+		display: inline-block;
+	}
+
 	p{
 		margin-bottom: 30px;
 	}
@@ -1883,7 +1887,7 @@ a {
 		}
 		.custom-field-description{
 		  display: inline-block;
-		  
+
 		  a{
 		    color: $black;
 		  }
@@ -3778,6 +3782,7 @@ select option:disabled {
         margin-bottom: 20px;
   }
 }
+
 
 @media (max-width: 992px) {
     .navbar-header {

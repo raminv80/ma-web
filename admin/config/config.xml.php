@@ -135,8 +135,9 @@
       <custom_template field="listing_object_id" value="9">ec_edit_page_my-account.tpl</custom_template>
       <custom_template field="listing_object_id" value="12">ec_edit_page_shopping-cart.tpl</custom_template>
       <custom_template field="listing_object_id" value="13">ec_edit_page_checkout.tpl</custom_template>
-      <custom_template field="listing_object_id" value="222">ec_edit_page_autorenewal.tpl</custom_template>
-      <custom_template field="listing_object_id" value="650">ec_edit_page_autorenewal.tpl</custom_template>
+      <custom_template field="listing_object_id" value="222">ec_edit_page_autorenewal.tpl</custom_template><!-- Quick renew -->
+      <custom_template field="listing_object_id" value="650">ec_edit_page_autorenewal.tpl</custom_template><!-- Auto-renewal -->
+      <custom_template field="listing_object_id" value="690">ec_edit_page_autorenewal.tpl</custom_template><!-- Quick checkout -->
       <custom_template field="listing_object_id" value="219">ec_edit_page_update-my-profile.tpl</custom_template>
       <custom_template field="listing_object_id" value="239">ec_edit_page_my-account.tpl</custom_template><!-- wish list -->
   	</section>
@@ -557,6 +558,7 @@
       	<id>product_id</id>
       	<field>product_name</field>
       	<deleted>product_deleted</deleted>
+        <orderby>product_order, product_name</orderby>
         <associated inlist="true"> 
           <name>variants</name>
           <table>tbl_variant</table>

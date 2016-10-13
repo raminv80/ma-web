@@ -83,7 +83,8 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
                 && ($user_obj->isUnfinancialMember($_SESSION['user']['public']['maf']['main']['user_status_db']) 
                     || $user_obj->isPastRenewalMonth($_SESSION['user']['public']['maf']['main']['user_RenewalDate']) >= 1)) ){
           $_SESSION['user']['public']['pending_update'] = $_POST;
-          $url = '/shopping-cart';
+          $_SESSION['user']['public']['pending_update_lifetime'] = $user_obj->isLifetimeMember($_SESSION['user']['public']['maf']['main']['user_membershipType']);
+          $url = '/quick-checkout';
           
         }else{
           $_SESSION['user']['public']['pending_update'] = null;

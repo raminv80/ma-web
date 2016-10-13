@@ -77,7 +77,7 @@
                     <input class="form-control" value="{$post.email}" type="email" name="email" id="email" required="">
                     <div class="error-msg help-block"></div>
                   </div>
-  
+
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="pcode">
                       Postcode<span>*</span>:
@@ -98,7 +98,7 @@
                     <br>Payment accepted: <img src="/images/gift-cards.jpg" alt="Payment accepted" title="Payment accepted" id="accepted" />
                   </div>
                 </div>
-  
+
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="ccno">
@@ -107,7 +107,7 @@
                     <input type="text" id="ccno" class="form-control" name="cc[number]" autocomplete="off" required />
                     <div class="error-msg help-block"></div>
                   </div>
-  
+
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="ccname">
                       Cardholder's name<span>*</span>:
@@ -116,7 +116,7 @@
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
-  
+
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="ccmonth">
@@ -153,7 +153,7 @@
                       </div>
                     </div>
                   </div>
-  
+
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="cccsv">
                       Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :
@@ -223,6 +223,16 @@
   </div>
 </div>
 
+<div class="emergency-grey">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2 text-center">
+				<h3>Gifts to the MedicAlert Foundation in your Will</h3>
+				<a href="/gifts-in-your-will" class="btn btn-red">Learn more</a>
+			</div>
+		</div>
+	</div>
+</div>
 
 {/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
 <script src="/includes/js/jquery-ui.js"></script>
@@ -231,7 +241,7 @@
   $(document).ready(function() {
 
 	$('[data-toggle="tooltip"]').tooltip();
-   
+
     $('#gift_form').validate();
 
     $('#price').rules("add", {
@@ -239,7 +249,7 @@
       digits: true,
       max: 1000
     });
-    
+
     $('#ccno').rules("add", {
       creditcard : true,
     });
@@ -248,14 +258,14 @@
       digits: true,
       minlength: 3
     });
-    
+
     $("select").selectBoxIt();
-    
+
   /*   $("input[name=variant_id]").change(function(){
       //Set attribute
       $('.variant-attributes').attr('disabled', 'disabled');
       $('#attribute_id-' + $(this).val()).removeAttr('disabled');
-      
+
       if($("input[name=variant_id]:checked").hasClass('show-otherval')){
         $("#otheram").show();
         $("#price").val('');
@@ -265,8 +275,8 @@
       }
       $('#fields-wrapper').fadeIn();
     }); */
-    
-    
+
+
     $('input[name="variant_id"]').change(function(){
       $('.donate-btn').removeClass('active');
 
@@ -284,7 +294,7 @@
         $("#otheram").hide();
       }
       $('.fields-wrapper').fadeIn();
-    }); 
+    });
 
 
   });

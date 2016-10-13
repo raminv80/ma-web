@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true">
+<config debug="true" staging="true">
   <domain></domain>
   <google_analytics>
     <id>UA-</id>
@@ -14,7 +14,7 @@
 		<state>SA</state>
 		<postcode>5063</postcode>
     </address>
-    <phone>(+61) 882 738 401</phone>
+    <phone>(+61)8 8273 8401</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
     <email>enquiry@medicalert.org.au</email>
@@ -95,7 +95,7 @@
         <reference>listing_name</reference>
         <extra>listing_image</extra>
         <extra>listing_url</extra>
-        <where>listing_type_id = '10' AND listing_published = '1'</where> 
+        <where>listing_type_id = '10' AND listing_flag1 = '1' AND listing_published = '1'</where> 
         <orderby>listing_order,listing_name</orderby> 
       </field>  
     </options>
@@ -260,6 +260,17 @@
     <pageID>222</pageID>
     <process>
       <file>includes/processes/process-load-quick-renew.php</file>
+    </process>
+    <process>
+      <file>includes/processes/process-check-MAF-login.php</file>
+    </process>
+  </static_page>
+  <static_page>
+    <url>quick-checkout</url>
+    <template>ec_quick-checkout.tpl</template>
+    <pageID>690</pageID>
+    <process>
+      <file>includes/processes/process-load-quick-checkout.php</file>
     </process>
     <process>
       <file>includes/processes/process-check-MAF-login.php</file>

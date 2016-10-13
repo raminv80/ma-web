@@ -7,7 +7,7 @@ try{
       LEFT JOIN tbl_productcat ON productcat_listing_id = listing_object_id
       LEFT JOIN tbl_product ON product_id = productcat_product_id
       WHERE product_deleted IS NULL AND productcat_deleted IS NULL AND product_published = 1
-      AND listing_deleted IS NULL AND listing_published = 1 AND listing_type_id = 10
+      AND listing_deleted IS NULL AND listing_published = 1 AND listing_type_id = 10 AND listing_flag1 = '1'
       GROUP BY listing_object_id ORDER BY listing_order, listing_name";
   $collections = $DBobject->wrappedSql($sql);
   $SMARTY->assign('collections', $collections);

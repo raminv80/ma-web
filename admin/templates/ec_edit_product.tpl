@@ -569,10 +569,10 @@
       var count = $('#' + ID).attr('rel');
       var today = mysql_now();
       
-      html = '<input type="hidden" value="'+today+'" name="field[10][tbl_gallery]['+count+'][attr_value_deleted]"/>';
+      html = '<input type="hidden" value="'+today+'" name="field[10][tbl_gallery]['+count+'][gallery_deleted]"/>';
       $('#' + ID).append(html);
       $('#' + ID).css('display', 'none');
-      $('#' + ID).removeClass('attr_values');
+      $('#' + ID).removeClass('images');
     }else{
       return false;
     }

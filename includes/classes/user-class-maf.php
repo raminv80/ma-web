@@ -354,6 +354,7 @@ class UserClass{
 		
 		$user = array();
 		$user['locked']                     = $userData['webSiteRecord']['pendingUpdate'];
+		$user['lifetime']                   = $this->isLifetimeMember($userData['dataBaseRecord']['membership']['membershipTypeId']);
 		$user['user_id']					= $userData['dataBaseRecord']['memberShipNumber'];
 		$user['user_firstname']				= $userData['dataBaseRecord']['details']['firstName'];
 		$user['user_lastname']				= $userData['dataBaseRecord']['details']['surname'];

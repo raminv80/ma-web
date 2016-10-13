@@ -151,6 +151,9 @@ function updateCart() {
             if(id == 'subtotal' || id == 'discount'){
               $('#' + id).attr('data-value', amount);
               $('#' + id).html( (id == 'discount' ? '-' : '') + '$' + amount.formatMoney(2, '.', ','));
+              if(amount){
+                $('#' + id).closest('.row').show(); 
+              }
             }
           });
           // renderShippingMethods(obj.shippingMethods);

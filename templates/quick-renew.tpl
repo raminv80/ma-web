@@ -4,7 +4,9 @@
 {/block} {block name=body}
 <div id="pagehead">
   <div class="bannerout">
+    <!-- 
     <img src="{if $listing_image}{$listing_image}{else}/images/newsdet-banner.jpg{/if}" alt="{$listing_name} banner" />
+     -->
   </div>
   <div class="container">
     <div class="row">
@@ -219,7 +221,7 @@
               <div class="row auto-opts" id="auto-dd-wrapper" style="display: none;">
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autobsb">BSB<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="7" id="autobsb" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="6" pattern="[0-9]" id="autobsb" >
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -231,7 +233,7 @@
 
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autoddno">Account number<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" autocomplete="off" maxlength="10" id="autoddno" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" autocomplete="off" maxlength="9" pattern="[0-9]" id="autoddno" >
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -302,6 +304,17 @@
     $('#autoddno').rules("add", {
       digits: true
     });
+    
+    $('#autobsb').rules("add", {
+      digits: true,
+      minlength: 6
+    });
+    
+    $('#auto-cccsv').rules("add", {
+      digits: true,
+      minlength: 3
+    });
+    
     
     
     $("select").selectBoxIt();

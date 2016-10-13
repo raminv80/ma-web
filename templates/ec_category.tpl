@@ -24,7 +24,7 @@
     <div class="row">
       {if $data}
       <div id="categorycontainer">
-        {assign var='count' value=0} {foreach $data.10 as $item}
+        {assign var='count' value=0} {foreach $data.10 as $item}{if $item.listing_flag1 neq 1}{continue}{/if}
         <div class="{if $count <2}col-sm-6{else}col-sm-4{/if} prodcatout text-center">
           <div class="prodcat">
             <a href="{$listing_url}/{$item.listing_url}" title="View {$item.listing_name} Products">

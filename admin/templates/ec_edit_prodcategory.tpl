@@ -54,6 +54,22 @@
         <div class="tab-pane active" id="details">
           <div class="form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_flag1">Display in collections</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.listing_flag1 eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_flag1]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.listing_flag1 eq 1} checked="checked" {/if} 
+                  onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag1">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_noindex">No index</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.listing_noindex eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_noindex]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.listing_noindex eq 1} checked="checked" {/if}
+                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_noindex">
+              </div>
+            </div>
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_name">Name *</label>
               <div class="col-sm-5">
                 <input class="form-control" type="text" value="{$fields.listing_name}" name="field[1][tbl_listing][{$cnt}][listing_name]" id="id_listing_name" onchange="seturl(this.value);" required>

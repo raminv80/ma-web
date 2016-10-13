@@ -159,7 +159,7 @@
                     <label for="mobile" class="visible-ie-only">
                       Mobile<span>*</span>:
                     </label>
-                    <input type="text" maxlength="10" value="{$user.maf.update.user_mobile}" class="form-control" id="mobile" name="user_mobile" pattern="[0-9]" required>
+                    <input type="text" maxlength="10" value="{$user.maf.update.user_mobile|replace:' ':''}" class="form-control" id="mobile" name="user_mobile" pattern="[0-9]" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -243,8 +243,8 @@
 
                 <div class="row">
                   <div class="col-sm-6 form-group">
-                    <label for="emerhomephone" class="visible-ie-only"> Home phone: </label>
-                    <input type="text" value="{$user.maf.update.contact_phone_home}" class="form-control" id="emerhomephone" name="contact_phone_home" pattern="[0-9]">
+                    <label for="emerhomephone" class="visible-ie-only"> Home phone <span>*</span>: </label>
+                    <input type="text" value="{$user.maf.update.contact_phone_home}" class="form-control" id="emerhomephone" name="contact_phone_home" pattern="[0-9]" required>
                     <div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
@@ -516,7 +516,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
                 <div class="row">
                   <div class="col-sm-12">
                     <hr />
-                    <p class="text-left">Only vital information that should be known in an emergency situation is to be recorded here. For example: additional emergency contact details, advance directive, specialist contact details and special needs.</p>
+                    <p class="text-left">Only vital information that should be known in an emergency situation is to be recorded here. For example: additional emergency contact details, advance care directive, specialist contact details and special needs.</p>
 
                     <p class="text-left">
                       <span class="bold">Note:</span> the first 95 characters (including spaces) are likely to print on your membership card, the remainder of the details will be held in your profile.

@@ -269,8 +269,13 @@
         <br />
         <br />
         {else}
-        <div>
-          <h3>Your shopping cart is empty.</h3>
+        <div class="row">
+          <div class="col-sm-12 text-center">
+            <h3>Your shopping cart is empty.</h3>
+            <br />
+            <br />
+            <a href="/products" title="shop products" class="btn-red btn">SHOP PRODUCTS</a>
+          </div>
         </div>
         {/if}
       </div>

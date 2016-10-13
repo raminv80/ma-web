@@ -85,6 +85,36 @@ function SearchProduct($search){
   $search = unclean($search);
   $search = str_replace(" ", "%", $search);
   $search = htmlclean($search);
+  
+  //Check if it is variant UID
+  
+  $sql= "SELECT tbl_variant.*, product_url AS 'cache_url'
+		FROM tbl_variant LEFT JOIN tbl_product ON product_id = variant_product_id
+		WHERE product_deleted IS NULL AND product_published = 1 AND variant_deleted IS NULL AND 
+		variant_uid LIKE :search
+        ORDER BY variant_uid DESC";
+  $params = array(":search"=>$search."%");
+  if ($res = $DBobject->wrappedSql($sql,$params) ) {
+    foreach ($res as $r){
+      $data ["{$r['cache_url']}"] = $r;
+      $data ["{$r['cache_url']}"]['tags'] = getTags('tbl_product',$r['variant_product_id']);
+      $sql = "SELECT * FROM tbl_gallery WHERE gallery_variant_id = :id AND gallery_deleted IS NULL";
+      $gallery = $DBobject->wrappedSql($sql, array(":id"=>$r['variant_id']));
+      if(!empty($gallery)){
+        $data ["{$r['cache_url']}"]['gallery'] = $gallery;
+      }else{
+        $sql = "SELECT * FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL";
+        $gallery = $DBobject->wrappedSql($sql, array(":id"=>$r['variant_product_id']));
+        if(!empty($gallery)){
+          $data ["{$r['cache_url']}"]['gallery'] = $gallery;
+        }
+      }
+    }
+  }
+  
+  if(count($data) > 0){
+    return $data;
+  }
 
   //IF TAG RESULTS = 0
 
@@ -94,8 +124,8 @@ function SearchProduct($search){
 		product_seo_title,
 		product_meta_description,
 		product_meta_words) AGAINST (:search) AS Relevance
-		FROM tbl_product 
-		WHERE product_deleted IS NULL AND product_published = 1 AND
+		FROM tbl_product
+		WHERE product_deleted IS NULL AND product_published = 1 AND 
 		MATCH(product_name,
 		product_description,
 		product_seo_title,
