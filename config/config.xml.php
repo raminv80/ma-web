@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true" staging="true">
+<config debug="false" staging="true">
   <domain></domain>
   <google_analytics>
     <id>UA-</id>
@@ -80,6 +80,7 @@
     </table>
     <template typeid="1">standardpage.tpl</template>
     <template typeid="6">landing-page.tpl</template> 
+    <template typeid="6" pageObjectId="670">bupa.tpl</template> 
     <process>
       <file>includes/processes/process-load-popular-products.php</file>
     </process>
