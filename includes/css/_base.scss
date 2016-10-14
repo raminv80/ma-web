@@ -399,6 +399,7 @@ a {
 #newsletter{
 	background: $foot-grey;
 	padding: 50px 0;
+	position: relative;
 
 	h2{
 		font-size: 36px;
@@ -425,6 +426,7 @@ a {
 }
 
 #foot1{
+	position: relative;
 	background: $red;
 	padding: 50px 0;
 	color: $white;
@@ -3783,6 +3785,225 @@ select option:disabled {
   }
 }
 
+#heroimg {
+    background: url(../../images/heroimg.jpg) no-repeat;
+    background-size: cover;
+    font-size: 22px;
+    line-height: 31px;
+    padding: 100px 0;
+
+	h1 {
+	font-weight: bold;
+    font-size: 72px;
+    line-height: 70px;
+    }
+
+    .highlight {
+    color: $red;
+	}
+
+	.btn{
+		margin-top: 40px;
+	}
+}
+
+#benefits {
+    font-size: 22px;
+    line-height: 40px;
+    padding: 50px 0;
+
+    #uspbox {
+    	margin-top: 30px;
+
+    	.usp {
+			padding: 15px 0;
+
+			&:nth-child(4) {
+				clear: both;
+			}
+
+			img {
+				display: inline-block;
+			}
+
+			h5 {
+				font-size: 20px;
+				line-height: 30px;
+				font-weight: normal;
+			}
+		}
+    }
+}
+
+#redeem {
+    background: $light-grey;
+    padding-bottom: 50px;
+
+	#joinhead {
+    font-size: 22px;
+    line-height: 40px;
+    color: #5e5f5f;
+    padding: 40px 20px;
+
+    span {
+	font-weight: bold;
+    font-size: 22px;
+    line-height: 40px;
+
+	    &.highlight{
+		    color: $red;
+		}
+    }
+    }
+
+	.onethird {
+    width: 33%;
+    float: left;
+
+    	img{
+			display: inline-block;
+			margin-bottom: 10px;
+    	}
+
+		.num {
+			float: left;
+			color: $red;
+			font-size: 36px;
+			font-weight:bold;
+			font-weight: 800;
+			width: 10%;
+			margin-right: 5%;
+		}
+
+		.text{
+			font-size: 18px;
+			float: left;
+			line-height: 25px;
+			width: 85%;
+			text-align: left;
+			margin-top: 10px;
+		}
+
+	}
+
+    #first {
+    background: $red;
+    font-size: 30px;
+    line-height: 40px;
+    color: $white;
+    min-height: 270px;
+    padding: 75px 20px;
+    }
+
+	#second {
+    background: $white;
+    min-height: 260px;
+    padding: 30px;
+    border-right: 1px solid #efefef;
+	}
+
+	#third {
+    background: $white;
+    min-height: 260px;
+    padding: 30px;
+	}
+
+}
+
+#products {
+    padding: 50px 0;
+    font-size: 22px;
+    line-height: 40px;
+
+    h2 {
+      font-size: 48px;
+      color: #e02445;
+      font-family: 'Calibri',sans-serif;
+      font-weight: bold;
+      margin-bottom: 0;
+	}
+
+}
+
+.profile-locked {
+    padding: 20px 10px;
+    border: solid 1px red;
+    margin-bottom: 20px;
+}
+
+#needhelp{
+    width: 300px;
+	right: 20px;
+    bottom: 0;
+    position: fixed;
+	cursor: pointer;
+
+    #helptab{
+	    background: $red;
+	    width: 170px;
+	    border-top-left-radius: 10px;
+	    border-top-right-radius: 10px;
+	    padding: 10px 15px;
+	    font-size: 20px;
+	    font-weight: bold;
+	    float: right;
+	    color: $white;
+
+	    #nhicon{
+			float: right;
+			height: 28px;
+			overflow: hidden;
+	    }
+    }
+
+    #helpcont{
+		background: $red;
+		clear: both;
+		color: $white;
+		float: left;
+		width: 100%;
+		height: 0;
+		overflow: hidden;
+		transition: 0.3s all ease-in-out;
+		-moz-transition: 0.3s all ease-in-out;
+		-webkit-transition: 0.3s all ease-in-out;
+		-o-transition: 0.3s all ease-in-out;
+		-ms-transition: 0.3s all ease-in-out;
+
+		#helpcontin{
+			padding: 10px 20px;
+		}
+
+		.needrow{
+			clear: both;
+			float: left;
+			width: 100%;
+
+			.needl{
+				float: left;
+				margin-right: 7px;
+
+				img{
+					margin-top: 3px;
+				}
+			}
+
+			.needr{
+				float: left;
+				font-size: 16px;
+				line-height: 36px;
+
+				h5{
+					font-size: 16px;
+				}
+
+				a{
+					color: $white;
+				}
+			}
+		}
+    }
+}
 
 @media (max-width: 992px) {
     .navbar-header {

@@ -99,7 +99,7 @@
 		{if $pdelivery_description}
 			<h3>
 				<div class="head-text">
-					<div class="head-title">Delivery &amp; returns</div>
+					<div class="head-title">Delivery</div>
 				</div>
 			</h3>
 			<div>
@@ -233,8 +233,8 @@
                       <div class="row charhelp">
 	                      <div class="col-sm-12">
 						  	<label>Need help with engraving?</label>
-						  	<p>Simply click &quot;add to cart&quot; and proceed through payment. One of our friendly team members will be then get in touch with you.</p>
-						  	<a href="/faqs">Engraving tips ></a>
+						  	<p>If you’re unsure of what details to engrave, simply click ‘add to cart’ and proceed through to payment and we’ll contact you shortly to discuss your needs. </p>
+						  	<a href="/bracelet-sizing-and-engraving-tips">Engraving tips ></a>
 	                      </div>
                       </div>
                     </div>

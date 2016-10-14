@@ -142,6 +142,48 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           'url' => $url 
       ));
       die();
+      
+    case 'sendWishList':
+      $url = '/login';
+      $success = null;
+      if(!empty($_SESSION['user']['public']['id'])){
+        $url = null;
+        $cart_obj = new cart($_SESSION['user']['public']['id']);
+        try{
+          $error = 'Your wish list is empty.';
+          if($products = $cart_obj->GetWishListWithProds()){
+            try{
+              //Send notification
+              $SMARTY->unloadFilter('output', 'trimwhitespace');
+              $SMARTY->assign('products', $products);
+              $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
+              $subject = 'Your MedicAlert wish list';
+              $fromEmail = (string) $CONFIG->company->email_from;
+              $to = $_SESSION['user']['public']['email'];
+              $SMARTY->assign('user_name', $_SESSION['user']['public']['gname']);
+              $COMP = json_encode($CONFIG->company);
+              $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
+              $from = (string) $CONFIG->company->name;
+              $body = $SMARTY->fetch("email/wish-list.tpl");
+              if($sent = sendMail($to, $from, $fromEmail, $subject, $body)){
+                $error = null;
+                $success = true;
+              }
+            }catch(Exception $e){
+              $error = 'Unexpected error: your wish list cannot be sent.';
+            }
+            
+          }
+        }catch(exceptionCart $e){
+          $error = $e->getMessage();
+        }
+      }
+      echo json_encode(array(
+          'error' => $error,
+          'success' => $success,
+          'url' => $url
+      ));
+      die();
     
     case 'applyDiscount':
       $cart_obj = new cart($_SESSION['user']['public']['id']);
@@ -376,7 +418,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $COMP = json_encode($CONFIG->company);
           $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
           $from = (string)$CONFIG->company->name;
-          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+          $fromEmail = (string) $CONFIG->company->email_from;
           
           //Init user details
           $userArr = $_SESSION['user']['public'];
@@ -478,8 +520,51 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $pay_obj->SetInvoiceEmail($paymentId, $mailID);
             }
           }
-          catch(Exception $e){
-            die($e);
+          catch(Exception $e){}
+          
+          //PROCESS PENDING UPDATES
+          if(!empty($_SESSION['user']['public']['pending_update'])){
+            $detailsArr = $_SESSION['user']['public']['pending_update'];
+            //Pre-process array fields
+            if(!empty($detailsArr['conditions'])){
+              $detailsArr['conditions'] = $user_obj->formatProfileArrayField($detailsArr['conditions'], $_SESSION['user']['public']['maf']['update']['conditions']);
+            }
+            if(!empty($detailsArr['allergies'])){
+              $detailsArr['allergies'] = $user_obj->formatProfileArrayField($detailsArr['allergies'], $_SESSION['user']['public']['maf']['update']['allergies']);
+            }
+            if(!empty($detailsArr['medications'])){
+              $detailsArr['medications'] = $user_obj->formatProfileArrayField($detailsArr['medications'], $_SESSION['user']['public']['maf']['update']['medications']);
+            }
+          
+            //Update profile
+            if($user_obj->processUpdate($_SESSION['user']['public']['maf']['token'], $detailsArr)){
+              saveInLog('member-profile-update', 'external', $_SESSION['user']['public']['id']);
+              try{
+                //Send notification
+                $SMARTY->unloadFilter('output', 'trimwhitespace');
+                $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
+                $subject = 'Update Member Profile';
+                $fromEmail = (string) $CONFIG->company->email_from;
+                $to = $detailsArr['user_email'];
+                $SMARTY->assign('user_name', $detailsArr['user_firstname']);
+                $COMP = json_encode($CONFIG->company);
+                $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
+                $from = (string) $CONFIG->company->name;
+                $body = $SMARTY->fetch("email/profile-update.tpl");
+                $sent = sendMail($to, $from, $fromEmail, $subject, $body);
+              }catch(Exception $e){}
+              
+              try{
+                //Create survey
+                require_once 'includes/classes/survey-class.php';
+                $surveyObj = new Survey();
+                $surveyObj->CreateSurvey($_SESSION['user']['public']['id'], $_SESSION['user']['public']['email'], 2);
+              }catch(Exception $e){}
+              
+            }else{
+              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Update profile after payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $user_obj->getErrorMsg());
+            }
+            $_SESSION['user']['public']['pending_update'] = null;
           }
           
           //PROCESS AUTO-RENEWAL
@@ -729,7 +814,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $COMP = json_encode($CONFIG->company);
         $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
         $from = (string)$CONFIG->company->name;
-        $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+        $fromEmail = (string) $CONFIG->company->email_from;
 
         $user_obj = new UserClass();
         $userArr = $_SESSION['user']['public'];
@@ -805,9 +890,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $pay_obj->SetInvoiceEmail($paymentId, $mailID);
           }
         }
-        catch(Exception $e){
-          die($e);
-        }
+        catch(Exception $e){}
         
         if($isGiftCertificate){
           // CREATE GIFT CERTIFICATE
@@ -1003,7 +1086,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $COMP = json_encode($CONFIG->company);
           $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
           $from = (string)$CONFIG->company->name;
-          $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+          $fromEmail = (string) $CONFIG->company->email_from;
     
           //Init user details
           $userArr = $_SESSION['user']['public'];
@@ -1044,8 +1127,59 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $pay_obj->SetInvoiceEmail($paymentId, $mailID);
             }
           }
-          catch(Exception $e){
-            die($e);
+          catch(Exception $e){}
+          
+          //PROCESS PENDING UPDATES
+          if(!empty($_SESSION['user']['public']['pending_update'])){
+            $detailsArr = $_SESSION['user']['public']['pending_update'];
+            //Pre-process array fields
+            if(!empty($detailsArr['conditions'])){
+              $detailsArr['conditions'] = $user_obj->formatProfileArrayField($detailsArr['conditions'], $_SESSION['user']['public']['maf']['update']['conditions']);
+            }
+            if(!empty($detailsArr['allergies'])){
+              $detailsArr['allergies'] = $user_obj->formatProfileArrayField($detailsArr['allergies'], $_SESSION['user']['public']['maf']['update']['allergies']);
+            }
+            if(!empty($detailsArr['medications'])){
+              $detailsArr['medications'] = $user_obj->formatProfileArrayField($detailsArr['medications'], $_SESSION['user']['public']['maf']['update']['medications']);
+            }
+            
+            //Update profile
+            if($user_obj->processUpdate($_SESSION['user']['public']['maf']['token'], $detailsArr)){
+              saveInLog('member-profile-update', 'external', $_SESSION['user']['public']['id']);
+              try{
+                //Send notification
+                $SMARTY->unloadFilter('output', 'trimwhitespace');
+                $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
+                $subject = 'Update Member Profile';
+                $fromEmail = (string) $CONFIG->company->email_from;
+                $to = $detailsArr['user_email'];
+                $SMARTY->assign('user_name', $detailsArr['user_firstname']);
+                $COMP = json_encode($CONFIG->company);
+                $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
+                $from = (string) $CONFIG->company->name;
+                $body = $SMARTY->fetch("email/profile-update.tpl");
+                $sent = sendMail($to, $from, $fromEmail, $subject, $body);
+              }catch(Exception $e){}
+              
+              try{
+                //Create survey
+                require_once 'includes/classes/survey-class.php';
+                $surveyObj = new Survey();
+                $surveyObj->CreateSurvey($_SESSION['user']['public']['id'], $_SESSION['user']['public']['email'], 2);
+              }catch(Exception $e){}
+              
+            }else{
+              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Update profile after payment (2)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $user_obj->getErrorMsg());
+            }  
+            $_SESSION['user']['public']['pending_update'] = null;
+
+          }else{
+            try{
+              //Create survey - when no profile updates
+              require_once 'includes/classes/survey-class.php';
+              $surveyObj = new Survey();
+              $surveyObj->CreateSurvey($_SESSION['user']['public']['id'], $_SESSION['user']['public']['email'], 1);
+            }catch(Exception $e){}
           }
     
           //PROCESS AUTO-RENEWAL
@@ -1173,7 +1307,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $COMP = json_encode($CONFIG->company);
       $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
       $from = (string)$CONFIG->company->name;
-      $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
+      $fromEmail = (string) $CONFIG->company->email_from;
       
       require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
       $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);

@@ -617,7 +617,7 @@ body, td {
                                               <tr>
                                                 <td class="w30" width="30"></td>
                                                 <td style="font-size: 16px; font-weight: bold;" width="300" class="w300">Phone:</td>
-                                                <td align="right" style="font-size: 16px;" width="280" class="w280">{$shipping.address_telephone}</td>
+                                                <td align="right" style="font-size: 16px;" width="280" class="w280">{if $billing.address_telephone}{$billing.address_telephone}{else}{$billing.address_mobile}{/if}</td>
                                                 <td class="w30" width="30"></td>
                                               </tr>
                                             </table>

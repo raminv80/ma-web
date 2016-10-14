@@ -502,11 +502,11 @@ a {
                     <tbody>
                       <td class="w30" width="30" style="table-layout: fixed;"></td>
                       <td class="w580" width="580" style="table-layout: fixed;">
-                        <!-- 
-                        <p style="font-size: 28px; line-height: 40px; color: #ed174f; font-weight: bold;">Hi {$user.gname}</p>
-                         -->
-                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">{$message1}</p>
-                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">{$message2}</p>
+                         
+                        <p style="font-size: 28px; line-height: 40px; color: #ed174f; font-weight: bold;">Hi {$user_name}</p>
+                        
+                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">This is your MedicAlert wish list:</p>
+                        
                       </td>
                       <td class="w30" width="30" style="table-layout: fixed;"></td>
                     </tbody>
@@ -523,7 +523,14 @@ a {
                   <tr>
                     <td class="w30" width="30"></td>
                     <td align="center" bgcolor="#ffffff" class="w580" width="580">
-                      <a class="butlink" href="{$DOMAIN}/survey?token={$surveytoken}&utm_source=website&utm_medium=email&utm_campaign=survey" target="_blank" style="font-size: 16px; color: #ed174f; text-decoration: none; text-decoration: none; -webkit-border-radius: 3px; padding: 15px 25px; border: 3px solid #ed174f; display: inline-block; font-weight: bold;">SEND MY FEEDBACK</a>
+                      {foreach $products as $item}
+                        <a class="butlink" href="{$DOMAIN}/{$item.product_url}&utm_source=website&utm_medium=email&utm_campaign=wish-list" target="_blank" title="{$item.product_name}">
+                          <img src="{$DOMAIN}{$item.gallery_link}?width=274&height=173&crop=1" alt="{$item.product_name}">
+                          <br/>
+                        {$item.product_name}
+                        </a>
+                        <br/><br/>
+                       {/foreach} 
                       </td>
                     <td class="w30" width="30"></td>
                   </tr>

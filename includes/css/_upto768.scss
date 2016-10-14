@@ -979,6 +979,49 @@ tr.tabopts {
 		}
 }
 
+#heroimg {
+    background: url(../../images/mobbanner.jpg) no-repeat;
+    background-size: cover;
+    height: 200px;
+}
+#offer {
+    padding: 20px 0;
+    font-size: 22px;
+    line-height: 34px;
+
+	img {
+    width: 33%;
+    display: inline-block;
+	}
+
+	h1 {
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 32px;
+    text-transform: uppercase;
+
+    	.highlight{
+	    	color: $red;
+    	}
+	}
+}
+
+#benefits #uspbox .usp:nth-child(4) {
+    clear: none;
+}
+
+#benefits #uspbox .usp:nth-child(odd) {
+    clear: left;
+}
+
+#redeem .onethird {
+    width: 100%;
+}
+
+#helpcont{
+	display: none;
+}
+
 }
 
 @media (max-width:480px){

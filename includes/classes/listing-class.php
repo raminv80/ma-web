@@ -116,18 +116,8 @@ class ListClass{
     $this->loadPageAdditional($this->CONFIG_OBJ);
     
     $template = $this->CONFIG_OBJ->template;
-  
     foreach($this->CONFIG_OBJ->template as $t){
       if(!empty($res[0]['listing_type_id']) && $t->attributes()->typeid == $res[0]['listing_type_id']){
-        $template = $t;
-        break;
-      }
-    }
-    
-
-    // Added by Nijesh - To get landing pages based on listing_object_id
-    foreach($this->CONFIG_OBJ->template as $t){
-      if(!empty($res[0]['listing_type_id']) && $t->attributes()->typeid == $res[0]['listing_type_id'] && $t->attributes()->pageObjectId == $res[0]['listing_object_id']){
         $template = $t;
         break;
       }

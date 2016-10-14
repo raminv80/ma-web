@@ -335,6 +335,23 @@
     padding: 12px 10px;
 }
 
+#heroimg {
+    background-position: -350px 0;
+}
+
+#benefits #uspbox .usp:nth-child(4) {
+    clear: none;
+}
+
+#benefits #uspbox .usp:nth-child(odd) {
+    clear: left;
+}
+
+#redeem #second, #redeem #third {
+    min-height: 270px;
+    padding: 34px 30px;
+}
+
 .emergency-grey .videoWrapper iframe{height: 266px;}
 #account #daysrenew .warning {font-size: 20px;}
 #account #accinfo{font-size: 17px;}

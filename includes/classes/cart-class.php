@@ -988,20 +988,20 @@ class cart{
   function ValidateCart($_memberArr = array()){
     global $DBobject;
     
-    // VALIDATE MAF MEMBERS
+    //VALIDATE MAF MEMBERS
     $addMSF = false;
     $addReactivationFee = false;
     $hasMAFProd = $this->HasMAFProducts();
     if(empty($_memberArr['id']) && $hasMAFProd){
-      // Add "member service fee - current_year" when member is not logged in
+      //Add "member service fee - current_year" when member is not logged in
       $addMSF = true;
     } elseif(!empty($_memberArr['maf'])){
-      // Existing member
+      //Existing member
       $addMSF = ($_memberArr['maf']['main']['renew'] == 't')? true : false;
       $addReactivationFee = ($_memberArr['maf']['main']['reactivation'] == 't')? true : false;
     }
     
-    // Add/remove MAF membership fee
+    //Add/remove MAF membership fee
     $msfArr = $this->GetCurrentMAF_MSF(225);
     $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
     if($addMSF && empty($membershipFeeCartitemId)){
@@ -1009,7 +1009,7 @@ class cart{
     } elseif(!$addMSF && !empty($membershipFeeCartitemId)){
       $this->RemoveFromCart($membershipFeeCartitemId);
     }
-    // Add/remove MAF reactivation fee
+    //Add/remove MAF reactivation fee
     $reactivationCartitemId = $this->hasProductInCart(225, 16);
     if($addReactivationFee && empty($reactivationCartitemId)){
       $this->AddToCart(225, array(), 0, 1, null, 16);
@@ -1017,16 +1017,21 @@ class cart{
       $this->RemoveFromCart($reactivationCartitemId);
     }
     
-    //----------------PENDING UPDATES-----------------------------
-    if(!empty($_memberArr['pending_update']) && !empty($_memberArr['pending_update_lifetime'])){
-      // Add MAF lifetime member details update
-      $cartitemId = $this->hasProductInCart(225, 876);
-      if(empty($cartitemId)){
-        $this->AddToCart(225, array(), 0, 1, null, 876);
+    //----------------LIFETIME MEMBER - PENDING UPDATES-----------------------------
+    $lifeCartitemId = $this->hasProductInCart(225, 876);
+    if(empty($_memberArr['maf']['main']['lifetime'])){
+      if(!empty($lifeCartitemId)){
+        $this->RemoveFromCart($lifeCartitemId);
+      }
+    }else{
+      if(!empty($_memberArr['pending_update']) ){
+        // Add MAF lifetime member details update
+        if(empty($lifeCartitemId)){
+          $this->AddToCart(225, array(), 0, 1, null, 876);
+        }
       }
     }
-    
-    // END OF VALIDATE MAF MEMBERS
+    //END OF VALIDATE MAF MEMBERS
     
     $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id = :id";
     if($res = $DBobject->wrappedSql($sql, array(
@@ -1613,6 +1618,25 @@ class cart{
     return $resArr;
   }
 
+  
+  /**
+   * Return wish list with product details
+   *
+   * @return array
+   */
+  function GetWishListWithProds(){
+    global $DBobject;
+  
+    $sql = "SELECT tbl_product.*, tbl_gallery.*, wishlist_modified FROM tbl_wishlist 
+        LEFT JOIN tbl_product ON product_object_id = wishlist_product_object_id
+        LEFT JOIN tbl_gallery ON gallery_product_id = product_id
+        WHERE wishlist_deleted IS NULL AND product_deleted IS NULL AND product_published = 1 
+        AND gallery_deleted IS NULL AND wishlist_user_id = :wishlist_user_id 
+        GROUP BY wishlist_product_object_id
+        ORDER BY wishlist_modified DESC";
+    return $DBobject->wrappedSql($sql, array(':wishlist_user_id' => $this->cart_user_id));
+  }
+  
 
   /**
    * Add product to wish list

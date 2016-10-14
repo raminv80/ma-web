@@ -7,7 +7,6 @@ $loginRegisterUrl = '/login-register';
 $checkoutUrl = '/checkout';
 $membersAreaUrl = '/my-account';
 
-
 $redirect = empty($_SESSION['redirect']) ? (empty($_SESSION['post']['redirect']) ? $_SERVER['HTTP_REFERER'] : $_SESSION['post']['redirect']) : $_SESSION['redirect'];
 $SMARTY->assign('redirect', $redirect);
 $_SESSION['redirect'] = null;
@@ -26,6 +25,14 @@ if(($REQUEST_URI == $loginUrl || $REQUEST_URI == $loginRegisterUrl) && !empty($_
   header('Location: ' . $membersAreaUrl);
   die();
 }
+
+
+
+//MAF ONLY - set BUPA discount code
+if(!empty($_REQUEST['setdc']) && $_REQUEST['setdc'] == 'BUPA16'){
+  $_SESSION['reApplydiscount'] = $_REQUEST['setdc'];
+}
+
 
 
 // **************** LOAD ECOMMERCE DETAILS

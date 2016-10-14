@@ -40,9 +40,13 @@
 		<div class="row">
 			<div class="col-sm-6 col-md-7 col-lg-8">
 				<div id="daysrenew" class=" text-center">
+                {if $user.maf.main.lifetime eq 1}
+                    <img src="/images/active-icon.png" alt="active" /> <span class="warning">Your are always protected</span>
+                    <div>as our MedicAlert lifetime member</div>
+                {else}
                     {$renewalDate = $user.maf.main.user_RenewalDate}
                     {if $renewalDate gt $smarty.now|date_format:"%Y-%m-%d"}
-			         <img src="/images/active-icon.png" alt="active" /> <span class="warning">Your are protected</span>
+			         <img src="/images/active-icon.png" alt="active" /> <span class="warning">You are protected</span>
                     <div><br>You have <strong>{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'} days</strong> until your renewal is due.</div>
                     {else}
                     <img src="/images/dashboard-warning.png" alt="Warning" /> <span class="warning">Your membership has expired</span>
@@ -53,6 +57,7 @@
                     <br>
                     <a href="/quick-renew" title="Click to renew your membership" class="btn btn-red">Renew now</a>
                     {/if}
+                 {/if}
 				</div>
 			</div>
 			<div class="col-sm-6 col-md-5 col-lg-4">
@@ -81,6 +86,7 @@
                             {$user.maf.main.user_memberJoinDate|date_format:"%d/%m/%Y"}
 						</div>
 					</div>
+          {if $user.maf.main.lifetime neq 1}
 					<div class="accrow">
 						<div class="col-xs-8 col-sm-8">
 							<img src="/images/dashboard-renewal.png" alt="Account" /> Your next renewal is due
@@ -89,6 +95,7 @@
                           {$user.maf.main.user_RenewalDate|date_format:"%d/%m/%Y"}
 						</div>
 					</div>
+          {/if}
 					<div class="accrow">
 						<div class="col-sm-12">
 							<img src="/images/dashboard-password.png" alt="Account" /> <a href="javascript:void(0)" onclick="$('#password-form').fadeIn('slow');">Update my password</a>
@@ -142,13 +149,13 @@
 				<p>It’s important to keep your MedicAlert membership up to date so we can continue to help protect you in an emergency. Don’t wait until it’s too late.  </p>
 
 				<div class="row">
-					<div class="col-sm-{if $user.maf.main.autoBilling eq 't'}12{else}6{/if} text-center" id="viewup">
+					<div class="col-sm-{if $user.maf.main.autoBilling eq 'f' && $user.maf.main.lifetime neq 1}6{else}12{/if} text-center" id="viewup">
 						<div>
 							<img src="/images/dashboard-viewupdate.png" alt="View / update your profile" class="img-responsive" />
 						</div>
 						<a href="/update-my-profile" title="Click to view/update your profile " class="btn btn-red">View / update your profile</a>
 					</div>
-          {if $user.maf.main.autoBilling eq 'f'}
+          {if $user.maf.main.autoBilling eq 'f' && $user.maf.main.lifetime neq 1}
 					<div class="col-sm-6 text-center" id="autor">
 						<div>
 							<img src="/images/dashboard-autorenew.png" alt="Register for auto-renewals" class="img-responsive" />

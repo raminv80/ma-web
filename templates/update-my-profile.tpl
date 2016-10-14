@@ -21,12 +21,11 @@
         <div class="alert alert-danger fade in">{$error}</div>
         {/if} 
       </div>
-      <div class="col-sm-12 text-center" id="listtoptext">
+      <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" id="listtoptext">
         <h1>{$listing_title}</h1>
         {if $user.maf.main.locked}
         <div class="profile-locked">
           {$listing_content2}
-          <br><br>
         </div>
         {/if}
       </div>
@@ -170,9 +169,8 @@
                       Preferred correspondence<span>*</span>:
                     </label>
                     <select class="selectlist-medium" id="preferred" name="correspondenceType" required>
-                      <option value="">Select an option</option>
-                      <option value="Email" {if $user.maf.update.correspondenceType neq 'Post'}selected="selected"{/if}>Email</option>
-                      <option value="Post" {if $user.maf.update.correspondenceType eq 'Post'}selected="selected"{/if}>Post</option>
+                      <option value="Email" {if $user.maf.update.correspondenceType neq 'Post' || !$user.maf.update.contact_phone_home}selected="selected"{/if}>Email</option>
+                      <option value="Post" {if $user.maf.update.correspondenceType eq 'Post' && $user.maf.update.contact_phone_home}selected="selected"{/if}>Post</option>
                     </select>
                     <div class="error-msg help-block"></div>
                   </div>
@@ -338,7 +336,7 @@
                 <div class="row">
                   <div class="col-sm-12 form-group">
                     <p class="text-left">
-                      It is recommended that you officially register your donation decision on the <a href="#" target="_blank">Australian Organ Donor Register</a>, and discuss your decision with your family.
+                      It is recommended that you officially register your donation decision on the <a href="https://www.humanservices.gov.au/customer/services/medicare/australian-organ-donor-register" title="Australian Organ Donor Register" target="_blank">Australian Organ Donor Register</a>, and discuss your decision with your family.
                     </p>
                     <input type="radio" name="user_donor" id="organdonationy" class="form-control" value="t" {if $user.maf.update.user_donor eq 't'}checked="checked" {/if}/>
                     <label for="organdonationy" class="radiolab">Yes</label>
@@ -723,7 +721,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
             $('#' + FORM).find('.error-alert').find('strong').html(obj.error);
             $('#' + FORM).find('.error-alert').fadeIn('slow');
           }else if(obj.success){
-            window.location.href = '/update-my-profile#profile-locked';
+            window.location.href = '/update-my-profile?submit=true#profile-locked';
           }
         }catch(err){
           console.log('TRY-CATCH error');

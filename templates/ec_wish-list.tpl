@@ -29,6 +29,10 @@
     <div class="row">
       <div class="col-sm-12 text-center">
         <a href="/products" title="Click to view our full product range" class="btn-red btn">Shop now</a>
+        <br>
+        <br>
+        <b id="response-msg"></b>
+        <a href="javascript:void(0)" onclick="SendWishList()" title="Send email" id="sendwishlist-btn" class="">Email me my wish list ></a>
       </div>
     </div>
   </div>
@@ -75,9 +79,7 @@
 
 
 {/block} {block name=tail}
-<script src="/includes/js/jquery-ui.js"></script>
 <script src="/includes/js/isotope.pkgd.min.js"></script>
-
 <script type="text/javascript">
 
   $(document).ready(function() {
@@ -86,7 +88,7 @@
 	  itemSelector: '.prodout',
 	  layoutMode: 'fitRows'
    });
-    
+
   });
   
 //REFRESH ISOTOPE WHEN SCROLLING UP/DOWN
@@ -103,6 +105,43 @@
       $("#products-wrapper").isotope('reloadItems' ).isotope();
     }
  });
+  
+  var RunningSend = false;
+  function SendWishList() {
+    if(RunningSend){ return false; }
+    $('#sendwishlist-btn').hide();
+    $('#response-msg').html('Sending...');
+    RunningSend = true;
+    $('body').css('cursor', 'wait');
+    $.ajax({
+      type: "POST",
+      url: "/process/cart",
+      cache: false,
+      data: "action=sendWishList",
+      dataType: "json",
+      success: function(obj) {
+        try{
+          if(obj.url){
+            window.location.href = obj.url;
+          }else if(obj.success){
+            $('#response-msg').html('You wish list was sent to your email address.');
+            
+          }else if(obj.error){
+            $('#response-msg').html(obj.error);
+          }
+          RunningSend = false;
+        }catch(err){
+          console.log('TRY-CATCH error');
+          RunningSend = false;
+        }
+        $('body').css('cursor', 'default');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        $('body').css('cursor', 'default');
+        console.log('AJAX error:' + errorThrown);
+      }
+    });
+  }
 </script>
 {/block}
 

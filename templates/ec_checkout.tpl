@@ -462,7 +462,7 @@
 
           <div class="row">
                 
-                <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew" {if $user.maf.main.autoBilling eq 't' || $newTotal eq 0}style="display:none"{/if}>
+                <div class="col-sm-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center autorenew" {if $user.maf.main.autoBilling eq 't' || $user.maf.main.lifetime eq 1 || $newTotal eq 0}style="display:none"{/if}>
 
             <div class="row">
               <div class="col-sm-12 text-center">

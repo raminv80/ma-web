@@ -53,6 +53,26 @@
 			</div>
 		</div>
 	</div>
+
+	<div id="needhelp" class="hidden-xs hidden-sm">
+		<div id="helptab">Need help? <div id="nhicon"><img src="/images/needhelp.png" alt="help" /></div></div>
+		<div id="helpcont">
+			<div id="helpcontin">
+			<div class="needrow">
+				<div class="needl"><img src="/images/need-call.png" alt="Call" /></div>
+				<div class="needr"><h5><a href="tel:{$COMPANY.toll_free}" title="Give us a call">Call Membership Services<br />{$COMPANY.toll_free}</a></h5></div>
+			</div>
+			<div class="needrow">
+				<div class="needl"><img src="/images/need-contact.png" alt="contact" /></div>
+				<div class="needr"><h5><a href="/contact-us" title="Click to contact us">Contact us</a></h5></div>
+			</div>
+			<div class="needrow">
+				<div class="needl"><img src="/images/need-faqs.png" alt="faqs" /></div>
+				<div class="needr"><h5><a href="/faqs" title="View our FAQs">FAQs</a></h5></div>
+			</div>
+			</div>
+		</div>
+	</div>
 </div>
   <div id="foot1">
     <div class="container">

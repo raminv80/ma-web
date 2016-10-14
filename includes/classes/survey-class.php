@@ -3,12 +3,20 @@ class exceptionSurvey extends Exception{}
 
 class Survey{
   protected $DBobj;
-  protected $voucherId;
-  protected $voucherRecord  = array();
+  protected $surveyId;
+  protected $surveyToken;
+  protected $surveyRecord  = array();
   protected $errorMsg = null;
   
-
-
+  /*
+   * 
+   * 
+   *  THE SURVEY RESPONSE WAS NOT INCLUDED IN THIS CLASS
+   * 
+   * 
+   * 
+   */
+  
   function __construct($_db = ''){
     global $DBobject;
     
@@ -25,56 +33,70 @@ class Survey{
   function CreateSurvey($_userId, $_email, $_questionTypeId = 1){
     
     do{
-      $surveytoken = genRandomString(10).time();
-      $sql = "SELECT surveytoken_id FROM tbl_surveytoken WHERE surveytoken_token = :surveytoken_token AND surveytoken_deleted IS NULL";
-      $res = $this->DBobj->wrappedSql($sql, array(":surveytoken_token" => $surveytoken));
+      $this->surveyToken = genRandomString(10).time();
+      $res = $this->GetSurveyByToken();
     }while(!empty($res));
-    
-    $question_type_id = 1;
-    
-    
-    if($res=$DBobject->wrappedSql($inssql, )){
-      
-    }
     
     $params = array(
         ":surveytoken_user_id" => $_userId,
-        ":surveytoken_token" => $surveytoken,
+        ":surveytoken_token" => $this->surveyToken,
         ":surveytoken_useremail"=> $_email,
         ":surveytoken_question_type_id" => $_questionTypeId
     );
     $sql = "INSERT INTO tbl_surveytoken (surveytoken_user_id, surveytoken_token, surveytoken_useremail, surveytoken_question_type_id, surveytoken_created) VALUES
       (:surveytoken_user_id, :surveytoken_token, :surveytoken_useremail, :surveytoken_question_type_id, NOW())";
     if($this->DBobj->wrappedSql($sql, $params)){
-      $this->voucherId = $this->DBobj->wrappedSqlIdentity();
-      return $this->voucherId;
+      $this->surveyId = $this->DBobj->wrappedSqlIdentity();
+      return $this->surveyId;
     }
     return 0;
   }
 
   
   /**
-   * Get voucher record including email
+   * Get survey record by id
    * 
    * @param int $_id
    * @return array
    */
-  function GetSurvey($_id = null){
+  function GetSurveyById($_id = null){
     if(!empty($_id)){
-      $this->voucherId = $_id;
+      $this->surveyId = $_id;
     }
-    if(empty($this->voucherRecord)){
-      $sql = "SELECT * FROM tbl_voucher LEFT JOIN tbl_email_queue ON email_id = voucher_code_email_id WHERE voucher_deleted IS NULL AND email_deleted IS NULL AND voucher_id = :id";
-      if($res = $this->DBobj->wrappedSql($sql, array(":id" => $this->voucherId))){
-        $this->voucherRecord = $res[0];
+    if(empty($this->surveyRecord)){
+      $sql = "SELECT * FROM tbl_surveytoken WHERE surveytoken_id= :id AND surveytoken_deleted IS NULL";
+      if($res = $this->DBobj->wrappedSql($sql, array(":id" => $this->surveyId))){
+        $this->surveyRecord = $res[0];
+        $this->surveyToken = $res[0]['surveytoken_token'];
       }
     }
-    return $this->voucherRecord;
+    return $this->surveyRecord;
   }
+  
 
+  /**
+   * Get survey record by token
+   *
+   * @param int $_id
+   * @return array
+   */
+  function GetSurveyByToken($_token = null){
+    if(!empty($_token)){
+      $this->surveyToken = $_token;
+    }
+    if(empty($this->surveyRecord)){
+      $sql = "SELECT * FROM tbl_surveytoken WHERE surveytoken_token= :id AND surveytoken_deleted IS NULL";
+      if($res = $this->DBobj->wrappedSql($sql, array(":id" => $this->surveyToken))){
+        $this->surveyId = $res[0]['surveytoken_id'];
+        $this->surveyRecord = $res[0];
+      }
+    }
+    return $this->surveyRecord;
+  }
+  
   
   /**
-   * Delete voucher
+   * Delete survey
    *
    * @param int $_id
    * @return boolean
@@ -83,10 +105,11 @@ class Survey{
     if(!empty($_id)){
       $this->voucherId = $_id;
     }
-    $sql = "UPDATE tbl_voucher SET voucher_deleted = NOW() WHERE voucher_id = :id";
+    $sql = "UPDATE tbl_surveytoken SET surveytoken_deleted = NOW() WHERE surveytoken_deleted IS NULL AND surveytoken_id = :id";
     if($this->DBobj->wrappedSql($sql, array(":id" => $this->voucherId))){
-      $this->voucherRecord = array();
-      $this->voucherId = 0;
+      $this->surveyRecord = array();
+      $this->surveyId = 0;
+      $this->surveyToken = 0;
       return true;
     }
     return false;
@@ -94,27 +117,34 @@ class Survey{
   
 
   /**
-   * Update voucher email ids
-   *
+   * Update survey email id
+   * 
+   * @param int $_emailId
    * @param int $_id
    * @return boolean
    */
-  function SetSurveyEmailIds($_recipientEmailId, $_senderEmailId, $_id = null){
+  function SetSurveyEmailId($_emailId, $_id = null){
     if(!empty($_id)){
-      $this->voucherId = $_id;
+      $this->surveyId = $_id;
     }
-    $sql = "UPDATE tbl_voucher SET voucher_code_email_id = :rid, voucher_confirmation_email_id = :sid WHERE voucher_id = :id";
-    if($this->DBobj->wrappedSql($sql, array(":id" => $this->voucherId, ":rid" => $_recipientEmailId, ":sid" => $_senderEmailId))){
-      $this->voucherRecord = array();
-      $this->voucherId = 0;
+    $sql = "UPDATE tbl_surveytoken SET surveytoken_email_id = :email_id WHERE surveytoken_deleted IS NULL AND surveytoken_id = :id";
+    if($this->DBobj->wrappedSql($sql, array(":id" => $this->surveyId, ":email_id" => $_emailId))){
       return true;
     }
     return false;
   }
 
   
-
-  
+  /**
+   * Get ALL pending surveys
+   * 
+   * @param int $_limit
+   * @return array
+   */
+  function GetPendingSurveys($_limit = 50){
+    $sql = "SELECT * FROM tbl_surveytoken WHERE surveytoken_deleted IS NULL AND (surveytoken_email_id IS NULL OR surveytoken_email_id = 0) ORDER BY surveytoken_created LIMIT {$_limit}";
+    return $this->DBobj->wrappedSql($sql);
+  }
   
 
 }

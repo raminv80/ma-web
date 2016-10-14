@@ -5,18 +5,6 @@ try{
    $methods = $ship_obj->getShippingMethods($itemNumber);
    $SMARTY->assign ( 'shippingMethods', $methods ); */
   
-  /*//RE-APPLY DISCOUNT CODE 
-   if(!empty($_SESSION['reApplydiscount']) && $itemNumber){		
-    $res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
-    if ($res['error']) {
-      $_SESSION['error']= $res['error'];
-      $_SESSION['post']= $_POST;
-    }
-    $_SESSION['reApplydiscount'] = '';
-    unset($_SESSION['reApplydiscount']);
-    header('Location: /shopping-cart');
-    die();
-  } */
   
   $cart_obj = new cart($_SESSION['user']['public']['id']);
   $validation = $cart_obj->ValidateCart($_SESSION['user']['public']);
@@ -29,6 +17,14 @@ try{
   $shippable = $cart_obj->ShippableCartitems();
   $shipping_obj = new ShippingClass(count($shippable), $cart_obj->GetCurrentFreeShippingDiscountName());
   $SMARTY->assign('shippingMethods', $shipping_obj->getShippingMethods());
+  
+  //RE-APPLY DISCOUNT CODE - BUPA
+  if(!empty($_SESSION['reApplydiscount']) && $shippable){
+    $res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
+    $_SESSION['reApplydiscount'] = '';
+    header('Location: /shopping-cart#1');
+    die();
+  }
   
   //Has donation
   $SMARTY->assign('hasDonation', $cart_obj->hasProductInCart(217));

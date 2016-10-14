@@ -10,13 +10,13 @@
     <div class="row">
       <div class="col-md-8 col-md-offset-2 text-center">
         <h1>{$listing_name}</h1>
-        {if $user.maf.main.autoBilling neq 't'}{$listing_content1}{else}{$listing_content2}{/if}
+        {if $user.maf.main.autoBilling neq 't' && $user.maf.main.lifetime neq 1}{$listing_content1}{else}{$listing_content2}{/if}
       </div>
     </div>
   </div>
 </div>
 
-{if $user.maf.main.autoBilling neq 't'}
+{if $user.maf.main.autoBilling neq 't' && $user.maf.main.lifetime neq 1}
 <div id="giftgrey">
   <div class="container">
     <div class="row">

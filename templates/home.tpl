@@ -140,7 +140,7 @@
                   <div>
                     <img src="/images/homequote.png" alt="" />
                   </div>
-                  {$t.listing_content2|truncate:220:'... <a href="/testimonials/'|cat:$t.listing_url|cat:'">Read more</a>'}
+                  {$t.listing_content2|truncate:220:'...'} <a href="/testimonials/'|cat:$t.listing_url|cat:'">Read more</a>
                 </li>
                 {/foreach}
               </ul>

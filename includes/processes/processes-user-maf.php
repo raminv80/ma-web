@@ -83,41 +83,47 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
                 && ($user_obj->isUnfinancialMember($_SESSION['user']['public']['maf']['main']['user_status_db']) 
                     || $user_obj->isPastRenewalMonth($_SESSION['user']['public']['maf']['main']['user_RenewalDate']) >= 1)) ){
           $_SESSION['user']['public']['pending_update'] = $_POST;
-          $_SESSION['user']['public']['pending_update_lifetime'] = $user_obj->isLifetimeMember($_SESSION['user']['public']['maf']['main']['user_membershipType']);
           $url = '/quick-checkout';
           
         }else{
           $_SESSION['user']['public']['pending_update'] = null;
-          
+          $detailsArr = $_POST;
           //Pre-process array fields
-          if(!empty($_POST['conditions'])){
-            $_POST['conditions'] = $user_obj->formatProfileArrayField($_POST['conditions'], $_SESSION['user']['public']['maf']['update']['conditions']);
+          if(!empty($detailsArr['conditions'])){
+            $detailsArr['conditions'] = $user_obj->formatProfileArrayField($detailsArr['conditions'], $_SESSION['user']['public']['maf']['update']['conditions']);
           }
-          if(!empty($_POST['allergies'])){
-            $_POST['allergies'] = $user_obj->formatProfileArrayField($_POST['allergies'], $_SESSION['user']['public']['maf']['update']['allergies']);
+          if(!empty($detailsArr['allergies'])){
+            $detailsArr['allergies'] = $user_obj->formatProfileArrayField($detailsArr['allergies'], $_SESSION['user']['public']['maf']['update']['allergies']);
           }
-          if(!empty($_POST['medications'])){
-            $_POST['medications'] = $user_obj->formatProfileArrayField($_POST['medications'], $_SESSION['user']['public']['maf']['update']['medications']);
+          if(!empty($detailsArr['medications'])){
+            $detailsArr['medications'] = $user_obj->formatProfileArrayField($detailsArr['medications'], $_SESSION['user']['public']['maf']['update']['medications']);
           }
           
           //Update profile
-          if($user_obj->processUpdate($_SESSION['user']['public']['maf']['token'], $_POST)){
+          if($user_obj->processUpdate($_SESSION['user']['public']['maf']['token'], $detailsArr)){
             saveInLog('member-profile-update', 'external', $_SESSION['user']['public']['id']);
             $error = null;
             $success = 'Your details were successfully submitted.';
-            try {
+            try{
               //Send notification
               $SMARTY->unloadFilter('output', 'trimwhitespace');
               $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
               $subject = 'Update Member Profile';
               $fromEmail = (string) $CONFIG->company->email_from;
-              $to = $_POST['user_email'];
-              $SMARTY->assign('user_name', $_POST['user_firstname']);
+              $to = $detailsArr['user_email'];
+              $SMARTY->assign('user_name', $detailsArr['user_firstname']);
               $COMP = json_encode($CONFIG->company);
               $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
               $from = (string) $CONFIG->company->name;
               $body = $SMARTY->fetch("email/profile-update.tpl");
               $sent = sendMail($to, $from, $fromEmail, $subject, $body);
+            }catch(Exception $e){}
+            
+            try{
+              //Create survey
+              require_once 'includes/classes/survey-class.php';
+              $surveyObj = new Survey();
+              $surveyObj->CreateSurvey($_SESSION['user']['public']['id'], $_SESSION['user']['public']['email'], 2);
             }catch(Exception $e){}
             
           }else{

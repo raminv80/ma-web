@@ -80,7 +80,6 @@
     </table>
     <template typeid="1">standardpage.tpl</template>
     <template typeid="6">landing-page.tpl</template> 
-    <template typeid="6" pageObjectId="670">bupa.tpl</template> 
     <process>
       <file>includes/processes/process-load-popular-products.php</file>
     </process>
@@ -207,6 +206,11 @@
     <pageID>96</pageID>
   </static_page>
   <static_page>
+    <url>careers</url>
+    <template>careers.tpl</template>
+    <pageID>109</pageID>
+  </static_page>
+  <static_page>
     <url>faqs</url>
     <template>faqs.tpl</template>
     <pageID>103</pageID>
@@ -254,6 +258,14 @@
     <url>refer-your-patients</url>
     <template>refer-your-patients.tpl</template>
     <pageID>105</pageID>
+  </static_page>
+  <static_page>
+    <url>bupa</url>
+    <template>bupa.tpl</template>
+    <pageID>670</pageID>
+    <process>
+      <file>includes/processes/process-load-bupa-products.php</file>
+    </process>
   </static_page>
   <static_page>
     <url>quick-renew</url>

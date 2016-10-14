@@ -103,8 +103,11 @@
 	      //$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 	      $(element).closest('.form-group').removeClass('has-error');
           $(element).closest('.form-group').find('.help-block').text('');
-   	      $(element).closest('form').find('#form-error').html('').hide();
-   	      $(element).closest('form').find('.error-textbox').html('').hide();
+   	      if(!$(element).closest('form').find('.form-group.has-error').length){
+   	        $(element).closest('form').find('#form-error').html('').hide();
+   	        $(element).closest('form').find('.error-textbox').html('').hide();
+   	      }
+   	      
 	    },
 	    errorPlacement: function (error, element) {
 			$(element).closest('.form-group').find('.help-block').text(error.text());

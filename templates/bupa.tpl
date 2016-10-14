@@ -5,155 +5,159 @@
 {/block}
 
 {block name=body}
-<div id="pagehead">
-	<div class="bannerout">
-      <img src="{if $listing_image}{$listing_image}{else}/images/newsdet-banner.jpg{/if}" alt="{$listing_name} banner" />
-	</div>
+<div id="heroimg">
 	<div class="container">
 		<div class="row">
-			<div class="{if $listing_object_id eq 10}col-md-12{else}col-md-8 col-md-offset-2{/if} text-center">
-				<h1>{if $listing_title}{$listing_title}{else}{$listing_name}{/if}</h1>
-				{$listing_content1}
+			<div class="col-sm-12 hidden-xs">
+				<img src="/images/bupalogo.jpg" class="img-responsive" alt="Bupa">
+				<div><h1><span class="highlight">Exclusive Bupa</span><br>
+				MEMBER OFFER</h1>
+				2 year MedicAlert<sup>&reg;</sup> membership + medical ID<br>
+				of your choice* for just $100<br>
+				<span class="highlight">SAVE UP TO 20%</span>
+				</div>
+				<a href="/benefits-of-membership" title="Benefits of membership" class="btn btn-red">View benefits</a>
 			</div>
 		</div>
 	</div>
 </div>
-{if $listing_content2}
-<div id="cost-grey" class="pinkh4">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12 text-center">
-        {$listing_content2}
-      </div>
-    </div>
-  </div>
+<div id="offer" class="visible-xs">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<img src="/images/bupalogo.jpg" class="img-responsive" alt="Bupa">
+				<div><h1><span class="highlight">Exclusive Bupa</span><br>
+				Member Offer</h1>
+				2 year MedicAlert<sup>&reg;</sup> membership + medical ID
+				of your choice* for just $100<br>
+				<span class="highlight">SAVE UP TO 20%</span>
+				</div>
+				<a href="/benefits-of-membership" title="Benefits of membership" class="btn btn-red">View benefits</a>
+			</div>
+		</div>
+	</div>
 </div>
-{/if}
-{if $listing_content3 || $listing_content4}
-<div>
-<div id="landing-page-middle" class="container">
-    <br>
-    <div class="row">
-      <div class="col-md-12 text-center">
-        {$listing_content3}
-      </div>
-    </div>
-</div>
-</div>
-<br>
-<div class="grey-bg-area video-wrapper">
-<div class="container">
-    <div class="row">
-      <div class="col-md-12 text-center">
-        {$listing_content4}
-      </div>
-    </div>
-  </div>
-</div>
-{/if}
+<div id="benefits">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<p>If you're living with a medical condition, have an allergy, take regular medications or have an implant/device,
+a MedicAlert membership could mean the difference between life and death.</p>
+				<p>As Australia's most trusted and recognised provider of medical IDs, MedicAlert Foundation can provide you with full support in a medical emergency. From the moment you join MedicAlert, you'll gain access to a range of exclusive benefits.</p>
+			</div>
+		</div>
+		<div class="row" id="uspbox">
+			<div class="col-xs-6 col-md-4 text-center usp">
+				<img src="/images/benefit1.png" alt="" class="img-responsive">
+				<h5>Protection for 12 months</h5>
+			</div>
+			<div class="col-xs-6 col-md-4 text-center usp">
+				<img src="/images/benefit2.png" alt="" class="img-responsive">
+				<h5>24/7 emergency service access to your medical information</h5>
+			</div>
+			<div class="col-xs-6 col-md-4 text-center usp">
+				<img src="/images/benefit3.png" alt="" class="img-responsive">
+				<h5>Exclusive member only offers</h5>
+			</div>
 
-{if $popular_products && $listing_flag1}
-<div id="popular">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-12 text-center">
-      <br><br>
-        <h2>Popular Products</h2>
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div id="popslide" class="flexslider">
-        <ul class="slides">
-    {foreach $popular_products as $item}
-          <li>
-            <div class="prod">
-                <a href="/{$item.product_url}"> <img src="{$item.general_details.image}?width=770&height=492&crop=1" alt="{$item.product_name} image" class="img-responsive" title="{$item.product_name} image" />
-        </a>
-        <div class="prod-labels">
-              {if $item.general_details.limitedstock.flag eq 1}
-          <div class="prod-label btn btn-white">Limited stock</div>
-          {/if}
-          {if $item.general_details.new.flag eq 1}
-          <div class="prod-label btn btn-white">New</div>
-          {/if}
-          {if $item.general_details.sale.flag eq 1}
-          <div class="prod-label btn btn-red">Sale</div>
-          {/if}
-        </div>
-        <div class="prod-info">
-                  <div class="prod-name">
-          <a href="/{$item.product_url}">{$item.product_name}</a>
-          </div>
-          <div class="prod-price">${$item.general_details.price.min|number_format:0:'.':','}{if $item.general_details.price.min neq $item.general_details.price.max} - ${$item.general_details.price.max|number_format:0:'.':','}{/if}</div>
-          {if $item.general_details.has_attributes.2}
-          <div class="colours">Available colours
-            <div class="colourbox">
-            {foreach $item.general_details.has_attributes.2 as $colour}
-            <img src="{$colour.values.attr_value_image}?height=22&width=22" alt="{$colour.values.attr_value_name}" title="{$colour.values.attr_value_name}" />
-            {/foreach}
-          </div>
-          </div>
-          {/if}
-        <div class="prod-wishlist"><img src="/images/prod-wishlist.png" alt="Wishlist"></div>
-            </div>
-          </li>
-    {/foreach}
-        </ul>
-      </div>
-    </div>
-  </div>
+			<div class="col-xs-6 col-md-4 text-center usp">
+				<img src="/images/benefit4.png" alt="" class="img-responsive">
+				<h5>Unlimited wallet and fridge cards listing your details</h5>
+			</div>
+			<div class="col-xs-6 col-md-4 text-center usp">
+				<img src="/images/benefit5.png" alt="" class="img-responsive">
+				<h5>Secure online access to your electronic health record</h5>
+			</div>
+			<div class="col-xs-6 col-md-4 text-center usp">
+				<img src="/images/benefit6.png" alt="" class="img-responsive">
+				<h5>Support from our Membership Services team</h5>
+			</div>
+		</div>
+	</div>
 </div>
-{else}
-<div class="container">
-    <div class="row">
-      <div class="col-md-12 text-center">
-        &nbsp;
-      </div>
-    </div>
+
+<div id="redeem">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 text-center" id="joinhead">
+				A special offer for Bupa members:<br>
+				<span class="highlight">2 year MedicAlert<sup>&reg;</sup> membership + medical ID of your choice*</span><br>
+				<span>for just $100</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="onethird text-left" id="first">
+					Redeem this<br> special offer in<br> 2 easy steps:
+				</div>
+				<div class="onethird text-center" id="second">
+					<img src="/images/join1.png" alt="" class="img-responsive">
+					<div><div class="num">1</div> <div class="text">Choose your medical ID from the range below</div></div>
+				</div>
+				<div class="onethird text-center" id="third">
+					<img src="/images/join2.png" alt="" class="img-responsive">
+					<div><div class="num">2</div> <div class="text">Fill out your details to complete registration</div></div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-{/if}
+
+<div id="products">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 text-center">
+				<h2>Select your medical ID</h2>
+				Choose from our range of genuine MedicAlert IDs
+			</div>
+      </div>
+      <div class="row" id="products-wrapper">
+          {if $products}
+          {foreach $products as $item}
+            {include file='ec_product_list_struct.tpl'}
+          {/foreach}
+          {/if}
+      </div>
+      <div class="row">
+			<div class="col-sm-12 text-center small">
+				*Selected products only. Price includes standard postage and handling and a 12-month standard Australia MedicAlert Foundation product warranty.
+			</div>
+			<div class="col-sm-12 text-center" id="moreprods">
+				<p>Can't find a product you like? See the <a href="/products?setdc=BUPA16" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
+			</div>
+		</div>
+	</div>
+</div>
 
 {/block}
 
 {* Place additional javascript here so that it runs after General JS includes *}
 {block name=tail}
-<script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
+<script src="/includes/js/isotope.pkgd.min.js"></script>
 <script type="text/javascript">
 
-  (function() {
+  $(document).ready(function() {
+    
+  $("#products-wrapper").isotope({
+    itemSelector: '.prodout',
+    layoutMode: 'fitRows'
+   });
 
-    // store the slider in a local variable
-    var $window = $(window), flexslider;
-
-    // tiny helper function to add breakpoints
-    function getGridSize() {
-      return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 2 : 4;
+  });
+  
+//REFRESH ISOTOPE WHEN SCROLLING UP/DOWN
+  var minLastView = $(document).height();
+  var maxLastView = 0;
+  $(window).scroll(function() {
+    var curHeight = $(window).scrollTop() + $(window).height();
+    if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 500){
+      minLastView = curHeight;
+      $("#products-wrapper").isotope('reloadItems' ).isotope();
     }
-
-    $window.load(function() {
-      $('.flexslider').flexslider({
-        animation: "slide",
-        controlNav: false,
-        animationLoop: false,
-        itemWidth: 210,
-        itemMargin: 20,
-        minItems: getGridSize(), // use function to pull in initial value
-        maxItems: getGridSize(),
-		start: function(slider){
-			flexslider = slider;
-		}
-      });
-    });
-
-    // check grid size on resize event
-    $window.resize(function() {
-      var gridSize = getGridSize();
-
-      flexslider.vars.minItems = gridSize;
-      flexslider.vars.maxItems = gridSize;
-    });
-  }());
+    if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 500){
+      maxLastView = curHeight;
+      $("#products-wrapper").isotope('reloadItems' ).isotope();
+    }
+ });
 </script>
 {/block}

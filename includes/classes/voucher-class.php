@@ -7,8 +7,7 @@ class Voucher{
   protected $voucherRecord  = array();
   protected $errorMsg = null;
   
-
-
+  
   function __construct($_db = ''){
     global $DBobject;
     
@@ -78,7 +77,7 @@ class Voucher{
     if(!empty($_id)){
       $this->voucherId = $_id;
     }
-    $sql = "UPDATE tbl_voucher SET voucher_deleted = NOW() WHERE voucher_id = :id";
+    $sql = "UPDATE tbl_voucher SET voucher_deleted = NOW() WHERE voucher_deleted IS NULL AND voucher_id = :id";
     if($this->DBobj->wrappedSql($sql, array(":id" => $this->voucherId))){
       $this->voucherRecord = array();
       $this->voucherId = 0;
@@ -98,10 +97,8 @@ class Voucher{
     if(!empty($_id)){
       $this->voucherId = $_id;
     }
-    $sql = "UPDATE tbl_voucher SET voucher_code_email_id = :rid, voucher_confirmation_email_id = :sid WHERE voucher_id = :id";
+    $sql = "UPDATE tbl_voucher SET voucher_code_email_id = :rid, voucher_confirmation_email_id = :sid WHERE voucher_deleted IS NULL AND voucher_id = :id";
     if($this->DBobj->wrappedSql($sql, array(":id" => $this->voucherId, ":rid" => $_recipientEmailId, ":sid" => $_senderEmailId))){
-      $this->voucherRecord = array();
-      $this->voucherId = 0;
       return true;
     }
     return false;
@@ -131,7 +128,6 @@ class Voucher{
     $sql = "SELECT voucher_id FROM tbl_voucher WHERE voucher_deleted IS NULL AND voucher_redeemed IS NULL AND voucher_code = :code";
     if($res = $this->DBobj->wrappedSql($sql, array(":code" => $_code))){
       $this->voucherId = $res[0]['voucher_id'];
-      $this->voucherRecord = array();
       return $this->UpdateRedeemDate();
     }
     return false;

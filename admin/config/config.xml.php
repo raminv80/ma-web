@@ -140,12 +140,13 @@
       <custom_template field="listing_object_id" value="690">ec_edit_page_autorenewal.tpl</custom_template><!-- Quick checkout -->
       <custom_template field="listing_object_id" value="219">ec_edit_page_update-my-profile.tpl</custom_template>
       <custom_template field="listing_object_id" value="239">ec_edit_page_my-account.tpl</custom_template><!-- wish list -->
+      <custom_template field="listing_object_id" value="109">edit_page_careers.tpl</custom_template><!-- Careers -->
   	</section>
     
     <section level="1">
       <showlist>FALSE</showlist>
       <url>landing-page</url>
-      <title>Landing Pages</title>
+      <title>Landing pages</title>
       <type>LISTING</type>
       <type_id>6</type_id>
       <associated>
@@ -685,7 +686,7 @@
     <section level="1">
       <showlist>FALSE</showlist>
       <url>discounts</url>
-      <title>Discount Codes</title>
+      <title>Discount codes</title>
       <type>TABLE</type>
       <table>
         <name>tbl_discount</name>
@@ -824,6 +825,28 @@
       <list_template>list_contact.tpl</list_template>
       <edit_template>edit_contact.tpl</edit_template>
     </section> 
+    <section level="1" subsection="true">
+      <showlist>FALSE</showlist>
+      <url>wish-list</url>
+      <title>Wish list</title>
+      <type>CUSTOM</type>
+      <subsection>
+        <url>members</url>
+        <title>Wish list</title>
+        <template>ec_wish-list-members.tpl</template>
+        <process>
+          <file>admin/includes/processes/load-wish-list-members.php</file>
+        </process>
+      </subsection>
+      <subsection hidden="true">
+        <url>products</url>
+        <title>Wish list</title>
+        <template>ec_wish-list-products.tpl</template>
+        <process>
+          <file>admin/includes/processes/load-wish-list-products.php</file>
+        </process>
+      </subsection>
+    </section>
   </group>
 
   <smartytemplate_config><!-- This element contains the smarty template values -->

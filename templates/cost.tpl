@@ -29,7 +29,7 @@
 
 			<div class="col-sm-3 text-center">
 				<img src="/images/cost-medicalid.png" alt="Medical ID" class="img-responsive" />
-				<div class="cost-text">Medical ID with free engraving – starting from <span>{$CONFIG_VARS['medical_id_price']}</span></div>
+				<div class="cost-text">Medical ID with free engraving – products starting from <span>{$CONFIG_VARS['medical_id_price']}</span></div>
 			</div>
 			<div class="col-sm-1 text-center">
 
