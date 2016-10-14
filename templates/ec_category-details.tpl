@@ -279,6 +279,7 @@
 
   $(document).ready(function() {
     
+
     
    /*  $("#showall").click(function() {
       $(this).hide();
@@ -310,6 +311,12 @@
     $('.iso-filter').click(function(){
       filterOptions();
     });
+    
+
+    $("#sort").val("price-low-high").change();
+
+    $("#products-wrapper").isotope({ sortBy: "price",sortAscending: true } );
+    
   });
 
   function filterOptions(){
