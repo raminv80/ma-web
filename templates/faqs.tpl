@@ -58,7 +58,12 @@
     $( "#accordion" ).accordion({
       icons: icons,
 	  heightStyle: "content",
-      collapsible: true
+      collapsible: true,
+      activate: function( event, ui ) {
+        if(!$.isEmptyObject(ui.newHeader.offset()) && !isScrolledIntoView(ui.newHeader)) {
+            $('html:not(:animated), body:not(:animated)').animate({ scrollTop: ui.newHeader.offset().top }, 'slow');
+        }
+    }
     });
   } );
 </script>

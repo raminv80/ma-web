@@ -4,7 +4,9 @@
 {/block} {block name=body}
 <div id="pagehead">
   <div class="bannerout">
+    <!-- 
     <img src="{if $listing_image}{$listing_image}{else}/images/newsdet-banner.jpg{/if}" alt="{$listing_name} banner" />
+     -->
   </div>
   <div class="container">
     <div class="row">

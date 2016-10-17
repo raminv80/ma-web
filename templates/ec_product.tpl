@@ -12,7 +12,7 @@
     <div class="row" id="productout">
 	  <div class="col-sm-12">
         <div id="back">
-          <a href="/products"> < Back to collections
+          <a href="/products{if $backcollection}/{$backcollection}{/if}"> < Back to{if $backcollection} {$backcollection}{/if} collections
           </a>
         </div>
 	  </div>
@@ -54,7 +54,7 @@
             {/if}
           </ul>
         </div>
-        <div class="text-center visible-xs visible-sm"><small>Slide to see more images</small></div>
+        <div class="text-center visible-xs visible-sm"><small>Swipe to see more images</small></div>
 
 		<div id="imgholder" style="display: none;">
             {if $gallery}
@@ -330,7 +330,12 @@ jQuery.fn.outerHTML = function(s) {
     $( "#accordion" ).accordion({
       icons: icons,
 	  heightStyle: "content",
-      collapsible: true
+      collapsible: true,
+      activate: function( event, ui ) {
+        if(!$.isEmptyObject(ui.newHeader.offset()) && !isScrolledIntoView(ui.newHeader)) {
+            $('html:not(:animated), body:not(:animated)').animate({ scrollTop: ui.newHeader.offset().top }, 'slow');
+        }
+    }
     });
   } );
 

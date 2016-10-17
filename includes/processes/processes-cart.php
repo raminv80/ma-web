@@ -462,6 +462,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               }
               catch(Exception $e){}
               
+              //Clean new user session variable
+              $_SESSION['user']['new_user'] = null;
+              
             }
           }
           //Create guest user

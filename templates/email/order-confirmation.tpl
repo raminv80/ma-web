@@ -289,7 +289,7 @@ body, td {
                             <p>Your generous gift will help ensure {$recipient_name} stays protected with an active MedicAlert membership, or with one of our internationally recognised MedicAlert medical IDs.</p>
                             <p>Your gift certificate has been scheduled for delivery to {$recipient_email}{if $send_date} at 9:00am (CST) on {$send_date|date_format:"%d/%m/%Y"}{/if}.</p>
                             <p>We will send you a delivery confirmation email {if $send_date}on the day of delivery to verify this has been sent.{else}in the next few minutes.{/if}</p>
-                            <p>If you have any questions about your gift certificate purchase in the meantime, please contact our Membership Services team on {$COMPANY.toll_free} between 8.3am - 5.30pm ACST Monday - Friday.</p>
+                            <p>If you have any questions about your gift certificate purchase, please contact our Membership Services team on {$COMPANY.toll_free} between 8.30am - 5.30pm ACST Monday - Friday.</p>
                           {/if}
                         </td>
                       </tr>

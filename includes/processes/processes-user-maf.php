@@ -1,14 +1,6 @@
 <?php
 if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], false)){
   
-  /**
-   * ************ SET CAMPAIGN MONITOR LIST ID WHEN NEEDED ********
-   */
-  $LIST_ID = '';
-  /**
-   * ************ **************************************** ********
-   */
-  
   switch($_POST["action"]){
     case 'createTemporaryMember':
       $error = "Error: Missing parameters.";
@@ -141,71 +133,29 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       die();
    
       
-    case 'resetPasswordToken':
-      $member = new UserClass();
+    case 'forgotPassword':
+      $user_obj = new UserClass();
       $success = null;
       $error = 'Undefined error. Please <a href="/contact-us">contact us</a>.';
-      try{
-        $authenticationRecord = json_decode($member->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD), true);
-      }catch(exceptionMedicAlertApiNotAuthenticated $e){
-        $_SESSION['user']['public'] = null;
-        $error = "API init error: {$e}";
-      }catch(exceptionMedicAlertApiSessionExpired $e){
-        $_SESSION['user']['public'] = null;
-        $error = "API init error: {$e}";
-      }catch(exceptionMedicAlertApi $e){
-        $error = "API init error: {$e}";
+      if(!empty($_POST['username']) && !empty($_POST['email'])){
+        $error = 'Undefined error2';
+        try{
+          if($user_obj->ForgotPassword($_POST['username'], $_POST['email'])){
+            $success = 'An email to reset your password has successfully been sent.';
+            $error = null;
+          }else{
+            $error = $user_obj->getErrorMsg();
+          }
+        }catch(Exception $e){
+          $error = $e;
+        }
       }
-      $sessionToken = $authenticationRecord['sessionToken'];
-      try{
-        $results = $member->medicAlertApi->lostPassWord($sessionToken, $_POST["membership_number"], $_POST["email"]);
-        $success = "An email has been sent to your";
-      }catch(exceptionMedicAlertNotFound $e){
-        $error = 'The details you entered do not match any member record.';
-      }
-      	
-      // logout of the API
-      try{
-        $member->medicAlertApi->logout($sessionToken);
-      }catch(exceptionMedicAlertApiNotAuthenticated $e){
-        $_SESSION['user']['public'] = null;
-        $error = "API error: {$e}";
-      }catch(exceptionMedicAlertApiSessionExpired $e){
-        $_SESSION['user']['public'] = null;
-        $error = "API error: {$e}";
-      }catch(exceptionMedicAlertApi $e){
-        $error = "API error: {$e}";
-      }
-      
       echo json_encode(array(
           'error' => $error, 
           'success' => $success
       ));
       die();
     
-    case 'passwordreset':
-      
-      $user_obj = new UserClass();
-      $res = $user_obj->ResetPassword($_POST["email"], $_POST['userToken'], $_POST['pass']);
-      if(empty($res['error'])){
-        $_SESSION['user']['public'] = $res;
-        $url = $_SERVER['HTTP_REFERER'];
-        if($_POST['redirect']){
-          $url = $_POST['redirect'];
-        }
-        echo json_encode(array(
-            'error' => false, 
-            'success' => true, 
-            'url' => $url 
-        ));
-        die();
-      }
-      echo json_encode(array(
-          'error' => $error, 
-          'success' => false, 
-          'url' => $url 
-      ));
-      die();
     
     case 'updatePassword':
       $error = "Your session has expired.";
@@ -259,22 +209,6 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       ));
       die();
     
-    case 'unsubscribe':
-      if(!empty($_REQUEST['tk']) && !empty($_REQUEST['tl'])){
-        $user_obj = new UserClass();
-        $email = $user_obj->UnsubscribeUser($_REQUEST['tk'], $_REQUEST['tl']);
-        if($email){
-          SetMemberCampaignMonitor($LIST_ID, array(
-              'email' => $email 
-          ), 0);
-          $_SESSION['notice'] = 'You have been successfully unsubscribed.';
-          header("Location: " . $_SERVER['HTTP_REFERER'] . "#notice");
-          die();
-        }
-      }
-      $_SESSION['error'] = 'Something went wrong, please check your email and try again!';
-      header("Location: " . $_SERVER['HTTP_REFERER'] . "#error");
-      die();
     
  
   }

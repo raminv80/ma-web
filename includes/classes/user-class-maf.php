@@ -160,7 +160,7 @@ class UserClass{
 		$this->memberRecord['membership']['membershipTypeId']		= '3';
 		//$this->memberRecord['membership']['RenewalDate']			= '';
 	
-		$this->memberRecord['details']['title']						= '';
+		$this->memberRecord['details']['title']						= '.';
 		$this->memberRecord['details']['firstName']					= ucwords(strtolower($_data['gname']));
 		$this->memberRecord['details']['middleName']				= '';
 		$this->memberRecord['details']['surname']					= ucwords(strtolower($_data['surname']));
@@ -179,7 +179,7 @@ class UserClass{
 		//$this->memberRecord['details']['receiveMarketingMaterial']	= '';
 		$this->memberRecord['details']['correspondenceType']		= '';
 		$this->memberRecord['details']['organDonor']				= '';
-		$this->memberRecord['details']['howDidYouHear']				= '';
+		$this->memberRecord['details']['howDidYouHear']				= $_data['heardabout'];
 	
 		$this->memberRecord['address']['address']					= ucwords(strtolower($_data['address']));
 		$this->memberRecord['address']['suburb']					= ucwords(strtolower($_data['suburb']));
@@ -501,6 +501,14 @@ class UserClass{
 	}
 	
 	
+	/**
+	 * Update password
+	 * 
+	 * @param string $_token
+	 * @param string $_currentpwd
+	 * @param string $_newpwd
+	 * @return boolean
+	 */
 	function UpdatePassword($_token, $_currentpwd, $_newpwd){
 		try{
 			if($results = $this->medicAlertApi->updatePassWord($_token, $_currentpwd, $_newpwd)){
@@ -522,7 +530,49 @@ class UserClass{
 		}
 		return false;
 	}
+
 	
+	/**
+	 * Forgot password - MAF will send an email
+	 * 
+	 * @param int $_membershipId
+	 * @param string $_email
+	 * @return boolean
+	 */
+	function ForgotPassword($_membershipId, $_email){
+	  
+	  $this->errorMsg = null;
+	  try{
+	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authenticationRecord = json_decode($authJSONResponse, true);
+	    $token = $authenticationRecord['sessionToken'];
+	  }
+	  catch(Exception $e){
+	    $this->errorMsg = "Invalid API membership number/password.";
+	    return false;
+	  }
+	 
+	  try{
+	    if($results = $this->medicAlertApi->lostPassWord($token, $_membershipId, $_email)){
+	      //Password successfully updated
+	      $this->medicAlertApi->logout($token);
+	      return true;
+	    }
+	    
+	  }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
+	    $this->errorMsg = "Your membership number and email address don't match.";
+	  }
+	  catch(exceptionMedicAlertApiNotAuthenticated $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  catch(exceptionMedicAlertApiSessionExpired $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  catch(exceptionMedicAlertApi $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  return false;
+	}
 	
 	
 	/**

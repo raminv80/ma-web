@@ -41,7 +41,7 @@
 			<div class="col-sm-6 col-md-7 col-lg-8">
 				<div id="daysrenew" class=" text-center">
                 {if $user.maf.main.lifetime eq 1}
-                    <img src="/images/active-icon.png" alt="active" /> <span class="warning">Your are always protected</span>
+                    <img src="/images/active-icon.png" alt="active" /> <span class="warning">You are always protected</span>
                     <div>as our MedicAlert lifetime member</div>
                 {else}
                     {$renewalDate = $user.maf.main.user_RenewalDate}

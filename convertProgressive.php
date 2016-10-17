@@ -14,7 +14,7 @@ session_set_cookie_params(7200);
 session_start();
 
 /* get all of the required data from the HTTP request */
-$jpg_quality   = (!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) > 0)?intval($_REQUEST['quality']*10):85; // the quality of any generated JPGs on a scale of 0 to 100
+$jpg_quality   = (!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) > 0)?intval($_REQUEST['quality']*10):90; // the quality of any generated JPGs on a scale of 0 to 100
 $quality = (!empty($_REQUEST['quality']) && intval($_REQUEST['quality']) > 0)?intval(ceil($_REQUEST['quality'])):9; //0 - 9 (0= no compression, 9 = high compression)
 $width = ((!empty($_REQUEST['width']) && intval($_REQUEST['width']) > 0)?intval($_REQUEST['width']):null);
 $height = ((!empty($_REQUEST['height']) && intval($_REQUEST['height']) > 0)?intval($_REQUEST['height']):null);

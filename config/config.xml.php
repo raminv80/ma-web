@@ -7,7 +7,7 @@
     <old_id></old_id>
   </google_analytics>
   <company>
-    <name>Australia Medic Alert Foundation</name>
+    <name>Australia MedicAlert Foundation</name>
     <address>
       <street>Level 1, 210 Greenhill Road</street>
         <suburb>Eastwood</suburb>
@@ -617,6 +617,9 @@
       </associated>
     </table>
     <template>ec_product.tpl</template>
+    <process>
+      <file>includes/processes/process-load-product.php</file>
+    </process>
   </product_page>
   
   <global_process_pre>

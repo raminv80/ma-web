@@ -158,7 +158,7 @@ a{color:#ed174f;text-decoration: none;}
 	            <td class="w580" width="580" style="table-layout: fixed;">
 					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Hi {$sender_name}</p>
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px; font-weight: bold;">Thank you once again for your recent MedicAlert gift certificate purchase. Your gift certificate has now been delivered to {$recipient_name} - {$recipient_email}.</p>
-                    <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">If you have any questions about your gift certificate purchase in the meantime, please contact our Membership Services team on {$COMPANY.toll_free} between 8.3am - 5.30pm ACST Monday - Friday.</p>
+                    <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">If you have any questions about your gift certificate purchase, please contact our Membership Services team on {$COMPANY.toll_free} between 8.30am - 5.30pm ACST Monday - Friday.</p>
 	            </td>
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 		        </tbody>

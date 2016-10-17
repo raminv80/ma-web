@@ -58,10 +58,26 @@
                     </label>
                     <select class="selectlist-medium" id="title" name="title">
                       <option value="">Please select</option>
+                      <option value="." {if $user.maf.update.user_title eq '.'}selected="selected"{/if}>.</option>
+                      <option value="Brother" {if $user.maf.update.user_title eq 'Brother'}selected="selected"{/if}>Brother</option>
+                      <option value="Dr" {if $user.maf.update.user_title eq 'Dr'}selected="selected"{/if}>Dr</option>
+                      <option value="Father" {if $user.maf.update.user_title eq 'Father'}selected="selected"{/if}>Father</option>
+                      <option value="Lady" {if $user.maf.update.user_title eq 'Lady'}selected="selected"{/if}>Lady</option>
+                      <option value="Lt Col" {if $user.maf.update.user_title eq 'Lt Col'}selected="selected"{/if}>Lt Col</option>
+                      <option value="Major General" {if $user.maf.update.user_title eq 'Major General'}selected="selected"{/if}>Major General</option>
+                      <option value="Master" {if $user.maf.update.user_title eq 'Master'}selected="selected"{/if}>Master</option>
+                      <option value="Miss" {if $user.maf.update.user_title eq 'Miss'}selected="selected"{/if}>Miss</option>
+                      <option value="Monsignor" {if $user.maf.update.user_title eq 'Monsignor'}selected="selected"{/if}>Monsignor</option>
                       <option value="Mr" {if $user.maf.update.user_title eq 'Mr'}selected="selected"{/if}>Mr</option>
                       <option value="Mrs" {if $user.maf.update.user_title eq 'Mrs'}selected="selected"{/if}>Mrs</option>
-                      <option value="Miss" {if $user.maf.update.user_title eq 'Miss'}selected="selected"{/if}>Miss</option>
-                      <option value="Dr" {if $user.maf.update.user_title eq 'Dr'}selected="selected"{/if}>Dr</option>
+                      <option value="Ms" {if $user.maf.update.user_title eq 'Ms'}selected="selected"{/if}>Ms</option>
+                      <option value="Prof" {if $user.maf.update.user_title eq 'Prof'}selected="selected"{/if}>Prof</option>
+                      <option value="Rev" {if $user.maf.update.user_title eq 'Rev'}selected="selected"{/if}>Rev</option>
+                      <option value="Rev. Canon" {if $user.maf.update.user_title eq 'Rev. Canon'}selected="selected"{/if}>Rev. Canon</option>
+                      <option value="Rev Fr" {if $user.maf.update.user_title eq 'Rev Fr'}selected="selected"{/if}>Rev Fr</option>
+                      <option value="Sir" {if $user.maf.update.user_title eq 'Sir'}selected="selected"{/if}>Sir</option>
+                      <option value="Sister" {if $user.maf.update.user_title eq 'Sister'}selected="selected"{/if}>Sister</option>
+                      <option value="The Hon." {if $user.maf.update.user_title eq 'The Hon.'}selected="selected"{/if}>The Hon.</option>
                     </select>
                     <div class="error-msg help-block"></div>
                   </div>
@@ -363,16 +379,24 @@
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3 form-group">
                     <label for="bloodgroup" class="visible-ie-only">Blood group:</label>
+                    {$op = ['O Positive', 'O Rh (D) Positive', 'O Rh POS']}
+                    {$on = ['O Negative', 'O Rh (D) Negative', 'O Rh NEG']}
+                    {$ap = ['A Positive', 'A Rh (D) Positive', 'A Rh POS']}
+                    {$an = ['A Negative', 'A Rh (D) Negative', 'A Rh NEG']}
+                    {$bp = ['B Positive', 'B Rh (D) Positive', 'B Rh POS']}
+                    {$bn = ['B Negative', 'B Rh (D) Negative', 'B Rh NEG', 'Rh (D) B Negative']}
+                    {$abp = ['AB Positive', 'AB Rh (D) Positive', 'AB Rh POS']}
+                    {$abn = ['AB Negative', 'AB Rh (D) Negative', 'AB Rh NEG']}
                     <select class="selectlist-medium" id="bloodgroup" name="blood_group">
                       <option value="">Select an option</option>
-                      <option value="O+" {if $user.maf.update.blood_group eq 'O+'}checked="checked"{/if}>O+</option>
-                      <option value="O-" {if $user.maf.update.blood_group eq 'O-'}checked="checked"{/if}>O-</option>
-                      <option value="A+" {if $user.maf.update.blood_group eq 'A+'}checked="checked"{/if}>A+</option>
-                      <option value="A-" {if $user.maf.update.blood_group eq 'A-'}checked="checked"{/if}>A-</option>
-                      <option value="B+" {if $user.maf.update.blood_group eq 'B+'}checked="checked"{/if}>B+</option>
-                      <option value="B-" {if $user.maf.update.blood_group eq 'B-'}checked="checked"{/if}>B-</option>
-                      <option value="AB+" {if $user.maf.update.blood_group eq 'AB+'}checked="checked"{/if}>AB+</option>
-                      <option value="AB-" {if $user.maf.update.blood_group eq 'AB-'}checked="checked"{/if}>AB-</option>
+                      <option value="O Positive" {if $user.maf.update.blood_group|in_array:$op}selected="selected"{/if}>O Positive</option>
+                      <option value="O Negative" {if $user.maf.update.blood_group|in_array:$on}selected="selected"{/if}>O Negative</option>
+                      <option value="A Positive" {if $user.maf.update.blood_group|in_array:$ap}selected="selected"{/if}>A Positive</option>
+                      <option value="A Negative" {if $user.maf.update.blood_group|in_array:$an}selected="selected"{/if}>A Negative</option>
+                      <option value="B Positive" {if $user.maf.update.blood_group|in_array:$bp}selected="selected"{/if}>B Positive</option>
+                      <option value="B Negative" {if $user.maf.update.blood_group|in_array:$bn}selected="selected"{/if}>B Negative</option>
+                      <option value="AB Positive" {if $user.maf.update.blood_group|in_array:$abp}selected="selected"{/if}>AB Positive</option>
+                      <option value="AB Negative" {if $user.maf.update.blood_group|in_array:$abn}selected="selected"{/if}>AB Negative</option>
                     </select>
                   </div>
                 </div>
@@ -635,7 +659,12 @@ The IHI is part of the government e-health initiative developed to enhance the w
     $("#accordion").accordion({
       icons: icons,
       heightStyle: "content",
-      collapsible: true
+      collapsible: true,
+      activate: function( event, ui ) {
+        if(!$.isEmptyObject(ui.newHeader.offset()) && !isScrolledIntoView(ui.newHeader)) {
+            $('html:not(:animated), body:not(:animated)').animate({ scrollTop: ui.newHeader.offset().top }, 'slow');
+        }
+    }
     });
   });
 </script>

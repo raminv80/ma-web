@@ -28,7 +28,7 @@
 		<div class="row">
 			<div class="col-sm-12 text-center">
 				<h2>Stay up to date with MedicAlert Foundation</h2>
-				<p>If you, or someone you care for, are one of the many Australians living with a medical condition, sign up to our email newsletter and be the first to hear about the latest news and special offers from Medic Alert<sup>&reg;</sup></p>
+				<p>If you, or someone you care for, are one of the many Australians living with a medical condition, sign up to our email newsletter and be the first to hear about the latest news and special offers from MedicAlert<sup>&reg;</sup></p>
 				<br />
 
 					<form action="https://themdigital.createsend.com/t/r/s/djiijii/" method="post" id="newsl_form" novalidate="novalidate">

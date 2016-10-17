@@ -27,7 +27,7 @@
         <div id="loginin">
           <div class="row">
             <div class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2  text-center">
-              <div id="login">
+              <div id="login-form-wrapper">
                 <form class="form-horizontal" id="login-form" data-attr-id="login-form" role="form" accept-charset="UTF-8" action="" method="post">
                   <input type="hidden" value="login" name="action" id="action" />
                   <input type="hidden" value="{$redirect}" name="redirect" class="redirect" />
@@ -47,7 +47,7 @@
                       <input class="form-control showpassword" type="password" id="password1" name="pass" autocomplete="off" required />
                       <a class="showhide" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[type=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[type=text]').get(0).type='password';$(this).html('Show'); }">Show</a>
                       <div class="error-msg help-block"></div>
-                      <span class="form-help-block col-sm-12"><a href="javascript:void(0)" onclick="$('#reset-email').val($('#email').val());$('#reset-pass').show('slow');">Forgot your password?</a></span>
+                      <span class="form-help-block"><a href="javascript:void(0)" onclick="$('#reset-username').val($('#username').val());$('#login-form-wrapper').hide();$('#reset-pass').fadeIn('slow');">Forgot your password?</a></span>
                     </div>
                   </div>
 
@@ -73,20 +73,27 @@
             <div id="reset-pass" class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2 text-center" style="display: none;">
               <!-- RESET PASSWORD SECTION - Hidden by default -->
               <h3 id="reset-pass-title">Reset password</h3>
-              <form class="form-horizontal" id="reset-pass-form" data-attr-id="reset-pass-form" role="form" accept-charset="UTF-8" action="" method="post">
-                <input type="hidden" value="resetPasswordToken" name="action" id="action" />
+              <form class="form-horizontal" id="reset-pass-form" role="form" accept-charset="UTF-8" action="" method="post">
+                <input type="hidden" value="forgotPassword" name="action" id="action" />
                 <input type="hidden" name="formToken" id="formToken" value="{$token}" />
 
                 <div class="row">
                   <div class="col-sm-12 form-group">
-                    <label for="email" class="control-label">Email</label>
+                    <label for="reset-username" class="control-label">Membership Number</label>
+                    <input type="text" value="" class="form-control" id="reset-username" name="username" required>
+                    <span class="help-block"></span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12 form-group">
+                    <label for="reset-email" class="control-label">Email</label>
                     <input type="email" value="" class="form-control" id="reset-email" name="email" required>
                     <span class="help-block"></span>
                   </div>
                 </div>
 
                 <div class="row">
-                  <div class="col-sm-offset-3 error-alert" style="display: none;">
+                  <div class="col-sm-12 error-alert" style="display: none;">
                     <div class="alert alert-danger fade in ">
                       <button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.error-alert').fadeOut('slow');">&times;</button>
                       <strong></strong>
@@ -95,7 +102,7 @@
                 </div>
 
                 <div class="row">
-                  <div class="col-sm-offset-3 success-alert" style="display: none;">
+                  <div class="col-sm-12 success-alert" style="display: none;">
                     <div class="alert alert-success fade in ">
                       <button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.success-alert').fadeOut('slow');">&times;</button>
                       <strong></strong>
@@ -111,6 +118,11 @@
                   </div>
                 </div>
               </form>
+              <div class="row">
+                  <div class="col-sm-12">
+                    <span class="form-help-block"><a href="javascript:void(0)" onclick="$('#reset-pass').hide();$('#login-form-wrapper').fadeIn('slow');">Back to login</a></span>
+                  </div>
+                </div>
             </div>
           </div>
         </div>
@@ -172,12 +184,11 @@
     });
 
 	$('#reset-pass-form').validate({
-      onkeyup: false,
-      onclick: false,
       submitHandler: function(form) {
         $('body').css('cursor', 'wait');
-        $('#' + form).find('.error-alert').hide();
-        var datastring = $('#' + form).serialize();
+        var formId = $(form).attr('id')
+        $('#' + formId).find('.error-alert').hide();
+        var datastring = $('#' + formId).serialize();
         $.ajax({
           type: "POST",
           url: "/process/user",
@@ -187,14 +198,14 @@
           success: function(obj) {
             try{
               if(obj.error){
-                $('#' + form).find('.success-alert').hide();
-                $('#' + form).find('.error-alert').find('strong').html(obj.error);
-                $('#' + form).find('.error-alert').fadeIn('slow');
+                $('#' + formId).find('.success-alert').hide();
+                $('#' + formId).find('.error-alert').find('strong').html(obj.error);
+                $('#' + formId).find('.error-alert').fadeIn('slow');
               }else{
-                $('#' + form).find('.error-alert').hide();
-                $('#' + form).find('.success-alert').find('strong').html(obj.success);
-                $('#' + form).find('.success-alert').fadeIn('slow');
-                $('#' + form).find('.form-group').hide();
+                $('#' + formId).find('.error-alert').hide();
+                $('#' + formId).find('.success-alert').find('strong').html(obj.success);
+                $('#' + formId).find('.success-alert').fadeIn('slow');
+                $('#' + formId).find('.form-group').hide();
                 $('#reset-pass-title').hide();
               }
             }catch(err){
@@ -203,8 +214,8 @@
             $('body').css('cursor', 'default');
           },
           error: function(jqXHR, textStatus, errorThrown) {
-            $('#' + form).find('.error-alert').find('strong').html('Undefined error.<br>Please refresh the page and try again or <a href="/contact-us">contact us</a>.');
-            $('#' + form).find('.error-alert').fadeIn('slow');
+            $('#' + formId).find('.error-alert').find('strong').html('Undefined error.<br>Please refresh the page and try again or <a href="/contact-us">contact us</a>.');
+            $('#' + formId).find('.error-alert').fadeIn('slow');
             $('body').css('cursor', 'default');
             console.log('AJAX error:' + errorThrown);
           }
