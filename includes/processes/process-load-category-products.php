@@ -64,8 +64,10 @@ try{
 
   
   //FILTERS
-  $whereSQL = "";
+  //Members only
+  $whereSQL = empty($_SESSION['user']['public']['id']) ? 'AND (product_membersonly IS NULL OR product_membersonly = 0)' : '';
   $baseParams = array();
+    
   
   //LOAD PRODUCTS
   $prodObj = new ProductClass('', $CONFIG->product_page);

@@ -560,12 +560,12 @@ function clean( $str ){
 		case "string":
 		default:
 			$str = unclean($str); //Unclean the value first to make sure that we are not double cleaning. This needs to be done because add slashes is an unsafe function. It can cause multiple slashes.
-			$str = htmlentities($str, ENT_QUOTES);
+			$str = isJson($str) ? $str : htmlentities($str, ENT_QUOTES);
 			//$str = htmlspecialchars(trim($str),ENT_QUOTES,'UTF-8',false);
 			$str = str_replace("&lt;", "<", $str);
 			$str = str_replace("&gt;", ">", $str);
 			$str = str_replace("&nbsp;", " ", $str);
-			$str = addslashes($str);
+			$str = isJson($str) ? $str : addslashes($str);
 			break;
 	}
 
@@ -904,6 +904,17 @@ function isMobile(){
     return true;
   }
   return false;
+}
+
+/**
+ * Return true when string is a valid json
+ * 
+ * @param string $string
+ * @return boolean
+ */
+function isJson($string){
+  json_decode($string);
+  return (json_last_error() == JSON_ERROR_NONE);
 }
 
 /**

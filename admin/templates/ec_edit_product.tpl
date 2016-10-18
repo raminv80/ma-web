@@ -59,6 +59,38 @@
         <div class="tab-pane active" id="details">
           <div class="form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_noindex">No index</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.product_noindex eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_noindex]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.product_noindex eq 1} checked="checked" {/if}
+                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_noindex">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_featured">Popular</label>
+              <div class="col-sm-5 ">
+                <input type="hidden" value="{if $fields.product_featured eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_featured]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.product_featured eq 1}checked="checked" {/if}
+                  onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_featured">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_gst">Incl. GST</label>
+              <div class="col-sm-5 ">
+                <input type="hidden" value="{if $fields.product_id}{if $fields.product_gst eq 1}1{else}0{/if}{else}1{/if}" name="field[1][tbl_product][{$cnt}][product_gst]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.product_gst eq 1 || $fields.product_id eq ""}checked="checked" {/if} 
+                  onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_gst">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_membersonly">Members only</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.product_membersonly eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_membersonly]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.product_membersonly eq 1} checked="checked" {/if}
+                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_membersonly">
+              </div>
+            </div>
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_name">Name*</label>
               <div class="col-sm-5">
                 <input class="form-control" maxlength="68" type="text" value="{$fields.product_name}" name="field[1][tbl_product][{$cnt}][product_name]" id="id_product_name" onchange="seturl(this.value);" required>
@@ -107,6 +139,12 @@
                 <input class="form-control" type="text" value="{$fields.product_meta_words}" name="field[1][tbl_product][{$cnt}][product_meta_words]" id="id_product_meta_words">
               </div>
             </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_product_order">Order(#position)</label>
+              <div class="col-sm-5 ">
+                <input class="form-control number" type="text" value="{if $fields.product_order neq ''}{$fields.product_order}{else}999{/if}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
+              </div>
+            </div>
             <!-- <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_brand">Brand</label>
               <div class="col-sm-5 ">
@@ -147,37 +185,8 @@
                 </select>
               </div>
             </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_gst">Incl. GST</label>
-              <div class="col-sm-5 ">
-                <input type="hidden" value="{if $fields.product_id}{if $fields.product_gst eq 1}1{else}0{/if}{else}1{/if}" name="field[1][tbl_product][{$cnt}][product_gst]" class="value">
-                <input class="chckbx" type="checkbox" {if $fields.product_gst eq 1 || $fields.product_id eq ""}checked="checked" {/if} 
-                  onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_gst">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_noindex">No index</label>
-              <div class="col-sm-5">
-                <input type="hidden" value="{if $fields.product_noindex eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_noindex]" class="value">
-                <input class="chckbx" type="checkbox" {if $fields.product_noindex eq 1} checked="checked" {/if}
-                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_noindex">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_order">Order(#position)</label>
-              <div class="col-sm-5 ">
-                <input class="form-control number" type="text" value="{if $fields.product_order neq ''}{$fields.product_order}{else}999{/if}" name="field[1][tbl_product][{$cnt}][product_order]" id="id_product_order">
-              </div>
-            </div>
+            
             <!-- <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_product_flag1">Featured Product</label>
-              <div class="col-sm-5 ">
-                <input type="hidden" value="{if $fields.product_flag1 eq 1}1{else}0{/if}" name="field[1][tbl_product][{$cnt}][product_flag1]" class="value">
-                <input class="chckbx" type="checkbox" {if $fields.product_flag1 eq 1}checked="checked" {/if}
-                  onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_product_flag1">
-              </div>
-            </div>
-            <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_product_content1">Description</label>
               <div class="col-sm-5 ">
                 <textarea name="field[1][tbl_product][{$cnt}][product_content1]" id="id_product_content1" class="tinymce">{$fields.product_content1}</textarea>
@@ -345,6 +354,7 @@
         <!--===+++===+++===+++===+++===+++ LOG TAB +++===+++===+++===+++===+++====-->
         <div class="tab-pane" id="log">
           <div class="form">
+            <div class="row">
             <div class="col-sm-12">
               {if $fields.logs}
               <table class="table table-bordered table-striped table-hover">
@@ -366,6 +376,7 @@
                 </tbody>
               </table>
               {else} Log empty. {/if}
+            </div>
             </div>
           </div>
         </div>

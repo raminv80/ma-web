@@ -102,3 +102,25 @@ function ToggleAccordionElem(ID, CLASS) {
     $('#'+ID).slideDown();
   }
 }
+
+function SelectToJSONsync(ELEMENT){ 
+  $(ELEMENT).hide();
+  $(ELEMENT).closest('.form-group').find('.json-multiselect option').remove().end();
+  var jsonStr = $(ELEMENT).closest('.form-group').find('.json-value').val();
+  var values = jsonStr ? JSON.parse( jsonStr ) : [];
+  
+  //Build array .json-key-value
+  $(".json-key-value").each(function(index, val){  
+    var p = $(val).closest('.attr_values').find('.json-addkey').val();
+    var v = $(val).val();
+    if(v > 0 && p > 0){ 
+     var selected = '';
+     if($.inArray(v, values) != -1){
+         selected = 'selected="selected"';
+     };
+     var n = $(val).closest('.attr_values').find('.json-name-value').val();
+     $(ELEMENT).closest('.form-group').find('.json-multiselect').append('<option value="' + v + '" ' + selected + '>' + n + '</option>');
+    }
+ });
+  $(ELEMENT).closest('.form-group').find('.json-multiselect').fadeIn();
+};

@@ -789,6 +789,20 @@ a {
 		}
 	}
 }
+.margintb15 {
+  margin: 15px 0;
+}
+.white-tag{
+	text-align: center;
+	min-height: 34px;
+	margin-top: 10px;
+	background: $white;
+	color: $red;
+	padding: 5px 14px;
+	border: 1px solid $red;
+    border-radius: 20px;
+	text-transform: none;
+}
 
 .prod{
 	border: 1px solid $medium-grey;

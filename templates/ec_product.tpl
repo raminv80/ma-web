@@ -19,6 +19,7 @@
 	  <div class="col-sm-12 visible-xs visible-sm">
         <div class="text-center">
 	        <h1>{$product_name}</h1>
+            {if $product_membersonly eq 1}<div class="margintb15"><span class="white-tag">Members only</span></div>{/if}
 			<div class="prodcode"></div>
         </div>
 	  </div>
@@ -111,6 +112,7 @@
       </div>
       <div class="col-sm-12 col-md-5" id="prodright">
         <h1 class="hidden-xs hidden-sm">{$product_name}</h1>
+        {if $product_membersonly eq 1}<div class="margintb15 hidden-xs hidden-sm"><span class="white-tag">Members only</span></div>{/if}
         <div class="prodcode hidden-xs hidden-sm"></div>
         <form class="form-horizontal" id="product-form" role="form" accept-charset="UTF-8" action="" method="post">
           <input type="hidden" value="ADDTOCART" name="action" id="action" />

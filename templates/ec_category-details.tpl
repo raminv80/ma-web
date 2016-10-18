@@ -202,7 +202,7 @@
         </div>
         <div class="row" id="products-wrapper">
           {if $products}
-          {foreach $products as $item}
+          {foreach $products as $k => $item}
             {include file='ec_product_list_struct.tpl'}
           {/foreach}
           {else}
@@ -225,7 +225,7 @@
     <div class="row">
       <div id="popslide" class="flexslider">
         <ul class="slides">
-          {foreach $recent_products as $item}
+          {foreach $recent_products as $k => $item}
           <li>
             <div class="prod">
               <a href="/{$item.product_url}" title="{$item.product_name}"> <img src="{if $item.general_details.image}{$item.general_details.image}{else}/images/no-image-available.png{/if}?width=568&height=363&crop=1" alt="{$item.product_name}" class="img-responsive" />
@@ -361,11 +361,11 @@
   var maxLastView = 0;
   $(window).scroll(function() {
     var curHeight = $(window).scrollTop() + $(window).height();
-    if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 500){
+    if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 700){
       minLastView = curHeight;
       $("#products-wrapper").isotope('reloadItems' ).isotope();
     }
-    if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 500){
+    if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 700){
       maxLastView = curHeight;
       $("#products-wrapper").isotope('reloadItems' ).isotope();
     }

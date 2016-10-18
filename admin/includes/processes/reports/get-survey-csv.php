@@ -12,21 +12,19 @@ $wheresql = '';
 $params = array();
 
 // INIT DATES
-$endtDate = date('Y-m-d');
-
-/* $startDate = date('Y-m-d', strtotime('-1 months'));
-if(!empty($_REQUEST['start'])){
-  $startDate = date('Y-m-d', strtotime($_REQUEST['start']));
+$startDate = date('Y-m-d', strtotime('-1 months'));
+if(!empty($_POST['start'])){
+  $startDate = date_format(date_create_from_format('d/m/Y', $_POST['start']), 'Y-m-d');
 }
 $wheresql .= " AND DATE(survey_created) >= :startdate";
 $params['startdate'] = $startDate;
 
-$endtDate = date('Y-m-d');
-if(!empty($_REQUEST['end'])){
-  $endDate = date('Y-m-d', strtotime($_REQUEST['end']));
+$endDate = date('Y-m-d');
+if(!empty($_POST['end'])){
+  $endDate = date_format(date_create_from_format('d/m/Y', $_POST['end']), 'Y-m-d');
 }
 $wheresql .= " AND DATE(survey_created) <= :enddate";
-$params['enddate'] = $endDate; */
+$params['enddate'] = $endDate; 
 
 
 
@@ -35,9 +33,10 @@ $result = array();
 $sql = "SELECT * FROM tbl_question WHERE question_deleted IS NULL ORDER BY question_type_id, question_order";
 if($res = $DBobject->wrappedSql($sql)){
   //$result[0]['A'] = "ID";
-  $result[0]['A'] = "Date-time";
-  $result[0]['B'] = "Membership id";
-  $result[0]['C'] = "Email";
+  $result[0]['A'] = "Created";
+  $result[0]['B'] = "Submitted";
+  $result[0]['C'] = "Membership ID";
+  $result[0]['D'] = "Email";
   
   $header_ids = array();
   
@@ -52,9 +51,10 @@ if($res = $DBobject->wrappedSql($sql)){
     
     foreach($surveyres as $sur){
       //$result[$sur['survey_surveytoken_id']]['A'] = (empty($result[$sur['survey_surveytoken_id']]['A']))? $sur['survey_surveytoken_id'] : $result[$sur['survey_surveytoken_id']]['A'];
-      $result[$sur['survey_surveytoken_id']]['A'] = empty($result[$sur['survey_surveytoken_id']]['A']) ? $sur['surveytoken_modified'] : $result[$sur['survey_surveytoken_id']]['A'];
-      $result[$sur['survey_surveytoken_id']]['B'] = empty($result[$sur['survey_surveytoken_id']]['B']) ? $sur['surveytoken_user_id'] : $result[$sur['survey_surveytoken_id']]['B'];
-      $result[$sur['survey_surveytoken_id']]['C'] = empty($result[$sur['survey_surveytoken_id']]['C']) ? $sur['surveytoken_useremail'] : $result[$sur['survey_surveytoken_id']]['C'];
+      $result[$sur['survey_surveytoken_id']]['A'] = empty($result[$sur['survey_surveytoken_id']]['A']) ? $sur['surveytoken_created'] : $result[$sur['survey_surveytoken_id']]['A'];
+      $result[$sur['survey_surveytoken_id']]['B'] = empty($result[$sur['survey_surveytoken_id']]['B']) ? $sur['surveytoken_modified'] : $result[$sur['survey_surveytoken_id']]['A'];
+      $result[$sur['survey_surveytoken_id']]['C'] = empty($result[$sur['survey_surveytoken_id']]['C']) ? $sur['surveytoken_user_id'] : $result[$sur['survey_surveytoken_id']]['C'];
+      $result[$sur['survey_surveytoken_id']]['D'] = empty($result[$sur['survey_surveytoken_id']]['D']) ? $sur['surveytoken_useremail'] : $result[$sur['survey_surveytoken_id']]['D'];
       
       foreach($header_ids as $hid){
         if(!isset($result[$sur['survey_surveytoken_id']][$hid])){
@@ -70,7 +70,7 @@ $res = unclean($result);
 //$csv = AssociativeArrayToCSV($res); //with header
 $csv = arrayToCSV($res); //without header
 
-$filename = "survey_{$startDate}_{$endtDate}.csv";
+$filename = "survey_{$startDate}_{$endDate}.csv";
 header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 header("Content-Length: " . strlen($csv));
 header("Content-type: text/x-csv");

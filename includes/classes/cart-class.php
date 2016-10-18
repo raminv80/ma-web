@@ -716,6 +716,7 @@ class cart{
           ":type_id" => $product['product_type_id'], 
           ":uid" => (empty($product['variant_uid'])? $product['product_uid'] : $product['variant_uid']), 
           ":product_name" => $product['product_name'], 
+          ":variant_name" => $product['variant_name'],
           ":product_price" => $product['product_price'], 
           ":qty" => $quantity, 
           ":subtotal" => $subtotal, 
@@ -723,8 +724,8 @@ class cart{
           ":ip" => $_SERVER['REMOTE_ADDR'], 
           ":browser" => $_SERVER['HTTP_USER_AGENT'] 
       );
-      $sql = "INSERT INTO tbl_cartitem ( cartitem_cart_id, cartitem_product_id, cartitem_variant_id, cartitem_type_id, cartitem_product_uid, cartitem_product_name, cartitem_product_price, cartitem_quantity, cartitem_subtotal, cartitem_product_gst, cartitem_user_ip, cartitem_user_browser, cartitem_created )
-        values( :cid, :product_id, :variant_id, :type_id, :uid, :product_name, :product_price, :qty, :subtotal, :product_gst, :ip, :browser, now() )";
+      $sql = "INSERT INTO tbl_cartitem ( cartitem_cart_id, cartitem_product_id, cartitem_variant_id, cartitem_type_id, cartitem_product_uid, cartitem_product_name, cartitem_variant_name, cartitem_product_price, cartitem_quantity, cartitem_subtotal, cartitem_product_gst, cartitem_user_ip, cartitem_user_browser, cartitem_created )
+        values( :cid, :product_id, :variant_id, :type_id, :uid, :product_name, :variant_name, :product_price, :qty, :subtotal, :product_gst, :ip, :browser, now() )";
       if($res = $DBobject->wrappedSql($sql, $params)){
         $errorCnt = 0;
         $cartitem_id = $DBobject->wrappedSqlIdentity();
@@ -1046,11 +1047,12 @@ class cart{
           $this->RemoveFromCart($item['cartitem_id']);
         } else{
           if($DBproduct['product_price'] != $item['cartitem_product_price'] || $DBproduct['variant_id'] != $item['cartitem_variant_id'] || $DBproduct['product_name'] != $item['cartitem_product_name'] || $DBproduct['product_gst'] != $item['cartitem_product_gst']){
-            $sql = "UPDATE tbl_cartitem SET cartitem_variant_id = :variant_id, cartitem_product_price = :price, cartitem_product_name = :product_name, cartitem_product_gst = :product_gst, cartitem_subtotal = :subtotal  WHERE cartitem_id = :id";
+            $sql = "UPDATE tbl_cartitem SET cartitem_variant_id = :variant_id, cartitem_product_price = :price, cartitem_product_name = :product_name, variant_name = :variant_name, cartitem_product_gst = :product_gst, cartitem_subtotal = :subtotal  WHERE cartitem_id = :id";
             $DBobject->wrappedSql($sql, array(
                 ":id" => $item['cartitem_id'], 
                 ":price" => $DBproduct['product_price'], 
                 ":product_name" => $DBproduct['product_name'], 
+                ":variant_name" => $DBproduct['variant_name'], 
                 ":variant_id" => $DBproduct['variant_id'], 
                 ":product_gst" => $DBproduct['product_gst'], 
                 ":subtotal" => floatval($DBproduct['product_price']) * $item['cartitem_quantity'] 

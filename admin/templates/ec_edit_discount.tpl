@@ -134,14 +134,14 @@
                 </div>
               </div>
             </div>
-            <!-- 			{if $fields.discount_used}
-							<div class="row form-group">
-								<label class="col-sm-3 control-label" for="id_discount_used">Used</label>
-								<div class="col-sm-5">
-									<span class="form-control number">{$fields.discount_used}</span>
-								</div>
-							</div>
-						{/if} -->
+    	   {if $fields.discount_used}
+			<div class="row form-group">
+				<label class="col-sm-3 control-label" for="id_discount_used">Used</label>
+				<div class="col-sm-5">
+					<span class="form-control number">{$fields.discount_used}</span>
+				</div>
+			</div>
+		    {/if} 
             
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_discount_published">Active</label>

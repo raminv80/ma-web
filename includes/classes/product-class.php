@@ -173,6 +173,7 @@ class ProductClass extends ListClass {
     $result['new']['flag'] = 0;
     $result['new']['variants'] = array();
     $result['has_attributes'] = array();
+    $result['has_parent_attributes'] = array();
     $result['image'] = '';
   
     //Check all variants
@@ -216,7 +217,7 @@ class ProductClass extends ListClass {
         }
         
         //Create attributes array
-        $sql = "SELECT tbl_productattr.*, attribute_name, attribute_type, attr_value_name, attr_value_image FROM tbl_productattr
+        $sql = "SELECT tbl_productattr.*, attribute_name, attribute_type, attr_value_name, attr_value_image, attr_value_associates FROM tbl_productattr
             LEFT JOIN tbl_attribute ON attribute_id = productattr_attribute_id
             LEFT JOIN tbl_attr_value ON attr_value_id = productattr_attr_value_id
             WHERE productattr_deleted IS NULL AND productattr_variant_id = :id GROUP BY attr_value_id";
@@ -224,8 +225,13 @@ class ProductClass extends ListClass {
           foreach($attr as $a){
             $result['has_attributes'][$a['productattr_attribute_id']][$a['productattr_attr_value_id']]['values'] = array('attribute_name' => $a['attribute_name'], 'attribute_name' => $a['attribute_name'], 'attr_value_name' => $a['attr_value_name'], 'attr_value_image' => $a['attr_value_image']);
             $result['has_attributes'][$a['productattr_attribute_id']][$a['productattr_attr_value_id']]['variants'][] = $r['variant_id'];
+            if(!empty($a['attr_value_associates']) && isJson($a['attr_value_associates'])){
+              //Set PARENT attr-values array
+              $result['has_parent_attributes'] = array_unique(array_merge($result['has_parent_attributes'], json_decode($a['attr_value_associates'])), SORT_REGULAR);
+            }
           }
         }
+        
       }
       
       //Get hero image
@@ -266,10 +272,13 @@ class ProductClass extends ListClass {
         $valuesArr = array_diff($valuesArr, array($newValue));
       }
       
-      //Insert product_object_id 
-      if(count($valuesArr) <= $maxValues){
-        $valuesArr[] = $newValue;
+      //Remove existing products  
+      while(count($valuesArr) >= $maxValues){
+        array_shift($valuesArr);
       }
+      
+      //Insert product_object_id
+      $valuesArr[] = $newValue;
       
       $value =  implode('.', $valuesArr);
       

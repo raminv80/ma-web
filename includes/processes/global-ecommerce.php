@@ -12,7 +12,7 @@ $SMARTY->assign('redirect', $redirect);
 $_SESSION['redirect'] = null;
 
 // Redirect to login page when displaying members only page and user is not logged in
-if((!empty($SMARTY->getTemplateVars('listing_membersonly')) && $REQUEST_URI != $loginUrl && empty($_SESSION['user']['public']['id']))
+if(((!empty($SMARTY->getTemplateVars('listing_membersonly')) || !empty($SMARTY->getTemplateVars('product_membersonly'))) && $REQUEST_URI != $loginUrl && empty($_SESSION['user']['public']['id']))
     || ($REQUEST_URI == $checkoutUrl && empty($_SESSION['user']['public']['id']) && empty($_SESSION['user']['new_user']))
   ){
   $_SESSION['redirect'] = $REQUEST_URI;

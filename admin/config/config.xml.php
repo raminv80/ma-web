@@ -847,6 +847,17 @@
         </process>
       </subsection>
     </section>
+    <section level="1" subsection="true">
+      <showlist>FALSE</showlist>
+      <url>download</url>
+      <title>Download</title>
+      <type>CUSTOM</type>
+      <subsection>
+        <url>reports</url>
+        <title>Reports</title>
+        <template>reports.tpl</template>
+      </subsection>
+    </section>
   </group>
 
   <smartytemplate_config><!-- This element contains the smarty template values -->

@@ -6299,7 +6299,7 @@ html[xmlns] .flexslider .slides {
     opacity: 1;
     cursor: default; }
 
-@media screen and (max-width: 860px) {
+@media screen and (max-width: 992px) {
   .flex-direction-nav .flex-prev {
     opacity: 1; }
   .flex-direction-nav .flex-next {
@@ -6798,6 +6798,20 @@ a {
       margin: 0; }
     .newslbox .newsl .red {
       color: #e9003b; }
+
+.margintb15 {
+  margin: 15px 0; }
+
+.white-tag {
+  text-align: center;
+  min-height: 34px;
+  margin-top: 10px;
+  background: #ffffff;
+  color: #e9003b;
+  padding: 5px 14px;
+  border: 1px solid #e9003b;
+  border-radius: 20px;
+  text-transform: none; }
 
 .prod {
   border: 1px solid #dedede; }

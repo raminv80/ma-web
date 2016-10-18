@@ -16,16 +16,17 @@
   </div>
   <div class="row attr_values" id="attr_value{$attrvalueno}">
     <input type="hidden" value="attribute_id" name="default[attr_value_attribute_id]" />
-    <input type="hidden" value="{$attr_value.attr_value_id}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_id]" id="attr_value_id_{$attrvalueno}" class="key" />
+    <input type="hidden" value="{$attr_value.attr_value_id}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_id]" id="attr_value_id_{$attrvalueno}" class="key json-key-value" />
     <input type="hidden" value="attr_value_id" name="field[10][tbl_attr_value][{$attrvalueno}][id]" id="id_{$attrvalueno}" />
     <input type="hidden" value="{$attr_value.attr_value_attribute_id}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_attribute_id]" id="attr_value_attribute_id_{$attrvalueno}" class="key" />
     <input type="hidden" value="{if $attr_value.attr_value_created}{$attr_value.attr_value_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_created]" id="attr_value_created_{$attrvalueno}">
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_name_{$attrvalueno}">Value*</label>
       <div class="col-sm-4">
-        <input class="form-control" type="text" value="{$attr_value.attr_value_name}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_name]" id="attr_value_name_{$attrvalueno}" onchange="$('#attr_value_name_{$attrvalueno}_preview').html(this.value);" required>
+        <input class="form-control json-name-value" type="text" value="{$attr_value.attr_value_name}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_name]" id="attr_value_name_{$attrvalueno}" onchange="$('#attr_value_name_{$attrvalueno}_preview').html(this.value);" required>
       </div>
     </div>
+    {if $attrtype eq 0 || !$attrtype}
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_flag1_{$attrvalueno}">Front-end editable</label>
       <div class="col-sm-5">
@@ -34,6 +35,7 @@
            onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="attr_value_flag1_{$attrvalueno}">
       </div>
     </div>
+    {/if}
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_description_{$attrvalueno}">Description</label>
       <div class="col-sm-4">
@@ -60,23 +62,22 @@
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_flag1_{$attrvalueno}">Parent</label>
       <div class="col-sm-5">
-        <input type="hidden" value="{if $attr_value.attr_value_flag1 eq 1}1{else}0{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_flag1]" class="value">
+        <input type="hidden" value="{if $attr_value.attr_value_flag1 eq 1}1{else}0{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_flag1]" class="value json-addkey">
         <input class="chckbx" type="checkbox" {if $attr_value.attr_value_flag1 eq 1} checked="checked" {/if}
-           onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="attr_value_flag1_{$attrvalueno}">
+           onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1');$(this).closest('.attr_values').find('.json-selector').fadeOut(); }else{ $(this).parent().children('.value').val('0');$(this).closest('.attr_values').find('.json-selector').fadeIn(); }" id="attr_value_flag1_{$attrvalueno}">
       </div>
     </div>
-    {* PENDING TO DO
-    <div class="row form-group">
+    <div class="row form-group json-selector" {if $attr_value.attr_value_flag1 eq 1}style="display:none"{/if}>
       <label class="col-sm-3 control-label" for="attr_value_associates{$attrvalueno}">Parents</label>
-      <input type="hidden" value="{$attr_value.attr_value_associates}" id="hidden-attr_value_associates{$attrvalueno}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_associates]" class="json-value">
+      <input type="hidden" value='{$attr_value.attr_value_associates}' id="hidden-attr_value_associates{$attrvalueno}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_associates]" class="json-value">
       <div class="col-sm-5 multiselect-json">
         <div>
-          <a href="javascript:void(0);" class="btn btn-info" onclick="LoadAttrParentSelect($(this))">Edit</a>
+          <a href="javascript:void(0);" class="btn btn-info" onclick="SelectToJSONsync(this);">Edit</a>
         </div>
-        <select class="form-control" multiple="multiple" name="" onchange="multiselectToJSON($(this))" id="attr_value_associates{$attrvalueno}">
+        <select style="display:none;" class="form-control json-multiselect" multiple="multiple" name="" onchange="$(this).closest('.form-group').find('.json-value').val(JSON.stringify($(this).val()))" id="attr_value_associates{$attrvalueno}">
         </select>
       </div>
-    </div>*}
+    </div>
     {elseif $attrtype eq '2'}
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_var1_{$attrvalueno}">Engraving line 1</label>

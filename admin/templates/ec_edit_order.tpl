@@ -32,12 +32,12 @@
 					<td><b>Billing address:</b></td>
 					<td class="text-center">{$fields.payment.0.billing_address.0.address_name} {$fields.payment.0.billing_address.0.address_surname}</td>
 					<td class="text-center" colspan="2">
-						{$fields.payment.0.billing_address.0.address_line1} 
+                        {$fields.payment.0.billing_address.0.address_line1} 
 						{$fields.payment.0.billing_address.0.address_line2} 
-						{$fields.payment.0.billing_address.0.address_suburb}, 
-						{$fields.payment.0.billing_address.0.address_state}, 
+						{if $fields.payment.0.billing_address.0.address_suburb}{$fields.payment.0.billing_address.0.address_suburb},{/if} 
+						{if $fields.payment.0.billing_address.0.address_state}{$fields.payment.0.billing_address.0.address_state}, {/if} 
 						{$fields.payment.0.billing_address.0.address_country} 
-						{$fields.payment.0.billing_address.0.address_postcode}. 
+						{if $fields.payment.0.billing_address.0.address_postcode}{$fields.payment.0.billing_address.0.address_postcode}. {/if} 
 						{if $fields.payment.0.billing_address.0.address_telephone} {$fields.payment.0.billing_address.0.address_telephone}{/if}
 						{if $fields.payment.0.billing_address.0.address_telephone && $fields.payment.0.billing_address.0.address_telephone}{/if} 
 						{if $fields.payment.0.billing_address.0.address_mobile} / {$fields.payment.0.billing_address.0.address_mobile} {/if}
@@ -50,10 +50,10 @@
 						<strong>
 						{$fields.payment.0.shipping_address.0.address_line1} 
 						{$fields.payment.0.shipping_address.0.address_line2} 
-						{$fields.payment.0.shipping_address.0.address_suburb}, 
-						{$fields.payment.0.shipping_address.0.address_state}, 
+						{if $fields.payment.0.shipping_address.0.address_suburb}{$fields.payment.0.shipping_address.0.address_suburb}, {/if}
+						{if $fields.payment.0.shipping_address.0.address_state}{$fields.payment.0.shipping_address.0.address_state}, {/if}
 						{$fields.payment.0.shipping_address.0.address_country} 
-						{$fields.payment.0.shipping_address.0.address_postcode}. 
+						{if $fields.payment.0.shipping_address.0.address_postcode}{$fields.payment.0.shipping_address.0.address_postcode}. {/if}
 						{if $fields.payment.0.shipping_address.0.address_telephone} {$fields.payment.0.shipping_address.0.address_telephone}{/if}
 						{if $fields.payment.0.shipping_address.0.address_telephone && $fields.payment.0.shipping_address.0.address_telephone}{/if} 
 						{if $fields.payment.0.shipping_address.0.address_mobile} / {$fields.payment.0.shipping_address.0.address_mobile} {/if}
@@ -83,12 +83,21 @@
 			<tbody>
 				{foreach $fields.items as $item}
 				<tr>
-					<td>{if $item.cartitem_product_gst eq '0'}*{/if}{$item.cartitem_product_name} 
-						{if $item.attributes} 
-			  				{foreach $item.attributes as $attr}
-			    				<small>/ {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}</small>
-		   					{/foreach}
-		  				{/if}
+					<td>
+                    <div>{$item.cartitem_product_name}{if $item.cartitem_type_id eq 3} - {$item.cartitem_variant_name}{/if}{if $item.cartitem_product_gst eq '1'} {assign var=free value=1} *{/if}</div> 
+                    {if $item.cartitem_type_id eq 1}
+                      <div><small>Product code: {$item.cartitem_product_uid}</small></div> 
+                      {if $item.attributes} {foreach from=$item.attributes item=attr}
+                      <div><small>
+                        {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}
+                        {if $attr.cartitem_attr_attr_value_additional && $attr.cartitem_attr_attribute_id eq 1} 
+                          ({foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}<span>{$v}</span>{/foreach}) 
+                        {/if} 
+                        </small>
+                      </div>
+                      {if $attr.cartitem_attr_attr_value_additional && $attr.cartitem_attr_attribute_id eq 4} {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
+                      <div><small>Engraving Line {$k}: {$v}</small></div> {/foreach} {/if} {/foreach} {/if} {/if}
+
 		  			</td>
 					<td class="text-right">{$item.cartitem_quantity}</td>
 					<td class="text-right">${$item.cartitem_product_price|number_format:2:".":","}</td>
@@ -107,14 +116,13 @@
 					<td class="text-right" colspan="3">Shipping</td>
 					<td class="text-right">${$fields.payment.0.payment_shipping_fee|number_format:2:".":","}</td>
 				</tr>
-				<tr>
+				{*<tr>
 					<td class="text-right" colspan="3">Total (excl. GST)</td>
 					{assign var='totalExclGST' value=$fields.payment.0.payment_charged_amount - $fields.payment.0.payment_gst}
 					<td class="text-right">(${$totalExclGST|number_format:2:".":","})</td>
-				</tr>
+				</tr>*}
 				<tr>
-					<td colspan="2"><small>{* COMMENTED OUT (*) GST Free item. *}</small></td>
-					<td class="text-right">Incl. GST</td>
+					<td class="text-right" colspan="3">Incl. GST</td>
 					<td class="text-right">(${$fields.payment.0.payment_gst|number_format:2:".":","})</td>
 				</tr>
 				<tr>
