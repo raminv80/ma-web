@@ -15,7 +15,7 @@ if(strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST'].'/products/')){
     $url.="/".$arr[$i];
   }
   
-  $sql = 'SELECT listing_name FROM tbl_listing WHERE listing_url = :listing_url AND listing_deleted IS NULL AND listing_type_id = 10';
+  $sql = 'SELECT listing_name FROM tbl_listing WHERE listing_url = :listing_url AND listing_deleted IS NULL AND listing_type_id = 10 AND listing_published = 1';
   if($res = $DBobject->executeSQL($sql,array("listing_url"=>$arr[count($arr)-1]))){
 
     $SMARTY->assign('backcollectionURL', $url);
