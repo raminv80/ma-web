@@ -258,7 +258,12 @@
       minDate: "+1D"
     });
 
-    $('#gift_form').validate();
+    $('#gift_form').validate({
+      submitHandler: function(form) {
+        $('#fbsub').val('Processing...').attr('disabled','disabled');
+      	form.submit();
+      }
+    });
 
     $('#price').rules("add", {
       required: true,

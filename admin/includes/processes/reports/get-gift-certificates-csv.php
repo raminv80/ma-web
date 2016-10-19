@@ -30,7 +30,7 @@ $params['enddate'] = $endDate;
 $result = array();
 
 $sql = "SELECT payment_transaction_no AS 'Order ID', voucher_code AS 'Code', voucher_amount AS 'Amount', voucher_name AS 'Sender name', voucher_email AS 'Sender email', voucher_recipientname AS 'Recipient name', 
-  voucher_recipientemail AS 'Recipient email', voucher_message AS 'Message', voucher_created AS 'Created', voucher_start_date AS 'Start date', voucher_end_date AS 'End date', voucher_redeemed AS 'Redeemed' 
+  voucher_recipientemail AS 'Recipient email', voucher_message AS 'Message', voucher_anonymous AS 'Anonymous', voucher_created AS 'Created', voucher_start_date AS 'Start date', voucher_end_date AS 'End date', voucher_redeemed AS 'Redeemed' 
   FROM tbl_voucher LEFT JOIN tbl_payment ON payment_id = voucher_payment_id
   WHERE voucher_deleted IS NULL {$wheresql} ORDER BY voucher_created DESC";
 if($res = $DBobject->wrappedSql($sql, $params)){

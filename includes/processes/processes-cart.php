@@ -3,6 +3,18 @@ global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 $referer = parse_url($_SERVER['HTTP_REFERER']);
 if($referer['host'] == $GLOBALS['HTTP_HOST']){
   switch($_POST['action']){
+    case 'SaveFiltersInSession':
+      if(!empty($_POST['listing_object_id'])){
+        $_SESSION['tempvars']['filters'][$_POST['listing_object_id']] = $_POST['filters'];
+        $success = true;
+        $error = null;
+      }
+      echo json_encode(array(
+          'success' => $success,
+          'error' => $error
+      ));
+      die();
+      
     case 'ADDTOCART':
       try{
         $cart_obj = new cart($_SESSION['user']['public']['id']);
@@ -428,6 +440,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           //MAF - Create new member
           if(empty($userArr) && $hasMAFProd){
             $MAFMemberId = $user_obj->CreateMember($_SESSION['user']['new_user']);
+            $user_obj->SetPaymentIdUserTemp($paymentId);
             if(empty($MAFMemberId)){
               //create guest user when failed
               $hasMAFProd = false;
@@ -920,6 +933,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                   "recipientname" => $_POST['rname'],
                   "recipientemail" => $_POST['remail'],
                   "message" => $_POST['message'],
+                  "anonymous" => (empty($_POST['anonymous']) ? 0 : 1),
                   "amount" => $chargedAmount,
                   "start_date" => $startDate,
                   "end_date" => $endDate

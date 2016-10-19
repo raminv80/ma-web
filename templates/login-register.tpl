@@ -216,7 +216,7 @@
                       State<span>*</span>:
                     </label>
                     <select class="form-control" id="state" name="state" required>
-                      <option value="">Select an option</option>
+                      <option value="">Please select an option</option>
                       {foreach $options_state as $opt}
                       <option value="{$opt.value}" {if $new_user.state eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}

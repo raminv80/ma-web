@@ -12,6 +12,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
     if($_POST['nature_enquiry']){
       $sql = "SELECT `reason_name`,`reason_email` FROM `tbl_reason` WHERE `reason_id`= :reason_id AND `reason_deleted` IS NULL";
       $res = $DBobject->wrappedSql($sql, array("reason_id"=>$_POST['nature_enquiry']));
+      $nature_enquiry_id = $_POST['nature_enquiry'];
       $nature_enquiry = $res[0]['reason_name'];
       $contact_email = $res[0]['reason_email'];
     }
@@ -71,6 +72,9 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         );
         $content = serialize($_POST);
         $buf .= '<h2>Website ' . $_POST['form_name'] . '</h2>';
+        if(isset($_POST['nature_enquiry'])){
+          $_POST['nature_enquiry'] = $nature_enquiry;
+        }
         foreach($_POST as $name => $var){
           if(!in_array($name, $banned)){
             $name = (strtolower($_POST['form_name']) == 'share your story' && $name == 'enquiry') ? 'Story' : $name;
@@ -115,8 +119,8 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             ":contact_name" => $_POST['name'], 
             ":contact_site" => $SITE, 
             ":contact_form_name" => $_POST['form_name'], 
-            ":contact_reference_id" => '', 
-            ":contact_reference_name" => $_POST['nature_enquiry'], 
+            ":contact_reference_id" => ($nature_enquiry)?$nature_enquiry_id:0, 
+            ":contact_reference_name" => ($nature_enquiry)?$nature_enquiry:$_POST['nature_enquiry'], 
             ":contact_name" => $_POST['name'], 
             ":contact_email" => $_POST['email'], 
             ":contact_phone" => $_POST['phone'], 

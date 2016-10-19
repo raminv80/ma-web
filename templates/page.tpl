@@ -15,7 +15,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <title>{$product_seo_title}{$listing_seo_title}</title>
-<link href="/images/favicon.png" type="image/png" rel="shortcut icon">
+<link href="/images/favicon.ico" type="image/png" rel="shortcut icon">
 
 <!-- for Facebook -->
 <meta property="og:title" content="{if $listing_share_title || $product_share_title}{$listing_share_title}{$product_share_title}{else}{$product_seo_title}{$listing_seo_title}{/if}" />

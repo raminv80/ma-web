@@ -24,7 +24,7 @@
         <h3>Make a donation to MedicAlert Foundation</h3>
         <p>Please select a donation amount:</p>
 
-        <form id="gift_form" accept-charset="UTF-8" method="post" action="/process/cart" novalidate="novalidate">
+        <form id="gift_form" accept-charset="UTF-8" method="post" action="/process/cart">
           <input type="hidden" name="action" value="quickcheckout" />
           <input type="hidden" name="product_id" value="{$products.product_object_id}" />
           <input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
@@ -242,7 +242,12 @@
 
 	$('[data-toggle="tooltip"]').tooltip();
 
-    $('#gift_form').validate();
+    $('#gift_form').validate({
+      submitHandler: function(form) {
+        $('#fbsub').val('Processing...').attr('disabled','disabled');
+      	form.submit();
+      }
+    });
 
     $('#price').rules("add", {
       required: true,

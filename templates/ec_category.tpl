@@ -29,7 +29,7 @@
           <div class="prodcat">
             <a href="{$listing_url}/{$item.listing_url}" title="View {$item.listing_name} Products">
               <div class="imgcont">
-                <img src="{if $item.listing_image neq ''}{$item.listing_image}{else}/images/no-image-available.png{/if}?width=800&height=360&crop=1" alt="{$item.listing_name}" title="{$item.listing_name}" class="img-responsive">
+                <img src="{if $item.listing_image neq ''}{$item.listing_image}{else}/images/no-image-available.png{/if}?width=800&height=400&crop=1" alt="{$item.listing_name}" title="{$item.listing_name}" class="img-responsive">
               </div>
               <div class="prodcat-txt prodlt">
                 Shop <span>{$item.listing_name}</span>

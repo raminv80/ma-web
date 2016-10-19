@@ -1475,6 +1475,61 @@ class UserClass{
     return $result;
   }
 	
+  /**
+   * ONLY FOR MAF - Temporary user 
+   * Require associative array
+   *
+   * @param array $user
+   * @return boolean
+   */
+  function CreateUserTemp($user){
+
+    $sql = "SELECT usertemp_id FROM tbl_usertemp WHERE usertemp_deleted IS NULL AND usertemp_session = :id";
+    if($res = $this->DBobj->wrappedSql($sql, array(':id' => session_id()))){
+      return $res[0]['usertemp_id'];
+    }
+    
+    $params = array(
+        ":gname" => $user['gname'],
+        ":surname" => $user['surname'],
+        ":email" => $user['email'],
+        ":mobile" => $user['mobile'],
+        ":dob" => $user['db_dob'],
+        ":gender" => $user['gender'],
+        ":address" => $user['address'],
+        ":suburb" => $user['suburb'],
+        ":state" => $user['state'],
+        ":postcode" => $user['postcode'],
+        ":heardabout" => $user['heardabout'],
+        ":session" => session_id(),
+        ":ip" => $_SERVER['REMOTE_ADDR'],
+        ":browser" => $_SERVER['HTTP_USER_AGENT']
+    );
+  
+    $sql = "INSERT INTO tbl_usertemp ( usertemp_gname, usertemp_surname, usertemp_email, usertemp_mobile, usertemp_dob, usertemp_gender, usertemp_address, usertemp_suburb, usertemp_state, usertemp_postcode, usertemp_heardabout, usertemp_session, usertemp_ip, usertemp_browser, usertemp_created)
+					 values ( :gname, :surname, :email, :mobile, :dob, :gender, :address, :suburb, :state, :postcode, :heardabout, :session, :ip, :browser, now() )";
+    if($this->DBobj->wrappedSql($sql, $params)){
+      return $this->DBobj->wrappedSqlIdentity();
+    } 
+    return 0;
+  }
+  
+  
+  /**
+   * ONLY FOR MAF - set payment_id for temporary user
+   * 
+   * @param int $_paymentId
+   * @return boolean
+   */
+  function SetPaymentIdUserTemp($_paymentId){
+    
+    $params = array(
+        ":session" => session_id(),
+        ":payment_id" => $_paymentId
+    );
+    $sql = "UPDATE tbl_usertemp SET usertemp_payment_id = :payment_id WHERE usertemp_deleted IS NULL AND usertemp_session = :session";
+    return  $this->DBobj->wrappedSql($sql, $params);
+  }
 
 }
 

@@ -12,7 +12,7 @@
     <div class="row" id="productout">
 	  <div class="col-sm-12">
         <div id="back">
-          <a href="/products{if $backcollectionURL}{$backcollectionURL}{/if}"> < Back to{if $backcollection} {$backcollection} collection{else} collections{/if} 
+          <a href="/products{if $backcollectionURL}{$backcollectionURL}{/if}"> < Back to{if $backcollection} {$backcollection} {else} collections{/if} 
           </a>
         </div>
 	  </div>
@@ -236,7 +236,7 @@
 	                      <div class="col-sm-12">
 						  	<label>Need help with engraving?</label>
 						  	<p>If you’re unsure of what details to engrave, simply click ‘add to cart’ and proceed through to payment and we’ll contact you shortly to discuss your needs. </p>
-						  	<a href="/bracelet-sizing-and-engraving-tips">Engraving tips ></a>
+						  	<a href="/bracelet-sizing-and-engraving-tips" target="_blank" title="Click to view engraving tips">Engraving tips ></a>
 	                      </div>
                       </div>
                     </div>

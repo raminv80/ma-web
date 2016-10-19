@@ -240,7 +240,7 @@
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="state">State*:</label>
                       <select id="state" name="address[B][address_state]" class="required form-control">
-                        <option value="">Select an option</option>
+                        <option value="">Please select an option</option>
                         {$cur_state = $selectedShippingState}
                         {if $address}{$cur_state = $address.B.address_state}{else}{if $user.maf.main.user_state_id}{$cur_state = $user.maf.main.user_state_id}{else}{$cur_state = $new_user.state}{/if}{/if}
                         {foreach $options_state as $opt }
@@ -264,7 +264,7 @@
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="phone">Phone*:</label>
-                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{if $user.maf.main.user_mobile}{$user.maf.main.user_mobile}{else}{$new_user.mobile}{/if}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required"  />
+                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{if $user.maf.main.user_mobile}{$user.maf.main.user_mobile}{else}{$new_user.mobile}{/if}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required" maxlength="10" pattern="[0-9]"/>
 						<div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -310,7 +310,7 @@
 						<div class="col-sm-6 form-group">
                          <label class="visible-ie-only" for="statesh">State*:</label>
                           <select id="statesh" name="address[S][address_state]" class="shipping-select-req required form-control">
-                            <option value="">Select an option</option>
+                            <option value="">Please select an option</option>
                             {foreach $options_state as $opt }
                             <option value="{$opt.value}" {if $address && $address.S.address_state eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                           {/foreach}
@@ -573,7 +573,7 @@
               <div class="row auto-opts" id="auto-dd-wrapper" style="display: none;">
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autobsb">BSB<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="7" id="autobsb" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="6" id="autobsb" >
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -585,7 +585,7 @@
 
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autoddno">Account number<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" autocomplete="off" maxlength="10" id="autoddno"  pattern="[0-9]">
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" autocomplete="off" maxlength="9" id="autoddno"  pattern="[0-9]">
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -681,6 +681,11 @@
     
     $('#autoddno').rules("add", {
       digits: true
+    });
+    
+    $('#autobsb').rules("add", {
+      digits: true,
+      minlength: 6
     });
 
     {/if}

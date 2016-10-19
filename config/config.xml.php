@@ -14,7 +14,7 @@
 		<state>SA</state>
 		<postcode>5063</postcode>
     </address>
-    <phone>(+61)8 8273 8401</phone>
+    <phone>(+61)8 8274 8400</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
     <email>enquiry@medicalert.org.au</email>
@@ -214,6 +214,11 @@
     <url>faqs</url>
     <template>faqs.tpl</template>
     <pageID>103</pageID>
+  </static_page>
+  <static_page>
+    <url>personal-alarms-and-monitoring</url>
+    <template>personal-alarms-and-monitoring.tpl</template>
+    <pageID>687</pageID>
   </static_page>
   <static_page>
     <url>member-partners</url>

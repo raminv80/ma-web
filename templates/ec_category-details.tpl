@@ -30,7 +30,7 @@
 
 {$product_cnt = 0}
 {if $products && count($products)}{$product_cnt = count($products)}{/if}
-<div id="prodcatdet">
+<div id="prodcatdet" data-listing-object-id="{$listing_object_id}" data-saved-filters="{$tempvars.filters.$listing_object_id}">
   <div class="container">
     <div class="row">
 	  <div class="col-sm-12">
@@ -74,7 +74,7 @@
 				</div>
 				<div id="narrow" class="panel-collapse collapse" role="tabpanel" aria-labelledby="narrow">
 					<div class="panel-body">
-                        <a href="javascript:void(0)" onclick="ResetFilters()">Reset filters</a>
+                        <a href="javascript:void(0)" onclick="ResetFilters()">Reset filters</a> <span>({$product_cnt} item{if $product_cnt gt 1}s{/if})</span>
 						<!---Type-->
 						<div class="panel-heading subhead" role="tab" id="accordion3">
 							<h4 class="panel-title">
@@ -278,13 +278,6 @@
     $('.panel-collapse').on('shown.bs.collapse', toggleIcon);
 
   $(document).ready(function() {
-    
-
-    
-   /*  $("#showall").click(function() {
-      $(this).hide();
-      $("#product-list #categorycontainer .prodcatout").css("display", "block !important");
-    }); */
 
   $("#products-wrapper").isotope({
 	  itemSelector: '.prodout',
@@ -297,6 +290,19 @@
 		}
 	  }
    });
+  
+  	if($('#prodcatdet').attr('data-saved-filters')){
+  	  var filterArr = $('#prodcatdet').attr('data-saved-filters').split('.'); 
+  	  $.each(filterArr, function(k1, v1){
+  	    $('.iso-filter').each(function(k2, v2){
+         if(v1 == $(v2).val()) {
+           $(v2).attr('checked', 'checked');
+           return false;
+         }
+       	});
+  	  });
+  	  filterOptions(true);
+  	}
 
     refreshFiltersCount();
 
@@ -319,12 +325,26 @@
     
   });
 
-  function filterOptions(){
+  var runningIsotope = false;
+  function filterOptions(SKIPSAVE){
+    
+    if(runningIsotope) {
+      return false;
+    }
+    runningIsotope = true;
+    
     var classesStr = '';
     //Check all values
     $('.iso-filter:checked').each(function(){
       classesStr += '.' + $(this).val();
     });
+    
+    if(!SKIPSAVE){
+      SaveFiltersInSession(classesStr);  
+    }
+    
+    
+    $('.iso-filter').attr('disabled', 'disabled');
     
     var $grid = $("#products-wrapper").isotope({
    	  itemSelector: '.prodout',
@@ -339,6 +359,7 @@
       $('#prodcnt-mob').html('Filter ' + filteredItems.length + ' product' + (filteredItems.length > 1 ? 's' : ''));
       
       refreshFiltersCount();
+      runningIsotope = false;
     });
     
   }
@@ -361,13 +382,13 @@
   var maxLastView = 0;
   $(window).scroll(function() {
     var curHeight = $(window).scrollTop() + $(window).height();
-    if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 700){
+    if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 500){
       minLastView = curHeight;
-      $("#products-wrapper").isotope('reloadItems' ).isotope();
+      $("#products-wrapper").isotope('layout');
     }
-    if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 700){
+    if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 500){
       maxLastView = curHeight;
-      $("#products-wrapper").isotope('reloadItems' ).isotope();
+      $("#products-wrapper").isotope('layout');
     }
  });
   
@@ -417,6 +438,28 @@
   function ResetFilters(){
     $('.iso-filter:checked').removeAttr('checked');
     filterOptions();
+  }
+  
+  function SaveFiltersInSession(FILTERS){
+    $.ajax({
+      type: "POST",
+      url: "/process/cart",
+      cache: false,
+      data: 'action=SaveFiltersInSession&filters='+FILTERS+'&listing_object_id='+$('#prodcatdet').attr('data-listing-object-id'),
+      dataType: "json",
+      success: function(obj) {
+        try{
+          if(obj.success){
+            console.log('filters-saved');
+          }
+        }catch(err){
+          console.log('TRY-CATCH error');
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log('AJAX error:' + errorThrown);
+      }
+    });
   }
 </script>
 {/block}

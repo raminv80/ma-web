@@ -27,6 +27,10 @@
         <div class="profile-locked">
           {$listing_content2}
         </div>
+        {else if $user.maf.main.lifetime eq 1}
+          <div class="profile-locked">
+              Please be aware that as a lifetime member, you'll be charged $6.50 for any changes you want to make.
+          </div>
         {/if}
       </div>
     </div>
@@ -56,7 +60,7 @@
                     <label for="title" class="visible-ie-only">
                       Title:
                     </label>
-                    <select class="selectlist-medium" id="title" name="title">
+                    <select class="selectlist-medium" id="title" name="user_title">
                       <option value="">Please select</option>
                       <option value="." {if $user.maf.update.user_title eq '.'}selected="selected"{/if}>.</option>
                       <option value="Brother" {if $user.maf.update.user_title eq 'Brother'}selected="selected"{/if}>Brother</option>
@@ -130,7 +134,7 @@
                       State<span>*</span>:
                     </label>
                     <select class="selectlist-medium" id="state" name="user_state_id" required>
-                      <option value="">Select an option</option>
+                      <option value="">Please select an option</option>
                       {foreach $options_state as $opt}
                       <option value="{$opt.value}" {if $user.maf.update.user_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}
@@ -240,7 +244,7 @@
                   <div class="col-sm-6 form-group">
                     <label for="emerstate" class="visible-ie-only"> State: </label>
                     <select class="selectlist-medium" id="emerstate" name="contact_state_id">
-                      <option value="">Select an option</option>
+                      <option value="">Please select an option</option>
                       {foreach $options_state as $opt}
                       <option value="{$opt.value}" {if $user.maf.update.contact_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}
@@ -314,7 +318,7 @@
                   <div class="col-sm-6 form-group">
                     <label for="docstate" class="visible-ie-only"> State: </label>
                     <select class="selectlist-medium" id="docstate" name="doc_state_id">
-                      <option value="">Select an option</option>
+                      <option value="">Please select an option</option>
                       {foreach $options_state as $opt}
                       <option value="{$opt.value}" {if $user.maf.update.doc_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}

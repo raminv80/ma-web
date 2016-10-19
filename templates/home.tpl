@@ -138,9 +138,9 @@
                 {foreach $testimonials as $t}
                 <li>
                   <div>
-                    <img src="/images/homequote.png" alt="" />
+                    <img src="/images/homequote.png" alt="Testimonials" />
                   </div>
-                  {$t.listing_content2|truncate:220:'...'} <a href="/testimonials/'|cat:$t.listing_url|cat:'">Read more</a>
+                  {$t.listing_content2|truncate:220:'...'} <br><a href="/testimonials/{$t.listing_url}" title="Click to read more">Read more</a>
                 </li>
                 {/foreach}
               </ul>

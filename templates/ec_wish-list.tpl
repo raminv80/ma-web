@@ -124,7 +124,7 @@
           if(obj.url){
             window.location.href = obj.url;
           }else if(obj.success){
-            $('#response-msg').html('You wish list was sent to your email address.');
+            $('#response-msg').html('Your wish list was sent to your email address.');
             
           }else if(obj.error){
             $('#response-msg').html(obj.error);

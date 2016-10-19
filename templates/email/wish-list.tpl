@@ -505,7 +505,7 @@ a {
                          
                         <p style="font-size: 28px; line-height: 40px; color: #ed174f; font-weight: bold;">Hi {$user_name}</p>
                         
-                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">This is your MedicAlert wish list:</p>
+                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">Here is your wish list, don't forget about these great products!</p>
                         
                       </td>
                       <td class="w30" width="30" style="table-layout: fixed;"></td>
