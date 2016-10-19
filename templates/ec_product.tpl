@@ -12,7 +12,7 @@
     <div class="row" id="productout">
 	  <div class="col-sm-12">
         <div id="back">
-          <a href="/products{if $backcollection}/{$backcollection}{/if}"> < Back to{if $backcollection} {$backcollection}{/if} collections
+          <a href="/products{if $backcollectionURL}{$backcollectionURL}{/if}"> < Back to{if $backcollection} {$backcollection} collection{else} collections{/if} 
           </a>
         </div>
 	  </div>
