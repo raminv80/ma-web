@@ -125,26 +125,6 @@ class UserClass{
   }
 	
 	
-	/**
-	 * Get the website record for the member.
-	 * Used on the view details form.
-	 */
-	function getWebsiteRecord(){
-	
-		try{
-			$this->memberRecordJSONResponse = $this->medicAlertApi->memberRetrieve($this->token);
-			$this->memberRecord = json_decode($this->memberRecordJSONResponse, true);
-		}catch(exceptionMedicAlertApiNotAuthenticated $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApiSessionExpired $e){
-			$_SESSION['user'] = null; unset($_SESSION['user']);
-			header("Location: /Membership/Members_Area"); die();
-		}catch(exceptionMedicAlertApi $e){
-			header("Location: /404"); die();
-		}
-	}
-	
 	
 	/**
 	 * Build new member array based on details entered
@@ -714,25 +694,6 @@ class UserClass{
 	}
 	
 	
-	/**
-	 * Sets the allow update flag and the please note message based on the user status
-	 */
-	function checkMemberStatus(){
-		
-		$_SESSION['user']['allowupdate'] = true;
-		$_SESSION['user']['pleasenote'] = '';
-
-		if($this->memberRecord['webSiteRecord']['pendingUpdate']){ // if updates pending
-			$_SESSION['user']['allowupdate'] = false;
-			$_SESSION['user']['pleasenote'].= '<p class="large"><span class="highlight">Your updates are currently pending.</span> You can still <a href="/Products">continue to shop</a>.</p>
-											   <br />
-											   <p class="small">You are unable to make changes to your \'Personal\' details until your changes made on '.$this->memberRecord['webSiteRecord']['pendingUpdateDate'].' have been reviewed and updated by our Membership Services team.</p>';
-		}else{
-			$_SESSION['user']['allowupdate'] = true;
-		}
-		
-	}
-	
 	
 	
 	
@@ -863,20 +824,6 @@ class UserClass{
 	
 	}
 	
-	
-	/**
-	 * Determines if the member already has Direct Debit enabled
-	 * @return boolean
-	 */
-	function isDirectDebitMember(){
-
-	  if($_SESSION['user']['preferedPaymentMethod'] == "Direct Debit" || $this->memberRecord['dataBaseRecord']['details']['preferedPaymentMethod'] == "Direct Debit" || $this->memberRecord['webSiteRecord']['details']['preferedPaymentMethod'] == "Direct Debit"){ // from webSiteRecord
-	    return true;
-	  }else{
-	    return false;
-	  }
-	
-	}
 	
 	
 	/**
@@ -1209,35 +1156,35 @@ class UserClass{
                     </tr>
                 	<tr valign="top">
                     	<td class="title" width="45%">Name:</td>
-                    	<td>'.unclean($_SESSION['doc']['name']).'</td>
+                    	<td>'.unclean($_data['doc_name']).'</td>
                     </tr>
                 	<tr valign="top">
                     	<td class="title">Medical Centre:</td>
-                    	<td><span class="title">'.unclean($_SESSION['doc']['medical_centre']).'</span></td>
+                    	<td><span class="title">'.unclean($_data['doc_medical_centre']).'</span></td>
                     </tr>
                 	<tr valign="top">
                     	<td class="title">Street Address:</td>
-                    	<td>'.unclean($_SESSION['doc']['address']).'</td>
+                    	<td>'.unclean($_data['doc_address']).'</td>
                     </tr>
                 	<tr valign="top">
                     	<td class="title">Suburb:</td>
-                    	<td>'.unclean($_SESSION['doc']['suburb']).'</td>
+                    	<td>'.unclean($_data['doc_suburb']).'</td>
                     </tr>
                 	<tr valign="top">
                     	<td class="title">State:</td>
-                    	<td>'.unclean($_SESSION['doc']['state_id']).'</td>
+                    	<td>'.unclean($_data['doc_state_id']).'</td>
                     </tr>
                 	<tr valign="top">
                     	<td class="title">Postcode:</td>
-                    	<td>'.unclean($_SESSION['doc']['postcode']).'</td>
+                    	<td>'.unclean($_data['doc_postcode']).'</td>
                     </tr>
                 	<tr valign="top">
                     	<td class="title">Phone:</td>
-                    	<td>'.unclean($_SESSION['doc']['phone']).'</td>
+                    	<td>'.unclean($_data['doc_phone']).'</td>
                     </tr>
                 	<tr valign="top">
                     	<td class="title">File Number:</td>
-                    	<td><span class="title">'.unclean($_data['file_no']).'</span></td>
+                    	<td><span class="title">'.unclean($_data['doc_file_no']).'</span></td>
                     </tr>
                 </table>
             </div>

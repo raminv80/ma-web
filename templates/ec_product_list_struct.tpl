@@ -20,7 +20,10 @@
 			<a href="/{$item.product_url}">{$item.product_name}</a>
 		</div>
 		<div class="prod-price">${$item.general_details.price.min|number_format:0:'.':','}{if $item.general_details.price.min neq $item.general_details.price.max} - ${$item.general_details.price.max|number_format:0:'.':','}{/if}</div>
-    	{if $item.general_details.has_attributes.2}	
+        {if $item.general_details.has_attributes.2}
+        {$hasColour = 0}
+        {foreach $item.general_details.has_attributes.2 as $colour}{if $colour.values.attr_value_image}{$hasColour = 1}{break}{/if}{/foreach}
+        {if $hasColour eq 1}	
         <div class="colours">Available colours
 			<div class="colourbox">
              {$max = 0}
@@ -31,7 +34,7 @@
             {/foreach}
 			</div>
 		</div>
-        {/if}
+        {/if}{/if}
 		<div class="prod-wishlist"><a href="javascript:void(0)" title="Your wish list" data-pid="{$item.product_object_id}" class="prodwishlist prodwishlist-{$item.product_object_id}{if $item.product_object_id|in_array:$wishlist} active{/if}"><img src="/images/prod-wishlist{if $item.product_object_id|in_array:$wishlist}-selected{/if}.png" alt="Wishlist"></a></div>
 	</div>
 	</div>

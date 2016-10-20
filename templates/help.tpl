@@ -174,6 +174,10 @@ $(document).ready(function(){
 			digits: true,
 			minlength: 4
 		});
+	 	
+	 	$('#phone').rules("add", {
+        	minlength: 8
+       	});
 
 		$("select").selectBoxIt();
 

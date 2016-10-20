@@ -577,12 +577,17 @@ class cart{
     global $DBobject, $CONFIG_VARS;
     
     $shippingFee = 0;
+    $tax = 0;
     if(!empty($CONFIG_VARS['postage'])){
       $shippingFee = floatval(str_replace('$', '', trim($CONFIG_VARS['postage'])));
+    }
+    if(!empty($CONFIG_VARS['gst'])){
+      $tax = floatval(trim($CONFIG_VARS['gst']));
     }
     
     $subtotal = $this->GetSubtotal();
     $gst_taxable = $this->GetGSTSubtotal();
+    $gst = round($gst_taxable * (1 - 100 / (100 + $tax)) , 2);
     $discount = 0;
     $discount_error = '';
     
@@ -623,6 +628,7 @@ class cart{
         'discount' => $discount, 
         'discount_error' => $discount_error, 
         'GST_Taxable' => $gst_taxable, 
+        'GST' => $gst,
         'total' => $subtotal - $discount 
     );
   }

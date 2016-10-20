@@ -359,7 +359,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         
         $totals = $cart_obj->CalculateTotal();
         $chargedAmount = $totals['total'] + $shippingFee;
-        $gst = round(($totals['GST_Taxable']) / 11, 2);
+        $gst = $totals['GST'];
         $params = array(
             'payment_user_id' => (empty($_SESSION['user']['public']['id']) ? 0 : $_SESSION['user']['public']['id']),
             'payment_billing_address_id' => $billID,
@@ -618,7 +618,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               }
               catch(Exception $e){}
             }else{
-              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (1)', "Member id:  {$userArr['id']} <br>". $autorenewObj->GetErrorMessage());
+              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (1)', "Member id:  {$userArr['id']} <br>".print_r($billing, true).'<br>'. $autorenewObj->GetErrorMessage());
             }
           }
           
@@ -767,7 +767,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
   
       $totals = $cart_obj->CalculateTotal();
       $chargedAmount = $totals['total'] + $shippingFee;
-      $gst = round(($totals['GST_Taxable']) / 11, 2);
+      $gst = $totals['GST'];
       $params = array(
           'payment_user_id' => (empty($_SESSION['user']['public']['id']) ? 0 : $_SESSION['user']['public']['id']),
           'payment_billing_address_id' => $billID,
@@ -1028,7 +1028,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
     
         $totals = $cart_obj->CalculateTotal();
         $chargedAmount = $totals['total'] + $shippingFee;
-        $gst = round(($totals['GST_Taxable']) / 11, 2);
+        $gst = $totals['GST'];
         $params = array(
             'payment_user_id' => (empty($_SESSION['user']['public']['id']) ? 0 : $_SESSION['user']['public']['id']),
             'payment_billing_address_id' => $billID,
@@ -1052,7 +1052,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             "address_name" => $_SESSION['user']['public']['gname'],
             "address_surname" => $_SESSION['user']['public']['surname'],
             "address_email" => $_SESSION['user']['public']['email'],
-            "address_telephone" => $_SESSION['user']['public']['maf']['main']['user_mobile'],
+            "address_telephone" => (empty($_SESSION['user']['public']['maf']['main']['user_mobile']) ? str_replace(' ', '', $_SESSION['user']['public']['maf']['main']['user_phone_home']) : $_SESSION['user']['public']['maf']['main']['user_mobile']),
             "address_line1" => $_SESSION['user']['public']['maf']['main']['user_address'],
             "address_suburb" => $_SESSION['user']['public']['maf']['main']['user_suburb'],
             "address_state" => $_SESSION['user']['public']['maf']['main']['user_state_id'],
@@ -1230,7 +1230,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               }
               catch(Exception $e){}
             }else{
-              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (2)', "Member id:  {$userArr['id']} <br>". $autorenewObj->GetErrorMessage());
+              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (2)', "Member id:  {$userArr['id']} <br>".print_r($billingArr, true).'<br>'. $autorenewObj->GetErrorMessage());
             }
           }
           
@@ -1298,13 +1298,13 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
         die();
       }
-      
+      //user_phone_home
       $billingArr = array(
           "address_user_id" => $_SESSION['user']['public']['id'],
           "address_name" => $_SESSION['user']['public']['gname'],
           "address_surname" => $_SESSION['user']['public']['surname'],
           "address_email" => $_SESSION['user']['public']['email'],
-          "address_telephone" => $_SESSION['user']['public']['maf']['main']['user_mobile'],
+          "address_telephone" => (empty($_SESSION['user']['public']['maf']['main']['user_mobile']) ? str_replace(' ', '', $_SESSION['user']['public']['maf']['main']['user_phone_home']) : $_SESSION['user']['public']['maf']['main']['user_mobile']),
           "address_line1" => $_SESSION['user']['public']['maf']['main']['user_address'],
           "address_suburb" => $_SESSION['user']['public']['maf']['main']['user_suburb'],
           "address_state" => $_SESSION['user']['public']['maf']['main']['user_state_id'],
@@ -1359,7 +1359,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         die();
       
       } else{
-        sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (3)', "Member id:  {$userArr['id']} <br>". $autorenewObj->GetErrorMessage());
+        sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (3)', "Member id:  {$userArr['id']} <br>". print_r($billingArr, true).'<br>'. $autorenewObj->GetErrorMessage());
         if($error_msg = $autorenewObj->GetErrorMessage()){
           $_SESSION['error'] = $error_msg;
         } else{

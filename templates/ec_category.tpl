@@ -93,7 +93,7 @@
 					</div>
 					</div>
 					{/if}
-				<div class="prod-wishlist"><img src="/images/prod-wishlist.png" alt="Wishlist"></div>
+                <div class="prod-wishlist"><a href="javascript:void(0)" title="Your wish list" data-pid="{$item.product_object_id}" class="prodwishlist prodwishlist-{$item.product_object_id}{if $item.product_object_id|in_array:$wishlist} active{/if}"><img src="/images/prod-wishlist{if $item.product_object_id|in_array:$wishlist}-selected{/if}.png" alt="Wishlist"></a></div>
             </div>
           </li>
 		{/foreach}

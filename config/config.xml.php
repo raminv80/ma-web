@@ -24,6 +24,10 @@
     <logo>logo.png</logo>
   </company>
   <global_variables>
+    <name>gst</name>
+    <value>10</value>
+  </global_variables> 
+  <global_variables>
     <name>membership_fee</name>
     <value>$32</value>
   </global_variables>  

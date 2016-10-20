@@ -72,99 +72,100 @@
 						</a>
 					</h4>
 				</div>
-				<div id="narrow" class="panel-collapse collapse" role="tabpanel" aria-labelledby="narrow">
+				<div id="narrow" class="panel-collapse collapse prod-filters-wrapper" role="tabpanel" aria-labelledby="narrow">
 					<div class="panel-body">
                         <a href="javascript:void(0)" onclick="ResetFilters()">Reset filters</a> <span>({$product_cnt} item{if $product_cnt gt 1}s{/if})</span>
-						<!---Type-->
-						<div class="panel-heading subhead" role="tab" id="accordion3">
-							<h4 class="panel-title">
-								<a role="button" data-toggle="collapse" data-parent="#accordion2" href="#type" aria-expanded="true" aria-controls="narrow">
-									<i class="more-less glyphicon glyphicon-plus"></i>
-									<div class="head-text">
-										<div class="head-title">Type</div>
-									</div>
-								</a>
-							</h4>
-						</div>
-						<div id="type" class="panel-collapse collapse subhead" role="tabpanel" aria-labelledby="type">
-							<div class="panel-body">
-						        {foreach $ptypes as $k => $v}
-						          {if $v.cnt gt 0} {/if}
-						          <div class="">
-						            <input type="checkbox" id="ptype{$k}" name="ptype[]" class="iso-filter" value="type-{$k}"> <label for="ptype{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
-						          </div>
-						        {/foreach}
+            <!---Type-->
+            <div class="prod-filters">
+				<div class="panel-heading subhead" role="tab" id="accordion3">
+					<h4 class="panel-title">
+						<a role="button" data-toggle="collapse" data-parent="#accordion2" href="#type" aria-expanded="true" aria-controls="narrow">
+							<i class="more-less glyphicon glyphicon-plus"></i>
+							<div class="head-text">
+								<div class="head-title">Type</div>
 							</div>
-						</div>
-
-            <!---Material-->
-            <div class="panel-heading subhead" role="tab" id="accordion4">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#material" aria-expanded="true" aria-controls="narrow">
-                  <i class="more-less glyphicon glyphicon-plus"></i>
-                  <div class="head-text">
-                    <div class="head-title">Material</div>
-                  </div>
-                </a>
-              </h4>
-            </div>
-            <div id="material" class="panel-collapse collapse subhead" role="tabpanel" aria-labelledby="material">
-              <div class="panel-body">
-                    {foreach $pmaterials as $k => $v}
-                      {if $v.cnt gt 0} {/if}
-                      <div class="">
-                        <input type="checkbox" id="pmaterial{$k}" name="pmaterial[]" class="iso-filter" value="material-{$k}"> <label for="pmaterial{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
-                      </div>
-                    {/foreach}
-              </div>
-            </div>
-
-            <!---Colour-->
-            <div class="panel-heading subhead" role="tab" id="accordion5">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#colour" aria-expanded="true" aria-controls="narrow">
-                  <i class="more-less glyphicon glyphicon-plus"></i>
-                  <div class="head-text">
-                    <div class="head-title">Colour</div>
-                  </div>
-                </a>
-              </h4>
-            </div>
-            <div id="colour" class="panel-collapse collapse subhead" role="tabpanel" aria-labelledby="colour">
-              <div class="panel-body">
-                    {foreach $attributes.2.values as $k => $v}
-                      {if $v.cnt gt 0} {/if}
-                      <div class="">
-                        <input type="checkbox" id="colour{$k}" name="colour[]" class="iso-filter" value="attrval-{$k}"> <label for="colour{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
-                      </div>
-                    {/foreach}
-              </div>
-            </div>
-
-            <!---Price-->
-            <div class="panel-heading subhead" role="tab" id="accordion6">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#price" aria-expanded="true" aria-controls="narrow">
-                  <i class="more-less glyphicon glyphicon-plus"></i>
-                  <div class="head-text">
-                    <div class="head-title">Price</div>
-                  </div>
-                </a>
-              </h4>
-            </div>
-            <div id="price" class="panel-collapse collapse subhead" role="tabpanel" aria-labelledby="price">
-              <div class="panel-body">
-                    {foreach $prices as $k => $v}
-                      {if $v.cnt gt 0} {/if}
-                      <div class="">
-                        <input type="checkbox" id="price{$k}" name="price[]" class="iso-filter" value="range-{$v.value}"> <label for="price{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
-                      </div>
-                    {/foreach}
-              </div>
-            </div>
-
+						</a>
+					</h4>
+				</div>
+				<div id="type" class="panel-collapse collapse subhead" role="tabpanel" aria-labelledby="type">
+					<div class="panel-body">
+				        {foreach $ptypes as $k => $v}
+				          <div class="">
+				            <input type="checkbox" id="ptype{$k}" name="ptype[]" class="iso-filter" value="type-{$k}"> <label for="ptype{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
+				          </div>
+				        {/foreach}
 					</div>
 				</div>
+            </div>
+            <!---Material-->
+            <div class="prod-filters">
+              <div class="panel-heading subhead" role="tab" id="accordion4">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#material" aria-expanded="true" aria-controls="narrow">
+                    <i class="more-less glyphicon glyphicon-plus"></i>
+                    <div class="head-text">
+                      <div class="head-title">Material</div>
+                    </div>
+                  </a>
+                </h4>
+              </div>
+              <div id="material" class="panel-collapse collapse subhead" role="tabpanel" aria-labelledby="material">
+                <div class="panel-body">
+                      {foreach $pmaterials as $k => $v}
+                        <div class="">
+                          <input type="checkbox" id="pmaterial{$k}" name="pmaterial[]" class="iso-filter" value="material-{$k}"> <label for="pmaterial{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
+                        </div>
+                      {/foreach}
+                </div>
+              </div>
+            </div>
+            <!---Colour-->
+            <div class="prod-filters">
+              <div class="panel-heading subhead" role="tab" id="accordion5">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#colour" aria-expanded="true" aria-controls="narrow">
+                    <i class="more-less glyphicon glyphicon-plus"></i>
+                    <div class="head-text">
+                      <div class="head-title">Colour</div>
+                    </div>
+                  </a>
+                </h4>
+              </div>
+              <div id="colour" class="panel-collapse collapse subhead" role="tabpanel" aria-labelledby="colour">
+                <div class="panel-body">
+                      {foreach $attributes.2.values as $k => $v}
+                        <div class="">
+                          <input type="checkbox" id="colour{$k}" name="colour[]" class="iso-filter" value="attrval-{$k}"> <label for="colour{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
+                        </div>
+                      {/foreach}
+                </div>
+              </div>
+            </div>
+            <!---Price-->
+            <div class="prod-filters">
+              <div class="panel-heading subhead" role="tab" id="accordion6">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#price" aria-expanded="true" aria-controls="narrow">
+                    <i class="more-less glyphicon glyphicon-plus"></i>
+                    <div class="head-text">
+                      <div class="head-title">Price</div>
+                    </div>
+                  </a>
+                </h4>
+              </div>
+              <div id="price" class="panel-collapse collapse subhead" role="tabpanel" aria-labelledby="price">
+                <div class="panel-body">
+                      {foreach $prices as $k => $v}
+                        <div class="">
+                          <input type="checkbox" id="price{$k}" name="price[]" class="iso-filter" value="range-{$v.value}"> <label for="price{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
+                        </div>
+                      {/foreach}
+                </div>
+              </div>
+              </div>
+
+			</div>
+		  </div>
 		</div>
 
 
@@ -374,6 +375,14 @@
         $(this).parent().fadeOut();
       }
       $(this).parent().find('.cnt-value').html(cnt + ' item' + (cnt > 1 ? 's' : ''));
+    });
+    
+    $('.prod-filters').each(function(){
+      if($(this).find('.iso-filter:enabled').length > 0){
+        $(this).show();
+      }else{
+        $(this).hide();
+      }
     });
   }
   

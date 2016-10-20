@@ -21,7 +21,9 @@
             <select class="form-control" name="report" id="report-name">
               <option value="get-autorenewal-csv">Auto renewal</option>
               <option value="get-gift-certificates-csv">Gift certificates</option>
-              <option value="get-survey-csv">Survey</option>
+              <option value="get-order-resources-csv">Order resources</option>
+              <option value="get-partial-registrations-csv">Partial registrations</option>
+              <option value="get-survey-csv">Surveys</option>
             </select>
           </div>
         </div>

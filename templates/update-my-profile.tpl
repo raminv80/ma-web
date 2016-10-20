@@ -341,7 +341,7 @@
                   </div>
                   <div class="col-sm-6 form-group">
                     <label for="docfileno" class="visible-ie-only"> File No. (if known): </label>
-                    <input type="text" maxlength="10" value="{$user.maf.update.doc_file_no}" class="form-control" id="docfileno" name="doc_file_no" pattern="[0-9]">
+                    <input type="text" maxlength="50" value="{$user.maf.update.doc_file_no}" class="form-control" id="docfileno" name="doc_file_no">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
