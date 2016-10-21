@@ -67,7 +67,7 @@ $COMP = json_encode($CONFIG->company);
 $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
 
 //GLOBAL VARIABLES FROM CONFIG
-foreach($CONFIG->global_variables as $gv){
+foreach($CONFIG->global_variable as $gv){
   $GLOBALS['CONFIG_VARS'][(string)$gv->name] = (string)$gv->value;
 }
 $SMARTY->assign("CONFIG_VARS", $GLOBALS['CONFIG_VARS']);

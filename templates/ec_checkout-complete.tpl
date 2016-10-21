@@ -12,13 +12,13 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12 text-center">
-        <h1>{$listing_name}</h1>
+        <h1>{if $listing_title}{$listing_title}{else}{$listing_name}{/if}</h1>
         <div class="col-sm-12 text-center">
         {if $orderNumber}<p style="color:#e9003b">Your order ID is: {$orderNumber}</p>{/if}
         <br>
         {$listing_content1}
         <br>
-        <a class="btn-red btn" title="UPDATE MY MEMBERSHIP PROFILE" href="/update-my-profile">COMPLETE MY MEMBERSHIP PROFILE</a>
+        <a class="btn-red btn" title="UPDATE MEMBERSHIP PROFILE" href="/update-my-profile">UPDATE MEMBERSHIP PROFILE</a>
       </div>
       </div>
     </div>

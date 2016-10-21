@@ -585,9 +585,6 @@ class cart{
       $tax = floatval(trim($CONFIG_VARS['gst']));
     }
     
-    $subtotal = $this->GetSubtotal();
-    $gst_taxable = $this->GetGSTSubtotal();
-    $gst = round($gst_taxable * (1 - 100 / (100 + $tax)) , 2);
     $discount = 0;
     $discount_error = '';
     
@@ -622,6 +619,10 @@ class cart{
       $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
       $this->RemoveFromCart($membershipFeeCartitemId);
     }
+    
+    $subtotal = $this->GetSubtotal();
+    $gst_taxable = $this->GetGSTSubtotal();
+    $gst = round($gst_taxable * (1 - 100 / (100 + $tax)) , 2);
     
     return array(
         'subtotal' => $subtotal, 
@@ -1053,7 +1054,7 @@ class cart{
           $this->RemoveFromCart($item['cartitem_id']);
         } else{
           if($DBproduct['product_price'] != $item['cartitem_product_price'] || $DBproduct['variant_id'] != $item['cartitem_variant_id'] || $DBproduct['product_name'] != $item['cartitem_product_name'] || $DBproduct['product_gst'] != $item['cartitem_product_gst']){
-            $sql = "UPDATE tbl_cartitem SET cartitem_variant_id = :variant_id, cartitem_product_price = :price, cartitem_product_name = :product_name, variant_name = :variant_name, cartitem_product_gst = :product_gst, cartitem_subtotal = :subtotal  WHERE cartitem_id = :id";
+            $sql = "UPDATE tbl_cartitem SET cartitem_variant_id = :variant_id, cartitem_product_price = :price, cartitem_product_name = :product_name, cartitem_variant_name = :variant_name, cartitem_product_gst = :product_gst, cartitem_subtotal = :subtotal  WHERE cartitem_id = :id";
             $DBobject->wrappedSql($sql, array(
                 ":id" => $item['cartitem_id'], 
                 ":price" => $DBproduct['product_price'], 

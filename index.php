@@ -194,6 +194,7 @@ foreach($CONFIG->global_process_post as $sp){
 }
 
 $page_tpl = "page.tpl";
+//$SMARTY->registerFilter("output", "str_replace");
 $SMARTY->display("extends:$page_tpl|$template");
 die();
 

@@ -20,6 +20,7 @@
         <div class="text-center">
 	        <h1>{$product_name}</h1>
             {if $product_membersonly eq 1}<div class="margintb15"><span class="white-tag">Members only</span></div>{/if}
+            <div class="margintb15 tag-outofstock" style="display:none"><span class="white-tag">Out of stock</span></div>
 			<div class="prodcode"></div>
         </div>
 	  </div>
@@ -113,6 +114,8 @@
       <div class="col-sm-12 col-md-5" id="prodright">
         <h1 class="hidden-xs hidden-sm">{$product_name}</h1>
         {if $product_membersonly eq 1}<div class="margintb15 hidden-xs hidden-sm"><span class="white-tag">Members only</span></div>{/if}
+        <div class="margintb15 hidden-xs hidden-sm tag-outofstock" style="display:none"><span class="white-tag">Out of stock</span></div>
+        
         <div class="prodcode hidden-xs hidden-sm"></div>
         <form class="form-horizontal" id="product-form" role="form" accept-charset="UTF-8" action="" method="post">
           <input type="hidden" value="ADDTOCART" name="action" id="action" />
@@ -254,7 +257,7 @@
           <div class="form-group">
   	        <div class="prodprice col-sm-12">
               <div class="text-danger" id="error-text"></div>
-                <div class="text-danger text-center variant-outofstocks {foreach $variants as $variant}{if $variant.variant_instock neq 1} variant-{$variant.variant_id}-outofstock{/if}{/foreach}" style="display:none"><b>Sorry, this item is out of stock</b></div>
+                <div class="error-message text-center variant-outofstock {foreach $variants as $variant}{if $variant.variant_instock neq 1} variant-{$variant.variant_id}-outofstock{/if}{/foreach}" style="display:none"><b>Sorry but this item is temporarily out of stock</b></div>
                 <div class="prodaddcart">
                   <button class="btn btn-red variant-addbtns {foreach $variants as $variant}{if $variant.variant_instock eq 1} variant-{$variant.variant_id}-addbtn{/if}{/foreach}" type="submit">Add to Cart</button>
                 </div>
@@ -660,8 +663,9 @@ $(window).load(function() {
 	  //Display selected variant-price
 	  $('.variant-prices').hide();
 	  $('#price').val('0');
-	  $('.variant-outofstocks').hide();
-	  /* $('.variant-addbtns').attr('disabled', 'disabled'); */
+	  $('.tag-outofstock').hide();
+	  $('.variant-outofstock').hide();
+	  $('.variant-addbtns').removeAttr('disabled'); 
 	  $('#'+variantElem).fadeIn('slow');
 	  $('#variant_id').val('0');
 	  $('.prodcode').html('');
@@ -670,10 +674,14 @@ $(window).load(function() {
 	  if(variantElem != 'variant-'){
 	    var price = $('#'+variantElem).find('.selected-price').attr('data-value');
 	    $('#price').val(price);
-	    $('.'+variantElem+'-outofstock').fadeIn();
 	    /* $('.'+variantElem+'-addbtn').removeAttr('disabled'); */
 	    $('#variant_id').val(variantElem.replace('variant-', ''));
 	    $('.prodcode').html('Product code: ' + $('#'+variantElem).attr('data-uid'));
+	    if($('.'+variantElem+'-outofstock').length > 0){
+	      $('.'+variantElem+'-outofstock').fadeIn();
+	      $('.tag-outofstock').show();
+	      $('.variant-addbtns').attr('disabled', 'disabled');
+	    }
 	  }
 	}
 

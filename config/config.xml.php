@@ -23,28 +23,32 @@
     <email_orders>apolo@them.com.au</email_orders>
     <logo>logo.png</logo>
   </company>
-  <global_variables>
+  <global_variable>
     <name>gst</name>
     <value>10</value>
-  </global_variables> 
-  <global_variables>
+  </global_variable> 
+  <global_variable>
     <name>membership_fee</name>
     <value>$32</value>
-  </global_variables>  
-  <global_variables>
+  </global_variable>
+  <global_variable>
     <name>medical_id_price</name>
     <value>$35</value>
-  </global_variables>
-  <global_variables>
+  </global_variable>
+  <global_variable>
     <name>postage</name>
     <value>$9</value>
-  </global_variables>    
+  </global_variable>    
   <database> 
     <host>122.201.97.172</host> 
     <user>them_usr01</user> 
     <password>OTwFwL?pSnR+</password> 
     <dbname>them_db01</dbname> 
-  </database> 
+  </database>
+  <database_content_variables>
+    <name>==postage==</name>
+    <gb_var_name>membership_fee</gb_var_name>
+  </database_content_variables>
   <payment_gateway>
     <payway>
       <!-- DEV -->
@@ -597,6 +601,7 @@
         <table>tbl_variant</table>
         <linkfield>product_id</linkfield>
         <field>variant_product_id</field> 
+        <where>variant_published = 1</where> 
          <associated> 
           <name>productattributes</name>
           <table>tbl_productattr</table>
@@ -631,6 +636,9 @@
     </process>
   </product_page>
   
+  <global_process_pre>
+    <file>includes/processes/global-dynamic-variables.php</file>
+  </global_process_pre>
   <global_process_pre>
     <file>includes/processes/global-source-referer.php</file>
   </global_process_pre>

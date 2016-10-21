@@ -23,14 +23,14 @@
     <email_orders>apolo@them.com.au</email_orders>
     <logo>logo.png</logo>
   </company> 
-  <global_variables>
+  <global_variable>
     <name>gst</name>
     <value>10</value>
-  </global_variables> 
-  <global_variables>
+  </global_variable> 
+  <global_variable>
     <name>membership_fee</name>
     <value>$32</value>
-  </global_variables> 
+  </global_variable> 
   <database> 
   	<host>122.201.97.172</host> 
     <user>them_usr01</user> 

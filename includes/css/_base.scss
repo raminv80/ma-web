@@ -3398,10 +3398,10 @@ select option:disabled {
 	color: $black;
 }
 
-.error-textbox {
-    color: #e9003b;
+.error-textbox, .error-message{
+    color: $red;
     margin-bottom: 10px;
-    border: 1px solid #e9003b;
+    border: 1px solid $red;
     padding: 10px;
     display: inline-block;
     background: #fff;
@@ -3613,7 +3613,7 @@ select option:disabled {
 
     	span.ui-accordion-header-icon {
 			float: right;
-			color: #e9003b;
+			color: $red;
 			font-size: 18px;
 			font-weight: bolder;
 		}

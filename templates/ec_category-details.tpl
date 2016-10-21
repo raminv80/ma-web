@@ -39,7 +39,7 @@
       <div class="col-md-3" id="collection-left">
         <!-- COLLECTIONS -->
 		<div class="panel panel-default">
-				<div class="panel-heading" role="tab" id="accordion1">
+				<div class="panel-heading mainhead" role="tab" id="accordion1">
 					<h4 class="panel-title">
 						<a role="button" data-toggle="collapse" data-parent="#accordion1" href="#collections" aria-expanded="true" aria-controls="collections">
 							<i class="more-less glyphicon glyphicon-plus"></i>
@@ -49,7 +49,7 @@
 						</a>
 					</h4>
 				</div>
-				<div id="collections" class="panel-collapse collapse" role="tabpanel" aria-labelledby="collections">
+				<div id="collections" class="panel-collapse mainhead collapse" role="tabpanel" aria-labelledby="collections">
 					<div class="panel-body">
 						{foreach $collections as $c}
 						<div class="collection-opts">
@@ -62,7 +62,7 @@
 
         <!-- FILTERS -->
 		<div class="panel panel-default">
-				<div class="panel-heading" role="tab" id="accordion2">
+				<div class="panel-heading mainhead" role="tab" id="accordion2">
 					<h4 class="panel-title">
 						<a role="button" data-toggle="collapse" data-parent="#accordion2" href="#narrow" aria-expanded="true" aria-controls="narrow">
 							<i class="more-less glyphicon glyphicon-plus"></i>
@@ -72,7 +72,7 @@
 						</a>
 					</h4>
 				</div>
-				<div id="narrow" class="panel-collapse collapse prod-filters-wrapper" role="tabpanel" aria-labelledby="narrow">
+				<div id="narrow" class="panel-collapse mainhead collapse prod-filters-wrapper" role="tabpanel" aria-labelledby="narrow">
 					<div class="panel-body">
                         <a href="javascript:void(0)" onclick="ResetFilters()">Reset filters</a> <span>({$product_cnt} item{if $product_cnt gt 1}s{/if})</span>
             <!---Type-->
@@ -269,14 +269,23 @@
 <script src="/includes/js/isotope.pkgd.min.js"></script>
 
 <script type="text/javascript">
-	function toggleIcon(e) {
+	function toggleIconMain(e) {
         $(e.target)
-            .prev('.panel-heading')
+            .prev('.panel-heading.mainhead')
             .find(".more-less")
             .toggleClass('glyphicon-plus glyphicon-minus');
     }
-    $('.panel-collapse').on('hidden.bs.collapse', toggleIcon);
-    $('.panel-collapse').on('shown.bs.collapse', toggleIcon);
+    $('.panel-collapse.mainhead').on('hidden.bs.collapse', toggleIconMain);
+    $('.panel-collapse.mainhead').on('shown.bs.collapse', toggleIconMain);
+    
+    function toggleIconSub(e) {
+      $(e.target)
+          .prev('.panel-heading.subhead')
+          .find(".more-less")
+          .toggleClass('glyphicon-plus glyphicon-minus');
+  	}
+    $('.panel-collapse.subhead').on('hidden.bs.collapse', toggleIconSub);
+    $('.panel-collapse.subhead').on('shown.bs.collapse', toggleIconSub);
 
   $(document).ready(function() {
 
