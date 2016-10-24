@@ -80,6 +80,22 @@
     </div>
     {elseif $attrtype eq '2'}
     <div class="row form-group">
+      <label class="col-sm-3 control-label" for="attr_value_image_{$attrvalueno}">Image</label>
+      <div class="col-sm-5">
+        <input type="hidden" value="{$attr_value.attr_value_image}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_image]" id="attr_value_image_{$attrvalueno}_link" class="fileinput"> 
+        <span class="file-view" id="attr_value_image_{$attrvalueno}_path">{if $attr_value.attr_value_image}<a href="{$attr_value.attr_value_image}" target="_blank" >View</a>{else}None{/if}</span> 
+        <a href="javascript:void(0);" class="btn btn-info marg-5r"
+          onclick="getFileType('attr_value_image_{$attrvalueno}','','');"
+        >Select File</a> 
+        <a href="javascript:void(0);" class="btn btn-info"
+          onclick="
+            $('#attr_value_image_{$attrvalueno}_link').val('');
+            $('#attr_value_image_{$attrvalueno}_path').html('None');
+          "
+        >Remove File</a>
+      </div>
+    </div>
+    <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_var1_{$attrvalueno}">Engraving line 1</label>
       <div class="col-sm-4">
         <input class="form-control number" type="text" maxlength="3" value="{if $attr_value.attr_value_var1}{$attr_value.attr_value_var1}{else}0{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_var1]" id="attr_value_var1_{$attrvalueno}">

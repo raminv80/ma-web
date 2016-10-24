@@ -45,8 +45,12 @@
                     <div>as our MedicAlert lifetime member</div>
                 {else}
                     {$renewalDate = $user.maf.main.user_RenewalDate}
-                    {if $renewalDate gt $smarty.now|date_format:"%Y-%m-%d"}
+                    {$renewalDateDiff = $user.maf.main.user_RenewalDate|date_difference:($smarty.now|date_format:'%Y-%m-%d')|intval}
+                    {if $renewalDateDiff lt -90}
 			         <img src="/images/active-icon.png" alt="active" /> <span class="warning">You are protected</span>
+                    <div><br>You have <strong>{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'} days</strong> until your renewal is due.</div>
+                    {else if $renewalDateDiff gte -90 && $renewalDateDiff lt -10}
+                    <img src="/images/warning-orange-icon.png" alt="active" /> <span class="warning">You are protected</span>
                     <div><br>You have <strong>{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'} days</strong> until your renewal is due.</div>
                     {else}
                     <img src="/images/dashboard-warning.png" alt="Warning" /> <span class="warning">Your membership has expired</span>

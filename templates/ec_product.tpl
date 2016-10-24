@@ -12,7 +12,7 @@
     <div class="row" id="productout">
 	  <div class="col-sm-12">
         <div id="back">
-          <a href="/products{if $backcollectionURL}{$backcollectionURL}{/if}"> < Back to{if $backcollection} {$backcollection} {else} collections{/if} 
+          <a href="/products{if $backcollectionURL}{$backcollectionURL}{/if}"> < Back to{if $backcollection} {$backcollection} {else} collections{/if}
           </a>
         </div>
 	  </div>
@@ -115,7 +115,7 @@
         <h1 class="hidden-xs hidden-sm">{$product_name}</h1>
         {if $product_membersonly eq 1}<div class="margintb15 hidden-xs hidden-sm"><span class="white-tag">Members only</span></div>{/if}
         <div class="margintb15 hidden-xs hidden-sm tag-outofstock" style="display:none"><span class="white-tag">Out of stock</span></div>
-        
+
         <div class="prodcode hidden-xs hidden-sm"></div>
         <form class="form-horizontal" id="product-form" role="form" accept-charset="UTF-8" action="" method="post">
           <input type="hidden" value="ADDTOCART" name="action" id="action" />
@@ -165,7 +165,7 @@
                     {if !$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id]['attr_value_id']}
                       {$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id] = $value}
                       {* HACK TO DISPLAY THE VARIANT IMAGE AS COLOUR *}
-                       {* COMMENTED OUT !!! 
+                       {* COMMENTED OUT !!!
                         {foreach $gallery as $g}
                           {if $g.gallery_variant_id eq $variant.variant_id}{$prdattrValuesArr[$attr.attribute_id][$value.attr_value_id]['attr_value_image'] = $g.gallery_link}{break}{/if}
                         {/foreach}
@@ -214,20 +214,24 @@
                   <option value="{$value.attr_value_id}" {if count($prdattrValuesArr[$attr.attribute_id]) eq 1}selected="selected"{/if} class="updateprice{foreach $value.variants as $vr} variant-{$vr}{/foreach}">{$value.attr_value_name}</option>
                 {/foreach}
               </select>
-              
+
                 {if $attr.attribute_type eq 2}
                   {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   <div class="additionals" id="additional-{$value.attr_value_id}" style="display:none;">
                     <div>{$value.attr_value_description}</div>
+                    {if $value.attr_value_image}<div class="hidden-md hidden-lg attr-image-wrapper"><img src="{$value.attr_value_image}" title="{$value.attr_value_name}" class="attr-image img-responsive"></div>{/if}
+                    <div class="charrow-wrapper" style="background: url('{$value.attr_value_image}') no-repeat;">
+
+	                <div class="charrowin">
                     {for $var=1 to 7}
                       {$varName = 'attr_value_var'|cat:$var}
                       {if $value[$varName] gt 0}
                       <div class="row charrow">
-	                      <div class="col-sm-3 col-lg-2">
+	                      <div class="col-sm-3 col-lg-2 linenob">
 						  	<label class="control-label lineno" for="additional-{$attr.attribute_id}-{$var}">Line {$var}</label>
 	                      </div>
-	                      <div class="col-sm-6 col-md-9 col-lg-6">
-						  	<input type="text" class="form-control{if $value[$varName]} hasmaxlength{/if}" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}">
+	                      <div class="col-sm-6 col-md-9 col-lg-7 textcont">
+						  	<input type="text" class="form-control{if $value[$varName]} hasmaxlength{/if}" style="width: {$value[$varName]*11}px;" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}">
 	                      </div>
 	                      <div class="col-sm-3 col-md-12 col-lg-4 charleft">
 		                      {if $value[$varName]}{$value[$varName]} characters left{/if}
@@ -235,6 +239,9 @@
                       </div>
                       {/if}
                     {/for}
+	                </div>
+
+                    </div>
                       <div class="row charhelp">
 	                      <div class="col-sm-12">
 						  	<label>Need help with engraving?</label>
@@ -409,7 +416,7 @@ jQuery.fn.outerHTML = function(s) {
 		  var content = left + ' character' + (left > 1 ? 's' : '') + ' left';
 		  $(this).closest('.row').find('.charleft').html(content);
 		});
-		
+
 		DisplayAdditionalWhenValid();
 		DisplayPrice();
 
@@ -434,7 +441,7 @@ jQuery.fn.outerHTML = function(s) {
 				$('#carousel.flexslider').data('flexslider').addSlide($(saved1));
 			}
 		});
-	  	
+
 	  	$("#imgholder img").each(function(index, element){
 	  			var classes=$(this).attr('class');
 	  			var class1=classes.replace('img-responsive ','');
@@ -445,16 +452,16 @@ jQuery.fn.outerHTML = function(s) {
 	  				$('#prodslider .flexslider').data('flexslider').addSlide($(saved1));
 	  			}
 	  		});
-	  	
+
 	  	$('#carousel.flexslider .slides li').click(function(){
 	  	  var curSlide = $( "#carousel.flexslider .slides li" ).index( this );
 	  	  $('#prodslider .flexslider').flexslider(curSlide);
 	  	});
-	  	
-	  	
 
 
-  	
+
+
+
 		});
 
 
@@ -665,7 +672,7 @@ $(window).load(function() {
 	  $('#price').val('0');
 	  $('.tag-outofstock').hide();
 	  $('.variant-outofstock').hide();
-	  $('.variant-addbtns').removeAttr('disabled'); 
+	  $('.variant-addbtns').removeAttr('disabled');
 	  $('#'+variantElem).fadeIn('slow');
 	  $('#variant_id').val('0');
 	  $('.prodcode').html('');
@@ -701,14 +708,14 @@ $(window).load(function() {
             if(ID){
               SetAdditionals(ID);
             }
-          }); 
+          });
 		}
 	    $('.hasAdditional').closest('form').find('.form-group.has-error .help-block').text('');
 	    $('.hasAdditional').closest('form').find('.form-group.has-error').removeClass('has-error');
 	  }
 	}
-	
-	
+
+
 	function getParameterByName(name) {
 		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -726,8 +733,8 @@ $(window).load(function() {
 	}, []);
 	  return result;
 	}
-	
-	
+
+
 </script>
 
 {/block}
