@@ -38,6 +38,10 @@
   <global_variable>
     <name>postage</name>
     <value>$9</value>
+  </global_variable> 
+  <global_variable>
+    <name>mintotal_membership_cost</name>
+    <value>$76</value>
   </global_variable>    
   <database> 
     <host>122.201.97.172</host> 
@@ -45,10 +49,22 @@
     <password>OTwFwL?pSnR+</password> 
     <dbname>them_db01</dbname> 
   </database>
-  <database_content_variables>
+  <database_variable>
+    <name>==membership_fee==</name>
+    <value global="membership_fee"></value>
+  </database_variable>
+  <database_variable>
+    <name>==medical_id_price==</name>
+    <value global="medical_id_price"></value>
+  </database_variable>
+  <database_variable>
     <name>==postage==</name>
-    <gb_var_name>membership_fee</gb_var_name>
-  </database_content_variables>
+    <value global="postage"></value>
+  </database_variable>
+  <database_variable>
+    <name>==mintotal_membership_cost==</name>
+    <value global="mintotal_membership_cost"></value>
+  </database_variable>
   <payment_gateway>
     <payway>
       <!-- DEV -->

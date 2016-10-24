@@ -45,18 +45,14 @@
             <a href="/{$item.cache_url}"><h3>{$item.product_name}</h3></a>
           </div>
           <div class="resultlink">
-            <a href="/{$item.cache_url}">{$DOMAIN}/{$item.cache_url}</a>
+            <a href="/{$item.cache_url}">View more</a>
           </div>
         </div>
         {/foreach}
 		{if $count > 4}
-        <div class="col-sm-12">
-	    <div class="row seemoresearch">
-	      <div class="col-sm-12 text-center result product">
-	        <div class="showmoresearch"><a href="javascipt:void(0)" onclick="$('.result.product:hidden').fadeIn();">Load more products</a></div>
+	      <div class="col-xs-12 text-center result product">
+	        <div class="showmoresearch"><a href="javascript:void(0)" data-type="product">Load more products</a></div>
 	      </div>
-	    </div>
-        </div>
 	    {/if}
         {assign var=count value=0}
         {foreach $results.pages as $item} {assign var=count value=$count+1}
@@ -67,18 +63,14 @@
           <div class="resulttype">{$item.type_name}</div>
           <div class="resultdescription">{if $item.listing_meta_description}{$item.listing_meta_description}{elseif $item.type_id eq 5 && $item.listing_content3}{$item.listing_content3}{else $item.listing_content1}{striptrimwords data=$item.listing_content1 maxwords=30}{/if}</div>
           <div class="resultlink">
-            <a href="/{$item.cache_url}">{$DOMAIN}/{$item.cache_url}</a>
+            <a href="/{$item.cache_url}">View more</a>
           </div>
         </div>
         {/foreach} {/if}
 		{if $count > 4}
-        <div class="col-sm-12">
-	    <div class="row seemoresearch">
-	      <div class="col-sm-12 text-center result page">
-	        <div class="showmoresearch"><a href="javascipt:void(0)" onclick="$('.result.page:hidden').fadeIn();">Load more pages</a></div>
+	      <div class="col-xs-12 text-center result page">
+	        <div class="showmoresearch"><a href="javascript:void(0)" data-type="page">Load more pages</a></div>
 	      </div>
-	    </div>
-        </div>
 	    {/if}
       </div>
   </div>
@@ -91,9 +83,9 @@
 <script src="/includes/js/jquery-ui.js"></script>
 <script src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript">
-	  $("#seemoresearch #showmoresearch").click(function() {
-	    $(this).closest('#seemoresearch').hide();
-    	$(".searchresults .result").slideDown('slow');
+	  $(".showmoresearch").click(function(){
+	    $('.result.'+ $(this).find('a').attr('data-type') +':hidden').fadeIn();
+	    $(this).closest('.result').hide();
 	});
 
 	$("select").selectBoxIt();

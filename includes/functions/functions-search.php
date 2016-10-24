@@ -3,10 +3,7 @@
 function SearchListing($search,$type=1){
 	global  $CONFIG,$SMARTY,$DBobject;
 	$data = array();
-	
-	$search = unclean($search);
-	$search = str_replace(" ", "%", $search);
-	$search = htmlclean($search);
+	$search = preg_replace("/[^\w+\-\s]/", " ", $search);
 	
 	//IF TAG RESULTS = 0
 	
@@ -47,13 +44,16 @@ function SearchListing($search,$type=1){
 	$sql= "SELECT tbl_listing.*,cache_tbl_listing.cache_url,tbl_type.*
 		FROM tbl_listing LEFT JOIN cache_tbl_listing ON tbl_listing.listing_object_id = cache_tbl_listing.cache_record_id
 	  LEFT JOIN tbl_type ON listing_type_id = type_id
+	  LEFT JOIN tbl_additional ON additional_listing_id = listing_id
 		WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 AND cache_tbl_listing.cache_published = 1
-			AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND
+			AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND additional_deleted IS NULL AND
 		(listing_name LIKE :search OR
 	  listing_content1 LIKE :search OR
     listing_seo_title LIKE :search OR
     listing_meta_description LIKE :search OR
-    listing_meta_words LIKE :search )
+    listing_meta_words LIKE :search OR
+    additional_description LIKE :search OR 
+	additional_content1 LIKE :search)
 	    ORDER BY type_order ASC";
 	$params = array(":search"=>"%".$search."%");
 
@@ -82,9 +82,7 @@ function SearchProduct($search){
   global  $CONFIG,$SMARTY,$DBobject;
   $data = array();
 
-  $search = unclean($search);
-  $search = str_replace(" ", "%", $search);
-  $search = htmlclean($search);
+  $search = preg_replace("/[^\w+\-\s]/", " ", $search);
   
   //Check if it is variant UID
   
@@ -265,9 +263,7 @@ function SearchAdmin($str){
 
   $data = array();
 
-  $str = unclean($str);
-  $str = str_replace(" ", "%", $str);
-  $str = htmlclean($str);
+  $search = preg_replace("/[^\w+\-\s]/", " ", $search);
 
   $sql = 'SELECT
   tbl_admin.*,

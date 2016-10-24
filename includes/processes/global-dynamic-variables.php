@@ -12,6 +12,15 @@ try{
   if($msfArr = $cart_obj->GetCurrentMAF_MSF(225)){
     $GLOBALS['CONFIG_VARS']['membership_fee'] = '$'. round($msfArr['variant_price'], 2);
     $SMARTY->assign("CONFIG_VARS", $GLOBALS['CONFIG_VARS']);
+    
+    //MAF ONLY - DATABASE VARIABLES
+    foreach($GLOBALS['DATABASE_VARS']['find'] as $k => $v){
+      if($v == '==membership_fee=='){
+        $GLOBALS['DATABASE_VARS']['replace'][$k] = $GLOBALS['CONFIG_VARS']['membership_fee'];
+        break;
+      }
+    }
+    $SMARTY->assign("DATABASE_VARS", $GLOBALS['DATABASE_VARS']);
   }
 }
 catch(exceptionCart $e){

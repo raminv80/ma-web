@@ -90,7 +90,8 @@ class Qvalent_REST_PayWayAPI extends Bank {
       if(empty($singleUseTokenId)){
         $err = array();
         foreach($response->data as $r){
-          $err[] = "{$r->fieldName}: {$r->message}";
+          //$err[] = "{$r->fieldName}: {$r->message}";
+          $err[] = $r->message;
         }
         $this->errorMsg .= implode("<br>", $err);
         return false;

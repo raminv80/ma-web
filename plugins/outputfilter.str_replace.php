@@ -2,15 +2,18 @@
 /*
  * Smarty plugin
  * -------------------------------------------------------------
- * File:	postfilter.str_replace.php
- * Type:	postfilter
+ * File:	outputfilter.str_replace.php
+ * Type:	outputfilter
  * Name:	str_replace
  * Purpose:	outputs replaced string
  * -------------------------------------------------------------
  */
-function smarty_function_banner($output, Smarty_Internal_Template $smarty)
+function smarty_outputfilter_str_replace($output, Smarty_Internal_Template $smarty)
 {
-    $arr = $smarty->getTemplateVars('databaseVars');
-    return str_replace($arr['key'], $arr['value'], $output);
+    $arr = $smarty->getTemplateVars('DATABASE_VARS');
+    if(!empty($arr['find']) && !empty($arr['replace'])){
+      $output =  str_replace($arr['find'], $arr['replace'], $output);
+    }
+    return $output;
 }
 ?>

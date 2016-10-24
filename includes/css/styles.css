@@ -6895,7 +6895,8 @@ a {
   right: -30px;
   z-index: 0; }
 #popular .prod .prod-info .colours img {
-  width: auto; }
+  width: auto;
+  display: inline-block; }
 
 #categ-bot {
   background: url("/images/prodlist-bot.jpg") no-repeat;

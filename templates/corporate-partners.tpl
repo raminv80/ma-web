@@ -25,7 +25,7 @@
 	            </div>
 	            <div class="col-sm-9">
 		            <h3>{$ad.additional_name}</h3>
-					<div class="website"><a href="{$ad.additional_description}" target="_blank">{$ad.additional_description}</a></div>
+					{if $ad.additional_description}<div class="website"><a href="{$ad.additional_description}" title="Click to go to website" target="_blank">Website</a></div>{/if}
 					<div class="description">{$ad.additional_content1}</div>
 	            </div>
             </div>

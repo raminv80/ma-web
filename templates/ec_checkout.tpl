@@ -471,7 +471,7 @@
             </div>
             <div class="row">
               <div class="col-sm-12 text-center">
-                <input class="autor" type="checkbox" value="autorenew" name="autorenewal" id="autorenewal" onclick="autorenew();">
+                <input class="autor" type="checkbox" value="autorenew" {if !$post || $post.autorenewal}checked="checked"{/if} name="autorenewal" id="autorenewal" onclick="autorenew();">
                 <label class="autor chkbox" for="autorenewal">Stay protected each year: sign up for auto-renewal.</label>
               </div>
             </div>

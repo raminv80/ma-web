@@ -112,6 +112,18 @@ foreach($CONFIG->global_variable as $gv){
 }
 $SMARTY->assign("CONFIG_VARS", $GLOBALS['CONFIG_VARS']);
 
+//DATABASE VARIABLES FROM CONFIG
+$cnt = 0;
+$GLOBALS['DATABASE_VARS']['find'] = array();
+$GLOBALS['DATABASE_VARS']['replace'] = array();
+foreach($CONFIG->database_variable as $gv){
+  $GLOBALS['DATABASE_VARS']['find'][$cnt] = (string)$gv->name;
+  $tmpVar = (string)$gv->value->attributes()->global;
+  $GLOBALS['DATABASE_VARS']['replace'][$cnt] = empty($tmpVar) ? (string)$gv->value : $GLOBALS['CONFIG_VARS'][$tmpVar];
+  $cnt++;
+}
+$SMARTY->assign("DATABASE_VARS", $GLOBALS['DATABASE_VARS']);
+
 //SECTION HOLDS THE INIT FUNCTIONS
 function LOADCONFIG($_CONF_FILE){
   //libxml_use_internal_errors(true);
