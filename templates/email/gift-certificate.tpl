@@ -169,7 +169,9 @@ a{color:#ed174f;text-decoration: none;}
                     </ul>		
                     <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Gift certificate can be redeemed either over the phone or at our online shop. You can use it to renew your annual MedicAlert membership, update your current medical ID to one of our latest pieces of jewellery, or purchase an additional piece of jewellery from our extensive range.</p>
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To redeem your gift certificate over the phone, call our Membership Services team on <a style="color: #ed3361; text-decoration: none;" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a> between 8.30am - 5.30pm ACST Monday - Friday.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">We encourage you to read our <a href="{$DOMAIN}/terms-and-conditions#gift-certificates">gift certificate terms and conditions</a>. If you have any questions about your gift certificate or redemption, please do not hesitate to get in touch.</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">We encourage you to read our <a href="{$DOMAIN}/terms-and-conditions#gift-certificates">gift certificate terms and conditions</a>. 
+          A Gift Certificate may only be redeemed in one transaction.  A Gift Certificate will not be debited, reissued or replaced with a new Gift Certificate with a lower value as a consequence of purchases that are below the value specified on the Gift Certificate.  
+          If you have any questions about your gift certificate or redemption, please do not hesitate to get in touch.</p>
 					
 	            </td>
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
