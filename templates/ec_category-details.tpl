@@ -176,12 +176,12 @@
       <div class="col-md-9">
         <!-- CATEGORY HEADER -->
  	    <div class="row hidden-xs hidden-sm">
-          <div class="col-sm-{if $listing_image}4{else}12{/if}">
+          <div class="col-sm-{if $listing_image}6{else}12{/if}">
             <h1>Shop <span>{$listing_name}</span></h1>
             {$listing_content1}
           </div>
           {if $listing_image}
-          <div class="col-sm-8">
+          <div class="col-sm-6">
             <img src="{$listing_image}?width=800&height=440&crop=1" alt="{$listing_name} banner" class="img-responsive" />
           </div>
           {/if}
