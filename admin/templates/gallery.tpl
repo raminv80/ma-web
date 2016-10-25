@@ -32,7 +32,7 @@
         <input type="hidden" value="0" name="field[10][tbl_gallery][{$imageno}][gallery_ishero]" id="gallery_ishero_{$imageno}" class="ishero">
         <input type="hidden" value="{$images.gallery_listing_id}" name="field[10][tbl_gallery][{$imageno}][gallery_listing_id]" id="gallery_listing_id" class="key">
         <input type="hidden" value="{$images.gallery_product_id}" name="field[10][tbl_gallery][{$imageno}][gallery_product_id]" id="gallery_product_id" class="key">
-        <input type="hidden" value="{$images.gallery_link}" name="field[10][tbl_gallery][{$imageno}][gallery_link]" id="gallery_image_{$imageno}_link" class="fileinput">
+        <input type="hidden" value="{$images.gallery_link}" name="field[10][tbl_gallery][{$imageno}][gallery_link]" id="gallery_image_{$imageno}_link" class="fileinput" required>
         <span class="file-view" id="gallery_image_{$imageno}_path">{if $images.gallery_link}<a href="{$images.gallery_link}" target="_blank">View</a>{else}None{/if}
         </span> <a href="javascript:void(0);" class="btn btn-info marg-5r" onclick="getFileType('gallery_image_{$imageno}','','');">Select File</a> <a href="javascript:void(0);" class="btn btn-info" onclick="
 						$('#gallery_image_{$imageno}').val('');
@@ -41,6 +41,7 @@
 						$('#gallery_image_{$imageno}_preview').html('');
 					">Remove File</a>
       </div>
+      <span class="help-block"></span>
     </div>
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="gallery_title_{$imageno}">Title</label>

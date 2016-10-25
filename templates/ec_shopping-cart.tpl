@@ -130,7 +130,7 @@
 				<div class="condn">*Offer only applies to one additional medical ID, must be equal or lesser value.</div>
 	        </div>
 	        <div class="col-sm-3 col-md-2" id="select">
-				<a href="/products" title="Select your additional product" class="btn btn-red">Select your <br /> product</a>
+				<a href="/products/stainless-steel" title="Select your additional product" class="btn btn-red">Select your <br /> product</a>
 	        </div>
         </div>
 {/if}

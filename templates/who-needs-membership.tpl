@@ -55,7 +55,7 @@
     <div class="row" id="testcont">
 	  <div class="col-sm-12 col-md-10 col-md-offset-1 text-center">
 	  <h3>The voice for people living with medical conditions</h3>
-	  <p>MedicAlert membership has given thousands of Australians peace of mind knowing that they’re protected in a medical emergency.<br />
+	  <p>MedicAlert membership has given thousands of Australians peace of mind knowing that they’re protected in an emergency.<br />
 		  <a href="/testimonials">View our members’ stories here ></a></p>
 	  </div>
 

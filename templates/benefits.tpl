@@ -95,7 +95,7 @@
 						<td colspan="4" class="section">The organisation</td>
 					</tr>
 					<tr>
-						<td>A trusted not-for-profit organisation for over 40 years</td>
+						<td>A trusted not-for-profit organisation for over 45 years</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
@@ -244,7 +244,7 @@
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>Membership offers with corporate partners including Tunstall Healthcare.</td>
+						<td>Membership offers with corporate partners</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>

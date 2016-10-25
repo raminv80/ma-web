@@ -70,4 +70,52 @@
     background-position: -300px 0;
 }
 
+
+#proddet #prodright .charrow-wrapper {
+    background: none !important;
+    margin-top: 25px;
+}
+
+#proddet #prodright .textcont input{
+	width: 100% !important;
+}
+
+}
+
+@media (min-width:1199px){
+
+#proddet #prodright .charleft{display: none;}
+#proddet #prodright .linenob{display: none;}
+#proddet #prodright .charrow-wrapper{
+	height: 350px;
+    background-size: cover !important;
+    vertical-align: middle;
+    text-align: center;
+}
+#proddet #prodright .charrow{
+	text-align: center;
+	height: 20px;
+	line-height: 20px;
+	margin-bottom: 4px;
+}
+
+#proddet #prodright .textcont{
+	float: none;
+	display: inline-block;
+    width: auto !important;
+}
+#proddet #prodright .charrow-wrapper input[type="text"]{
+	height: 20px;
+    padding: 0 12px;
+    text-align: center;
+}
+.attr-image-wrapper{height: 260px;}
+#proddet #prodright .charrowin{
+    position: absolute;
+    top: 55%;
+    transform: translate(-50%,-50%);
+    width: 48%;
+    left: 50%;
+}
+
 }

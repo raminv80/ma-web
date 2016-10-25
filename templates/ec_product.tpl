@@ -219,7 +219,7 @@
                   {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   <div class="additionals" id="additional-{$value.attr_value_id}" style="display:none;">
                     <div>{$value.attr_value_description}</div>
-                    {if $value.attr_value_image}<div class="hidden-md hidden-lg attr-image-wrapper"><img src="{$value.attr_value_image}" title="{$value.attr_value_name}" class="attr-image img-responsive"></div>{/if}
+                    {if $value.attr_value_image}<div class="hidden-lg attr-image-wrapper"><img src="{$value.attr_value_image}" title="{$value.attr_value_name}" class="attr-image img-responsive"></div>{/if}
                     <div class="charrow-wrapper" style="background: url('{$value.attr_value_image}') no-repeat;">
 
 	                <div class="charrowin">
@@ -227,13 +227,13 @@
                       {$varName = 'attr_value_var'|cat:$var}
                       {if $value[$varName] gt 0}
                       <div class="row charrow">
-	                      <div class="col-sm-3 col-lg-2 linenob">
+	                      <div class="col-sm-12 col-md-3 col-lg-2 linenob">
 						  	<label class="control-label lineno" for="additional-{$attr.attribute_id}-{$var}">Line {$var}</label>
 	                      </div>
-	                      <div class="col-sm-6 col-md-9 col-lg-7 textcont">
+	                      <div class="col-sm-12 col-md-9 col-lg-7 textcont">
 						  	<input type="text" class="form-control{if $value[$varName]} hasmaxlength{/if}" style="width: {$value[$varName]*11}px;" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}">
 	                      </div>
-	                      <div class="col-sm-3 col-md-12 col-lg-4 charleft">
+	                      <div class="col-sm-6 col-md-12 col-lg-4 charleft">
 		                      {if $value[$varName]}{$value[$varName]} characters left{/if}
 	                      </div>
                       </div>

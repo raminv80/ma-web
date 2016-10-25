@@ -664,13 +664,11 @@ tr.tabopts {
 #proddet #prodslider ul.slides{min-height: 134px;}
 
 #proddet #prodright .lineno{
-    text-align: center;
     margin-bottom: 0px;
     line-height: 25px;
 }
 
 #proddet #prodright .charleft{
-    text-align: center;
     margin-bottom: 10px;
     line-height: 25px;
 }
@@ -1020,6 +1018,15 @@ tr.tabopts {
 
 #helpcont{
 	display: none;
+}
+
+#proddet #prodright .charrow-wrapper {
+    background: none !important;
+    margin-top: 25px;
+}
+
+#proddet #prodright .textcont input{
+	width: 100% !important;
 }
 
 }

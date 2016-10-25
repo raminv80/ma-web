@@ -90,7 +90,7 @@ a {
 			border-bottom: 3px solid transparent;
 			padding-bottom: 10px;
 
-			&:hover{
+			&:hover, &:focus{
 				background: transparent;
 				border-bottom: 3px solid $white;
 			}
@@ -440,7 +440,7 @@ a {
 			opacity: 0.8;
 		}
 	}
-	
+
 	#main-footer{
 	   margin-bottom: 25px;
 	}

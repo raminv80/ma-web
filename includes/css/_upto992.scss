@@ -289,10 +289,6 @@
 
 .prod img.prodimg{min-height: 164px;}
 
-#proddet #prodright .lineno{
-			text-align: center;
-}
-
 #giftgrey #gift_form .giftopimg{
 	min-height: 71px;
 }
@@ -350,6 +346,15 @@
 #redeem #second, #redeem #third {
     min-height: 270px;
     padding: 34px 30px;
+}
+
+
+#proddet #prodright .charrow-wrapper {
+    background: none !important;
+}
+
+#proddet #prodright .textcont input{
+	width: 100% !important;
 }
 
 .emergency-grey .videoWrapper iframe{height: 266px;}

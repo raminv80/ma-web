@@ -135,7 +135,7 @@
                 <div class="panel-body">
                       {foreach $attributes.2.values as $k => $v}
                         <div class="">
-                          <input type="checkbox" id="colour{$k}" name="colour[]" class="iso-filter" value="attrval-{$k}"> <label for="colour{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
+                          <input type="checkbox" id="colour{$k}" name="colour[]" class="iso-filter img-changer" data-changer="data-img-{$k}" value="attrval-{$k}"> <label for="colour{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
                         </div>
                       {/foreach}
                 </div>
@@ -356,6 +356,17 @@
     
     $('.iso-filter').attr('disabled', 'disabled');
     
+    //Image changer
+    $('.img-changer:checked').each(function(){
+      var dataimg =  $(this).attr('data-changer');
+      $('img.prodimg').each(function(){
+      	if($(this).attr(dataimg)){
+      	  $(this).attr('src', $(this).attr(dataimg));
+      	}
+      });
+    });
+    
+    //Isotope filter
     var $grid = $("#products-wrapper").isotope({
    	  itemSelector: '.prodout',
    	  layoutMode: 'fitRows',

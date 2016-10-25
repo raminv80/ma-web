@@ -2,16 +2,6 @@
 global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 
 try{
-  //LOAD COLLECTIONS
-  $sql = "SELECT COUNT(product_object_id) AS cnt, listing_name, listing_url, listing_object_id FROM tbl_listing
-      LEFT JOIN tbl_productcat ON productcat_listing_id = listing_object_id
-      LEFT JOIN tbl_product ON product_id = productcat_product_id
-      WHERE product_deleted IS NULL AND productcat_deleted IS NULL AND product_published = 1
-      AND listing_deleted IS NULL AND listing_published = 1 AND listing_type_id = 10 AND listing_flag1 = '1'
-      GROUP BY listing_object_id ORDER BY listing_order, listing_name";
-  $collections = $DBobject->wrappedSql($sql);
-  $SMARTY->assign('collections', $collections);
-  
 
   //LOAD PRODUCT TYPES
   $ptypes = array();
@@ -67,12 +57,13 @@ try{
   //Members only
   $whereSQL = empty($_SESSION['user']['public']['id']) ? 'AND (product_membersonly IS NULL OR product_membersonly = 0)' : '';
   $baseParams = array();
+  $params = array();
     
   
   //LOAD PRODUCTS
   $prodObj = new ProductClass('', $CONFIG->product_page);
   $sql = "SELECT product_object_id, product_name, product_url, product_brand, product_meta_description, product_associate1 FROM tbl_product LEFT JOIN tbl_productcat ON productcat_product_id = product_id
-  WHERE product_deleted IS NULL AND productcat_deleted IS NULL AND product_published = 1 AND productcat_listing_id = :id {$whereSQL} ORDER BY product_order, product_name";
+  WHERE product_deleted IS NULL AND productcat_deleted IS NULL AND product_published = 1 AND productcat_listing_id = :id {$whereSQL} GROUP BY product_object_id ORDER BY product_order, product_name";
   $params = array_merge(array('id' => $SMARTY->getTemplateVars('listing_object_id')), $baseParams);
   if($products = $DBobject->wrappedSql($sql, $params)){
     foreach($products as &$p){
@@ -92,6 +83,24 @@ try{
   
   $recentProducts = $prodObj->GetRecentViewProduct();
   $SMARTY->assign('recent_products', (count($recentProducts) > 4) ? $recentProducts : '');
+  
+
+  //LOAD COLLECTIONS
+  $sql = "SELECT listing_name, listing_url, listing_object_id FROM tbl_listing
+      WHERE listing_deleted IS NULL AND listing_published = 1 AND listing_type_id = 10 AND listing_flag1 = '1'
+      GROUP BY listing_object_id ORDER BY listing_order, listing_name";
+  if($collections = $DBobject->wrappedSql($sql)){
+    foreach($collections as &$c){
+      $sql = "SELECT COUNT(product_object_id) as CNT FROM tbl_product LEFT JOIN tbl_productcat ON productcat_product_id = product_id
+        WHERE product_deleted IS NULL AND productcat_deleted IS NULL AND product_published = 1 AND productcat_listing_id = :id {$whereSQL} GROUP BY product_object_id";
+      $params['id'] = $c['listing_object_id'];
+      if($products = $DBobject->wrappedSql($sql, $params)){
+        $c['cnt'] = count($products);
+      }
+    }
+    
+  }
+  $SMARTY->assign('collections', $collections);
   
 }catch(exceptionCart $e) {
   $SMARTY->assign('error', $e->getMessage());

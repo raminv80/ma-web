@@ -2,7 +2,7 @@
 <div class="col-sm-6 col-lg-4 prodout show-all type-{$item.product_associate1} range-{$item.price_range} {if $item.general_details.sale.flag eq 1}range-sale{/if} {foreach $item.general_details.materials as $matk => $matv}material-{$matk} {/foreach} {foreach $item.general_details.has_attributes as $attr}{foreach $attr as $valid => $valval} attrval-{$valid}{/foreach}{/foreach} split {foreach $item.general_details.has_parent_attributes as $valid} attrval-{$valid}{/foreach}" data-order="{$k}">
 	<div class="prod">
 	<a href="/{$item.product_url}">
-		<img src="{if $item.general_details.image}{$item.general_details.image}{else}/images/no-image-available.png{/if}?width=770&height=492&crop=1" alt="{$item.product_name} image" class="img-responsive prodimg" title="{$item.product_name} image">
+		<img {foreach $item.general_details.has_attributes as $aid => $attr}{if $aid eq 2}{foreach $attr as $valid => $valval}{if $valval.product_image}{foreach $valval.values.parents as $p} data-img-{$p}="{$valval.product_image}"{/foreach}{/if}{/foreach}{/if}{/foreach} {foreach $item.general_details.has_attributes as $aid => $attr}{if $aid eq 2}{foreach $attr as $valid => $valval}{if $valval.product_image} data-img-{$valid}="{$valval.product_image}"{/if}{/foreach}{/if}{/foreach} src="{if $item.general_details.image}{$item.general_details.image}{else}/images/no-image-available.png{/if}?width=770&height=492&crop=1" alt="{$item.product_name} image" class="img-responsive prodimg" title="{$item.product_name} image">
 	</a>
 	<div class="prod-labels">
         {if $item.general_details.limitedstock.flag eq 1}
