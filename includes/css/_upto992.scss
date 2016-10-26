@@ -22,6 +22,9 @@
 #top #mainmenu #navbar-collapse-2 ul li{
   width: 100%;
 }
+#main{
+  border-bottom: initial;
+}
 
 #cart {
 	margin-top: 10px;
@@ -348,9 +351,9 @@
     padding: 34px 30px;
 }
 
-
 #proddet #prodright .charrow-wrapper {
     background: none !important;
+    margin-top: 15px;
 }
 
 #proddet #prodright .textcont input{

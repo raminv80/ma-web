@@ -1,6 +1,6 @@
 #AuthType Basic
 #AuthName "Login required"
-#AuthUserFile /home/6-web/68/10/themserver.com/public/ready/.htpasswd
+#AuthUserFile /home/them/public_html/.htpasswd
 #require valid-user
 #Order Deny,Allow
 #Deny from all

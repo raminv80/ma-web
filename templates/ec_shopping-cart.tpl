@@ -2,6 +2,13 @@
 
 <div id="carttop">
 	<div class="container">
+      {if $error}
+      <div class="row">
+        <div class="col-sm-12 error-message text-center">
+          {$error}
+        </div>
+      </div>
+      {/if}
 		<div class="row hidden-xs">
 			<div class="col-xs-4 col-sm-4 text-center">
 				<span class="bold">1. Cart</span>
@@ -183,7 +190,7 @@
 	                  <input class="form-control" type="text" placeholder="ENTER CODE" id="promo" value="{if $post}{$post.discount_code}{else}{$cart.cart_discount_code}{/if}" name="discount_code" required/>
 	                  <div class="error-msg help-block"></div>
                       <div>
-	                    {if $error}<span class="invalid error-textbox">{$error}</span>{else}<small><b>{if $discount.discount_name}'{$discount.discount_name}' has been successfully applied.{/if}</b></small>{/if}
+	                    {if $notice}<span class="invalid error-textbox">{$notice}</span>{else}<small><b>{if $discount.discount_name}'{$discount.discount_name}' has been successfully applied.{/if}</b></small>{/if}
 	                  </div>
 	                </div>
 	                <div class="col-xs-12">

@@ -131,7 +131,9 @@
 		}
 	}
 }
-
+#main{
+  border-bottom: initial;
+}
 #cart{
 	position: relative;
 
@@ -1022,7 +1024,7 @@ tr.tabopts {
 
 #proddet #prodright .charrow-wrapper {
     background: none !important;
-    margin-top: 25px;
+    margin-top: 15px;
 }
 
 #proddet #prodright .textcont input{

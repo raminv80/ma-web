@@ -231,7 +231,7 @@
 						  	<label class="control-label lineno" for="additional-{$attr.attribute_id}-{$var}">Line {$var}</label>
 	                      </div>
 	                      <div class="col-sm-12 col-md-9 col-lg-7 textcont">
-						  	<input type="text" class="form-control{if $value[$varName]} hasmaxlength{/if}" style="width: {$value[$varName]*11}px;" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}">
+						  	<input type="text" class="form-control{if $value[$varName]} hasmaxlength{/if}" {if $var eq 2}placeholder="Enter text"{/if} style="width: {$value[$varName]*11}px;" maxlength="{$value[$varName]}" name="attr[{$attr.attribute_id}][additional][{$var}]" id="additional-{$value.attr_value_id}-{$var}" onkeyup="if($(this).val().length == {$value[$varName]}){ $('#additional-{$value.attr_value_id}-{$var+1}').focus(); } else if($(this).val().length == 0 && event.keyCode == 8){ $('#additional-{$value.attr_value_id}-{$var-1}').focus();  }">
 	                      </div>
 	                      <div class="col-sm-6 col-md-12 col-lg-4 charleft">
 		                      {if $value[$varName]}{$value[$varName]} characters left{/if}
@@ -610,7 +610,11 @@ $(window).load(function() {
 
 	  //Clear all selections when main-attribute
 	  if($(ELEMENT).hasClass('mainAttr')){
-	    $('.notMainAttr').val('');
+	    $('.notMainAttr').each(function(){
+	      if($(this).find('option').length > 2){
+	        $(this).val('');  
+	      }
+	    });
 	    SetAdditionals();
 	  }
 

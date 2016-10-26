@@ -95,11 +95,19 @@ $staging = (string)$CONFIG->attributes()->staging;
 if($staging === "true" || $_PUBLISHED == 0 ){
   $SMARTY->assign("staging",true);
   $GLOBALS['GA_ID'] = null;
+  $GLOBALS['GA_OLD_ID'] = null;
+  $GLOBALS['GTM_ID'] = null;
 }else{
   $SMARTY->assign("staging",false);
   $ga_id = (string) $CONFIG->google_analytics->id;
   $GLOBALS['GA_ID'] = $ga_id;
   $SMARTY->assign("ga_id", $ga_id);
+  $ga_old_id = (string) $CONFIG->google_analytics->old_id;
+  $GLOBALS['GA_OLD_ID'] = $ga_old_id;
+  $SMARTY->assign("ga_old_id", $ga_old_id);
+  $gtm_id = (string) $CONFIG->google_tag_manager->id;
+  $GLOBALS['GTM_ID'] = $gtm_id;
+  $SMARTY->assign("gtm_id", $gtm_id);
 }
 
 //COMPANY INFO FROM CONFIG

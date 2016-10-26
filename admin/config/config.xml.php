@@ -1,9 +1,9 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
 <config debug="false" staging="true"> 
-  <domain></domain>
+  <domain>medicalert.org.au</domain>
   <google_analytics>
-  	<id>UA-</id>
+  	<id>UA-86286777-1</id>
   	<old_id></old_id>
   </google_analytics>
   <company>
@@ -32,10 +32,14 @@
     <value>$32</value>
   </global_variable> 
   <database> 
-  	<host>122.201.97.172</host> 
+    <host>122.201.118.45</host> 
+    <user>medicalertorg_usr</user> 
+    <password>VLw!8L+fM6cAh</password> 
+    <dbname>medicalertorg_web</dbname> 
+  	<!-- <host>122.201.97.172</host> 
     <user>them_usr01</user> 
     <password>OTwFwL?pSnR+</password> 
-    <dbname>them_db01</dbname> 
+    <dbname>them_db01</dbname>  -->
   </database> 
   <resource> 
   	<url>file-manager</url> 

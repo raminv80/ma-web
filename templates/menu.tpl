@@ -34,7 +34,7 @@
 			<div class="col-xs-8 col-sm-8 col-md-3" id="logoout">
 				<a href="/" title="Home"><img src="/images/moblogo.svg"	class="img-responsive" alt="Logo" id="logo" /></a>
 			</div>
-			<div class="col-sm-4 col-sm-offset-1 hidden-sm hidden-xs" id="top-menu">
+			<div class="col-sm-5 hidden-sm hidden-xs" id="top-menu">
 				<nav class="collapse navbar-collapse">
 					<ul class="nav navbar-nav navbar-right">
 						{call name=render_list items=$menuitems['top-header']['list'] ismobile=0}

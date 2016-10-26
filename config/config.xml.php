@@ -1,11 +1,14 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true">
-  <domain></domain>
+<config debug="false" staging="false">
+  <domain>medicalert.org.au</domain>
   <google_analytics>
-    <id>UA-</id>
+    <id>UA-86286777-1</id>
     <old_id></old_id>
   </google_analytics>
+  <google_tag_manager>
+    <id>GTM-TZCC4F</id>
+  </google_tag_manager>
   <company>
     <name>Australia MedicAlert Foundation</name>
     <address>
@@ -44,10 +47,14 @@
     <value>$76</value>
   </global_variable>    
   <database> 
-    <host>122.201.97.172</host> 
+    <host>122.201.118.45</host> 
+    <user>medicalertorg_usr</user> 
+    <password>VLw!8L+fM6cAh</password> 
+    <dbname>medicalertorg_web</dbname> 
+  	<!-- <host>122.201.97.172</host> 
     <user>them_usr01</user> 
     <password>OTwFwL?pSnR+</password> 
-    <dbname>them_db01</dbname> 
+    <dbname>them_db01</dbname>  -->
   </database>
   <database_variable>
     <name>==membership_fee==</name>
@@ -419,6 +426,9 @@
       <linkfield>listing_associate3</linkfield>
       <field>banner_id</field>
     </associated>
+    <process>
+      <file>includes/processes/process-check-MAF-login.php</file>
+    </process>
     <process>
       <file>includes/processes/process-load-account.php</file>
     </process>

@@ -31,7 +31,7 @@
 				<p>If you, or someone you care for, are one of the many Australians living with a medical condition, sign up to our email newsletter and be the first to hear about the latest news and special offers from MedicAlert<sup>&reg;</sup></p>
 				<br />
 
-					<form action="https://themdigital.createsend.com/{if $staging}t/r/s/kiidlhi/{else}t/r/s/djiijii/{/if}" method="post" id="newsl_form" novalidate="novalidate">
+					<form action="https://themdigital.createsend.com/t/r/s/kiidlhi/" method="post" id="newsl_form" novalidate="novalidate">
 						<div class="row form-group">
 							<div class="col-sm-6 ">
 							  <label for="fieldName">Name<span>*</span></label>
@@ -40,7 +40,7 @@
 							</div>
 							<div class="col-sm-6 ">
 							  <label for="fieldEmail">Email<span>*</span></label>
-							  <input class="form-control" type="email" name="{if $staging}cm-kiidlhi-kiidlhi{else}cm-djiijii-djiijii{/if}" id="fieldEmail" required="">
+							  <input class="form-control" type="email" name="cm-kiidlhi-kiidlhi" id="fieldEmail" required="">
 							  <div class="error-msg help-block"></div>
 							</div>
 						</div>

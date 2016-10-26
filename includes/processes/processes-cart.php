@@ -201,7 +201,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $cart_obj = new cart($_SESSION['user']['public']['id']);
       $res = $cart_obj->ApplyDiscountCode($_POST['discount_code']);
       if($res['error']){
-        $_SESSION['error'] = $res['error'];
+        $_SESSION['notice'] = $res['error'];
         $_SESSION['reApplydiscount'] = ($res['reApplyAfterLogin'])? $_POST['discount_code'] : '';
         $_SESSION['post'] = $_POST;
         header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
@@ -280,7 +280,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       if(!empty($_POST['address']['wantpromo'])){
         try{
           require_once 'includes/createsend/csrest_subscribers.php';
-          $wrap = new CS_REST_Subscribers('ef8adc9395331188758415b1785e6c81', '060d24d9003a77b06b95e7c47691975b'); // !!!! UPDATE CREATESEND LIST CODE !!!!!
+          $wrap = new CS_REST_Subscribers('d5de22e15e29de7ada93174dbd839cd3', '060d24d9003a77b06b95e7c47691975b'); 
           $cs_result = $wrap->add(array(
               'EmailAddress' => $_POST['address']['B']['address_email'],
               'Name' => $_POST['address']['B']['address_name'],
