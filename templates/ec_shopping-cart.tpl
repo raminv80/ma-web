@@ -190,7 +190,7 @@
 	                  <input class="form-control" type="text" placeholder="ENTER CODE" id="promo" value="{if $post}{$post.discount_code}{else}{$cart.cart_discount_code}{/if}" name="discount_code" required/>
 	                  <div class="error-msg help-block"></div>
                       <div>
-	                    {if $notice}<span class="invalid error-textbox">{$notice}</span>{else}<small><b>{if $discount.discount_name}'{$discount.discount_name}' has been successfully applied.{/if}</b></small>{/if}
+	                    {if $notice || $totals.discount_error}<span class="invalid error-textbox">{if $totals.discount_error}{$totals.discount_error}{else}{$notice}{/if}</span>{else}<small><b>{if $discount.discount_name}'{$discount.discount_name}' has been successfully applied.{/if}</b></small>{/if}
 	                  </div>
 	                </div>
 	                <div class="col-xs-12">

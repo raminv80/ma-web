@@ -1218,7 +1218,7 @@ function sendGAEnEcAction($_tid, $_action, $_cartitemArr,$_cid=null){
 			'pa' => $_action,
 			'pa1' => $_SERVER['HTTP_REFERER'],
 			'pr1id' => $_cartitemArr['id'],
-			'pr1nm' => urlencode($_cartitemArr['name']),
+			'pr1nm' => $_cartitemArr['name'],
 			'pr1ca' => $_cartitemArr['category'],
 			'pr1br' => $_cartitemArr['brand'],
 			'pr1va' => $_cartitemArr['variant'],
@@ -1237,7 +1237,7 @@ function sendGAEnEcAction($_tid, $_action, $_cartitemArr,$_cid=null){
  * @param array $_cartitemArr
  * @return boolean
  */
-function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr,$_cid=null){
+function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr, $_cid=null){
 	if(empty($_tid) || empty($_cartitemArr)) return false;
 
 	$v = 1;
@@ -1260,7 +1260,7 @@ function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr,$_cid
 	$cnt = 1;
 	foreach($_cartitemArr as $item){
 		$data["pr{$cnt}id"] = $item['id'];
-		$data["pr{$cnt}nm"] = urlencode($item['name']);
+		$data["pr{$cnt}nm"] = $item['name'];
 		$data["pr{$cnt}ca"] = $item['category'];
 		$data["pr{$cnt}br"] = $item['brand'];
 		$data["pr{$cnt}va"] = $item['variant'];
@@ -1283,7 +1283,7 @@ function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr,$_cid
  * @param integer $_step
  * @return boolean
  */
-function sendGAEnEcCheckoutOptions($_tid, $_stepOption, $_step,$_cid=null){
+function sendGAEnEcCheckoutOptions($_tid, $_stepOption, $_step, $_cid=null){
 	if(empty($_tid) || empty($_stepOption) || empty($_step)) return false;
 
 	$v = 1;
@@ -1341,7 +1341,7 @@ function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 	$cnt = 1;
 	foreach($_cartitemArr as $item){
 		$data["pr{$cnt}id"] = $item['id'];
-		$data["pr{$cnt}nm"] = urlencode($item['name']);
+		$data["pr{$cnt}nm"] = $item['name'];
 		$data["pr{$cnt}ca"] = $item['category'];
 		$data["pr{$cnt}br"] = $item['brand'];
 		$data["pr{$cnt}va"] = $item['variant'];
@@ -1358,16 +1358,18 @@ function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 
 // See https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 function gaFireHit( $data = null ) {
-  if ( $data ) {
-    $getString = 'https://ssl.google-analytics.com/collect';
-    $getString .= '?payload_data&';
-    $getString .= http_build_query($data);
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $getString);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_exec($ch);
-    return true;
+  if($data){
+    try{
+      $getString = 'https://ssl.google-analytics.com/collect';
+      $getString .= '?payload_data&';
+      $getString .= http_build_query($data);
+      
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $getString);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_exec($ch);
+      return true;
+    }catch(Exception $e){}
   }
   return false;
 }

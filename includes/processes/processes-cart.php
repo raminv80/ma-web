@@ -29,14 +29,12 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $SMARTY->assign('subtotal', $subtotal);
         $popoverShopCart = $SMARTY->fetch('templates/ec_popover-shopping-cart.tpl');
         
+        $productGA = $cart_obj->getProductInfo_GA($_POST['product_id'], $_POST['attr'], $_POST['quantity'], 0, null, 0, $_POST['variant_id']);
+        sendGAEnEcAction($GA_ID, 'add', $productGA);
+        
       }catch(exceptionCart $e){
         $error = $e->getMessage();
       }
-      
-      //----------------- PENDING TO DO -------------
-      /* $productGA = $cart_obj->getProductInfo_GA($_POST['product_id'], $_POST['attr'], $_POST['quantity'], $_POST['listing_id']);
-      sendGAEnEcAction($GA_ID, 'add', $productGA); */
-      
       echo json_encode(array(
           'success' => $success,
           'error' => $error,
@@ -635,7 +633,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
             
             $totalsGA = array(
-                'id' => $order_cartId, 
+                'id' => $orderNumber, 
                 'total' => $chargedAmount, 
                 'tax' => $gst, 
                 'shipping' => $shippingFee, 
@@ -792,6 +790,11 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           'address' => $billingArr
       );
       
+      if(!empty($GA_ID)){
+        $productsGA = $cart_obj->getCartitemsByCartId_GA();
+        sendGAEnEcCheckoutStep($GA_ID, $_SESSION['shipping']['selectedMethod'], $productsGA);
+      }
+      
       require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
       $pay_obj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
       $response = false;
@@ -866,7 +869,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         if(!empty($GA_ID)){
           sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
           $totalsGA = array(
-              'id' => $order_cartId,
+              'id' => $orderNumber,
               'total' => $chargedAmount,
               'tax' => $gst,
               'shipping' => $shippingFee,
@@ -1064,6 +1067,11 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'settings' => $CONFIG->payment_gateway->payway,
             'address' => $billingArr
         );
+        
+        if(!empty($GA_ID)){
+          $productsGA = $cart_obj->getCartitemsByCartId_GA();
+          sendGAEnEcCheckoutStep($GA_ID, $_SESSION['shipping']['selectedMethod'], $productsGA);
+        }
     
         require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
         $pay_obj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
@@ -1246,7 +1254,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
     
             $totalsGA = array(
-                'id' => $order_cartId,
+                'id' => $orderNumber,
                 'total' => $chargedAmount,
                 'tax' => $gst,
                 'shipping' => $shippingFee,

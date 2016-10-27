@@ -111,7 +111,7 @@
 	</div>
 </div>
 {$donotshow = [1,7,12,13]}
-{if $user && $user.maf.main.user_RenewalDate|date_format:"%Y%m%d" lt $smarty.now|date_format:"%Y%m%d" && !$listing_object_id|in_array:$donotshow}
+{if $user && $user.maf.main.lifetime neq 1 && $user.maf.main.user_RenewalDate|date_format:"%Y%m%d" lt $smarty.now|date_format:"%Y%m%d" && !$listing_object_id|in_array:$donotshow}
 <div id="reminder">
   <div class="container">
     <div class="row">

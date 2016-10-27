@@ -1003,7 +1003,7 @@ class cart{
     if(empty($_memberArr['id']) && $hasMAFProd){
       //Add "member service fee - current_year" when member is not logged in
       $addMSF = true;
-    } elseif(!empty($_memberArr['maf'])){
+    } elseif(!empty($_memberArr['maf']) && empty($_memberArr['maf']['main']['lifetime'])){
       //Existing member
       $addMSF = ($_memberArr['maf']['main']['renew'] == 't')? true : false;
       $addReactivationFee = ($_memberArr['maf']['main']['reactivation'] == 't')? true : false;
@@ -1182,14 +1182,13 @@ class cart{
               }
             }
             if(empty($discount)){
-              $result['error'] = "This code '" . $code . "' doesn't apply for the item(s) on your cart";
+              $result['error'] = "This code '" . $code . "' doesn't apply to the item(s) on your cart";
               //$code = null;
             }
           }
         }
       } else{
-        $result['error'] = "Sorry, this code '" . $code . "' is no longer valid. " . ($useValid? '' : 'Maximum claims reached.');
-        $result['error'] = ($userRestricted)? $userRestrictionError : '';
+        $result['error'] = ($userRestricted)? $userRestrictionError : ("Sorry, this code '" . $code . "' is no longer valid. " . ($useValid? '' : 'Maximum claims reached.'));
         if($reApplyAfterLogin){
           $result['reApplyAfterLogin'] = true;
         }
@@ -1417,7 +1416,7 @@ class cart{
       }
       
       $result = array(
-          'id' => $product['product_object_id'], 
+          'id' => (empty($product['variant_uid']) ? "{$product['product_object_id']}-{$product['variant_id']}" : $product['variant_uid']), 
           'name' => $product['product_name'], 
           'category' => $this->getFullCategoryName($productId), 
           'brand' => $product['product_brand'], 
@@ -1439,7 +1438,7 @@ class cart{
    * @return string
    */
   function getFullCategoryName($productObjId){
-    return '';
+    return 'products';
   }
 
   
@@ -1456,8 +1455,10 @@ class cart{
     $param = array(
         ":id" => $cartItemId 
     );
-    $sql = "SELECT * FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id 
-  			WHERE product_deleted IS NULL AND product_published = 1 AND cartitem_id = :id";
+    $sql = "SELECT tbl_cartitem.*, product_brand, variant_id, variant_uid 
+        FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id 
+        LEFT JOIN tbl_variant ON variant_id = cartitem_variant_id 
+  			WHERE product_deleted IS NULL AND product_published = 1 AND variant_deleted IS NULL AND cartitem_id = :id";
     if($res = $DBobject->wrappedSql($sql, $param)){
       
       $variant = array();
@@ -1471,7 +1472,7 @@ class cart{
       }
       
       $result = array(
-          'id' => $res[0]['cartitem_product_id'], 
+          'id' => (empty($res[0]['variant_uid']) ? "{$res[0]['cartitem_product_id']}-{$res[0]['variant_uid']}" : $res[0]['variant_uid']), 
           'name' => $res[0]['cartitem_product_name'], 
           'category' => $this->getFullCategoryName($res[0]['cartitem_product_id']), 
           'brand' => $res[0]['product_brand'], 

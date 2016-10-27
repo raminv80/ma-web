@@ -13,15 +13,15 @@
     <name>Australia MedicAlert Foundation</name>
     <address>
       <street>Level 1, 210 Greenhill Road</street>
-        <suburb>Eastwood</suburb>
-		<state>SA</state>
-		<postcode>5063</postcode>
+      <suburb>Eastwood</suburb>
+      <state>SA</state>
+	  <postcode>5063</postcode>
     </address>
     <phone>(+61)8 8274 8400</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
     <email>enquiry@medicalert.org.au</email>
-    <email_from>noreply@themdigital.com.au</email_from>
+    <email_from>noreply@medicalert.org.au</email_from>
     <email_contact>apolo@them.com.au</email_contact>
     <email_orders>apolo@them.com.au</email_orders>
     <logo>logo.png</logo>
