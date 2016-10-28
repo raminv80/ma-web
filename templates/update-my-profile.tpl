@@ -361,7 +361,7 @@
                     <input type="radio" name="user_donor" id="organdonationy" class="form-control" value="t" {if $user.maf.update.user_donor eq 't'}checked="checked" {/if}/>
                     <label for="organdonationy" class="radiolab">Yes</label>
 
-                    <input type="radio" name="user_donor" id="organdonationn" class="form-control" value="f" {if $user.maf.update.user_donor eq 'f'}checked="checked" {/if} />
+                    <input type="radio" name="user_donor" id="organdonationn" class="form-control" value="f" {if $user.maf.update.user_donor neq 't'}checked="checked" {/if} />
                     <label for="organdonationn" class="radiolab">No</label>
                   </div>
                 </div>

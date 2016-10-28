@@ -21,7 +21,7 @@ function fatal_handler() {
     	die($body);
     }
     $subject = "Fatal error";
-    $to = "themadvertise@gmail.com,online@them.com.au";
+    $to = "weberrors@them.com.au";
     $from = (string) $CONFIG->company->name;
     $from = empty($from)?"website":$from;
     $fromEmail = 'noreply@' . str_replace ( "www.", "", $_SERVER['SERVER_NAME'] );
@@ -34,7 +34,7 @@ function fatal_handler() {
     $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
     $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
     $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-    $headers .= "Bcc: cmsemails@them.com.au\r\n";
+    $headers .= "Bcc: medicalert.org.au@gmail.com\r\n";
     try{
     	$filename = $_SERVER['DOCUMENT_ROOT'].'/fatalerror'. date("Y-m-d-H") .'.txt';
     	if(!file_exists($filename)){

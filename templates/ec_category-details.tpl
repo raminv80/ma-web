@@ -267,6 +267,7 @@
 <script src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
 <script src="/includes/js/isotope.pkgd.min.js"></script>
+<script src="/includes/js/jquery.lazyload.min.js"></script>
 
 <script type="text/javascript">
 	function toggleIconMain(e) {
@@ -331,10 +332,30 @@
 
     $("#sort").val("price-low-high").change();
 
-    $("#products-wrapper").isotope({ sortBy: "price",sortAscending: true } );
+    $("#products-wrapper").isotope({ 
+		sortBy: "price",
+		sortAscending: true, 
+		onLayout: function() {
+			$(window).trigger("scroll");
+		}
+	} );
     
+	$('img.prodimg').lazyload({
+		effect: "fadeIn",
+        failure_limit: Math.max($('img.prodimg').length - 1, 0),
+        event: "scroll click"
+	});
+	
+    	
   });
 
+	$(window).bind("load", function() {
+		setTimeout(function() {
+			$("#products-wrapper").trigger('click');
+		},10);
+
+	});
+  
   var runningIsotope = false;
   function filterOptions(SKIPSAVE){
     

@@ -32,10 +32,6 @@ $SMARTY->assign('HTTP_REFERER', rtrim($_SERVER['HTTP_REFERER'],'/'));
 $SMARTY->assign('REQUEST_URI', $REQUEST_URI);
 $_request = htmlclean($_REQUEST);
 $SMARTY->assign('_REQUEST', $_REQUEST);
-$SMARTY->assign('orderNumber', $_SESSION['orderNumber']);
-$SMARTY->assign('ga_ec', $_SESSION['ga_ec']);// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
-unset($_SESSION['ga_ec']);
-
 
 $token = getToken('frontend');
 $SMARTY->assign('token', $token);
@@ -97,7 +93,7 @@ while(true){
       $_nurl = $_request["arg1"];
       $class = (string)$lp->file;
       $obj = new $class($_nurl,$lp);
-      $template = $obj->Load((!empty($lp->root_parent_id)?$lp->root_parent_id:null),$_PUBLISHED);
+      $template = $obj->Load(null, $_PUBLISHED);
       $menu = $obj->LoadMenu($lp->root_parent_id);
       $SMARTY->assign('menuitems',$menu);
       $fieldname = (string) $lp->url->attributes()->requiredvar;

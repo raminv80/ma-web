@@ -33,9 +33,8 @@ class medicAlertApi {
 	// --------------------------------------------------------------
 	// CONSTANTS
 	//
-// 	const SERVER = 'https://apistaging.medicalert.com.au';
-//	const SERVER = 'https://api.medicalert.org.au';
- 	const SERVER = 'https://apistaging.medicalert.org.au';
+	const SERVER = 'https://api.medicalert.org.au';
+// 	const SERVER = 'https://apistaging.medicalert.org.au';
 	const API_USER = 'MA-WEBSITE';
 	const API_USER_PASSWORD = 'htAHHGWug!kc';
 

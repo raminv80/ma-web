@@ -641,6 +641,29 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             );
             $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
             sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
+            
+            $_SESSION['conversionTracking'] = '<script>
+              setTimeout(function(){
+  		        fbq(\'track\', \'Purchase\', {value: '.$chargedAmount.', currency: \'AUD\'});
+        	  }, 6000);
+              </script>
+              <script type="text/javascript">
+              var google_conversion_id = 950737209;
+              var google_conversion_language = "en";
+              var google_conversion_format = "3";
+              var google_conversion_color = "ffffff";
+              var google_conversion_label = "_aTfCPT1r14QubKsxQM";
+              var google_conversion_value = '.$chargedAmount.';
+              var google_conversion_currency = "AUD";
+              var google_remarketing_only = false;
+              </script>
+              <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+              </script>
+              <noscript>
+              <div style="display:inline;">
+              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$total_amount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
+              </div>
+              </noscript>';
           }
           
           // SET USED DISCOUNT CODE
@@ -877,6 +900,29 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           );
           $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
           sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
+          
+          $_SESSION['conversionTracking'] = '<script>
+              setTimeout(function(){
+  		        fbq(\'track\', \'Purchase\', {value: '.$chargedAmount.', currency: \'AUD\'});
+        	  }, 6000);
+              </script>
+              <script type="text/javascript">
+              var google_conversion_id = 950737209;
+              var google_conversion_language = "en";
+              var google_conversion_format = "3";
+              var google_conversion_color = "ffffff";
+              var google_conversion_label = "_aTfCPT1r14QubKsxQM";
+              var google_conversion_value = '.$chargedAmount.';
+              var google_conversion_currency = "AUD";
+              var google_remarketing_only = false;
+              </script>
+              <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+              </script>
+              <noscript>
+              <div style="display:inline;">
+              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$total_amount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
+              </div>
+              </noscript>';
         }
         
         // OPEN NEW CART
@@ -1262,6 +1308,29 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             );
             $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
             sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
+            
+            $_SESSION['conversionTracking'] = '<script>
+              setTimeout(function(){
+  		        fbq(\'track\', \'Purchase\', {value: '.$chargedAmount.', currency: \'AUD\'});
+        	  }, 6000);
+              </script>
+              <script type="text/javascript">
+              var google_conversion_id = 950737209;
+              var google_conversion_language = "en";
+              var google_conversion_format = "3";
+              var google_conversion_color = "ffffff";
+              var google_conversion_label = "_aTfCPT1r14QubKsxQM";
+              var google_conversion_value = '.$chargedAmount.';
+              var google_conversion_currency = "AUD";
+              var google_remarketing_only = false;
+              </script>
+              <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+              </script>
+              <noscript>
+              <div style="display:inline;">
+              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$total_amount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
+              </div>
+              </noscript>';
           }
     
           // OPEN NEW CART

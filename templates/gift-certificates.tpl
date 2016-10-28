@@ -1,5 +1,5 @@
 {block name="head"}
-<link href="/includes/css/jquery-ui.css" rel="stylesheet" media="screen">
+{printfile file='/includes/css/jquery-ui.css' type='style'}
 {/block} {block name=body}
 <div id="pagehead">
   <div class="bannerout">

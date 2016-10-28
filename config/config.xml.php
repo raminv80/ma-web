@@ -74,16 +74,16 @@
   </database_variable>
   <payment_gateway>
     <payway>
+      <!-- LIVE  -->
+      <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey>
+      <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey>
+      <merchantid>23886963</merchantid>
+      <bankAccountid>035213308316A</bankAccountid>
       <!-- DEV -->
       <secretkey>T10023_SEC_6es29q2sek6cnvetsrs6h8pkay5um3985djkjv93xm9mf8vruc3enbzd2ek2</secretkey>
       <publishableakey>T10023_PUB_aumgejfq7yd27cbkbypftzg87eht5vf84q3thibxy9wpa7ru44cnfddqrx4f</publishableakey>
       <merchantid>TEST</merchantid>
       <bankAccountid>0000000A</bankAccountid>
-      <!-- LIVE  -->
-<!--       <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey> -->
-<!--       <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey> -->
-<!--       <merchantid>23886963</merchantid> -->
-<!--       <bankAccountid>035213308316A</bankAccountid> -->
     </payway>
   </payment_gateway>
   

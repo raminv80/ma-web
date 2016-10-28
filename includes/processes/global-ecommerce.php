@@ -56,6 +56,10 @@ try{
   //Temporary user's addresses
   $SMARTY->assign('address', $_SESSION['address']);
   
+  $SMARTY->assign('orderNumber', $_SESSION['orderNumber']);
+  $SMARTY->assign('conversionTracking', $_SESSION['conversionTracking']);// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
+  unset($_SESSION['conversionTracking']);
+  
 }
 catch(exceptionCart $e){
   $SMARTY->assign('error', $e->getMessage());

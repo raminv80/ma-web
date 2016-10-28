@@ -38,7 +38,8 @@
 <meta itemprop="description" content="{$product_meta_description} {$listing_meta_description}">
 <meta itemprop="image" content="{$DOMAIN}/images/logo.png">
 
-<link href="/includes/css/styles.css" rel="stylesheet" media="screen">
+{printfile file='/includes/css/styles.css' type='style'}
+
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -60,10 +61,6 @@
 	ga('require', 'linkid', 'linkid.js');
 	ga('require', 'ec');
 	ga('set', '&cu', 'AUD');
-
-	{$ga_ec}
-	{block name=enhanced_ecommerce}{/block}
-
 	ga('send', 'pageview');
 	</script>
 {/if}
@@ -86,11 +83,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     {if $gtm_id}
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={$gtm_id}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     {/if}
-	<script type="text/javascript" src="/includes/js/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="/includes/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/includes/js/jquery.validate.min.js"></script>
-	<script type="text/javascript" src="/includes/js/shopping-cart.js"></script>
-	<script type="text/javascript" src="/includes/js/custom.js"></script>
+    
+	{printfile file='/includes/js/jquery-2.1.4.min.js' type='script'}
+	{printfile file='/includes/js/bootstrap.min.js' type='script'}
+    {printfile file='/includes/js/jquery.validate.min.js' type='script'}
+	{printfile file='/includes/js/shopping-cart.min.js' type='script'}
+	{printfile file='/includes/js/custom.min.js' type='script'}
+  
 	<script type="text/javascript">
 	if (jQuery.validator) {
 	  jQuery.validator.setDefaults({
@@ -214,7 +213,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 	</script>
 	{block name=tail}{/block}
-
-
+    {$conversionTracking}
 </body>
 </html>

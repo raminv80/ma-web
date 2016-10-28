@@ -134,16 +134,31 @@ a MedicAlert membership could mean the difference between life and death.</p>
 {* Place additional javascript here so that it runs after General JS includes *}
 {block name=tail}
 <script src="/includes/js/isotope.pkgd.min.js"></script>
+<script src="/includes/js/jquery.lazyload.min.js"></script>
 <script type="text/javascript">
 
   $(document).ready(function() {
     
-  $("#products-wrapper").isotope({
-    itemSelector: '.prodout',
-    layoutMode: 'fitRows'
-   });
+  	$("#products-wrapper").isotope({
+      itemSelector: '.prodout',
+      layoutMode: 'fitRows'
+   	});
 
-  });
+ 	$('img.prodimg').lazyload({
+ 		effect: "fadeIn",
+       	failure_limit: Math.max($('img.prodimg').length - 1, 0),
+       	event: "scroll click"
+ 	});
+ 	
+     	
+ });
+
+  $(window).bind("load", function() {
+  	setTimeout(function() {
+  		$("#products-wrapper").trigger('click');
+  	},10);
+  
+  })
   
 //REFRESH ISOTOPE WHEN SCROLLING UP/DOWN
   var minLastView = $(document).height();

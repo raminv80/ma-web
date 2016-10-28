@@ -193,7 +193,7 @@ function logError($trace, $err, $sql = false) {
 	if($debug == 'true'){
 		die("$msg<br/>$trace");
 	}else{
-		sendMail("cmsemails@them.com.au", $CONFIG->attributes->company_name.'-Website', 'noreply@website.com.au', 'Error', "$msg<br/>$trace");
+		sendMail("weberrors@them.com.au", $CONFIG->attributes->company_name.'-Website', 'noreply@website.com.au', 'Error', "$msg<br/>$trace");
 		header('Location: /404');
 		die();
 	}
@@ -216,7 +216,7 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $a
   $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
   $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
   $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-  $headers .= "Bcc: cmsemails@them.com.au".(!empty($bcc)?",".$bcc:"")."\r\n";
+  $headers .= "Bcc: medicalert.org.au@gmail.com".(!empty($bcc)?",".$bcc:"")."\r\n";
 
   $mailSent = 0;
   if(empty($notsendid)){
@@ -294,7 +294,7 @@ function createBulkMail($to_Array,$from,$fromEmail,$subject,$body, $adminId = 0,
   $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
   $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
   $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-  $headers .= "Bcc: cmsemails@them.com.au\r\n";
+  $headers .= "Bcc: medicalert.org.au@gmail.com\r\n";
 
   try{
     foreach ($to_Array as $k => $to){
@@ -392,7 +392,7 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
     	   $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
     	   $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
     	   $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-    	   $headers .= "Bcc: cmsemails@them.com.au\r\n";
+    	   $headers .= "Bcc: medicalert.org.au@gmail.com\r\n";
   
     	   $verify = false;
     	   $sql = "SELECT count(email_id) as cnt FROM tbl_email_queue WHERE email_sent = 1 AND email_modified BETWEEN DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND NOW() ";
@@ -462,7 +462,7 @@ function sendErrorMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
   $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
   $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
   $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-  $headers .= "Bcc: cmsemails@them.com.au".(!empty($bcc)?",".$bcc:"")."\r\n";
+  $headers .= "Bcc: medicalert.org.au@gmail.com".(!empty($bcc)?",".$bcc:"")."\r\n";
 
   $mailSent = 0;
   try{
@@ -477,77 +477,6 @@ function sendErrorMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
   return $mailSent;
 }
 
-function preparehtmlmail($html) {
-
-  preg_match_all('~<img.*?src=.([\/.a-z0-9:_-]+).*?>~si',$html,$matches);
-  $i = 0;
-  $paths = array();
-
-  foreach ($matches[1] as $img) {
-    $img_old = $img;
-
-    if(strpos($img, "http://") == false) {
-      $uri = parse_url($img);
-      $paths[$i]['path'] = $_SERVER['DOCUMENT_ROOT'].$uri['path'];
-      $content_id = md5($img);
-      $html = str_replace($img_old,'cid:'.$content_id,$html);
-      $paths[$i++]['cid'] = $content_id;
-    }
-  }
-
-  $boundary = "--".md5(uniqid(time()));
-  $headers .= "MIME-Version: 1.0\n";
-  $headers .="Content-Type: multipart/mixed; boundary=\"$boundary\"\n";
-  $headers .= "From: ".DEFCALLBACKNAME." <".DEFCALLBACKMAIL.">\n";
-  $headers .= "Bcc: cmsemails@them.com.au\r\n";
-  $multipart = '';
-  $multipart .= "--$boundary\n";
-  $kod = 'utf-8';
-  $multipart .= "Content-Type: text/html; charset=$kod\n";
-  $multipart .= "Content-Transfer-Encoding: Quot-Printed\n\n";
-  $multipart .= "$html\n\n";
-
-  foreach ($paths as $path) {
-    if(file_exists($path['path']))
-      $fp = fopen($path['path'],"r");
-      if (!$fp)  {
-        return false;
-      }
-
-    $imagetype = substr(strrchr($path['path'], '.' ),1);
-    $file = fread($fp, filesize($path['path']));
-    fclose($fp);
-
-    $message_part = "";
-
-    switch ($imagetype) {
-      case 'png':
-      case 'PNG':
-            $message_part .= "Content-Type: image/png";
-            break;
-      case 'jpg':
-      case 'jpeg':
-      case 'JPG':
-      case 'JPEG':
-            $message_part .= "Content-Type: image/jpeg";
-            break;
-      case 'gif':
-      case 'GIF':
-            $message_part .= "Content-Type: image/gif";
-            break;
-    }
-
-    $message_part .= "; file_name = \"$path\"\n";
-    $message_part .= 'Content-ID: <'.$path['cid'].">\n";
-    $message_part .= "Content-Transfer-Encoding: base64\n";
-    $message_part .= "Content-Disposition: inline; filename = \"".basename($path['path'])."\"\n\n";
-    $message_part .= chunk_split(base64_encode($file))."\n";
-    $multipart .= "--$boundary\n".$message_part."\n";
-
-  }
-  $multipart .= "--$boundary--\n";
-  return array('multipart' => $multipart, 'headers' => $headers);
-}
 
 function clean( $str ){
 	$type = strtolower(gettype($str));

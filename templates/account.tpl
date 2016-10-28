@@ -148,18 +148,18 @@
 			</div>
 			<div class="clearfix"></div>
 
-			<div class="col-sm-12 text-center" id="renewal">
+			<div class="col-sm-12 text-center" id="renewal" data-autobilling="{$user.maf.main.autoBilling}" data-lifetime="{$user.maf.main.lifetime}">
 				<h3>{$user.maf.main.user_firstname}, is your membership up to date?</h3>
 				<p>It’s important to keep your MedicAlert membership up to date so we can continue to help protect you in an emergency. Don’t wait until it’s too late.  </p>
 
 				<div class="row">
-					<div class="col-sm-{if $user.maf.main.autoBilling eq 'f' && $user.maf.main.lifetime neq 1}6{else}12{/if} text-center" id="viewup">
+					<div class="col-sm-{if $user.maf.main.autoBilling neq 't' && $user.maf.main.lifetime neq 1}6{else}12{/if} text-center" id="viewup">
 						<div>
 							<img src="/images/dashboard-viewupdate.png" alt="View / update your profile" class="img-responsive" />
 						</div>
 						<a href="/update-my-profile" title="Click to view/update your profile " class="btn btn-red">View / update your profile</a>
 					</div>
-          {if $user.maf.main.autoBilling eq 'f' && $user.maf.main.lifetime neq 1}
+          {if $user.maf.main.autoBilling neq 't' && $user.maf.main.lifetime neq 1}
 					<div class="col-sm-6 text-center" id="autor">
 						<div>
 							<img src="/images/dashboard-autorenew.png" alt="Register for auto-renewals" class="img-responsive" />

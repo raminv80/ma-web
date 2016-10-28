@@ -20,20 +20,11 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
      $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
      $mail->Port = 587;    */                                 // TCP port to connect to
 
-    /** ============= UNCOMMENT THE COMMENTED LINES AND VICE VERSA WHEN LIVE =============== **/
-    if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
-      $mail->addAddress('apolo@them.com.au');
-    }else{
-      $mail->addAddress('rstevens@medicalert.org.au');
-      $mail->addBCC('apolo@them.com.au');
+    $toArr = explode(',',$to);
+    foreach($toArr as $m){
+      $mail->addAddress($m);
     }
-    $mail->Subject = "[TEST - {$to}] " . $subject;
-//     $toArr = explode(',',$to);
-//     foreach($toArr as $m){
-//       $mail->addAddress($m);
-//     }
-//     $mail->Subject = $subject;
-    /** ============= ------------------------------------------------------ =============== **/
+    $mail->Subject = $subject;
     
     $header_arr = explode("\r\n", $headers);
     foreach ($header_arr as $val){
