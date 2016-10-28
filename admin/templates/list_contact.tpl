@@ -4,9 +4,9 @@
 	{foreach $items as $item}
 		{if $item.url}
 		<tr>
-		  <td>{$item.fields.contact_created|date_format:"%d/%m/%Y"}</td>
+		  <td>{$item.contact_created|date_format:"%d/%m/%Y"}</td>
 		  <td>{$item.title}</td>
-		  <td><a href="tel:{$item.fields.contact_phone}" title="Click to call">{$item.fields.contact_phone}</a></td>
+		  <td><a href="tel:{$item.fields.contact_phone}" title="Click to call">{$item.contact_phone}</a></td>
 			<td>{if $item.url} <a href='{$item.url}' class='btn btn-small btn-warning pull-right'>View</a> {/if}
 			</td>
 			<td>{if $item.url_delete && $admin.level eq 1 } <a href='{$item.url_delete}' onclick="return ConfirmDelete();" class='btn btn-small btn-danger pull-right'>Delete</a> {/if}

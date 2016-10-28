@@ -14,7 +14,12 @@ RewriteCond %{REQUEST_URI} "/admin/includes/"
 RewriteRule (.*) $1 [L]
 
 RewriteCond %{HTTP_HOST} !^www\.
-RewriteRule ^(.*)$ http://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L] 
+RewriteRule ^(.*)$ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L] 
+
+RewriteCond %{SERVER_PORT} !^443
+RewriteCond %{HTTPS} !=on
+RewriteCond %{ENV:STATUS} !^https$
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 ##### ATTEMPT TO SEE IF I CAN MAP page=XX TO THE CORRENT FRIENDLY URL
 RewriteRule ^([^.]+)?$ index.php?arg1=$1 [QSA]

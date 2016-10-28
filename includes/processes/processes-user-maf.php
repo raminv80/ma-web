@@ -25,6 +25,9 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
               $error = null;
               $success = true;
               $url = empty($_POST['redirect']) ? '/checkout' : $_POST['redirect'];
+              if(!empty($GA_ID)){
+                sendGAEvent($GA_ID, 'user', 'pre-register', '0');
+              }
             }
           }catch (Exception $e){
             $error = 'Database error. Please try again';
@@ -56,6 +59,9 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
             $url = empty($_POST['redirect']) ? $_SERVER['HTTP_REFERER'] : $_POST['redirect'];
             saveInLog('member-login', 'external', $_SESSION['user']['public']['id']);
             $_SESSION['user']['new_user'] = null;
+            if(!empty($GA_ID)){
+              sendGAEvent($GA_ID, 'user', 'login', $_SESSION['user']['public']['id']);
+            }
           }
         }else{
           $error = $user_obj->getErrorMsg();
@@ -103,6 +109,9 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
             saveInLog('member-profile-update', 'external', $_SESSION['user']['public']['id']);
             $error = null;
             $success = 'Your details were successfully submitted.';
+            if(!empty($GA_ID)){
+              sendGAEvent($GA_ID, 'user', 'profile-update', $_SESSION['user']['public']['id']);
+            }
             try{
               //Send notification
               $SMARTY->unloadFilter('output', 'trimwhitespace');
@@ -150,6 +159,10 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
           if($user_obj->ForgotPassword($_POST['username'], $_POST['email'])){
             $success = 'An email to reset your password has successfully been sent.';
             $error = null;
+            saveInLog('forgot-password', 'external', $_SESSION['user']['public']['id']);
+            if(!empty($GA_ID)){
+              sendGAEvent($GA_ID, 'user', 'forgot-password', $_SESSION['user']['public']['id']);
+            }
           }else{
             $error = $user_obj->getErrorMsg();
           }
@@ -178,6 +191,9 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
             if($user_obj->UpdatePassword($_SESSION['user']['public']['maf']['token'], $_POST['current'], $_POST['new'])){
               //Password updated
               saveInLog('password-update', 'external', $_SESSION['user']['public']['id']);
+              if(!empty($GA_ID)){
+                sendGAEvent($GA_ID, 'user', 'password-update', $_SESSION['user']['public']['id']);
+              }
               $memberId = $_SESSION['user']['public']['id'];
               //Log out
               $user_obj->logOut($_SESSION['user']['public']['maf']['token']);
@@ -225,6 +241,9 @@ $redirect = $_SERVER['HTTP_REFERER'];
 if($_GET["logout"]){
   $user_obj = new UserClass();
   saveInLog('member-logout', 'external', $_SESSION['user']['public']['id'], $_SESSION['user']['public']['maf']['token']);
+  if(!empty($GA_ID)){
+    sendGAEvent($GA_ID, 'user', 'logout', $_SESSION['user']['public']['id']);
+  }
   $user_obj->logOut($_SESSION['user']['public']['maf']['token']);
   $_SESSION['user']['public'] = null;
   session_regenerate_id();
@@ -237,6 +256,9 @@ if(!empty($_GET["action"] == 'getfile') && !empty($_GET["fid"]) && is_numeric($_
   $user_obj = new UserClass();
   if($fileArr = $user_obj->getMembersFile($_SESSION['user']['public']['maf']['token'], $_GET['fid'])){
     saveInLog('member-file-download', 'external', $_GET['fid'], $_SESSION['user']['public']['id']);
+    if(!empty($GA_ID)){
+      sendGAEvent($GA_ID, 'user', 'member-file-download', $_SESSION['user']['public']['id']);
+    }
     header('Content-type: '.$fileArr['fileMimeType']);
     header('Content-disposition: attachment; filename="'. str_replace(' ', '_', $fileArr['fileName']) .'"');
     $file = base64_decode($fileArr['base64Data']);

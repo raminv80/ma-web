@@ -263,12 +263,35 @@
 </div>
 
 {/block} {block name=tail}
-<script src="/includes/js/jquery-ui.js"></script>
-<script src="/includes/js/jquery.selectBoxIt.min.js"></script>
-<script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
-<script src="/includes/js/isotope.pkgd.min.js"></script>
-<script src="/includes/js/jquery.lazyload.min.js"></script>
+{foreach $products as $k => $item}
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{$item.product_name|strip_tags}",
+  "image": "{$DOMAIN}{$item.general_details.image}",
+  "description": "{$item.product_meta_description}",
+  "offers": {
+    {if $item.general_details.price.min eq $item.general_details.price.max}
+  "@type": "Offer",
+    "priceCurrency": "AUD",
+    "price": "{$item.general_details.price.min}",
+    "availability": "InStock"
+  {else}
+  "@type": "AggregateOffer",
+    "highPrice": "${$item.general_details.price.max}",
+    "lowPrice": "${$item.general_details.price.min}",
+  {/if}
+  }
+}
+</script>            
+{/foreach}
 
+{printfile file='/includes/js/jquery-ui.js' type='script'}
+{printfile file='/includes/js/jquery.selectBoxIt.min.js' type='script'}
+{printfile file='/includes/js/jquery.flexslider-min.js' type='script'}
+{printfile file='/includes/js/isotope.pkgd.min.js' type='script'}
+{printfile file='/includes/js/jquery.lazyload.min.js' type='script'}
 <script type="text/javascript">
 	function toggleIconMain(e) {
         $(e.target)
@@ -288,9 +311,18 @@
     $('.panel-collapse.subhead').on('hidden.bs.collapse', toggleIconSub);
     $('.panel-collapse.subhead').on('shown.bs.collapse', toggleIconSub);
 
+    
   $(document).ready(function() {
 
-  $("#products-wrapper").isotope({
+    $('img.prodimg').lazyload({
+    		effect: "fadeIn",
+            failure_limit: Math.max($('img.prodimg').length - 1, 0),
+            event: "scroll click",
+            load: triggerIsotopeLayout
+    	});
+    
+    
+    var $gridfilter = $("#products-wrapper").isotope({
 	  itemSelector: '.prodout',
 	  layoutMode: 'fitRows',
 	  getSortData: {
@@ -301,6 +333,10 @@
 		}
 	  }
    });
+  
+  $gridfilter.on('arrangeComplete', function(){
+    $(window).trigger("scroll");
+  });
   
   	if($('#prodcatdet').attr('data-saved-filters')){
   	  var filterArr = $('#prodcatdet').attr('data-saved-filters').split('.'); 
@@ -334,27 +370,14 @@
 
     $("#products-wrapper").isotope({ 
 		sortBy: "price",
-		sortAscending: true, 
-		onLayout: function() {
-			$(window).trigger("scroll");
-		}
-	} );
-    
-	$('img.prodimg').lazyload({
-		effect: "fadeIn",
-        failure_limit: Math.max($('img.prodimg').length - 1, 0),
-        event: "scroll click"
+		sortAscending: true
 	});
 	
-    	
   });
 
-	$(window).bind("load", function() {
-		setTimeout(function() {
-			$("#products-wrapper").trigger('click');
-		},10);
-
-	});
+  function triggerIsotopeLayout(){
+    $("#products-wrapper").isotope('layout');
+  }
   
   var runningIsotope = false;
   function filterOptions(SKIPSAVE){
@@ -383,6 +406,7 @@
       $('img.prodimg').each(function(){
       	if($(this).attr(dataimg)){
       	  $(this).attr('src', $(this).attr(dataimg));
+      	  $(this).attr('data-original', $(this).attr(dataimg));
       	}
       });
     });
@@ -401,10 +425,12 @@
       $('#prodcnt-mob').html('Filter ' + filteredItems.length + ' product' + (filteredItems.length > 1 ? 's' : ''));
       
       refreshFiltersCount();
+      $(window).trigger("scroll");
       runningIsotope = false;
     });
-    
   }
+  
+  
   function refreshFiltersCount(){
     $('.iso-filter').each(function(){
       var cnt = $('.prodout.' + $(this).val() + ':visible').length;
@@ -434,11 +460,11 @@
     var curHeight = $(window).scrollTop() + $(window).height();
     if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 500){
       minLastView = curHeight;
-      $("#products-wrapper").isotope('layout');
+      triggerIsotopeLayout();
     }
     if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 500){
       maxLastView = curHeight;
-      $("#products-wrapper").isotope('layout');
+      triggerIsotopeLayout();
     }
  });
   

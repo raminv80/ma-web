@@ -8,44 +8,6 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
     $sent = 0;
     $file_name = '';
     
-    // SAVE FILE FUNCTIONS (Accepts Image types)
-    /* try{
-      if(!empty($_FILES["file"]["name"])){
-        if($_FILES["file"]["error"] == 0){
-          $acceptedFileFormat = array(
-              'pdf', 
-              'jpeg', 
-              'jpg', 
-              'gif', 
-              'png' 
-          );
-          if(in_array(strtolower(substr($_FILES["file"]["name"], -3)), $acceptedFileFormat)){
-            $path = $_SERVER['DOCUMENT_ROOT'];
-            $file_short = time() . '_' . str_replace(" ", '', $_FILES["file"]["name"]);
-            // Set directory
-            $filedir = $path . '/uploads_contact/';
-            if(!file_exists($filedir)){
-              mkdir($filedir, 0755);
-            }
-            // Store file
-            $_POST['filename'] = $file_short;
-            $file_name = $filedir . $file_short;
-            if(!move_uploaded_file($_FILES["file"]["tmp_name"], $file_name)){
-              $error = 'Invalid file name. Please rename your file.';
-            }
-          } else{
-            $error = 'Please check your file extension (use PDF, JPG , GIF or  PNG).';
-          }
-        } else{
-          $error = 'Please check your file and  try again later.';
-        }
-      }
-    } 
-    catch(Exception $e){
-      $error = 'Please check your file and  try again later.';
-    }
-    */
-    
     // SEND EMAIL TO ADMIN
     if(empty($error)){
       try{

@@ -8,6 +8,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $_SESSION['tempvars']['filters'][$_POST['listing_object_id']] = $_POST['filters'];
         $success = true;
         $error = null;
+        if(!empty($GA_ID)){
+          sendGAEvent($GA_ID, 'category-filters', $_POST['listing_object_id'], $_POST['filters']);
+        }
       }
       echo json_encode(array(
           'success' => $success,
@@ -28,9 +31,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $SMARTY->assign('itemNumber', $itemsCount);
         $SMARTY->assign('subtotal', $subtotal);
         $popoverShopCart = $SMARTY->fetch('templates/ec_popover-shopping-cart.tpl');
-        
-        $productGA = $cart_obj->getProductInfo_GA($_POST['product_id'], $_POST['attr'], $_POST['quantity'], 0, null, 0, $_POST['variant_id']);
-        sendGAEnEcAction($GA_ID, 'add', $productGA);
+        if(!empty($GA_ID)){
+          $productGA = $cart_obj->getProductInfo_GA($_POST['product_id'], $_POST['attr'], $_POST['quantity'], 0, null, 0, $_POST['variant_id']);
+          sendGAEnEcAction($GA_ID, 'add', $productGA);
+        }
         
       }catch(exceptionCart $e){
         $error = $e->getMessage();
@@ -58,7 +62,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $SMARTY->assign('subtotal', $totals['subtotal']);
       $SMARTY->assign('cart', $cart);
       $popoverShopCart = $SMARTY->fetch('templates/ec_popover-shopping-cart.tpl');
-      sendGAEnEcAction($GA_ID, 'remove', $productGA);
+      if(!empty($GA_ID)){
+        sendGAEnEcAction($GA_ID, 'remove', $productGA);
+      }
       echo json_encode(array(
           'product' => $productGA, 
           'itemsCount' => $itemsCount, 
@@ -112,6 +118,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
     case 'addProductWishList':
       $url = '/login';
       $success = null;
+      if(!empty($GA_ID)){
+        sendGAEvent($GA_ID, 'wish-list', 'attempt-add', $_POST['product_object_id']);
+      }
       if(!empty($_SESSION['user']['public']['id'])){
         $url = null;
         $cart_obj = new cart($_SESSION['user']['public']['id']);
@@ -119,6 +128,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           if($cart_obj->AddProductWishList($_POST['product_object_id'])){
             $error = null;
             $success = true;
+            if(!empty($GA_ID)){
+              sendGAEvent($GA_ID, 'wish-list', 'added', $_POST['product_object_id']);
+            }
           }
         }catch(exceptionCart $e){
           $error = $e->getMessage();
@@ -134,6 +146,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
     case 'deleteProductWishList':
       $url = '/login';
       $success = null;
+      if(!empty($GA_ID)){
+        sendGAEvent($GA_ID, 'wish-list', 'attempt-remove', $_POST['product_object_id']);
+      }
       if(!empty($_SESSION['user']['public']['id'])){
         $url = null;
         $cart_obj = new cart($_SESSION['user']['public']['id']);
@@ -141,6 +156,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           if($cart_obj->DeleteProductWishList($_POST['product_object_id'])){
             $error = null;
             $success = true;
+            if(!empty($GA_ID)){
+              sendGAEvent($GA_ID, 'wish-list', 'removed', $_POST['product_object_id']);
+            }
           }
         }catch(exceptionCart $e){
           $error = $e->getMessage();
@@ -162,6 +180,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         try{
           $error = 'Your wish list is empty.';
           if($products = $cart_obj->GetWishListWithProds()){
+            if(!empty($GA_ID)){
+              sendGAEvent($GA_ID, 'wish-list', 'sent', $_SESSION['user']['public']['id']);
+            }
             try{
               //Send notification
               $SMARTY->unloadFilter('output', 'trimwhitespace');
@@ -442,7 +463,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             if(empty($MAFMemberId)){
               //create guest user when failed
               $hasMAFProd = false;
-              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Create member', "Member email:  {$_SESSION['user']['new_user']['email']} <br>". $user_obj->getErrorMsg());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Create member', "Member email:  {$_SESSION['user']['new_user']['email']} <br>". $user_obj->getErrorMsg());
             }else{
               saveInLog('member-create', 'external', $MAFMemberId, $_SESSION['user']['new_user']['state']);
               //Login MAF member
@@ -455,7 +476,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                   saveInLog('member-login', 'external', $_SESSION['user']['public']['id']);
                 }
               }else{
-                sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Login after creation', "Member id:  {$MAFMemberId} <br>". $user_obj->getErrorMsg());
+                sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Login after creation', "Member id:  {$MAFMemberId} <br>". $user_obj->getErrorMsg());
               }
               $userArr = array(
                   "id" => $MAFMemberId,
@@ -536,6 +557,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           }
           catch(Exception $e){}
           
+          if(!empty($GA_ID) && $hasDonation){
+            sendGAEvent($GA_ID, 'donation', 'success', $_SESSION['user']['public']['id']);
+          }
+          
           //PROCESS PENDING UPDATES
           if(!empty($_SESSION['user']['public']['pending_update'])){
             $detailsArr = $_SESSION['user']['public']['pending_update'];
@@ -576,7 +601,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               }catch(Exception $e){}
               
             }else{
-              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Update profile after payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $user_obj->getErrorMsg());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Update profile after payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $user_obj->getErrorMsg());
             }
             $_SESSION['user']['public']['pending_update'] = null;
           }
@@ -584,6 +609,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           //PROCESS AUTO-RENEWAL
           $setAutoRenewal = false;
           if(!empty($_POST['autorenewal'])){
+            if(!empty($GA_ID)){
+              sendGAEvent($GA_ID, 'autorenewal-checkout', 'attempt', $_SESSION['user']['public']['id']);
+            }
             $bankSettingsArr = array(
                 'settings' => $CONFIG->payment_gateway->payway,
                 'address' => $billing
@@ -603,8 +631,11 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $setAutoRenewal = true;
               //Register for auto-renewal and change member status to "active pending"
               if(!$user_obj->setAutoRenewal($_SESSION['user']['public']['maf']['token'], $customerArr)){
-                sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set auto-renewal (1)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+                sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Set auto-renewal (1)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
                 $setAutoRenewal = false;
+              }
+              if(!empty($GA_ID)){
+                sendGAEvent($GA_ID, 'autorenewal-checkout', 'success', $_SESSION['user']['public']['id']);
               }
               try{
                 //Send auto-renewal email
@@ -616,14 +647,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               }
               catch(Exception $e){}
             }else{
-              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (1)', "Member id:  {$userArr['id']} <br>".print_r($billing, true).'<br>'. $autorenewObj->GetErrorMessage());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Register for auto-renewal (1)', "Member id:  {$userArr['id']} <br>".print_r($billing, true).'<br>'. $autorenewObj->GetErrorMessage());
             }
           }
           
           //Change member status to "active pending"
           if($MAFSetActivePending && !empty($_SESSION['user']['public']['maf'] && !$setAutoRenewal)){
             if(!$user_obj->setPendingStatus($_SESSION['user']['public']['maf']['token'], $_SESSION['user']['public']['id'])){
-              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set active-pending (1)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Set active-pending (1)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
             }
           }
           
@@ -957,7 +988,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         }
         catch(Exception $e){}
         
+        if(!empty($GA_ID) && $hasDonation){
+          sendGAEvent($GA_ID, 'donation', 'success', $_SESSION['user']['public']['id']);
+        }
+        
         if($isGiftCertificate){
+          if(!empty($GA_ID)){
+            sendGAEvent($GA_ID, 'gift-certificate', 'success', $_SESSION['user']['public']['id']);
+          }
           // CREATE GIFT CERTIFICATE
           try{
             include_once 'includes/classes/voucher-class.php';
@@ -1027,7 +1065,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             
           }
           catch(Exception $e){
-            die(var_dump($e));
+            sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Create voucher', "Payment id:  {$paymentId} <br>". $e);
           }
         }
   
@@ -1176,6 +1214,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           );
           $pay_obj->SetUserAddressIds($params);
     
+          if(!empty($GA_ID)){
+            sendGAEvent($GA_ID, 'quick-renew', 'success', $_SESSION['user']['public']['id']);
+          }
           try{
             // SEND CONFIRMATION EMAIL
             $SMARTY->assign('hasMAFProd', $hasMAFProd);
@@ -1240,7 +1281,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               }catch(Exception $e){}
               
             }else{
-              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Update profile after payment (2)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $user_obj->getErrorMsg());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Update profile after payment (2)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $user_obj->getErrorMsg());
             }  
             $_SESSION['user']['public']['pending_update'] = null;
 
@@ -1256,6 +1297,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           //PROCESS AUTO-RENEWAL
           $setAutoRenewal = false;
           if(!empty($_POST['autorenewal'])){
+            if(!empty($GA_ID)){
+              sendGAEvent($GA_ID, 'autorenewal-quick', 'attempt', $_SESSION['user']['public']['id']);
+            }
+            
             $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
             if(!empty($_POST['autopayment']) && $_POST['autopayment'] == 'dd'){
               $autorenewArr = $_POST['auto-dd'];
@@ -1271,8 +1316,11 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $setAutoRenewal = true;
               //Register for auto-renewal and change member status to "active pending"
               if(!$user_obj->setAutoRenewal($_SESSION['user']['public']['maf']['token'], $customerArr)){
-                sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set auto-renewal (2)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+                sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Set auto-renewal (2)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
                 $setAutoRenewal = false;
+              }
+              if(!empty($GA_ID)){
+                sendGAEvent($GA_ID, 'autorenewal-quick', 'success', $_SESSION['user']['public']['id']);
               }
               try{
                 //Send auto-renewal email
@@ -1284,14 +1332,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               }
               catch(Exception $e){}
             }else{
-              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (2)', "Member id:  {$userArr['id']} <br>".print_r($billingArr, true).'<br>'. $autorenewObj->GetErrorMessage());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Register for auto-renewal (2)', "Member id:  {$userArr['id']} <br>".print_r($billingArr, true).'<br>'. $autorenewObj->GetErrorMessage());
             }
           }
           
           //Change member status to "active pending"
           if(!$setAutoRenewal){
             if(!$user_obj->setPendingStatus($_SESSION['user']['public']['maf']['token'], $_SESSION['user']['public']['id'])){
-              sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set active-pending (2)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Set active-pending (2)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
             }
           }
           
@@ -1413,13 +1461,20 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $autorenewArr['method'] = $_POST['autopayment'];
       $autorenewObj->PreparePayment($autorenewArr);
       
+      if(!empty($GA_ID)){
+        sendGAEvent($GA_ID, 'autorenewal-checkout', 'attempt', $_SESSION['user']['public']['id']);
+      }
+      
       if($autorenewObj->CreateCustomerOnly()){
         $customerArr = $autorenewObj->GetBankCustomerRecord();
         $customerArr['user_id'] = $_SESSION['user']['public']['id'];
         $autorenewObj->StoreAutoRenew($customerArr);
         //Register for auto-renewal and change member status to "active pending"
         if(!$user_obj->setAutoRenewal($_SESSION['user']['public']['maf']['token'], $customerArr)){
-          sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Set auto-renewal (3)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+          sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Set auto-renewal (3)', "Member id:  {$userArr['id']} <br>". $user_obj->getErrorMsg());
+        }
+        if(!empty($GA_ID)){
+          sendGAEvent($GA_ID, 'autorenewal-only', 'success', $_SESSION['user']['public']['id']);
         }
         try{
           //Send auto-renewal email
@@ -1436,7 +1491,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         die();
       
       } else{
-        sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Register for auto-renewal (3)', "Member id:  {$userArr['id']} <br>". print_r($billingArr, true).'<br>'. $autorenewObj->GetErrorMessage());
+        sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Register for auto-renewal (3)', "Member id:  {$userArr['id']} <br>". print_r($billingArr, true).'<br>'. $autorenewObj->GetErrorMessage());
         if($error_msg = $autorenewObj->GetErrorMessage()){
           $_SESSION['error'] = $error_msg;
         } else{

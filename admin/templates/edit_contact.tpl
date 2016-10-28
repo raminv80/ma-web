@@ -8,13 +8,13 @@
 		<table class="table table-bordered table-striped table-hover" style="margin-top:20px;">
 			<tbody>
 				<tr>
-					<td><b>Site:</b></td>
+					<td><b>Form name:</b></td>
 					<td class="text-center">
-						{$fields.contact_site}
+						{$fields.contact_form_name}
 					</td>
 				</tr>
 				<tr{if !$fields.contact_reference_name} style="color: #ccc"{/if}>
-					<td><b>Store:</b></td>
+					<td><b>Reason:</b></td>
 					<td class="text-center">
 						{$fields.contact_reference_name}
 					</td>
@@ -25,6 +25,12 @@
 						{$fields.contact_name}
 					</td>
 				</tr>
+                <tr{if !$fields.contact_content1} style="color: #ccc"{/if}>
+                  <td><b>Membership ID:</b></td>
+                  <td class="text-center">
+                    {$fields.contact_content1}
+                  </td>
+                </tr>
 				<tr>
 					<td><b>Email:</b></td>
 					<td class="text-center">
@@ -50,7 +56,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><b>Content:</b></td>
+					<td><b>Enquiry:</b></td>
 					<td class="text-center">
 						 {$fields.contact_enquiry}
 					</td>

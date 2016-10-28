@@ -39,7 +39,8 @@ RewriteRule ^(.*)/$ /$1 [L,R=301]
 #stuff to let through (ignore)
 RewriteCond %{REQUEST_URI} "/admin/" [OR]
 RewriteCond %{REQUEST_URI} "/new_admin/" [OR]
-RewriteCond %{REQUEST_URI} "/includes/"
+RewriteCond %{REQUEST_URI} "/includes/"[OR]
+RewriteCond %{REQUEST_URI} "/email/"
 RewriteRule (.*) $1 [L]
   
 

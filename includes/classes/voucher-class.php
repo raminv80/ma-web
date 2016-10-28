@@ -150,6 +150,25 @@ class Voucher{
   }
   
   
+
+  /**
+   * Get all pending-to-send vouchers given a date
+   *
+   * @param string $_date (optional)
+   * @return array
+   */
+  function GetPendingToSendVouchers($_date = null){
+    $param = array();
+    $whereSQL = ''; 
+    if(!empty($_date)){
+      $param[':sdate'] = $_date;
+      $whereSQL = 'AND voucher_start_date = :sdate';
+    }
+    $sql = "SELECT * FROM tbl_voucher WHERE voucher_deleted IS NULL AND voucher_redeemed IS NULL 
+    AND (voucher_code_email_id IS NULL OR voucher_code_email_id = 0) {$whereSQL}";
+    return $this->DBobj->wrappedSql($sql, $param);
+  }
+  
   /**
    * Generate voucher code
    * 
