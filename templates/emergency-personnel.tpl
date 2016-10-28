@@ -81,14 +81,14 @@
                       <label class="visible-ie-only" for="state">State<span>*</span>:</label>
                       <select class="form-control" name="state" id="state"  required="">
 	                      <option value="">Please select</option>
-	                      <option value="ACT">ACT</option>
-	                      <option value="NSW">NSW</option>
-	                      <option value="NT">NT</option>
-	                      <option value="QLD">QLD</option>
-	                      <option value="SA">SA</option>
-	                      <option value="TAS">TAS</option>
-	                      <option value="VIC">VIC</option>
-	                      <option value="WA">WA</option>
+	                      <option {if $post.state eq 'ACT'}selected = "selected"{/if} value="ACT">ACT</option>
+	                      <option {if $post.state eq 'NSW'}selected = "selected"{/if} value="NSW">NSW</option>
+	                      <option {if $post.state eq 'NT'}selected = "selected"{/if} value="NT">NT</option>
+	                      <option {if $post.state eq 'QLD'}selected = "selected"{/if} value="QLD">QLD</option>
+	                      <option {if $post.state eq 'SA'}selected = "selected"{/if} value="SA">SA</option>
+	                      <option {if $post.state eq 'TAS'}selected = "selected"{/if} value="TAS">TAS</option>
+	                      <option {if $post.state eq 'VIC'}selected = "selected"{/if} value="VIC">VIC</option>
+	                      <option {if $post.state eq 'WA'}selected = "selected"{/if} value="WA">WA</option>
                       </select>
 						<div class="error-msg help-block"></div>
                     </div>
@@ -116,13 +116,13 @@
     				  <label class="visible-ie-only" for="category">Category<span>*</span>:</label>
                       <select class="form-control" name="category" id="category"  required="">
 	                      <option value="">Please select</option>
-	                      <option value="Hospital">Hospital</option>
-	                      <option value="Pharmacy">Pharmacy</option>
-	                      <option value="Medical practice">Medical practice</option>
-	                      <option value="Specialist - Cardiac">Specialist - Cardiac</option>
-	                      <option value="Specialist - Diabetes">Specialist - Diabetes</option>
-	                      <option value="Specialist - Other">Specialist - Other</option>
-	                      <option value="Other">Other</option>
+	                      <option {if $post.category eq 'Hospital'}selected = "selected"{/if} value="Hospital">Hospital</option>
+	                      <option {if $post.category eq 'Pharmacy'}selected = "selected"{/if} value="Pharmacy">Pharmacy</option>
+	                      <option {if $post.category eq 'Medical practice'}selected = "selected"{/if} value="Medical practice">Medical practice</option>
+	                      <option {if $post.category eq 'Specialist - Cardiac'}selected = "selected"{/if} value="Specialist - Cardiac">Specialist - Cardiac</option>
+	                      <option {if $post.category eq 'Specialist - Other'}selected = "selected"{/if} value="Specialist - Other">Specialist - Diabetes</option>
+	                      <option {if $post.category eq 'Specialist - Other'}selected = "selected"{/if} value="Specialist - Other">Specialist - Other</option>
+	                      <option {if $post.category eq 'Other'}selected = "selected"{/if} value="Other">Other</option>
                       </select>
 						<div class="error-msg help-block"></div>
     				</div>
