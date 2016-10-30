@@ -317,10 +317,8 @@
     $('img.prodimg').lazyload({
     		effect: "fadeIn",
             failure_limit: Math.max($('img.prodimg').length - 1, 0),
-            event: "scroll click",
-            load: triggerIsotopeLayout
+            event: "scroll click"
     	});
-    
     
     var $gridfilter = $("#products-wrapper").isotope({
 	  itemSelector: '.prodout',
@@ -376,7 +374,7 @@
   });
 
   function triggerIsotopeLayout(){
-    $("#products-wrapper").isotope('layout');
+  	$("#products-wrapper").isotope('layout');
   }
   
   var runningIsotope = false;
@@ -404,9 +402,9 @@
     $('.img-changer:checked').each(function(){
       var dataimg =  $(this).attr('data-changer');
       $('img.prodimg').each(function(){
-      	if($(this).attr(dataimg)){
+      	if($(this).attr(dataimg) && $(this).attr('src') != $(this).attr(dataimg)){
       	  $(this).attr('src', $(this).attr(dataimg));
-      	  $(this).attr('data-original', $(this).attr(dataimg));
+    	  $(this).attr('data-original', $(this).attr(dataimg));
       	}
       });
     });
@@ -417,7 +415,6 @@
    	  layoutMode: 'fitRows',
    	  filter: (classesStr ? classesStr: '.show-all')
     });
-    
     
     $grid.on( 'arrangeComplete', function( event, filteredItems ) {
       //Update product count

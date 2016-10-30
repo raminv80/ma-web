@@ -115,7 +115,7 @@
         <div class="contline">
           <img src="/images/contact-phone.png" alt="Location" />
           <div class="cont-text">
-        <p>Free call <a class="tel" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a></p>
+        <p>Free call <a class="tel AVANSERnumber" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a></p>
           </div>
         </div>
         <div class="contline">

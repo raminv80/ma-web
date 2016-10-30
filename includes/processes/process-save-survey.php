@@ -10,7 +10,9 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
   $sql = "SELECT * FROM tbl_surveytoken WHERE surveytoken_id = :surveytoken_id";
   
   $error = "";
-  if($res = $DBobject->wrappedSql($sql, array(":surveytoken_id" => $surveytoken_id))){
+  if($res = $DBobject->wrappedSql($sql, array(
+      ":surveytoken_id" => $surveytoken_id 
+  ))){
     if($res[0]['surveytoken_status'] == 0){
       try{
         $upsql = "UPDATE tbl_surveytoken SET surveytoken_status = 1 WHERE surveytoken_id = :surveytoken_id";
@@ -45,7 +47,6 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         
         $ins = implode(", ", $insert);
         // SAVE IN DATABASE
-        
         try{
           $sql = "INSERT INTO tbl_survey (survey_surveytoken_id,survey_question_id,survey_qoption_id,survey_answer,survey_created) VALUES " . $ins;
           $DBobject->wrappedSql($sql, $params);
@@ -54,6 +55,21 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             sendGAEvent($GA_ID, 'Survey', 'Submitted', $surveytoken_id);
           }
           
+          //Notify when requested
+          if(!empty($_POST['answer']['20']) || !empty($_POST['answer']['21'])){
+            try{
+              $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
+              $body = '<h2>Website - Survey</h2><br><b>' . $res[0]['surveytoken_user_id'] . '</b> has requested to be contacted about her/his feedback.';
+              $subject = 'Someone has requested to be contacted about her/his feedback';
+              $fromEmail = (string)$CONFIG->company->email_from;
+              $to = 'apolo@them.com.au'; //'kreek@medicalert.org.au';
+              $COMP = json_encode($CONFIG->company);
+              $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+              $from = (string)$CONFIG->company->name;
+              $sent = sendMail($to, $from, $fromEmail, $subject, $body);
+            }
+            catch(Exception $e){}
+          }
           header("Location: /thank-you-for-taking-a-survey");
           die();
         }
@@ -61,12 +77,13 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
           $error = "There was an unexpected error saving your survey {$e}.";
         }
         
+       
       }
     } else{
       header("Location: /thank-you-for-taking-a-survey");
       die();
     }
-  } 
+  }
 }
 $_SESSION['post'] = $_POST;
 $_SESSION['error'] = $error;

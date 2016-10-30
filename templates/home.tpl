@@ -4,7 +4,7 @@
 		<div class="row">
 			<div class="col-sm-12 text-center">
 				<h1>{$listing_title}</h1>
-				<a href="/benefits-of-membership" title="Learn more about MedicAlert membership" class="btn btn-red">Learn more</a>
+				<a id="learnmorehome" href="/benefits-of-membership" title="Learn more about MedicAlert membership" class="btn btn-red">Learn more</a>
 			</div>
 		</div>
 	</div>
@@ -20,7 +20,7 @@
 				<img src="/images/homeredbracelet.png" alt="Bracelet" class="img-responsive" />
 			</div>
 			<div class="col-sm-12 col-md-2">
-				<a href="/products" class="btn btn-transp">Shop the range</a>
+				<a href="/products" id="shoptherange" class="btn btn-transp">Shop the range</a>
 			</div>
 		</div>
 	</div>

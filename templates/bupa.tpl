@@ -139,11 +139,15 @@ a MedicAlert membership could mean the difference between life and death.</p>
 
   $(document).ready(function() {
     
-  	$("#products-wrapper").isotope({
-      itemSelector: '.prodout',
-      layoutMode: 'fitRows'
-   	});
-
+   var $grid = $("#products-wrapper").isotope({
+  	  itemSelector: '.prodout',
+  	  layoutMode: 'fitRows'
+     });
+    
+    $grid.on( 'arrangeComplete', function( event, filteredItems ) {
+      $(window).trigger("scroll");
+    });
+    
  	$('img.prodimg').lazyload({
  		effect: "fadeIn",
        	failure_limit: Math.max($('img.prodimg').length - 1, 0),
@@ -153,12 +157,6 @@ a MedicAlert membership could mean the difference between life and death.</p>
      	
  });
 
-  $(window).bind("load", function() {
-  	setTimeout(function() {
-  		$("#products-wrapper").trigger('click');
-  	},10);
-  
-  })
   
 //REFRESH ISOTOPE WHEN SCROLLING UP/DOWN
   var minLastView = $(document).height();
@@ -167,11 +165,11 @@ a MedicAlert membership could mean the difference between life and death.</p>
     var curHeight = $(window).scrollTop() + $(window).height();
     if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 500){
       minLastView = curHeight;
-      $("#products-wrapper").isotope('reloadItems' ).isotope();
+      $("#products-wrapper").isotope('layout');
     }
     if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 500){
       maxLastView = curHeight;
-      $("#products-wrapper").isotope('reloadItems' ).isotope();
+      $("#products-wrapper").isotope('layout');
     }
  });
 </script>

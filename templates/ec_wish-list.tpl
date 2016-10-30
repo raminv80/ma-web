@@ -85,10 +85,14 @@
 
   $(document).ready(function() {
     
-  $("#products-wrapper").isotope({
+  var $grid = $("#products-wrapper").isotope({
 	  itemSelector: '.prodout',
 	  layoutMode: 'fitRows'
    });
+  
+  $grid.on( 'arrangeComplete', function( event, filteredItems ) {
+    $(window).trigger("scroll");
+  });
   
 
  	$('img.prodimg').lazyload({
@@ -96,15 +100,14 @@
          failure_limit: Math.max($('img.prodimg').length - 1, 0),
          event: "scroll click"
  	});
+ 	
 
   });
 
- 	$(window).bind("load", function() {
- 		setTimeout(function() {
- 			$("#products-wrapper").trigger('click');
- 		},10);
-
- 	});
+  function triggerIsotopeLayout(){
+   	$("#products-wrapper").isotope('layout');
+   }
+ 	
 //REFRESH ISOTOPE WHEN SCROLLING UP/DOWN
   var minLastView = $(document).height();
   var maxLastView = 0;
@@ -112,11 +115,11 @@
     var curHeight = $(window).scrollTop() + $(window).height();
     if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 500){
       minLastView = curHeight;
-      $("#products-wrapper").isotope('reloadItems' ).isotope();
+      $("#products-wrapper").isotope('layout');
     }
     if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 500){
       maxLastView = curHeight;
-      $("#products-wrapper").isotope('reloadItems' ).isotope();
+      $("#products-wrapper").isotope('layout');
     }
  });
   

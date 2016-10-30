@@ -43,10 +43,10 @@
 
 			</div>
 			<div class="hidden-xs hidden-sm col-sm-3 text-right" id="call">
-				<a href="tel:{$COMPANY.toll_free}">
+				<a class="AVANSERnumber" href="tel:{$COMPANY.toll_free}">
 					<div class="callout">
 						Call Membership Services
-						<div class="phno">{$COMPANY.toll_free}</div>
+						<div class="phno AVANSERnumber">{$COMPANY.toll_free}</div>
 					</div>
 					<img src="/images/header-phone.png" alt="Phone" />
 				</a>
@@ -64,7 +64,7 @@
 		  	<div class="hidden-md hidden-lg">
 			<nav class="collapse navbar-collapse" id="mobile-navbar">
 				<ul class="nav navbar-nav">
-                  <li class=""><a title="Call Membership Services" href="tel:{$COMPANY.toll_free}"><img src="/images/m-call-icon.png" alt="Call us" />Membership Services</a></li>
+                  <li class=""><a title="Call Membership Services" class="AVANSERnumber" href="tel:{$COMPANY.toll_free}"><img src="/images/m-call-icon.png" alt="Call us" />Membership Services</a></li>
 					{call name=render_list items=$menuitems['mobile-header']['list'] ismobile=0}
 				</ul>
 			</nav>

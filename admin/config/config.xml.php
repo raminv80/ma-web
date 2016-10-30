@@ -19,8 +19,8 @@
     <fax>1800 64 32 59</fax>
     <email>enquiry@medicalert.org.au</email>
     <email_from>noreply@medicalert.org.au</email_from>
-    <email_contact>apolo@them.com.au</email_contact>
-    <email_orders>apolo@them.com.au</email_orders>
+    <email_contact>enquiry@medicalert.org.au</email_contact>
+    <email_orders>idewey@medicalert.org.au</email_orders>
     <logo>logo.png</logo>
   </company> 
   <global_variable>

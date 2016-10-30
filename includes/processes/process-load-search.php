@@ -13,6 +13,9 @@ try{
   	return;
   }
   
+  if(!empty($GA_ID)){
+    sendGAEvent($GA_ID, 'search', 'input', $str);
+  }
   
   /*$tags['pages']  = SearchPagesTags($str);
   $tags['news']  = SearchNewsTags($str);

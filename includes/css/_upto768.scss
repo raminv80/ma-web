@@ -1045,4 +1045,11 @@ tr.tabopts {
       padding-top: 15px;
     }
   }
+  
+  #surveycont input[type="checkbox"]{
+    position: absolute;
+  }
+  #surveycont p.opt label{
+    margin-left: 15px;
+  }
 }
