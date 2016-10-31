@@ -338,14 +338,14 @@ body, td {
                                             </table>
                                           </td>
                                         </tr>
-                                        {if $hasMAFProd}
+                                        {if $payment.payment_user_id gt 0}
                                         <tr class="w640" width="640" bgcolor="#ffffff">
                                           <td class="w640" width="640">
                                             <table class="w640" width="640">
                                               <tr>
                                                 <td class="w30" width="30"></td>
                                                 <td style="font-size: 16px; font-weight: bold;" width="300" class="w300">Member number:</td>
-                                                <td align="right" style="font-size: 16px;" width="280" class="w280">{$billing.address_user_id}</td>
+                                                <td align="right" style="font-size: 16px;" width="280" class="w280">{$payment.payment_user_id}</td>
                                                 <td class="w30" width="30"></td>
                                               </tr>
                                             </table>
@@ -557,7 +557,7 @@ body, td {
                                               <tr>
                                                 <td class="w30" width="30"></td>
                                                 <td style="font-size: 16px; font-weight: bold;" width="300" class="w300">Name:</td>
-                                                <td align="right" style="font-size: 16px;" width="280" class="w280">{$billing.address_name}</td>
+                                                <td align="right" style="font-size: 16px;" width="280" class="w280">{$billing.address_name} {$billing.address_surname}</td>
                                                 <td class="w30" width="30"></td>
                                               </tr>
                                             </table>

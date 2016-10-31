@@ -33,7 +33,7 @@ try{
       
       $subject = 'Someone has sent you a MedicAlert gift certificate';
       $body = $SMARTY->fetch('email/gift-certificate.tpl');
-      $mailID_recipient = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+      $mailID_recipient = sendMail($to, $from, $fromEmail, $subject, $body, null, 0, 0, -2);
 
       // SEND GIFT CERTIFICATE TO SENDER
       $to = $v['voucher_email'];
@@ -42,7 +42,7 @@ try{
       $SMARTY->assign('sender_name', $v['voucher_name']);
       $subject = 'Your MedicAlert gift certificate was sent';
       $body = $SMARTY->fetch('email/confirmation-gift-certificate.tpl');
-      $mailID_sender = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+      $mailID_sender = sendMail($to, $from, $fromEmail, $subject, $body, null, 0, 0, -2);
 
       $voucherObj->SetVoucherEmailIds($mailID_recipient, $mailID_sender, $voucherId);
       echo $mailID_sender.'<br>';

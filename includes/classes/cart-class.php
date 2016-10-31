@@ -388,7 +388,7 @@ class cart{
       $cid = $this->cart_id;
     }
     $cart_arr = array();
-    $sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND cartitem_type_id = 1 AND cartitem_cart_id = :id";
+    $sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> '0' AND (cartitem_type_id = 1 OR cartitem_type_id = 4) AND cartitem_cart_id = :id";
     if($res = $DBobject->wrappedSql($sql, array(
         ":id" => $cid 
     ))){

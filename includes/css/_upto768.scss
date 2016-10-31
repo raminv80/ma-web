@@ -20,7 +20,7 @@
 
 #banner{
 	background: url(../../images/mob-home-banner.jpg) no-repeat;
-    height: 300px;
+    height: 350px;
     padding: 20px;
     background-size: cover;
 }
@@ -1031,6 +1031,11 @@ tr.tabopts {
 	width: 100% !important;
 }
 
+#banner #learnmorehome, #banner #newfhome{
+	margin: 10px 10px;
+	width: 190px;
+}
+
 }
 
 @media (max-width:480px){
@@ -1045,11 +1050,15 @@ tr.tabopts {
       padding-top: 15px;
     }
   }
-  
+
   #surveycont input[type="checkbox"]{
     position: absolute;
   }
   #surveycont p.opt label{
     margin-left: 15px;
+  }
+
+  #banner {
+    height: 380px;
   }
 }

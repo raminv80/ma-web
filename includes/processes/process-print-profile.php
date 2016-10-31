@@ -5,7 +5,7 @@ if(!empty($_SESSION['user']['public']['maf']['token'])){
       $template = null;
       $user_obj = new UserClass();
       if($loginCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token'])){
-        $template = $user_obj->printProfile("http://{$_SERVER['HTTP_HOST']}/includes/print", $_SESSION['user']['public']['maf']['main'], $_SESSION['user']['public']['maf']['update']);
+        $template = $user_obj->printProfile("https://{$_SERVER['HTTP_HOST']}/includes/print", $_SESSION['user']['public']['maf']['main'], $_SESSION['user']['public']['maf']['update']);
         saveInLog('member-print-profile', 'external', $_SESSION['user']['public']['id']);
         echo $template;
         die();

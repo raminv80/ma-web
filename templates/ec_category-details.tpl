@@ -279,8 +279,9 @@
     "availability": "InStock"
   {else}
   "@type": "AggregateOffer",
-    "highPrice": "${$item.general_details.price.max}",
-    "lowPrice": "${$item.general_details.price.min}",
+	"priceCurrency": "AUD",
+    "highPrice": "{$item.general_details.price.max}",
+    "lowPrice": "{$item.general_details.price.min}"
   {/if}
   }
 }

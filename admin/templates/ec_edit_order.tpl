@@ -10,6 +10,11 @@
 					<td><b>Order placed:</b></td>
 					<td class="text-center">{$fields.cart_closed_date|date_format:"%e %B %Y"}</td>
 				</tr>
+        <tr>
+          <td><b>Membership Number:</b></td>
+          <td class="text-center" colspan="3">{if $fields.payment.0.payment_user_id gt 0}{$fields.payment.0.payment_user_id}{else}Non member{/if}</td>
+        </tr>
+        
 	{* COMMENTED OUT FOR MAF	
     		<tr>
         
@@ -26,7 +31,7 @@
 					<td><b>Shipping method:</b></td>
 					<td class="text-center">{$fields.payment.0.payment_shipping_method}</td>
 					<td><b>Card:</b></td>
-					<td class="text-center">{$fields.payment.0.payment_response_cardscheme}</td>
+					<td class="text-center">{$fields.payment.0.payment_response_cardscheme|capitalize}</td>
 				</tr>
 				<tr>
 					<td><b>Billing address:</b></td>
@@ -133,23 +138,27 @@
 		</table>
 	</div>
 </div>
-<div class="row">
-	<form class="well form-horizontal" id="send_invoice_email" accept-charset="UTF-8" method="post">
-<!--		<input type="hidden" value="{$fields.payment.0.payment_id}" name="payment_id" /> 
- 		<input type="hidden" value="{$fields.payment.0.billing_address.0.address_id}" name="bill_ID" /> 
-		<input type="hidden" value="{$fields.payment.0.shipping_address.0.address_id}" name="ship_ID" /> 
-		<input type="hidden" value="{$fields.user.0.user_gname}" name="user[gname]" />
-		<input type="hidden" value="{$fields.cart_id}" name="cart_id" />   -->
-		<input type="hidden" value="{$fields.user.0.user_email}" name="email" id="email" /> 
-		<input type="hidden" value="{$fields.payment.0.payment_invoice_email_id}" name="email_id" /> 
-		<input type="hidden" name="formToken" id="formToken" value="{$token}" />
-					
-		<div class="row">
-			<div class="col-sm-offset-3 col-sm-9">
-				<a href="javascript:void(0);" onClick="sendInvoiceEmail();" id="send-btn" class="btn btn-info pull-right"><span class="glyphicon glyphicon-envelope"></span> Re-send Invoice</a>
-			</div>
-		</div>
-	</form>
+<div class="well">
+  <div class="row">
+  	<form class="form-horizontal" id="send_invoice_email" accept-charset="UTF-8" method="post">
+  <!--		<input type="hidden" value="{$fields.payment.0.payment_id}" name="payment_id" /> 
+   		<input type="hidden" value="{$fields.payment.0.billing_address.0.address_id}" name="bill_ID" /> 
+  		<input type="hidden" value="{$fields.payment.0.shipping_address.0.address_id}" name="ship_ID" /> 
+  		<input type="hidden" value="{$fields.user.0.user_gname}" name="user[gname]" />
+  		<input type="hidden" value="{$fields.cart_id}" name="cart_id" />   -->
+  		<input type="hidden" value="{$fields.user.0.user_email}" name="email" id="email" /> 
+  		<input type="hidden" value="{$fields.payment.0.payment_invoice_email_id}" name="email_id" /> 
+  		<input type="hidden" name="formToken" id="formToken" value="{$token}" />
+  	</form>
+  </div>
+  <div class="row">
+      <div class="col-sm-6">
+          <a href="/admin/includes/processes/view-email.php?id={$fields.payment.0.payment_invoice_email_id}" target="_blank" id="view-email-btn" class="btn btn-success"><span class="glyphicon glyphicon-eye-open"></span> View e-tax invoice</a>
+        </div>  
+        <div class="col-sm-6">
+      <a href="javascript:void(0);" onClick="sendInvoiceEmail();" id="send-btn" class="btn btn-info pull-right"><span class="glyphicon glyphicon-envelope"></span> Re-send Invoice</a>
+    </div>
+  </div>
 </div>
 
 {* COMMENTED OUT FOR MAF

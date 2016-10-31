@@ -490,7 +490,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                 $to = $userArr['email'];
                 $subject = 'MedicAlert Foundation Registration';
                 $body = $SMARTY->fetch('email/welcome.tpl');
-                sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+                sendMail($to, $from, $fromEmail, $subject, $body);
               }
               catch(Exception $e){}
               
@@ -548,7 +548,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $SMARTY->assign('orderItems', $orderItems);
             
             $to = $_SESSION['address']['B']['address_email'];
-            // $bcc = 'apolo@them.com.au';
+            $bcc = (string) $CONFIG->company->email_orders;
             $subject = 'Payment | Order confirmation';
             $body = $SMARTY->fetch('email/order-confirmation.tpl');
             if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
@@ -604,6 +604,15 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Update profile after payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $user_obj->getErrorMsg());
             }
             $_SESSION['user']['public']['pending_update'] = null;
+
+          //NO PROFILE UPDATE
+          }else{
+            try{
+              //Create survey
+              require_once 'includes/classes/survey-class.php';
+              $surveyObj = new Survey();
+              $surveyObj->CreateSurvey($_SESSION['user']['public']['id'], $_SESSION['user']['public']['email'], 1);
+            }catch(Exception $e){}  
           }
           
           //PROCESS AUTO-RENEWAL
@@ -979,7 +988,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $SMARTY->assign('orderItems', $orderItems);
         
           $to = $userArr['email'];
-          // $bcc = 'apolo@them.com.au';
+          $bcc = (string) $CONFIG->company->email_orders;
           $subject = 'Payment | Order confirmation';
           $body = $SMARTY->fetch('email/order-confirmation.tpl');
           if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
@@ -1048,14 +1057,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                     $SMARTY->assign('custom_message', $_POST['message']);
                     $subject = 'Someone has sent you a MedicAlert gift certificate';
                     $body = $SMARTY->fetch('email/gift-certificate.tpl');
-                    $mailID_recipient = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+                    $mailID_recipient = sendMail($to, $from, $fromEmail, $subject, $body);
                     
                     // SEND GIFT CERTIFICATE TO SENDER
                     $to = $_POST['email'];
                     $SMARTY->assign('sender_name', $_POST['name']);
                     $subject = 'Your MedicAlert gift certificate was sent';
                     $body = $SMARTY->fetch('email/confirmation-gift-certificate.tpl');
-                    $mailID_sender = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+                    $mailID_sender = sendMail($to, $from, $fromEmail, $subject, $body);
                     
                     $voucherObj->SetVoucherEmailIds($mailID_recipient, $mailID_sender);
                   }
@@ -1232,7 +1241,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $SMARTY->assign('orderItems', $orderItems);
     
             $to = $userArr['email'];
-            // $bcc = 'apolo@them.com.au';
+            $bcc = (string) $CONFIG->company->email_orders;
             $subject = 'Payment | Order confirmation';
             $body = $SMARTY->fetch('email/order-confirmation.tpl');
             if($mailID = sendMail($to, $from, $fromEmail, $subject, $body, $bcc)){
@@ -1482,6 +1491,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $to = $_SESSION['user']['public']['email'];
           $subject = 'Auto-renewal Subscription';
           $body = $SMARTY->fetch('email/autorenewal.tpl');
+          $bcc = (string) $CONFIG->company->email_orders;
           sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
         }
         catch(Exception $e){}

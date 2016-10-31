@@ -4,6 +4,7 @@ include_once 'includes/functions/functions.php';
 global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 
 try{
+  
   require_once 'includes/classes/survey-class.php';
   $surveyObj = new Survey();
   
@@ -34,7 +35,7 @@ try{
       $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
       
       $body = $SMARTY->fetch('email/email-survey.tpl');
-      if($sent = sendMail($to, $from, $fromEmail, $subject, $body)){
+      if($sent = sendMail($to, $from, $fromEmail, $subject, $body, null, 0, 0, -2)){
         $surveyObj->SetSurveyEmailId($sent, $r['surveytoken_id']);
         echo $sent.'<br>';
       }
@@ -42,6 +43,6 @@ try{
   }
   
 }catch(Exception $e){
-  sendErrorMail('apolo@them.com.au', $from, $fromEmail, 'Send survey', "Token:  {$surveytoken} <br>". $surveyObj->getErrorMsg());
+  sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Send survey', "Token:  {$surveytoken} <br>". $surveyObj->getErrorMsg());
 }
 die();

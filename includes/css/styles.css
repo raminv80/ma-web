@@ -6449,6 +6449,8 @@ a {
     line-height: 76px;
     font-weight: 300;
     color: #ffffff; }
+  #banner #learnmorehome, #banner #newfhome {
+    margin: 0 10px; }
 
 #whiteblock1, #whiteblock2 {
   padding: 50px 0; }
@@ -8828,6 +8830,27 @@ select option:disabled {
         #needhelp #helpcont .needrow .needr a {
           color: #ffffff; }
 
+.newf-grey {
+  padding: 50px 0;
+  background: #f8f8f9; }
+  .newf-grey.nopad {
+    padding-bottom: 0; }
+  .newf-grey.pad10 {
+    padding-bottom: 20px; }
+  .newf-grey img {
+    display: inline-block; }
+  .newf-grey p {
+    margin-bottom: 25px; }
+
+.newf-white {
+  padding: 50px 0;
+  background: #ffffff; }
+  .newf-white img {
+    display: inline-block;
+    padding: 15px; }
+  .newf-white p {
+    margin-bottom: 25px; }
+
 @media (max-width: 992px) {
   .navbar-header {
     float: left; }
@@ -8890,7 +8913,7 @@ select option:disabled {
 
   #banner {
     background: url(../../images/mob-home-banner.jpg) no-repeat;
-    height: 300px;
+    height: 350px;
     padding: 20px;
     background-size: cover; }
 
@@ -9667,7 +9690,11 @@ select option:disabled {
     margin-top: 15px; }
 
   #proddet #prodright .textcont input {
-    width: 100% !important; } }
+    width: 100% !important; }
+
+  #banner #learnmorehome, #banner #newfhome {
+    margin: 10px 10px;
+    width: 190px; } }
 @media (max-width: 480px) {
   #faqs h3.ui-accordion-header .head-text .head-title {
     width: 90% !important;
@@ -9679,7 +9706,10 @@ select option:disabled {
     position: absolute; }
 
   #surveycont p.opt label {
-    margin-left: 15px; } }
+    margin-left: 15px; }
+
+  #banner {
+    height: 380px; } }
 @media (min-width: 768px) and (max-width: 991px) {
   #navbar-collapse-2 {
     background: #ffffff;

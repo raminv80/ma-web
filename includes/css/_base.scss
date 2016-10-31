@@ -216,6 +216,12 @@ a {
     font-weight: 300;
     color: $white;
 	}
+
+
+
+	#learnmorehome, #newfhome{
+		margin: 0 10px;
+	}
 }
 
 #whiteblock1, #whiteblock2{
@@ -4021,6 +4027,41 @@ select option:disabled {
 				}
 			}
 		}
+    }
+}
+
+.newf-grey{
+    padding: 50px 0;
+    background: $light-grey;
+
+    &.nopad{
+	   padding-bottom: 0;
+    }
+
+    &.pad10{
+	   padding-bottom: 20px;
+    }
+
+    img{
+	    display: inline-block;
+    }
+
+    p{
+	    margin-bottom: 25px;
+    }
+}
+
+.newf-white{
+    padding: 50px 0;
+    background: $white;
+
+    img{
+	    display: inline-block;
+	    padding: 15px;
+    }
+
+    p{
+	    margin-bottom: 25px;
     }
 }
 
