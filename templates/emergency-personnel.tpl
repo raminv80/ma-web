@@ -96,12 +96,12 @@
     			<div class="row">
                     <div class="col-sm-6 form-group">
                       <label class="visible-ie-only" for="postcode">Postcode<span>*</span>:</label>
-                      <input class="form-control" value="{$post.postcode}" maxlength="4" type="text" name="postcode" id="postcode"  required="">
+                      <input class="form-control" value="{$post.postcode}" maxlength="4" type="text" name="postcode" id="postcode" pattern="[0-9]*" required="">
 						<div class="error-msg help-block"></div>
                     </div>
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="phone">Phone:</label>
-    					<input class="form-control" value="{$post.phone}" type="text" name="phone" id="phone">
+    					<input class="form-control" value="{$post.phone}" type="text" name="phone" id="phone" pattern="[0-9]*">
 						<div class="error-msg help-block"></div>
     				</div>
     			</div>
@@ -120,7 +120,7 @@
 	                      <option {if $post.category eq 'Pharmacy'}selected = "selected"{/if} value="Pharmacy">Pharmacy</option>
 	                      <option {if $post.category eq 'Medical practice'}selected = "selected"{/if} value="Medical practice">Medical practice</option>
 	                      <option {if $post.category eq 'Specialist - Cardiac'}selected = "selected"{/if} value="Specialist - Cardiac">Specialist - Cardiac</option>
-	                      <option {if $post.category eq 'Specialist - Other'}selected = "selected"{/if} value="Specialist - Other">Specialist - Diabetes</option>
+	                      <option {if $post.category eq 'Specialist - Diabetes'}selected = "selected"{/if} value="Specialist - Diabetes">Specialist - Diabetes</option>
 	                      <option {if $post.category eq 'Specialist - Other'}selected = "selected"{/if} value="Specialist - Other">Specialist - Other</option>
 	                      <option {if $post.category eq 'Other'}selected = "selected"{/if} value="Other">Other</option>
                       </select>
@@ -144,9 +144,9 @@
     				  <label class="visible-ie-only" for="membershipcat">Membership catalogues:</label>
                       <select class="form-control" name="membership_catalogues" id="membershipcat">
 	                      <option value="0">Please select</option>
-	                      <option value="20">20</option>
-	                      <option value="40">40</option>
-	                      <option value="100">100</option>
+	                      <option {if $post.membership_catalogues eq '20'}selected = "selected"{/if} value="20">20</option>
+	                      <option {if $post.membership_catalogues eq '40'}selected = "selected"{/if} value="40">40</option>
+	                      <option {if $post.membership_catalogues eq '100'}selected = "selected"{/if} value="100">100</option>
                       </select>
 						<div class="error-msg help-block"></div>
     				</div>
@@ -154,9 +154,9 @@
     				  <label class="visible-ie-only" for="a3posters">A3 posters:</label>
                       <select class="form-control" name="a3_posters" id="a3posters">
 	                      <option value="0">Please select</option>
-	                      <option value="1">1</option>
-	                      <option value="2">2</option>
-	                      <option value="3">3</option>
+	                      <option {if $post.a3_posters eq '1'}selected = "selected"{/if} value="1">1</option>
+	                      <option {if $post.a3_posters eq '2'}selected = "selected"{/if} value="2">2</option>
+	                      <option {if $post.a3_posters eq '3'}selected = "selected"{/if} value="3">3</option>
                       </select>
 						<div class="error-msg help-block"></div>
     				</div>
@@ -250,6 +250,11 @@ $(document).ready(function(){
 			minlength: 4
 		});
 
+	 	$('#phone').rules("add", {
+     		digits: true,
+     		minlength: 8
+     	});
+	 	
 		$("select").selectBoxIt();
 
 

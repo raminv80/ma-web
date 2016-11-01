@@ -8,7 +8,7 @@
 #Satisfy Any
 
 <IfModule mod_deflate.c>
-AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css text/javascript application/javascript application/x-httpd-php
+AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css text/javascript application/javascript application/x-httpd-php image/svg+xml
 </IfModule>
 
 ## EXPIRES CACHING ##
@@ -408,8 +408,8 @@ RewriteRule ^Newsletter/Worthy\+Winner\+Claims\+Fitness\+Pack$	/news-and-resourc
 RewriteRule ^testimonials/Lois\+Job%2C\+81%2C\+Murdoch%2C\+WA$	/testimonials/lois-job? [R=301,L,NC]
 RewriteRule ^Newsletter/Ab\+Fab\+Veggie\+Frittata$	/news-and-resources/ab-fab-veggie-frittata? [R=301,L,NC]
 
-RewriteRule ^mobile/$	/? [R=301,L,NC]
-RewriteRule ^mobile/mobile/$	/? [R=301,L,NC]
+RewriteRule ^mobile$	/? [R=301,L,NC]
+RewriteRule ^mobile/mobile$	/? [R=301,L,NC]
 RewriteRule ^mobile/Membership/Members_Area$	/login? [R=301,L,NC]
 RewriteRule ^mobile/mobile/Forgotten_Password$	/login? [R=301,L,NC]
 RewriteRule ^mobile/Products$	/products? [R=301,L,NC]
@@ -489,12 +489,17 @@ RewriteRule ^mobile/mobile/Membership/How_to_Join$	/how-to-become-a-member? [R=3
 RewriteRule ^mobile/mobile/Products$	/products? [R=301,L,NC]
 RewriteRule ^mobile/mobile/Membership/Membership_Benefits$	/benefits-of-membership? [R=301,L,NC]
 RewriteRule ^mobile/mobile/FAQ$	/faqs? [R=301,L,NC]
+RewriteRule ^mobile/faq$	/faqs? [R=301,L,NC]
 RewriteRule ^mobile/mobile/About_Us/About_MedicAlert__Foundation$	/about-medicalert-foundation? [R=301,L,NC]
 RewriteRule ^mobile/mobile/Contact_Us$	/contact-us? [R=301,L,NC]
 RewriteRule ^mobile/mobile/terms\-and\-conditions$	/terms-and-conditions? [R=301,L,NC]
 RewriteRule ^mobile/mobile/membership$	/how-to-become-a-member? [R=301,L,NC]
 RewriteRule ^mobile/mobile/privacy$	/privacy-policy? [R=301,L,NC]
 RewriteRule ^mobile/mobile/Membership/Who_needs_MedicAlert__membership$	/who-needs-membership? [R=301,L,NC]
+RewriteRule ^mobile/products/bracelet/stainless_steel/stainless_steel_violet_belcher_bracelet___small_emblem$ /stainless-steel-belcher-bracelet? [R=301,L,NC]
+RewriteRule ^mobile/products/sports/fabric/stainless_steel_leopard_sports_band___large_emblem /stainless-steel-sports-bands? [R=301,L,NC]
+RewriteRule ^products/bracelet/swarovski/sterling_silver_blush_crystal_bracelet___large_emblem /sterling-silver-spectrum-crystal-bracelet? [R=301,L,NC]
+RewriteRule ^wear-what-matters /? [R=301,L,NC]
 ################################################################################
 
 

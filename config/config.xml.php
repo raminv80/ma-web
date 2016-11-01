@@ -80,10 +80,10 @@
       <merchantid>23886963</merchantid>
       <bankAccountid>035213308316A</bankAccountid>
       <!-- DEV -->
-      <secretkey>T10023_SEC_6es29q2sek6cnvetsrs6h8pkay5um3985djkjv93xm9mf8vruc3enbzd2ek2</secretkey>
+<!--       <secretkey>T10023_SEC_6es29q2sek6cnvetsrs6h8pkay5um3985djkjv93xm9mf8vruc3enbzd2ek2</secretkey>
       <publishableakey>T10023_PUB_aumgejfq7yd27cbkbypftzg87eht5vf84q3thibxy9wpa7ru44cnfddqrx4f</publishableakey>
       <merchantid>TEST</merchantid>
-      <bankAccountid>0000000A</bankAccountid>
+      <bankAccountid>0000000A</bankAccountid> -->
     </payway>
   </payment_gateway>
   
@@ -302,6 +302,11 @@
     <process>
       <file>includes/processes/process-load-bupa-products.php</file>
     </process>
+  </static_page>
+  <static_page>
+    <url>newwebsitefeatures</url>
+    <template>new-features.tpl</template>
+    <pageID>763</pageID>
   </static_page>
   <static_page>
     <url>quick-renew</url>

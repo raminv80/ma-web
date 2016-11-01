@@ -5,6 +5,7 @@
 			<div class="col-sm-12 text-center">
 				<h1>{$listing_title}</h1>
 				<a id="learnmorehome" href="/benefits-of-membership" title="Learn more about MedicAlert membership" class="btn btn-red">Learn more</a>
+				<a id="newfhome" href="/newwebsitefeatures" title="New features on our new website" class="btn btn-black">New website features</a>
 			</div>
 		</div>
 	</div>

@@ -271,6 +271,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
     case 'checkout2':
       $_SESSION['postageID'] = $_POST['postageID'];
       $_SESSION['address'] = $_POST['address'];
+      $_SESSION['address']['B']['address_user_id'] = empty($_SESSION['user']['public']['id']) ? 0 : $_SESSION['user']['public']['id'];
       $bsum = $_POST['address']['B']['address_name'] . ' ';
       $bsum .= $_POST['address']['B']['address_surname'] . '<br />';
       $bsum .= $_POST['address']['B']['address_line1'] . '<br />';

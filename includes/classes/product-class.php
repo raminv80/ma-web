@@ -235,7 +235,7 @@ class ProductClass extends ListClass {
         $sql = "SELECT tbl_productattr.*, attribute_name, attribute_type, attr_value_name, attr_value_image, attr_value_associates FROM tbl_productattr
             LEFT JOIN tbl_attribute ON attribute_id = productattr_attribute_id
             LEFT JOIN tbl_attr_value ON attr_value_id = productattr_attr_value_id
-            WHERE productattr_deleted IS NULL AND productattr_variant_id = :id GROUP BY attr_value_id";
+            WHERE productattr_deleted IS NULL AND attr_value_id IS NOT NULL AND productattr_variant_id = :id GROUP BY attr_value_id";
         if($attr = $DBobject->wrappedSql($sql, array(":id" => $r['variant_id']))){
           foreach($attr as $a){
             $attrArr = array(

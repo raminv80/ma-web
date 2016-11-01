@@ -99,7 +99,7 @@ class Qvalent_REST_PayWayAPI extends Bank {
       
       //GET CONTACT INFORMATION FOR THIS CUSTOMER
       $contactArr = array(
-          "name" => $this->address['address_name'] . ' ' . $this->address['address_surname'],
+          "name" => $this->address['address_name'] . ' ' . $this->address['address_surname'] . (empty($this->address['address_user_id']) || $this->address['address_user_id'] < 0 ? '' : " ({$this->address['address_user_id']})"),
           "email" => $this->address['address_email'],
           "phone" => preg_replace("/[^0-9]/", "", $this->address['address_telephone']),
           "street1" => $this->address['address_line1'],

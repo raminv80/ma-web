@@ -1,11 +1,11 @@
-AuthType Basic
-AuthName "Login required"
-AuthUserFile /home/them/public_html/.htpasswd
-require valid-user
-Order Deny,Allow
-Deny from all
-Allow from 150.101.230.130
-Satisfy Any
+#AuthType Basic
+#AuthName "Login required"
+#AuthUserFile /home/them/public_html/.htpasswd
+#require valid-user
+#Order Deny,Allow
+#Deny from all
+#Allow from 150.101.230.130
+#Satisfy Any
 
 ErrorDocument 404 /404.php
 RewriteEngine  on

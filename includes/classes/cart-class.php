@@ -600,6 +600,7 @@ class cart{
         if(empty($this->cart_user_id)){
           $discount = $this->GetBupaDiscount($shippingFee);
           $hasBupaDiscount = true;
+          $discount_error = '';
           if(empty($discount)){
             $discount_error = 'Please add a valid product for this offer.';
             $hasBupaDiscount = false;

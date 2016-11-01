@@ -49,7 +49,7 @@
                 <div class="row">
                   <div class="col-sm-12 form-group" id="otheram">
                     <label class="visible-ie-only" for="amount">Please only specify a whole dollar amount<span>*</span>:</label>
-                    <input class="form-control" value="{$post.price}" type="text" pattern="[0-9]" name="price" id="price" required="">
+                    <input class="form-control" value="{$post.price}" type="text" pattern="[0-9]*" name="price" id="price" required="">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -82,7 +82,7 @@
                     <label class="visible-ie-only" for="pcode">
                       Postcode<span>*</span>:
                     </label>
-                    <input class="form-control" value="{$post.postcode}" type="text" name="postcode" id="postcode" required="">
+                    <input class="form-control" value="{$post.postcode}" type="text" pattern="[0-9]*" name="postcode" id="postcode" required="">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -95,7 +95,7 @@
                 </div>
                 <div class="row">
                   <div class="col-sm-12 form-group">
-                    <br>Payment accepted: <img src="/images/gift-cards.jpg" alt="Payment accepted" title="Payment accepted" id="accepted" />
+                    <br>Payment accepted: <img src="/images/cards.png" alt="Payment accepted" title="Payment accepted" id="accepted" />
                   </div>
                 </div>
 
@@ -104,7 +104,7 @@
                     <label class="visible-ie-only" for="ccno">
                       Card number<span>*</span>:
                     </label>
-                    <input type="text" id="ccno" class="form-control" name="cc[number]" autocomplete="off" required />
+                    <input type="text" id="ccno" class="form-control" name="cc[number]" pattern="[0-9]*" autocomplete="off" required />
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -159,7 +159,7 @@
                       Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :
                     </label>
                     <div>
-                      <input type="text" id="cccsv" name="cc[csv]" class="seccode form-control" autocomplete="off" pattern="[0-9]" required/>
+                      <input type="text" id="cccsv" name="cc[csv]" class="seccode form-control" autocomplete="off" pattern="[0-9]*" required/>
                       <img class="seccode" src="/images/donate-security.jpg" alt="Security code" />
                     </div>
                     <div class="error-msg help-block"></div>

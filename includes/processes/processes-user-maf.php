@@ -2,6 +2,90 @@
 if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], false)){
   
   switch($_POST["action"]){
+    case 'activateOnlineAccount':
+      $error = "Error: Missing parameters.";
+      $success = null;
+
+      if(!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['phone']) && !empty($_POST['membership_no']) && is_numeric($_POST['phone']) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 3){
+        try{
+          $error = null;
+          $SMARTY->unloadFilter('output', 'trimwhitespace');
+          $banned = array(
+              'formToken',
+              'action',
+              'additional',
+              'wantpromo',
+              'enqsub',
+              'Hp',
+              'timestamp',
+              'honeypot'
+          );
+          $content = serialize($_POST);
+          $buf .= '<h2>Website ' . $_POST['form_name'] . '</h2>';
+          foreach($_POST as $name => $var){
+            if(!in_array($name, $banned)){
+              $buf .= '<br/><b>' . ucwords(str_replace('_', ' ', $name)) . ': </b> <br/> ' . $var . '<br/>';
+            }
+          }
+          $body = $buf;
+          $subject = 'Website ' . $_POST['form_name'];
+          $fromEmail = (string)$CONFIG->company->email_from;
+          $to = (string)$CONFIG->company->email_contact;
+          $COMP = json_encode($CONFIG->company);
+          $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
+          $from = (string)$CONFIG->company->name;
+          $bcc = null;
+          $sent = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
+          
+        }
+        catch(Exception $e){
+          $error = 'There was an error sending your request.';
+        }
+        if(empty($error)){
+          try {
+            $sql = "INSERT INTO tbl_contact (contact_site,contact_form_name,contact_reference_id,contact_reference_name,contact_name,contact_email,
+    		    contact_phone,contact_postcode,contact_file,contact_enquiry,contact_content1,contact_content2,contact_flag1,contact_flag2,contact_ip,
+    		    contact_email_id,contact_created)
+              VALUES (:contact_site,:contact_form_name,:contact_reference_id,:contact_reference_name,:contact_name,:contact_email,:contact_phone,
+    		    :contact_postcode,:contact_file,:contact_enquiry,:contact_content1,:contact_content2,:contact_flag1,:contact_flag2,:contact_ip,
+    		    :contact_email_id,now() )";
+            $params = array(
+                ":contact_name" => $_POST['name'],
+                ":contact_site" => $SITE,
+                ":contact_form_name" => $_POST['form_name'],
+                ":contact_reference_id" => 0,
+                ":contact_reference_name" => '',
+                ":contact_email" => $_POST['email'],
+                ":contact_phone" => $_POST['phone'],
+                ":contact_postcode" => '',
+                ":contact_file" => '',
+                ":contact_enquiry" => '',
+                ":contact_content1" => $_POST['membership_no'],
+                ":contact_content2" => '',
+                ":contact_flag1" => '',
+                ":contact_flag2" => '',
+                ":contact_ip" => $_SERVER['REMOTE_ADDR'],
+                ":contact_email_id" => $sent
+            );
+            $DBobject->wrappedSql($sql, $params);
+          }catch(Exception $e){
+            $error = 'There was an unexpected error saving your request.';
+          }
+          if(empty($error)){
+            if(!empty($GA_ID)){
+              sendGAEvent($GA_ID, 'Enquiry', 'Submitted', $_POST['form_name']);
+            }
+            $success = 'Your online account activation request was successfully sent.<br>You will be contacted shortly by our Membership Services team.';
+          }
+        }
+        
+      }
+      echo json_encode(array(
+          'error' => $error,
+          'success' => $success
+      ));
+      die();
+      
     case 'createTemporaryMember':
       $error = "Error: Missing parameters.";
       $success = null;
@@ -159,9 +243,9 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
           if($user_obj->ForgotPassword($_POST['username'], $_POST['email'])){
             $success = 'An email to reset your password has successfully been sent.';
             $error = null;
-            saveInLog('forgot-password', 'external', $_SESSION['user']['public']['id']);
+            saveInLog('forgot-password', 'external', $_POST['username'], $_POST['email']);
             if(!empty($GA_ID)){
-              sendGAEvent($GA_ID, 'user', 'forgot-password', $_SESSION['user']['public']['id']);
+              sendGAEvent($GA_ID, 'user', 'forgot-password', $_POST['username'], $_POST['email']);
             }
           }else{
             $error = $user_obj->getErrorMsg();

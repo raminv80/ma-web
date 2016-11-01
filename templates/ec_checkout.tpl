@@ -251,7 +251,7 @@
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="postcode-field">Postcode*:</label>
-                      <input id="postcode-field" value="{if $shippostcode}{$shippostcode}{else}{if $address && $address.B.address_postcode}{$address.B.address_postcode}{else}{if $user.maf.main.user_postcode}{$user.maf.main.user_postcode}{else}{$new_user.postcode}{/if}{/if}{/if}" name="address[B][address_postcode]" pattern="[0-9]" type="text" class="postcode billing-req form-control" required="required" onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
+                      <input id="postcode-field" value="{if $shippostcode}{$shippostcode}{else}{if $address && $address.B.address_postcode}{$address.B.address_postcode}{else}{if $user.maf.main.user_postcode}{$user.maf.main.user_postcode}{else}{$new_user.postcode}{/if}{/if}{/if}" name="address[B][address_postcode]" pattern="[0-9]*" type="text" class="postcode billing-req form-control" required="required" onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
 						<div class="error-msg help-block"></div>
                   </div>
     	  		</div>
@@ -264,7 +264,7 @@
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="phone">Phone*:</label>
-                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{if $user.maf.main.user_mobile}{$user.maf.main.user_mobile}{else}{$new_user.mobile}{/if}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required" maxlength="10" pattern="[0-9]"/>
+                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{if $user.maf.main.user_mobile}{$user.maf.main.user_mobile}{else}{$new_user.mobile}{/if}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required" maxlength="10" pattern="[0-9]*"/>
 						<div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -319,7 +319,7 @@
                         </div>
 						<div class="col-sm-6 form-group">
                          <label class="visible-ie-only" for="postcodesh">Postcode*:</label>
-                          <input id="postcodesh" value="{if $address}{$address.S.address_postcode}{/if}" name="address[S][address_postcode]" pattern="[0-9]" type="text" class="postcode shipping-req form-control" required="required"  onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
+                          <input id="postcodesh" value="{if $address}{$address.S.address_postcode}{/if}" name="address[S][address_postcode]" pattern="[0-9]*" type="text" class="postcode shipping-req form-control" required="required"  onPaste="updateShipping();" onBlur="updateShipping();" {literal}onkeydown="if(event.keyCode == 13 || $(this).val().length >= 4){updateShipping();}"{/literal} />
 						<div class="error-msg help-block"></div>
 						</div>
 					</div>
@@ -383,7 +383,7 @@
 				  	<div class="row">
 				  		<div class="col-sm-12">
 					  		Payment accepted:
-				  			<img src="/images/donate-visamc.jpg" alt="Visa Mastercard" />
+				  			<img src="/images/cards.png" alt="Visa Mastercard" />
 				  		</div>
 				  	</div>
 				  	<div class="row notice">
@@ -395,7 +395,7 @@
 				  	<div class="row">
 				  		<div class="col-sm-6 form-group">
 				  			<label class="visible-ie-only" for="ccno">Card number<span>*</span>:</label>
-				  			<input type="text" id="ccno" class="cc-req form-control copycc" name="cc[number]" autocomplete="off" />
+				  			<input type="text" id="ccno" class="cc-req form-control copycc" pattern="[0-9]*" name="cc[number]" autocomplete="off" />
 				  			<div class="error-msg help-block"></div>
 				  		</div>
 
@@ -445,7 +445,7 @@
 				  		<div class="col-sm-6 form-group">
 				  			<label class="visible-ie-only" for="cccsv">Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :</label>
 				  			<div>
-					  			<input type="text" id="cccsv" name="cc[csv]" class="seccode cc-req form-control copycc" autocomplete="off" pattern="[0-9]" maxlength="4"  />
+					  			<input type="text" id="cccsv" name="cc[csv]" class="seccode cc-req form-control copycc" autocomplete="off" pattern="[0-9]*" maxlength="4"  />
 					  			<img  class="seccode" src="/images/donate-security.jpg" alt="Security code" />
 				  			</div>
 					  		<div class="error-msg help-block"></div>
@@ -512,7 +512,7 @@
                 </div>
               <div class="col-sm-6 form-group">
                 <label class="visible-ie-only" for="auto-ccno">Card number<span>*</span>:</label>
-                <input type="text" id="auto-ccno" class="auto-cc-req form-control" name="auto-cc[number]" autocomplete="off" />
+                <input type="text" id="auto-ccno" class="auto-cc-req form-control" name="auto-cc[number]" pattern="[0-9]*" autocomplete="off" />
                 <div class="error-msg help-block"></div>
               </div>
 
@@ -562,7 +562,7 @@
               <div class="col-sm-6 form-group">
                 <label class="visible-ie-only" for="auto-cccsv">Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :</label>
                 <div>
-                  <input type="text" id="auto-cccsv" name="auto-cc[csv]" class="seccode auto-cc-req form-control" autocomplete="off" pattern="[0-9]" maxlength="4" />
+                  <input type="text" id="auto-cccsv" name="auto-cc[csv]" class="seccode auto-cc-req form-control" autocomplete="off" pattern="[0-9]*" maxlength="4" />
                   <img  class="seccode" src="/images/donate-security.jpg" alt="Security code" />
                 </div>
                 <div class="error-msg help-block"></div>
@@ -573,7 +573,7 @@
               <div class="row auto-opts" id="auto-dd-wrapper" style="display: none;">
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autobsb">BSB<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="6" id="autobsb" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="6" id="autobsb"  pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -585,7 +585,7 @@
 
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autoddno">Account number<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" autocomplete="off" maxlength="9" id="autoddno"  pattern="[0-9]">
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[number]" autocomplete="off" maxlength="9" id="autoddno"  pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
 

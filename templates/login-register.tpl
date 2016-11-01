@@ -28,7 +28,9 @@
           <div class="row">
             <div class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2  text-center">
                <div id="login-form-wrapper">
-               <h3>Already a member? Login</h3>
+               <h3><b>Already a member? Login</b></h3>
+                <p>If you already have a MedicAlert medical ID but haven't signed up online, please <a href="javascript:void(0)" onclick="$('#logincont').hide(); $('#existing-member-wrapper').fadeIn();">click here</a> to activate your account.</p>
+                <br>
                 <form class="form-horizontal" id="login-form" data-attr-id="login-form" role="form" accept-charset="UTF-8" action="" method="post">
                   <input type="hidden" value="login" name="action" id="action" />
                   <input type="hidden" value="{$redirect}" name="redirect" class="redirect" />
@@ -37,7 +39,7 @@
                   <div class="row">
                     <div class="col-sm-12 form-group">
                       <label for="username" class="visible-ie-only">Membership Number</label>
-                      <input type="text" value="" class="form-control" id="username" name="username" required>
+                      <input type="text" value="" class="form-control" id="username" pattern="[0-9]*" name="username" required>
                       <div class="error-msg help-block"></div>
                     </div>
                   </div>
@@ -81,7 +83,7 @@
                 <div class="row">
                   <div class="col-sm-12 form-group">
                     <label for="reset-username" class="control-label">Membership Number</label>
-                    <input type="text" value="" class="form-control" id="reset-username" name="username" required>
+                    <input type="text" value="" class="form-control" id="reset-username" name="username" pattern="[0-9]*" required>
                     <span class="help-block"></span>
                   </div>
                 </div>
@@ -136,11 +138,11 @@
           <div class="row error-msg" id="register-form-error"></div>
           <div class="row">
             <div class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2 text-center">
-              <h3>New member? Join now</h3>
+              <h3><b>New member? Join now</b></h3>
             </div>
             <div class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2 text-center">{$listing_content2}</div>
             <div class="col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2 text-center">
-
+            <br>
               <form class="form-horizontal" id="register-form" data-attr-id="register-form" role="form" accept-charset="UTF-8" action="" method="post">
                 <input type="hidden" value="createTemporaryMember" name="action" id="action" />
                 <input type="hidden" value="" name="redirect" class="redirect" />
@@ -237,7 +239,7 @@
 
                 <div class="row">
                   <div class="col-sm-12 form-group">
-                    <label for="phone" class="visible-ie-only">
+                    <label for="mobile" class="visible-ie-only">
                       Mobile<span>*</span>:
                     </label>
                     <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control" id="mobile" name="mobile" pattern="[0-9]" required>
@@ -334,10 +336,84 @@
         <a href="/store/checkout" class="btn btn-info">Continue as Guest</a>
       </div>
       {/if}
-
     </div>
   </div>
+</div>
+<div id="existing-member-wrapper" style="display:none">
+  <div class="container">
+    <div class="row">
+      <!-- EXISTING MEMBER SECTION  -->
+      <div class="col-sm-10 col-md-6 col-sm-offset-1 col-md-offset-3 text-center">
+        <div id="existing_member">
+        <h3 id="existing-member-title"><b>Online account activation</b></h3>
 
+          <form class="" id="existing-member-form" role="form" accept-charset="UTF-8" action="" method="post">
+            <input type="hidden" value="Online account activation" name="form_name" />
+            <input type="hidden" value="activateOnlineAccount" name="action" />
+            <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+            <input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
+            <div class="row">
+          <div class="col-sm-6 form-group">
+            <label class="visible-ie-only" for="name">Full name<span>*</span>:</label>
+            <input class="form-control" value="{if $post.name}{$post.name}{else}{$user.gname} {$user.surname}{/if}" type="text" name="name" id="name" required="">
+          <div class="error-msg help-block"></div>
+          </div>
+          <div class="col-sm-6 form-group">
+            <label class="visible-ie-only" for="email">Email<span>*</span>:</label>
+            <input class="form-control" value="{if $post.email}{$post.email}{else}{$user.email}{/if}" type="email" name="email" id="email" required="">
+          <div class="error-msg help-block"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 form-group">
+            <label class="visible-ie-only" for="phone">Phone<span>*</span>:</label>
+            <input class="form-control" value="{if $post.phone}{$post.phone}{else}{$user.maf.main.user_mobile}{/if}" type="text" name="phone" id="phone" required="" pattern="[0-9]*">
+          <div class="error-msg help-block"></div>
+          </div>
+
+                <div class="col-sm-6 form-group">
+            <label class="visible-ie-only" for="membership_no">Membership number<span>*</span>:</label>
+            <input class="form-control" value="{if $post.membership_no}{$post.membership_no}{else}{$user.id}{/if}" type="text" name="membership_no" id="membership_no" required="" pattern="[0-9]*">
+          <div class="error-msg help-block"></div>
+            </div>
+            </div>
+            <div style="height:0;overflow:hidden;">
+              <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="row">
+              <div class="error-alert" style="display: none;">
+                <div class="alert alert-danger fade in">
+                  <button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.error-alert').fadeOut('slow');">&times;</button>
+                  <strong></strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 success-alert" style="display: none;">
+                <div class="alert alert-success fade in">
+                  <button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.success-alert').fadeOut('slow');">&times;</button>
+                  <strong></strong>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 form-group">
+                <div class="col-sm-offset-2 col-sm-8">
+                  <button type="submit" class="btn btn-red">Request activation</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="row">
+                  <div class="col-sm-12">
+                    <a href="javascript:void(0)" onclick="$('#existing-member-wrapper').hide(); $('#logincont').fadeIn();">Back to login</a>
+                  </div>
+                </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="greyblock1" class="login">
@@ -476,6 +552,51 @@
       hasLowercase: true,
       hasUppercase: true,
       hasDigit: true
+    });
+    
+    $('#existing-member-form').validate({
+      submitHandler: function(form) {
+        $('body').css('cursor', 'wait');
+        var formId = $(form).attr('id')
+        $('#' + formId).find('.error-alert').hide();
+        var datastring = $('#' + formId).serialize();
+        $.ajax({
+          type: "POST",
+          url: "/process/user",
+          cache: false,
+          data: datastring,
+          dataType: "json",
+          success: function(obj) {
+            try{
+              if(obj.error){
+                $('#' + formId).find('.success-alert').hide();
+                $('#' + formId).find('.error-alert').find('strong').html(obj.error);
+                $('#' + formId).find('.error-alert').fadeIn('slow');
+              }else{
+                $('#' + formId).find('.error-alert').hide();
+                $('#' + formId).find('.success-alert').find('strong').html(obj.success);
+                $('#' + formId).find('.success-alert').fadeIn('slow');
+                $('#' + formId).find('.form-group').hide();
+                $('#existing-member-title').hide();
+              }
+            }catch(err){
+              console.log('TRY-CATCH error');
+            }
+            $('body').css('cursor', 'default');
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            $('#' + formId).find('.error-alert').find('strong').html('Undefined error.<br>Please refresh the page and try again or <a href="/contact-us">contact us</a>.');
+            $('#' + formId).find('.error-alert').fadeIn('slow');
+            $('body').css('cursor', 'default');
+            console.log('AJAX error:' + errorThrown);
+          }
+        });
+      }
+    });
+
+    $('#phone').rules("add", {
+      digits: true,
+      minlength: 8
     });
   });
 

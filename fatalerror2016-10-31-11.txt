@@ -1,0 +1,57 @@
+<table><thead bgcolor='#c8c8c8'><th>Item</th><th>Description</th></thead><tbody><tr valign='top'><td><b>Error</b></td><td><pre>Uncaught exception 'PDOException' with message 'SQLSTATE[HY000] [2002] Connection refused' in /home/medicalertorg/public_html/database/pdo-db-manager.php:19
+Stack trace:
+#0 /home/medicalertorg/public_html/database/pdo-db-manager.php(19): PDO->__construct('mysql:host=122....', 'medicalertorg_u...', 'VLw!8L+fM6cAh')
+#1 /home/medicalertorg/public_html/includes/functions/functions.php(80): DBmanager->__construct()
+#2 /home/medicalertorg/public_html/index.php(11): include('/home/medicaler...')
+#3 {main}
+  thrown</pre></td></tr><tr valign='top'><td><b>Errno</b></td><td><pre>1</pre></td></tr><tr valign='top'><td><b>File</b></td><td>/home/medicalertorg/public_html/database/pdo-db-manager.php</td></tr><tr valign='top'><td><b>Line</b></td><td>19</td></tr></tbody></table><br />$_POST<br/>Array
+(
+)
+<br />$_SERVER<br/>Array
+(
+    [PATH] => /usr/local/jdk/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/lib/courier-imap/sbin:/usr/lib/courier-imap/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/usr/X11R6/bin:/root/bin:/opt/bin
+    [SCRIPT_NAME] => /index.php
+    [REQUEST_URI] => /wristband-tag-
+    [QUERY_STRING] => arg1=wristband-tag-
+    [REQUEST_METHOD] => GET
+    [SERVER_PROTOCOL] => HTTP/1.1
+    [GATEWAY_INTERFACE] => CGI/1.1
+    [REDIRECT_URL] => /wristband-tag-
+    [REDIRECT_QUERY_STRING] => arg1=wristband-tag-
+    [REMOTE_PORT] => 50149
+    [SCRIPT_FILENAME] => /home/medicalertorg/public_html/index.php
+    [SERVER_ADMIN] => webmaster@medicalert.org.au
+    [DOCUMENT_ROOT] => /home/medicalertorg/public_html
+    [REMOTE_ADDR] => 58.164.253.193
+    [SERVER_PORT] => 443
+    [SERVER_ADDR] => 122.201.118.45
+    [SERVER_NAME] => www.medicalert.org.au
+    [SERVER_SOFTWARE] => Apache
+    [SERVER_SIGNATURE] => 
+    [HTTP_COOKIE] => wooTracker=KvPeNx4rReZY; prdarr=232; _gat=1; _gat_oldTracker=1; _hjIncludedInSample=1; PHPSESSID=dda52c83448d5f4079279d8bb0b6d3ee; _ga=GA1.3.46504669.1472364837
+    [HTTP_ACCEPT_LANGUAGE] => en-US,en;q=0.8
+    [HTTP_ACCEPT_ENCODING] => gzip, deflate, sdch, br
+    [HTTP_REFERER] => https://www.medicalert.org.au/products/women
+    [HTTP_ACCEPT] => text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+    [HTTP_USER_AGENT] => Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36
+    [HTTP_UPGRADE_INSECURE_REQUESTS] => 1
+    [HTTP_CONNECTION] => close
+    [HTTP_HOST] => www.medicalert.org.au
+    [SSL_TLS_SNI] => www.medicalert.org.au
+    [HTTPS] => on
+    [UNIQUE_ID] => WBadc3rJdi0AAHneGvQAAAAQ
+    [REDIRECT_STATUS] => 200
+    [REDIRECT_SSL_TLS_SNI] => www.medicalert.org.au
+    [REDIRECT_HTTPS] => on
+    [REDIRECT_UNIQUE_ID] => WBadc3rJdi0AAHneGvQAAAAQ
+    [FCGI_ROLE] => RESPONDER
+    [PHP_SELF] => /index.php
+    [REQUEST_TIME_FLOAT] => 1477877107.91
+    [REQUEST_TIME] => 1477877107
+    [argv] => Array
+        (
+            [0] => arg1=wristband-tag-
+        )
+
+    [argc] => 1
+)

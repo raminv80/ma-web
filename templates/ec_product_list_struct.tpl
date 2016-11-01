@@ -27,10 +27,10 @@
         <div class="colours">Available colours
 			<div class="colourbox">
              {$max = 0}
-            {foreach $item.general_details.has_attributes.2 as $colour}  
+            {foreach $item.general_details.has_attributes.2 as $k => $colour}  
               {$max = $max+1}
               {if $max gt 8}{break}{/if}
-              <img src="{if $colour.values.attr_value_image}{$colour.values.attr_value_image}{else}/images/undefined-colour.png{/if}?height=22&width=22" alt="{$colour.values.attr_value_name}" title="{$colour.values.attr_value_name}" />
+              <img src="{if $colour.values.attr_value_image}{$colour.values.attr_value_image}{else}/images/undefined-colour.png{/if}?height=22&width=22" alt="{$colour.values.attr_value_name}" title="{$colour.values.attr_value_name}" {if !$colour.values.attr_value_image}data-missing="{$k}"{/if} />
             {/foreach}
 			</div>
 		</div>

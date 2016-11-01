@@ -503,6 +503,7 @@ a {
                       <td class="w30" width="30" style="table-layout: fixed;"></td>
                       <td class="w580" width="580" style="table-layout: fixed;">
                         <p style="font-size: 28px; line-height: 40px; color: #ed174f; font-weight: bold;">Hi {$user.gname}</p>
+                        <p style="margin-bottom: 20px; font-size: 12px; line-height: 24px;"><b>Membership number: {$user.id}</b></p>
                         <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">Your request for automatic renewal of your annual MedicAlert membership has been accepted.</p>
                         <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">
                           Your annual membership fee will now be automatically debited from your nominated account on the due date each year. You will receive an email receipt acknowledging this payment once your transaction is processed.

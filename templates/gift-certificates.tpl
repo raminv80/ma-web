@@ -60,7 +60,7 @@
                   <label class="visible-ie-only" for="price">
                     Please specify a whole dollar amount<span>*</span>:
                   </label>
-                  <input class="form-control" value="{$post.price}" type="text" pattern="[0-9]" name="price" id="price" required="">
+                  <input class="form-control" value="{$post.price}" type="text" pattern="[0-9]*" name="price" id="price" required="">
                   <div class="error-msg help-block"></div>
                 </div>
               </div>
@@ -131,14 +131,14 @@
               </div>
               <div class="row customdate" style="display:none">
                 <div class="col-sm-12 text-left">
-                  <small><b>*All certificates with a set delivery date will be sent at 9.00 am AEST.</b></small>
+                  <small><b>*All certificates with a set delivery date will be sent at 9.00am (AEST).</b></small>
                 </div>
               </div>
               <br />
               <br />
               <div class="row">
                 <div class="col-sm-12">
-                  Payment accepted: <img src="/images/donate-visamc.jpg" alt="Visa Mastercard" />
+                  Payment accepted: <img src="/images/cards.png" alt="Visa Mastercard" />
                 </div>
               </div>
               <div class="row notice">
@@ -154,7 +154,7 @@
                   <label class="visible-ie-only" for="ccno">
                     Card number<span>*</span>:
                   </label>
-                  <input type="text" id="ccno" class="form-control" name="cc[number]" autocomplete="off" required />
+                  <input type="text" id="ccno" class="form-control" name="cc[number]" pattern="[0-9]*" autocomplete="off" required />
                   <div class="error-msg help-block"></div>
                 </div>
 
@@ -209,7 +209,7 @@
                     Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :
                   </label>
                   <div>
-                    <input type="text" id="cccsv" name="cc[csv]" class="seccode form-control" autocomplete="off" pattern="[0-9]" required/>
+                    <input type="text" id="cccsv" name="cc[csv]" class="seccode form-control" autocomplete="off" pattern="[0-9]*" required/>
                     <img class="seccode" src="/images/donate-security.jpg" alt="Security code" />
                   </div>
                   <div class="error-msg help-block"></div>

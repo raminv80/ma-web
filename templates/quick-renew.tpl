@@ -38,7 +38,7 @@
               <div class="fields-wrapper">
                 <div class="row">
                   <div class="col-sm-12 form-group">
-                    <br>Payment accepted: <img src="/images/gift-cards.jpg" alt="Payment accepted" title="Payment accepted" id="accepted" />
+                    <br>Payment accepted: <img src="/images/cards.png" alt="Payment accepted" title="Payment accepted" id="accepted" />
                   </div>
                 </div>
   
@@ -102,7 +102,7 @@
                       Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :
                     </label>
                     <div>
-                      <input type="text" id="cccsv" name="cc[csv]" class="seccode form-control copycc" autocomplete="off" pattern="[0-9]" maxlength="4" required/>
+                      <input type="text" id="cccsv" name="cc[csv]" class="seccode form-control copycc" autocomplete="off" pattern="[0-9]*" maxlength="4" required/>
                       <img class="seccode" src="/images/donate-security.jpg" alt="Security code" />
                     </div>
                     <div class="error-msg help-block"></div>
@@ -160,7 +160,7 @@
                 </div>
               <div class="col-sm-6 form-group">
                 <label class="visible-ie-only" for="auto-ccno">Card number<span>*</span>:</label>
-                <input type="text" id="auto-ccno" class="auto-cc-req form-control" name="auto-cc[number]" autocomplete="off" />
+                <input type="text" id="auto-ccno" class="auto-cc-req form-control" pattern="[0-9]*" name="auto-cc[number]" autocomplete="off" />
                 <div class="error-msg help-block"></div>
               </div>
 
@@ -210,7 +210,7 @@
               <div class="col-sm-6 form-group">
                 <label class="visible-ie-only" for="auto-cccsv">Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :</label>
                 <div>
-                  <input type="text" id="auto-cccsv" name="auto-cc[csv]" class="seccode auto-cc-req form-control" autocomplete="off" pattern="[0-9]" maxlength="4" />
+                  <input type="text" id="auto-cccsv" name="auto-cc[csv]" class="seccode auto-cc-req form-control" autocomplete="off" pattern="[0-9]*" maxlength="4" />
                   <img  class="seccode" src="/images/donate-security.jpg" alt="Security code" />
                 </div>
                 <div class="error-msg help-block"></div>
@@ -221,7 +221,7 @@
               <div class="row auto-opts" id="auto-dd-wrapper" style="display: none;">
                   <div class="col-sm-offset-3 col-sm-6 form-group">
                     <label class="visible-ie-only" for="autobsb">BSB<span>*</span>:</label>
-                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="6" pattern="[0-9]" id="autobsb" >
+                    <input class="form-control auto-dd-req" type="text" name="auto-dd[bsb]" autocomplete="off" maxlength="6" pattern="[0-9]*" id="autobsb" >
                     <div class="error-msg help-block"></div>
                   </div>
 
