@@ -324,6 +324,28 @@
 {/block}
 
 {block name=tail}
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": "{$product_name|strip_tags}",
+  "image": "{$DOMAIN}{$general_details.image}",
+  "description": "{$product_meta_description}",
+  "offers": {
+    {if $general_details.price.min eq $general_details.price.max}
+  "@type": "Offer",
+    "priceCurrency": "AUD",
+    "price": "{$general_details.price.min}",
+    "availability": "InStock"
+  {else}
+  "@type": "AggregateOffer",
+  "priceCurrency": "AUD",
+    "highPrice": "{$general_details.price.max}",
+    "lowPrice": "{$general_details.price.min}"
+  {/if}
+  }
+}
+</script>   
 <script src="/includes/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>

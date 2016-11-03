@@ -91,7 +91,8 @@
           <br><br>
 		</div>
 
-    <div class="col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4" id="contacttext">
+    <div class="col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4" id="contacttext" itemscope itemtype="http://schema.org/LocalBusiness">
+        <meta itemprop="name" content="{$COMPANY.name}">
         <div class="h2">Contact details</div>
         <hr>
         <div class="contline">
@@ -136,6 +137,7 @@
         <div class="contline">
           <img src="/images/contact-time.png" alt="Location" />
         <div class="cont-text">
+        <meta itemprop="openingHours" content="Mo-Fr 8:30-17:30">
         <p>Office hours:<br>Monday - Friday, 8:30am - 5:30pm CST</p>
         </div>
         </div>

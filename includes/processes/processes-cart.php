@@ -689,6 +689,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         	  }, 6000);
               </script>
               <script type="text/javascript">
+  		      /* <![CDATA[ */
               var google_conversion_id = 950737209;
               var google_conversion_language = "en";
               var google_conversion_format = "3";
@@ -697,12 +698,13 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               var google_conversion_value = '.$chargedAmount.';
               var google_conversion_currency = "AUD";
               var google_remarketing_only = false;
+              /* ]]> */
               </script>
               <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
               </script>
               <noscript>
               <div style="display:inline;">
-              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$total_amount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
+              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$chargedAmount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
               </div>
               </noscript>';
           }
@@ -948,6 +950,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         	  }, 6000);
               </script>
               <script type="text/javascript">
+  		      /* <![CDATA[ */
               var google_conversion_id = 950737209;
               var google_conversion_language = "en";
               var google_conversion_format = "3";
@@ -956,12 +959,13 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               var google_conversion_value = '.$chargedAmount.';
               var google_conversion_currency = "AUD";
               var google_remarketing_only = false;
+              /* ]]> */
               </script>
               <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
               </script>
               <noscript>
               <div style="display:inline;">
-              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$total_amount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
+              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$chargedAmount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
               </div>
               </noscript>';
         }
@@ -1373,6 +1377,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         	  }, 6000);
               </script>
               <script type="text/javascript">
+  		      /* <![CDATA[ */
               var google_conversion_id = 950737209;
               var google_conversion_language = "en";
               var google_conversion_format = "3";
@@ -1381,12 +1386,13 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               var google_conversion_value = '.$chargedAmount.';
               var google_conversion_currency = "AUD";
               var google_remarketing_only = false;
+              /* ]]> */
               </script>
               <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
               </script>
               <noscript>
               <div style="display:inline;">
-              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$total_amount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
+              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$chargedAmount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
               </div>
               </noscript>';
           }

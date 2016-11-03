@@ -83,7 +83,7 @@ class Qvalent_REST_PayWayAPI extends Bank {
           $this->errorMsg .= "Please verify your credit cart details.<br>";
           return false;
         }
-        $response = $this->CreateCreditCardSingleUseToken($this->cc_number, $this->cc_name, $this->cc_cvc, $this->cc_expiry_month, $this->cc_expiry_year);
+        $response = $this->CreateCreditCardSingleUseToken($this->cc_number, unclean($this->cc_name), $this->cc_cvc, $this->cc_expiry_month, $this->cc_expiry_year);
       }
       $singleUseTokenId = $response->singleUseTokenId;
       //MISSING TOKEN
@@ -99,7 +99,7 @@ class Qvalent_REST_PayWayAPI extends Bank {
       
       //GET CONTACT INFORMATION FOR THIS CUSTOMER
       $contactArr = array(
-          "name" => $this->address['address_name'] . ' ' . $this->address['address_surname'] . (empty($this->address['address_user_id']) || $this->address['address_user_id'] < 0 ? '' : " ({$this->address['address_user_id']})"),
+          "name" => unclean($this->address['address_name'] . ' ' . $this->address['address_surname']) . (empty($this->address['address_user_id']) || $this->address['address_user_id'] < 0 ? '' : " ({$this->address['address_user_id']})"),
           "email" => $this->address['address_email'],
           "phone" => preg_replace("/[^0-9]/", "", $this->address['address_telephone']),
           "street1" => $this->address['address_line1'],
