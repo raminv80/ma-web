@@ -239,7 +239,7 @@
     	  		<div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="state">State*:</label>
-                      <select id="state" name="address[B][address_state]" class="required form-control">
+                      <select id="state" name="address[B][address_state]" class="required form-control addplugin">
                         <option value="">Please select an option</option>
                         {$cur_state = $selectedShippingState}
                         {if $address}{$cur_state = $address.B.address_state}{else}{if $user.maf.main.user_state_id}{$cur_state = $user.maf.main.user_state_id}{else}{$cur_state = $new_user.state}{/if}{/if}
@@ -309,7 +309,7 @@
 					<div class="row">
 						<div class="col-sm-6 form-group">
                          <label class="visible-ie-only" for="statesh">State*:</label>
-                          <select id="statesh" name="address[S][address_state]" class="shipping-select-req required form-control">
+                          <select id="statesh" name="address[S][address_state]" class="shipping-select-req required form-control addplugin">
                             <option value="">Please select an option</option>
                             {foreach $options_state as $opt }
                             <option value="{$opt.value}" {if $address && $address.S.address_state eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
@@ -660,7 +660,7 @@
     sameAddress();
 	autorenew();
 
-	$("select").selectBoxIt();
+	$("select.addplugin").selectBoxIt({ autoWidth: false });
   	$('[data-toggle="tooltip"]').tooltip();
 
   	$('#phone').rules("add", {
@@ -745,7 +745,8 @@
           elementVal = $(this).val();
           elementNode = $(this).prop('nodeName');
           if(elementNode == 'SELECT'){
-            $('select#auto-' + elementID).data("selectBox-selectBoxIt").selectOption(elementVal);            
+            $('select#auto-' + elementID).val(elementVal); 
+            //$('select#auto-' + elementID).data("selectBox-selectBoxIt").selectOption(elementVal);            
           }else{
             $('input[name="auto-' + elementName + '"]').val(elementVal);  
           }

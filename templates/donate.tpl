@@ -264,7 +264,6 @@
       minlength: 3
     });
 
-    $("select").selectBoxIt();
 
   /*   $("input[name=variant_id]").change(function(){
       //Set attribute

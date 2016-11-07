@@ -249,7 +249,6 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
-    $("select").selectBoxIt();
 
     $('[data-toggle="tooltip"]').tooltip();
 

@@ -1108,6 +1108,60 @@ function sendGAEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 	return true;
 }
 
+
+/**
+ * Enhanced Ecommerce Tracking  - Combining Impressions and Actions
+ *
+ * @param string $_tid
+ * @param string $_action
+ * @param array $_proditemArr
+ * @param string $_impressionList
+ * @return boolean
+ */
+function sendGAEnEcImpressionAction($_tid, $_action, $_proditemArr, $_impressionList = null, $_cid=null){
+  if(empty($_tid) || empty($_action) || empty($_proditemArr)) return false;
+
+  $v = 1;
+  $tid = $_tid; // Put your own Analytics ID in here
+  $cid = !empty($_cid)?$_cid:gaParseCookie();
+  $dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
+
+  // Send Transaction hit
+  $data = array(
+      'v' => $v,
+      'tid' => $tid,
+      'cid' => $cid,
+      't' => 'event',
+      'ec' => 'UX',
+      'ea' => 'click',
+      'el' => 'Results',
+      'pa' => $_action
+  );
+  
+  $k = 1;
+  foreach($_proditemArr as $p){
+    $data["pi{$k}id"] = $p['id'];
+    $data["pi{$k}nm"] = $p['name'];
+    $data["pi{$k}ca"] = $p['category'];
+    $data["pi{$k}br"] = $p['brand'];
+    $data["pi{$k}va"] = $p['variant'];
+    $data["pi{$k}ps"] = $p['position'];
+    if(!empty($_impressionList)){
+      $data["il1nm"] = $_impressionList;
+      $data["il1pi{$k}id"] = $p['id'];
+      $data["il1pi{$k}nm"] = $p['name'];
+      $data["il1pi{$k}ca"] = $p['category'];
+      $data["il1pi{$k}br"] = $p['brand'];
+      $data["il1pi{$k}va"] = $p['variant'];
+      $data["il1pi{$k}ps"] = $p['position'];
+    }
+    $k++;
+  }
+  
+  return gaFireHit($data);
+}
+
+
 /**
  * Enhanced Ecommerce Tracking  - Measuring Action
  * 
@@ -1123,7 +1177,7 @@ function sendGAEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
  * -promo_click: 	A click on an internal promotion.
 
  * @param string $_tid
- * @param array $_action
+ * @param string $_action
  * @param array $_cartitemArr
  * @return boolean
  */
@@ -1166,7 +1220,7 @@ function sendGAEnEcAction($_tid, $_action, $_cartitemArr,$_cid=null){
  * @param array $_cartitemArr
  * @return boolean
  */
-function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr, $_cid=null){
+function sendGAEnEcCheckoutStep($_tid, $_stepNumber = 1, $_stepName = 'N/A', $_cartitemArr, $_cid=null){
 	if(empty($_tid) || empty($_cartitemArr)) return false;
 
 	$v = 1;
@@ -1183,8 +1237,8 @@ function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr, $_ci
 			'dh' => $dh,
 			'dp' => $_SERVER['HTTP_REFERER'],
 			'pa' => 'checkout',
-			'cos' => '1',
-			'col' => $_stepOption
+			'cos' => $_stepNumber,
+			'col' => $_stepName
 	);
 	$cnt = 1;
 	foreach($_cartitemArr as $item){
@@ -1212,7 +1266,7 @@ function sendGAEnEcCheckoutStep($_tid, $_stepOption = 'N/A', $_cartitemArr, $_ci
  * @param integer $_step
  * @return boolean
  */
-function sendGAEnEcCheckoutOptions($_tid, $_stepOption, $_step, $_cid=null){
+function sendGAEnEcCheckoutOptions($_tid, $_stepNumber, $_stepOption,  $_cid=null){
 	if(empty($_tid) || empty($_stepOption) || empty($_step)) return false;
 
 	$v = 1;
@@ -1228,7 +1282,7 @@ function sendGAEnEcCheckoutOptions($_tid, $_stepOption, $_step, $_cid=null){
 			'ec' => 'Checkout',
 			'ea' => 'Option',
 			'pa' => 'checkout_option',
-			'cos' => $_step,
+			'cos' => $_stepNumber,
 			'col' => $_stepOption
 	);
 	return gaFireHit($data);

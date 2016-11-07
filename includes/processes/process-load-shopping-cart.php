@@ -32,6 +32,10 @@ try{
   //Has stainless steel product - display special
   $SMARTY->assign('showProductEspecial', $cart_obj->HasStainlessSteel());
   
+  if(!empty($GA_ID)){
+    $productsGA = $cart_obj->getCartitemsByCartId_GA();
+    sendGAEnEcCheckoutStep($GA_ID, '1', 'Shopping cart', $productsGA);
+  }
   
 }catch(exceptionCart $e) {
   $SMARTY->assign('error', $e->getMessage());

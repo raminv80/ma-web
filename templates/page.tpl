@@ -75,14 +75,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 </head>
 <body>
+{if $gtm_id}
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={$gtm_id}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+{/if}
 <header>
   {include file='menu.tpl'}
 </header>
 	{block name=body}{/block}
 	{include file='footer.tpl'}
-    {if $gtm_id}
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={$gtm_id}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    {/if}
+  {$conversionTracking}
     
 	{printfile file='/includes/js/jquery-2.1.4.min.js' type='script'}
 	{printfile file='/includes/js/bootstrap.min.js' type='script'}
@@ -213,6 +214,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 	</script>
 	{block name=tail}{/block}
-    {$conversionTracking}
+    
 </body>
 </html>

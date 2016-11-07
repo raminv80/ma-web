@@ -256,10 +256,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $selectedMethod = unclean($_POST['selectedMethod']);
       if(array_key_exists($selectedMethod, $methods)){
         $_SESSION['shipping']['selectedMethod'] = $selectedMethod; 
-        if(!empty($GA_ID)){
-          $productsGA = $cart_obj->getCartitemsByCartId_GA();
-          sendGAEnEcCheckoutStep($GA_ID, $_SESSION['shipping']['selectedMethod'], $productsGA);
-        }
         header('Location: /checkout');
         die();
       }
@@ -309,6 +305,12 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           ));
         }
         catch(Exception $e){}
+      }
+      
+      if(!empty($GA_ID)){
+        $cart_obj = new cart($_SESSION['user']['public']['id']);
+        $productsGA = $cart_obj->getCartitemsByCartId_GA();
+        sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
       }
       
       echo json_encode(array(
@@ -397,6 +399,10 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_gst' => $gst, 
             'payment_method' => $paymentMethod 
         );
+        
+        if(!empty($GA_ID)){
+          sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
+        }
         
         //require_once 'includes/classes/PayWay.php';
         //$pay_obj = new PayWay();
@@ -561,6 +567,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           if(!empty($GA_ID) && $hasDonation){
             sendGAEvent($GA_ID, 'donation', 'success', $_SESSION['user']['public']['id']);
           }
+            
           
           //PROCESS PENDING UPDATES
           if(!empty($_SESSION['user']['public']['pending_update'])){
@@ -671,8 +678,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           
           // SET GOOGLE ANALYTICS - ECOMMERCE
           if(!empty($GA_ID)){
-            sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
-            
+            $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
+            sendGAEnEcCheckoutStep($GA_ID, '5', 'Checkout complete', $productsGA);
             $totalsGA = array(
                 'id' => $orderNumber, 
                 'total' => $chargedAmount, 
@@ -680,33 +687,21 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                 'shipping' => $shippingFee, 
                 'coupon' => $order['cart_discount_code'] 
             );
-            $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
             sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
             
-            $_SESSION['conversionTracking'] = '<script>
-              setTimeout(function(){
-  		        fbq(\'track\', \'Purchase\', {value: '.$chargedAmount.', currency: \'AUD\'});
-        	  }, 6000);
-              </script>
-              <script type="text/javascript">
-  		      /* <![CDATA[ */
-              var google_conversion_id = 950737209;
-              var google_conversion_language = "en";
-              var google_conversion_format = "3";
-              var google_conversion_color = "ffffff";
-              var google_conversion_label = "_aTfCPT1r14QubKsxQM";
-              var google_conversion_value = '.$chargedAmount.';
-              var google_conversion_currency = "AUD";
-              var google_remarketing_only = false;
-              /* ]]> */
-              </script>
-              <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
-              </script>
-              <noscript>
-              <div style="display:inline;">
-              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$chargedAmount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
-              </div>
-              </noscript>';
+            try{
+              $cartitemProdUIDsArr = array();
+              $cartitemProdUIDs = '';
+              foreach($orderItems as $oi){
+                $cartitemProdUIDsArr[] = empty($oi['variant_uid']) ? "{$oi['cartitem_product_id']}-{$oi['cartitem_variant_id']}" : $oi['variant_uid'];
+              }
+              $cartitemProdUIDs = implode(',', "'". $cartitemProdUIDsArr ."'");
+            }catch(Exception $e){}
+            $_SESSION['conversionTracking'] = "<script>
+              var CartitemProdUIDs = [{$cartitemProdUIDs}];
+              var PaymentAmount = '{$chargedAmount}';
+              var OrderNumber = '{$orderNumber}';
+              </script>";
           }
           
           // SET USED DISCOUNT CODE
@@ -858,7 +853,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       
       if(!empty($GA_ID)){
         $productsGA = $cart_obj->getCartitemsByCartId_GA();
-        sendGAEnEcCheckoutStep($GA_ID, $_SESSION['shipping']['selectedMethod'], $productsGA);
+        sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
+        sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
       }
       
       require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
@@ -933,7 +929,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         
         // SET GOOGLE ANALYTICS - ECOMMERCE
         if(!empty($GA_ID)){
-          sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
+          sendGAEnEcCheckoutStep($GA_ID, '5', 'Checkout complete', $productsGA);
           $totalsGA = array(
               'id' => $orderNumber,
               'total' => $chargedAmount,
@@ -941,33 +937,21 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               'shipping' => $shippingFee,
               'coupon' => $order['cart_discount_code']
           );
-          $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
           sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
           
-          $_SESSION['conversionTracking'] = '<script>
-              setTimeout(function(){
-  		        fbq(\'track\', \'Purchase\', {value: '.$chargedAmount.', currency: \'AUD\'});
-        	  }, 6000);
-              </script>
-              <script type="text/javascript">
-  		      /* <![CDATA[ */
-              var google_conversion_id = 950737209;
-              var google_conversion_language = "en";
-              var google_conversion_format = "3";
-              var google_conversion_color = "ffffff";
-              var google_conversion_label = "_aTfCPT1r14QubKsxQM";
-              var google_conversion_value = '.$chargedAmount.';
-              var google_conversion_currency = "AUD";
-              var google_remarketing_only = false;
-              /* ]]> */
-              </script>
-              <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
-              </script>
-              <noscript>
-              <div style="display:inline;">
-              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$chargedAmount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
-              </div>
-              </noscript>';
+          try{
+            $cartitemProdUIDsArr = array();
+            $cartitemProdUIDs = '';
+            foreach($orderItems as $oi){
+              $cartitemProdUIDsArr[] = empty($oi['variant_uid']) ? "{$oi['cartitem_product_id']}-{$oi['cartitem_variant_id']}" : $oi['variant_uid'];
+            }
+            $cartitemProdUIDs = implode(',', "'". $cartitemProdUIDsArr ."'");
+          }catch(Exception $e){}
+          $_SESSION['conversionTracking'] = "<script>
+              var CartitemProdUIDs = [{$cartitemProdUIDs}];
+              var PaymentAmount = '{$chargedAmount}';
+              var OrderNumber = '{$orderNumber}';
+              </script>";
         }
         
         // OPEN NEW CART
@@ -1168,7 +1152,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         
         if(!empty($GA_ID)){
           $productsGA = $cart_obj->getCartitemsByCartId_GA();
-          sendGAEnEcCheckoutStep($GA_ID, $_SESSION['shipping']['selectedMethod'], $productsGA);
+          sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
+          sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
         }
     
         require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
@@ -1359,8 +1344,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           
           // SET GOOGLE ANALYTICS - ECOMMERCE
           if(!empty($GA_ID)){
-            sendGAEnEcCheckoutOptions($GA_ID, $paymentMethod, '2');
-    
+            sendGAEnEcCheckoutStep($GA_ID, '5', 'Checkout complete', $productsGA);
             $totalsGA = array(
                 'id' => $orderNumber,
                 'total' => $chargedAmount,
@@ -1368,33 +1352,21 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                 'shipping' => $shippingFee,
                 'coupon' => $order['cart_discount_code']
             );
-            $productsGA = $cart_obj->getCartitemsByCartId_GA($order_cartId);
             sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
             
-            $_SESSION['conversionTracking'] = '<script>
-              setTimeout(function(){
-  		        fbq(\'track\', \'Purchase\', {value: '.$chargedAmount.', currency: \'AUD\'});
-        	  }, 6000);
-              </script>
-              <script type="text/javascript">
-  		      /* <![CDATA[ */
-              var google_conversion_id = 950737209;
-              var google_conversion_language = "en";
-              var google_conversion_format = "3";
-              var google_conversion_color = "ffffff";
-              var google_conversion_label = "_aTfCPT1r14QubKsxQM";
-              var google_conversion_value = '.$chargedAmount.';
-              var google_conversion_currency = "AUD";
-              var google_remarketing_only = false;
-              /* ]]> */
-              </script>
-              <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
-              </script>
-              <noscript>
-              <div style="display:inline;">
-              <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/950737209/?value='.$chargedAmount.'&amp;currency_code=AUD&amp;label=_aTfCPT1r14QubKsxQM&amp;guid=ON&amp;script=0"/>
-              </div>
-              </noscript>';
+            try{
+              $cartitemProdUIDsArr = array();
+              $cartitemProdUIDs = '';
+              foreach($orderItems as $oi){
+                $cartitemProdUIDsArr[] = empty($oi['variant_uid']) ? "{$oi['cartitem_product_id']}-{$oi['cartitem_variant_id']}" : $oi['variant_uid'];
+              }
+              $cartitemProdUIDs = implode(',', "'". $cartitemProdUIDsArr ."'");
+            }catch(Exception $e){}
+            $_SESSION['conversionTracking'] = "<script>
+              var CartitemProdUIDs = [{$cartitemProdUIDs}];
+              var PaymentAmount = '{$chargedAmount}';
+              var OrderNumber = '{$orderNumber}';
+              </script>";
           }
     
           // OPEN NEW CART

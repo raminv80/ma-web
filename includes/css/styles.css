@@ -6320,6 +6320,9 @@ a {
   a:hover, a:active, a:focus {
     color: #e9003b; }
 
+select.form-control {
+  height: 40px; }
+
 .btn {
   font-size: 16px;
   border-radius: 0;

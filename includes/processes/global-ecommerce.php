@@ -60,6 +60,10 @@ try{
   $SMARTY->assign('conversionTracking', $_SESSION['conversionTracking']);// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
   unset($_SESSION['conversionTracking']);
   
+  if(!empty($GA_ID) && $REQUEST_URI == $loginRegisterUrl){
+    $productsGA = $cart_obj->getCartitemsByCartId_GA();
+    sendGAEnEcCheckoutStep($GA_ID, '2', 'Login / Join', $productsGA);
+  }
 }
 catch(exceptionCart $e){
   $SMARTY->assign('error', $e->getMessage());

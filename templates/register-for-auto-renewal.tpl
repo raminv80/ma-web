@@ -213,8 +213,6 @@
     });
     
     
-    $("select").selectBoxIt();
-    
     $('input[name="autopayment"]').change(function(){
       automethod();
     });
@@ -237,7 +235,8 @@
           elementVal = $(this).val();
           elementNode = $(this).prop('nodeName');
           if(elementNode == 'SELECT'){
-            $('select#auto-' + elementID).data("selectBox-selectBoxIt").selectOption(elementVal);            
+            $('select#auto-' + elementID).val(elementVal);
+            //$('select#auto-' + elementID).data("selectBox-selectBoxIt").selectOption(elementVal);            
           }else{
             $('input[name="auto-' + elementName + '"]').val(elementVal);  
           }

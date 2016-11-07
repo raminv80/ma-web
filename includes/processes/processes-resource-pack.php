@@ -38,13 +38,16 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
         $from = (string)$CONFIG->company->name;
         $bcc = null;
-        if(!empty($file_name)){
+        /**
+         * COMMENTED OUT - 04/11/2016 - REQUESTED BY MAF
+         */
+        /* if(!empty($file_name)){
           if(sendAttachMail($to, $from, $fromEmail, $subject, $body, $bcc, $file_name)){
             $sent = 1;
           }
         } else{
           $sent = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
-        }
+        } */
       }
       catch(Exception $e){
         $error = 'There was an error sending your enquiry.';
