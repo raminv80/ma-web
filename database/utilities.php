@@ -470,7 +470,7 @@ function sendErrorMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
       $mailSent = SafeMail($to, "ERROR: $subject", $body, $headers, '-f '. $fromEmail);
     }
     $filename = $_SERVER['DOCUMENT_ROOT'].'/debug_log.txt';
-    $body = time(). PHP_EOL . $body . PHP_EOL;
+    $body = time(). PHP_EOL . $subject. PHP_EOL . $body . PHP_EOL;
     file_put_contents($filename, $body, FILE_APPEND | LOCK_EX);
     
   }catch(Exception $e){}

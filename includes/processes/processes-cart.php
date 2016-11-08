@@ -519,15 +519,13 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           
           
           //SAVE BILLING AND SHIPPING ADDRESS
-          $billID = $user_obj->InsertNewAddress(array_merge(array(
-              'address_user_id' => $userArr['id']
-          ), $_SESSION['address']['B']));
+          $_SESSION['address']['B']['address_user_id'] = $userArr['id'];
+          $billID = $user_obj->InsertNewAddress($_SESSION['address']['B']);
           $shipID = $billID;
           
           if(empty($_SESSION['address']['same_address'])){
-            $shipID = $user_obj->InsertNewAddress(array_merge(array(
-                'address_user_id' => $userArr['id']
-            ), $_SESSION['address']['S']));
+            $_SESSION['address']['S']['address_user_id'] = $userArr['id'];
+            $shipID = $user_obj->InsertNewAddress($_SESSION['address']['S']);
           }
           
           $params = array(
@@ -567,7 +565,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           if(!empty($GA_ID) && $hasDonation){
             sendGAEvent($GA_ID, 'donation', 'success', $_SESSION['user']['public']['id']);
           }
-            
           
           //PROCESS PENDING UPDATES
           if(!empty($_SESSION['user']['public']['pending_update'])){
@@ -853,8 +850,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       
       if(!empty($GA_ID)){
         $productsGA = $cart_obj->getCartitemsByCartId_GA();
-        sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
-        sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
+        //sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
+        //sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
       }
       
       require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
@@ -927,37 +924,6 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         );
         $pay_obj->SetUserAddressIds($params);
         
-        // SET GOOGLE ANALYTICS - ECOMMERCE
-        if(!empty($GA_ID)){
-          sendGAEnEcCheckoutStep($GA_ID, '5', 'Checkout complete', $productsGA);
-          $totalsGA = array(
-              'id' => $orderNumber,
-              'total' => $chargedAmount,
-              'tax' => $gst,
-              'shipping' => $shippingFee,
-              'coupon' => $order['cart_discount_code']
-          );
-          sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
-          
-          try{
-            $cartitemProdUIDsArr = array();
-            $cartitemProdUIDs = '';
-            foreach($orderItems as $oi){
-              $cartitemProdUIDsArr[] = empty($oi['variant_uid']) ? "{$oi['cartitem_product_id']}-{$oi['cartitem_variant_id']}" : $oi['variant_uid'];
-            }
-            $cartitemProdUIDs = implode(',', "'". $cartitemProdUIDsArr ."'");
-          }catch(Exception $e){}
-          $_SESSION['conversionTracking'] = "<script>
-              var CartitemProdUIDs = [{$cartitemProdUIDs}];
-              var PaymentAmount = '{$chargedAmount}';
-              var OrderNumber = '{$orderNumber}';
-              </script>";
-        }
-        
-        // OPEN NEW CART
-        $cart_obj->CreateCart();
-        
-        
         try{
           // SEND CONFIRMATION EMAIL
           $SMARTY->assign('isGiftCertificate', $isGiftCertificate);
@@ -985,6 +951,33 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           }
         }
         catch(Exception $e){}
+        
+        // SET GOOGLE ANALYTICS - ECOMMERCE
+        if(!empty($GA_ID)){
+          //sendGAEnEcCheckoutStep($GA_ID, '5', 'Checkout complete', $productsGA);
+          $totalsGA = array(
+              'id' => $orderNumber,
+              'total' => $chargedAmount,
+              'tax' => $gst,
+              'shipping' => $shippingFee,
+              'coupon' => $order['cart_discount_code']
+          );
+          sendGAEnEcPurchase($GA_ID, $totalsGA, $productsGA);
+        
+          try{
+            $cartitemProdUIDsArr = array();
+            $cartitemProdUIDs = '';
+            foreach($orderItems as $oi){
+              $cartitemProdUIDsArr[] = empty($oi['variant_uid']) ? "{$oi['cartitem_product_id']}-{$oi['cartitem_variant_id']}" : $oi['variant_uid'];
+            }
+            $cartitemProdUIDs = implode(',', "'". $cartitemProdUIDsArr ."'");
+          }catch(Exception $e){}
+          $_SESSION['conversionTracking'] = "<script>
+            var CartitemProdUIDs = [{$cartitemProdUIDs}];
+            var PaymentAmount = '{$chargedAmount}';
+            var OrderNumber = '{$orderNumber}';
+            </script>";
+        }
         
         if(!empty($GA_ID) && $hasDonation){
           sendGAEvent($GA_ID, 'donation', 'success', $_SESSION['user']['public']['id']);
@@ -1066,6 +1059,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Create voucher', "Payment id:  {$paymentId} <br>". $e);
           }
         }
+        
+        // OPEN NEW CART
+        $cart_obj->CreateCart();
   
         $_SESSION['post'] = '';
         
@@ -1152,8 +1148,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         
         if(!empty($GA_ID)){
           $productsGA = $cart_obj->getCartitemsByCartId_GA();
-          sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
-          sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
+          //sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
+          //sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
         }
     
         require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
@@ -1344,7 +1340,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           
           // SET GOOGLE ANALYTICS - ECOMMERCE
           if(!empty($GA_ID)){
-            sendGAEnEcCheckoutStep($GA_ID, '5', 'Checkout complete', $productsGA);
+            //sendGAEnEcCheckoutStep($GA_ID, '5', 'Checkout complete', $productsGA);
             $totalsGA = array(
                 'id' => $orderNumber,
                 'total' => $chargedAmount,
