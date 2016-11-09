@@ -1,5 +1,5 @@
 {block name="head"}
-<!-- <link href="/includes/css/jquery-ui.css" rel="stylesheet" media="screen"> -->
+<!--<link href="/includes/css/jquery-ui.css" rel="stylesheet" media="screen">-->
 {/block} {block name=body}
 <div id="headgrey">
   <div class="container">
@@ -19,7 +19,7 @@
       <div class="col-sm-12 text-left">
         {if $error}
         <div class="alert alert-danger fade in">{$error}</div>
-        {/if} 
+        {/if}
       </div>
       <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" id="listtoptext">
         <h1>{$listing_title}</h1>
@@ -553,7 +553,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
                   <div class="col-sm-12 form-group">
                     <label for="emergencyinfo" class="visible-ie-only"> Emergency information: </label>
 
-                    <textarea maxlength="95" id="emergencyinfo" name="emergencyInfo" class="form-control">{$user.maf.update.emergencyInfo}</textarea>
+                    <textarea maxlength="1000" id="emergencyinfo" name="emergencyInfo" class="form-control">{$user.maf.update.emergencyInfo}</textarea>
                   </div>
                 </div>
               </div>
@@ -651,7 +651,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
 </div>
 
 
-{/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail} 
+{/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
 <script type="text/javascript" src="/includes/js/jquery-ui.js"></script>
 <script src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script>
@@ -674,44 +674,44 @@ The IHI is part of the government e-health initiative developed to enhance the w
 </script>
 <script type="text/javascript">
   $(document).ready(function() {
-    
+
     {if $user.maf.main.locked}
     	lockFields();
     {/if}
-    
-    
+
+
     $("select").selectBoxIt();
     $('[data-toggle="tooltip"]').tooltip();
-    
+
     $('#update-profile-form').validate({
       submitHandler: function(form) {
         SubmitProfileForm($(form).attr('id'));
       }
     });
-    
+
     $("#dob").datepicker({
       dateFormat: "dd/mm/yy",
       changeMonth: true,
       changeYear: true,
-      yearRange: "-100:+0",
+      yearRange: "-120:+0",
       maxDate: "-1D"
     });
-    
+
     $('#postcode').rules("add", {
       digits: true,
       minlength: 3
     });
-    
+
     $('#emerpostcode').rules("add", {
       digits: true,
       minlength: 3
     });
-    
+
     $('#docpostcode').rules("add", {
       digits: true,
       minlength: 3
     });
-    
+
     $('#mobile').rules("add", {
       required: true,
       minlength: 10,
@@ -721,7 +721,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
         equalTo: "Please verify your mobile number"
       }
     });
-    
+
     $('#emermobile').rules("add", {
       required: false,
       minlength: 10,
@@ -731,9 +731,9 @@ The IHI is part of the government e-health initiative developed to enhance the w
         equalTo: "Please verify your mobile number"
       }
     });
-    
+
   });
-  
+
   function SubmitProfileForm(FORM) {
     $('body').css('cursor', 'wait');
     var datastring = $('#' + FORM).serialize();
@@ -762,14 +762,14 @@ The IHI is part of the government e-health initiative developed to enhance the w
         $('body').css('cursor', 'default');
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        $('#' + FORM).find('.error-alert').find('strong').html('Undefined error');
+        $('#' + FORM).find('.error-alert').find('strong').html('Something went wrong or your session has expired.<br>Please refresh the page and try again or <a href="/contact-us">contact us</a>.');
         $('#' + FORM).find('.error-alert').fadeIn('slow');
         $('body').css('cursor', 'default');
         console.log('AJAX error:' + errorThrown);
       }
     });
   }
-  
+
   function redirectWin(url) {
     window.location.replace(url);
   }
@@ -782,7 +782,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
   function setDateValue(id, date) {
     $("#" + id).val(convert_to_mysql_date_format(date));
   }
-  
+
   function lockFields(){
     $('#update-profile-form :input').attr('disabled', 'disabled');
   }

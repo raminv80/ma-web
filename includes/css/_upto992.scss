@@ -359,7 +359,9 @@
 #proddet #prodright .textcont input{
 	width: 100% !important;
 }
-
+.selectboxit-container *{
+	max-width: 100%;
+}
 .emergency-grey .videoWrapper iframe{height: 266px;}
 #account #daysrenew .warning {font-size: 20px;}
 #account #accinfo{font-size: 17px;}

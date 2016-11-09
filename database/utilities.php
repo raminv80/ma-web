@@ -1181,7 +1181,7 @@ function sendGAEnEcImpressionAction($_tid, $_action, $_proditemArr, $_impression
  * @param array $_cartitemArr
  * @return boolean
  */
-function sendGAEnEcAction($_tid, $_action, $_cartitemArr,$_cid=null){
+function sendGAEnEcAction($_tid, $_action, $_cartitemArr, $_impressionList = null, $_cid=null){
 	if(empty($_tid) || empty($_action) || empty($_cartitemArr)) return false;
 
 	$v = 1;
@@ -1208,6 +1208,15 @@ function sendGAEnEcAction($_tid, $_action, $_cartitemArr,$_cid=null){
 			'pr1pr' => $_cartitemArr['price'],
 			'pr1ps' => $_cartitemArr['position']
 	);
+	if(!empty($_impressionList)){
+	  $data["il1nm"] = $_impressionList;
+	  $data["il1pi1id"] = $_cartitemArr['id'];
+	  $data["il1pi1nm"] = $_cartitemArr['name'];
+	  $data["il1pi1ca"] = $_cartitemArr['category'];
+	  $data["il1pi1br"] = $_cartitemArr['brand'];
+	  $data["il1pi1va"] = $_cartitemArr['variant'];
+	  $data["il1pi1ps"] = $_cartitemArr['position'];
+	}
 	return gaFireHit($data);
 }
 

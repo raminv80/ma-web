@@ -111,10 +111,10 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
       try{
         $sql = "INSERT INTO tbl_contact (contact_site,contact_form_name,contact_reference_id,contact_reference_name,contact_name,contact_email,
     		    contact_phone,contact_postcode,contact_file,contact_enquiry,contact_content1,contact_content2,contact_flag1,contact_flag2,contact_ip,
-    		    contact_email_id,contact_created)
+    		    contact_email_id, contact_browser, contact_ga_clientid, contact_created)
               VALUES (:contact_site,:contact_form_name,:contact_reference_id,:contact_reference_name,:contact_name,:contact_email,:contact_phone,
     		    :contact_postcode,:contact_file,:contact_enquiry,:contact_content1,:contact_content2,:contact_flag1,:contact_flag2,:contact_ip,
-    		    :contact_email_id,now() )";
+    		    :contact_email_id, :contact_browser, :contact_ga_clientid, now() )";
         $params = array(
             ":contact_name" => $_POST['name'], 
             ":contact_site" => $SITE, 
@@ -132,6 +132,8 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             ":contact_flag1" => '', 
             ":contact_flag2" => '', 
             ":contact_ip" => $_SERVER['REMOTE_ADDR'], 
+            ":contact_browser" => $_SERVER['HTTP_USER_AGENT'], 
+            ":contact_ga_clientid" => gaParseCookie(),
             ":contact_email_id" => $sent 
         );
         $DBobject->wrappedSql($sql, $params);

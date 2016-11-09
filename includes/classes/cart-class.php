@@ -130,12 +130,19 @@ class cart{
   function CreateCart(){
     global $DBobject, $SITE;
     
+    //Google Analytics Client ID
+    $gaClient = '';
+    try{
+      $gaClient = gaParseCookie();
+    }catch(Exception $e){}
+    
     $this->cart_session = session_id();
-    $sql = " INSERT INTO tbl_cart ( cart_created, cart_session, cart_user_id, cart_site )
-        VALUES ( now(), :sid, :uid, :site )";
+    $sql = " INSERT INTO tbl_cart ( cart_created, cart_session, cart_user_id, cart_site, cart_ga_clientid )
+        VALUES ( now(), :sid, :uid, :site, :gaid )";
     $params = array(
         ":sid" => $this->cart_session, 
-        ":uid" => $this->cart_user_id, 
+        ":uid" => $this->cart_user_id,
+        ":gaid" => $gaClient,
         ":site" => $SITE 
     );
     $res = $DBobject->wrappedSql($sql, $params);
@@ -167,7 +174,7 @@ class cart{
         if($orig_items){
           foreach($orig_items as $item){
             $attrs = $this->GetAttributesIdsOnCartitem($item['cartitem_id']);
-            $this->validateMsg[] = $this->AddToCart($item['cartitem_product_id'], $attrs, $item['cartitem_product_price'], $item['cartitem_quantity'], $destination, $item['cartitem_variant_id']);
+            $this->validateMsg[] = $this->AddToCart($item['cartitem_product_id'], $attrs, $item['cartitem_product_price'], $item['cartitem_quantity'], $destination, $item['cartitem_variant_id'], $item['cartitem_listname']);
           }
         }
         
@@ -691,7 +698,7 @@ class cart{
    * @param boolean $getMemberPrice          
    * @return string
    */
-  function AddToCart($productId, $attributesArr, $price, $quantity = 1, $cartId = null, $variantId = 0){
+  function AddToCart($productId, $attributesArr, $price, $quantity = 1, $cartId = null, $variantId = 0, $listname = null){
     global $DBobject;
     
     if($this->cart_id == '' || $this->cart_id == '0'){
@@ -729,11 +736,12 @@ class cart{
           ":qty" => $quantity, 
           ":subtotal" => $subtotal, 
           ":product_gst" => $product['product_gst'], 
+          ":listname" => $listname,
           ":ip" => $_SERVER['REMOTE_ADDR'], 
           ":browser" => $_SERVER['HTTP_USER_AGENT'] 
       );
-      $sql = "INSERT INTO tbl_cartitem ( cartitem_cart_id, cartitem_product_id, cartitem_variant_id, cartitem_type_id, cartitem_product_uid, cartitem_product_name, cartitem_variant_name, cartitem_product_price, cartitem_quantity, cartitem_subtotal, cartitem_product_gst, cartitem_user_ip, cartitem_user_browser, cartitem_created )
-        values( :cid, :product_id, :variant_id, :type_id, :uid, :product_name, :variant_name, :product_price, :qty, :subtotal, :product_gst, :ip, :browser, now() )";
+      $sql = "INSERT INTO tbl_cartitem ( cartitem_cart_id, cartitem_product_id, cartitem_variant_id, cartitem_type_id, cartitem_product_uid, cartitem_product_name, cartitem_variant_name, cartitem_product_price, cartitem_quantity, cartitem_subtotal, cartitem_product_gst, cartitem_listname, cartitem_user_ip, cartitem_user_browser, cartitem_created )
+        values( :cid, :product_id, :variant_id, :type_id, :uid, :product_name, :variant_name, :product_price, :qty, :subtotal, :product_gst, :listname, :ip, :browser, now() )";
       if($res = $DBobject->wrappedSql($sql, $params)){
         $errorCnt = 0;
         $cartitem_id = $DBobject->wrappedSqlIdentity();
@@ -1902,11 +1910,6 @@ class cart{
         $discount = $prodAmount - 100; 
         
       }else{
-        //remove MAF membership fee - current year
-        $msfArr = $this->GetCurrentMAF_MSF(225);
-        $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
-        $this->RemoveFromCart($membershipFeeCartitemId);
-        
         //remove MAF membership fee - next year
         $msfArr = $this->GetCurrentMAF_MSF(225, date('Y', strtotime('+1 year')));
         $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);

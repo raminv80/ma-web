@@ -520,7 +520,7 @@
       dateFormat: "dd/mm/yy",
       changeMonth: true,
       changeYear: true,
-      yearRange: "-100:+0",
+      yearRange: "-120:+0",
       maxDate: "-1D"
     });
 
@@ -624,7 +624,7 @@
         $('body').css('cursor', 'default');
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        $('#' + FORM).find('.error-alert').find('strong').html('Undefined error');
+        $('#' + FORM).find('.error-alert').find('strong').html('Undefined error.<br>Please refresh the page and try again or <a href="/contact-us">contact us</a>.');
         $('#' + FORM).find('.error-alert').fadeIn('slow');
         $('body').css('cursor', 'default');
         console.log('AJAX error:' + errorThrown);

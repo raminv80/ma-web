@@ -21,6 +21,7 @@ if(strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST'] . '/products/')){
       "listing_url" => $arr[count($arr) - 1] 
   ))){
     $impressionList = unclean($res[0]['listing_name']);
+    $SMARTY->assign('impressionList', $impressionList);
     $SMARTY->assign('backcollectionURL', $url);
     $SMARTY->assign('backcollection', strtolower($impressionList));
   }

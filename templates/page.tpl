@@ -4,7 +4,7 @@
 <meta name="description" content="{$product_meta_description} {$listing_meta_description}" />
 <meta name="keywords" content="{$product_meta_words} {$listing_meta_words}" />
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="X-UA-Compatible" content="IE=11; IE=edge">
 <meta name="distribution" content="Global" />
 <meta name="author" content="{if $COMPANY.name}{$COMPANY.name}{else}Them Advertising{/if}" />
 {if $staging || $listing_noindex eq 1}

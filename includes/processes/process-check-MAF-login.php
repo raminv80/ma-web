@@ -5,8 +5,7 @@ try{
   $loginUrl = '/login';
   $user_obj = new UserClass();
   
-  $loginCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token']);
-  if(!$loginCheck){
+  if(empty($_SESSION['user']['public']['maf']['token']) || !$user_obj->setSessionVars($_SESSION['user']['public']['maf']['token'])){
     $_SESSION['user']['public'] = null;
     $_SESSION['redirect'] = $REQUEST_URI;
     header('Location: ' . $loginUrl);

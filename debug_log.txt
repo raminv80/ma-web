@@ -1,4 +1,45 @@
-1476006166
-Member id:   <br>
-1476006521
-Member id:  946232 <br>
+1478488949
+Member id:  948835 <br>Array
+(
+    [address_id] => 290
+    [address_user_id] => 0
+    [address_name] => Simone
+    [address_surname] => Agostino
+    [address_email] => simone.agostino@ymail.com
+    [address_telephone] => 0402839616
+    [address_mobile] => 
+    [address_company] => 
+    [address_line1] => 5A Ken Street
+    [address_line2] => 
+    [address_postcode] => 6019
+    [address_suburb] => Wembley Downs 
+    [address_state] => Western Australia
+    [address_country] => 
+    [address_created] => 2016-11-07 13:52:27
+    [address_modified] => 2016-11-07 13:52:27
+    [address_deleted] => 
+)
+<br>
+1478522645
+Register for auto-renewal (1)
+Member id:  948842 <br>Array
+(
+    [address_id] => 316
+    [address_user_id] => 0
+    [address_name] => blake
+    [address_surname] => feist
+    [address_email] => feistfamily1@bigpond.com
+    [address_telephone] => 0497705376
+    [address_mobile] => 
+    [address_company] => 
+    [address_line1] => 29 sabre close 
+    [address_line2] => 
+    [address_postcode] => 6065
+    [address_suburb] => bullsbrook
+    [address_state] => Western Australia
+    [address_country] => 
+    [address_created] => 2016-11-07 23:14:03
+    [address_modified] => 2016-11-07 23:14:03
+    [address_deleted] => 
+)
+<br>-

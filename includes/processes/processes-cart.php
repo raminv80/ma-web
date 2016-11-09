@@ -21,7 +21,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
     case 'ADDTOCART':
       try{
         $cart_obj = new cart($_SESSION['user']['public']['id']);
-        $success = $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['price'], $_POST['quantity'], null, $_POST['variant_id']);
+        $success = $cart_obj->AddToCart($_POST['product_id'], $_POST['attr'], $_POST['price'], $_POST['quantity'], null, $_POST['variant_id'], $_POST['listname']);
         $itemsCount = $cart_obj->NumberOfProductsOnCart();
         $subtotal = $cart_obj->GetSubtotal();
         $productsOnCart = $cart_obj->GetDataProductsOnCart();
@@ -33,7 +33,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         $popoverShopCart = $SMARTY->fetch('templates/ec_popover-shopping-cart.tpl');
         if(!empty($GA_ID)){
           $productGA = $cart_obj->getProductInfo_GA($_POST['product_id'], $_POST['attr'], $_POST['quantity'], 0, null, 0, $_POST['variant_id']);
-          sendGAEnEcAction($GA_ID, 'add', $productGA);
+          sendGAEnEcAction($GA_ID, 'add', $productGA, $_POST['listname']);
         }
         
       }catch(exceptionCart $e){
