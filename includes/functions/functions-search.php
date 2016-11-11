@@ -16,7 +16,8 @@ function SearchListing($search,$type=1){
 		FROM tbl_listing LEFT JOIN cache_tbl_listing ON tbl_listing.listing_object_id = cache_tbl_listing.cache_record_id
 	  LEFT JOIN tbl_type ON listing_type_id = type_id  
 		WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 AND cache_tbl_listing.cache_published = 1
-			AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND 
+		AND (listing_noindex IS NULL OR listing_noindex != 1)	
+	    AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND 
 		MATCH(tbl_listing.listing_name,
 		tbl_listing.listing_content1,
 		tbl_listing.listing_seo_title,
@@ -46,7 +47,8 @@ function SearchListing($search,$type=1){
 	  LEFT JOIN tbl_type ON listing_type_id = type_id
 	  LEFT JOIN tbl_additional ON additional_listing_id = listing_id
 		WHERE tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_published = 1 AND cache_tbl_listing.cache_published = 1
-			AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND additional_deleted IS NULL AND
+		AND (listing_noindex IS NULL OR listing_noindex != 1)	
+	    AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND additional_deleted IS NULL AND
 		(listing_name LIKE :search OR
 	  listing_content1 LIKE :search OR
     listing_seo_title LIKE :search OR

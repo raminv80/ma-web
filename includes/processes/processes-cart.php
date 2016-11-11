@@ -742,7 +742,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           }
         }
       } else{
-        $_SESSION['error'] = 'Database Connection Error. Please try again, otherwise contact us by phone.';
+        $_SESSION['error'] = 'Your session has expired, please try again.<br>If you are still experiencing technical difficulties, please contact us.';
       }
       
       $_SESSION['post'] = $_POST;
@@ -1379,7 +1379,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           }
         }
       } else{
-        $_SESSION['error'] = 'Database Connection Error. Please try again, otherwise contact us by phone.';
+        $_SESSION['error'] = 'Your session has expired, please try again.<br>If you are still experiencing technical difficulties, please contact us.';
       }
     
       $_SESSION['post'] = $_POST;

@@ -1009,8 +1009,13 @@ class cart{
     $addMSF = false;
     $addReactivationFee = false;
     $hasMAFProd = $this->HasMAFProducts();
-    if(empty($_memberArr['id']) && $hasMAFProd){
+    //MAF membership fee
+    $msfArr = $this->GetCurrentMAF_MSF(225);
+    $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
+    
+    if(empty($_memberArr['id']) && $hasMAFProd && ($this->NumberOfProductsOnCart() > 1 || empty($membershipFeeCartitemId))){
       //Add "member service fee - current_year" when member is not logged in
+      //Prevent from having a MAF membership fee without a product
       $addMSF = true;
     } elseif(!empty($_memberArr['maf']) && empty($_memberArr['maf']['main']['lifetime'])){
       //Existing member
@@ -1019,8 +1024,6 @@ class cart{
     }
     
     //Add/remove MAF membership fee
-    $msfArr = $this->GetCurrentMAF_MSF(225);
-    $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
     if($addMSF && empty($membershipFeeCartitemId)){
       $this->AddToCart($msfArr['product_object_id'], array(), 0, 1, null, $msfArr['variant_id']);
     } elseif(!$addMSF && !empty($membershipFeeCartitemId)){

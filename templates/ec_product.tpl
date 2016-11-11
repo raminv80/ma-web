@@ -347,7 +347,6 @@
 }
 </script>   
 <script src="/includes/js/jquery-ui.js"></script>
-<script type="text/javascript" src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
 <script>
 var google_tag_params = {
@@ -463,6 +462,7 @@ jQuery.fn.outerHTML = function(s) {
 		  $('.image-selector:checked').trigger('click');
 		}
 
+
 		//calculatePrice();
 
 		/* ga('ec:addProduct', {
@@ -494,6 +494,7 @@ $(window).load(function() {
     slideshow: false,
     sync: "#carousel.flexslider"
   });
+  
 });
 
   (function() {
@@ -554,6 +555,10 @@ $(window).load(function() {
     ELEMENT.closest('.form-group').find('.attrtype1_name').html($(ELEMENT).attr('data-name'));
     $('.attr-hidden').show();
     
+    BlockAttrOptions(ELEMENT);
+    DisplayAdditionalWhenValid();
+    DisplayPrice();
+    
       $('#carousel.flexslider').flexslider(0);
       $('#prodslider .flexslider').flexslider(0);
     while ($('#prodslider .flexslider').data('flexslider').count > 0){
@@ -573,6 +578,12 @@ $(window).load(function() {
       $('#carousel.flexslider').data('flexslider').addSlide($(saved1));
     }
   });
+    //Generic images
+    $("#imgholder img.img-variant-0").each(function(index, element){
+        html=$(element)[0].outerHTML;
+        saved1 = $('<li>'+html+'</li>');
+        $('#carousel.flexslider').data('flexslider').addSlide($(saved1));
+    });
 
     $("#imgholder img").each(function(index, element){
         var classes=$(element).attr('class');
@@ -584,12 +595,17 @@ $(window).load(function() {
           $('#prodslider .flexslider').data('flexslider').addSlide($(saved1));
         }
       });
-
-    $('#carousel.flexslider .slides li').click(function(index, element){
-      var curSlide = $( "#carousel.flexslider .slides li" ).index( element );
-      $('#prodslider .flexslider').flexslider(curSlide);
+    
+    $("#imgholder img.img-variant-0").each(function(index, element){
+        html=$(element)[0].outerHTML;
+        saved1 = $('<li>'+html+'</li>');
+        $('#prodslider .flexslider').data('flexslider').addSlide($(saved1));
     });
 
+    $('#carousel.flexslider .slides li').on('click', function(){
+      var curSlide = $( "#carousel.flexslider .slides li" ).index( this );
+      $('#prodslider .flexslider').flexslider(curSlide);
+    });
   };
 
 	function UnblockSelectOptions(ELEMENT){
