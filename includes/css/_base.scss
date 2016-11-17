@@ -21,7 +21,10 @@ a {
 select.form-control {
   height: 40px;
 }
-  
+.form-control:focus {
+  border-color: initial;  
+} 
+
 .btn{
 	font-size: 16px;
 	border-radius: 0;
@@ -3656,6 +3659,28 @@ select option:disabled {
 	padding-bottom: 50px;
 	margin-top: -40px;
 
+  input[type="checkbox"] {
+    display: inline-block;
+    height: auto;
+    width: 20px;
+  }
+  .chkbx.has-error{
+    border: 1px solid $red;
+    padding: 15px;
+    float: left;
+  }
+  label.checkbox-label{
+    display: inline;
+  }
+
+  .acc-tab-error {
+      float: right;
+      padding-right: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      color: $red;
+      padding-top: 1px;
+  }
 	h3.ui-accordion-header {
     border-color: #dedede;
     float: left;
@@ -4112,6 +4137,13 @@ select option:disabled {
     }
 }
 
+.session-modal-txt{
+  font-size: 25px;
+  margin-bottom: 35px;
+}
+.modal .btn{
+  margin-bottom: 15px;
+}    
 .ui-datepicker.ui-widget.ui-widget-content {
     border: 1px solid #d3d3d3;
 }

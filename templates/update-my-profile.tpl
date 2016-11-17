@@ -42,12 +42,17 @@
     <div id="update-profile-wrapper">
       <div class="row">
         <div class="col-sm-12 col-md-10 col-md-offset-1 text-center">
-          <a href="/process/print-profile" target="_blank" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my profile</a>
-
+          <a href="/process/print-profile" target="_blank" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my {if $user.maf.main.locked}current {/if}profile</a>
+        </div>
+        <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" {if $user.maf.main.locked}style="display:none;"{/if}>    
           <form id="update-profile-form" role="form" accept-charset="UTF-8" action="" method="post">
             <input type="hidden" value="update-profile" name="action" id="action" />
             <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-
+            <div class="row">
+              <div class="col-sm-12 text-center">
+                <div class="error-textbox" style="display:none"></div>
+              </div>
+            </div>
             <div id="accordion" class="validateaccordion">
               <h3>
                 <div class="head-text">
@@ -616,6 +621,12 @@ The IHI is part of the government e-health initiative developed to enhance the w
                 {$listing_content1}
               </div>
             </div>
+            <div class="row">
+              <div class="col-sm-10 col-sm-offset-1 form-group chkbx">
+                <input type="checkbox" name="agreed_record_locked" id="agreed_record_locked" class="form-control" value="agreed" required/>
+                <label for="agreed_record_locked" class="radiolab checkbox-label">I confirm that I have read and understood the above paragraph.</label>
+              </div>
+            </div>
             <br />
             <div class="row">
               <div class="col-sm-12">
@@ -684,6 +695,9 @@ The IHI is part of the government e-health initiative developed to enhance the w
     $('[data-toggle="tooltip"]').tooltip();
 
     $('#update-profile-form').validate({
+      onkeyup: false,
+      onfocusout: false,
+      onclick: false,
       submitHandler: function(form) {
         SubmitProfileForm($(form).attr('id'));
       }

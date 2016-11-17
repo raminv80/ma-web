@@ -433,26 +433,49 @@ class cart{
       $cart_arr[$p['cartitem_id']] = $p;
       
       // ---------------- ATTRIBUTES SAVED IN tbl_cartitem_attr ----------------
-      $sql = "SELECT * FROM tbl_cartitem_attr WHERE cartitem_attr_cartitem_id = :id AND cartitem_attr_deleted IS NULL AND cartitem_attr_cartitem_id <> '0'";
-      $cart_arr[$p['cartitem_id']]['attributes'] = $DBobject->wrappedSql($sql, array(
-          ":id" => $p['cartitem_id'] 
-      ));
+      $sql = "SELECT * FROM tbl_cartitem_attr WHERE cartitem_attr_cartitem_id = :id AND cartitem_attr_deleted IS NULL AND cartitem_attr_cartitem_id <> '0' ORDER BY cartitem_attr_order";
+      $params = array(":id" => $p['cartitem_id']);
+      $cart_arr[$p['cartitem_id']]['attributes'] = $DBobject->wrappedSql($sql, $params);
       
       // ---------------- PRODUCT CATEGORY ----------------
       $cart_arr[$p['cartitem_id']]['category'] = $this->getFullCategoryName($p['cartitem_product_id']);
       
       // ---------------- PRODUCTS GALLERY ----------------
       $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_variant_id = :id AND gallery_deleted IS NULL ORDER BY gallery_order LIMIT 1";
-      if($gal1 = $DBobject->wrappedSql($sql, array(
-          ":id" => $p['cartitem_variant_id'] 
-      ))){
-        $cart_arr[$p['cartitem_id']]['gallery'] = $gal1;
-      } else{
-        $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_order LIMIT 1";
-        $cart_arr[$p['cartitem_id']]['gallery'] = $DBobject->wrappedSql($sql, array(
-            ":id" => $p['product_id'] 
-        ));
+      $params = array(":id" => $p['cartitem_variant_id']);
+      $galArr = $DBobject->wrappedSql($sql, $params);
+      
+      if(empty($galArr) && !empty($cart_arr[$p['cartitem_id']]['attributes'])){
+        //Get similar variant based on attribute 
+        $params = array(":id" => $p['product_id']);
+        $whereStr = '';
+        $paramsArr = array();
+        foreach($cart_arr[$p['cartitem_id']]['attributes'] as $k => $attr){
+          if(!empty($attr['cartitem_attr_attr_value_id'])){
+            $params[":attr{$k}"] = $attr['cartitem_attr_attr_value_id'];
+            $whereStr .= " AND productattr_attr_value_id = :attr{$k}";
+            $paramsArr[$k]['params'] = $params; 
+            $paramsArr[$k]['where'] = $whereStr;
+          }
+        }
+        $reversedArr = array_reverse($paramsArr);
+        foreach($reversedArr as $v){
+          $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_variant LEFT JOIN tbl_gallery ON gallery_variant_id = variant_id
+            LEFT JOIN tbl_productattr ON productattr_variant_id = variant_id
+            WHERE gallery_deleted IS NULL AND productattr_deleted IS NULL AND gallery_link IS NOT NULL AND variant_deleted IS NULL AND variant_product_id = :id {$v['where']} ORDER BY gallery_order LIMIT 1";
+          if($galArr = $DBobject->wrappedSql($sql, $v['params'])){
+            break;
+          }
+        }
       }
+      
+      if(empty($galArr)){
+        //Get base product image
+        $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_order LIMIT 1";
+        $params = array(":id" => $p['product_id']);
+        $galArr = $DBobject->wrappedSql($sql, $params);
+      }
+      $cart_arr[$p['cartitem_id']]['gallery'] = $galArr;
       
       // ---------------- PRODUCT PRICE MODIFIER ----------------
       $sql = "SELECT * FROM tbl_productqty WHERE productqty_variant_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";

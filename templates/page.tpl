@@ -83,6 +83,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </header>
 	{block name=body}{/block}
 	{include file='footer.tpl'}
+  
+  <div id="myModalSession" class="modal fade session-modal" tabindex="-1" role="dialog" aria-labelledby="myModalSession" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span>
+        <div class="small">CLOSE</div></button>
+      </div>
+      <div class="modal-body text-center">
+          <div class="session-modal-txt">Your session will expire in <b id="timer-counter">5 minutes</b></div>
+          <button class="btn-red btn" onclick="ExtendSession();">Click here to extend it</button>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
   {$conversionTracking}
     
 	{printfile file='/includes/js/jquery-2.1.4.min.js' type='script'}
@@ -103,11 +121,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	      $(element).closest('form').find('#form-error').html('Error, please check the highlighted fields.').show();
 	      $(element).closest('form').find('.error-textbox').html('Error, please check the highlighted fields.').show();
 	      if($('#accordion.validateaccordion').length){
-	        var setopt = $('div.acc-body').index( $(element).closest('div.acc-body') );
-	        $('#accordion.validateaccordion').accordion( "option", "active", setopt );
-	          $('html,body').animate({
-	 	        		scrollTop : $(element).offset().top
-	 	        	});
+	        $('#accordion.validateaccordion').accordion( "option", "active", 99 );
+	        ValidateFormWithAccordion($(element).closest('form'));
+	        $('html,body').animate({
+           scrollTop : $(element).closest('form').offset().top
+          });
+	        
+	        
+	        //OPEN TAB AND FOCUS ON ELEMENET
+	        // var setopt = $('div.acc-body').index( $(element).closest('div.acc-body') );
+	        // $('#accordion.validateaccordion').accordion( "option", "active", setopt );
+	        //  $('html,body').animate({
+	 	      //  		scrollTop : $(element).offset().top
+	 	      //  	});
 	      }
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
@@ -117,6 +143,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
    	      if(!$(element).closest('form').find('.form-group.has-error').length){
    	        $(element).closest('form').find('#form-error').html('').hide();
    	        $(element).closest('form').find('.error-textbox').html('').hide();
+   	      }else{
+   	        if($('#accordion.validateaccordion').length){
+   	          ValidateFormWithAccordion($(element).closest('form'));
+   	        }
    	      }
    	      
 	    },
@@ -178,6 +208,72 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	  
 	}
 	
+	function ValidateFormWithAccordion(ELEMENT){
+	  ELEMENT.find('div.acc-body').each(function(){
+     var errorCnt = $(this).find('.form-group.has-error').length;
+     $(this).attr('data-error', errorCnt);
+     var errorTabMsg = errorCnt > 0 ? '<span class="acc-tab-error">' + errorCnt + ' error'+ (errorCnt > 1 ? 's' : '') +'</span>' : '';
+     var curTab = $('#accordion.validateaccordion h3[aria-controls="' + $(this).attr('id') + '"]');
+     if(errorTabMsg){
+       if(curTab.find('.acc-tab-error').length){
+         curTab.find('.acc-tab-error').html(errorTabMsg);
+       }else{
+         curTab.append(errorTabMsg);  
+       }
+     }else{
+       curTab.find('.acc-tab-error').remove();
+     }
+   });
+	}
+	
+	//EXPIRY SESSION TIMER
+	var sessionWarningTime = 60000;//1440000; //24min
+	var sessionTimer;
+	var startTimer = 15;//301; //5mins + 1sec
+	var timer = startTimer;
+	var sessionRedirectURL = '/process/user?logout=true';
+	
+	function InitSessionTimer(){
+	  sessionTimer = setTimeout(function() {
+     $('#myModalSession').modal('show');
+     timer = startTimer;
+     CountDown($('#timer-counter'));
+     console.log('session-timer init');
+   }, sessionWarningTime); 
+	}
+	
+	function ExtendSession(){
+	  $('#myModalSession .btn').attr('disabled', 'disabled');
+	  $.ajax({
+     type: "POST",
+     url: "/my-account",
+     cache: false,
+     dataType: "html",
+     success : function(obj, textStatus) {
+       clearTimeout(sessionTimer);
+       InitSessionTimer();
+       timer = -1;
+	     $('#myModalSession').modal('hide');
+	     $('#myModalSession .btn').removeAttr('disabled');
+	   },
+     error: function(jqXHR, textStatus, errorThrown) {
+       console.log('AJAX error:' + errorThrown);
+     }
+   });
+	}
+	
+	function CountDown(ELEMENT) {
+	  if (timer > 0) {
+	    --timer; 
+       ELEMENT.html( timer + ' secs.');
+       setTimeout(function(){
+         CountDown(ELEMENT);
+       }, 1000);
+   } else if(timer == 0) {
+     window.location = sessionRedirectURL;
+   }
+  }
+	
 	$(document).ready(function(){
 	  
 	  	$('#newsl_form').validate();
@@ -206,10 +302,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		}, function() {
 		  $(this).find('.dropdown-menu:visible').fadeOut(200)
 		});
-
+		
+		{if $user.id || $new_user}
+		InitSessionTimer();
+		{/if}
 	});
-
-
 
 
 	</script>

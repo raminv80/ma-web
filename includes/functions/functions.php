@@ -1,6 +1,7 @@
 <?php
 set_include_path($_SERVER['DOCUMENT_ROOT']);  //SET THE INCLUDE PATH TO DOCUMENT ROOT SO THAT ALL INCLUDES ARE DONE RELATIVE TO WEB FOLDER
 ini_set('display_errors',0); ini_set('error_reporting',0 );error_reporting(0);
+ini_set('session.gc_maxlifetime', 7200);
 
 include_once 'database/fatal_handler.php';
 

@@ -15,7 +15,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 col-md-6">
-				Our members wear the genuine MedicAlert ID
+				Our members wear the genuine MedicAlert Medical ID
 			</div>
 			<div class="col-sm-3 col-md-3 col-sm-offset-0 col-md-offset-0 hidden-xs hidden-sm">
 				<img src="/images/homeredbracelet.png" alt="Bracelet" class="img-responsive" />
@@ -119,7 +119,7 @@
     </div>
     <div class="row">
       <div class="col-sm-12 text-center">
-        <a href="/products" class="btn btn-red">View all products</a>
+        <a href="/products" class="btn btn-red">View all collections</a>
       </div>
     </div>
   </div>

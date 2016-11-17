@@ -27,7 +27,7 @@
         {assign var='count' value=0} {foreach $data.10 as $item}{if $item.listing_flag1 neq 1}{continue}{/if}
         <div class="{if $count <2}col-sm-6{else}col-sm-4{/if} prodcatout text-center">
           <div class="prodcat">
-            <a href="{$listing_url}/{$item.listing_url}" title="View {$item.listing_name} Products">
+            <a href="/{$listing_url}/{$item.listing_url}" title="View {$item.listing_name} Products">
               <div class="imgcont">
                 <img src="{if $item.listing_image neq ''}{$item.listing_image}{else}/images/no-image-available.png{/if}?width=800&height=400&crop=1" alt="{$item.listing_name}" title="{$item.listing_name}" class="img-responsive">
               </div>
@@ -41,11 +41,12 @@
       </div>
       {/if}
     </div>
-    <!-- <div class="row">
+    <div class="row">
       <div class="col-sm-12 text-center">
-        <div class="btn btn-red" id="showall">Show all collections</div>
+        <br><br>
+        <a href="/{$listing_url}/all-products" class="btn btn-red">View all products</a>
       </div>
-    </div> -->
+    </div>
   </div>
 </div>
 
