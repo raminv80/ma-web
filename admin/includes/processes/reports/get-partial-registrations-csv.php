@@ -34,7 +34,7 @@ $sql = "SELECT usertemp_gname AS 'First name', usertemp_surname AS 'Surname',  u
    usertemp_suburb AS 'Suburb', usertemp_state AS 'State',  usertemp_postcode AS 'Postcode',
    usertemp_heardabout AS 'How did you hear about us?', usertemp_created AS 'Created'
   FROM tbl_usertemp 
-  WHERE usertemp_deleted IS NULL AND usertemp_payment_id > 0 {$wheresql} 
+  WHERE usertemp_deleted IS NULL AND (usertemp_payment_id IS NULL OR usertemp_payment_id = 0) {$wheresql} 
   ORDER BY usertemp_created DESC";
 if($res = $DBobject->wrappedSql($sql, $params)){
   $result = $res;

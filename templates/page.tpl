@@ -227,9 +227,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	}
 	
 	//EXPIRY SESSION TIMER
-	var sessionWarningTime = 60000;//1440000; //24min
+	var sessionWarningTime = 1440000; //24min
 	var sessionTimer;
-	var startTimer = 15;//301; //5mins + 1sec
+	var startTimer = 301; //5mins + 1sec
 	var timer = startTimer;
 	var sessionRedirectURL = '/process/user?logout=true';
 	
