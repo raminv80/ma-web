@@ -556,6 +556,49 @@ class UserClass{
 	
 	
 	/**
+	 * Verify whether or not a profile already exists given the firstname, lastname and dob
+	 *
+	 * @param string $_firstname
+	 * @param string $_lastname
+	 * @param string $_dob
+	 * @return int
+	 */
+	function profileMatch($_firstname, $_lastname, $_dob){
+	   
+	  $this->errorMsg = null;
+	  try{
+	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authenticationRecord = json_decode($authJSONResponse, true);
+	    $token = $authenticationRecord['sessionToken'];
+	  }
+	  catch(Exception $e){
+	    $this->errorMsg = "Invalid API membership number/password.";
+	    return 0;
+	  }
+	
+	  try{
+	    $response = $this->medicAlertApi->memberProfileMatch($token, $_firstname, $_lastname, $_dob);
+	    $response = json_decode($response);
+	    if(!empty($response)){
+	      //Password successfully updated
+	      $this->medicAlertApi->logout($token);
+	      return $response[0]->membershipNumber;
+	    }
+	  }
+	  catch(exceptionMedicAlertApiNotAuthenticated $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  catch(exceptionMedicAlertApiSessionExpired $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  catch(exceptionMedicAlertApi $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  return 0;
+	}
+	
+	
+	/**
 	 * Formats the date of birth from YYYY-MM-DD to DD-MM-YYYY
 	 * @param string $date
 	 * @return string

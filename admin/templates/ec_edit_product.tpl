@@ -615,12 +615,15 @@
   function deleteVariant(ID) {
     if(ConfirmDelete()){
       var count = $('#' + ID).attr('rel');
-      var today = mysql_now();
-      
-      html = '<input type="hidden" value="'+today+'" name="field[2][tbl_variant]['+count+'][variant_deleted]"/>';
-      $('#' + ID).append(html);
-      $('#' + ID).css('display', 'none');
-      $('#' + ID).removeClass('variants');
+      if($('#variant_id_'+count).val()){
+        var today = mysql_now();
+        html = '<input type="hidden" value="'+today+'" name="field[2][tbl_variant]['+count+'][variant_deleted]"/>';
+        $('#' + ID).append(html);
+        $('#' + ID).css('display', 'none');
+        $('#' + ID).removeClass('variants');
+      }else{
+        $('#' + ID).remove();        
+      }
     }else{
       return false;
     }

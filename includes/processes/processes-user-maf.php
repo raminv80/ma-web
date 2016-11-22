@@ -94,30 +94,50 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       if(!empty($_POST['gname']) && !empty($_POST['surname']) && !empty($_POST['dob']) && !empty($_POST['gender']) 
           && !empty($_POST['address']) && !empty($_POST['suburb']) && !empty($_POST['state']) && !empty($_POST['postcode']) && !empty($_POST['mobile']) && !empty($_POST['email']) && !empty($_POST['password'])){
         
+        $user_obj = new UserClass();
         $error = "Error: Invalid date of birth (DD/MM/YYYY).";
         if(validateDate($_POST['dob'])){
-          $excludeArr = array('formToken', 'action', 'redirect');
-          foreach($_POST as $k => $v){
-            if(!in_array($k, $excludeArr)){
-              $_SESSION['user']['new_user'][$k] = $v;
-            }
-          }
-          $_SESSION['user']['new_user']['db_dob'] = date_format(date_create_from_format('d/m/Y', $_SESSION['user']['new_user']['dob']), 'Y-m-d');
-          try{
-            $user_obj = new UserClass();
-            if($user_obj->CreateUserTemp($_SESSION['user']['new_user'])){
-              $error = null;
-              $success = true;
-              $url = empty($_POST['redirect']) ? '/checkout' : $_POST['redirect'];
-              if(!empty($GA_ID)){
-                sendGAEvent($GA_ID, 'user', 'pre-register', '0');
-                $cart_obj = new cart($_SESSION['user']['public']['id']);
-                $productsGA = $cart_obj->getCartitemsByCartId_GA();
-                sendGAEnEcCheckoutStep($GA_ID, '3', 'Billing and shipping', $productsGA);
+          $dobDB = date_format(date_create_from_format('d/m/Y', $_POST['dob']), 'Y-m-d');
+          if($memberId = $user_obj->profileMatch($_POST['gname'], $_POST['surname'], $dobDB)){
+            //Already has an account
+            $error = 'Our records indicate that you may already be a member of MedicAlert Foundation.<br>Please <a href="/contact-us">contact us</a> for more information.';
+            try{
+              //Send notification
+              $subject = 'Notice - Member registration match';
+              $fromEmail = (string) $CONFIG->company->email_from;
+              $to = (string) $CONFIG->company->email_orders;
+              $from = (string) $CONFIG->company->name;
+              $body = "A member match was found when <b>{$_POST['gname']} {$_POST['surname']}</b> attempted to register on the website.<br/>";
+              $body .= "Member record <b>{$memberId}</b> was found as the matching result. <br/>";
+              $body .= "DOB: {$dobDB}<br/>Phone: {$_POST['mobile']}<br/>Email: {$_POST['email']}";
+              $sent = sendMail($to, $from, $fromEmail, $subject, $body);
+            }catch (Exception $e){}
+            
+          }else{
+            //New member
+            $excludeArr = array('formToken', 'action', 'redirect');
+            foreach($_POST as $k => $v){
+              if(!in_array($k, $excludeArr)){
+                $_SESSION['user']['new_user'][$k] = $v;
               }
             }
-          }catch (Exception $e){
-            $error = 'Database error. Please try again';
+            $_SESSION['user']['new_user']['db_dob'] = $dobDB;
+            
+            try{
+              if($user_obj->CreateUserTemp($_SESSION['user']['new_user'])){
+                $error = null;
+                $success = true;
+                $url = empty($_POST['redirect']) ? '/checkout' : $_POST['redirect'];
+                if(!empty($GA_ID)){
+                  sendGAEvent($GA_ID, 'user', 'pre-register', '0');
+                  $cart_obj = new cart($_SESSION['user']['public']['id']);
+                  $productsGA = $cart_obj->getCartitemsByCartId_GA();
+                  sendGAEnEcCheckoutStep($GA_ID, '3', 'Billing and shipping', $productsGA);
+                }
+              }
+            }catch (Exception $e){
+              $error = 'Database error. Please try again';
+            }
           }
         }
       }

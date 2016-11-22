@@ -31,6 +31,7 @@
           <input type="hidden" value="{if $fields.listing_object_id}{$fields.listing_object_id}{else}{$objID}{/if}" name="field[1][tbl_listing][{$cnt}][listing_object_id]" id="listing_object_id">
           <input type="hidden" value="{if $fields.listing_published}{$fields.listing_published}{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" id="listing_published">
           <input type="hidden" value="{if $fields.listing_created}{$fields.listing_created}{else}{'Y-m-d H:i:s'|date}{/if}" name="field[1][tbl_listing][{$cnt}][listing_created]" id="listing_created">
+          <input type="hidden" value="{if $fields.listing_parent_id}{$fields.listing_parent_id}{else}{$rootParentID}{/if}" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="listing_parent_id">
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
         </div>
       </div>
@@ -81,15 +82,6 @@
               <div class="col-sm-5">
                 <input class="form-control" type="hidden" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" onchange="seturl(this.value, true);">
                 <span id="id_listing_url_text" class="form-control url-text edit-url">{$fields.listing_url}&nbsp;</span> <a href="javascript:void(0);" class="btn btn-info btn-sm marg-5r edit-url" onclick="$('.edit-url').removeClass('url-text').hide();$('#id_listing_url').get(0).type='text';">Edit URL</a> <span class="help-block"></span>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_parent_id">Parent</label>
-              <div class="col-sm-5">
-                <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent_id">
-                  <option value="{$rootParentID}">None</option>
-                  {call name=options_list opts=$fields.options.listing_parent_id selected=$fields.listing_parent_id}
-                </select>
               </div>
             </div>
             <div class="row form-group">
