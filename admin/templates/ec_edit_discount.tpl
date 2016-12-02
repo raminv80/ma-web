@@ -71,7 +71,7 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_discount_listing_id">Category</label>
+              <label class="col-sm-3 control-label" for="id_discount_listing_id">Collection</label>
               <div class="col-sm-5">
                 <select class="form-control" name="field[1][tbl_discount][{$cnt}][discount_listing_id]" id="id_discount_listing_id">
                   <option value="0">ALL</option>

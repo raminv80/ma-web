@@ -545,6 +545,13 @@ The IHI is part of the government e-health initiative developed to enhance the w
                   </div>
                 </div>
                 <div class="row">
+                  <div class="col-sm-6 col-sm-offset-3 form-group">
+                    <label for="seniorscard" class="visible-ie-only"> Seniors card: </label>
+                    <input type="text" value="{$user.maf.update.attributes.18}" class="form-control" id="seniorscard" name="seniorscard">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>
+                <div class="row">
                   <div class="col-sm-12">
                     <hr />
                     <p class="text-left">Only vital information that should be known in an emergency situation is to be recorded here. For example: additional emergency contact details, advance care directive, specialist contact details and special needs.</p>

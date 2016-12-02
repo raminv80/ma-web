@@ -105,7 +105,7 @@
         </div>
 
         <div class="col-xs-12 visible-xs text-center">
-			<a href="/privacy-policy">Privacy policy</a> | <a href="/terms">Terms &amp; conditions</a><br />
+			<a href="/privacy-policy">Privacy policy</a> | <a href="/terms-and-conditions">Terms &amp; conditions</a><br />
 			&copy; Copyright {$COMPANY.name} {"Y"|date}. <br />
 			Made by <a href="http://www.them.com.au" target="_blank" title="Them Advertising">Them</a>
         </div>

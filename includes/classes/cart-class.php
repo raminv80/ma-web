@@ -619,13 +619,17 @@ class cart{
     $discount_error = '';
     
     $cart = $this->GetDataCart();
-    if($cart['cart_discount_code']){
+    
+    $hasBupaDiscount = false;
+    $hasAutismDiscount = false;
+    $hasSeniorsDiscount = false;
+    
+    if(!empty($cart['cart_discount_code'])){
       $discArr = $this->ApplyDiscountCode($cart['cart_discount_code'], $shippingFee);
       $discount = $discArr['discount'];
       $discount_error = $discArr['error'];
       
       //ONLY FOR MAF - BUPA OFFER - BUPA16
-      $hasBupaDiscount = false;
       if($cart['cart_discount_code'] == 'BUPA16'){
         if(empty($this->cart_user_id)){
           $discount = $this->GetBupaDiscount($shippingFee);
@@ -639,11 +643,35 @@ class cart{
           $discount_error = 'This offer is for new members only.';
         }
       }
+      
+      //ONLY FOR MAF - AUTISM16 OFFER - BUPA16
+      if($cart['cart_discount_code'] == 'AUTISM16'){
+        if(empty($this->cart_user_id)){
+          $discount = $this->GetAutismDiscount($shippingFee);
+          $hasAutismDiscount = true;
+          $discount_error = '';
+          if(empty($discount)){
+            $discount_error = 'Please add a valid product for this offer.';
+            $hasAutismDiscount = false;
+          }
+        }else{
+          $discount_error = 'This offer is for new members only.';
+        }
+      }
+      
+      //ONLY FOR MAF - SENIORS OFFER - SENIORS
+      //2nd part - 20% off membership
+      if($cart['cart_discount_code'] == 'SENIORS'){
+        $discount += $this->GetMSFDiscount(20);
+        $hasSeniorsDiscount = true;
+      }
     }
     
     // For MAF only
     if(!$hasBupaDiscount){
-      $discount += $this->GetStainlessSteelDiscount();
+      if(!hasSeniorsDiscount && !$hasAutismDiscount){
+        $discount += $this->GetStainlessSteelDiscount();
+      }
       
       //remove MAF membership fee - next year
       $msfArr = $this->GetCurrentMAF_MSF(225, date('Y', strtotime('+1 year')));
@@ -1870,27 +1898,29 @@ class cart{
   function GetStainlessSteelDiscount(){
     global $DBobject;
     
+    $amount = 0;
     // Stainless steel - tbl_pmaterial - pmateriallink_record_id = pmaterial_id = 1
     
     $sql = "SELECT SUM(cartitem_quantity) AS 'QTY', MIN(cartitem_product_price) AS 'AMOUNT' FROM tbl_cartitem 
         LEFT JOIN tbl_product ON cartitem_product_id = product_object_id  
         LEFT JOIN tbl_pmateriallink ON pmateriallink_product_id = product_id
-        WHERE product_deleted IS NULL AND product_published = 1 AND pmateriallink_deleted IS NULL AND pmateriallink_record_id = 1 
+        WHERE product_deleted IS NULL AND product_published = 1 AND cartitem_product_price >= 35 AND pmateriallink_deleted IS NULL AND pmateriallink_record_id = 1 
         AND cartitem_deleted IS NULL  AND cartitem_cart_id = :id ";
     if($res = $DBobject->wrappedSql($sql, array(
         ':id' => $this->cart_id 
     ))){
       if(!empty($res[0]['QTY']) && intval($res[0]['QTY']) > 1 && !empty($res[0]['AMOUNT'])){
-        return round(floatval($res[0]['AMOUNT']) - 35, 2);
+         $amount = round(floatval($res[0]['AMOUNT']) - 35, 2);
+         $amount = ($amount > 0) ? $amount : 0; 
       }
     }
-    return 0;
+    return $amount;
   }
   
   
   /**
    * ONLY FOR MAF
-   * Discount amount - second stainless steel for $35
+   * Discount amount - BUPA 2 years membership + selected product for $100
    *
    * @return float
    */
@@ -1941,10 +1971,73 @@ class cart{
         $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
         $this->RemoveFromCart($membershipFeeCartitemId);
       }
-      
     }
-    
+    return round($discount, 2);
+  }
+
+
+  /**
+   * ONLY FOR MAF
+   * Discount amount - AUTISM 1 year membership + selected product for $80
+   *
+   * @return float
+   */
+  function GetAutismDiscount($shippingFee = 0){
+    global $DBobject;
+  
+    $discount = 0;
+    $prodAmount = 0;
+    if(empty($this->cart_user_id)){
+  
+      //Check for valid product - Exclusive Autism collection - listing_id = 667
+      $sql = "SELECT cartitem_product_id, cartitem_quantity, cartitem_subtotal, cartitem_product_price FROM tbl_cartitem
+            WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' ORDER BY cartitem_product_price";
+      if($cartItems = $DBobject->wrappedSql($sql, array(':id' => $this->cart_id))){
+        foreach($cartItems as $item){
+          $collectionArr = $this->getProductCategoriesArr($item['cartitem_product_id']);
+          if(in_array(667, $collectionArr)){
+            $prodAmount = floatval($item['cartitem_product_price']);
+            break;
+          }
+        }
+      }
+      if($prodAmount > 0){
+        //Shipping fee
+        $prodAmount += $shippingFee;
+  
+        // Add MAF membership fee - current year
+        $msfArr = $this->GetCurrentMAF_MSF(225);
+        $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
+        if(empty($membershipFeeCartitemId)){
+          $this->AddToCart($msfArr['product_object_id'], array(), 0, 1, null, $msfArr['variant_id']);
+        }
+        $prodAmount += floatval($msfArr['variant_price']);
+  
+        $discount = $prodAmount - 80;
+      }
+    }
     return round($discount, 2);
   }
   
+  
+  /**
+   * ONLY FOR MAF
+   * Discount amount - Annual membership discount
+   * 
+   * @param float $percentage
+   * @return float
+   */
+  function GetMSFDiscount($percentage = 0){
+    global $DBobject;
+  
+    $discount = 0;
+
+    //MAF membership fee - current year
+    $msfArr = $this->GetCurrentMAF_MSF(225);
+    $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
+    if(!empty($membershipFeeCartitemId)){
+      $discount =  floatval($msfArr['variant_price']) * $percentage / 100;
+    }
+    return round($discount, 2);
+  }
 }
