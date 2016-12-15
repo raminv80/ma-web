@@ -146,7 +146,7 @@ class UserClass{
 		$this->memberRecord['details']['surname']					= ucwords(strtolower($_data['surname']));
 		$this->memberRecord['details']['nickName']					= '';
 		$this->memberRecord['details']['dateOfBirth']				= $_data['db_dob'];
-		$this->memberRecord['details']['gender']					= ucwords($_data['gender'][0]);
+		$this->memberRecord['details']['gender']					= ucwords(strtolower($_data['gender']));
 		$this->memberRecord['details']['phoneHome']					= '';
 		$this->memberRecord['details']['phoneWork']					= '';
 		$this->memberRecord['details']['phoneMobile']				= $_data['mobile'];
@@ -222,6 +222,9 @@ class UserClass{
 		$this->memberRecord['attributes'][8]['id']					= '14';
 		$this->memberRecord['attributes'][8]['text']				= 'Individual Health Identifier (eHealth)';
 		$this->memberRecord['attributes'][8]['value']				= '';
+		$this->memberRecord['attributes'][9]['id']					= '18';
+		$this->memberRecord['attributes'][9]['text']				= 'Seniors Card';
+		$this->memberRecord['attributes'][9]['value']				= '';
 		
 	}
 	
@@ -322,6 +325,9 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['attributes'][3]['id']					= '14';
 		$this->memberRecord['webSiteRecord']['attributes'][3]['text']				= 'Individual Health Identifier (eHealth)';
 		$this->memberRecord['webSiteRecord']['attributes'][3]['value']				= $_data['ehealth'];
+		$this->memberRecord['webSiteRecord']['attributes'][4]['id']					= '18';
+		$this->memberRecord['webSiteRecord']['attributes'][4]['text']				= 'Seniors Cards';
+		$this->memberRecord['webSiteRecord']['attributes'][4]['value']				= $_data['seniorscard'];
 	}
 	
 	
