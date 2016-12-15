@@ -220,13 +220,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $cart_obj = new cart($_SESSION['user']['public']['id']);
       $res = $cart_obj->ApplyDiscountCode($_POST['discount_code']);
       if($res['error']){
-        $_SESSION['notice'] = $res['error'];
         $_SESSION['reApplydiscount'] = ($res['reApplyAfterLogin'])? $_POST['discount_code'] : '';
+        $totals =  $cart_obj->CalculateTotal();
+        $_SESSION['notice'] = (empty($totals['discount_error']) && !empty($totals['discount']))? '': $res['error'] ;
         $_SESSION['post'] = $_POST;
         header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
-      } else{
-        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        die();
       }
+      header('Location: ' . $_SERVER['HTTP_REFERER']);
       die();
     
     case 'checkout1':

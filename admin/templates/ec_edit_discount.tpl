@@ -1,6 +1,12 @@
-{block name=body} {* Define the function *} {function name=options_list level=0 } {foreach $opts as $opt} {if $fields.discount_id neq $opt.id}
-<option value="{$opt.id}" {if $selected eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
-{if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1 selected=$selected} {/if} {/if} {/foreach} {/function}
+{block name=body} {* Define the function *} 
+{function name=options_list level=0 } 
+  {foreach $opts as $opt} 
+      <option value="{$opt.id}" {if $selected eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
+      {if count($opt.subs) > 0} 
+        {call name=options_list opts=$opt.subs level=$level+1 selected=$selected} 
+      {/if}
+  {/foreach} 
+{/function}
 
 <div class="row">
   <div class="col-sm-12">
@@ -218,8 +224,12 @@
       changeYear: true,
       dateFormat: "dd/mm/yy",
       onSelect: function(selectedDate) {
-        $("#id_discount_start_date").val(convert_to_mysql_date_format(selectedDate));
+        var mysqlDate = convert_to_mysql_date_format(selectedDate);
+        $("#id_discount_start_date").val(mysqlDate);
         $("#to").datepicker("option", "minDate", selectedDate);
+        if(mysqlDate > $("#id_discount_end_date").val()){
+          $("#id_discount_end_date").val(mysqlDate);
+        }
       }
     });
     
@@ -229,7 +239,7 @@
       dateFormat: "dd/mm/yy",
       onSelect: function(selectedDate) {
         $("#id_discount_end_date").val(convert_to_mysql_date_format(selectedDate));
-        $("#from").datepicker("option", "maxDate", selectedDate);
+        //$("#from").datepicker("option", "maxDate", selectedDate);
       }
     });
     

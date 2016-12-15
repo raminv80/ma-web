@@ -3,13 +3,19 @@
 function SearchListing($search,$type=1){
 	global  $CONFIG,$SMARTY,$DBobject;
 	$data = array();
-	$search = preg_replace("/[^\w+\-\s]/", " ", $search);
+	$search = preg_replace("/[^\w+\-\s]/", " ", trim($search, '-'));
+	
 	
 	//IF TAG RESULTS = 0
 	
 	$sql= "SELECT tbl_listing.*,cache_tbl_listing.cache_url,tbl_type.*,
 		MATCH(tbl_listing.listing_name,
 		tbl_listing.listing_content1,
+		tbl_listing.listing_content2,
+		tbl_listing.listing_content3,
+		tbl_listing.listing_content4,
+		tbl_listing.listing_content5,
+		tbl_listing.listing_content6,
 		tbl_listing.listing_seo_title,
 		tbl_listing.listing_meta_description,
 		tbl_listing.listing_meta_words) AGAINST (:search) AS Relevance
@@ -20,6 +26,11 @@ function SearchListing($search,$type=1){
 	    AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND 
 		MATCH(tbl_listing.listing_name,
 		tbl_listing.listing_content1,
+		tbl_listing.listing_content2,
+		tbl_listing.listing_content3,
+		tbl_listing.listing_content4,
+		tbl_listing.listing_content5,
+		tbl_listing.listing_content6,
 		tbl_listing.listing_seo_title,
 		tbl_listing.listing_meta_description,
 		tbl_listing.listing_meta_words) AGAINST(:search IN
@@ -51,6 +62,11 @@ function SearchListing($search,$type=1){
 	    AND tbl_listing.listing_url != '404' AND tbl_listing.listing_url != 'search' AND additional_deleted IS NULL AND
 		(listing_name LIKE :search OR
 	  listing_content1 LIKE :search OR
+	  listing_content2 LIKE :search OR
+	  listing_content3 LIKE :search OR
+	  listing_content4 LIKE :search OR
+	  listing_content5 LIKE :search OR
+	  listing_content6 LIKE :search OR
     listing_seo_title LIKE :search OR
     listing_meta_description LIKE :search OR
     listing_meta_words LIKE :search OR
@@ -84,13 +100,14 @@ function SearchProduct($search){
   global  $CONFIG,$SMARTY,$DBobject;
   $data = array();
 
-  $search = preg_replace("/[^\w+\-\s]/", " ", $search);
+  $search = preg_replace("/[^\w+\-\s]/", " ", trim($search, '-'));
   
   //Check if it is variant UID
   
   $sql= "SELECT tbl_variant.*, product_url AS 'cache_url'
 		FROM tbl_variant LEFT JOIN tbl_product ON product_id = variant_product_id
 		WHERE product_deleted IS NULL AND product_published = 1 AND variant_deleted IS NULL AND 
+       product_type_id != 2 AND product_type_id != 3 AND
 		variant_uid LIKE :search
         ORDER BY variant_uid DESC";
   $params = array(":search"=>$search."%");
@@ -125,7 +142,7 @@ function SearchProduct($search){
 		product_meta_description,
 		product_meta_words) AGAINST (:search) AS Relevance
 		FROM tbl_product
-		WHERE product_deleted IS NULL AND product_published = 1 AND 
+		WHERE product_deleted IS NULL AND product_published = 1 AND product_type_id != 2 AND product_type_id != 3 AND
 		MATCH(product_name,
 		product_description,
 		product_seo_title,
@@ -152,7 +169,7 @@ function SearchProduct($search){
 
   $sql= "SELECT tbl_product.*, product_url AS 'cache_url'
 		FROM tbl_product 
-		WHERE product_deleted IS NULL AND product_published = 1 AND
+		WHERE product_deleted IS NULL AND product_published = 1 AND product_type_id != 2 AND product_type_id != 3 AND
 		(product_name LIKE :search OR
 	  product_description LIKE :search OR
     product_seo_title LIKE :search OR
@@ -265,7 +282,7 @@ function SearchAdmin($str){
 
   $data = array();
 
-  $search = preg_replace("/[^\w+\-\s]/", " ", $search);
+  $search = preg_replace("/[^\w+\-\s]/", " ", trim($search, '-'));
 
   $sql = 'SELECT
   tbl_admin.*,

@@ -12,10 +12,10 @@
   <company>
     <name>Australia MedicAlert Foundation</name>
     <address>
-      <street>Level 1, 210 Greenhill Road</street>
-      <suburb>Eastwood</suburb>
+      <street>Ground Floor, 11 King William Street</street>
+      <suburb>Kent Town</suburb>
       <state>SA</state>
-	  <postcode>5063</postcode>
+	  <postcode>5067</postcode>
     </address>
     <phone>(+61)8 8273 8400</phone>
     <toll_free>1800 88 22 22</toll_free>

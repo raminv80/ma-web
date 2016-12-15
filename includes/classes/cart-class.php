@@ -618,7 +618,7 @@ class cart{
     $discount = 0;
     $discount_error = '';
     
-    $cart = $this->GetDataCart();
+    $cart = $this->GetDataCart($this->cart_id);
     
     $hasBupaDiscount = false;
     $hasAutismDiscount = false;
