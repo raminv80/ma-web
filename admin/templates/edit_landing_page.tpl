@@ -1,4 +1,11 @@
-{block name=body}
+{block name=body} {* Define the function *} 
+{function name=options_list level=0}
+  {foreach $opts as $opt}
+    {if ($ignore && $ignore eq $opt.id) || ($ignoregroupid && $ignoregroupvalue eq $opt.extra.$ignoregroupid)}{continue}{/if}
+    <option value="{$opt.id}" {if  $selected eq $opt.id}selected="selected"{/if}>{for $var=1 to $level}- {/for}{$opt.value}</option>
+    {if count($opt.subs) > 0} {call name=options_list opts=$opt.subs level=$level+1 selected=$selected} {/if}
+  {/foreach}
+{/function}
 <div class="row">
   <div class="col-sm-12">
     <form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">
@@ -178,6 +185,12 @@
                   <option value="0">None</option>
                   {call name=options_list opts=$fields.options.collections selected=$fields.listing_associate1}
                 </select>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_content6">Discount code</label>
+              <div class="col-sm-5">
+                <input class="form-control" type="text" value="{$fields.listing_content6}" name="field[1][tbl_listing][{$cnt}][listing_content6]" id="id_listing_content6">
               </div>
             </div>
           </div>

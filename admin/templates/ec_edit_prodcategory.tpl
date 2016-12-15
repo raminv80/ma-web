@@ -218,7 +218,7 @@
         table: "tbl_listing",
         field: "listing_url",
         field2: "listing_parent_id",
-        value2: "id_listing_parent"
+        value2: "listing_parent_id"
       }
     });
   });

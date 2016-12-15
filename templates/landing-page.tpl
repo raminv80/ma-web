@@ -109,12 +109,30 @@
   </div>
 </div>
 {else}
-<div class="container">
+<div id="products">
+  <div class="container">
+    {if $products}
     <div class="row">
-      <div class="col-md-12 text-center">
-        &nbsp;
+      <div class="col-sm-12 text-center">
+        <h2>Select your medical ID</h2>
+        Choose from our range of genuine MedicAlert IDs
+      </div>
+      </div>
+      <div class="row" id="products-wrapper">
+          {foreach $products as $item}
+            {include file='ec_product_list_struct.tpl'}
+          {/foreach}
+      </div>
+      <div class="row">
+      <div class="col-sm-12 text-center small">
+        *Selected products only. 
+      </div>
+      <div class="col-sm-12 text-center" id="moreprods">
+        <p>Can't find a product you like? See the <a href="/products?setdc={$discount_code}" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
       </div>
     </div>
+    {/if}
+  </div>
 </div>
 {/if}
 
@@ -123,6 +141,8 @@
 {* Place additional javascript here so that it runs after General JS includes *}
 {block name=tail}
 <script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
+<script src="/includes/js/isotope.pkgd.min.js"></script>
+<script src="/includes/js/jquery.lazyload.min.js"></script>
 <script type="text/javascript">
 
   (function() {
@@ -158,5 +178,44 @@
       flexslider.vars.maxItems = gridSize;
     });
   }());
+  
+  
+  $(document).ready(function() {
+    
+    var $grid = $("#products-wrapper").isotope({
+       itemSelector: '.prodout',
+       layoutMode: 'fitRows'
+      });
+     
+     $grid.on( 'arrangeComplete', function( event, filteredItems ) {
+       $(window).trigger("scroll");
+     });
+     
+   $('img.prodimg').lazyload({
+     effect: "fadeIn",
+         failure_limit: Math.max($('img.prodimg').length - 1, 0),
+         event: "scroll click"
+   });
+   
+       
+  });
+
+   
+ //REFRESH ISOTOPE WHEN SCROLLING UP/DOWN
+   var minLastView = $(document).height();
+   var maxLastView = 0;
+   $(window).scroll(function() {
+     var curHeight = $(window).scrollTop() + $(window).height();
+     if(curHeight < minLastView && Math.abs(curHeight - minLastView) > 500){
+       minLastView = curHeight;
+       $("#products-wrapper").isotope('layout');
+     }
+     if(curHeight > maxLastView && Math.abs(curHeight - maxLastView) > 500){
+       maxLastView = curHeight;
+       $("#products-wrapper").isotope('layout');
+     }
+  });
 </script>
 {/block}
+
+

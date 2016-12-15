@@ -1929,6 +1929,11 @@ class cart{
     
     $discount = 0;
     $prodAmount = 0;
+    $amount = 100;
+    //Update time 01/01/2017, 12:00:00 AM (1483191000)
+    if(time() > 1483191000){
+      $amount = 125;
+    }
     if(empty($this->cart_user_id)){
       
       //Check for valid product - Bupa member collection - listing_id = 667
@@ -1963,7 +1968,7 @@ class cart{
         }
         $prodAmount += floatval($msfArr['variant_price']);
         
-        $discount = $prodAmount - 100; 
+        $discount = $prodAmount - $amount; 
         
       }else{
         //remove MAF membership fee - next year
@@ -1972,6 +1977,7 @@ class cart{
         $this->RemoveFromCart($membershipFeeCartitemId);
       }
     }
+    $discount = ($discount > 0) ? $discount : 0;
     return round($discount, 2);
   }
 
@@ -2016,6 +2022,7 @@ class cart{
         $discount = $prodAmount - 80;
       }
     }
+    $discount = ($discount > 0) ? $discount : 0;
     return round($discount, 2);
   }
   

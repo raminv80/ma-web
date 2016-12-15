@@ -29,7 +29,7 @@ if(($REQUEST_URI == $loginUrl || $REQUEST_URI == $loginRegisterUrl) && !empty($_
 
 
 //MAF ONLY - set BUPA discount code
-if(!empty($_REQUEST['setdc']) && $_REQUEST['setdc'] == 'BUPA16'){
+if(!empty($_REQUEST['setdc']) && ($_REQUEST['setdc'] == 'BUPA16' || $_REQUEST['setdc'] == 'AUTISM16')){
   $_SESSION['reApplydiscount'] = $_REQUEST['setdc'];
 }
 

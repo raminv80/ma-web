@@ -20,7 +20,13 @@ class ShippingClass {
       $this->methods['Shipping (standard)'] = 0.00;
     }*/
     if($qty > 0){
-      $this->methods['Postage & handling'] = 9.00;
+      $amount = 9.00;
+      
+      //Update time 01/01/2017, 12:00:00 AM (1483191000)
+      if(time() > 1483191000){
+        $amount = 9.50;
+      }
+      $this->methods['Postage & handling'] = $amount;
     }else{
       $this->methods['Postage & handling'] = 0.00;
     }
