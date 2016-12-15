@@ -171,6 +171,15 @@
                    onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag1">
               </div>
             </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_associate1">Collection</label>
+              <div class="col-sm-5">
+                <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate1]" id="id_listing_associate1">
+                  <option value="0">None</option>
+                  {call name=options_list opts=$fields.options.collections selected=$fields.listing_associate1}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
         <!--===+++===+++===+++===+++===+++ IMAGES TAB +++===+++===+++===+++===+++====-->

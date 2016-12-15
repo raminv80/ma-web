@@ -114,6 +114,9 @@
     <process>
       <file>includes/processes/process-load-popular-products.php</file>
     </process>
+    <process>
+      <file>includes/processes/process-load-landing-page.php</file>
+    </process>
   </page_strut>
   <index_page>
     <template>home.tpl</template>
