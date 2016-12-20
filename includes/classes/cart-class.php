@@ -669,7 +669,7 @@ class cart{
     
     // For MAF only
     if(!$hasBupaDiscount){
-      if(!hasSeniorsDiscount && !$hasAutismDiscount){
+      if(!$hasSeniorsDiscount && !$hasAutismDiscount){
         $discount += $this->GetStainlessSteelDiscount();
       }
       
