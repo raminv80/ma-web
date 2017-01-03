@@ -1061,9 +1061,20 @@ class cart{
     $addReactivationFee = false;
     $hasMAFProd = $this->HasMAFProducts();
     //MAF membership fee
-    $msfArr = $this->GetCurrentMAF_MSF(225);
+    $year = '';
+    if(!empty($_memberArr['maf']['main']['reactivation']) && !empty($_memberArr['maf']['main']['user_RenewalDate']) && $_memberArr['maf']['main']['reactivation'] == 'f'){
+      $year = date('Y', strtotime($_memberArr['maf']['main']['user_RenewalDate']));
+      //To fix renewal issue  - REMOVE THIS AFTER 2017
+      if($year != date('Y') && date('Y') == '2017'){
+        $msfArrOld = $this->GetCurrentMAF_MSF(225);
+        if($membershipFeeCartitemIdOld = $this->hasProductInCart($msfArrOld['product_object_id'], $msfArrOld['variant_id'])){
+          $this->RemoveFromCart($membershipFeeCartitemIdOld);
+        }
+      }
+      //----------
+    }
+    $msfArr = $this->GetCurrentMAF_MSF(225, $year);
     $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
-    
     if(empty($_memberArr['id']) && $hasMAFProd && ($this->NumberOfProductsOnCart() > 1 || empty($membershipFeeCartitemId))){
       //Add "member service fee - current_year" when member is not logged in
       //Prevent from having a MAF membership fee without a product
@@ -1073,13 +1084,21 @@ class cart{
       $addMSF = ($_memberArr['maf']['main']['renew'] == 't')? true : false;
       $addReactivationFee = ($_memberArr['maf']['main']['reactivation'] == 't')? true : false;
     }
-    
     //Add/remove MAF membership fee
     if($addMSF && empty($membershipFeeCartitemId)){
       $this->AddToCart($msfArr['product_object_id'], array(), 0, 1, null, $msfArr['variant_id']);
     } elseif(!$addMSF && !empty($membershipFeeCartitemId)){
       $this->RemoveFromCart($membershipFeeCartitemId);
     }
+    //To fix renewal issue - REMOVE THIS AFTER 2017
+    if((empty($year) || $year == '2017') && date('Y') == '2017'){
+      $msfArrOld = $this->GetCurrentMAF_MSF(225, '2016');
+      if($membershipFeeCartitemIdOld = $this->hasProductInCart($msfArrOld['product_object_id'], $msfArrOld['variant_id'])){
+        $this->RemoveFromCart($membershipFeeCartitemIdOld);
+      }
+    }
+    //----------
+    
     //Add/remove MAF reactivation fee
     $reactivationCartitemId = $this->hasProductInCart(225, 16);
     if($addReactivationFee && empty($reactivationCartitemId)){
@@ -2041,7 +2060,8 @@ class cart{
 
     //MAF membership fee - current year
     $msfArr = $this->GetCurrentMAF_MSF(225);
-    $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
+    //$membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']); //variant_id removed to fix renewal date issue
+    $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id']);
     if(!empty($membershipFeeCartitemId)){
       $discount =  floatval($msfArr['variant_price']) * $percentage / 100;
     }

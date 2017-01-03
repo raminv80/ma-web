@@ -13,7 +13,7 @@
 				<div><h1><span class="highlight">Exclusive Bupa</span><br>
 				MEMBER OFFER</h1>
 				2 year MedicAlert<sup>&reg;</sup> membership + medical ID<br>
-				of your choice* for just $100<br>
+				of your choice* for just $125<br>
 				<span class="highlight">SAVE UP TO 20%</span>
 				</div>
 				<a href="/benefits-of-membership" title="Benefits of membership" class="btn btn-red">View benefits</a>
@@ -29,7 +29,7 @@
 				<div><h1><span class="highlight">Exclusive Bupa</span><br>
 				Member Offer</h1>
 				2 year MedicAlert<sup>&reg;</sup> membership + medical ID
-				of your choice* for just $100<br>
+				of your choice* for just $125<br>
 				<span class="highlight">SAVE UP TO 20%</span>
 				</div>
 				<a href="/benefits-of-membership" title="Benefits of membership" class="btn btn-red">View benefits</a>
@@ -82,7 +82,7 @@ a MedicAlert membership could mean the difference between life and death.</p>
 			<div class="col-sm-12 text-center" id="joinhead">
 				A special offer for Bupa members:<br>
 				<span class="highlight">2 year MedicAlert<sup>&reg;</sup> membership + medical ID of your choice*</span><br>
-				<span>for just $100</span>
+				<span>for just $125</span>
 			</div>
 		</div>
 		<div class="row">
