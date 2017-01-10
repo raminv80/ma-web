@@ -14,7 +14,7 @@
 				MEMBER OFFER</h1>
 				2 year MedicAlert<sup>&reg;</sup> membership + medical ID<br>
 				of your choice* for just $125<br>
-				<span class="highlight">SAVE UP TO 20%</span>
+				<span class="highlight">SAVE UP TO 26%</span>
 				</div>
 				<a href="/benefits-of-membership" title="Benefits of membership" class="btn btn-red">View benefits</a>
 			</div>
@@ -30,7 +30,7 @@
 				Member Offer</h1>
 				2 year MedicAlert<sup>&reg;</sup> membership + medical ID
 				of your choice* for just $125<br>
-				<span class="highlight">SAVE UP TO 20%</span>
+				<span class="highlight">SAVE UP TO 26%</span>
 				</div>
 				<a href="/benefits-of-membership" title="Benefits of membership" class="btn btn-red">View benefits</a>
 			</div>
@@ -123,7 +123,7 @@ a MedicAlert membership could mean the difference between life and death.</p>
 				*Selected products only. Price includes standard postage and handling and a 12-month standard Australia MedicAlert Foundation product warranty.
 			</div>
 			<div class="col-sm-12 text-center" id="moreprods">
-				<p>Can't find a product you like? See the <a href="/products?setdc=BUPA16" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
+				<p>Can't find a product you like? See the <a href="/products?setdc=BUPA17" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
 			</div>
 		</div>
 	</div>
