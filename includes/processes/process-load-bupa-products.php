@@ -9,7 +9,7 @@ try{
   $params = array('id' => 667);
   if($products = $DBobject->wrappedSql($sql, $params)){
     foreach($products as &$p){
-      $p['product_url'] .= '?setdc=BUPA16'; 
+      $p['product_url'] .= '?setdc=BUPA17'; 
       $p['general_details'] = $prodObj->GetProductGeneralDetails($p['product_object_id']);
       
       //Set price range
