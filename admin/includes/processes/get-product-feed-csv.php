@@ -15,7 +15,7 @@ global $DBobject;
         AND (product_membersonly IS NULL OR product_membersonly = 0)
         AND variant_published =1 AND variant_deleted IS NULL 
         GROUP BY id
-        ORDER BY id, item_group_id";
+        ORDER BY item_group_id, id";
     
 	if($res = $DBobject->wrappedSql($sql, array())){
 	  
