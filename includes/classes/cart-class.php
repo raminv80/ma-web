@@ -2014,13 +2014,13 @@ class cart{
     $prodAmount = 0;
     if(empty($this->cart_user_id)){
   
-      //Check for valid product - Exclusive Autism collection - listing_id = 667
+      //Check for valid product - Exclusive Autism collection - listing_id = 820
       $sql = "SELECT cartitem_product_id, cartitem_quantity, cartitem_subtotal, cartitem_product_price FROM tbl_cartitem
             WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' ORDER BY cartitem_product_price";
       if($cartItems = $DBobject->wrappedSql($sql, array(':id' => $this->cart_id))){
         foreach($cartItems as $item){
           $collectionArr = $this->getProductCategoriesArr($item['cartitem_product_id']);
-          if(in_array(667, $collectionArr)){
+          if(in_array(820, $collectionArr)){
             $prodAmount = floatval($item['cartitem_product_price']);
             break;
           }

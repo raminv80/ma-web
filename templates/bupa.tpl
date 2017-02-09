@@ -113,6 +113,7 @@ a MedicAlert membership could mean the difference between life and death.</p>
       </div>
       <div class="row" id="products-wrapper">
           {if $products}
+          {$nofollowprod = 1}
           {foreach $products as $item}
             {include file='ec_product_list_struct.tpl'}
           {/foreach}
@@ -123,7 +124,7 @@ a MedicAlert membership could mean the difference between life and death.</p>
 				*Selected products only. Price includes standard postage and handling and a 12-month standard Australia MedicAlert Foundation product warranty.
 			</div>
 			<div class="col-sm-12 text-center" id="moreprods">
-				<p>Can't find a product you like? See the <a href="/products?setdc=BUPA17" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
+				<p>Can't find a product you like? See the <a href="/products?setdc=BUPA17" rel="nofollow" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
 			</div>
 		</div>
 	</div>
