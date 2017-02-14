@@ -600,6 +600,13 @@ RewriteRule ^benefits-of-membershi$ /benefits-of-membership? [R=301,L,NC]
 RewriteRule ^.au$ /? [R=301,L,NC]
 RewriteRule ^uploads/pages/.*$ /? [R=301,L,NC]
 RewriteRule ^uploads/other/.*$ /? [R=301,L,NC]
+
+RewriteRule ^onlinecatalogue$ /refer-your-patients? [R=301,L,NC]
+RewriteRule ^order_catalogue$ /refer-your-patients? [R=301,L,NC]
+RewriteRule ^competition$ /? [R=301,L,NC]
+RewriteRule ^seniors$ /seniors-card? [R=301,L,NC]
+RewriteRule ^supporters/gift_certificate.aspx$  /gift-certificates? [R=301,L,NC]
+RewriteRule ^products/stainless_steel_dog_tag_ball_chain$ /stainless-steel-red-enamel-dog-tag-and-ballchain? [R=301,L,NC]
 ################################################################################
 
 

@@ -61,13 +61,13 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
                 orderresource_fname,orderresource_lname,orderresource_job_title,orderresource_company,orderresource_department,
                 orderresource_address,orderresource_suburb,orderresource_state,orderresource_postcode,orderresource_email,
     		    orderresource_phone,orderresource_category,orderresource_pack_required,orderresource_catalogue,orderresource_a3poster,
-                orderresource_ip,orderresource_email_id,orderresource_created)
+                orderresource_stand, orderresource_ip,orderresource_email_id,orderresource_created)
             
               VALUES (:orderresource_form_name,
                 :orderresource_fname,:orderresource_lname,:orderresource_job_title,:orderresource_company,:orderresource_department,
                 :orderresource_address,:orderresource_suburb,:orderresource_state,:orderresource_postcode,:orderresource_email,
     		    :orderresource_phone,:orderresource_category,:orderresource_pack_required,:orderresource_catalogue,:orderresource_a3poster,
-                :orderresource_ip,:orderresource_email_id,now() )";
+                :orderresource_stand, :orderresource_ip,:orderresource_email_id,now() )";
         
         $resource_pack = 0;
         if($_POST['resource_pack']){
@@ -89,7 +89,8 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             ":orderresource_category" => $_POST['category'], 
             ":orderresource_pack_required" => $resource_pack, 
             ":orderresource_catalogue" => $_POST['membership_catalogues'],  
-            ":orderresource_a3poster" => $_POST['a3_posters'],  
+            ":orderresource_a3poster" => $_POST['a3_posters'],
+            ":orderresource_stand" => $_POST['stands'],
             ":orderresource_ip" => $_SERVER['REMOTE_ADDR'], 
             ":orderresource_email_id" => $sent 
         );

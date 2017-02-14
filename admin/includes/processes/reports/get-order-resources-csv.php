@@ -33,7 +33,7 @@ $sql = "SELECT orderresource_form_name AS 'Source', orderresource_fname AS 'Firs
   orderresource_company AS 'Company name', orderresource_department AS 'Department', orderresource_address AS 'Postal address', 
   orderresource_suburb AS 'Suburb', orderresource_state AS 'State', orderresource_postcode AS 'Postcode', orderresource_phone AS 'Phone',  
   orderresource_email AS 'Email', orderresource_category AS 'Category', IF(orderresource_pack_required = 1, 'Yes', 'No') AS 'Need a resource pack',  
-  orderresource_catalogue AS 'catalogues', orderresource_a3poster AS 'A3 posters', orderresource_created AS 'Created' 
+  orderresource_catalogue AS 'catalogues', orderresource_a3poster AS 'A3 posters', orderresource_stand AS 'Flyer stand and bracelet',  orderresource_created AS 'Created' 
   FROM tbl_orderresource 
   WHERE orderresource_deleted IS NULL {$wheresql} 
   ORDER BY orderresource_created DESC";

@@ -150,7 +150,7 @@
 		    			<h4 class="bold">Additional resources</h4>
 	    			</div>
     				<div class="col-sm-6 form-group">
-    				  <label class="visible-ie-only" for="membershipcat">Membership catalogues:</label>
+    				  <label class="visible-ie-only" for="membershipcat">Membership flyer:</label>
                       <select class="form-control" name="membership_catalogues" id="membershipcat">
 	                      <option value="0">Please select</option>
 	                      <option {if $post.membership_catalogues eq '20'}selected = "selected"{/if} value="20">20</option>
@@ -170,6 +170,20 @@
 						<div class="error-msg help-block"></div>
     				</div>
     			</div>
+          
+          <div class="row">
+            <div class="col-sm-6 form-group">
+              <label class="visible-ie-only" for="stands">Membership Flyer Stand &amp; sample bracelet:</label>
+                      <select class="form-control" name="stands" id="stands">
+                        <option value="0">Please select</option>
+                        <option {if $post.stands eq '1'}selected = "selected"{/if} value="1">1</option>
+                        <option {if $post.stands eq '2'}selected = "selected"{/if} value="2">2</option>
+                      </select>
+            <div class="error-msg help-block"></div>
+            </div>
+            <div class="col-sm-6 form-group">
+            </div>
+          </div>
 
     			<div style="height:0;overflow:hidden;">
                    <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1">
