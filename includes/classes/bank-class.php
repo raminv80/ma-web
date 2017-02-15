@@ -96,7 +96,9 @@ class Bank{
       $this->SetResponsePaymentRecord();
     } else{
       $this->StorePaymentRecord();
-      $this->SubmitPayment();
+      if(!$this->IsCreditCardFraud()){
+        $this->SubmitPayment();
+      }
       $this->SetResponsePaymentRecord();
     }
     return $this->payment_success;
@@ -311,4 +313,96 @@ class Bank{
   function FormatToCents($amount){
     return number_format((float)$amount * 100, 0, '.', '');
   }
+  
+  
+  /**
+   * Check declined payments and mitigate credit card frauds attempts
+   */
+  protected function IsCreditCardFraud(){
+    
+    $minutes = 0;
+    
+    //Check tbl_paymentblocked records
+    $params = array(
+        "session" => session_id(),
+        "ip" => $_SERVER['REMOTE_ADDR']
+    );
+    $sql = "SELECT COUNT(paymentblocked_id) AS CNT FROM tbl_paymentblocked WHERE paymentblocked_deleted IS NULL 
+        AND (paymentblocked_ip = :ip  OR paymentblocked_session = :session)
+        AND paymentblocked_end_datetime > NOW()";
+    $res = $this->DBobj->wrappedSql($sql, $params);
+    if(!empty($res) && $res[0]['CNT'] > 0){
+        $minutes = 30 * floatval($res[0]['CNT']);
+        $this->SetPaymentBlocked($minutes);
+      
+    }else{
+      //Check declined payments for the last 5 mins (payment_user_ip and cart_session)
+      //If more than 3, then add a paymentblocked record
+      $sql = "SELECT COUNT(payment_id) AS CNT FROM tbl_payment LEFT JOIN tbl_cart ON cart_id = payment_cart_id WHERE payment_deleted IS NULL
+        AND payment_status = 'F' AND (payment_user_ip = :ip OR cart_session = :session)
+        AND payment_created > DATE_SUB(NOW(), INTERVAL 10 MINUTE) ";
+      if($res = $this->DBobj->wrappedSql($sql, $params)){
+        if($res[0]['CNT'] > 2){
+          $minutes = 5;
+          $this->SetPaymentBlocked($minutes);
+        }
+      }
+    }
+    
+    //Set error message and stop other payment attempts 
+    if($minutes > 0){
+      if($minutes > 59){
+        $timeStr = ceil($minutes/60) . ' hours';
+        $timeStr = ($timeStr > 1) ? $timeStr . ' hours' : $timeStr . ' hour';
+      }else{
+        $timeStr = "{$minutes} minutes";
+      }
+      $this->response['payment_status'] = 'F';
+      $this->response['msg'] = 'website-blocked';
+      $this->payment_success = false;
+      $this->errorMsg .= "The payment gateway has been blocked for {$timeStr} due to multiple failed attempts.<br>Please <a href=\"/contact-us\">contact us</a> for help or more information.";
+      return true;
+    }
+    return false;
+  }
+  
+  
+  /**
+   * 
+   * @param integer $minutes
+   * @return boolean
+   */
+  protected function SetPaymentBlocked($minutes = 5){
+  
+    $endDateTime = '';
+    $params = array(
+        "minute" => $minutes
+    );
+    $sql = "SELECT (NOW() + INTERVAL :minute MINUTE) as future";
+    if($res = $this->DBobj->wrappedSql($sql, $params)){
+      $endDateTime = $res[0]['future'];
+    }
+    
+    if(!empty($endDateTime)){
+      //Temporary notification
+      try {
+        sendErrorMail('weberrors@them.com.au', 'MedicAlert', 'noreply@medicalert.org.au', 'Payment blocker', "Payment id:  {$this->payment_id}");
+      } catch (Exception $e) {
+      }
+      
+      
+      $params = array(
+          "paymentblocked_payment_id" => $this->payment_id,
+          "paymentblocked_session" => session_id(),
+          "paymentblocked_ip" => $_SERVER['REMOTE_ADDR'],
+          "paymentblocked_end_datetime" => $endDateTime
+      );
+      $sql = "INSERT INTO tbl_paymentblocked (paymentblocked_payment_id, paymentblocked_session, paymentblocked_ip, paymentblocked_end_datetime, paymentblocked_created)
+        VALUES (:paymentblocked_payment_id, :paymentblocked_session, :paymentblocked_ip, :paymentblocked_end_datetime, NOW())";
+      return $this->DBobj->wrappedSql($sql, $params);
+    }
+    return false;
+  }
+  
+  
 }
