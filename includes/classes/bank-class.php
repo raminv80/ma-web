@@ -334,16 +334,20 @@ class Bank{
     if(!empty($res) && $res[0]['CNT'] > 0){
         $minutes = 30 * floatval($res[0]['CNT']);
         $this->SetPaymentBlocked($minutes);
+        //Set 10 years lock
+        if($res[0]['CNT'] > 2){
+          $this->SetPaymentBlocked(5256000);
+        }
       
     }else{
       //Check declined payments for the last 5 mins (payment_user_ip and cart_session)
       //If more than 3, then add a paymentblocked record
       $sql = "SELECT COUNT(payment_id) AS CNT FROM tbl_payment LEFT JOIN tbl_cart ON cart_id = payment_cart_id WHERE payment_deleted IS NULL
         AND payment_status = 'F' AND (payment_user_ip = :ip OR cart_session = :session)
-        AND payment_created > DATE_SUB(NOW(), INTERVAL 10 MINUTE) ";
+        AND payment_created > DATE_SUB(NOW(), INTERVAL 30 MINUTE) ";
       if($res = $this->DBobj->wrappedSql($sql, $params)){
         if($res[0]['CNT'] > 2){
-          $minutes = 5;
+          $minutes = 10;
           $this->SetPaymentBlocked($minutes);
         }
       }
