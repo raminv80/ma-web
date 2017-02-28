@@ -44,7 +44,7 @@
   </global_variable> 
   <global_variable>
     <name>mintotal_membership_cost</name>
-    <value>$76</value>
+    <value>$93.5</value>
   </global_variable>    
   <database> 
     <host>122.201.118.45</host> 

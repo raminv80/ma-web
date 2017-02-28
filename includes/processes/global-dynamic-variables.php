@@ -39,6 +39,14 @@ try{
         break;
       }
     }
+    //MAF ONLY - DATABASE VARIABLES - Calculations must be done separately
+    foreach($GLOBALS['DATABASE_VARS']['find'] as $k => $v){
+      if($v == '==mintotal_membership_cost=='){
+        $GLOBALS['DATABASE_VARS']['replace'][$k] = floatval(str_replace('$', '', $GLOBALS['CONFIG_VARS']['membership_fee'])) + floatval(str_replace('$', '', $GLOBALS['CONFIG_VARS']['postage'])) + floatval(str_replace('$', '', $GLOBALS['CONFIG_VARS']['medical_id_price']));
+        $GLOBALS['DATABASE_VARS']['replace'][$k] = number_format($GLOBALS['DATABASE_VARS']['replace'][$k], 2, '.', ',');
+        break;
+      }
+    }
     $SMARTY->assign("DATABASE_VARS", $GLOBALS['DATABASE_VARS']);
   }
 }

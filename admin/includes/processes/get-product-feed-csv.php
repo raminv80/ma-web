@@ -26,12 +26,18 @@ global $DBobject;
 	        $res[$key]['size'] = '';
 	        $res[$key]['image_link'] = '';
 	        
+	        $flag = 0;
+	        
     	    $colsql = "SELECT attr_value_name AS color FROM tbl_productattr 
     	        LEFT JOIN tbl_attr_value ON attr_value_id = productattr_attr_value_id AND attr_value_attribute_id = productattr_attribute_id
     	        WHERE productattr_variant_id = :variant_id AND productattr_attribute_id = 2";
     	    
     	    if($colres = $DBobject->wrappedSql($colsql, array('variant_id'=>$r['id']))){
     	      $res[$key]['color'] = $colres[0]['color'];
+      
+    	      $res[$key]['description'] = $res[$key]['description']." Colour: ".$res[$key]['color'];
+    	      
+    	      $flag = 1;
     	      
     	      $psql = "SELECT variant_id, gallery_link, attr_value_name FROM tbl_product
                     RIGHT JOIN tbl_variant ON variant_product_id = product_id
@@ -60,6 +66,14 @@ global $DBobject;
     	    	
     	    if($lenres = $DBobject->wrappedSql($lensql, array('variant_id'=>$r['id']))){
     	      $res[$key]['length'] = $lenres[0]['custom_label_0'];
+    	      
+    	      if($flag == 1){
+    	        $res[$key]['description'] = $res[$key]['description'].",";
+    	      }
+    	      $res[$key]['description'] = $res[$key]['description']." Length: ".$res[$key]['length'];
+    	      
+    	      $flag = 1;
+    	      
     	    }
     	    
     	    $sizesql = "SELECT attr_value_name AS custom_label_1 FROM tbl_productattr
@@ -68,7 +82,13 @@ global $DBobject;
     	    	
     	    if($sizeres = $DBobject->wrappedSql($sizesql, array('variant_id'=>$r['id']))){
     	      $res[$key]['size'] = $sizeres[0]['custom_label_1'];
+    	      
+    	      if($flag == 1){
+    	        $res[$key]['description'] = $res[$key]['description'].",";
+    	      }
+    	      $res[$key]['description'] = $res[$key]['description']." Size: ".$res[$key]['size'];
     	    }
+    	    
 	  }
 	}
 	
