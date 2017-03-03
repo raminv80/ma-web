@@ -104,7 +104,7 @@ function SearchProduct($search){
   
   //Check if it is variant UID
   
-  $sql= "SELECT tbl_variant.*, product_url AS 'cache_url'
+  $sql= "SELECT tbl_variant.*, product_url AS 'cache_url', product_name
 		FROM tbl_variant LEFT JOIN tbl_product ON product_id = variant_product_id
 		WHERE product_deleted IS NULL AND product_published = 1 AND variant_deleted IS NULL AND 
        product_type_id != 2 AND product_type_id != 3 AND
