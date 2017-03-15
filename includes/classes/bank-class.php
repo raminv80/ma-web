@@ -389,10 +389,10 @@ class Bank{
     
     if(!empty($endDateTime)){
       //Temporary notification
-      try {
+      /* try {
         sendErrorMail('weberrors@them.com.au', 'MedicAlert', 'noreply@medicalert.org.au', 'Payment blocker', "Payment id:  {$this->payment_id}");
       } catch (Exception $e) {
-      }
+      } */
       
       
       $params = array(
