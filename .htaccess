@@ -607,6 +607,8 @@ RewriteRule ^competition$ /? [R=301,L,NC]
 RewriteRule ^seniors$ /seniors-card? [R=301,L,NC]
 RewriteRule ^supporters/gift_certificate.aspx$  /gift-certificates? [R=301,L,NC]
 RewriteRule ^products/stainless_steel_dog_tag_ball_chain$ /stainless-steel-red-enamel-dog-tag-and-ballchain? [R=301,L,NC]
+RewriteRule ^autism-sa$ /safe-return? [R=301,L,NC]
+
 ################################################################################
 
 
