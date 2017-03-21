@@ -204,7 +204,7 @@
 	      </div>
 	      <div class="col-xs-9 col-sm-12">
           <div class="bold">Call</div>
-          <div>the 24/7 emergency hotline number engraved on the medical ID (<a href="tel://08 8272 8822">08 8272 8822</a>) to receive more detailed medical and personal information.</div>
+          <div>the 24/7 Emergency Response Service number engraved on the medical ID (<a href="tel://08 8272 8822">08 8272 8822</a>) to receive more detailed medical and personal information.</div>
 	      </div>
         </div>
         <div class="col-sm-3 text-center step">

@@ -158,7 +158,7 @@
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>24/7 emergency hotline phone number for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
+						<td>24/7 Emergency Response Service phone number for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
@@ -378,7 +378,7 @@
 						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
-						<td colspan="3">24/7 emergency hotline phone number for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
+						<td colspan="3">24/7 Emergency Response Service phone number for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
