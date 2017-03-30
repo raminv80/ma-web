@@ -33,7 +33,7 @@
     <div class="row">
       <div class="col-sm-6 form-group">
         <label class="visible-ie-only" for="plan_type">Plan<span>*</span></label>
-        <select class="selectlist-medium" id="plan-type" name="plan_type" required onchange="UpdatePlanType(this.value);">
+        <select class="selectlist-medium" id="plan-type" name="plan_type" required="" >
           <option value="">Please select</option>
           <option value="Managed" {if $post.plan_type eq "Managed"}selected{/if}>Managed</option>
           <option value="Self-managed" {if $post.plan_type eq "Self-managed"}selected{/if}>Self-managed</option>

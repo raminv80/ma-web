@@ -161,7 +161,6 @@
   $(document).ready(function() {
     
    $('#contact_form').validate();
-
   
    $('#phone').rules("add", {
        digits: true,
@@ -174,23 +173,19 @@
 
    $("select").selectBoxIt();
 
-
        $('input[type="radio"]').change(function(){
-         console.log("radio check");
           UpdateMemberRadio($(this).val());
-       });
-         
+       });      
+          
   });
 
   function UpdateMemberRadio(selectedValue){
-    console.log("update menue" + selectedValue);
     if(selectedValue == 1){
       $('#maf-no').closest('.form-group').removeClass('hide');
       } else {
         $('#maf-no').closest('.form-group').addClass('hide');
         $('#maf-no').val('');
       }
-
   }
 
   
