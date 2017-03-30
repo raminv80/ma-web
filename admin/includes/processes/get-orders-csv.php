@@ -1,4 +1,10 @@
 <?php
+$referer = parse_url($_SERVER['HTTP_REFERER']);
+if($referer['host'] != $_SERVER['HTTP_HOST']){
+  header('HTTP/1.0 403 Forbidden');
+  die();
+}
+
 set_include_path ( $_SERVER ['DOCUMENT_ROOT'] );
 include_once 'admin/includes/functions/admin-functions.php';
 global $DBobject;

@@ -1,3 +1,9 @@
+<?php
+session_start();
+if((!isset($_SESSION['user']['admin']) || empty($_SESSION['user']['admin']))){
+  die('Authentication failed!');
+}
+?>
 <!DOCTYPE html>
 <html>
 	<head>

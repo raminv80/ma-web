@@ -23,6 +23,31 @@ $GLOBALS['CONFIG']=simplexml_load_file($_SERVER['DOCUMENT_ROOT']."/admin/config/
 session_start();
 $_paths = array();
 
+$allowMIMEarr = array(
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/svg+xml',
+    'application/zip',
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'audio/mpeg',
+    'video/mpeg'
+);
+
+$restrictAttr = array(  
+    'pattern' => '/\.(?:exe|js|html|php|py|pl|sh|xml)$/i',
+    'read'   => false,
+    'write'  => false,
+    'locked' => true,
+    'hidden' => true
+);
+
 if(!empty($_SESSION['user']['admin']["stores"]) && $_SESSION['user']['admin']["level"] > 1){
 	foreach($_SESSION['user']['admin']["stores"] as $id){
 		$dir = "/sudofiles/id".$id['access_store_id'];
@@ -34,7 +59,11 @@ if(!empty($_SESSION['user']['admin']["stores"]) && $_SESSION['user']['admin']["l
 						'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
 						'path'          => $_SERVER['DOCUMENT_ROOT'].$dir,         // path to files (REQUIRED)
 						'URL'           => $dir, // URL to files (REQUIRED)
-						'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
+						'accessControl' => 'access',             // disable and hide dot starting files (OPTIONAL)
+				        'uploadAllow'   => $allowMIMEarr,
+				        'uploadOrder'   => array('allow', 'deny'),
+	                    'attributes' => array($restrictAttr),
+				        'disabled' => array('extract', 'archive')
 				);
 		}
 	}
@@ -43,13 +72,22 @@ if(!empty($_SESSION['user']['admin']["stores"]) && $_SESSION['user']['admin']["l
 			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
 			'path'          => $_SERVER['DOCUMENT_ROOT'] .'/uploads/',         // path to files (REQUIRED)
 			'URL'           => '/uploads/', // URL to files (REQUIRED)
-			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
+			'accessControl' => 'access',             // disable and hide dot starting files (OPTIONAL)
+	        'uploadAllow'  => $allowMIMEarr,
+			'uploadOrder'   => array('allow', 'deny'),
+	        'attributes' => array($restrictAttr),
+	        'disabled' => array('extract', 'archive')
+	    
 		);
 	$_paths[] = array(
 			'driver'        => 'LocalFileSystem',   // driver for accessing file system (REQUIRED)
 			'path'          => $_SERVER['DOCUMENT_ROOT'] .'/sudofiles/',         // path to files (REQUIRED)
 			'URL'           => '/storefiles/', // URL to files (REQUIRED)
-			'accessControl' => 'access'             // disable and hide dot starting files (OPTIONAL)
+			'accessControl' => 'access',            // disable and hide dot starting files (OPTIONAL)
+	        'uploadAllow'   => $allowMIMEarr,
+	        'uploadOrder'   => array('allow', 'deny'),
+	        'attributes' => array($restrictAttr),
+	        'disabled' => array('extract', 'archive')
 	);
 }
 
