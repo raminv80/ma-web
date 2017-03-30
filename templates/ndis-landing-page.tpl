@@ -182,17 +182,6 @@
          
   });
 
-//   function UpdatePlanType(selectedValue){      
-//       console.log('plan type is defined' + selectedValue)
-//       if(selectedValue == 'Managed'){
-//         console.log("managed");
-//         $('#plan-manager').closest('.form-group').removeClass('hide');
-//       } else {        
-//         $('#plan-manager').closest('.form-group').addClass('hide');
-//         $('#plan-manager').val('');
-//       }
-//   }
-
   function UpdateMemberRadio(selectedValue){
     console.log("update menue" + selectedValue);
     if(selectedValue == 1){

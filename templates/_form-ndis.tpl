@@ -41,7 +41,7 @@
         </select>
         <div class="error-msg help-block"></div>
       </div>
-      <div class="col-sm-6 form-group {if $post.plan_type neq 'Managed'}hide{/if}">
+      <div class="col-sm-6 form-group">
         <label class="visible-ie-only" for="plan_manager">Plan Manager:</label>
         <input class="form-control" value="{if $post.plan_manager}{$post.plan_manager}{/if}" type="text" name="plan_manager" id="plan-manager">
         <div class="error-msg help-block"></div>
