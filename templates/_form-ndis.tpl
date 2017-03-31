@@ -1,4 +1,5 @@
 <div class=" col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8 text-center" id="contform">
+<h3>NDIS Registration Form</h3>
   <form id="contact_form" accept-charset="UTF-8" method="post" action="/process/ndis-contact-us" novalidate="novalidate">
     <input type="hidden" name="formToken" id="formToken" value="{$token}" />
     <input type="hidden" value="NDIS" name="form_name" id="form_name" />
@@ -7,12 +8,12 @@
     <div class="row">
       <div class="col-sm-6 form-group">
         <label class="visible-ie-only" for="name">Full name<span>*</span>:</label>
-        <input class="form-control" value="{if $post.name}{$post.name}{else}{$user.gname} {$user.surname}{/if}" type="text" name="name" id="name" required="">
+        <input class="form-control" value="{if $post.name}{$post.name}{else}{$user.gname} {$user.surname}{/if}" type="text" name="name" id="name" required>
         <div class="error-msg help-block"></div>
       </div>
       <div class="col-sm-6 form-group">
         <label class="visible-ie-only" for="email">Email<span>*</span>:</label>
-        <input class="form-control" value="{if $post.email}{$post.email}{else}{$user.email}{/if}" type="email" name="email" id="email" required="">
+        <input class="form-control" value="{if $post.email}{$post.email}{else}{$user.email}{/if}" type="email" name="email" id="email" required>
         <div class="error-msg help-block"></div>
       </div>
     </div>
@@ -20,12 +21,12 @@
     <div class="row">
       <div class="col-sm-6 form-group">
         <label class="visible-ie-only" for="phone">Phone<span>*</span>:</label>
-        <input class="form-control" value="{if $post.phone}{$post.phone}{else}{$user.maf.main.user_mobile}{/if}" type="text" name="phone" id="phone" required="" pattern="[0-9]*">
+        <input class="form-control" value="{if $post.phone}{$post.phone}{else}{$user.maf.main.user_mobile}{/if}" type="text" name="phone" id="phone" required pattern="[0-9]*">
         <div class="error-msg help-block"></div>
       </div>
       <div class="col-sm-6 form-group">
         <label class="visible-ie-only" for="plan_no">NDIS Plan number:</label>
-        <input class="form-control" value="{if $post.plan_no}{$post.plan_no}{/if}" type="text" name="plan_no" id="plan_no"  pattern="[0-9]*" required="">
+        <input class="form-control" value="{if $post.plan_no}{$post.plan_no}{/if}" type="text" name="plan_no" id="plan_no"  pattern="[0-9]*" required>
       <div class="error-msg help-block"></div>
       </div>
     </div>  
@@ -33,7 +34,7 @@
     <div class="row">
       <div class="col-sm-6 form-group">
         <label class="visible-ie-only" for="plan_type">Plan<span>*</span></label>
-        <select class="selectlist-medium" id="plan-type" name="plan_type" required="" >
+        <select class="selectlist-medium" id="plan-type" name="plan_type" required onchange="UpdatePlanType(this.value);">
           <option value="">Please select</option>
           <option value="Managed" {if $post.plan_type eq "Managed"}selected{/if}>Managed</option>
           <option value="Self-managed" {if $post.plan_type eq "Self-managed"}selected{/if}>Self-managed</option>
@@ -41,18 +42,32 @@
         </select>
         <div class="error-msg help-block"></div>
       </div>
+    </div>
+    
+    <div class="row {if $post.plan_type neq 'Plan managed'}hide{/if}" id="plan-manager-group" style="border: 1px solid #eaebec; border-radius: 5px; margin-bottom: 20px;" >
+      <h4>Manager Details</h4>
       <div class="col-sm-6 form-group">
-        <label class="visible-ie-only" for="plan_manager">Plan Manager:</label>
-        <input class="form-control" value="{if $post.plan_manager}{$post.plan_manager}{/if}" type="text" name="plan_manager" id="plan-manager">
+        <label class="visible-ie-only" for="pmanager_name">Manager Name<span>*</span>:</label>
+        <input class="form-control" value="{if $post.pmanager_name}{$post.pmanager_name}{/if}" type="text" name="pmanager_name" id="pmanager-name" required>
+        <div class="error-msg help-block"></div>
+      </div>
+      <div class="col-sm-6 form-group">
+        <label class="visible-ie-only" for="pmanager_email">Manager Email<span>*</span>:</label>
+        <input class="form-control" value="{if $post.pmanager_email}{$post.pmanager_email}{else}{$user.email}{/if}" type="email" name="pmanager_email" id="pmanager-email" required>
+        <div class="error-msg help-block"></div>
+      </div>
+      <div class="col-sm-6 form-group">
+        <label class="visible-ie-only" for="pmanager_phone">Manager Phone<span>*</span>:</label>
+        <input class="form-control" value="{if $post.pmanager_phone}{$post.pmanager_phone}{else}{$user.maf.main.user_mobile}{/if}" type="text" name="pmanager_phone" id="pmanager-phone" required pattern="[0-9]*">
         <div class="error-msg help-block"></div>
       </div>
     </div>
     
     <div class="row">
       <div class="col-sm-6 form-group">        
-          <p>Already an existing MedicAlert member:</p>
-          <label class="radio-inline"><input type="radio" name="maf_member" id="maf-member" value="1" {if $post.maf_member eq 1}checked{/if}>Yes</label>
-          <label class="radio-inline"><input type="radio" name="maf_member" id="maf-member" value="0" {if $post.maf_member eq 0}checked{/if}>No</label>        
+        <p>Already an existing MedicAlert member:</p>
+        <label class="radio-inline"><input type="radio" name="maf_member" id="maf-member" value="1" {if $post.maf_member eq 1}checked{/if}>Yes</label>
+        <label class="radio-inline"><input type="radio" name="maf_member" id="maf-member" value="0" {if $post.maf_member eq 0}checked{/if}>No</label>        
       </div>          
       <div class="col-sm-6 form-group {if $post.maf_member eq 0}hide{/if}" >
         <label class="visible-ie-only" for="maf_no">Membership number:</label>
