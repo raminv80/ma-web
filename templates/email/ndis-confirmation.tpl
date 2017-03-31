@@ -508,8 +508,7 @@ a {
 
                         <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">Thank you for registering for a MedicAlert Everyday medical ID + 1 year membership 
                         through the NDIS. As a proud provider of the National Disability Insurance Scheme, we're pleased to provide you with our 24/7 emergency response 
-                        service and medical ID as a MedicAlert member.</p>
-                        <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">It's our pleasure to welcome you as a new MedicAlert&reg; member.</p>
+                        service and medical ID as a MedicAlert member.</p>                        
                         <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">One of our team members will be in touch with you over the next 2 business days 
                         to discuss your enquiry.</p>
                        
