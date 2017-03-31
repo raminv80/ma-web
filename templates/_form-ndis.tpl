@@ -25,7 +25,7 @@
         <div class="error-msg help-block"></div>
       </div>
       <div class="col-sm-6 form-group">
-        <label class="visible-ie-only" for="plan_no">NDIS Plan number:</label>
+        <label class="visible-ie-only" for="plan_no">NDIS Plan number<span>*</span>:</label>
         <input class="form-control" value="{if $post.plan_no}{$post.plan_no}{/if}" type="text" name="plan_no" id="plan_no"  pattern="[0-9]*" required>
       <div class="error-msg help-block"></div>
       </div>
@@ -36,7 +36,7 @@
         <label class="visible-ie-only" for="plan_type">Plan<span>*</span></label>
         <select class="selectlist-medium" id="plan-type" name="plan_type" required onchange="UpdatePlanType(this.value);">
           <option value="">Please select</option>
-          <option value="Managed" {if $post.plan_type eq "Managed"}selected{/if}>Managed</option>
+          <option value="NDIS Managed" {if $post.plan_type eq "NDIS Managed"}selected{/if}>NDIS Managed</option>
           <option value="Self-managed" {if $post.plan_type eq "Self-managed"}selected{/if}>Self-managed</option>
           <option value="Plan managed"{if $post.plan_type eq "Plan managed"}selected{/if}>Plan managed</option>
         </select>
