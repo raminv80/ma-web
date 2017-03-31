@@ -41,12 +41,14 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
       }
       catch(Exception $e){
         $error = 'There was an error sending your enquiry.';
+        if($_SERVER['REMOTE_ADDR']=='150.101.230.130'){
+         die("error"); 
+        }
       }
     }
     
     // SAVE IN DATABASE
     if(empty($error)){
-
       try{
         $sql = "INSERT INTO tbl_ndis (
             ndis_name, 
@@ -55,7 +57,9 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             ndis_form_name,
             ndis_plan_no, 
             ndis_plan_type, 
-            ndis_plan_manager, 
+            ndis_pmanager_name,
+            ndis_pmanager_email,
+            ndis_pmanager_phone,
             ndis_maf_member, 
             ndis_maf_no,              
             ndis_ip, 
@@ -71,7 +75,9 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             :ndis_form_name,
             :ndis_plan_no, 
             :ndis_plan_type, 
-            :ndis_plan_manager, 
+            :ndis_pmanager_name,
+            :ndis_pmanager_email,
+            :ndis_pmanager_phone,
             :ndis_maf_member, 
             :ndis_maf_no,             
             :ndis_ip, 
@@ -88,7 +94,9 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             ":ndis_form_name" => $_POST['form_name'],             
             ":ndis_plan_no" => $_POST['plan_no'], 
             ":ndis_plan_type" => $_POST['plan_type'],             
-            ":ndis_plan_manager" => $_POST['plan_manager'],
+            ":ndis_pmanager_name" => $_POST['pmanager_name'],
+            ":ndis_pmanager_email" => $_POST['pmanager_email'],
+            ":ndis_pmanager_phone" => $_POST['pmanager_phone'],
             ":ndis_maf_member" => $_POST['maf_member'],
             ":ndis_maf_no" => $_POST['maf_no'],
             ":ndis_ip" => $_SERVER['REMOTE_ADDR'], 
@@ -106,8 +114,9 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
     if(empty($error)){      
        try{
          $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
-         $body = $SMARTY->fetch("email-thank-you.tpl");
-         $subject = 'Thank you for your enquiry';
+         $SMARTY->assign('ndis_name', $_POST['name']);
+         $body = $SMARTY->fetch("email/ndis-confirmation.tpl");
+         $subject = 'Thanks for registering your interest in choosing MedicAlert as an NDIS provider';
          $fromEmail = (string) $CONFIG->company->email_from;
          $to = $_POST['email'];
          $COMP = json_encode($CONFIG->company);
