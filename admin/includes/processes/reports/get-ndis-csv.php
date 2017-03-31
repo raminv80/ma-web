@@ -35,7 +35,7 @@ $params['enddate'] = $endDate;
 
 $result = array();
 
-$sql = "SELECT ndis_name AS 'Full Name', ndis_phone AS 'Phone', ndis_email AS 'Email', ndis_plan_type AS 'NDIS Plan', ndis_plan_manager AS 'Plan Manager', ndis_maf_no AS 'Membership ID', ndis_created AS 'Created' FROM tbl_ndis WHERE ndis_deleted IS NULL {$wheresql} ORDER BY ndis_created DESC";
+$sql = "SELECT ndis_name AS 'Full Name', ndis_phone AS 'Phone', ndis_email AS 'Email', ndis_plan_type AS 'NDIS Plan', ndis_pmanager_name AS 'Plan Manager', ndis_pmanager_email AS 'Plan Manager Email', ndis_pmanager_phone AS 'Plan Manager Phone', ndis_maf_no AS 'Membership ID', ndis_created AS 'Created' FROM tbl_ndis WHERE ndis_deleted IS NULL {$wheresql} ORDER BY ndis_created DESC";
 if($res = $DBobject->wrappedSql($sql, $params)){
   $result = $res;
 }
