@@ -71,7 +71,6 @@
       </div>
     </div>
 
-
     <div class="row">
       <div id="popslide" class="flexslider">
         <ul class="slides">
@@ -118,32 +117,32 @@
   </div>
 </div>
 {else}
-<div id="products">
-  <div class="container">
-    {if $products}
-    <div class="row">
-      <div class="col-sm-12 text-center">
-        <h2>Select your medical ID</h2>
-        Choose from our range of genuine MedicAlert IDs
-      </div>
-      </div>
-      <div class="row" id="products-wrapper">
-          {$nofollowprod = 1}
-          {foreach $products as $item}
-            {include file='ec_product_list_struct.tpl'}
-          {/foreach}
-      </div>
-      <div class="row">
-      <div class="col-sm-12 text-center small">
-        *Selected products only. 
-      </div>
-      <div class="col-sm-12 text-center" id="moreprods">
-        <p>Can't find a product you like? See the <a href="/products?setdc={$discount_code}" rel="nofollow" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
+  {if $products}
+    <div id="products">
+      <div class="container">      
+        <div class="row">
+          <div class="col-sm-12 text-center">
+            <h2>Select your medical ID</h2>
+            Choose from our range of genuine MedicAlert IDs
+          </div>
+          </div>
+          <div class="row" id="products-wrapper">
+              {$nofollowprod = 1}
+              {foreach $products as $item}
+                {include file='ec_product_list_struct.tpl'}
+              {/foreach}
+          </div>
+          <div class="row">
+          <div class="col-sm-12 text-center small">
+            *Selected products only. 
+          </div>
+          <div class="col-sm-12 text-center" id="moreprods">
+            <p>Can't find a product you like? See the <a href="/products?setdc={$discount_code}" rel="nofollow" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
+          </div>
+        </div>  
       </div>
     </div>
-    {/if}
-  </div>
-</div>
+  {/if}
 {/if}
 
 {/block}
@@ -171,13 +170,35 @@
      email: true
    });
 
+   $('#pmanager-phone').rules("add", {
+     digits: true,
+     minlength: 8
+   });
+
+   $('#pmanager-email').rules("add", {
+     email: true
+   });     
+
    $("select").selectBoxIt();
 
-       $('input[type="radio"]').change(function(){
-          UpdateMemberRadio($(this).val());
-       });      
-          
+    $('input[type="radio"]').change(function(){
+      UpdateMemberRadio($(this).val());
+    });                
   });
+
+  function UpdatePlanType(selectedValue){      
+      console.log('plan type is defined' + selectedValue)
+      if(selectedValue == 'Plan managed'){
+        $('#plan-manager-group').slideDown().removeClass('hide');
+        $('#plan-manager-group :input').prop('required', true);
+      } else {        
+
+        $('#plan-manager-group').slideUp();
+        
+        $('#plan-manager-group :input').val('');
+        $('#plan-manager-group :input').prop('required', false);        
+      }
+  }
 
   function UpdateMemberRadio(selectedValue){
     if(selectedValue == 1){
@@ -187,7 +208,6 @@
         $('#maf-no').val('');
       }
   }
-
   
 </script>
 {/block}
