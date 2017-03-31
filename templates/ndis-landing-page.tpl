@@ -183,11 +183,15 @@
 
     $('input[type="radio"]').change(function(){
       UpdateMemberRadio($(this).val());
-    });                
+    });               
+
+    if($('#plan-manager-group').hasClass("hide")){
+      $('#plan-manager-group :input').prop('required', false);    
+    }
+     
   });
 
   function UpdatePlanType(selectedValue){      
-      console.log('plan type is defined' + selectedValue)
       if(selectedValue == 'Plan managed'){
         $('#plan-manager-group').slideDown().removeClass('hide');
         $('#plan-manager-group :input').prop('required', true);
