@@ -20,11 +20,30 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             'enqsub', 
             'Hp', 
             'timestamp', 
-            'honeypot' 
+            'honeypot',
+            'maf_member'
         );
+        
+        $mapped = array(
+            'Plan Manager Name' => 'pmanager_name',
+            'Plan Manager Email' => 'pmanager_email',
+            'Plan Manager Phone' => 'pmanager_phone',            
+            'MedicAlert Membership Number' => 'maf_no'
+        );
+        
         $content = serialize($_POST);
         $buf .= '<h2>Website ' . $_POST['form_name'] . '</h2>';
         
+        foreach($_POST as $name => $var){
+            if($res = array_search($name, $mapped)){              
+              $name = $res;              
+            }         
+          
+          if(!in_array($name, $banned)){
+        
+            $buf .= '<br/><b>' . ucwords(str_replace('_', ' ', $name)) . ': </b> <br/> ' . $var . '<br/>';
+          }
+        }
         $body = $buf;
         $subject = 'Website ' . $_POST['form_name'];
         $fromEmail = (string)$CONFIG->company->email_from;
