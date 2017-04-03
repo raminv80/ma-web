@@ -45,19 +45,24 @@
     </div>
     
     <div class="row {if $post.plan_type neq 'Plan managed'}hide{/if}" id="plan-manager-group" style="border: 1px solid #eaebec; border-radius: 5px; margin-bottom: 20px;" >
-      <h4>Manager Details</h4>
+      <h4>Plan Manager Details</h4>
       <div class="col-sm-6 form-group">
-        <label class="visible-ie-only" for="pmanager_name">Manager Name<span>*</span>:</label>
+        <label class="visible-ie-only" for="pmanager_name">Plan Manager's Name<span>*</span>:</label>
         <input class="form-control" value="{if $post.pmanager_name}{$post.pmanager_name}{/if}" type="text" name="pmanager_name" id="pmanager-name" required>
         <div class="error-msg help-block"></div>
       </div>
       <div class="col-sm-6 form-group">
-        <label class="visible-ie-only" for="pmanager_email">Manager Email<span>*</span>:</label>
+        <label class="visible-ie-only" for="pmanager_company_name">Plan Manager's Company Name<span>*</span>:</label>
+        <input class="form-control" value="{if $post.pmanager_company_name}{$post.pmanager_company_name}{/if}" type="text" name="pmanager_company_name" id="pmanager-company-name" required>
+        <div class="error-msg help-block"></div>
+      </div>      
+      <div class="col-sm-6 form-group">
+        <label class="visible-ie-only" for="pmanager_email">Plan Manager's Email<span>*</span>:</label>
         <input class="form-control" value="{if $post.pmanager_email}{$post.pmanager_email}{else}{$user.email}{/if}" type="email" name="pmanager_email" id="pmanager-email" required>
         <div class="error-msg help-block"></div>
       </div>
       <div class="col-sm-6 form-group">
-        <label class="visible-ie-only" for="pmanager_phone">Manager Phone<span>*</span>:</label>
+        <label class="visible-ie-only" for="pmanager_phone">Plan Manager's Phone<span>*</span>:</label>
         <input class="form-control" value="{if $post.pmanager_phone}{$post.pmanager_phone}{else}{$user.maf.main.user_mobile}{/if}" type="text" name="pmanager_phone" id="pmanager-phone" required pattern="[0-9]*">
         <div class="error-msg help-block"></div>
       </div>
