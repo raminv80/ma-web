@@ -26,6 +26,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         
         $mapped = array(
             'Plan Manager Name' => 'pmanager_name',
+            'Plan Manager Company Name' => 'pmanager_company_name',
             'Plan Manager Email' => 'pmanager_email',
             'Plan Manager Phone' => 'pmanager_phone',            
             'MedicAlert Membership Number' => 'maf_no'
@@ -77,6 +78,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             ndis_plan_no, 
             ndis_plan_type, 
             ndis_pmanager_name,
+            ndis_pmanager_company_name,
             ndis_pmanager_email,
             ndis_pmanager_phone,
             ndis_maf_member, 
@@ -95,6 +97,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             :ndis_plan_no, 
             :ndis_plan_type, 
             :ndis_pmanager_name,
+            :ndis_pmanager_company_name,
             :ndis_pmanager_email,
             :ndis_pmanager_phone,
             :ndis_maf_member, 
@@ -114,6 +117,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             ":ndis_plan_no" => $_POST['plan_no'], 
             ":ndis_plan_type" => $_POST['plan_type'],             
             ":ndis_pmanager_name" => $_POST['pmanager_name'],
+            ":ndis_pmanager_company_name" => $_POST['pmanager_company_name'],
             ":ndis_pmanager_email" => $_POST['pmanager_email'],
             ":ndis_pmanager_phone" => $_POST['pmanager_phone'],
             ":ndis_maf_member" => $_POST['maf_member'],
