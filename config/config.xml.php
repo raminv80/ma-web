@@ -1,13 +1,15 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="false">
+<config debug="false" staging="true">
   <domain>medicalert.org.au</domain>
   <google_analytics>
-    <id>UA-86286777-1</id>
+<!--     <id>UA-86286777-1</id> -->
+    <id></id>
     <old_id></old_id>
   </google_analytics>
   <google_tag_manager>
-    <id>GTM-TZCC4F</id>
+    <id></id>
+<!--     <id>GTM-TZCC4F</id> -->
   </google_tag_manager>
   <company>
     <name>Australia MedicAlert Foundation</name>
@@ -21,9 +23,9 @@
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
     <email>enquiry@medicalert.org.au</email>
-    <email_from>noreply@medicalert.org.au</email_from>
-    <email_contact>enquiry@medicalert.org.au</email_contact>
-    <email_orders>idewey@medicalert.org.au</email_orders>
+    <email_from>noreply@themdigital.com.au</email_from>
+    <email_contact>shaun@them.com.au</email_contact>
+    <email_orders>shaun@them.com.au</email_orders>
     <logo>logo.png</logo>
   </company>
   <global_variable>
@@ -47,14 +49,14 @@
     <value>$93.5</value>
   </global_variable>    
   <database> 
-    <host>122.201.118.45</host> 
-    <user>medicalertorg_usr</user> 
-    <password>VLw!8L+fM6cAh</password> 
-    <dbname>medicalertorg_web</dbname> 
-  	<!-- <host>122.201.97.172</host> 
+<!--     <host>122.201.118.45</host>  -->
+<!--     <user>medicalertorg_usr</user>  -->
+<!--     <password>VLw!8L+fM6cAh</password>  -->
+<!--     <dbname>medicalertorg_web</dbname>  -->
+  	<host>122.201.97.172</host> 
     <user>them_usr01</user> 
     <password>OTwFwL?pSnR+</password> 
-    <dbname>them_db01</dbname>  -->
+    <dbname>them_db01</dbname>
   </database>
   <database_variable>
     <name>==membership_fee==</name>
@@ -75,15 +77,15 @@
   <payment_gateway>
     <payway>
       <!-- LIVE  -->
-      <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey>
+      <!-- <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey>
       <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey>
       <merchantid>23886963</merchantid>
-      <bankAccountid>035213308316A</bankAccountid>
+      <bankAccountid>035213308316A</bankAccountid> -->
       <!-- DEV -->
-<!--       <secretkey>T10023_SEC_6es29q2sek6cnvetsrs6h8pkay5um3985djkjv93xm9mf8vruc3enbzd2ek2</secretkey>
+      <secretkey>T10023_SEC_6es29q2sek6cnvetsrs6h8pkay5um3985djkjv93xm9mf8vruc3enbzd2ek2</secretkey>
       <publishableakey>T10023_PUB_aumgejfq7yd27cbkbypftzg87eht5vf84q3thibxy9wpa7ru44cnfddqrx4f</publishableakey>
       <merchantid>TEST</merchantid>
-      <bankAccountid>0000000A</bankAccountid> -->
+      <bankAccountid>0000000A</bankAccountid>
     </payway>
   </payment_gateway>
   
@@ -110,7 +112,7 @@
     </associated>
     </table>
     <template typeid="1">standardpage.tpl</template>
-    <template typeid="6">landing-page.tpl</template> 
+    <template typeid="6">landing-page.tpl</template>
     <process>
       <file>includes/processes/process-load-popular-products.php</file>
     </process>
@@ -383,6 +385,11 @@
     <process>
       <file>includes/processes/process-load-wish-list.php</file>
     </process>
+  </static_page>
+  <static_page>
+    <url>ndis</url>
+    <template>ndis-landing-page.tpl</template>
+    <pageID>770</pageID>
   </static_page>
   
   <!-- ECOMMERCE  -->
@@ -729,6 +736,11 @@
     <file>includes/processes/process-send-survey.php</file>
     <return_url></return_url>
   </process>  
+  <process>
+    <url>process/ndis-contact-us</url>
+    <file>includes/processes/processes-ndis-contact.php</file>
+    <return_url></return_url>
+  </process>
 
   <smartytemplate_config>
     <templates>/templates</templates>
