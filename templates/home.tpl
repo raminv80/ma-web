@@ -4,7 +4,7 @@
 		<div class="row">
 			<div class="col-sm-12 text-center">
 				<h1>{$listing_title}</h1>
-				<a id="learnmorehome" href="/contact-us" title="Learn more about MedicAlert membership" class="btn btn-red">Contact Us</a>
+				<a id="learnmorehome" href="/ndis" title="Learn more about NDIS" class="btn btn-red">Learn More</a>
 				<a id="newfhome" href="/newwebsitefeatures" title="New features on our new website" class="btn btn-black">New website features</a>
 			</div>
 		</div>
