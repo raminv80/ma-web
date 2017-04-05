@@ -6,9 +6,10 @@
 
 {block name=body}
 <div id="pagehead">
-	<div class="bannerout">
+{*	<div class="bannerout">
       <img src="{if $listing_image}{$listing_image}{else}/images/newsdet-banner.jpg{/if}" alt="{$listing_name} banner" />
 	</div>
+  *}
 	<div class="container">
 		<div class="row">
 			<div class="{if $listing_object_id eq 10}col-md-12{else}col-md-8 col-md-offset-2{/if} text-center">
