@@ -51,7 +51,8 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         if($contact_email){
           $to = $contact_email;
         }else{
-          $to = (string)$CONFIG->company->email_contact;
+          //$to = (string)$CONFIG->company->email_contact;
+          $to = "ndis@medicalert.org.au";
         }
         $COMP = json_encode($CONFIG->company);
         $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
