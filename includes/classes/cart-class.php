@@ -1357,9 +1357,9 @@ class cart{
    */
   function GetCurrentFreeShippingDiscountName(){
     global $DBobject;
-    
+
     $sql = "SELECT discount_shipping FROM tbl_discount
-	    	WHERE discount_deleted IS NULL AND discount_published = 1 AND ((discount_start_date >= CURDATE() AND discount_end_date IS NULL)  OR (CURDATE() BETWEEN discount_start_date AND discount_end_date)) AND discount_code = :id ";
+	    	WHERE discount_deleted IS NULL AND discount_published = 1 AND ((discount_start_date <= CURDATE() AND discount_end_date IS NULL)  OR (CURDATE() BETWEEN discount_start_date AND discount_end_date)) AND discount_code = :id ";
     if($res = $DBobject->wrappedSql($sql, array(
         ":id" => $this->cartRecord['cart_discount_code'] 
     ))){
@@ -2048,7 +2048,7 @@ class cart{
   
   /**
    * ONLY FOR MAF
-   * Discount amount - Annual membership discount
+   * Discount amount - Annual membership discount for the current & previous year
    * 
    * @param float $percentage
    * @return float
@@ -2057,14 +2057,23 @@ class cart{
     global $DBobject;
   
     $discount = 0;
+    
+    //MAF membership fee - last year
+    $msfArr = $this->GetCurrentMAF_MSF(225, date('Y', strtotime('-1 year')));
 
-    //MAF membership fee - current year
-    $msfArr = $this->GetCurrentMAF_MSF(225);
-    //$membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']); //variant_id removed to fix renewal date issue
-    $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id']);
+    $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
     if(!empty($membershipFeeCartitemId)){
-      $discount =  floatval($msfArr['variant_price']) * $percentage / 100;
+      $discount +=  floatval($msfArr['variant_price']) * $percentage / 100;
     }
+    
+    //MAF membership fee - current year
+    $msfArr = $this->GetCurrentMAF_MSF(225, date('Y'));
+    
+    $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
+    if(!empty($membershipFeeCartitemId)){
+      $discount +=  floatval($msfArr['variant_price']) * $percentage / 100;
+    }
+    
     return round($discount, 2);
   }
 }
