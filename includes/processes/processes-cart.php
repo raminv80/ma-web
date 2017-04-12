@@ -553,6 +553,11 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
             $SMARTY->assign('orderItems', $orderItems);
             
+            //Promo message - Special occasion
+            if(floatval(date('Ymd')) <= 20170514 && $cart_obj->HasCategory(249)){
+              $SMARTY->assign('promo_message', 'Includes Silver Coloured Stainless Steel Curb Chain Bracelet.');
+            }
+            
             $to = $_SESSION['address']['B']['address_email'];
             $bcc = (string) $CONFIG->company->email_orders;
             $subject = 'Payment | Order confirmation';

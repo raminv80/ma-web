@@ -87,9 +87,6 @@
   table[class=w580], td[class=w580], img[class=w580] {
     width: 260px !important;
   }
-  table[class=w580], td[class=w580], img[class=w580] {
-    width: 280px !important;
-  }
   table[class=w640], td[class=w640], img[class=w640] {
     width: 300px !important;
   }
@@ -711,6 +708,13 @@ body, td {
                                                 <td align="left" height="20" width="170" class="w170" height="20"></td>
                                                 <td class="w30" width="30" height="20"></td>
                                               </tr>
+                                              {if $promo_message}
+                                              <tr>
+                                                <td class="w30" width="30"></td>
+                                                <td colspan="2" style="font-size: 12px; font-weight: bold; text-align: right;" width="580" class="w580">{$promo_message}</td>
+                                                <td class="w30" width="30"></td>
+                                              </tr>
+                                              {/if}
                                               <tr>
                                                 <td class="w30" width="30"></td>
                                                 <td style="font-size: 16px; font-weight: bold; text-align: right;" width="410" class="w410">Sub total&nbsp;&nbsp;</td>

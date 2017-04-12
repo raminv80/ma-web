@@ -1688,6 +1688,32 @@ class cart{
     }
     return false;
   }
+  
+  
+  /**
+   * Checks whether or not the cart has a given category (listing_object_id)
+   *
+   * @param int $oid
+   * @return boolean
+   */
+  function HasCategory($oid){
+    global $DBobject;
+
+    $params = array(
+        ':cid' => $this->cart_id,
+        ':oid' => $oid
+    );
+    
+    $sql = "SELECT cartitem_id FROM tbl_cartitem
+        LEFT JOIN tbl_product ON cartitem_product_id = product_object_id
+        LEFT JOIN tbl_productcat ON productcat_product_id = product_id
+        WHERE product_deleted IS NULL AND product_published = 1 AND productcat_deleted IS NULL 
+        AND cartitem_deleted IS NULL AND cartitem_cart_id = :cid AND productcat_listing_id = :oid";
+    if($res = $DBobject->wrappedSql($sql, $params)){
+      return true;
+    }
+    return false;
+  }
 
 
   /**
