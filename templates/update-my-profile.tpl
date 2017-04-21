@@ -21,11 +21,19 @@
         <div class="alert alert-danger fade in">{$error}</div>
         {/if}
       </div>
-      <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" id="listtoptext">
+      <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" id="listtoptext" data-locked="{$user.maf.main.locked}" data-mslocked="{$user.maf.main.membership_system_locked}">
         <h1>{$listing_title}</h1>
-        {if $user.maf.main.locked}
+        
+        {* SET CURRENT MEMBER RECORD *}
+        {if $user.maf.main.locked}{$member_record = $user.maf.pending}{else}{$member_record = $user.maf.update}{/if}
+        
+        {if $user.maf.main.membership_system_locked}
         <div class="profile-locked">
           {$listing_content2}
+        </div>
+        {elseif !$user.maf.main.membership_system_locked && $user.maf.main.locked}
+        <div class="profile-locked">
+          {$listing_content3}
         </div>
         {else if $user.maf.main.lifetime eq 1}
           <div class="profile-locked">
@@ -44,7 +52,7 @@
         <div class="col-sm-12 col-md-10 col-md-offset-1 text-center">
           <a href="/process/print-profile" target="_blank" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my {if $user.maf.main.locked}current {/if}profile</a>
         </div>
-        <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" {if $user.maf.main.locked}style="display:none;"{/if}>    
+        <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" {if $user.maf.main.membership_system_locked}style="display:none;"{/if}>    
           <form id="update-profile-form" role="form" accept-charset="UTF-8" action="" method="post">
             <input type="hidden" value="update-profile" name="action" id="action" />
             <input type="hidden" name="formToken" id="formToken" value="{$token}" />
@@ -67,26 +75,26 @@
                     </label>
                     <select class="selectlist-medium" id="title" name="user_title">
                       <option value="">Please select</option>
-                      <option value="." {if $user.maf.update.user_title eq '.'}selected="selected"{/if}>.</option>
-                      <option value="Brother" {if $user.maf.update.user_title eq 'Brother'}selected="selected"{/if}>Brother</option>
-                      <option value="Dr" {if $user.maf.update.user_title eq 'Dr'}selected="selected"{/if}>Dr</option>
-                      <option value="Father" {if $user.maf.update.user_title eq 'Father'}selected="selected"{/if}>Father</option>
-                      <option value="Lady" {if $user.maf.update.user_title eq 'Lady'}selected="selected"{/if}>Lady</option>
-                      <option value="Lt Col" {if $user.maf.update.user_title eq 'Lt Col'}selected="selected"{/if}>Lt Col</option>
-                      <option value="Major General" {if $user.maf.update.user_title eq 'Major General'}selected="selected"{/if}>Major General</option>
-                      <option value="Master" {if $user.maf.update.user_title eq 'Master'}selected="selected"{/if}>Master</option>
-                      <option value="Miss" {if $user.maf.update.user_title eq 'Miss'}selected="selected"{/if}>Miss</option>
-                      <option value="Monsignor" {if $user.maf.update.user_title eq 'Monsignor'}selected="selected"{/if}>Monsignor</option>
-                      <option value="Mr" {if $user.maf.update.user_title eq 'Mr'}selected="selected"{/if}>Mr</option>
-                      <option value="Mrs" {if $user.maf.update.user_title eq 'Mrs'}selected="selected"{/if}>Mrs</option>
-                      <option value="Ms" {if $user.maf.update.user_title eq 'Ms'}selected="selected"{/if}>Ms</option>
-                      <option value="Prof" {if $user.maf.update.user_title eq 'Prof'}selected="selected"{/if}>Prof</option>
-                      <option value="Rev" {if $user.maf.update.user_title eq 'Rev'}selected="selected"{/if}>Rev</option>
-                      <option value="Rev. Canon" {if $user.maf.update.user_title eq 'Rev. Canon'}selected="selected"{/if}>Rev. Canon</option>
-                      <option value="Rev Fr" {if $user.maf.update.user_title eq 'Rev Fr'}selected="selected"{/if}>Rev Fr</option>
-                      <option value="Sir" {if $user.maf.update.user_title eq 'Sir'}selected="selected"{/if}>Sir</option>
-                      <option value="Sister" {if $user.maf.update.user_title eq 'Sister'}selected="selected"{/if}>Sister</option>
-                      <option value="The Hon." {if $user.maf.update.user_title eq 'The Hon.'}selected="selected"{/if}>The Hon.</option>
+                      <option value="." {if $member_record.user_title eq '.'}selected="selected"{/if}>.</option>
+                      <option value="Brother" {if $member_record.user_title eq 'Brother'}selected="selected"{/if}>Brother</option>
+                      <option value="Dr" {if $member_record.user_title eq 'Dr'}selected="selected"{/if}>Dr</option>
+                      <option value="Father" {if $member_record.user_title eq 'Father'}selected="selected"{/if}>Father</option>
+                      <option value="Lady" {if $member_record.user_title eq 'Lady'}selected="selected"{/if}>Lady</option>
+                      <option value="Lt Col" {if $member_record.user_title eq 'Lt Col'}selected="selected"{/if}>Lt Col</option>
+                      <option value="Major General" {if $member_record.user_title eq 'Major General'}selected="selected"{/if}>Major General</option>
+                      <option value="Master" {if $member_record.user_title eq 'Master'}selected="selected"{/if}>Master</option>
+                      <option value="Miss" {if $member_record.user_title eq 'Miss'}selected="selected"{/if}>Miss</option>
+                      <option value="Monsignor" {if $member_record.user_title eq 'Monsignor'}selected="selected"{/if}>Monsignor</option>
+                      <option value="Mr" {if $member_record.user_title eq 'Mr'}selected="selected"{/if}>Mr</option>
+                      <option value="Mrs" {if $member_record.user_title eq 'Mrs'}selected="selected"{/if}>Mrs</option>
+                      <option value="Ms" {if $member_record.user_title eq 'Ms'}selected="selected"{/if}>Ms</option>
+                      <option value="Prof" {if $member_record.user_title eq 'Prof'}selected="selected"{/if}>Prof</option>
+                      <option value="Rev" {if $member_record.user_title eq 'Rev'}selected="selected"{/if}>Rev</option>
+                      <option value="Rev. Canon" {if $member_record.user_title eq 'Rev. Canon'}selected="selected"{/if}>Rev. Canon</option>
+                      <option value="Rev Fr" {if $member_record.user_title eq 'Rev Fr'}selected="selected"{/if}>Rev Fr</option>
+                      <option value="Sir" {if $member_record.user_title eq 'Sir'}selected="selected"{/if}>Sir</option>
+                      <option value="Sister" {if $member_record.user_title eq 'Sister'}selected="selected"{/if}>Sister</option>
+                      <option value="The Hon." {if $member_record.user_title eq 'The Hon.'}selected="selected"{/if}>The Hon.</option>
                     </select>
                     <div class="error-msg help-block"></div>
                   </div>
@@ -95,7 +103,7 @@
                     <label for="gname" class="visible-ie-only">
                       First Name<span>*</span>:
                     </label>
-                    <input type="text" value="{$user.maf.update.user_firstname}" class="form-control" id="gname" name="user_firstname" required>
+                    <input type="text" value="{$member_record.user_firstname}" class="form-control" id="gname" name="user_firstname" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -103,14 +111,14 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="middlename" class="visible-ie-only"> Middle Name: </label>
-                    <input type="text" value="{$user.maf.update.user_middlename}" class="form-control" id="middlename" name="user_middlename">
+                    <input type="text" value="{$member_record.user_middlename}" class="form-control" id="middlename" name="user_middlename">
                     <div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label for="surname" class="visible-ie-only">
                       Last Name<span>*</span>:
                     </label>
-                    <input type="text" value="{$user.maf.update.user_lastname}" class="form-control" id="surname" name="user_lastname" required>
+                    <input type="text" value="{$member_record.user_lastname}" class="form-control" id="surname" name="user_lastname" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -120,7 +128,7 @@
                     <label for="address" class="visible-ie-only">
                       Address<span>*</span>:
                     </label>
-                    <input type="text" value="{$user.maf.update.user_address}" class="form-control" id="address" name="user_address" required>
+                    <input type="text" value="{$member_record.user_address}" class="form-control" id="address" name="user_address" required>
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -128,7 +136,7 @@
                     <label for="suburb" class="visible-ie-only">
                       Suburb<span>*</span>:
                     </label>
-                    <input type="text" value="{$user.maf.update.user_suburb}" class="form-control" id="suburb" name="user_suburb" required>
+                    <input type="text" value="{$member_record.user_suburb}" class="form-control" id="suburb" name="user_suburb" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -141,7 +149,7 @@
                     <select class="selectlist-medium" id="state" name="user_state_id" required>
                       <option value="">Please select an option</option>
                       {foreach $options_state as $opt}
-                      <option value="{$opt.value}" {if $user.maf.update.user_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
+                      <option value="{$opt.value}" {if $member_record.user_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}
                     </select>
                     <div class="error-msg help-block"></div>
@@ -151,7 +159,7 @@
                     <label for="postcode" class="visible-ie-only">
                       Postcode<span>*</span>:
                     </label>
-                    <input type="text" maxlength="4" value="{$user.maf.update.user_postcode}" class="form-control" id="postcode" name="user_postcode" pattern="[0-9]" required>
+                    <input type="text" maxlength="4" value="{$member_record.user_postcode}" class="form-control" id="postcode" name="user_postcode" pattern="[0-9]" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -161,13 +169,13 @@
                     <label for="email" class="visible-ie-only">
                       Email<span>*</span>:
                     </label>
-                    <input type="email" value="{$user.maf.update.user_email}" class="form-control" id="reg-email" name="user_email" required>
+                    <input type="email" value="{$member_record.user_email}" class="form-control" id="reg-email" name="user_email" required>
                     <div class="error-msg help-block"></div>
                   </div>
 
                   <div class="col-sm-6 form-group">
                     <label for="homephone" class="visible-ie-only"> Home phone: </label>
-                    <input type="text" value="{$user.maf.update.user_phone_home}" class="form-control" id="homephone" name="user_phone_home" pattern="[0-9]">
+                    <input type="text" value="{$member_record.user_phone_home}" class="form-control" id="homephone" name="user_phone_home" pattern="[0-9]">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -175,7 +183,7 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="workphone" class="visible-ie-only"> Work phone: </label>
-                    <input type="text" value="{$user.maf.update.user_phone_work}" class="form-control" id="workphone" name="user_phone_work" pattern="[0-9]">
+                    <input type="text" value="{$member_record.user_phone_work}" class="form-control" id="workphone" name="user_phone_work" pattern="[0-9]">
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -183,7 +191,7 @@
                     <label for="mobile" class="visible-ie-only">
                       Mobile<span>*</span>:
                     </label>
-                    <input type="text" maxlength="10" value="{$user.maf.update.user_mobile|replace:' ':''}" class="form-control" id="mobile" name="user_mobile" pattern="[0-9]" required>
+                    <input type="text" maxlength="10" value="{$member_record.user_mobile|replace:' ':''}" class="form-control" id="mobile" name="user_mobile" pattern="[0-9]" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -194,8 +202,8 @@
                       Preferred correspondence<span>*</span>:
                     </label>
                     <select class="selectlist-medium" id="preferred" name="correspondenceType" required>
-                      <option value="Email" {if $user.maf.update.correspondenceType neq 'Post' || !$user.maf.update.contact_phone_home}selected="selected"{/if}>Email</option>
-                      <option value="Post" {if $user.maf.update.correspondenceType eq 'Post' && $user.maf.update.contact_phone_home}selected="selected"{/if}>Post</option>
+                      <option value="Email" {if $member_record.correspondenceType neq 'Post' || !$member_record.contact_phone_home}selected="selected"{/if}>Email</option>
+                      <option value="Post" {if $member_record.correspondenceType eq 'Post' && $member_record.contact_phone_home}selected="selected"{/if}>Post</option>
                     </select>
                     <div class="error-msg help-block"></div>
                   </div>
@@ -204,8 +212,8 @@
                     <label for="dob" class="visible-ie-only">
                       Date of birth<span>*</span>:
                     </label>
-                    <input type="hidden" value="{$user.maf.update.user_dob}" name="user_dob" id="user_dob" required>
-                    <input type="text" value="{$user.maf.update.user_dob|date_format:'%d/%m/%Y'}" placeholder="DD/MM/YYYY" class="form-control" id="dob" name="dob" onchange="setDateValue('user_dob',this.value);" required>
+                    <input type="hidden" value="{$member_record.user_dob}" name="user_dob" id="user_dob" required>
+                    <input type="text" value="{$member_record.user_dob|date_format:'%d/%m/%Y'}" placeholder="DD/MM/YYYY" class="form-control" id="dob" name="dob" onchange="setDateValue('user_dob',this.value);" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -221,26 +229,26 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="emername" class="visible-ie-only"> Name: </label>
-                    <input type="text" value="{$user.maf.update.contact_name}" class="form-control" id="emername" name="contact_name">
+                    <input type="text" value="{$member_record.contact_name}" class="form-control" id="emername" name="contact_name">
                     <div class="error-msg help-block"></div>
                   </div>
 
                   <div class="col-sm-6 form-group">
                     <label for="emerrel" class="visible-ie-only"> Relationship: </label>
-                    <input type="text" value="{$user.maf.update.contact_relationship}" class="form-control" id="emerrel" name="contact_relationship">
+                    <input type="text" value="{$member_record.contact_relationship}" class="form-control" id="emerrel" name="contact_relationship">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="emeraddress" class="visible-ie-only"> Address: </label>
-                    <input type="text" value="{$user.maf.update.contact_address}" class="form-control" id="emeraddress" name="contact_address">
+                    <input type="text" value="{$member_record.contact_address}" class="form-control" id="emeraddress" name="contact_address">
                     <div class="error-msg help-block"></div>
                   </div>
 
                   <div class="col-sm-6 form-group">
                     <label for="emersuburb" class="visible-ie-only"> Suburb: </label>
-                    <input type="text" value="{$user.maf.update.contact_suburb}" class="form-control" id="emersuburb" name="contact_suburb">
+                    <input type="text" value="{$member_record.contact_suburb}" class="form-control" id="emersuburb" name="contact_suburb">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -251,7 +259,7 @@
                     <select class="selectlist-medium" id="emerstate" name="contact_state_id">
                       <option value="">Please select an option</option>
                       {foreach $options_state as $opt}
-                      <option value="{$opt.value}" {if $user.maf.update.contact_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
+                      <option value="{$opt.value}" {if $member_record.contact_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}
                     </select>
                     <div class="error-msg help-block"></div>
@@ -259,7 +267,7 @@
 
                   <div class="col-sm-6 form-group">
                     <label for="emerpostcode" class="visible-ie-only"> Postcode: </label>
-                    <input type="text" maxlength="4" value="{$user.maf.update.contact_postcode}" class="form-control" id="emerpostcode" name="contact_postcode" pattern="[0-9]">
+                    <input type="text" maxlength="4" value="{$member_record.contact_postcode}" class="form-control" id="emerpostcode" name="contact_postcode" pattern="[0-9]">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -267,12 +275,12 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="emerhomephone" class="visible-ie-only"> Home phone <span>*</span>: </label>
-                    <input type="text" value="{$user.maf.update.contact_phone_home}" class="form-control" id="emerhomephone" name="contact_phone_home" pattern="[0-9]" required>
+                    <input type="text" value="{$member_record.contact_phone_home}" class="form-control" id="emerhomephone" name="contact_phone_home" pattern="[0-9]" required>
                     <div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label for="emerworkphone" class="visible-ie-only"> Work phone: </label>
-                    <input type="text" value="{$user.maf.update.contact_phone_work}" class="form-control" id="emerworkphone" name="contact_phone_work" pattern="[0-9]">
+                    <input type="text" value="{$member_record.contact_phone_work}" class="form-control" id="emerworkphone" name="contact_phone_work" pattern="[0-9]">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -280,7 +288,7 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="emermobile" class="visible-ie-only"> Mobile: </label>
-                    <input type="text" maxlength="10" value="{$user.maf.update.contact_mobile}" class="form-control" id="emermobile" name="contact_mobile" pattern="[0-9]">
+                    <input type="text" maxlength="10" value="{$member_record.contact_mobile}" class="form-control" id="emermobile" name="contact_mobile" pattern="[0-9]">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -295,26 +303,26 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="docname" class="visible-ie-only"> Name: </label>
-                    <input type="text" value="{$user.maf.update.doc_name}" class="form-control" id="docname" name="doc_name">
+                    <input type="text" value="{$member_record.doc_name}" class="form-control" id="docname" name="doc_name">
                     <div class="error-msg help-block"></div>
                   </div>
 
                   <div class="col-sm-6 form-group">
                     <label for="docmedcentre" class="visible-ie-only"> Medical centre: </label>
-                    <input type="text" value="{$user.maf.update.doc_medical_centre}" class="form-control" id="docmedcentre" name="doc_medical_centre">
+                    <input type="text" value="{$member_record.doc_medical_centre}" class="form-control" id="docmedcentre" name="doc_medical_centre">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="docaddress" class="visible-ie-only"> Address: </label>
-                    <input type="text" value="{$user.maf.update.doc_address}" class="form-control" id="docaddress" name="doc_address">
+                    <input type="text" value="{$member_record.doc_address}" class="form-control" id="docaddress" name="doc_address">
                     <div class="error-msg help-block"></div>
                   </div>
 
                   <div class="col-sm-6 form-group">
                     <label for="docsuburb" class="visible-ie-only"> Suburb: </label>
-                    <input type="text" value="{$user.maf.update.doc_suburb}" class="form-control" id="docsuburb" name="doc_suburb">
+                    <input type="text" value="{$member_record.doc_suburb}" class="form-control" id="docsuburb" name="doc_suburb">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -325,7 +333,7 @@
                     <select class="selectlist-medium" id="docstate" name="doc_state_id">
                       <option value="">Please select an option</option>
                       {foreach $options_state as $opt}
-                      <option value="{$opt.value}" {if $user.maf.update.doc_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
+                      <option value="{$opt.value}" {if $member_record.doc_state_id eq $opt.value}selected="selected"{/if}>{$opt.value}</option>
                       {/foreach}
                     </select>
                     <div class="error-msg help-block"></div>
@@ -333,7 +341,7 @@
 
                   <div class="col-sm-6 form-group">
                     <label for="docpostcode" class="visible-ie-only"> Postcode: </label>
-                    <input type="text" maxlength="4" value="{$user.maf.update.doc_postcode}" class="form-control" id="docpostcode" name="doc_postcode" pattern="[0-9]">
+                    <input type="text" maxlength="4" value="{$member_record.doc_postcode}" class="form-control" id="docpostcode" name="doc_postcode" pattern="[0-9]">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -341,12 +349,12 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="docphone" class="visible-ie-only"> Phone: </label>
-                    <input type="text" value="{$user.maf.update.doc_phone}" class="form-control" id="docphone" name="doc_phone" pattern="[0-9]">
+                    <input type="text" value="{$member_record.doc_phone}" class="form-control" id="docphone" name="doc_phone" pattern="[0-9]">
                     <div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label for="docfileno" class="visible-ie-only"> File No. (if known): </label>
-                    <input type="text" maxlength="50" value="{$user.maf.update.doc_file_no}" class="form-control" id="docfileno" name="doc_file_no">
+                    <input type="text" maxlength="50" value="{$member_record.doc_file_no}" class="form-control" id="docfileno" name="doc_file_no">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -363,17 +371,17 @@
                     <p class="text-left">
                       It is recommended that you officially register your donation decision on the <a href="https://www.humanservices.gov.au/customer/services/medicare/australian-organ-donor-register" title="Australian Organ Donor Register" target="_blank">Australian Organ Donor Register</a>, and discuss your decision with your family.
                     </p>
-                    <input type="radio" name="user_donor" id="organdonationy" class="form-control" value="t" {if $user.maf.update.user_donor eq 't'}checked="checked" {/if}/>
+                    <input type="radio" name="user_donor" id="organdonationy" class="form-control" value="t" {if $member_record.user_donor eq 't'}checked="checked" {/if}/>
                     <label for="organdonationy" class="radiolab">Yes</label>
 
-                    <input type="radio" name="user_donor" id="organdonationn" class="form-control" value="f" {if $user.maf.update.user_donor neq 't'}checked="checked" {/if} />
+                    <input type="radio" name="user_donor" id="organdonationn" class="form-control" value="f" {if $member_record.user_donor neq 't'}checked="checked" {/if} />
                     <label for="organdonationn" class="radiolab">No</label>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-sm-12 form-group">
                     <label for="organotherinfo" class="visible-ie-only">Other Info:</label>
-                    <textarea id="organotherinfo" name="user_donorFreeText" class="form-control">{$user.maf.update.user_donorFreeText}</textarea>
+                    <textarea id="organotherinfo" name="user_donorFreeText" class="form-control">{$member_record.user_donorFreeText}</textarea>
                   </div>
                 </div>
               </div>
@@ -398,14 +406,14 @@
                     {$abn = ['AB Negative', 'AB Rh (D) Negative', 'AB Rh NEG']}
                     <select class="selectlist-medium" id="bloodgroup" name="blood_group">
                       <option value="">Select an option</option>
-                      <option value="O Positive" {if $user.maf.update.blood_group|in_array:$op}selected="selected"{/if}>O Positive</option>
-                      <option value="O Negative" {if $user.maf.update.blood_group|in_array:$on}selected="selected"{/if}>O Negative</option>
-                      <option value="A Positive" {if $user.maf.update.blood_group|in_array:$ap}selected="selected"{/if}>A Positive</option>
-                      <option value="A Negative" {if $user.maf.update.blood_group|in_array:$an}selected="selected"{/if}>A Negative</option>
-                      <option value="B Positive" {if $user.maf.update.blood_group|in_array:$bp}selected="selected"{/if}>B Positive</option>
-                      <option value="B Negative" {if $user.maf.update.blood_group|in_array:$bn}selected="selected"{/if}>B Negative</option>
-                      <option value="AB Positive" {if $user.maf.update.blood_group|in_array:$abp}selected="selected"{/if}>AB Positive</option>
-                      <option value="AB Negative" {if $user.maf.update.blood_group|in_array:$abn}selected="selected"{/if}>AB Negative</option>
+                      <option value="O Positive" {if $member_record.blood_group|in_array:$op}selected="selected"{/if}>O Positive</option>
+                      <option value="O Negative" {if $member_record.blood_group|in_array:$on}selected="selected"{/if}>O Negative</option>
+                      <option value="A Positive" {if $member_record.blood_group|in_array:$ap}selected="selected"{/if}>A Positive</option>
+                      <option value="A Negative" {if $member_record.blood_group|in_array:$an}selected="selected"{/if}>A Negative</option>
+                      <option value="B Positive" {if $member_record.blood_group|in_array:$bp}selected="selected"{/if}>B Positive</option>
+                      <option value="B Negative" {if $member_record.blood_group|in_array:$bn}selected="selected"{/if}>B Negative</option>
+                      <option value="AB Positive" {if $member_record.blood_group|in_array:$abp}selected="selected"{/if}>AB Positive</option>
+                      <option value="AB Negative" {if $member_record.blood_group|in_array:$abn}selected="selected"{/if}>AB Negative</option>
                     </select>
                   </div>
                 </div>
@@ -418,12 +426,12 @@
                 </div>
               </h3>
               <div class="acc-body">
-                {if $user.maf.update.conditions}
+                {if $member_record.conditions}
                 <div class="row">
                   <div class="col-sm-12 form-group">
                     <p class="text-left">To remove a condition untick the relevant box.</p>
                   </div>
-                  {foreach $user.maf.update.conditions as $k => $v}
+                  {foreach $member_record.conditions as $k => $v}
                   <div class="col-sm-12 form-group">
                     <input type="checkbox" name="conditions[]" id="medicalcond{$k}" class="form-control" value="{$v.value}" {if $v.status eq '1'}checked="checked" {/if}/>
                     <label for="medicalcond{$k}" class="radiolab">{$v.value}</label>
@@ -454,12 +462,12 @@
                     <p class="text-left">The Australasian Society of Clinical Immunology & Allergy recommends allergies should always be confirmed (authenticated) by your doctor.</p>
                   </div>
                 </div>
-                <br /> {if $user.maf.update.allergies}
+                <br /> {if $member_record.allergies}
                 <div class="row">
                   <div class="col-sm-12 form-group">
                     <p class="text-left">To remove an allergy untick the relevant box.</p>
                   </div>
-                  {foreach $user.maf.update.allergies as $k => $v}
+                  {foreach $member_record.allergies as $k => $v}
                   <div class="col-sm-12 form-group">
                     <input type="checkbox" name="allergies[]" id="allergies{$k}" class="form-control" value="{$v.value}" {if $v.status eq '1'}checked="checked" {/if}/>
                     <label for="allergies{$k}" class="radiolab">{$v.value}</label>
@@ -484,12 +492,12 @@
               </h3>
 
               <div class="acc-body">
-                {if $user.maf.update.medications}
+                {if $member_record.medications}
                 <div class="row">
                   <div class="col-sm-12 form-group">
                     <p class="text-left">To remove a medication untick the relevant box.</p>
                   </div>
-                  {foreach $user.maf.update.medications as $k => $v}
+                  {foreach $member_record.medications as $k => $v}
                   <div class="col-sm-12 form-group">
                     <input type="checkbox" name="medications[]" id="medications{$k}" class="form-control" value="{$v.value}" {if $v.status eq '1'}checked="checked" {/if}/>
                     <label for="medications{$k}" class="radiolab">{$v.value}</label>
@@ -516,21 +524,21 @@
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3 form-group">
                     <label for="dva" class="visible-ie-only"> DVA gold card number: </label>
-                    <input type="text" value="{$user.maf.update.attributes.10}" class="form-control" id="dva" name="dvagoldcard">
+                    <input type="text" value="{$member_record.attributes.10}" class="form-control" id="dva" name="dvagoldcard">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3 form-group">
                     <label for="healthfundname" class="visible-ie-only"> Health fund name: </label>
-                    <input type="text" value="{$user.maf.update.attributes.12}" class="form-control" id="healthfundname" name="healthfundname">
+                    <input type="text" value="{$member_record.attributes.12}" class="form-control" id="healthfundname" name="healthfundname">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3 form-group">
                     <label for="healthfundno" class="visible-ie-only"> Health fund number: </label>
-                    <input type="text" value="{$user.maf.update.attributes.13}" class="form-control" id="healthfundno" name="healthfundnumber">
+                    <input type="text" value="{$member_record.attributes.13}" class="form-control" id="healthfundno" name="healthfundnumber">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -540,14 +548,14 @@
                       Individual health identifier: <img src="/images/question-mark.png" alt="Health identifier information" title="Note: An Individual Health Identifier (IHI) number is your numerical identifier that uniquely identifies each individual in the Australian healthcare system (my health record).
 The IHI is part of the government e-health initiative developed to enhance the way information is exchanged, shared and managed in the Australian health sector." data-toggle="tooltip" data-placement="top" />
                     </label>
-                    <input type="text" value="{$user.maf.update.attributes.14}" class="form-control" id="healthid" name="ehealth">
+                    <input type="text" value="{$member_record.attributes.14}" class="form-control" id="healthid" name="ehealth">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-sm-6 col-sm-offset-3 form-group">
                     <label for="seniorscard" class="visible-ie-only"> Seniors card: </label>
-                    <input type="text" value="{$user.maf.update.attributes.18}" class="form-control" id="seniorscard" name="seniorscard">
+                    <input type="text" value="{$member_record.attributes.18}" class="form-control" id="seniorscard" name="seniorscard">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -565,7 +573,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
                   <div class="col-sm-12 form-group">
                     <label for="emergencyinfo" class="visible-ie-only"> Emergency information: </label>
 
-                    <textarea maxlength="1000" id="emergencyinfo" name="emergencyInfo" class="form-control">{$user.maf.update.emergencyInfo}</textarea>
+                    <textarea maxlength="1000" id="emergencyinfo" name="emergencyInfo" class="form-control">{$member_record.emergencyInfo}</textarea>
                   </div>
                 </div>
               </div>
@@ -582,7 +590,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
 
                     <p><b>Medical record files:</b></p>
                       {$hasfile = 0}
-                      {foreach $user.maf.update.medicalRecordFiles as $k => $v}
+                      {foreach $member_record.medicalRecordFiles as $k => $v}
                         {if $v.fileId}
                           {$hasfile = 1}
                           <div class="filename"><a target="_blank" href="/process/user?action=getfile&fid={$v.fileId}" title="Click to download">{$v.fileName}</a></div>
@@ -596,7 +604,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
                     <br>
                     <p><b>Other Files</b></p>
                       {$hasfile = 0}
-                      {foreach $user.maf.update.otherFiles as $k => $v}
+                      {foreach $member_record.otherFiles as $k => $v}
                         {if $v.fileId}
                           {$hasfile = 1}
                           <div class="filename"><a target="_blank" href="/process/user?action=getfile&fid={$v.fileId}" title="Click to download">{$v.fileName}</a></div>
@@ -621,10 +629,10 @@ The IHI is part of the government e-health initiative developed to enhance the w
             </div>
 
             <div class="clearfix"></div>
-            {if !$user.maf.main.locked}
+            {if true || !$user.maf.main.membership_system_locked}
             <div class="row">
               <div class="col-sm-10 col-sm-offset-1">
-                <br /> <a href="/process/print-profile" target="_blank" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my profile</a> <br />
+                <br /> <a href="/process/print-profile" target="_blank" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my {if $user.maf.main.locked}current {/if}profile</a> <br />
                 {$listing_content1}
               </div>
             </div>
@@ -693,7 +701,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
 <script type="text/javascript">
   $(document).ready(function() {
 
-    {if $user.maf.main.locked}
+    {if $user.maf.main.membership_system_locked}
     	lockFields();
     {/if}
 

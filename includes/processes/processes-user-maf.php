@@ -357,6 +357,7 @@ if($_GET["logout"]){
   $user_obj->logOut($_SESSION['user']['public']['maf']['token']);
   $_SESSION['user']['public'] = null;
   $_SESSION['user']['new_user'] = null;
+  $_SESSION['address'] = null;
   session_regenerate_id();
   if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
   header('Location: ' . $redirect);

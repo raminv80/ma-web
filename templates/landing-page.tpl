@@ -125,9 +125,11 @@
           {/foreach}
       </div>
       <div class="row">
+      {if $listing_object_id neq 822}
       <div class="col-sm-12 text-center small">
         *Selected products only. 
       </div>
+      {/if}
       <div class="col-sm-12 text-center" id="moreprods">
         <p>Can't find a product you like? See the <a href="/products?setdc={$discount_code}" rel="nofollow" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
       </div>

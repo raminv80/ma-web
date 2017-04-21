@@ -18,7 +18,7 @@ try{
   $shipping_obj = new ShippingClass(count($shippable), $cart_obj->GetCurrentFreeShippingDiscountName());
   $SMARTY->assign('shippingMethods', $shipping_obj->getShippingMethods());
   
-  //RE-APPLY DISCOUNT CODE - BUPA
+  //RE-APPLY DISCOUNT CODE - (BUPA/AUTISM with products) 
   if(!empty($_SESSION['reApplydiscount']) && $shippable){
     $res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
     $_SESSION['reApplydiscount'] = '';

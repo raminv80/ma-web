@@ -469,7 +469,7 @@ function sendErrorMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
     if(function_exists("SafeMail")){
       $mailSent = SafeMail($to, "ERROR: $subject", $body, $headers, '-f '. $fromEmail);
     }
-    $filename = $_SERVER['DOCUMENT_ROOT'].'/debug_log.txt';
+    $filename = $_SERVER['DOCUMENT_ROOT'].'/debug_log';
     $body = time(). PHP_EOL . $subject. PHP_EOL . $body . PHP_EOL;
     file_put_contents($filename, $body, FILE_APPEND | LOCK_EX);
     

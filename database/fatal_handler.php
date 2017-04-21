@@ -36,7 +36,7 @@ function fatal_handler() {
     $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
     $headers .= "Bcc: medicalert.org.au@gmail.com\r\n";
     try{
-    	$filename = $_SERVER['DOCUMENT_ROOT'].'/fatalerror'. date("Y-m-d-H") .'.txt';
+    	$filename = $_SERVER['DOCUMENT_ROOT'].'/fatalerror'. date("Y-m-d-H");
     	if(!file_exists($filename)){
     		file_put_contents($filename, $body);
     		mail($to,$subject,$body,$headers, "-f$fromEmail");

@@ -1081,9 +1081,15 @@ class cart{
       $addMSF = true;
     } elseif(!empty($_memberArr['maf']) && empty($_memberArr['maf']['main']['lifetime'])){
       //Existing member
-      $addMSF = ($_memberArr['maf']['main']['renew'] == 't')? true : false;
-      $addReactivationFee = ($_memberArr['maf']['main']['reactivation'] == 't')? true : false;
+      
+      //Avoid duplicate payments - member service fee
+      $addMSF = ($_memberArr['maf']['main']['renew'] == 't' && !$this->HasPaidMSF($_memberArr['id'], $msfArr['product_object_id'], $msfArr['variant_id']))? true : false;
+      
+      //Avoid duplicate payments - reactivation fee
+      $addReactivationFee = ($_memberArr['maf']['main']['reactivation'] == 't' && !$this->HasPaidMSF($_memberArr['id'], 255, 16))? true : false;
     }
+    
+    
     //Add/remove MAF membership fee
     if($addMSF && empty($membershipFeeCartitemId)){
       $this->AddToCart($msfArr['product_object_id'], array(), 0, 1, null, $msfArr['variant_id']);
@@ -2102,4 +2108,32 @@ class cart{
     
     return round($discount, 2);
   }
+  
+  
+  /**
+   * ONLY FOR MAF
+   * Check if the member has already paid the membership fee for the last 18 months 
+   *
+   * @param integer $membershipId
+   * @return boolean
+   */
+  protected function HasPaidMSF($membershipId, $productId, $variantId){
+    global $DBobject;
+  
+    if(!empty($membershipId)){
+      $params = array(
+          ':uid' => $membershipId,
+          ':pid' => $productId,
+          ':vid' => $variantId
+      );
+      $sql = "SELECT cartitem_id FROM tbl_payment LEFT JOIN tbl_cartitem ON payment_cart_id = cartitem_cart_id 
+          WHERE payment_deleted IS NULL AND payment_status = 'A' AND payment_user_id = :uid 
+          AND cartitem_deleted IS NULL AND cartitem_product_id = :pid AND cartitem_variant_id = :vid AND payment_created > (NOW() - INTERVAL 18 MONTH)";
+      if($res = $DBobject->wrappedSql($sql, $params)){
+        return true;
+      }
+    }
+    return false;
+  }
+  
 }

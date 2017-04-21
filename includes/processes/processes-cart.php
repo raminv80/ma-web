@@ -554,7 +554,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $SMARTY->assign('orderItems', $orderItems);
             
             //Promo message - Special occasion
-            if(floatval(date('Ymd')) <= 20170514 && $cart_obj->HasCategory(249)){
+            if(floatval(date('Ymd')) <= 20170514 && !empty($MAFMemberId) && $cart_obj->HasCategory(249)){
               $SMARTY->assign('promo_message', 'Includes Silver Coloured Stainless Steel Curb Chain Bracelet.');
             }
             

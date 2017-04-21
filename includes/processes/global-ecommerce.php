@@ -33,8 +33,6 @@ if(!empty($_REQUEST['setdc'])){
   $_SESSION['reApplydiscount'] = $_REQUEST['setdc'];
 }
 
-
-
 // **************** LOAD ECOMMERCE DETAILS
 try{
   $cart_obj = new cart($_SESSION['user']['public']['id']);
@@ -69,4 +67,39 @@ catch(exceptionCart $e){
   $SMARTY->assign('error', $e->getMessage());
 }
 
+
+//MAF ONLY - auto apply SENIORS when DOB >= 60 years and seniors card not empty
+if($itemNumber > 0 && empty($cart['cart_discount_code']) && empty($_SESSION['reApplydiscount'])){ 
+  $dob = '';
+  $seniorsCard = '';
+  $age = 0;
   
+  //New member
+  if(!empty($_SESSION['user']['new_user']) && empty($_SESSION['user']['public']['id'])){
+    $dob = $_SESSION['user']['new_user']['db_dob'];
+    $seniorsCard = $_SESSION['user']['new_user']['seniorscard'];
+  }
+  
+  //Existing member
+  if(!empty($_SESSION['user']['public']['maf']['update'])){
+    $dob = $_SESSION['user']['public']['maf']['update']['user_dob'];
+    $seniorsCard = $_SESSION['user']['public']['maf']['update']['attributes'][18];
+  }
+  
+  if(!empty($dob)){
+    //Calculate date difference between renewal date and today
+    $dob = date_create_from_format('Y-m-d', $dob);
+    $today = new DateTime();
+    $interval = $dob->diff($today);
+    $age = floatval($interval->y);
+  }
+  
+  if($age >= 60 && !empty($seniorsCard)){
+    $cart_obj->ApplyDiscountCode('SENIORS');
+    $totals = $cart_obj->CalculateTotal();
+    if($totals['discount'] > 0){
+      header('Location: /shopping-cart#1');
+      die();
+    }
+  }
+}

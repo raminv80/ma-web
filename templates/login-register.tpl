@@ -293,6 +293,16 @@
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
+                
+                <div class="row seniorscard-wrapper" style="display:none">
+                  <div class="col-sm-12 form-group">
+                    <label for="seniorscard" class="visible-ie-only">
+                      Seniors card:
+                    </label>
+                    <input type="text" value="{if $new_user}{$new_user.seniorscard}{/if}" class="form-control" id="seniorscard" name="seniorscard">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>
 
                 <div class="row">
                   <div class="col-sm-12 form-group chkbx">
@@ -598,6 +608,16 @@
       digits: true,
       minlength: 8
     });
+    
+    $("#dob").change(function(){
+      var member_age = getAge(convert_to_mysql_date_format($(this).val()));
+      console.log(member_age);
+      if(member_age > 59){
+        $('.seniorscard-wrapper').show();
+      }else{
+        $('.seniorscard-wrapper').hide();
+      }
+    });
   });
 
   function SubmitLoginRegisterForm(FORM) {
@@ -630,6 +650,22 @@
         console.log('AJAX error:' + errorThrown);
       }
     });
+  }
+  
+  function getAge(dateString) {
+    var today = new Date();
+    var birthDate = new Date(dateString);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+  }
+  
+  function convert_to_mysql_date_format(str){
+    var dateArr = str.split("/");
+    return dateArr[2]+'-'+dateArr[1]+'-'+dateArr[0]; 
   }
 
   /*   function FBlogin() {

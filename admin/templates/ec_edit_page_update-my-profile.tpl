@@ -130,9 +130,15 @@
               </div>
             </div> -->
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content1">Content (unlocked)</label>
+              <label class="col-sm-3 control-label" for="id_listing_content1">Content (default)</label>
               <div class="col-sm-5">
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="tinymce">{$fields.listing_content1}</textarea>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_content3">Content (pending)</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="tinymce">{$fields.listing_content3}</textarea>
               </div>
             </div>
             <div class="row form-group">

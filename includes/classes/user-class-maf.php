@@ -208,7 +208,7 @@ class UserClass{
 		$this->memberRecord['attributes'][3]['value']				= '';
 		$this->memberRecord['attributes'][4]['id']					= '8';
 		$this->memberRecord['attributes'][4]['text']				= 'How did you hear about MedicAlert?';
-		$this->memberRecord['attributes'][4]['value']				= $_data['heardabout'];
+		$this->memberRecord['attributes'][4]['value']				= '';
 		//NEW FIELDS 08/05/2014
 		$this->memberRecord['attributes'][5]['id']					= '10';
 		$this->memberRecord['attributes'][5]['text']				= 'DVA Gold Card Number';
@@ -224,7 +224,7 @@ class UserClass{
 		$this->memberRecord['attributes'][8]['value']				= '';
 		$this->memberRecord['attributes'][9]['id']					= '18';
 		$this->memberRecord['attributes'][9]['text']				= 'Seniors Card';
-		$this->memberRecord['attributes'][9]['value']				= '';
+		$this->memberRecord['attributes'][9]['value']				= $_data['seniorscard'];
 		
 	}
 	
@@ -339,6 +339,7 @@ class UserClass{
 	function getUserArray($userData){
 		
 		$user = array();
+		$user['membership_system_locked']   = (!empty($userData['dataBaseRecord']['memberLocked']) && !empty($userData['webSiteRecord']['pendingUpdate'])) ? 1 : 0;
 		$user['locked']                     = $userData['webSiteRecord']['pendingUpdate'];
 		$user['lifetime']                   = $this->isLifetimeMember($userData['dataBaseRecord']['membership']['membershipTypeId']);
 		$user['user_id']					= $userData['dataBaseRecord']['memberShipNumber'];

@@ -219,7 +219,7 @@
                   {foreach $prdattrValuesArr[$attr.attribute_id] as $value}
                   <div class="additionals" id="additional-{$value.attr_value_id}" style="display:none;">
                     <div>{$value.attr_value_description}</div>
-                    {if $value.attr_value_image}<div class="hidden-lg attr-image-wrapper"><img src="{$value.attr_value_image}" title="{$value.attr_value_name}" class="attr-image img-responsive"></div>{/if}
+                    {if $value.attr_value_image}<div class="hidden-lg attr-image-wrapper"><img src="{$value.attr_value_image}" alt="{$value.attr_value_name}" title="{$value.attr_value_name}" class="attr-image img-responsive"></div>{/if}
                     <div class="charrow-wrapper" style="background: url('{$value.attr_value_image}') no-repeat;">
 
 	                <div class="charrowin">
@@ -276,7 +276,7 @@
           <div class="form-group">
 	          <div class="col-sm-12" id="bottombox">
 		          <h5>When you purchase your first medical ID you are also becoming a MedicAlert member</h5>
-				  <p>From the moment you join, and each year you renew your membership, you’ll get access to a range of valuable benefits that could help save your life. <a href="/benefits-of-membership" title="Learn more">Learn more ></a></p>
+				  <p>From the moment you join, and each year you renew your membership, you'll get access to a range of valuable benefits that could help save your life. <a href="/benefits-of-membership" title="Learn more">Learn more ></a></p>
 	          </div>
           </div>
           {/if}
