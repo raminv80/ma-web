@@ -636,12 +636,6 @@ The IHI is part of the government e-health initiative developed to enhance the w
                 {$listing_content1}
               </div>
             </div>
-            <div class="row">
-              <div class="col-sm-10 col-sm-offset-1 form-group chkbx">
-                <input type="checkbox" name="agreed_record_locked" id="agreed_record_locked" class="form-control" value="agreed" required/>
-                <label for="agreed_record_locked" class="radiolab checkbox-label">I confirm that I have read and understood the above paragraph.</label>
-              </div>
-            </div>
             <br />
             <div class="row">
               <div class="col-sm-12">
