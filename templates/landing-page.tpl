@@ -1,6 +1,8 @@
 {block name=head}
 <style type="text/css">
-
+  .referbtn{
+    margin-bottom: 60px;
+  }
 </style>
 {/block}
 
@@ -18,6 +20,85 @@
 		</div>
 	</div>
 </div>
+
+{if $listing_object_id eq 769}
+ <div class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <h2>Refer a friend today</h2>
+        <p>If someone you know could benefit from a MedicAlert membership, don't wait until it's too late to tell them about it. Simply fill out the form below and we'll get in touch with them with more information.</p>
+      </div>
+    </div>
+
+   <div class="row">
+    <div class="col-md-offset-1 col-md-10 text-center {if $error}visible visible-md{/if}" id="referfriend">
+        <form id="refer_friend_form" accept-charset="UTF-8" method="post" action="/process/refer-friend-senior" novalidate="novalidate">
+              <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+              <input type="hidden" value="Refer a friend senior" name="form_name" id="form_name" />
+          <input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
+            <div class="row">
+            <div class="col-sm-6 form-group">
+              <label class="visible-ie-only" for="name">Your name<span>*</span>:</label>
+              <input class="form-control" value="{if $post.name}{$post.name}{else}{$user.gname} {$user.surname}{/if}" type="text" name="name" id="name" required="">
+            <div class="error-msg help-block"></div>
+            </div>
+            <div class="col-sm-6 form-group">
+              <label class="visible-ie-only" for="email">Your email<span>*</span>:</label>
+              <input class="form-control" value="{if $post.email}{$post.email}{else}{$user.email}{/if}" type="email" name="email" id="email" required="">
+            <div class="error-msg help-block"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6 form-group">
+              <label class="visible-ie-only" for="memberno">Membership number:</label>
+              <input class="form-control" value="{if $post.memberno}{$post.memberno}{else}{$user.id}{/if}" type="text" name="memberno" id="memberno">
+            <div class="error-msg help-block"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <hr />
+            </div>
+          </div>
+            <div class="row">
+            <div class="col-sm-6 form-group">
+              <label class="visible-ie-only" for="frname">Your friend's name<span>*</span>:</label>
+              <input class="form-control" value="{$post.friendname}" type="text" name="friendname" id="frname" required="">
+            <div class="error-msg help-block"></div>
+            </div>
+            <div class="col-sm-6 form-group">
+              <label class="visible-ie-only" for="fremail">Your friend's email<span>*</span>:</label>
+              <input class="form-control" value="{$post.friendemail}" type="email" name="friendemail" id="fremail" required="">
+            <div class="error-msg help-block"></div>
+            </div>
+          </div>
+
+          <div class="row error-msg" id="form-error" {if !$error}style="display:none"{/if}>{$error}</div>
+          <div class="row">
+            <div class="col-sm-12">
+              <input type="submit" value="Refer your friend now" class="btn-red btn" id="fbsub">
+            </div>
+          </div>
+        </form>
+          <br><br>
+      </div>
+      {if !$error}
+      <div class="row referbottom">
+      	<div class="col-md-offset-1 col-md-10 text-center">
+          <button class="btn-red btn referbtn">Refer your friend now</button>
+        </div>
+      </div>
+      {/if}
+    </div>
+  </div>
+</div>
+
+
+
+{/if}
+
+
 {if $listing_content2}
 <div id="cost-grey" class="pinkh4">
   <div class="container">
@@ -184,6 +265,19 @@
   
   
   $(document).ready(function() {
+
+  $('#referfriend').hide();
+
+  $('.referbtn').on('click', function(){
+    $('#referfriend').slideDown("slow", function(){
+      
+
+    });
+    $(this).hide();
+
+    });
+    
+    
     
     var $grid = $("#products-wrapper").isotope({
        itemSelector: '.prodout',
