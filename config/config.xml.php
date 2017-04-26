@@ -714,6 +714,11 @@
     <file>includes/processes/processes-refer-friend.php</file>
     <return_url></return_url>
   </process>
+    <process>
+    <url>process/refer-friend-senior</url>
+    <file>includes/processes/processes-refer-friend-senior.php</file>
+    <return_url></return_url>
+  </process>
   <process>
     <url>process/load-more</url>
     <file>includes/processes/load-more.php</file>
