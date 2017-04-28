@@ -1086,7 +1086,7 @@ class cart{
       $addMSF = ($_memberArr['maf']['main']['renew'] == 't' && !$this->HasPaidMSF($_memberArr['id'], $msfArr['product_object_id'], $msfArr['variant_id']))? true : false;
       
       //Avoid duplicate payments - reactivation fee
-      $addReactivationFee = ($_memberArr['maf']['main']['reactivation'] == 't' && !$this->HasPaidMSF($_memberArr['id'], 255, 16))? true : false;
+      $addReactivationFee = ($_memberArr['maf']['main']['reactivation'] == 't' && !$this->HasPaidMSF($_memberArr['id'], 225, 16))? true : false;
     }
     
     
