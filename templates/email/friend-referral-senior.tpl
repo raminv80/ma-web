@@ -157,7 +157,7 @@ a{color:#ed174f;text-decoration: none;}
 						<tr>
 							<td class="w30" width="30"></td>
 							<td class="w580" width="580">
-								<img src="{$DOMAIN}/images/email-banner.png" width="580" class="w580" alt="" />
+								<img src="{$DOMAIN}/images/email-banner-senior.jpg" width="580" class="w580" alt="" />
 							</td>
 							<td class="w30" width="30"></td>
 						</tr>
@@ -173,12 +173,14 @@ a{color:#ed174f;text-decoration: none;}
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 	            <td class="w580" width="580" style="table-layout: fixed;">
 					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Hi {$friend_name}</p>
+          <p style="margin-bottom: 20px;font-size: 18px; line-height: 24px; font-weight: bold;">Seniors can save 10% on all products and 20% on their MedicAlert membership when they enter the code SENIORS at the checkout*.</p>
+
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px; font-weight: bold;">Your friend {$user_name} thought you might be interested in joining MedicAlert Foundation.
 					</p>
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">MedicAlert membership is essential for anyone with a medical condition, allergy or who takes regular medication that needs to be known in an emergency.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">With your own customised medical ID that’s internationally recognised, plus 24/7 emergency service access to your medical information and exclusive member only offers, there’s never been a better time to join.</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">With your own customised medical ID that's internationally recognised, plus 24/7 emergency service access to your medical information and exclusive member only offers, there's never been a better time to join.</p>
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">The MedicAlert medical ID offers peace of mind by alerting emergency service and healthcare professionals to your specific needs when it matters most - especially when you can't speak for yourself.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Make sure you’re protected in a medical emergency. Simply head online or give us a call on <a style="color: #ed3361; text-decoration: none;" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a>.</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Make sure you're protected in a medical emergency. Simply head online or give us a call on <a style="color: #ed3361; text-decoration: none;" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a>.</p>
 					<p style="font-weight: bold;font-size: 14px; line-height: 24px;">Remember, for a small annual fee, your membership gives you access to a range of benefits including:</p>
 	            </td>
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
@@ -280,10 +282,17 @@ a{color:#ed174f;text-decoration: none;}
 	            <table class="w640" width="640" cellpadding="0" cellpadding="0" border="0" style="table-layout: fixed;">
 		        <tbody>
 	            <td class="w30" width="30" height="20"></td>
-	            <td class="w580" width="580" height="20"></td>
+	            <td class="w580" width="580" height="20">*Conditions Apply: Seniors Card discount is applicable to this offer. Not to be used in conjunction with any other offer. No further discounts/offers apply.</td>
 	            <td class="w30" width="30" height="20"></td>
 		        </tbody>
 	            </table>
+                            <table class="w640" width="640" cellpadding="0" cellpadding="0" border="0" style="table-layout: fixed;">
+            <tbody>
+              <td class="w30" width="30" height="20"></td>
+              <td class="w580" width="580" height="20"></td>
+              <td class="w30" width="30" height="20"></td>
+            </tbody>
+              </table>
             	</td>
                 </tr>
 	            <tr>
