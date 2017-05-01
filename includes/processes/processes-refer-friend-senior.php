@@ -11,7 +11,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
     $SMARTY->unloadFilter('output', 'trimwhitespace');
     try{
       $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
-      $subject = 'Do you know anything about MedicAlert Foundation?';
+      $subject = 'Help protect the one you love with MedicAlert - seniors offer just for you';
       $fromEmail = (string) $CONFIG->company->email_from;
       $to = $_POST['friendemail'];
       $SMARTY->assign('friend_name', $_POST['friendname']);
