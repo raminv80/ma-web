@@ -3,6 +3,14 @@ $error = 'Missing required info. Please try again.';
 if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 3){
   if(!empty($_POST['email']) && !empty($_POST['fname']) && !empty($_POST['lname']) && !empty($_POST['postcode']) && is_numeric($_POST['postcode'])){
     global $CONFIG, $DBobject, $SMARTY, $SITE, $GA_ID;
+  
+    /**
+     * ************ SET CAMPAIGN MONITOR LIST ID WHEN NEEDED ********
+     */
+    $LIST_ID = '0119c2290ed3c55b2efebe830398a56a';
+    /**
+     * ************ **************************************** ********
+     */
     
     $error = '';
     $sent = 0;
@@ -48,12 +56,20 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         } else{
           $sent = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
         } */
-      }
+      }      
+      
       catch(Exception $e){
         $error = 'There was an error sending your enquiry.';
       }
     }
-    
+      
+      $data = array_merge($_POST, array(
+          'user_id' => $_SESSION['user']['public']['id']
+      ));
+      $promo = 0;
+      $data['user_want_promo'] = empty($_POST['user_want_promo'])? 0 : 1;
+      $result = SetMemberCampaignMonitor($LIST_ID, $data, $data['user_want_promo']);
+       
     // SAVE IN DATABASE
     if(empty($error)){
       try{
@@ -95,7 +111,6 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
             ":orderresource_email_id" => $sent 
         );
         
-        //print_r($params);
         $DBobject->wrappedSql($sql, $params);
       }
       catch(Exception $e){
@@ -138,3 +153,57 @@ $_SESSION['post'] = $_POST;
 $_SESSION['error'] = $error;
 header("Location: {$_SERVER['HTTP_REFERER']}#form-error");
 die();
+
+
+function SetMemberCampaignMonitor($listId, $data, $flag){
+  global $CONFIG;
+
+  if(empty($data) || empty($listId)){
+    return false;
+  }
+
+  $customFields = array();
+  $skipArr = array(
+      'email',
+      'gname',
+      'surname'
+  );
+  foreach($data as $k => $v){
+    if(!in_array($k, $skipArr)){
+      $customFields[] = array(
+          'Key' => $k,
+          'Value' => $v
+      );
+    }
+  }
+
+  try{
+    require_once 'includes/createsend/csrest_subscribers.php';
+    $wrap = new CS_REST_Subscribers($listId, '060d24d9003a77b06b95e7c47691975b');
+    //die(var_dump($data));
+    if(empty($flag)){
+      $cs_result = $wrap->unsubscribe($data['email']);
+    } else{      
+      $cs_result = $wrap->add(array(
+          'EmailAddress' => $data['email'],
+          'Name' => $data['fname'] . ' ' . $data['lname'],
+          'CustomFields' => $customFields,
+          "Resubscribe" => "true"
+      ));
+    }
+//    die(var_dump($cs_result));
+    if($cs_result->was_successful()){
+      return true;
+    }
+  }
+  catch(Exception $e){
+    $COMP = json_encode($CONFIG->company);
+    $body = "Error: {$e}<br> Session: " . print_r($_SESSION, true);
+    $to = 'shaun@them.com.au';
+    $from = (string)$CONFIG->company->name;
+    $fromEmail = (string)$CONFIG->company->email_from;
+    $subject = "{$from} | Campaign monitor error";
+    sendMail($to, $from, $fromEmail, $subject, $body);
+  }
+  return false;
+}
