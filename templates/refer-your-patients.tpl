@@ -190,7 +190,7 @@
           <div class="row">
             <div class="col-sm-12 form-group text-left">
               <input type="checkbox" {if !$post || $post.user_want_promo}checked="checked" {/if}name="user_want_promo" id="user_want_promo" />
-              <label class="visible-ie-only" for="user_want_promo">Please send me the marketing material</label> <span><a href="privacy-policy" target="_blank">Privacy Policy</a></span>
+              <label class="visible-ie-only" for="user_want_promo">Please keep me up to date with the latest information from MedicAlert.</label> <span><a href="privacy-policy" target="_blank">Privacy Policy</a></span>
               <div class="error-msg help-block"></div>
             </div>
           </div>
