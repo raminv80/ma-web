@@ -30,7 +30,6 @@
 </div>
 
 {if $listing_object_id eq 769}
-
 <div class="container">
   <div class="row">
     <div class="col-sm-12 text-center">
@@ -96,7 +95,7 @@
   </div>
   {if !$error}
   <div class="row referbottom">
-  	<div class="col-md-offset-1 col-md-10 text-center">
+    <div class="col-md-offset-1 col-md-10 text-center">
       <button class="btn-red btn referbtn">Refer your friend now</button>
     </div>
   </div>
@@ -105,11 +104,7 @@
 </div>
   </div>
 </div>
-
-
-
 {/if}
-
 
 {if $listing_content2}
 <div id="cost-grey" class="pinkh4">
@@ -154,8 +149,6 @@
         <h2>Popular Products</h2>
       </div>
     </div>
-
-
     <div class="row">
       <div id="popslide" class="flexslider">
         <ul class="slides">
