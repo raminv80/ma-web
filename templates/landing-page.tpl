@@ -1,12 +1,35 @@
 {block name=head}
 <style type="text/css">
-  .referbtn{
-    margin-bottom: 30px;
-  }
+  
+  {*{if $listing_object_id eq 822}*}
   {if $listing_object_id eq 769}
-    #contact.refer {
+    .referbtn{
+      margin-bottom: 30px;
+    }
+    
+    .refer {
     padding: 0 0 30px 0 !important;
     }
+    
+    #fbsub {
+      margin-top: 20px;
+    }  
+  
+  .video-container {
+    position:relative;
+    padding-bottom:56.25%;
+    padding-top:30px;
+    height:0;
+    overflow:hidden;
+  }
+  .video-container iframe, .video-container object, .video-container embed {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+  }
+  
   
   {/if}
   
@@ -29,17 +52,18 @@
 	</div>
 </div>
 
+{*{if $listing_object_id eq 822}*}
 {if $listing_object_id eq 769}
 <div class="container">
   <div class="row">
-    <div class="col-sm-12 text-center">
+    <div class="col-sm-12 text-center" id="contact" >
       <h2>Refer a friend today</h2>
       <p>If someone you know could benefit from a MedicAlert membership, don't wait until it's too late to tell them about it. Simply fill out the form below and we'll get in touch with them with more information.</p>
     </div>
   </div>
 
 </div>
-<div id="contact" class="refer">
+<div class="refer">
   <div class="container">
    <div class="row">
     <div class="col-md-offset-1 col-md-10 text-center {if $error}visible visible-md{/if}" id="referfriend">
@@ -270,16 +294,27 @@
   
   
   $(document).ready(function() {
+  
+    var hash = window.location.hash.toString(); 
+    if(hash === '#contact'){
+      console.log("has contact");
+      $('.referbtn').hide();
+    } else {
+      console.log("does NOT have contact");
+      $('#referfriend').hide();
+    }
+  
+
+    
   $('#refer_friend_form').validate();
-  $('#referfriend').hide();
+  
+
+
 
   $('.referbtn').on('click', function(){
     $('#referfriend').slideDown("slow", function(){
-      
-
     });
     $(this).hide();
-
     });
     
     
