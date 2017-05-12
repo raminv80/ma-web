@@ -29,8 +29,8 @@ try{
   //Has donation
   $SMARTY->assign('hasDonation', $cart_obj->hasProductInCart(217));
   
-  //Has stainless steel product - display special
-  $SMARTY->assign('showProductEspecial', $cart_obj->HasStainlessSteel());
+  //Has at least one product (type 1) in order to display special
+  $SMARTY->assign('showProductEspecial', ($cart_obj->GetProductTypeCountInCart(1)) ? 'true' : '');
   
   if(!empty($GA_ID)){
     $productsGA = $cart_obj->getCartitemsByCartId_GA();

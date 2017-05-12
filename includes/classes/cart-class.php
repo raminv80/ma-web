@@ -1837,6 +1837,28 @@ class cart{
     return false;
   }
 
+  
+  /**
+   * Get the number of items in the current cart based on product type id 
+   *
+   * @return int
+   */
+  function GetProductTypeCountInCart($typeId){
+    global $DBobject;
+  
+    $params = array(
+        ':id' => $this->cart_id,
+        ':pid' => $typeId
+    );
+  
+    $sql = "SELECT SUM(cartitem_quantity) AS 'QTY' FROM tbl_cartitem
+        LEFT JOIN tbl_product ON cartitem_product_id = product_object_id
+        WHERE product_deleted IS NULL AND product_published = 1 AND product_type_id = :pid
+        AND cartitem_deleted IS NULL AND cartitem_cart_id = :id";
+  
+    $res = $DBobject->wrappedSql($sql, $params);
+    return $res[0]['QTY'];
+  }
 
   /**
    * ONLY FOR MAF
@@ -1942,7 +1964,7 @@ class cart{
 
   /**
    * ONLY FOR MAF
-   * Discount amount - second stainless steel for $35
+   * Discount amount - Get a second stainless steel product for $35
    * 
    * @return float
    */
@@ -1950,19 +1972,23 @@ class cart{
     global $DBobject;
     
     $amount = 0;
-    // Stainless steel - tbl_pmaterial - pmateriallink_record_id = pmaterial_id = 1
-    
-    $sql = "SELECT SUM(cartitem_quantity) AS 'QTY', MIN(cartitem_product_price) AS 'AMOUNT' FROM tbl_cartitem 
-        LEFT JOIN tbl_product ON cartitem_product_id = product_object_id  
-        LEFT JOIN tbl_pmateriallink ON pmateriallink_product_id = product_id
-        WHERE product_deleted IS NULL AND product_published = 1 AND cartitem_product_price >= 35 AND pmateriallink_deleted IS NULL AND pmateriallink_record_id = 1 
-        AND cartitem_deleted IS NULL  AND cartitem_cart_id = :id ";
-    if($res = $DBobject->wrappedSql($sql, array(
+    $params = array(
         ':id' => $this->cart_id 
-    ))){
-      if(!empty($res[0]['QTY']) && intval($res[0]['QTY']) > 1 && !empty($res[0]['AMOUNT'])){
-         $amount = round(floatval($res[0]['AMOUNT']) - 35, 2);
-         $amount = ($amount > 0) ? $amount : 0; 
+    );
+    
+    // Validate that there are more than one standard product (type = 1)
+    if($this->GetProductTypeCountInCart(1) > 1){
+     
+      // Stainless steel - tbl_pmaterial - pmateriallink_record_id = pmaterial_id = 1
+      $sql = "SELECT MIN(cartitem_product_price) AS 'AMOUNT' FROM tbl_cartitem
+      LEFT JOIN tbl_product ON cartitem_product_id = product_object_id
+      LEFT JOIN tbl_pmateriallink ON pmateriallink_product_id = product_id
+      WHERE product_deleted IS NULL AND product_published = 1 AND cartitem_product_price >= 35 AND pmateriallink_deleted IS NULL AND pmateriallink_record_id = 1
+      AND cartitem_deleted IS NULL AND cartitem_cart_id = :id";
+      
+      if($res = $DBobject->wrappedSql($sql, $params)){
+        $amount = round(floatval($res[0]['AMOUNT']) - 35, 2);
+        $amount = ($amount > 0) ? $amount : 0;
       }
     }
     return $amount;
