@@ -51,7 +51,7 @@
                       <input class="form-control showpassword" type="password" id="password1" name="pass" autocomplete="off" required />
                       <a class="showhide" href="javascript:void(0);" onclick="if($(this).html() == 'Show'){ $(this).closest('div').find('input[type=password]').get(0).type='text';$(this).html('Hide'); }else{ $(this).closest('div').find('input[type=text]').get(0).type='password';$(this).html('Show'); }">Show</a>
                       <div class="error-msg help-block"></div>
-                      <span class="form-help-block"><a href="javascript:void(0)" onclick="$('#reset-username').val($('#username').val());$('#login-form-wrapper').hide();$('#reset-pass').fadeIn('slow');">Forgot your password?</a></span>
+                      <span class="form-help-block">Forgot your password? <a href="javascript:void(0)" onclick="$('#reset-username').val($('#username').val());$('#login-form-wrapper').hide();$('#reset-pass').fadeIn('slow');">Click here</a></span>
                     </div>
                   </div>
 

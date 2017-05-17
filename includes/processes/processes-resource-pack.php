@@ -56,8 +56,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         } else{
           $sent = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
         } */
-      }      
-      
+      }
       catch(Exception $e){
         $error = 'There was an error sending your enquiry.';
       }

@@ -561,6 +561,58 @@ class UserClass{
 	  return false;
 	}
 	
+
+	/**
+	 * Get Members basic details
+	 * Expected output: array(
+	 *   member_membership_number
+	 *   status_id
+     *   member_details_title
+     *   member_details_firstname
+     *   member_details_middlenames
+     *   member_details_surname
+     *   member_details_dob
+     *   member_details_email
+     *   member_address_postcode
+	 * )
+	 * @param int $_membershipId
+	 * @return array
+	 */
+	function GetMemberBasicDetails($_membershipId){
+	  
+	  $res = array();
+	  $this->errorMsg = null;
+	  try{
+	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authenticationRecord = json_decode($authJSONResponse, true);
+	    $token = $authenticationRecord['sessionToken'];
+	  }
+	  catch(Exception $e){
+	    $this->errorMsg = "Invalid API membership number/password.";
+	    return $res;
+	  }
+	
+	  try{
+	    if($results = $this->medicAlertApi->getMemberBasicDetails($token, $_membershipId)){
+	      $this->medicAlertApi->logout($token);
+	      return json_decode($results, true);
+	    }
+	     
+	  }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
+	    $this->errorMsg = "Your membership number and email address don't match.";
+	  }
+	  catch(exceptionMedicAlertApiNotAuthenticated $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  catch(exceptionMedicAlertApiSessionExpired $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  catch(exceptionMedicAlertApi $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  return $res;
+	}
+	
 	
 	/**
 	 * Verify whether or not a profile already exists given the firstname, lastname and dob
@@ -1479,7 +1531,7 @@ class UserClass{
    * @param array $user
    * @return boolean
    */
-  function CreateUserTemp($user){
+  function CreateUserTemp($user, $cartId = 0){
 
     $sql = "SELECT usertemp_id FROM tbl_usertemp WHERE usertemp_deleted IS NULL AND usertemp_session = :id";
     if($res = $this->DBobj->wrappedSql($sql, array(':id' => session_id()))){
@@ -1487,6 +1539,7 @@ class UserClass{
     }
     
     $params = array(
+        ":cartid" => $cartId,
         ":gname" => $user['gname'],
         ":surname" => $user['surname'],
         ":email" => $user['email'],
@@ -1503,8 +1556,8 @@ class UserClass{
         ":browser" => $_SERVER['HTTP_USER_AGENT']
     );
   
-    $sql = "INSERT INTO tbl_usertemp ( usertemp_gname, usertemp_surname, usertemp_email, usertemp_mobile, usertemp_dob, usertemp_gender, usertemp_address, usertemp_suburb, usertemp_state, usertemp_postcode, usertemp_heardabout, usertemp_session, usertemp_ip, usertemp_browser, usertemp_created)
-					 values ( :gname, :surname, :email, :mobile, :dob, :gender, :address, :suburb, :state, :postcode, :heardabout, :session, :ip, :browser, now() )";
+    $sql = "INSERT INTO tbl_usertemp ( usertemp_cart_id, usertemp_gname, usertemp_surname, usertemp_email, usertemp_mobile, usertemp_dob, usertemp_gender, usertemp_address, usertemp_suburb, usertemp_state, usertemp_postcode, usertemp_heardabout, usertemp_session, usertemp_ip, usertemp_browser, usertemp_created)
+					 values ( :cartid, :gname, :surname, :email, :mobile, :dob, :gender, :address, :suburb, :state, :postcode, :heardabout, :session, :ip, :browser, now() )";
     if($this->DBobj->wrappedSql($sql, $params)){
       return $this->DBobj->wrappedSqlIdentity();
     } 

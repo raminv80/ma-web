@@ -33,8 +33,8 @@ class medicAlertApi {
 	// --------------------------------------------------------------
 	// CONSTANTS
 	//
-	const SERVER = 'https://api.medicalert.org.au';
-// 	const SERVER = 'https://apistaging.medicalert.org.au';
+//	const SERVER = 'https://api.medicalert.org.au';
+ 	const SERVER = 'https://apistaging.medicalert.org.au';
 	const API_USER = 'MA-WEBSITE';
 	const API_USER_PASSWORD = 'htAHHGWug!kc';
 
@@ -400,6 +400,42 @@ class medicAlertApi {
 		}
 
 		return $response;
+	}
+	
+	/**
+	 * Get member basic details
+	 * Expected output: Object(
+	 *   member_membership_number
+	 *   status_id
+     *   member_details_title
+     *   member_details_firstname
+     *   member_details_middlenames
+     *   member_details_surname
+     *   member_details_dob
+     *   member_details_email
+     *   member_address_postcode
+	 * )
+	 * @param string $sessionToken
+	 * @param string $membershipNumber
+	 * @return object
+	 */
+	public function getMemberBasicDetails($sessionToken, $membershipNumber)
+	{
+	
+	  $params = array(
+	      'sessionToken' => $this->_saltToken($sessionToken, MD5($this->_getRequestIp())),
+	      'membershipNumber' => $membershipNumber
+	  );
+	
+	  try{
+	    $response = $this->_processRequest(self::SERVER . '/member_basic_details.php', $params);
+	  }catch(Exception $e){
+	    $sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (getMemberBasicDetails)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
+	    $this->DBobj->wrappedSql($sql);
+	    throw $e;
+	  }
+	
+	  return $response;
 	}
 
 	/**

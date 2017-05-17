@@ -611,6 +611,7 @@ RewriteRule ^autism-sa$ /safe-return? [R=301,L,NC]
 
 RewriteRule ^seniors$ /seniors-card\?utm_source=SENIORS-DM&utm_medium=FLYER&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^seniorsflyer$ /seniors-card\?utm_source=SENIORS-WELCOMEPACK-INSERT&utm_medium=FLYER&utm_campaign=SENIORS [R=301,L,NC]
+RewriteRule ^ndisguide$ /ndis\?utm_source=NDIS-LIFTOUT&utm_medium=FLYER&utm_campaign=NDIS [R=301,L,NC]
 
 ################################################################################
 

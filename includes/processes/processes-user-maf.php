@@ -124,13 +124,14 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
             $_SESSION['user']['new_user']['db_dob'] = $dobDB;
             
             try{
-              if($user_obj->CreateUserTemp($_SESSION['user']['new_user'])){
+              $cart_obj = new cart($_SESSION['user']['public']['id']);
+              if($user_obj->CreateUserTemp($_SESSION['user']['new_user'], $cart_obj->cart_id)){
                 $error = null;
                 $success = true;
                 $url = empty($_POST['redirect']) ? '/checkout' : $_POST['redirect'];
                 if(!empty($GA_ID)){
                   sendGAEvent($GA_ID, 'user', 'pre-register', '0');
-                  $cart_obj = new cart($_SESSION['user']['public']['id']);
+                  
                   $productsGA = $cart_obj->getCartitemsByCartId_GA();
                   sendGAEnEcCheckoutStep($GA_ID, '3', 'Billing and shipping', $productsGA);
                 }

@@ -1,17 +1,17 @@
 {block name=head}
 <style type="text/css">
   
-  {*{if $listing_object_id eq 822}*}
-  {if $listing_object_id eq 769}
+  {if $listing_object_id eq 822}
+  
     .referbtn{
       margin-bottom: 30px;
     }
     
-    .refer {
+    #contact .refer {
     padding: 0 0 30px 0 !important;
     }
     
-    #fbsub {
+    #contact #fbsub {
       margin-top: 20px;
     }  
   
@@ -52,18 +52,18 @@
 	</div>
 </div>
 
-{*{if $listing_object_id eq 822}*}
-{if $listing_object_id eq 769}
+{if $listing_object_id eq 822}
+
 <div class="container">
   <div class="row">
-    <div class="col-sm-12 text-center" id="contact" >
+    <div class="col-sm-12 text-center" id="cform" >
       <h2>Refer a friend today</h2>
       <p>If someone you know could benefit from a MedicAlert membership, don't wait until it's too late to tell them about it. Simply fill out the form below and we'll get in touch with them with more information.</p>
     </div>
   </div>
 
 </div>
-<div class="refer">
+<div id="contact" class="refer">
   <div class="container">
    <div class="row">
     <div class="col-md-offset-1 col-md-10 text-center {if $error}visible visible-md{/if}" id="referfriend">
@@ -293,32 +293,22 @@
   }());
   
   
-  $(document).ready(function() {
-  
+  $(document).ready(function() {  
     var hash = window.location.hash.toString(); 
-    if(hash === '#contact'){
-      console.log("has contact");
+    if(hash === '#cform'){
       $('.referbtn').hide();
     } else {
-      console.log("does NOT have contact");
       $('#referfriend').hide();
     }
-  
-
     
   $('#refer_friend_form').validate();
   
-
-
-
   $('.referbtn').on('click', function(){
     $('#referfriend').slideDown("slow", function(){
     });
     $(this).hide();
     });
-    
-    
-    
+        
     var $grid = $("#products-wrapper").isotope({
        itemSelector: '.prodout',
        layoutMode: 'fitRows'
