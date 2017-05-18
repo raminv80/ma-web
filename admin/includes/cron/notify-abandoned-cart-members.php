@@ -79,8 +79,6 @@ try {
     }
   }
   
-  
-  
   //Create and send emails
   foreach($tempMembers as $email => $d){
     $token = 'TM-' . dechex($d['cart_id']) . '-'. dechex(time()) . '-' . dechex($d['user_id']);
@@ -89,7 +87,7 @@ try {
     $SMARTY->assign('unsubscribe_token', 'tm-' . dechex($d['user_id']) . '-' . dechex(time()));
     $SMARTY->assign('productsOnCart', GetDataProductsOnCart($d['cart_id']));
     $body = $SMARTY->fetch('email/abandoned-cart.tpl'); //FRONT-END templates
-    if(!IsUnsubscribed($email)){
+    if(!IsUnsubscribed($email)){ 
       createBulkMail(array($email), $from, $fromEmail, $subject, $body, 0, array($d['user_id'] * -1));
     }
   }

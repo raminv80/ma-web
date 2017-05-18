@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true">
+<config debug="false" staging="false">
   <domain>medicalert.org.au</domain>
   <google_analytics>
     <id>UA-86286777-1</id>
@@ -20,14 +20,10 @@
     <phone>(+61)8 8273 8400</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
-<!--    <email>enquiry@medicalert.org.au</email>
+    <email>enquiry@medicalert.org.au</email>
     <email_from>noreply@medicalert.org.au</email_from>
     <email_contact>enquiry@medicalert.org.au</email_contact>
-    <email_orders>idewey@medicalert.org.au</email_orders>-->
-    <email>shaun@them.com.au</email>
-    <email_from>noreply@medicalert.org.au</email_from>
-    <email_contact>shaun@them.com.au</email_contact>
-    <email_orders>shaun@them.com.au</email_orders>
+    <email_orders>idewey@medicalert.org.au</email_orders>
     <logo>logo.png</logo>
   </company>
   <global_variable>
@@ -51,14 +47,14 @@
     <value>$93.5</value>
   </global_variable>    
   <database> 
-<!--     <host>122.201.118.45</host>  -->
-<!--     <user>medicalertorg_usr</user>  -->
-<!--     <password>VLw!8L+fM6cAh</password>  -->
-<!--     <dbname>medicalertorg_web</dbname>  -->
-  	<host>122.201.97.172</host> 
+    <host>122.201.118.45</host> 
+    <user>medicalertorg_usr</user> 
+    <password>VLw!8L+fM6cAh</password> 
+    <dbname>medicalertorg_web</dbname> 
+  	<!-- <host>122.201.97.172</host> 
     <user>them_usr01</user> 
     <password>OTwFwL?pSnR+</password> 
-    <dbname>them_db01</dbname> 
+    <dbname>them_db01</dbname>  -->
   </database>
   <database_variable>
     <name>==membership_fee==</name>
@@ -393,20 +389,6 @@
     <template>ndis-landing-page.tpl</template>
     <pageID>850</pageID>
   </static_page>
-  <static_page>
-    <url>test-competition</url>
-    <template>competition.tpl</template>
-    <pageID>773</pageID>
-    <options>
-      <field> 
-        <name>options_hearabout</name>
-        <table>tbl_heardabout</table>
-        <id>heardabout_value</id>
-        <reference>heardabout_value</reference>
-        <orderby>heardabout_order</orderby> 
-      </field>
-    </options>  
-  </static_page>
   
   <!-- ECOMMERCE  -->
   <static_page>
@@ -735,11 +717,6 @@
     <process>
     <url>process/refer-friend-senior</url>
     <file>includes/processes/processes-refer-friend-senior.php</file>
-    <return_url></return_url>
-  </process>
-  <process>
-    <url>process/competition</url>
-    <file>includes/processes/process-competition.php</file>
     <return_url></return_url>
   </process>
   <process>
