@@ -83,14 +83,16 @@
              <div class="error-msg help-block"></div>
             </div>
           
+          {if $listing_content3}
           <div class="row question">
             <div class="col-sm-12 form-group text-left">
-              <label class="visible-ie-only" for="entry">Question (in 25 words or less)<span>*</span>:
+              <label class="visible-ie-only" for="entry">{$listing_content3} (in 25 words or less)<span>*</span>:
               </label>
               <textarea class="form-control" name="entry" id="entry" required="">{$post.entry}</textarea>
               <div class="error-msg help-block"></div>
             </div>
           </div>
+          {/if}
         
           <div style="height: 0; overflow: hidden;">
             <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1" autocomplete="off">
@@ -114,13 +116,7 @@
     </div>
   </div>
 </div>
-{if $listing_content3 || $listing_content4}
-  <div id="landing-page-middle" class="container">
-    <div class="row">
-      <div class="col-md-12 text-center">{$listing_content3}</div>
-    </div>
-  </div>
-
+{if $listing_content4}
   <div class="grey-bg-area video-wrapper">
     <div class="container">
       <div class="row">

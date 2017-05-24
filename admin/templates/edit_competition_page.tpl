@@ -168,16 +168,18 @@
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea>
               </div>
             </div>
+
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content3">Content 3</label>
-              <div class="col-sm-5">
-                <textarea name="field[1][tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="tinymce">{$fields.listing_content3}</textarea>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content4">Content 4</label>
+              <label class="col-sm-3 control-label" for="id_listing_content4">Content 3</label>
               <div class="col-sm-5">
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content4]" id="id_listing_content4" class="tinymce">{$fields.listing_content4}</textarea>
+              </div>
+            </div>
+            
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_content3">Question (in 25 words or less)</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="form-control">{$fields.listing_content3}</textarea>
               </div>
             </div>
 
