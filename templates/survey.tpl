@@ -142,7 +142,9 @@
       var clickedVal = $(this).val();           
       if(clickedVal == '4' || clickedVal == '5'){
         $(this).parents('.form-group').next('.form-group').show();
-      }
+      } else {
+        $(this).parents('.form-group').next('.form-group').hide();
+        }
     });
   });
 </script>
