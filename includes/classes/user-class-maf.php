@@ -262,7 +262,13 @@ class UserClass{
 		//$this->memberRecord['webSiteRecord']['details']['receiveMarketingMaterial']		= ($_data['check_newsletter']? '':'t');
 		$this->memberRecord['webSiteRecord']['details']['correspondenceType']			= $_data['correspondenceType'];
 		//$this->memberRecord['webSiteRecord']['details']['preferedPaymentMethod']			= $_data['user_preferedPaymentMethod'];
-	
+		$this->memberRecord['webSiteRecord']['details']['ndisPlanNumber']			    = $_data['ndis_plan_number'];
+		$this->memberRecord['webSiteRecord']['details']['ndisPlanType']			        = $_data['ndis_plan_type'];
+		$this->memberRecord['webSiteRecord']['details']['ndisManagerName']			    = $_data['ndis_manager_name'];
+		$this->memberRecord['webSiteRecord']['details']['ndisManagerCompany']			= $_data['ndis_manager_company'];
+		$this->memberRecord['webSiteRecord']['details']['ndisManagerEmail']			    = $_data['ndis_manager_email'];
+		$this->memberRecord['webSiteRecord']['details']['ndisManagerPhone']			    = $_data['ndis_manager_phone'];
+		
 		$this->memberRecord['webSiteRecord']['address']['address']						= ucwords(strtolower($_data['user_address']));
 		$this->memberRecord['webSiteRecord']['address']['suburb']						= ucwords(strtolower($_data['user_suburb']));
 		$this->memberRecord['webSiteRecord']['address']['postCode']						= $_data['user_postcode'];
@@ -1004,7 +1010,14 @@ class UserClass{
 	  $resArr['correspondenceType'] = $_data['details']['correspondenceType'];
 	  $resArr['preferedPaymentMethod'] = $_data['details']['preferedPaymentMethod'];
 	  $resArr['user_heardabout'] = $_data['attributes'][4]['value'];
-	   
+	  
+	  $resArr['ndis_plan_number'] = $_data['details']['ndisPlanNumber'];
+	  $resArr['ndis_plan_type'] = $_data['details']['ndisPlanType'];
+	  $resArr['ndis_manager_name'] = $_data['details']['ndisManagerName'];
+	  $resArr['ndis_manager_company'] = $_data['details']['ndisManagerCompany'];
+	  $resArr['ndis_manager_email'] = $_data['details']['ndisManagerEmail'];
+	  $resArr['ndis_manager_phone'] = $_data['details']['ndisManagerPhone'];
+	  
 	  $resArr['user_donor'] = $_data['details']['isOrganDonor'];
 	  $resArr['user_donorFreeText'] = "";
 	  if($_data['details']['donorEye'] == 't'){

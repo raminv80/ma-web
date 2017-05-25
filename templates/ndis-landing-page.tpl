@@ -193,7 +193,7 @@
   });
 
   function UpdatePlanType(selectedValue){      
-      if(selectedValue == 'Plan managed'){
+      if(selectedValue == 'Plan Managed'){
         $('#plan-manager-group').slideDown().removeClass('hide');
         $('#plan-manager-group :input').prop('required', true);
       } else {        

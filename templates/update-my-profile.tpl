@@ -159,7 +159,7 @@
                     <label for="postcode" class="visible-ie-only">
                       Postcode<span>*</span>:
                     </label>
-                    <input type="text" maxlength="4" value="{$member_record.user_postcode}" class="form-control" id="postcode" name="user_postcode" pattern="[0-9]" required>
+                    <input type="text" maxlength="4" value="{$member_record.user_postcode}" class="form-control" id="postcode" name="user_postcode" pattern="[0-9]*" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -175,7 +175,7 @@
 
                   <div class="col-sm-6 form-group">
                     <label for="homephone" class="visible-ie-only"> Home phone: </label>
-                    <input type="text" value="{$member_record.user_phone_home}" class="form-control" id="homephone" name="user_phone_home" pattern="[0-9]">
+                    <input type="text" value="{$member_record.user_phone_home}" class="form-control" id="homephone" name="user_phone_home" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -183,7 +183,7 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="workphone" class="visible-ie-only"> Work phone: </label>
-                    <input type="text" value="{$member_record.user_phone_work}" class="form-control" id="workphone" name="user_phone_work" pattern="[0-9]">
+                    <input type="text" value="{$member_record.user_phone_work}" class="form-control" id="workphone" name="user_phone_work" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -191,7 +191,7 @@
                     <label for="mobile" class="visible-ie-only">
                       Mobile<span>*</span>:
                     </label>
-                    <input type="text" maxlength="10" value="{$member_record.user_mobile|replace:' ':''}" class="form-control" id="mobile" name="user_mobile" pattern="[0-9]" required>
+                    <input type="text" maxlength="10" value="{$member_record.user_mobile|replace:' ':''}" class="form-control" id="mobile" name="user_mobile" pattern="[0-9]*" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -267,7 +267,7 @@
 
                   <div class="col-sm-6 form-group">
                     <label for="emerpostcode" class="visible-ie-only"> Postcode: </label>
-                    <input type="text" maxlength="4" value="{$member_record.contact_postcode}" class="form-control" id="emerpostcode" name="contact_postcode" pattern="[0-9]">
+                    <input type="text" maxlength="4" value="{$member_record.contact_postcode}" class="form-control" id="emerpostcode" name="contact_postcode" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -275,12 +275,12 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="emerhomephone" class="visible-ie-only"> Home phone <span>*</span>: </label>
-                    <input type="text" value="{$member_record.contact_phone_home}" class="form-control" id="emerhomephone" name="contact_phone_home" pattern="[0-9]" required>
+                    <input type="text" value="{$member_record.contact_phone_home}" class="form-control" id="emerhomephone" name="contact_phone_home" pattern="[0-9]*" required>
                     <div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label for="emerworkphone" class="visible-ie-only"> Work phone: </label>
-                    <input type="text" value="{$member_record.contact_phone_work}" class="form-control" id="emerworkphone" name="contact_phone_work" pattern="[0-9]">
+                    <input type="text" value="{$member_record.contact_phone_work}" class="form-control" id="emerworkphone" name="contact_phone_work" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -288,7 +288,7 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="emermobile" class="visible-ie-only"> Mobile: </label>
-                    <input type="text" maxlength="10" value="{$member_record.contact_mobile}" class="form-control" id="emermobile" name="contact_mobile" pattern="[0-9]">
+                    <input type="text" value="{$member_record.contact_mobile}" maxlength="10" class="form-control" id="emermobile" name="contact_mobile" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -341,7 +341,7 @@
 
                   <div class="col-sm-6 form-group">
                     <label for="docpostcode" class="visible-ie-only"> Postcode: </label>
-                    <input type="text" maxlength="4" value="{$member_record.doc_postcode}" class="form-control" id="docpostcode" name="doc_postcode" pattern="[0-9]">
+                    <input type="text" maxlength="4" value="{$member_record.doc_postcode}" class="form-control" id="docpostcode" name="doc_postcode" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -349,7 +349,7 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="docphone" class="visible-ie-only"> Phone: </label>
-                    <input type="text" value="{$member_record.doc_phone}" class="form-control" id="docphone" name="doc_phone" pattern="[0-9]">
+                    <input type="text" value="{$member_record.doc_phone}" maxlength="10" class="form-control" id="docphone" name="doc_phone" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
@@ -514,7 +514,56 @@
                   </div>
                 </div>
               </div>
-
+              
+              
+              <h3>
+                <div class="head-text">
+                  <div class="head-title">NDIS details</div>
+                </div>
+              </h3>
+              <div class="acc-body">
+                <div class="row">
+                  <div class="col-sm-6 form-group">
+                    <label for="docphone" class="visible-ie-only">Plan Number:</label>
+                    <input type="text" value="{$member_record.ndis_plan_number}" class="form-control" id="ndis_plan_number" name="ndis_plan_number">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label for="bloodgroup" class="visible-ie-only">Plan type:</label>
+                    <select class="selectlist-medium" id="ndis_plan_type" name="ndis_plan_type" onchange="RenderPlanManagedFields();">
+                      <option value="">Select an option</option>
+                      <option value="NDIS Managed" {if $member_record.ndis_plan_type eq 'NDIS Managed'}selected="selected"{/if}>NDIS Managed</option>
+                      <option value="Plan Managed" {if $member_record.ndis_plan_type eq 'Plan Managed'}selected="selected"{/if}>Plan Managed</option>
+                      <option value="Self Managed" {if $member_record.ndis_plan_type eq 'Self Managed'}selected="selected"{/if}>Self Managed</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row plan-managed-wrapper">
+                  <div class="col-sm-6 form-group">
+                    <label for="docphone" class="visible-ie-only">Plan Manager's Name:</label>
+                    <input type="text" value="{$member_record.ndis_manager_name}" class="form-control" id="ndis_manager_name" name="ndis_manager_name">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label for="docphone" class="visible-ie-only">Plan Manager's Company Name:</label>
+                    <input type="text" value="{$member_record.ndis_manager_company}" class="form-control" id="ndis_manager_company" name="ndis_manager_company">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>
+                <div class="row plan-managed-wrapper">
+                  <div class="col-sm-6 form-group">
+                    <label for="docphone" class="visible-ie-only">Plan Manager's Email:</label>
+                    <input type="email" value="{$member_record.ndis_manager_email}" class="form-control" id="ndis_manager_email" name="ndis_manager_email">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                  <div class="col-sm-6 form-group">
+                    <label for="docphone" class="visible-ie-only">Plan Manager's Phone:</label>
+                    <input type="text" value="{$member_record.ndis_manager_phone}" maxlength="10" class="form-control" id="ndis_manager_phone" name="ndis_manager_phone" pattern="[0-9]*">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>                 
+              </div>
+              
               <h3>
                 <div class="head-text">
                   <div class="head-title">Other info</div>
@@ -699,6 +748,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
     	lockFields();
     {/if}
 
+    RenderPlanManagedFields();
 
     $("select").selectBoxIt();
     $('[data-toggle="tooltip"]').tooltip();
@@ -754,11 +804,20 @@ The IHI is part of the government e-health initiative developed to enhance the w
         equalTo: "Please verify your mobile number"
       }
     });
-
+    
+    $('#ndis_manager_phone').rules("add", {
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        equalTo: "Please verify phone number"
+      }
+    });
   });
 
   function SubmitProfileForm(FORM) {
     $('body').css('cursor', 'wait');
+    ClearPlanManagedFields();
     var datastring = $('#' + FORM).serialize();
     $('#' + FORM).find('.error-alert').hide();
     $('#' + FORM).find('.success-alert').hide();
@@ -809,6 +868,20 @@ The IHI is part of the government e-health initiative developed to enhance the w
   function lockFields(){
     $('#update-profile-form :input').attr('disabled', 'disabled');
   }
+  
+  function RenderPlanManagedFields(){
+    if($('#ndis_plan_type').val() == 'Plan Managed'){
+      $('.plan-managed-wrapper').show('slow');
+    }else{
+      $('.plan-managed-wrapper').hide('slow');
+    }
+  };
+  
+  function ClearPlanManagedFields(){
+    if($('#ndis_plan_type').val() != 'Plan Managed'){
+      $('.plan-managed-wrapper').find('input').val('');
+    }
+  };
 </script>
 {/block}
 

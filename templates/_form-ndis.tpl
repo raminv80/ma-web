@@ -37,8 +37,8 @@
         <select class="selectlist-medium" id="plan-type" name="plan_type" required onchange="UpdatePlanType(this.value);">
           <option value="">Please select</option>
           <option value="NDIS Managed" {if $post.plan_type eq "NDIS Managed"}selected{/if}>NDIS Managed</option>
-          <option value="Self-managed" {if $post.plan_type eq "Self-managed"}selected{/if}>Self-managed</option>
-          <option value="Plan managed"{if $post.plan_type eq "Plan managed"}selected{/if}>Plan managed</option>
+          <option value="Self Managed" {if $post.plan_type eq "Self-managed"}selected{/if}>Self Managed</option>
+          <option value="Plan Managed"{if $post.plan_type eq "Plan managed"}selected{/if}>Plan Managed</option>
         </select>
         <div class="error-msg help-block"></div>
       </div>
