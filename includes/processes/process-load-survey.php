@@ -35,7 +35,8 @@ try{
               "question_id" => $q['question_id'], 
               "question" => $q['question_question'], 
               "option_group_id" => $q['question_qoption_group_id'], 
-              "is_mandatory" => $q['question_mandatory'] 
+              "is_mandatory" => $q['question_mandatory'], 
+              "question_triggers" => $q['question_triggers'] 
           ));
         }
       }

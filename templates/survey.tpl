@@ -30,9 +30,9 @@
           <p class="bold">Thinking about your recent purchase through the MedicAlert Foundation. How satisfied were you with the:</p>
         </div>
         {foreach from=$questions[1] key=k item=qset1}
-        <div class="col-md-8 col-md-offset-2 form-group {if $qset1['option_group_id'] eq '3' || $qset1['option_group_id'] eq '2' || $qset1['option_group_id'] eq '4' || $qset1['option_group_id'] eq '5'}text-center questiondiv{/if} {if $qset1['option_group_id'] eq '3'}childdiv{/if} {if $qset1['option_group_id'] eq '5'}subquestion{/if}" {if $qset1['option_group_id'] eq '3'}id="childdiv1"{/if}>
+        <div data-triggers="{$qset1['question_triggers']}" class="col-md-8 col-md-offset-2 form-group questions {if $qset1['option_group_id'] eq '3' || $qset1['option_group_id'] eq '2' || $qset1['option_group_id'] eq '4'}text-center questiondiv{/if} {if $qset1['option_group_id'] eq '3'}childdiv{/if}">
           <input type="hidden" name="questionid[{$qset1['question_id']}]" value="{$qset1['question_id']}">
-          {if $qset1['option_group_id'] eq '3' || $qset1['option_group_id'] eq '5' }
+          {if $qset1['option_group_id'] eq '3'}
           <p class="bold">{$qset1['question']} {if $qset1['is_mandatory'] eq '1'}*{/if}</p>
           <textarea class="form-control" name="answer[{$qset1['question_id']}]" {if $qset1['is_mandatory'] eq '1'}required{/if}></textarea>
           <div class="error-msg help-block"></div>
@@ -66,7 +66,7 @@
           <p class="bold">Thinking about the process of creating your Medicalert profile and finalising your membership. How satisfied were you with the:</p>
         </div>
         {foreach from=$questions[2] key=k item=qset1}
-        <div class="col-md-8 col-md-offset-2 form-group {if $qset1['option_group_id'] eq '3' || $qset1['option_group_id'] eq '2' || $qset1['option_group_id'] eq '4'}text-center questiondiv{/if} {if $qset1['option_group_id'] eq '3'}childdiv{/if}" {if $qset1['option_group_id'] eq '3'}id="childdiv1"{/if}>
+        <div data-triggers="{$qset1['question_triggers']}" class="col-md-8 col-md-offset-2 form-group questions {if $qset1['option_group_id'] eq '3' || $qset1['option_group_id'] eq '2' || $qset1['option_group_id'] eq '4'}text-center questiondiv{/if} {if $qset1['option_group_id'] eq '3'}childdiv{/if}">
           <input type="hidden" name="questionid[{$qset1['question_id']}]" value="{$qset1['question_id']}">
           {if $qset1['option_group_id'] eq '3'}
           <p class="bold">{$qset1['question']} {if $qset1['is_mandatory'] eq '1'}*{/if}</p>
@@ -120,32 +120,26 @@
   </div>
   {/if}
 </div>
-{/block}{* Place additional javascript here so that it runs after General JS includes *}{block name=tail}
+{/block}
+{block name=tail}
 <script type="text/javascript">
-  $(document).ready(function() {
+  $(document).ready(function(){
     $(".childdiv").hide();
+    
     $("#survey_cont").validate();
-    $('.questiondiv input[type="radio"]').click(function() {
-      if($(this).data('keyvalue') == '1'){
-        var divId = $(this).data('childdiv');
-        $("#" + divId).show();
-      }else{
-        var divId = $(this).data('childdiv');
-        $("#" + divId).hide();
+    
+    $('.questions input[type="radio"]').change(function(){
+      var nextElement = $(this).closest('.questions').next();
+      if(nextElement.hasClass('childdiv')){
+        var triggersList = String(nextElement.data('triggers')).split('-');
+        if(triggersList && $.inArray($(this).attr('value'), triggersList) > -1){
+          nextElement.show('slow');
+        }else{
+          nextElement.hide('slow');
+        }
       }
     });
-
     
-
-    $(".subquestion").hide();
-    $('input[type="radio"]').click(function() {
-      var clickedVal = $(this).val();           
-      if(clickedVal == '4' || clickedVal == '5'){
-        $(this).parents('.form-group').next('.form-group').show();
-      } else {
-        $(this).parents('.form-group').next('.form-group').hide();
-        }
-    });
   });
 </script>
 {/block}
