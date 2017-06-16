@@ -608,10 +608,11 @@ RewriteRule ^supporters/gift_certificate.aspx$  /gift-certificates? [R=301,L,NC]
 RewriteRule ^products/stainless_steel_dog_tag_ball_chain$ /stainless-steel-red-enamel-dog-tag-and-ballchain? [R=301,L,NC]
 RewriteRule ^autism-sa$ /safe-return? [R=301,L,NC]
 
+RewriteRule ^ndisguide$ /ndis\?utm_source=NDIS-LIFTOUT&utm_medium=FLYER&utm_campaign=NDIS [R=301,L,NC]
 
 RewriteRule ^seniors$ /seniors-card\?utm_source=SENIORS-DM&utm_medium=FLYER&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^seniorsflyer$ /seniors-card\?utm_source=SENIORS-WELCOMEPACK-INSERT&utm_medium=FLYER&utm_campaign=SENIORS [R=301,L,NC]
-RewriteRule ^ndisguide$ /ndis\?utm_source=NDIS-LIFTOUT&utm_medium=FLYER&utm_campaign=NDIS [R=301,L,NC]
+RewriteRule ^seniorsfestival$ /seniors-card\?utm_source=SENIORS-FESTIVAL&utm_medium=PROGRAM-GUIDE-AD&utm_campaign=SENIORS [R=301,L,NC]
 
 ################################################################################
 
