@@ -413,7 +413,7 @@ class cart{
    *
    * @return array
    */
-  function GetDataProductsOnCart($cartId = null){
+  function GetDataProductsOnCart($cartId = null, $disableUnclean = false){
     global $DBobject;
     
     if(empty($cartId)){
@@ -488,7 +488,7 @@ class cart{
       }
     }
     
-    $this->cartProducts = unclean($cart_arr);
+    $this->cartProducts = $disableUnclean ? $cart_arr : unclean($cart_arr);
     return $this->cartProducts;
   }
 
@@ -1195,21 +1195,44 @@ class cart{
       // Check discount restriction per user or usergroup
       $userRestricted = false;
       $reApplyAfterLogin = false;
-      if($res['discount_user_id'] > 0 || $res['discount_usergroup_id'] == 1){
-        $userRestricted = true;
+      if($res['discount_usergroup_id'] > 0){
+        
         $cartInfo = $this->GetDataCart();
-        if(empty($cartInfo['cart_user_id']) || $cartInfo['cart_user_id'] == 0){
-          $userRestrictionError = "You must be logged in to use this code '" . $code . "'. <a href='/login-register' title='Click here to log in'>Click here to log in.</a>";
-          $reApplyAfterLogin = true;
-        } else{
-          $sql = "SELECT user_group FROM tbl_user WHERE user_id = :id AND user_deleted IS NULL";
-          $userInfo = $DBobject->wrappedSql($sql, array(
-              ":id" => $cartInfo['cart_user_id'] 
-          ));
-          if($res['discount_user_id'] == $cartInfo['cart_user_id'] || $res['discount_usergroup_id'] == $userInfo[0]['user_group']){
-            $userRestricted = false;
+        $usrLoggedIn = empty($cartInfo['cart_user_id']) ? false : true;
+        
+        //Check user group
+        switch($res['discount_usergroup_id']){
+          
+          //Members only/logged in
+          case 1:{ 
+            if($usrLoggedIn){
+              //Validate for user_id
+              if($res['discount_user_id'] > 0 && $cartInfo['cart_user_id'] != $res['discount_user_id']){
+                $userRestricted = true;
+                $userRestrictionError = "Sorry but this code is non-transferable.<br>Please <a href='/contact-us' title='Contact us'>contact us</a> for more information.";
+                $reApplyAfterLogin = true;
+              }
+            }else{
+              $userRestricted = true;
+              $userRestrictionError = "Authentication is required for this code.<br><a href='/login' title='Click here to log in'>Please click here to log in.</a>";
+              $reApplyAfterLogin = true;
+            }
+            break;
           }
-          $userRestrictionError = "This code '" . $code . "' does not match user's details.";
+          
+          //Non-members only/not logged in
+          case 2:{
+            if($usrLoggedIn){
+              $userRestricted = true;
+              $userRestrictionError = "Sorry but this offer applies to new members only";
+              $reApplyAfterLogin = true;
+            }
+            break;
+          }
+          default:{
+            $userRestricted = true;
+            $userRestrictionError = "Undefined error, please <a href='/login' title='Contact us'>contact us</a> for more information.";
+          }
         }
       }
       

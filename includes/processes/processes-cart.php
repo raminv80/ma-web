@@ -550,7 +550,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $SMARTY->assign('discount', $discount);
             $payment = $pay_obj->GetPaymentRecord($paymentId);
             $SMARTY->assign('payment', $payment);
-            $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId);
+            $orderItems = $cart_obj->GetDataProductsOnCart($order_cartId, true);
             $SMARTY->assign('orderItems', $orderItems);
             
             //Promo message - Special occasion
