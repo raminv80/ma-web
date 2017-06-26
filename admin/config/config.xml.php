@@ -749,6 +749,7 @@
         <deleted>discount_deleted</deleted>
         <orderby>discount_id DESC</orderby>
         <published>discount_published</published>
+        <where>discount_name != 'Gift certificate' AND discount_name != 'Birthday voucher'</where>
         <options> 
           <field recursive="true"> 
             <name>categories</name>
@@ -783,6 +784,67 @@
       </table>
       <list_template>ec_list_discount.tpl</list_template>
       <edit_template>ec_edit_discount.tpl</edit_template>
+    </section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>gift-certificates</url>
+      <title>Gift certificates</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_discount</name>
+        <id>discount_id</id>
+        <field>discount_name</field>
+        <deleted>discount_deleted</deleted>
+        <orderby>discount_id DESC</orderby>
+        <published>discount_published</published>
+        <where>discount_name = 'Gift certificate'</where>
+        <options> 
+          <field recursive="true"> 
+            <name>categories</name>
+            <table>tbl_listing</table>
+            <id>listing_object_id</id>
+            <parent_id>6</parent_id>
+            <reference>listing_name</reference> 
+            <where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
+            <orderby>listing_name</orderby>
+          </field> 
+          <field> 
+            <name>products</name>
+            <table>tbl_product</table>
+            <id>product_object_id</id>
+            <reference>product_name</reference>
+            <where>product_published = 1</where>
+            <orderby>product_name</orderby>
+          </field>
+          <field> 
+            <name>usergroups</name>
+            <table>tbl_usergroup</table>
+            <id>usergroup_id</id>
+            <reference>usergroup_name</reference>
+            <orderby>usergroup_name</orderby>
+          </field> 
+        </options>
+        <log>
+          <table>tbl_discount</table>
+          <id>discount_id</id>
+          <field>discount_id</field>
+        </log>
+      </table>
+      <list_template>ec_list_discount.tpl</list_template>
+      <edit_template>ec_edit_discount.tpl</edit_template>
+    </section>
+    
+    <section level="1" subsection="true">
+      <showlist>FALSE</showlist>
+      <url>vouchers</url>
+      <title>Vouchers</title>
+      <type>CUSTOM</type>
+      <subsection>
+        <url>birthday</url>
+        <title>Birthday vouchers</title>
+        <template>ec_list_birthday_voucher.tpl</template>
+      </subsection>
     </section>
   </group>
   

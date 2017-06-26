@@ -34,7 +34,7 @@ class medicAlertApi {
 	// CONSTANTS
 	//
 	const SERVER = 'https://api.medicalert.org.au';
-// 	const SERVER = 'https://apistaging.medicalert.org.au';
+ 	//const SERVER = 'https://apistaging.medicalert.org.au';
 	const API_USER = 'MA-WEBSITE';
 	const API_USER_PASSWORD = 'htAHHGWug!kc';
 
@@ -431,6 +431,33 @@ class medicAlertApi {
 	    $response = $this->_processRequest(self::SERVER . '/member_basic_details.php', $params);
 	  }catch(Exception $e){
 	    $sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (getMemberBasicDetails)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
+	    $this->DBobj->wrappedSql($sql);
+	    throw $e;
+	  }
+	
+	  return $response;
+	}
+	
+	/**
+	 * Get members by birthday
+	 * @param string $sessionToken
+	 * @param int $day
+	 * @param int $month
+	 * @return object
+	 */
+	public function getMembersByBirthday($sessionToken, $day, $month)
+	{
+	
+	  $params = array(
+	      'sessionToken' => $this->_saltToken($sessionToken, MD5($this->_getRequestIp())),
+	      'day' => $day,
+	      'month' => $month
+	  );
+	
+	  try{
+	    $response = $this->_processRequest(self::SERVER . '/get_members_by_birthday.php', $params);
+	  }catch(Exception $e){
+	    $sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (getMembersByBirthday)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 	    $this->DBobj->wrappedSql($sql);
 	    throw $e;
 	  }

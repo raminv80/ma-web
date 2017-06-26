@@ -21,9 +21,11 @@ try{
   //RE-APPLY DISCOUNT CODE - (BUPA/AUTISM with products) 
   if(!empty($_SESSION['reApplydiscount']) && $shippable){
     $res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
-    $_SESSION['reApplydiscount'] = '';
-    header('Location: /shopping-cart#1');
-    die();
+    if(empty($res['error'])){
+      $_SESSION['reApplydiscount'] = '';
+      header('Location: /shopping-cart#2');
+      die();
+    }
   }
   
   //Has donation

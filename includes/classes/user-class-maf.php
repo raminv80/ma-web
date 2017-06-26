@@ -618,6 +618,57 @@ class UserClass{
 	  }
 	  return $res;
 	}
+
+
+	/**
+	 * Get Members basic details
+	 * Expected output: array(
+	 *   membershipNumber
+	 *   title
+	 *   firstName
+     *   middleName
+	 *   surname
+	 *   dateOfBirth
+	 *   emailAddress
+	 * )
+	 * @param int $_day 
+	 * @param int $_month
+	 * @return array
+	 */
+	function GetMembersByBirthday($_day, $_month){
+	   
+	  $res = array();
+	  $this->errorMsg = null;
+	  try{
+	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authenticationRecord = json_decode($authJSONResponse, true);
+	    $token = $authenticationRecord['sessionToken'];
+	  }
+	  catch(Exception $e){
+	    $this->errorMsg = "Invalid API membership number/password.";
+	    return $res;
+	  }
+	
+	  try{
+	    if($results = $this->medicAlertApi->getMembersByBirthday($token, $_day, $_month)){
+	      $this->medicAlertApi->logout($token);
+	      return json_decode($results, true);
+	    }
+	
+	  }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
+	    $this->errorMsg = "Your membership number and email address don't match.";
+	  }
+	  catch(exceptionMedicAlertApiNotAuthenticated $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  catch(exceptionMedicAlertApiSessionExpired $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  catch(exceptionMedicAlertApi $e){
+	    $this->errorMsg = "API error: {$e}";
+	  }
+	  return $res;
+	}
 	
 	
 	/**

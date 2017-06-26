@@ -27,9 +27,8 @@ if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
     $SMARTY->assign('shipping', $res[0]);
 
     $cart_obj = new cart();
-    $orderItems = $cart_obj->GetDataProductsOnCart($order[0]["payment_cart_id"]);
+    $orderItems = $cart_obj->GetDataProductsOnCart($order[0]["payment_cart_id"], true);
     $SMARTY->assign('orderItems', $orderItems);
-    
 
     $discount = $cart_obj->GetDiscountData($order[0]['cart_discount_code']);
     $SMARTY->assign('discount', $discount);

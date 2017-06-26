@@ -13,7 +13,10 @@ if(!empty($_REQUEST['tk'])){
   try{
     $redirect = 'unsubscribe#error';
     
-    $acceptedArr = array('em', 'tm'); // List of accepted prefixes
+    // List of accepted prefixes
+    $nonMemberArr = array('tm');
+    $memberArr = array('em', 'bd');
+    $acceptedArr = array_merge($nonMemberArr, $memberArr); 
     
     // Validate the token
     if(in_array($tokenArr[0], $acceptedArr) && is_int(hexdec($tokenArr[1])) && is_int(hexdec($tokenArr[2])) && hexdec($tokenArr[2]) < time()){
@@ -22,12 +25,12 @@ if(!empty($_REQUEST['tk'])){
       $userId = 0;
       
       //Get email address for non-member
-      if($tokenArr[0] == 'tm'){
+      if(in_array($tokenArr[0], $nonMemberArr)){
         $userId = hexdec($tokenArr[1]) * -1;
       }
       
       //Get email address for existing member
-      if($tokenArr[0] == 'em'){
+      if(in_array($tokenArr[0], $memberArr)){
         $userId = hexdec($tokenArr[1]);
       }
       
