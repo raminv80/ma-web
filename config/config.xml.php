@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="false" staging="true">
+<config debug="false" staging="false">
   <domain>medicalert.org.au</domain>
   <google_analytics>
     <id>UA-86286777-1</id>
@@ -20,14 +20,10 @@
     <phone>(+61)8 8273 8400</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
-<!--    <email>enquiry@medicalert.org.au</email>
+    <email>enquiry@medicalert.org.au</email>
     <email_from>noreply@medicalert.org.au</email_from>
     <email_contact>enquiry@medicalert.org.au</email_contact>
-    <email_orders>idewey@medicalert.org.au</email_orders>-->
-    <email>apolo@them.com.au</email>
-    <email_from>noreply@medicalert.org.au</email_from>
-    <email_contact>apolo@them.com.au</email_contact>
-    <email_orders>apolo@them.com.au</email_orders>
+    <email_orders>idewey@medicalert.org.au</email_orders>
     <logo>logo.png</logo>
   </company>
   <global_variable>
@@ -51,14 +47,14 @@
     <value>$93.5</value>
   </global_variable>    
   <database> 
-<!--     <host>122.201.118.45</host>  -->
-<!--     <user>medicalertorg_usr</user>  -->
-<!--     <password>VLw!8L+fM6cAh</password>  -->
-<!--     <dbname>medicalertorg_web</dbname>  -->
-  	<host>122.201.97.172</host> 
+    <host>122.201.118.45</host> 
+    <user>medicalertorg_usr</user> 
+    <password>VLw!8L+fM6cAh</password> 
+    <dbname>medicalertorg_web</dbname> 
+  	<!-- <host>122.201.97.172</host> 
     <user>them_usr01</user> 
     <password>OTwFwL?pSnR+</password> 
-    <dbname>them_db01</dbname> 
+    <dbname>them_db01</dbname>  -->
   </database>
   <database_variable>
     <name>==membership_fee==</name>
@@ -79,15 +75,15 @@
   <payment_gateway>
     <payway>
       <!-- LIVE  -->
-<!--       <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey> -->
-<!--       <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey> -->
-<!--       <merchantid>23886963</merchantid> -->
-<!--       <bankAccountid>035213308316A</bankAccountid> -->
+      <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey>
+      <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey>
+      <merchantid>23886963</merchantid>
+      <bankAccountid>035213308316A</bankAccountid>
       <!-- DEV -->
-      <secretkey>T10023_SEC_6es29q2sek6cnvetsrs6h8pkay5um3985djkjv93xm9mf8vruc3enbzd2ek2</secretkey>
+<!--       <secretkey>T10023_SEC_6es29q2sek6cnvetsrs6h8pkay5um3985djkjv93xm9mf8vruc3enbzd2ek2</secretkey>
       <publishableakey>T10023_PUB_aumgejfq7yd27cbkbypftzg87eht5vf84q3thibxy9wpa7ru44cnfddqrx4f</publishableakey>
       <merchantid>TEST</merchantid>
-      <bankAccountid>0000000A</bankAccountid>
+      <bankAccountid>0000000A</bankAccountid> -->
     </payway>
   </payment_gateway>
   
@@ -392,20 +388,6 @@
     <url>ndis</url>
     <template>ndis-landing-page.tpl</template>
     <pageID>850</pageID>
-  </static_page>
-  <static_page>
-    <url>test-competition</url>
-    <template>competition.tpl</template>
-    <pageID>773</pageID>
-    <options>
-      <field> 
-        <name>options_hearabout</name>
-        <table>tbl_heardabout</table>
-        <id>heardabout_value</id>
-        <reference>heardabout_value</reference>
-        <orderby>heardabout_order</orderby> 
-      </field>
-    </options>  
   </static_page>
   
   <!-- ECOMMERCE  -->
@@ -735,11 +717,6 @@
     <process>
     <url>process/refer-friend-senior</url>
     <file>includes/processes/processes-refer-friend-senior.php</file>
-    <return_url></return_url>
-  </process>
-  <process>
-    <url>process/competition</url>
-    <file>includes/processes/process-competition.php</file>
     <return_url></return_url>
   </process>
   <process>

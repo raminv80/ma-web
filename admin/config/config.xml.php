@@ -32,14 +32,14 @@
     <value>$32</value>
   </global_variable> 
   <database> 
-<!--     <host>122.201.118.45</host>  -->
-<!--     <user>medicalertorg_usr</user>  -->
-<!--     <password>VLw!8L+fM6cAh</password>  -->
-<!--     <dbname>medicalertorg_web</dbname>  -->
-  <host>122.201.97.172</host> 
+    <host>122.201.118.45</host> 
+    <user>medicalertorg_usr</user> 
+    <password>VLw!8L+fM6cAh</password> 
+    <dbname>medicalertorg_web</dbname> 
+  	<!-- <host>122.201.97.172</host> 
     <user>them_usr01</user> 
     <password>OTwFwL?pSnR+</password> 
-    <dbname>them_db01</dbname>
+    <dbname>them_db01</dbname>  -->
   </database> 
   <resource> 
   	<url>file-manager</url> 
@@ -189,41 +189,6 @@
       </log>
       <list_template>list.tpl</list_template>
       <edit_template>edit_landing_page.tpl</edit_template>
-    </section>
-    
-    
-    
-    <section level="1">
-      <showlist>FALSE</showlist>
-      <url>competition</url>
-      <title>Competition pages</title>
-      <type>LISTING</type>
-      <type_id>12</type_id>      
-      <associated> 
-        <name>gallery</name>
-        <table>tbl_gallery</table>
-        <linkfield>listing_id</linkfield>
-        <field>gallery_listing_id</field> 
-        <orderby>gallery_order ASC</orderby>
-      </associated>
-      <options>
-        <field recursive="true"> 
-          <name>collections</name>
-          <table>tbl_listing</table>
-          <id>listing_object_id</id>
-          <parent_id>6</parent_id>
-          <reference>listing_name</reference> 
-          <where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
-          <orderby>listing_name</orderby>
-        </field>
-      </options>
-      <log>
-        <table>tbl_listing</table>
-        <id>listing_id</id>
-        <field>listing_object_id</field>
-      </log>
-      <list_template>list.tpl</list_template>
-      <edit_template>edit_competition_page.tpl</edit_template>
     </section>
     
     <section level="1">
@@ -975,11 +940,6 @@
       </subsection>
     </section>
   </group>
-  <process>
-    <url>process/competition-entries</url>
-    <file>admin/includes/processes/get-competition-entries.php</file>
-    <return_url></return_url>
-  </process>
 
   <smartytemplate_config><!-- This element contains the smarty template values -->
   	<templates>/templates</templates>
