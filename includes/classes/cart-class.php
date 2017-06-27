@@ -1293,7 +1293,7 @@ class cart{
               }
             }
             if(empty($discount)){
-              $result['error'] = "This code '" . $code . "' doesn't apply to the item(s) on your cart";
+              $result['error'] = "This code '" . $code . "' doesn't apply for the item(s) on your cart";
               //$code = null;
             }
           }

@@ -39,7 +39,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-6 col-md-7 col-lg-8">
-				<div id="daysrenew" class=" text-center">
+				<div id="daysrenew" class=" text-center" data-advanced-renewal="{$tempvars.advanced_renewal_mn}">
                 {if $user.maf.main.lifetime eq 1}
                     <img src="/images/active-icon.png" alt="active" /> <span class="warning">You are always protected</span>
                     <div>as our MedicAlert lifetime member</div>

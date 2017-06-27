@@ -260,6 +260,11 @@
     <pageID>107</pageID>
   </static_page>
   <static_page>
+    <url>offers</url>
+    <template>corporate-partners.tpl</template>
+    <pageID>884</pageID>
+  </static_page>
+  <static_page>
     <url>gift-certificates</url>
     <template>gift-certificates.tpl</template>
     <pageID>97</pageID>
