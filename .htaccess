@@ -613,6 +613,7 @@ RewriteRule ^ndisguide$ /ndis\?utm_source=NDIS-LIFTOUT&utm_medium=FLYER&utm_camp
 RewriteRule ^seniors$ /seniors-card\?utm_source=SENIORS-DM&utm_medium=FLYER&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^seniorsflyer$ /seniors-card\?utm_source=SENIORS-WELCOMEPACK-INSERT&utm_medium=FLYER&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^seniorsfestival$ /seniors-card\?utm_source=SENIORS-FESTIVAL&utm_medium=PROGRAM-GUIDE-AD&utm_campaign=SENIORS [R=301,L,NC]
+RewriteRule ^seniorsnsw$ /seniors-card\?utm_source=SENIORS-NSW-DIRECTORY&utm_medium=SENIORS-NSW-AD&utm_campaign=SENIORS [R=301,L,NC]
 
 ################################################################################
 
