@@ -25,7 +25,8 @@
         <p>Each pack includes:</p>
         <ul>
           <li>An <span class="bold">A3 poster</span></li>
-          <li><span class="bold">Membership catalogues</span></li>
+          <li><span class="bold">Membership flyer</span></li>
+          <li><span class="bold">Membership flyer stand and sample bracelet</span></li>
           <li>A sample <span class="bold">membership card</span></li>
         </ul>
       </div>
