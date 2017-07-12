@@ -1242,7 +1242,7 @@ class cart{
         // Valid code by date
         if($res['discount_listing_id'] == 0 && $res['discount_product_id'] == 0){
           // No filter or special code for particular category/product
-          if($res['discount_amount_percentage']){
+          if($res['discount_amount_percentage'] == '1'){
             $discount = $subtotal * floatval($res['discount_amount']) / 100;
           } else{
             // Discount must not be higher than subtotal
@@ -1263,7 +1263,7 @@ class cart{
                 // Special code for category only
                 $listingArr = $this->getProductCategoriesArr($item['cartitem_product_id']);
                 if(in_array_r($res['discount_listing_id'], $listingArr)){
-                  if($res['discount_amount_percentage']){
+                  if($res['discount_amount_percentage'] == '1'){
                     $discount += floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
                   } else{
                     $listingMatchSubtotal += floatval($item['cartitem_subtotal']);
@@ -1273,7 +1273,7 @@ class cart{
                 
               } elseif($res['discount_product_id'] == $item['cartitem_product_id']){
                 // Special code for product only
-                if($res['discount_amount_percentage']){
+                if($res['discount_amount_percentage'] == '1'){
                   $discount = floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
                 } else{
                   // Discount must not be higher than subtotal
@@ -1285,7 +1285,13 @@ class cart{
                 }
               }
             }
+            
             if($listingMatchSubtotal > 0){
+              //Discount amount for entire shopping cart
+              if($res['discount_amount_percentage'] == '-1'){
+                $discount_amount_total = (floatval($res['discount_amount']) < $listingMatchSubtotal) ? floatval($res['discount_amount']) : $listingMatchSubtotal;
+              }
+              
               if($discount_amount_total > $listingMatchSubtotal + $shippingFee){
                 $discount = $listingMatchSubtotal + $shippingFee;
               } else{
@@ -1434,7 +1440,7 @@ class cart{
         ":discount_name" => $_data['name'], 
         ":discount_description" => $_data['description'], 
         ":discount_amount" => (empty($_data['amount'])? 0 : $_data['amount']), 
-        ":discount_amount_percentage" => (empty($_data['isPercentage'])? 0 : 1), 
+        ":discount_amount_percentage" => (empty($_data['isPercentage'])? 0 : $_data['isPercentage']), 
         ":discount_listing_id" => (empty($_data['listing_id'])? 0 : $_data['listing_id']), 
         ":discount_product_id" => (empty($_data['product_id'])? 0 : $_data['product_id']), 
         ":discount_usergroup_id" => (empty($_data['usergroup_id'])? 0 : $_data['usergroup_id']), 

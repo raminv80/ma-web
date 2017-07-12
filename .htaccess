@@ -609,6 +609,7 @@ RewriteRule ^products/stainless_steel_dog_tag_ball_chain$ /stainless-steel-red-e
 RewriteRule ^autism-sa$ /safe-return? [R=301,L,NC]
 
 RewriteRule ^ndisguide$ /ndis\?utm_source=NDIS-LIFTOUT&utm_medium=FLYER&utm_campaign=NDIS [R=301,L,NC]
+RewriteRule ^ndissource$ /ndis\?utm_source=KIDS-SOURCE-MAGAZINE&utm_medium=PRESS-AD&utm_campaign=NDIS [R=301,L,NC]
 
 RewriteRule ^seniors$ /seniors-card\?utm_source=SENIORS-DM&utm_medium=FLYER&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^seniorsflyer$ /seniors-card\?utm_source=SENIORS-WELCOMEPACK-INSERT&utm_medium=FLYER&utm_campaign=SENIORS [R=301,L,NC]

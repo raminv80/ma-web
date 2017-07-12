@@ -34,7 +34,7 @@ try {
   $cart_obj = new cart();
   $user_obj = new UserClass();
   if($members = $user_obj->GetMembersByBirthday($day, $month)){
-    
+    $members = array_reverse($members);
     //Build list of temp members with abandoned carts.
     $existingMembers = array();
     foreach($members as $r){
@@ -70,6 +70,7 @@ try {
             "isPublished" => 1,
             "usergroup_id" => 1,
             "user_id" => $d['user_id'],
+            "isPercentage" => -1,
             "listing_id" => 777 //All products collection
         );
         if($discountId = $cart_obj->CreateDiscountCode($newDiscountArr)){
@@ -79,14 +80,12 @@ try {
           $SMARTY->assign('amount', $amount);
           $SMARTY->assign('unsubscribe_token', 'bd-' . dechex($d['user_id']) . '-' . dechex(time()));
           $body = $SMARTY->fetch('email/birthday-voucher.tpl'); //FRONT-END templates
-          $email = 'apolo@them.com.au';
           createBulkMail(array($email), $from, $fromEmail, $subject, $body, 0, array($d['user_id']));
           $cnt++;
         }
       }else{
         $error .= '<br>'. $d['user_id'] . ' had no code.';
       }
-      if($cnt > 0) { sendBulkMail(); break; }
     }
   }
   
