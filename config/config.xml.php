@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true" staging="false">
+<config debug="false" staging="false">
   <domain>medicalert.org.au</domain>
   <google_analytics>
     <id>UA-86286777-1</id>
@@ -29,7 +29,7 @@
   <global_variable>
     <name>gst</name>
     <value>10</value>
-  </global_variable>
+  </global_variable> 
   <global_variable>
     <name>membership_fee</name>
     <value>$49</value>
@@ -41,20 +41,20 @@
   <global_variable>
     <name>postage</name>
     <value>$9.5</value>
-  </global_variable>
+  </global_variable> 
   <global_variable>
     <name>mintotal_membership_cost</name>
     <value>$93.5</value>
-  </global_variable>
-  <database>
-    <!-- <host>122.201.118.45</host>
-    <user>medicalertorg_usr</user>
-    <password>VLw!8L+fM6cAh</password>
-    <dbname>medicalertorg_web</dbname> -->
-  	<host>122.201.97.172</host>
-    <user>them_usr01</user>
-    <password>OTwFwL?pSnR+</password>
-    <dbname>them_db01</dbname>
+  </global_variable>    
+  <database> 
+    <host>122.201.118.45</host> 
+    <user>medicalertorg_usr</user> 
+    <password>VLw!8L+fM6cAh</password> 
+    <dbname>medicalertorg_web</dbname> 
+  	<!-- <host>122.201.97.172</host> 
+    <user>them_usr01</user> 
+    <password>OTwFwL?pSnR+</password> 
+    <dbname>them_db01</dbname>  -->
   </database>
   <database_variable>
     <name>==membership_fee==</name>
@@ -86,7 +86,7 @@
       <bankAccountid>0000000A</bankAccountid> -->
     </payway>
   </payment_gateway>
-
+  
   <page_strut>
     <type>1</type>
     <depth>2</depth>
@@ -101,16 +101,16 @@
       <field>gallery_listing_id</field>
       <orderby>gallery_order ASC</orderby>
     </associated>
-    <associated>
+    <associated> 
       <name>additionals</name>
       <table>tbl_additional</table>
       <linkfield>listing_id</linkfield>
-      <field>additional_listing_id</field>
+      <field>additional_listing_id</field> 
       <orderby>additional_category, additional_order, additional_name</orderby>
     </associated>
     </table>
     <template typeid="1">standardpage.tpl</template>
-    <template typeid="6">landing-page.tpl</template>
+    <template typeid="6">landing-page.tpl</template> 
     <process>
       <file>includes/processes/process-load-popular-products.php</file>
     </process>
@@ -121,17 +121,17 @@
   <index_page>
     <template>home.tpl</template>
     <pageID>1</pageID>
-    <options>
-      <field>
+    <options> 
+      <field> 
         <name>collections</name>
         <table>tbl_listing</table>
         <id>listing_object_id</id>
         <reference>listing_name</reference>
         <extra>listing_image</extra>
         <extra>listing_url</extra>
-        <where>listing_type_id = '10' AND listing_flag1 = '1' AND listing_published = '1'</where>
-        <orderby>listing_order,listing_name</orderby>
-      </field>
+        <where>listing_type_id = '10' AND listing_flag1 = '1' AND listing_published = '1'</where> 
+        <orderby>listing_order,listing_name</orderby> 
+      </field>  
     </options>
     <process>
       <file>includes/processes/process-load-testimonials.php</file>
@@ -167,28 +167,28 @@
     <url>contact-us</url>
     <template>contact-us.tpl</template>
     <pageID>3</pageID>
-    <options>
-      <field>
+    <options> 
+      <field> 
         <name>reasons</name>
         <table>tbl_reason</table>
         <id>reason_id</id>
         <reference>reason_name</reference>
-        <orderby>reason_order, reason_name</orderby>
-      </field>
+        <orderby>reason_order, reason_name</orderby> 
+      </field>  
     </options>
   </static_page>
   <static_page>
     <url>help</url>
     <template>help.tpl</template>
     <pageID>108</pageID>
-    <options>
-      <field>
+    <options> 
+      <field> 
         <name>reasons</name>
         <table>tbl_reason</table>
         <id>reason_id</id>
         <reference>reason_name</reference>
-        <orderby>reason_order, reason_name</orderby>
-      </field>
+        <orderby>reason_order, reason_name</orderby> 
+      </field>  
     </options>
   </static_page>
   <static_page>
@@ -283,7 +283,7 @@
   <static_page>
     <url>seniors-card</url>
     <template>seniors-card.tpl</template>
-    <pageID>769</pageID>
+    <pageID>822</pageID>
   </static_page>
   <static_page>
     <url>donate</url>
@@ -347,13 +347,13 @@
     <url>update-my-profile</url>
     <template>update-my-profile.tpl</template>
     <pageID>219</pageID>
-    <options>
-      <field>
+    <options> 
+      <field> 
         <name>options_state</name>
         <table>tbl_postcode</table>
         <id>postcode_state_long</id>
         <reference>postcode_state_long</reference>
-        <orderby>postcode_state_long</orderby>
+        <orderby>postcode_state_long</orderby> 
       </field>
     </options>
     <process>
@@ -399,7 +399,7 @@
     <template>ndis-landing-page.tpl</template>
     <pageID>850</pageID>
   </static_page>
-
+  
   <!-- ECOMMERCE  -->
   <static_page>
     <url>login</url>
@@ -410,21 +410,21 @@
     <url>login-register</url>
     <template>login-register.tpl</template>
     <pageID>8</pageID>
-    <options>
-      <field>
+    <options> 
+      <field> 
         <name>options_state</name>
         <table>tbl_postcode</table>
         <id>postcode_state_long</id>
         <reference>postcode_state_long</reference>
-        <orderby>postcode_state_long</orderby>
-      </field>
-      <field>
+        <orderby>postcode_state_long</orderby> 
+      </field> 
+      <field> 
         <name>options_hearabout</name>
         <table>tbl_heardabout</table>
         <id>heardabout_value</id>
         <reference>heardabout_value</reference>
-        <orderby>heardabout_order</orderby>
-      </field>
+        <orderby>heardabout_order</orderby> 
+      </field>  
     </options>
   </static_page>
   <static_page>
@@ -484,39 +484,39 @@
     <url>checkout</url>
     <template>ec_checkout.tpl</template>
     <pageID>13</pageID>
-    <options>
-      <field>
+    <options> 
+      <field> 
         <name>options_state</name>
         <table>tbl_postcode</table>
         <id>postcode_state_long</id>
         <reference>postcode_state_long</reference>
-        <orderby>postcode_state_long</orderby>
-      </field>
+        <orderby>postcode_state_long</orderby> 
+      </field> 
     </options>
     <process>
       <file>includes/processes/process-load-checkout.php</file>
     </process>
   </static_page>
-
+  
 
   <listing_page name="news-and-resources">
     <url>news-and-resources</url>
-    <root_parent_id>0</root_parent_id>
-    <type>2</type><!-- articles -->
+    <root_parent_id>0</root_parent_id> 
+    <type>2</type><!-- articles --> 
     <type>3</type><!-- newsletter -->
     <type>5</type><!-- videos -->
     <file>ListClass</file>
     <orderby>listing_schedule_start DESC</orderby>
     <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL)]]></where>
     <limit level="1">20</limit>
-    <table>
+    <table> 
       <name>tbl_listing</name>
-      <field>listing_url</field>
+      <field>listing_url</field>  
       <extends>
         <table>tbl_news</table>
         <linkfield>listing_id</linkfield>
         <field>news_listing_id</field>
-      </extends>
+      </extends>    
       <associated listing="false">
         <name>gallery</name>
         <table>tbl_gallery</table>
@@ -529,38 +529,38 @@
         <linkfield>listing_id</linkfield>
         <field>tag_object_id</field>
       </associated>
-      <template typeid="2">news-article.tpl</template>
-      <template typeid="3">newsletter.tpl</template>
-      <template typeid="5">newsletter.tpl</template>
+      <template typeid="2">news-article.tpl</template> 
+      <template typeid="3">newsletter.tpl</template> 
+      <template typeid="5">newsletter.tpl</template> 
     </table>
     <template>news-resources.tpl</template>
-    <loadmoretemplate>news-resources-structure.tpl</loadmoretemplate>
+    <loadmoretemplate>news-resources-structure.tpl</loadmoretemplate>  
   </listing_page>
-
+  
   <listing_page name="testimonials">
     <url>testimonials</url>
-    <root_parent_id>0</root_parent_id>
+    <root_parent_id>0</root_parent_id> 
     <type>4</type>
     <file>ListClass</file>
     <orderby>listing_order</orderby>
     <limit level="1">200</limit>
-    <table>
+    <table> 
       <name>tbl_listing</name>
-      <field>listing_url</field>
-      <template typeid="4">testimonial-details.tpl</template>
+      <field>listing_url</field>  
+      <template typeid="4">testimonial-details.tpl</template> 
     </table>
     <template>testimonials.tpl</template>
   </listing_page>
-
+  
   <listing_page name="products">
     <url>products</url>
-    <root_parent_id>6</root_parent_id>
+    <root_parent_id>6</root_parent_id> 
     <type>10</type>
     <file>ListClass</file>
     <limit level="1">100</limit>
-    <table>
+    <table> 
       <name>tbl_listing</name>
-      <field>listing_url</field>
+      <field>listing_url</field>  
       <associated listing="false">
         <name>gallery</name>
         <table>tbl_gallery</table>
@@ -574,11 +574,11 @@
         <field>banner_id</field>
         <where>banner_flag1 != '1'</where>
       </associated>
-      <template>ec_category-details.tpl</template>
+      <template>ec_category-details.tpl</template> 
     </table>
     <template typeid="10">ec_category-details.tpl</template>
     <template typeid="1">ec_category.tpl</template>
-    <loadmoretemplate>ec_category-loadmore.tpl</loadmoretemplate>
+    <loadmoretemplate>ec_category-loadmore.tpl</loadmoretemplate>  
     <process>
       <file>includes/processes/process-load-category-products.php</file>
     </process>
@@ -586,7 +586,7 @@
       <file>includes/processes/process-load-popular-products.php</file>
     </process>
   </listing_page>
-
+  	
   <product_page>
     <file>ProductClass</file>
     <table>
@@ -617,7 +617,7 @@
           <table>tbl_pcare</table>
           <linkfield>pcarelink_record_id</linkfield>
           <field>pcare_id</field>
-        </extends>
+        </extends> 
       </associated>
       <associated>
         <name>gallery</name>
@@ -626,17 +626,17 @@
         <field>gallery_product_id</field>
         <orderby>gallery_order</orderby>
       </associated>
-      <associated>
+      <associated> 
         <name>attributes</name>
         <table>tbl_productschema</table>
         <linkfield>product_type_id</linkfield>
-        <field>productschema_type_id</field>
+        <field>productschema_type_id</field> 
         <orderby>attribute_order</orderby>
         <extends>
           <table>tbl_attribute</table>
           <linkfield>productschema_attribute_id</linkfield>
           <field>attribute_id</field>
-        </extends>
+        </extends> 
         <associated>
           <name>values</name>
           <table>tbl_attr_value</table>
@@ -645,17 +645,17 @@
           <orderby>attr_value_order</orderby>
         </associated>
       </associated>
-      <associated>
+      <associated> 
         <name>variants</name>
         <table>tbl_variant</table>
         <linkfield>product_id</linkfield>
-        <field>variant_product_id</field>
-        <where>variant_published = 1</where>
-         <associated>
+        <field>variant_product_id</field> 
+        <where>variant_published = 1</where> 
+         <associated> 
           <name>productattributes</name>
           <table>tbl_productattr</table>
           <linkfield>variant_id</linkfield>
-          <field>productattr_variant_id</field>
+          <field>productattr_variant_id</field> 
         </associated>
       </associated>
       <associated>
@@ -668,7 +668,7 @@
           <table>tbl_product</table>
           <linkfield>productassoc_product_object_id</linkfield>
           <field>product_object_id</field>
-        </extends>
+        </extends> 
         <associated>
           <name>gallery</name>
           <table>tbl_gallery</table>
@@ -684,7 +684,7 @@
       <file>includes/processes/process-load-product.php</file>
     </process>
   </product_page>
-
+  
   <global_process_pre>
     <file>includes/processes/global-dynamic-variables.php</file>
   </global_process_pre>
@@ -698,7 +698,7 @@
     <url>process/cart</url>
     <file>includes/processes/processes-cart.php</file>
     <return_url></return_url>
-  </process>
+  </process>  
   <process>
     <url>process/autocomplete</url>
     <file>includes/processes/processes-autocomplete.php</file>
@@ -708,7 +708,7 @@
     <url>process/user</url>
     <file>includes/processes/processes-user-maf.php</file>
     <return_url></return_url>
-  </process>
+  </process>  
   <process>
     <url>process/contact-us</url>
     <file>includes/processes/processes-contactus.php</file>
@@ -733,22 +733,22 @@
     <url>process/load-more</url>
     <file>includes/processes/load-more.php</file>
     <return_url></return_url>
-  </process>
+  </process>	
   <process>
     <url>process/survey</url>
     <file>includes/processes/process-save-survey.php</file>
     <return_url></return_url>
-  </process>
+  </process> 	
   <process>
     <url>process/print-profile</url>
     <file>includes/processes/process-print-profile.php</file>
     <return_url></return_url>
-  </process>
+  </process> 
   <process>
     <url>process/sendsurvey</url>
     <file>includes/processes/process-send-survey.php</file>
     <return_url></return_url>
-  </process>
+  </process>  
   <process>
     <url>process/ndis-contact-us</url>
     <file>includes/processes/processes-ndis-contact.php</file>
@@ -769,7 +769,7 @@
     <file>includes/processes/process-advanced-renewal.php</file>
     <return_url></return_url>
   </process>
-
+  
 
   <smartytemplate_config>
     <templates>/templates</templates>
