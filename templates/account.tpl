@@ -57,7 +57,7 @@
 					<div class="days">{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'}</div>
 					<div>days overdue</div>
                     {/if}
-                    {if $user.maf.main.renew eq 't'}
+                    {if $user.maf.main.renew eq 't' || $user.maf.main.renew_option eq 't'}
                     <br>
                     <a href="/quick-renew" title="Click to renew your membership" class="btn btn-red">Renew now</a>
                     {/if}
@@ -219,7 +219,7 @@
 					<img src="{$item.general_details.image}?width=770&height=492&crop=1" alt="{$item.product_name} image" class="img-responsive"/>
 				</a>
 			</div>
-              {if $k gt 1}{break}{/if} 
+              {if $k gt 1}{break}{/if}
 			{/foreach}
 			<div class="col-xs-6 col-sm-3 col-md-2 text-center prod">
     			<a href="/products" title="Click to view our product range">
@@ -260,7 +260,7 @@
               </a>
             </div>
             {/if}
-			
+
 		</div>
 	</div>
 </div>
@@ -402,7 +402,7 @@
                 <input type="hidden" value="ADDTOCART" name="action" id="action" />
                 <input type="hidden" name="formToken" id="formToken" value="{$token}" />
                 <input type="hidden" value="{$products.product_object_id}" name="product_id" id="product_id" />
-                
+
                 <h3>Help us to help others</h3>
 				<p>While you’re here, why not make a small donation to our not-for-profit organisation? Just a few dollars can help provide our life-saving service, and allow us to educate Australians about the importance of MedicAlert Foundation. Donations over $2 are tax deductible. </p>
 
@@ -465,7 +465,7 @@ $(document).ready(function(){
                  if(obj.refresh){
                    setTimeout(function() {
                      location.reload();
-                   }, 5000);	
+                   }, 5000);
                  }
                }catch(err){
                  console.log('TRY-CATCH error');
@@ -481,7 +481,7 @@ $(document).ready(function(){
            });
          }
        });
-	 	
+
 	 	$('#newpassword').rules("add", {
            minlength: 8,
            hasLowercase: true,
@@ -505,7 +505,7 @@ $(document).ready(function(){
        addCart($(form).attr('id'), true);
      }
    });
- 
+
    $('#otherval').rules("add", {
      required: true,
      digits: true,
@@ -513,13 +513,13 @@ $(document).ready(function(){
    });
 
 $('input[name="variant_id"]').change(function(){
-     $('.donate-btn').removeClass('active'); 
+     $('.donate-btn').removeClass('active');
      $('#prod-submit-btn').removeAttr('disabled');
-     
+
      //Set attribute
      $('.variant-attributes').attr('disabled', 'disabled');
      $('#attribute_id-' + $(this).val()).removeAttr('disabled');
-     
+
      //Show/hide/highligth content based on selection
      $('#variant-' + $(this).val() + '-btn').addClass('active');
      if($('#variant-' + $(this).val()).hasClass('show-otherval')){
