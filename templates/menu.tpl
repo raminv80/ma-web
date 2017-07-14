@@ -23,6 +23,11 @@
 {/function}
 
   <!-- ***** Top menu ***** -->
+  {*
+  <div style="background-color: #212221;color: #fff;padding: 20px;text-align: center;">
+    We are currently experiencing some technical issues with processing orders on our website. We apologise for any inconvenience. We are currently working on fixing this technical issue and expect it to be fixed in the next hour.
+  </div>
+  *}
 <div id="top">
 	<div class="container">
 		<div class="row">

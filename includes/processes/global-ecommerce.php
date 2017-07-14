@@ -94,7 +94,7 @@ if($itemNumber > 0 && empty($cart['cart_discount_code']) && empty($_SESSION['reA
     $age = floatval($interval->y);
   }
 
-
+  
   if($age >= 60 && !empty($seniorsCard)){
     $cart_obj->ApplyDiscountCode('SENIORS');
     $totals = $cart_obj->CalculateTotal();

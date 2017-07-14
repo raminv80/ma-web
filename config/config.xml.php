@@ -212,6 +212,11 @@
     <pageID>4</pageID>
   </static_page>
   <static_page>
+    <url>thank-you-for-renewing</url>
+    <template>thank-you-for-renewing.tpl</template>
+    <pageID>779</pageID>
+  </static_page>
+  <static_page>
     <url>thank-you-for-purchasing</url>
     <template>ec_checkout-complete.tpl</template>
     <pageID>7</pageID>

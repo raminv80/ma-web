@@ -5,7 +5,7 @@ try{
   $cart_obj = new cart($_SESSION['user']['public']['id']);
   $cart_obj->RemoveNonMembershipFeeCartitems();
   $cart = $cart_obj->GetDataCart();
-  if($cart['cart_discount_code'] != 'SENIORS') $cart_obj->RemoveDiscountCode(); // If no seniors discount exists
+  if($cart['cart_discount_code'] != 'SENIORS') $cart_obj->RemoveDiscountCode();
   $validation = $cart_obj->ValidateCart($_SESSION['user']['public'], true);
   $SMARTY->assign('validation',$validation);
   $totals = $cart_obj->CalculateTotal();

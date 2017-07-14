@@ -74,19 +74,6 @@
 
 
         </div>
-
-
-<!--
-
-        {foreach from=$productsOnCart item=item}
-          <h4>{$item.cartitem_product_name} - {$item.variant_name}: &nbsp;&nbsp; ${$item.cartitem_product_price|number_format:0:'.':','}</h4>
-        {/foreach}
-
-        <h4>Subtotal: &nbsp;&nbsp; ${$totals.subtotal|number_format:2:".":","}</h4>
-        <h4>Discount: &nbsp;&nbsp; {if $totals.discount gt 0}<b>-${$totals.discount|number_format:2:".":","}</b>{else} $0.00 {/if}</h4> -->
-
-        <!-- <h3><b>Total ${$totals.total|number_format:2:'.':','}</b></h3> -->
-
         <form id="quickrenew_form" class="payment-autorenew" accept-charset="UTF-8" method="post" action="/process/cart" novalidate="novalidate">
           <input type="hidden" name="action" value="quick-renew" />
           <input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
@@ -373,9 +360,6 @@
     });
 
 
-
-    $("select").selectBoxIt();
-
     autorenew();
 
     $('input[name="autopayment"]').change(function(){
@@ -400,7 +384,8 @@
           elementVal = $(this).val();
           elementNode = $(this).prop('nodeName');
           if(elementNode == 'SELECT'){
-            $('select#auto-' + elementID).data("selectBox-selectBoxIt").selectOption(elementVal);
+            $('select#auto-' + elementID).val(elementVal);
+            //$('select#auto-' + elementID).data("selectBox-selectBoxIt").selectOption(elementVal);
           }else{
             $('input[name="auto-' + elementName + '"]').val(elementVal);
           }

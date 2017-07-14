@@ -101,12 +101,6 @@
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>Provides assistance to those with financial hardships</td>
-						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td class="border"><img src="/images/cross.png" alt="none" /></td>
-						<td class="border"><img src="/images/cross.png" alt="none" /></td>
-					</tr>
-					<tr>
 						<td>Internationally recognised medical ID and the first medical identification and alerting company</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
@@ -119,7 +113,7 @@
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>All staff located in Australia</td>
+						<td>All staff and 24/7 emergency response service staff located in Australia</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
@@ -142,7 +136,7 @@
 					<tr>
 						<td>Member can update the electronic health record at any time.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/checkmark.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
@@ -152,13 +146,13 @@
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>Membership provides protection for 12 months worldwide.</td>
+						<td>Membership including 24/7 emergency response service provides protection for 12 months worldwide.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>24/7 Emergency Response Service phone number for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
+						<td>24/7 emergency response service for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
@@ -170,13 +164,13 @@
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>Delivers training resources for emergency services and healthcare personnel, or for training students and other first responder teams.</td>
+						<td>Delivers training and education programs for emergency services and healthcare personnel, or for training students and other first responder teams.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>Provides regular communication with valuable health and education information.</td>
+						<td>Partnership arrangement with key peak health organisations.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
@@ -272,17 +266,6 @@
 						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
-						<td colspan="3">Provides assistance to those with financial hardships</td>
-					</tr>
-					<tr class="tabopts">
-						<td>
-							MedicAlert<br>Foundation
-							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
-						</td>
-						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
-						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
-					</tr>
-					<tr>
 						<td colspan="3">Internationally recognised medical ID and the first medical identification and alerting company</td>
 					</tr>
 					<tr class="tabopts">
@@ -305,7 +288,7 @@
 						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
-						<td colspan="3">All staff located in Australia</td>
+						<td colspan="3">All staff and 24/7 emergency response service staff located in Australia.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
@@ -350,7 +333,10 @@
 							MedicAlert<br>Foundation
 							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
 						</td>
-						<td>Other ID<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
+						<td>
+							Other ID<br>providers
+							<div><img src="/images/checkmark.png" alt="checkmark" /></div>
+						</td>
 						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
@@ -365,7 +351,7 @@
 						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
-						<td colspan="3">Membership provides protection for 12 months worldwide.</td>
+						<td colspan="3">Membership including 24/7 emergency response service provides protection for 12 months worldwide.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
@@ -378,7 +364,7 @@
 						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
-						<td colspan="3">24/7 Emergency Response Service phone number for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
+						<td colspan="3">24/7 emergency response service for emergency services and healthcare professionals and access to your detailed, up-to-date electronic health record.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
@@ -400,7 +386,7 @@
 						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
-						<td colspan="3">Delivers training resources for emergency services and healthcare personnel, or for training students and other first responder teams.</td>
+						<td colspan="3">Delivers and education programs for emergency services and healthcare personnel, or for training students and other first responder teams.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>
@@ -411,7 +397,7 @@
 						<td>Pharmacy<br>providers<div><img src="/images/cross.png" alt="none" /></div></td>
 					</tr>
 					<tr>
-						<td colspan="3">Provides regular communication with valuable health and education information.</td>
+						<td colspan="3">Partnership arrangement with key peak health organisations.</td>
 					</tr>
 					<tr class="tabopts">
 						<td>

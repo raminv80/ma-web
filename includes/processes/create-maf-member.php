@@ -5,7 +5,7 @@ if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
   include_once 'includes/functions/functions.php';
   global $SMARTY, $DBobject, $CONFIG, $GA_ID;
   
-  $email = 'email_here';
+  $email = 'bekmoorenco@outlook.com';
   
   $sql = "SELECT * FROM tbl_usertemp WHERE usertemp_email LIKE :email";
   $params = array(

@@ -349,7 +349,6 @@ class UserClass{
 
     //Days before memebership expiry make membership renewal optional.
     $days_before_opt = 45;
-
 		$user = array();
 		$user['membership_system_locked']   = (!empty($userData['dataBaseRecord']['memberLocked']) && !empty($userData['webSiteRecord']['pendingUpdate'])) ? 1 : 0;
 		$user['locked']                     = $userData['webSiteRecord']['pendingUpdate'];
