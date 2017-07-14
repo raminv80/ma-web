@@ -22,6 +22,7 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
 
     /** ============= UNCOMMENT THE COMMENTED LINES AND VICE VERSA WHEN LIVE =============== **/
     $mail->addAddress('apolo@them.com.au');
+    $mail->addAddress('oliver@them.com.au');
     if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
       //$mail->addAddress('apolo@them.com.au');
     }else{
@@ -35,7 +36,7 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
 //     }
 //     $mail->Subject = $subject;
     /** ============= ------------------------------------------------------ =============== **/
-    
+
     $header_arr = explode("\r\n", $headers);
     foreach ($header_arr as $val){
       $content = explode(":", $val, 2);
@@ -63,9 +64,9 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
         }
       }
     }
-    
+
     $mail->Body    = $body;
-    
+
     //Attachments
     if(!empty($attachments)) {
       foreach($attachments as $att){
@@ -74,7 +75,7 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
         }
       }
     }
-    
+
     $mailSent = ($mail->send()?1:0);
     // 		var_dump($mail->ErrorInfo);
   } catch (Exception $e) {
@@ -92,5 +93,3 @@ function get_string_between($string, $start, $end){
   $len = strpos($string, $end, $ini) - $ini;
   return substr($string, $ini, $len);
 }
-
-

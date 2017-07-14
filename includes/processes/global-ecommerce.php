@@ -46,18 +46,18 @@ try{
   $SMARTY->assign('subtotal', $subtotal);
   $productsOnCart = $cart_obj->GetDataProductsOnCart();
   $SMARTY->assign('productsOnCart', $productsOnCart);
-  
+
   //Wish list
   $wishlist = $cart_obj->GetWishList();
   $SMARTY->assign('wishlist', $wishlist);
-  
+
   //Temporary user's addresses
   $SMARTY->assign('address', $_SESSION['address']);
-  
+
   $SMARTY->assign('orderNumber', $_SESSION['orderNumber']);
   $SMARTY->assign('conversionTracking', $_SESSION['conversionTracking']);// ASSIGN JS-SCRIPTS TO GOOGLE ANALYTICS - ECOMMERCE (USED ON THANK YOU PAGE)
   unset($_SESSION['conversionTracking']);
-  
+
   if(!empty($GA_ID) && $REQUEST_URI == $loginRegisterUrl){
     $productsGA = $cart_obj->getCartitemsByCartId_GA();
     sendGAEnEcCheckoutStep($GA_ID, '2', 'Login / Join', $productsGA);
@@ -69,23 +69,23 @@ catch(exceptionCart $e){
 
 
 //MAF ONLY - auto apply SENIORS when DOB >= 60 years and seniors card not empty
-if($itemNumber > 0 && empty($cart['cart_discount_code']) && empty($_SESSION['reApplydiscount'])){ 
+if($itemNumber > 0 && empty($cart['cart_discount_code']) && empty($_SESSION['reApplydiscount'])){
   $dob = '';
   $seniorsCard = '';
   $age = 0;
-  
+
   //New member
   if(!empty($_SESSION['user']['new_user']) && empty($_SESSION['user']['public']['id'])){
     $dob = $_SESSION['user']['new_user']['db_dob'];
     $seniorsCard = $_SESSION['user']['new_user']['seniorscard'];
   }
-  
+
   //Existing member
   if(!empty($_SESSION['user']['public']['maf']['update'])){
     $dob = $_SESSION['user']['public']['maf']['update']['user_dob'];
     $seniorsCard = $_SESSION['user']['public']['maf']['update']['attributes'][18];
   }
-  
+
   if(!empty($dob)){
     //Calculate date difference between renewal date and today
     $dob = date_create_from_format('Y-m-d', $dob);
@@ -93,11 +93,12 @@ if($itemNumber > 0 && empty($cart['cart_discount_code']) && empty($_SESSION['reA
     $interval = $dob->diff($today);
     $age = floatval($interval->y);
   }
-  
+
+
   if($age >= 60 && !empty($seniorsCard)){
     $cart_obj->ApplyDiscountCode('SENIORS');
     $totals = $cart_obj->CalculateTotal();
-    if($totals['discount'] > 0){
+    if($totals['discount'] > 0 && $_SESSION['user']['public']['maf']['main']['renew_option'] === 'f'){
       header('Location: /shopping-cart#1');
       die();
     }

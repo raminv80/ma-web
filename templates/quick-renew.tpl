@@ -4,7 +4,7 @@
 {/block} {block name=body}
 <div id="pagehead">
   <div class="bannerout">
-    <!-- 
+    <!--
     <img src="{if $listing_image}{$listing_image}{else}/images/newsdet-banner.jpg{/if}" alt="{$listing_name} banner" />
      -->
   </div>
@@ -12,24 +12,81 @@
     <div class="row">
       <div class="col-md-8 col-md-offset-2 text-center">
         <h1>{$listing_name}</h1>
-        {if $user.maf.main.renew eq 't'}{$listing_content1}{else}{$listing_content2}{/if}
+        {if $user.maf.main.renew eq 't' || $user.maf.main.renew_option eq 't'}{$listing_content1}{else}{$listing_content2}{/if}
       </div>
     </div>
   </div>
 </div>
 
-{if $user.maf.main.renew eq 't'}
+{if $user.maf.main.renew eq 't' || $user.maf.main.renew_option eq 't'}
 <div id="giftgrey">
   <div class="container">
     <div class="row">
       <div class="col-sm-12 text-center">
         <h2>Payment information</h2>
         <br>
+
+
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              {foreach from=$productsOnCart item=item}
+                <div class="col-sm-4 col-sm-offset-2 text-right">
+                  {$item.cartitem_product_name} - {$item.variant_name}:
+                </div>
+                <div class="col-sm-4 text-left" >
+                  ${$item.cartitem_product_price|number_format:2:'.':','}
+                </div>
+              {/foreach}
+
+            </div>
+
+          </div>
+          {if $totals.discount gt 0}
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="col-sm-4 col-sm-offset-2 text-right">
+                Discount:
+              </div>
+              <div class="col-sm-4 text-left" >
+                <b>${$totals.discount|number_format:2:".":","}</b>
+              </div>
+
+            </div>
+
+          </div>
+          {/if}
+
+          <br>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="col-sm-4 col-sm-offset-2 text-right">
+                <h3><strong>Total:</strong></h3>
+              </div>
+              <div class="col-sm-4 text-left" >
+                <h3><strong>${$totals.total|number_format:2:'.':','}</strong></h3>
+              </div>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+<!--
+
         {foreach from=$productsOnCart item=item}
           <h4>{$item.cartitem_product_name} - {$item.variant_name}: &nbsp;&nbsp; ${$item.cartitem_product_price|number_format:0:'.':','}</h4>
         {/foreach}
-        <h3><b>Total ${$totals.total|number_format:2:'.':','}</b></h3>
-        
+
+        <h4>Subtotal: &nbsp;&nbsp; ${$totals.subtotal|number_format:2:".":","}</h4>
+        <h4>Discount: &nbsp;&nbsp; {if $totals.discount gt 0}<b>-${$totals.discount|number_format:2:".":","}</b>{else} $0.00 {/if}</h4> -->
+
+        <!-- <h3><b>Total ${$totals.total|number_format:2:'.':','}</b></h3> -->
+
         <form id="quickrenew_form" class="payment-autorenew" accept-charset="UTF-8" method="post" action="/process/cart" novalidate="novalidate">
           <input type="hidden" name="action" value="quick-renew" />
           <input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
@@ -41,7 +98,7 @@
                     <br>Payment accepted: <img src="/images/cards.png" alt="Payment accepted" title="Payment accepted" id="accepted" />
                   </div>
                 </div>
-  
+
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="ccno">
@@ -50,7 +107,7 @@
                     <input type="text" id="ccno" class="form-control copycc" name="cc[number]" autocomplete="off" required />
                     <div class="error-msg help-block"></div>
                   </div>
-  
+
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="ccname">
                       Cardholder's name<span>*</span>:
@@ -59,7 +116,7 @@
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
-  
+
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="ccmonth">
@@ -96,7 +153,7 @@
                       </div>
                     </div>
                   </div>
-  
+
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="cccsv">
                       Security code<span>*</span> <img src="/images/question-mark.png" alt="The three-digit number on the signature panel on the back of the card." title="The three-digit number on the signature panel on the back of the card." data-toggle="tooltip" data-placement="top" /> :
@@ -109,7 +166,7 @@
                   </div>
                 </div>
                 <div class="row">
-                
+
                 <div class="col-sm-12 text-center autorenew" {if $user.maf.main.autoBilling eq 't'}style="display:none"{/if}>
 
             <div class="row">
@@ -128,7 +185,7 @@
                 <p>Auto-renewal helps protect you by paying your annual membership fee automatically each year by direct debit from your nominated payment method.
                             Please confirm your auto-renewal payment method below. The first payment will occur at your next renewal of annual membership.</p>
 
-              
+
               </div>
             </div>
             <div id="autorenew-subform">
@@ -284,10 +341,10 @@
   $(document).ready(function() {
 
 	$('[data-toggle="tooltip"]').tooltip();
-   
+
     $('#quickrenew_form').validate();
 
-    
+
     $('#ccno').rules("add", {
       creditcard : true,
     });
@@ -296,26 +353,29 @@
       digits: true,
       minlength: 3
     });
-    
+
     $('#auto-ccno').rules("add", {
       creditcard : true,
     });
-    
+
     $('#autoddno').rules("add", {
       digits: true
     });
-    
+
     $('#autobsb').rules("add", {
       digits: true,
       minlength: 6
     });
-    
+
     $('#auto-cccsv').rules("add", {
       digits: true,
       minlength: 3
     });
-    
-    
+
+
+
+    $("select").selectBoxIt();
+
     autorenew();
 
     $('input[name="autopayment"]').change(function(){
@@ -323,7 +383,7 @@
     });
 
   });
-  
+
   function automethod(){
     var option = $('input[name="autopayment"]:checked').val();
     $('.auto-opts').hide();
@@ -340,10 +400,9 @@
           elementVal = $(this).val();
           elementNode = $(this).prop('nodeName');
           if(elementNode == 'SELECT'){
-            $('select#auto-' + elementID).val(elementVal); 
-            //$('select#auto-' + elementID).data("selectBox-selectBoxIt").selectOption(elementVal);            
+            $('select#auto-' + elementID).data("selectBox-selectBoxIt").selectOption(elementVal);
           }else{
-            $('input[name="auto-' + elementName + '"]').val(elementVal);  
+            $('input[name="auto-' + elementName + '"]').val(elementVal);
           }
         });
       }

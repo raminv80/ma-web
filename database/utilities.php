@@ -101,13 +101,13 @@ function isValidPassword($data)
   if(strlen(trim($data))<8){
     return false;
   }
-  
+
     $rgx = array();
 	$rgx[] = '/[A-Z]/';  //Uppercase
 	$rgx[] = '/[a-z]/';  //lowercase
 	$rgx[] = '/[0-9]/';  //numbers
 	$rgx[] = '/[!@#\$%\^&*)(\-._=+]/';  // whatever you mean by 'special char'
-	
+
 	foreach($rgx as $r){
     	if (preg_match_all($r, trim($data), $matches)<1) {
     		return false;
@@ -227,7 +227,7 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $a
       if($resc = $DBobject->executeSQL($sql)){
         $verify = ($resc[0]['cnt'] >= 480)? false : true;
       }
-  
+
       if(function_exists("SafeMail") && $verify){
         $sql = "SELECT email_id FROM tbl_email_queue WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND NOW() LIMIT 5";
         $params = array(
@@ -241,7 +241,7 @@ function sendMail($to,$from,$fromEmail,$subject,$body,$bcc=null, $userId = 0, $a
         }
       }
     }catch(Exception $e){}
-  
+
   }else{
     //put in the queue with an id
     $mailSent = $notsendid;
@@ -380,26 +380,26 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
           $attachments = array($attachments);
         }
       }
-       
+
       if(!empty($to) && !empty($subject) && !empty($body) ){
     	   /* To send HTML mail, you can set the Content-type header. */
     	   $headers  = "MIME-Version: 1.0\r\n";
     	   $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
     	   $headers .= "X-Priority: 3\r\n";
     	   $headers .= "X-Mailer: PHP". phpversion() ."\r\n";
-  
+
     	   /* additional headers */
     	   $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
     	   $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
     	   $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
     	   $headers .= "Bcc: medicalert.org.au@gmail.com\r\n";
-  
+
     	   $verify = false;
     	   $sql = "SELECT count(email_id) as cnt FROM tbl_email_queue WHERE email_sent = 1 AND email_modified BETWEEN DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND NOW() ";
     	   if($resc = $DBobject->executeSQL($sql)){
     	     $verify = ($resc[0]['cnt'] >= 480)? false : true;
     	   }
-  
+
     	   if(function_exists("SafeMail") && $verify){
     	     $sql = "SELECT email_id FROM tbl_email_queue WHERE email_ip = :ip AND email_created BETWEEN DATE_SUB(NOW(), INTERVAL 1 MINUTE) AND NOW() LIMIT 5";
     	     $params = array(
@@ -414,12 +414,12 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
     	   }
       }
     }catch(Exception $e){}
-    
+
   }else{
     //put in the queue with an id
     $mailSent = $notsendid;
   }
-  
+
   try{
     $headers = '';
     $sql = "INSERT INTO tbl_email_queue (email_to, email_from, email_from_email, email_header, email_subject, email_content,email_file,email_ip,email_sent,email_user_id,email_admin_id,email_modified,email_ua,email_serverip) VALUES
@@ -472,7 +472,7 @@ function sendErrorMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
     $filename = $_SERVER['DOCUMENT_ROOT'].'/debug_log';
     $body = time(). PHP_EOL . $subject. PHP_EOL . $body . PHP_EOL;
     file_put_contents($filename, $body, FILE_APPEND | LOCK_EX);
-    
+
   }catch(Exception $e){}
   return $mailSent;
 }
@@ -566,7 +566,7 @@ function hasTags( $str )
 
 
 function sendtoforbidden(){
-	GLOBAL $DBobject; 
+	GLOBAL $DBobject;
 	if($DBobject){
 		$params = array(
 				"ip"=>$_SERVER['REMOTE_ADDR'],
@@ -577,7 +577,7 @@ function sendtoforbidden(){
 		);
 		$sql = "INSERT INTO badrequest_log (ip,uri,request,get,post) VALUES (:ip,:uri,:request,:get,:post)";
 		$DBobject->wrappedSql($sql,$params);
-		
+
 		$sql = "SELECT COUNT(id) AS cnt FROM badrequest_log WHERE created > DATE_SUB(NOW(), INTERVAL 30 MINUTE) AND ip = :ip";
 		$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
 		if($res[0]['cnt'] >= 3){
@@ -585,7 +585,7 @@ function sendtoforbidden(){
 			$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));
 		}
 	}
-	
+
 	header("HTTP/1.1 403 Forbidden");
 	header("Location: /403.html");
 	die();
@@ -600,7 +600,7 @@ function checkforbidden(){
 			return false;
 		}
 	}
-	
+
 	header("HTTP/1.1 403 Forbidden");
 	header("Location: /403.html");
 	die();
@@ -628,7 +628,7 @@ function unclean( $str ){
 
 /**
  * Get a specific token if not created then generate it
- * 
+ *
  * @param string $name
  * @return string
  */
@@ -642,8 +642,8 @@ function getToken($name){
 }
 
 /**
- * Generate token 
- * 
+ * Generate token
+ *
  * @return string
  */
 function generatetoken(){
@@ -652,8 +652,8 @@ function generatetoken(){
 }
 
 /**
- * Verify specific token and optionally renew it when valid  
- * 
+ * Verify specific token and optionally renew it when valid
+ *
  * @param string $name
  * @param string $token
  * @param boolean $deleteAfterValidCheck
@@ -783,7 +783,7 @@ function in_array_r($needle, $haystack, $strict = false) {
 
 /**
  * Convert an associative array into csv string with header based on the keys
- * 
+ *
  * @param  $array
  * @return string
  */
@@ -837,7 +837,7 @@ function isMobile(){
 
 /**
  * Return true when string is a valid json
- * 
+ *
  * @param string $string
  * @return boolean
  */
@@ -866,8 +866,8 @@ function dateDifference($_date1 , $_date2 , $differenceFormat = '%R%a' )
 }
 
 /**
- * Return associative array with parents info (admin_level and admin_id)  
- * 
+ * Return associative array with parents info (admin_level and admin_id)
+ *
  * @param int $parentId
  * @param int $root
  * @param array $list
@@ -891,7 +891,7 @@ function getAdminParents($parentId, $root = 0, $list = array()) {
 
 /**
  * Return array with all children given the admin_id
- * 
+ *
  * @param int $parentId
  * @param int $root
  * @param array $list
@@ -1137,7 +1137,7 @@ function sendGAEnEcImpressionAction($_tid, $_action, $_proditemArr, $_impression
       'el' => 'Results',
       'pa' => $_action
   );
-  
+
   $k = 1;
   foreach($_proditemArr as $p){
     $data["pi{$k}id"] = $p['id'];
@@ -1157,14 +1157,14 @@ function sendGAEnEcImpressionAction($_tid, $_action, $_proditemArr, $_impression
     }
     $k++;
   }
-  
+
   return gaFireHit($data);
 }
 
 
 /**
  * Enhanced Ecommerce Tracking  - Measuring Action
- * 
+ *
  * PRODUCTS AND PROMOTION ACTIONS
  * -click: 	A click on a product or product link for one or more products.
  * -detail: 	A view of product details.
@@ -1308,12 +1308,12 @@ function sendGAEnEcCheckoutOptions($_tid, $_stepNumber, $_stepOption,  $_cid=nul
  */
 function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 	if(empty($_tid) || empty($_totalArr) || empty($_cartitemArr)) return false;
-	
+
 	$v = 1;
 	$tid = $_tid; // Put your own Analytics ID in here
 	$cid = !empty($_cid)?$_cid:gaParseCookie();
 	$dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
-	
+
 	// Send Transaction hit
 	$data = array(
 			'v' => $v,
@@ -1346,7 +1346,7 @@ function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 	$response = gaFireHit($data);
 	//sendMail('apolo@them.com.au', 'Themserver', 'noreply@them.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
 	return $response;
-} 
+}
 
 // See https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
 function gaFireHit( $data = null ) {
@@ -1355,7 +1355,7 @@ function gaFireHit( $data = null ) {
       $getString = 'https://ssl.google-analytics.com/collect';
       $getString .= '?payload_data&';
       $getString .= http_build_query($data);
-      
+
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $getString);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -1434,15 +1434,15 @@ function sendSMS($recipients = array(), $message, $adminId = 0){
 	$error = array();
 	$response = array();
 	$cnt = 0;
-	
+
 	try{
 		foreach($recipients as $user_id => $to){
 			if(!empty($to)) {
-				
+
 				// Create new MMSoap class
 				$response[$user_id] = $soap->sendMessages(array($to), html_entity_decode(utf8_decode($message),ENT_QUOTES), null, $origin);
 				$result = $response[$user_id]->getResult();
-				
+
 				#if failed, send email to THEM
 				if($result->sent){
 					$sent = 1;
@@ -1450,7 +1450,7 @@ function sendSMS($recipients = array(), $message, $adminId = 0){
 					$sent = 0;
 					$error[] =  "Failed[$user_id]:  $to";
 				}
-				
+
 				// Store in log
 				$sql = "INSERT INTO tbl_sms (sms_admin_id, sms_user_id, sms_to, sms_content, sms_ip, sms_sent) VALUES
 			      (:sms_admin_id, :sms_user_id, :sms_to, :sms_content, :sms_ip, :sms_sent)";
@@ -1466,7 +1466,7 @@ function sendSMS($recipients = array(), $message, $adminId = 0){
 				if($sent == 1) $cnt++;
 			}
 		}
-		
+
 	}catch(Exception $e){
 		$error[] = $e;
 	}
@@ -1516,3 +1516,8 @@ function validateDate($date, $format = 'd/m/Y'){
   return $d && $d->format($format) === $date;
 }
 
+function pretty_print($var){
+	echo '<pre>';
+	print_r($var);
+	echo '</pre>';
+}
