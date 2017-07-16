@@ -1184,7 +1184,7 @@ class cart{
     $code = strtoupper($code);
     $denyHigherSubtotal = true; // CHANGE THIS ACCORDINGLY
 
-    $subtotal = floatval($this->GetSubtotal()) + $shippingFee;
+    $subtotal = floatval($this->GetSubtotal());
 
     $discount = 0;
 
@@ -1253,7 +1253,7 @@ class cart{
             $discount = $subtotal * floatval($res['discount_amount']) / 100;
           } else{
             // Discount must not be higher than subtotal
-            if(floatval($res['discount_amount']) > $subtotal && $denyHigherSubtotal){
+            if(floatval($res['discount_amount']) > $subtotal + $shippingFee && $denyHigherSubtotal){
               $discount = $subtotal;
             } else{
               $discount = $res['discount_amount'];
