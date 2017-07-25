@@ -157,7 +157,7 @@ a{color:#ed174f;text-decoration: none;}
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 	            <td class="w580" width="580" style="table-layout: fixed;">
 					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Happy Birthday {$name}!</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">As a valued MedicAlert member, we didn't want to miss the chance to help you celebrate your special day. So, we thought we'd give you a present!</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">We didn't want to miss the chance to help you celebrate your special day. So, we thought we'd give you a present!</p>
           <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Here's a ${$amount} voucher for you to use towards your next MedicAlert ID*!</p>
                     
                     <p style="font-weight: bold;font-size: 14px; line-height: 26px;">Your birthday voucher code is: <span style="font-size: 18px;">{$code}</span></p>
