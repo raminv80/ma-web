@@ -461,8 +461,8 @@ class cart{
         $reversedArr = array_reverse($paramsArr);
         foreach($reversedArr as $v){
           $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_variant LEFT JOIN tbl_gallery ON gallery_variant_id = variant_id
-            LEFT JOIN tbl_productattr ON productattr_variant_id = variant_id
-            WHERE gallery_deleted IS NULL AND productattr_deleted IS NULL AND gallery_link IS NOT NULL AND variant_deleted IS NULL AND variant_product_id = :id {$v['where']} ORDER BY gallery_order LIMIT 1";
+          LEFT JOIN tbl_productattr ON productattr_variant_id = variant_id
+          WHERE gallery_deleted IS NULL AND productattr_deleted IS NULL AND gallery_link IS NOT NULL AND variant_deleted IS NULL AND variant_product_id = :id {$v['where']} ORDER BY gallery_order LIMIT 1";
           if($galArr = $DBobject->wrappedSql($sql, $v['params'])){
             break;
           }
@@ -664,6 +664,7 @@ class cart{
       if($cart['cart_discount_code'] == 'SENIORS'){
         $discount += $this->GetMSFDiscount(20);
         $hasSeniorsDiscount = true;
+        if($discount > 0) $discount_error = '';
       }
     }
 
@@ -1609,7 +1610,7 @@ class cart{
           'quantity' => $res[0]['cartitem_quantity'],
           'coupon' => '',
           'position' => ''
-      );
+              );
     }
 
     return $result;
@@ -1637,15 +1638,15 @@ class cart{
       foreach($res as $r){
         $product = $this->getProductInfoByCartItem_GA($r['cartitem_id']);
         $result .= "ga('ec:addProduct', {
-  			'id': '{$product['id']}',
-  			'name': '{$product['name']}',
-  			'category': '{$product['category']}',
-  			'brand': '{$product['brand']}',
-  			'variant': '{$product['variant']}',
-  			'price': '{$product['price']}',
-  			'quantity': {$product['quantity']}
-  			});
-  			";
+        'id': '{$product['id']}',
+        'name': '{$product['name']}',
+        'category': '{$product['category']}',
+        'brand': '{$product['brand']}',
+        'variant': '{$product['variant']}',
+        'price': '{$product['price']}',
+        'quantity': {$product['quantity']}
+      });
+      ";
       }
     }
 
