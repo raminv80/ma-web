@@ -708,10 +708,10 @@ body, td {
                                                 <td align="left" height="20" width="170" class="w170" height="20"></td>
                                                 <td class="w30" width="30" height="20"></td>
                                               </tr>
-                                              {if $promo_message}
+                                              {if $promo_message || $discount.discount_invoice_message}
                                               <tr>
                                                 <td class="w30" width="30"></td>
-                                                <td colspan="2" style="font-size: 12px; font-weight: bold; text-align: right;" width="580" class="w580">{$promo_message}</td>
+                                                <td colspan="2" style="font-size: 12px; font-weight: bold; text-align: right;" width="580" class="w580">{if $discount.discount_invoice_message}{$discount.discount_special_message}{else}{$promo_message}{/if}</td>
                                                 <td class="w30" width="30"></td>
                                               </tr>
                                               {/if}

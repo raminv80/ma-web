@@ -1308,9 +1308,9 @@ class cart{
                 $discount = $discount_amount_total;
               }
             }
-            if(empty($discount) && (empty($res['discount_shipping']) || (!empty($res['discount_shipping']) && !$matchCategory && !$matchProduct))){
+            if(empty($discount) && (empty($res['discount_special']) || (!empty($res['discount_special']) && !$matchCategory && !$matchProduct)) && (empty($res['discount_shipping']) || (!empty($res['discount_shipping']) && !$matchCategory && !$matchProduct))){
               $result['error'] = "This code '" . $code . "' doesn't apply for the item(s) on your cart";
-              if(!empty($res['discount_shipping'])){
+              if(!empty($res['discount_shipping']) || !empty($res['discount_special'])){
                 $code = null;
               }
             }

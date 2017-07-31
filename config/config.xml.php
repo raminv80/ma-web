@@ -1,6 +1,6 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
-<config debug="true" staging="true">
+<config debug="false" staging="true">
   <domain>medicalert.org.au</domain>
   <google_analytics>
     <id>UA-86286777-1</id>

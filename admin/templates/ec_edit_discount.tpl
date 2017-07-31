@@ -48,12 +48,36 @@
             </div>
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_discount_description">Description</label>
-              <br />
               <div class="col-sm-5">
                 <textarea name="field[1][tbl_discount][{$cnt}][discount_description]" id="id_discount_description" class="tinymce">{$fields.discount_description}</textarea>
               </div>
             </div>
+            
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_discount_invoice_message">Invoice message</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_discount][{$cnt}][discount_invoice_message]" id="id_discount_invoice_message" rows="5" class="form-control">{$fields.discount_invoice_message}</textarea>
+              </div>
+            </div>
+            
+            <!-- Special -->
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_discount_special">Special (no discount)</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{$fields.discount_special}" name="field[1][tbl_discount][{$cnt}][discount_special]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.discount_special eq 1}checked="checked" {/if} 
+                onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1'); DisplaySpecial(1); }else{ $(this).parent().children('.value').val('0'); DisplaySpecial(0); }" id="id_discount_special">
+              </div>
+            </div>
+            <div class="row form-group special-true">
+              <label class="col-sm-3 control-label" for="id_discount_special_message">Special message<br><small>(on shopping cart page)</small></label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_discount][{$cnt}][discount_special_message]" id="id_discount_special_message" rows="4" class="form-control">{$fields.discount_special_message}</textarea>
+              </div>
+            </div>
+            
+            
+            <div class="row form-group special-false">
               <label class="col-sm-3 control-label" for="id_discount_amount">Amount</label>
               <div class="col-sm-9">
                 <input class="form-control double" type="text" value="{$fields.discount_amount}" name="field[1][tbl_discount][{$cnt}][discount_amount]" id="id_discount_amount" >
@@ -68,10 +92,10 @@
                 <span class="help-block"></span>
               </div>
             </div>
-            <div class="row form-group">
+            <div class="row form-group special-false">
               <label class="col-sm-3 control-label" for="id_discount_shipping">Free shipping</label>
               <div class="col-sm-5">
-                <input type="hidden" value="{$fields.discount_shipping}" name="field[1][tbl_discount][{$cnt}][discount_shipping]" class="value">
+                <input type="hidden" value="{$fields.discount_shipping}" name="field[1][tbl_discount][{$cnt}][discount_shipping]" class="value" id="free_shipping">
                 <input class="chckbx" type="checkbox" {if $fields.discount_shipping}checked="checked" {/if} 
                 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('Postage & handling') }else{ $(this).parent().children('.value').val('') }" id="id_discount_shipping">
               </div>
@@ -205,6 +229,8 @@
       onkeyup: false
     });
     
+    DisplaySpecial({$fields.discount_special});
+    
     $('#id_discount_code').rules("add", {
       uniqueURL: {
         id: $('#discount_id').val(),
@@ -244,5 +270,18 @@
     });
     
   });
+  
+  function DisplaySpecial(VAL){
+    if(VAL == 1){
+      $('.special-true').show('slow');
+      $('.special-false').hide();
+      $('#id_discount_amount').val('0');
+      $('#free_shipping').val('');
+      $('#id_discount_shipping').removeAttr('checked');
+    }else{
+      $('.special-false').show('slow');
+      $('.special-true').hide();
+    }
+  }
 </script>
 {/block}
