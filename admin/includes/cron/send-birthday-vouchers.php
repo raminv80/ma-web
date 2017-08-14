@@ -18,7 +18,7 @@ $cnt = 0;
 $day = intval(date('d'));
 $month = intval(date('m'));
 //Only at THEM
-if($_SERVER['REMOTE_ADDR']=='150.101.230.130' && !empty($_REQUEST['day']) && !empty($_REQUEST['month'])){
+if($_SERVER['REMOTE_ADDR'] == '45.124.202.249' && !empty($_REQUEST['day']) && !empty($_REQUEST['month'])){
   $day = intval($_REQUEST['day']);
   $month = intval($_REQUEST['month']);
 }
@@ -42,9 +42,9 @@ try {
         $existingMembers[$r['emailAddress']]['name'] = $r['firstName'];
         $existingMembers[$r['emailAddress']]['user_id'] = $r['membershipNumber'];
       }
-      if(count($existingMembers) >= 50){
-        break;
-      }
+//       if(count($existingMembers) >= 50){
+//         break;
+//       }
     }
     
     //Create and send emails
