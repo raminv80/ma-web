@@ -80,10 +80,16 @@ if($itemNumber > 0 && empty($cart['cart_discount_code']) && empty($_SESSION['reA
     $seniorsCard = $_SESSION['user']['new_user']['seniorscard'];
   }
   
-  //Existing member
+  //Existing member - approved details
   if(!empty($_SESSION['user']['public']['maf']['update'])){
     $dob = $_SESSION['user']['public']['maf']['update']['user_dob'];
     $seniorsCard = $_SESSION['user']['public']['maf']['update']['attributes'][18];
+  }
+  
+  //Existing member - pending details
+  if(!empty($_SESSION['user']['public']['maf']['pending'])){
+    $dob = $_SESSION['user']['public']['maf']['pending']['user_dob'];
+    $seniorsCard = $_SESSION['user']['public']['maf']['pending']['attributes'][18];
   }
   
   if(!empty($dob)){
