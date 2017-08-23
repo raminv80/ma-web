@@ -663,7 +663,7 @@ a {
                       <tr>
                         <td class="w30" width="30"></td>
                         <td class="w580" width="580" align="center">
-                          <p style="font-size: 16px; line-height: 20px; margin-bottom: 0;">*Offer only applies to one additional medical ID, must be equal or lesser value.</p>
+                          <p style="font-size: 16px; line-height: 20px; margin-bottom: 0;">*Offer only applies to one additional MedicAlert ID, must be equal or lesser value.</p>
                         </td>
                         <td class="w30" width="30"></td>
                       </tr>

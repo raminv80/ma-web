@@ -178,8 +178,8 @@ a{color:#ed174f;text-decoration: none;}
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px; font-weight: bold;">Your friend {$user_name} thought you might be interested in joining MedicAlert Foundation.
 					</p>
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">MedicAlert membership is essential for anyone with a medical condition, allergy or who takes regular medication that needs to be known in an emergency.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">With your own customised medical ID that's internationally recognised, plus 24/7 emergency service access to your medical information and exclusive member only offers, there's never been a better time to join.</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">The MedicAlert medical ID offers peace of mind by alerting emergency service and healthcare professionals to your specific needs when it matters most - especially when you can't speak for yourself.</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">With your own customised MedicAlert ID that's internationally recognised, plus 24/7 emergency service access to your medical information and exclusive member only offers, there's never been a better time to join.</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">The MedicAlert ID offers peace of mind by alerting emergency service and healthcare professionals to your specific needs when it matters most - especially when you can't speak for yourself.</p>
 					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Make sure you're protected in a medical emergency. Simply head online or give us a call on <a style="color: #ed3361; text-decoration: none;" href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a>.</p>
 					<p style="font-weight: bold;font-size: 14px; line-height: 24px;">Remember, for a small annual fee, your membership gives you access to a range of benefits including:</p>
 	            </td>

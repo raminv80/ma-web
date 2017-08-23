@@ -505,7 +505,7 @@ a {
                         <p style="font-size: 28px; line-height: 40px; color: #ed174f; font-weight: bold;">Hi {$user_name}</p>
                         <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">The changes to your MedicAlert membership profile have now been submitted. You will receive a confirmation email once our Membership Services team has reviewed and updated your profile.</p>
                         <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">
-                          Now is also a good opportunity to check your emblem. If the engraving is difficult to read, or you'd simply like a new medical ID, you can order one online. Click below to view our full range.
+                          Now is also a good opportunity to check your emblem. If the engraving is difficult to read, or you'd simply like a new MedicAlert ID, you can order one online. Click below to view our full range.
                         </p>
                       </td>
                       <td class="w30" width="30" style="table-layout: fixed;"></td>
