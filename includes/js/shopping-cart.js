@@ -209,8 +209,12 @@ function deleteItem(ID) {
             $('#' + ID).hide('slow');
             $.each(totals, function(id, value) {
               amount = parseFloat(value);
+              if(id == 'total'){
+                amount += parseFloat($('#shippingMethod').attr('data-value'));
+              }
               $('#' + id).html('$' + amount.formatMoney(2, '.', ','));
             });
+            
           }else{
             location.reload();
           }

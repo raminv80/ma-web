@@ -26,6 +26,8 @@ try{
       header('Location: /shopping-cart#2');
       die();
     }
+    $totals = $cart_obj->CalculateTotal();
+    $SMARTY->assign('totals',$totals);
   }
   
   //Has donation
