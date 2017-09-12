@@ -4,7 +4,8 @@
 #require valid-user
 #Order Deny,Allow
 #Deny from all
-#Allow from 150.101.230.130
+#Allow from 139.130.82.178
+#Allow from 45.124.202.249
 #Satisfy Any
 
 <IfModule mod_deflate.c>
@@ -32,6 +33,11 @@ ExpiresDefault "access plus 7 days"
 #ErrorDocument 404 /404
 ErrorDocument 503 /503.html
 RewriteEngine  on
+
+##### REDIRECT FOR DEVELOPMENT SITE #####
+RewriteCond %{REMOTE_ADDR} !139.130.82.178
+RewriteCond %{REMOTE_ADDR} !45.124.202.249
+RewriteRule (.*)$ https://www.medicalert.org.au/$1 [L]
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)/$ /$1 [L,R=301]
