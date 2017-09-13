@@ -22,8 +22,8 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
 
     /** ============= UNCOMMENT THE COMMENTED LINES AND VICE VERSA WHEN LIVE =============== **/
     $mail->addAddress('apolo@them.com.au');
-    $mail->addAddress('oliver@them.com.au');
-    if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
+    //$mail->addAddress('oliver@them.com.au');
+    if($_SERVER['REMOTE_ADDR'] == '45.124.202.249'){
       //$mail->addAddress('apolo@them.com.au');
     }else{
       //$mail->addAddress('rstevens@medicalert.org.au');
