@@ -216,7 +216,7 @@ code {
 }
 
 #footer1 {
-  
+
 }
 /* Fonts and Content */
 body, td {
@@ -275,7 +275,7 @@ body, td {
                       <tr>
                         <td class="w640" width="640" style="font-family: Arial, sans-serif; font-size: 14px; line-height: 24px; text-align: left;">
                           {if $hasMAFProd}
-                            <p>Your MedicAlert product order has been placed and will be processed by our Membership Services team. Please allow 20 working days to receive your order (if no adjustments required).Below is a summary of your order. Please retain this as proof of purchase.</p>
+                            <p>Your MedicAlert product order has been placed and will be processed by our Membership Services team. Please allow 10 working days to receive your order (if no adjustments required).Below is a summary of your order. Please retain this as proof of purchase.</p>
                               {$additional_message}
                           {/if}
                           {if $hasDonation}
@@ -665,9 +665,9 @@ body, td {
                                             <div class="attributes" style="font-size: 14px;">Product code: {$item.cartitem_product_uid}</div> {if $item.attributes} {foreach from=$item.attributes item=attr}
                                             <div class="attributes" style="font-size: 14px;">
                                               {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}
-                                              {if $attr.cartitem_attr_attr_value_additional && $attr.cartitem_attr_attribute_id eq 1} 
-                                                ({foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}<span>{$v}</span>{/foreach}) 
-                                              {/if} 
+                                              {if $attr.cartitem_attr_attr_value_additional && $attr.cartitem_attr_attribute_id eq 1}
+                                                ({foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}<span>{$v}</span>{/foreach})
+                                              {/if}
                                             </div>
                                             {if $attr.cartitem_attr_attr_value_additional && $attr.cartitem_attr_attribute_id eq 4} {foreach $attr.cartitem_attr_attr_value_additional|json_decode as $k => $v}
                                             <div class="attributes" style="font-size: 14px;">Engraving Line {$k}: {$v}</div> {/foreach} {/if} {/foreach} {/if} {/if}
@@ -840,6 +840,7 @@ body, td {
                                         </tr>
                                       </tbody>
                                     </table>
+                                    {if $payment.payment_utm_campaign}<span style="font-size: 10px">{$payment.payment_utm_medium} &gt;&gt; {$payment.payment_utm_campaign}</span>{/if}
                                     {/if}
                                   </td>
                                 </tr>
@@ -848,8 +849,6 @@ body, td {
                           </div>
                         </td>
                       </tr>
-
-
                     </tbody>
                   </table>
                 </td>
@@ -862,7 +861,10 @@ body, td {
                   <table class="w640" width="640" cellpadding="0" cellspacing="0">
                     <tbody>
                       <tr>
-                        <td class="w640" width="640" style="font-size: 14px; line-height: 24px; text-align: left;">Kind regards<br /> Membership Services<br /> MedicAlert Foundation<br />
+                        <td class="w640" width="640" style="font-size: 14px; line-height: 24px; text-align: left;">
+                        Kind regards<br /> 
+                        Membership Services<br /> 
+                        MedicAlert Foundation<br />
                         <br /> This email is automatically generated. Please do not reply. If you have any queries please call Membership Services on {$COMPANY.toll_free} (Mon-Fri 8.30am to 5.30pm CST) or email <a href="mailto:{$COMPANY.email}" style="color: #ed174f;">{$COMPANY.email}</a>.<br />
 
                         </td>

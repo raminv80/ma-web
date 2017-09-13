@@ -398,7 +398,11 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_payee_name' => $_POST['cc']['name'], 
             'payment_charged_amount' => $chargedAmount, 
             'payment_gst' => $gst, 
-            'payment_method' => $paymentMethod 
+            'payment_method' => $paymentMethod, 
+            'payment_utm_source' => $_SESSION['utm_source'], 
+            'payment_utm_medium' => $_SESSION['utm_medium'], 
+            'payment_utm_campaign' => $_SESSION['utm_campaign'], 
+            'payment_source_referer' => $_SESSION['source_referer'] 
         );
         
         if(!empty($GA_ID)){
@@ -845,7 +849,11 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           'payment_payee_name' => $_POST['cc']['name'],
           'payment_charged_amount' => $chargedAmount,
           'payment_gst' => $gst,
-          'payment_method' => $paymentMethod
+          'payment_method' => $paymentMethod, 
+          'payment_utm_source' => $_SESSION['utm_source'], 
+          'payment_utm_medium' => $_SESSION['utm_medium'], 
+          'payment_utm_campaign' => $_SESSION['utm_campaign'], 
+          'payment_source_referer' => $_SESSION['source_referer'] 
       );
       
       $bankSettingsArr = array(
@@ -1133,7 +1141,11 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_payee_name' => $_POST['cc']['name'],
             'payment_charged_amount' => $chargedAmount,
             'payment_gst' => $gst,
-            'payment_method' => $paymentMethod
+            'payment_method' => $paymentMethod, 
+            'payment_utm_source' => $_SESSION['utm_source'], 
+            'payment_utm_medium' => $_SESSION['utm_medium'], 
+            'payment_utm_campaign' => $_SESSION['utm_campaign'], 
+            'payment_source_referer' => $_SESSION['source_referer'] 
         );
     
         $billingArr = array(

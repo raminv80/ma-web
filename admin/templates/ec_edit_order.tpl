@@ -71,6 +71,14 @@
 						{$fields.payment.0.payment_shipping_comments} 
 					</td>
 				</tr>
+        {if $fields.payment.0.payment_utm_campaign}
+        <tr>
+          <td><b>UTM:</b></td>
+          <td class="text-center" colspan="3">
+            {$fields.payment.0.payment_utm_medium} &gt;&gt; {$fields.payment.0.payment_utm_campaign}
+          </td>
+        </tr>
+         {/if}
 			</tbody>
 		</table>
 	</div>
