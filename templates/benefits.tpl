@@ -55,7 +55,7 @@
 					</div>
 					<div class="col-sm-4 text-center benout">
 						<img src="/images/benefit2.png" class="img-responsive" alt="" />
-						<div class="bene">24/7 emergency service access to your medical information</div>
+						<div class="bene">24/7 emergency service access to your health information</div>
 					</div>
 					<div class="col-sm-4 text-center benout">
 						<img src="/images/benefit3.png" class="img-responsive" alt="" />
@@ -69,7 +69,7 @@
 					</div>
 					<div class="col-sm-4 text-center benout">
 						<img src="/images/benefit5.png" class="img-responsive" alt="" />
-						<div class="bene">Secure online access to your electronic health record </div>
+						<div class="bene">Secure online access to your health records</div>
 					</div>
 					<div class="col-sm-4 text-center benout">
 						<img src="/images/benefit6.png" class="img-responsive" alt="" />

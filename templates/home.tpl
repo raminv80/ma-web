@@ -57,8 +57,8 @@
 				<p>Protection for 12 months</p>
 			</div>
 			<div class="col-sm-4 text-center benefits">
-				<img src="/images/benefit2.png" alt="24/7 emergency service access to your medical information" class="img-responsive" />
-				<p>24/7 emergency service access to your medical information</p>
+				<img src="/images/benefit2.png" alt="24/7 emergency service access to your health information" class="img-responsive" />
+				<p>24/7 emergency service access to your health information</p>
 			</div>
 			<div class="col-sm-4 text-center benefits">
 				<img src="/images/benefit3.png" alt="Exclusive member only offers" class="img-responsive" />
@@ -69,8 +69,8 @@
 				<p>Unlimited wallet and fridge cards listing your details</p>
 			</div>
 			<div class="col-sm-4 text-center benefits hidden-xs">
-				<img src="/images/benefit5.png" alt="Secure online access to your electronic health record " class="img-responsive" />
-				<p>Secure online access to your electronic health record </p>
+				<img src="/images/benefit5.png" alt="Secure online access to your health records" class="img-responsive" />
+				<p>Secure online access to your health records</p>
 			</div>
 			<div class="col-sm-4 text-center benefits hidden-xs">
 				<img src="/images/benefit6.png" alt="Support from our Membership Services team" class="img-responsive" />
