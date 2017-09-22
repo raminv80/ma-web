@@ -132,7 +132,7 @@ function GenerateVoucherCode(){
     }
     //Code complete
     if(count($codeArr) == $blockQty){
-      $codeStr = implode('-', $codeArr);
+      $codeStr = 'BD-' . implode('-', $codeArr);
       return $codeStr;     
     }
   }

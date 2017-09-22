@@ -187,7 +187,7 @@ class Voucher{
       }
       //Code complete
       if(count($codeArr) == $blockQty){
-        $codeStr = implode('-', $codeArr);
+        $codeStr = 'GC-' . implode('-', $codeArr);
         if(!$this->ExistVoucherCode($codeStr)){
           return $codeStr;
         }else{
