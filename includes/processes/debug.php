@@ -4,7 +4,9 @@ if($_SERVER['REMOTE_ADDR'] == '45.124.202.249'){
   include_once 'includes/functions/functions.php';
   global $DBobject, $CONFIG;
   	
-  
+  $number = '0123456789';
+  $res = '(' . substr($number, 0, 2) . ') ' . substr($number, 2, 4) . ' ' . substr($number, 6, 4);
+  die(var_dump($res));
   
   try{
     $startDate = '2016-10-30';

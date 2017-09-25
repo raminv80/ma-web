@@ -33,8 +33,9 @@ class medicAlertApi {
 	// --------------------------------------------------------------
 	// CONSTANTS
 	//
-	const SERVER = 'https://api.medicalert.org.au';
+	//const SERVER = 'https://api.medicalert.org.au';
  	//const SERVER = 'https://apistaging.medicalert.org.au';
+ 	
 	const API_USER = 'MA-WEBSITE';
 	const API_USER_PASSWORD = 'htAHHGWug!kc';
 
@@ -69,11 +70,15 @@ class medicAlertApi {
 	const JOIN_CATEGORY_ELITE_18CT_SOLID_GOLD = 5;
 	const JOIN_CATEGORY_OTHER = 6;
 
+	private $SERVER; // Server URL
+	
 	protected $DBobj;
 	
 	function __construct($_db = '') {
 	  global $DBobject;
 	
+	  $this->SERVER = ($_SERVER['SERVER_NAME'] == 'medicalert.org.au' || $_SERVER['SERVER_NAME'] == 'www.medicalert.org.au') ? 'https://api.medicalert.org.au' : 'https://apistaging.medicalert.org.au';
+	  
 	  $this->DBobj = empty($_db)?$DBobject:$_db;
 	}
 	
@@ -101,7 +106,7 @@ class medicAlertApi {
 		);
 
 		try{
-			$response = $this->_processRequest(self::SERVER . '/authenticate.php', $params);
+			$response = $this->_processRequest($this->SERVER . '/authenticate.php', $params);
 		}catch(Exception $e){
 			throw $e;
 		}
@@ -127,7 +132,7 @@ class medicAlertApi {
 		);
 
 		try{
-			$response = $this->_processRequest(self::SERVER . '/logout.php', $params);
+			$response = $this->_processRequest($this->SERVER . '/logout.php', $params);
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (logOut)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
@@ -161,7 +166,7 @@ class medicAlertApi {
 		);
 
 		try{
-			$response = $this->_processRequest(self::SERVER . '/lost_password.php', $params);
+			$response = $this->_processRequest($this->SERVER . '/lost_password.php', $params);
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (lostPassWord)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			//$this->DBobj->wrappedSql($sql);
@@ -196,7 +201,7 @@ class medicAlertApi {
 		);
 
 		try{
-			$response = $this->_processRequest(self::SERVER . '/update_password.php', $params);
+			$response = $this->_processRequest($this->SERVER . '/update_password.php', $params);
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (updatePassWord)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			//$this->DBobj->wrappedSql($sql);
@@ -230,7 +235,7 @@ class medicAlertApi {
 		);
 
 		try{
-			$response = $this->_processRequest(self::SERVER . '/member_create.php', $params);
+			$response = $this->_processRequest($this->SERVER . '/member_create.php', $params);
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (memberCreate)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
@@ -240,7 +245,7 @@ class medicAlertApi {
 		if(empty($response)){
 		 $body = "DATETIME: ".date("dd/mm/yy HH:i:s");
 		  $body.= "TIME: ".time();
-		  $body.= "URL: ".self::SERVER . '/member_create.php'."<br/>";
+		  $body.= "URL: ".$this->SERVER . '/member_create.php'."<br/>";
 		  $body.= "PARAMS: ".print_r($params, true)."<br/>";
 		  $body.= "RESPONSE: ".print_r($response,true)."<br/>";
 		  sendMail('apolo@them.com.au', 'MedicAlert Members system', 'noreply@medicalert.org.au', 'MedicAlert Members system no Member No', $body);
@@ -269,7 +274,7 @@ class medicAlertApi {
 		);
 
 		try{
-			$response = $this->_processRequest(self::SERVER . '/member_retrieve.php', $params);
+			$response = $this->_processRequest($this->SERVER . '/member_retrieve.php', $params);
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (retrieveMember)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
@@ -307,7 +312,7 @@ class medicAlertApi {
 		);
 
 		try{
-			$response = $this->_processRequest(self::SERVER . '/member_update.php', $params);
+			$response = $this->_processRequest($this->SERVER . '/member_update.php', $params);
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (memberUpdate)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
@@ -361,7 +366,7 @@ class medicAlertApi {
 		);
 
 		try{
-			$response = $this->_processRequest(self::SERVER . '/member_profile_match.php', $params);
+			$response = $this->_processRequest($this->SERVER . '/member_profile_match.php', $params);
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (memberProfileMatch)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
@@ -391,7 +396,7 @@ class medicAlertApi {
 		);
 
 		try{
-			$response = $this->_processRequest(self::SERVER . '/file_retrieve.php', $params);
+			$response = $this->_processRequest($this->SERVER . '/file_retrieve.php', $params);
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (logOut)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
@@ -428,7 +433,7 @@ class medicAlertApi {
 	  );
 	
 	  try{
-	    $response = $this->_processRequest(self::SERVER . '/member_basic_details.php', $params);
+	    $response = $this->_processRequest($this->SERVER . '/member_basic_details.php', $params);
 	  }catch(Exception $e){
 	    $sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (getMemberBasicDetails)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 	    $this->DBobj->wrappedSql($sql);
@@ -455,7 +460,7 @@ class medicAlertApi {
 	  );
 	
 	  try{
-	    $response = $this->_processRequest(self::SERVER . '/get_members_by_birthday.php', $params);
+	    $response = $this->_processRequest($this->SERVER . '/get_members_by_birthday.php', $params);
 	  }catch(Exception $e){
 	    $sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (getMembersByBirthday)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 	    $this->DBobj->wrappedSql($sql);

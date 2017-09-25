@@ -175,7 +175,7 @@
 
                   <div class="col-sm-6 form-group">
                     <label for="homephone" class="visible-ie-only"> Home phone: </label>
-                    <input type="text" value="{$member_record.user_phone_home}" class="form-control" id="homephone" name="user_phone_home" pattern="[0-9]*">
+                    <input type="text" maxlength="10" value="{$member_record.user_phone_home}" class="form-control" id="homephone" name="user_phone_home" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -183,7 +183,7 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="workphone" class="visible-ie-only"> Work phone: </label>
-                    <input type="text" value="{$member_record.user_phone_work}" class="form-control" id="workphone" name="user_phone_work" pattern="[0-9]*">
+                    <input type="text" maxlength="10" value="{$member_record.user_phone_work}" class="form-control" id="workphone" name="user_phone_work" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
 
@@ -217,9 +217,21 @@
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
-
-              </div>
-
+              
+                <div class="row">
+                  <div class="col-sm-6 form-group">
+                    <label for="gender" class="visible-ie-only">
+                      Gender<span>*</span>:
+                    </label>
+                    <select class="selectlist-medium" id="gender" name="user_gender" required>
+                      <option value="M" {if $member_record.user_gender eq 'M'}selected="selected"{/if}>Male</option>
+                      <option value="F" {if $member_record.user_gender eq 'F'}selected="selected"{/if}>Female</option>
+                    </select>
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>
+            </div>
+            
               <h3>
                 <div class="head-text">
                   <div class="head-title">Emergency contact</div>
@@ -275,12 +287,12 @@
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label for="emerhomephone" class="visible-ie-only"> Home phone <span>*</span>: </label>
-                    <input type="text" value="{$member_record.contact_phone_home}" class="form-control" id="emerhomephone" name="contact_phone_home" pattern="[0-9]*" required>
+                    <input type="text" maxlength="10" value="{$member_record.contact_phone_home}" class="form-control" id="emerhomephone" name="contact_phone_home" pattern="[0-9]*" required>
                     <div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
                     <label for="emerworkphone" class="visible-ie-only"> Work phone: </label>
-                    <input type="text" value="{$member_record.contact_phone_work}" class="form-control" id="emerworkphone" name="contact_phone_work" pattern="[0-9]*">
+                    <input type="text" maxlength="10" value="{$member_record.contact_phone_work}" class="form-control" id="emerworkphone" name="contact_phone_work" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -795,6 +807,25 @@ The IHI is part of the government e-health initiative developed to enhance the w
       }
     });
 
+    $('#emerhomephone').rules("add", {
+      required: true,
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        equalTo: "Please verify phone number"
+      }
+    });
+    
+    $('#emerworkphone').rules("add", {
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        equalTo: "Please verify phone number"
+      }
+    });
+    
     $('#emermobile').rules("add", {
       required: false,
       minlength: 10,
@@ -813,6 +844,35 @@ The IHI is part of the government e-health initiative developed to enhance the w
         equalTo: "Please verify phone number"
       }
     });
+    
+    $('#homephone').rules("add", {
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        equalTo: "Please verify phone number"
+      }
+    });
+    
+    $('#workphone').rules("add", {
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        equalTo: "Please verify phone number"
+      }
+    });
+
+    $('#docphone').rules("add", {
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        equalTo: "Please verify phone number"
+      }
+    });
+    
+    
   });
 
   function SubmitProfileForm(FORM) {

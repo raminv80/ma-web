@@ -149,7 +149,7 @@ class UserClass{
 		$this->memberRecord['details']['gender']					= ucwords(strtolower($_data['gender']));
 		$this->memberRecord['details']['phoneHome']					= '';
 		$this->memberRecord['details']['phoneWork']					= '';
-		$this->memberRecord['details']['phoneMobile']				= $_data['mobile'];
+		$this->memberRecord['details']['phoneMobile']				= substr($_data['mobile'], 0, 4) . ' ' . substr($_data['mobile'], 4, 3) . ' ' . substr($_data['mobile'], 7, 3);
 		$this->memberRecord['details']['emailAddress']				= $_data['email'];
 		$this->memberRecord['details']['emergencyInformation']		= '';
 		$this->memberRecord['details']['donorEye']					= '';
@@ -251,10 +251,10 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['details']['surname']						= ucwords(strtolower($_data['user_lastname']));
 		$this->memberRecord['webSiteRecord']['details']['nickName']						= ucwords(strtolower($_data['user_nickname']));
 		$this->memberRecord['webSiteRecord']['details']['dateOfBirth']					= $_data['user_dob'];
-		//$this->memberRecord['webSiteRecord']['details']['gender']						= ucwords(strtolower($_data['user_gender']));
-		$this->memberRecord['webSiteRecord']['details']['phoneHome']					= $_data['user_phone_home'];
-		$this->memberRecord['webSiteRecord']['details']['phoneWork']					= $_data['user_phone_work'];
-		$this->memberRecord['webSiteRecord']['details']['phoneMobile']					= $_data['user_mobile'];
+		$this->memberRecord['webSiteRecord']['details']['gender']						= $_data['user_gender'];
+		$this->memberRecord['webSiteRecord']['details']['phoneHome']					= empty($_data['user_phone_home']) ? '' : '(' . substr($_data['user_phone_home'], 0, 2) . ') ' . substr($_data['user_phone_home'], 2, 4) . ' ' . substr($_data['user_phone_home'], 6, 4);
+		$this->memberRecord['webSiteRecord']['details']['phoneWork']					= empty($_data['user_phone_work']) ? '' : '(' . substr($_data['user_phone_work'], 0, 2) . ') ' . substr($_data['user_phone_work'], 2, 4) . ' ' . substr($_data['user_phone_work'], 6, 4);
+		$this->memberRecord['webSiteRecord']['details']['phoneMobile']					= empty($_data['user_mobile']) ? '' : substr($_data['user_mobile'], 0, 4) . ' ' . substr($_data['user_mobile'], 4, 3) . ' ' . substr($_data['user_mobile'], 7, 3);
 		$this->memberRecord['webSiteRecord']['details']['emailAddress']					= $_data['user_email'];
 		$this->memberRecord['webSiteRecord']['details']['emergencyInformation']			= $_data['emergencyInfo'];
 		$this->memberRecord['webSiteRecord']['details']['isOrganDonor']					= $_data['user_donor'];
@@ -267,7 +267,7 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['details']['ndisManagerName']			    = $_data['ndis_manager_name'];
 		$this->memberRecord['webSiteRecord']['details']['ndisManagerCompany']			= $_data['ndis_manager_company'];
 		$this->memberRecord['webSiteRecord']['details']['ndisManagerEmail']			    = $_data['ndis_manager_email'];
-		$this->memberRecord['webSiteRecord']['details']['ndisManagerPhone']			    = $_data['ndis_manager_phone'];
+		$this->memberRecord['webSiteRecord']['details']['ndisManagerPhone']			    = empty($_data['ndis_manager_phone']) ? '' : '(' . substr($_data['ndis_manager_phone'], 0, 2) . ') ' . substr($_data['ndis_manager_phone'], 2, 4) . ' ' . substr($_data['ndis_manager_phone'], 6, 4);
 		
 		$this->memberRecord['webSiteRecord']['address']['address']						= ucwords(strtolower($_data['user_address']));
 		$this->memberRecord['webSiteRecord']['address']['suburb']						= ucwords(strtolower($_data['user_suburb']));
@@ -286,9 +286,9 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['emergencyContact']['postCode']			= $_data['contact_postcode'];
 		$this->memberRecord['webSiteRecord']['emergencyContact']['state']				= $_data['contact_state_id'];
 		$this->memberRecord['webSiteRecord']['emergencyContact']['country']				= 'Australia';
-		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneHome']			= $_data['contact_phone_home'];
-		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneWork']			= $_data['contact_phone_work'];
-		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneMobile']			= $_data['contact_mobile'];
+		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneHome']			= empty($_data['contact_phone_home']) ? '' : '(' . substr($_data['contact_phone_home'], 0, 2) . ') ' . substr($_data['contact_phone_home'], 2, 4) . ' ' . substr($_data['contact_phone_home'], 6, 4);
+		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneWork']			= empty($_data['contact_phone_work']) ? '' :'(' . substr($_data['contact_phone_work'], 0, 2) . ') ' . substr($_data['contact_phone_work'], 2, 4) . ' ' . substr($_data['contact_phone_work'], 6, 4);
+		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneMobile']			= empty($_data['contact_mobile']) ? '' : substr($_data['contact_mobile'], 0, 4) . ' ' . substr($_data['contact_mobile'], 4, 3) . ' ' . substr($_data['contact_mobile'], 7, 3);
 	
 		$this->memberRecord['webSiteRecord']['doctor']['doctorName']					= ucwords(strtolower($_data['doc_name']));
 		$this->memberRecord['webSiteRecord']['doctor']['medicalCentreName']				= ucwords(strtolower($_data['doc_medical_centre']));
@@ -297,7 +297,7 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['doctor']['postCode']						= $_data['doc_postcode'];
 		$this->memberRecord['webSiteRecord']['doctor']['state']							= $_data['doc_state_id'];
 		$this->memberRecord['webSiteRecord']['doctor']['country']						= 'Australia';
-		$this->memberRecord['webSiteRecord']['doctor']['phoneNumber']					= $_data['doc_phone'];
+		$this->memberRecord['webSiteRecord']['doctor']['phoneNumber']					= empty($_data['doc_phone']) ? '' : '(' . substr($_data['doc_phone'], 0, 2) . ') ' . substr($_data['doc_phone'], 2, 4) . ' ' . substr($_data['doc_phone'], 6, 4);
 		$this->memberRecord['webSiteRecord']['doctor']['fileNumber']					= $_data['doc_file_no'];
 
 		$this->memberRecord['webSiteRecord']['conditions']								= $_data['conditions'];
@@ -1062,8 +1062,8 @@ class UserClass{
 	  $resArr['user_state_id'] = $_data['address']['state'];
 	  $resArr['user_state'] = $_data['address']['state'];
 	  $resArr['user_postcode'] = $_data['address']['postCode'];
-	  $resArr['user_phone_home'] = $_data['details']['phoneHome'];
-	  $resArr['user_phone_work'] = $_data['details']['phoneWork'];
+	  $resArr['user_phone_home'] = preg_replace("/[^0-9]/", "", $_data['details']['phoneHome']);
+	  $resArr['user_phone_work'] = preg_replace("/[^0-9]/", "", $_data['details']['phoneWork']);
 	  $resArr['user_mobile'] = $_data['details']['phoneMobile'];
 	  $resArr['user_dob'] = $_data['details']['dateOfBirth'];
 	  $resArr['user_gender'] = $_data['details']['gender'];
@@ -1077,7 +1077,7 @@ class UserClass{
 	  $resArr['ndis_manager_name'] = $_data['details']['ndisManagerName'];
 	  $resArr['ndis_manager_company'] = $_data['details']['ndisManagerCompany'];
 	  $resArr['ndis_manager_email'] = $_data['details']['ndisManagerEmail'];
-	  $resArr['ndis_manager_phone'] = $_data['details']['ndisManagerPhone'];
+	  $resArr['ndis_manager_phone'] = preg_replace("/[^0-9]/", "", $_data['details']['ndisManagerPhone']);
 	  
 	  $resArr['user_donor'] = $_data['details']['isOrganDonor'];
 	  $resArr['user_donorFreeText'] = "";
@@ -1104,8 +1104,8 @@ class UserClass{
 	  $resArr['contact_postcode'] = unclean($_data['emergencyContact']['postCode']);
 	  $resArr['contact_state_id'] = unclean($_data['emergencyContact']['state']);
 	  $resArr['contact_country'] = unclean($_data['emergencyContact']['country']);
-	  $resArr['contact_phone_home'] = $_data['emergencyContact']['phoneHome'];
-	  $resArr['contact_phone_work'] = $_data['emergencyContact']['phoneWork'];
+	  $resArr['contact_phone_home'] = preg_replace("/[^0-9]/", "", $_data['emergencyContact']['phoneHome']);
+	  $resArr['contact_phone_work'] = preg_replace("/[^0-9]/", "", $_data['emergencyContact']['phoneWork']);
 	  $resArr['contact_mobile'] = str_replace(' ', '', $_data['emergencyContact']['phoneMobile']);
 	  
 	  $resArr['doc_name'] = unclean($_data['doctor']['doctorName']);
@@ -1115,7 +1115,7 @@ class UserClass{
 	  $resArr['doc_postcode'] = unclean($_data['doctor']['postCode']);
 	  $resArr['doc_state_id'] = unclean($_data['doctor']['state']);
 	  $resArr['doc_country'] = unclean($_data['doctor']['country']);
-	  $resArr['doc_phone'] = $_data['doctor']['phoneNumber'];
+	  $resArr['doc_phone'] = preg_replace("/[^0-9]/", "", $_data['doctor']['phoneNumber']);
 	  $resArr['doc_file_no'] = $_data['doctor']['fileNumber'];
 	  
 	  $resArr['conditions'] = $_data['conditions'];

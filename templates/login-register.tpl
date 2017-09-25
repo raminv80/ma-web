@@ -185,8 +185,8 @@
                     </label>
                     <select class="form-control" id="gender" name="gender" required>
                       <option value="">Select an option</option>
-                      <option value="Male" {if $new_user.gender eq 'Male'}selected="selected"{/if}>Male</option>
-                      <option value="Female" {if $new_user.gender eq 'Female'}selected="selected"{/if}>Female</option>
+                      <option value="M" {if $new_user.gender eq 'M'}selected="selected"{/if}>Male</option>
+                      <option value="F" {if $new_user.gender eq 'F'}selected="selected"{/if}>Female</option>
                     </select>
                     <div class="error-msg help-block"></div>
                   </div>

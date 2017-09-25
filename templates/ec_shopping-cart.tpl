@@ -217,7 +217,7 @@
 	                <input type="hidden" value="checkout1" name="action" id="action" />
 	              {foreach $shippingMethods as $k => $v}
 	                <input type="hidden" value="{$k}" data-value="{$v}" name="selectedMethod" id="shippingMethod" />
-	                <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">{$k} <img src="/images/question-mark.png" alt="Please allow approximately 20 working days to receive your order." title="Please allow approximately 20 working days to receive your order." data-toggle="tooltip" data-placement="top" /> </div>
+	                <div class="col-xs-5 col-sm-8 col-md-10 shopping-label text-right  mobl">{$k} <img src="/images/question-mark.png" alt="Please allow approximately 10 working days to receive your order." title="Please allow approximately 10 working days to receive your order." data-toggle="tooltip" data-placement="top" /> </div>
 	                <div class="col-xs-7 col-sm-4 col-md-2 num text-right mobr">${$v|number_format:2:".":","}</div>
 	                {break}
 	              {/foreach}
