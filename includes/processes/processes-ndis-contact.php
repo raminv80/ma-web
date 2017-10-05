@@ -1,6 +1,7 @@
 <?php
+$referer = parse_url($_SERVER['HTTP_REFERER']);
 $error = 'Missing required info. Please try again.';
-if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 3){
+if(checkToken('frontend', $_POST["formToken"]) && $referer['host'] == $GLOBALS['HTTP_HOST'] && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 3){
   if(!empty($_POST['email']) && !empty($_POST['phone']) && !empty($_POST['name']) && !empty($_POST['plan_type'])){
     global $CONFIG, $DBobject, $SMARTY, $SITE, $GA_ID;
     $error = '';
