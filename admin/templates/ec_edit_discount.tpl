@@ -64,7 +64,7 @@
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_discount_special">Special (no discount)</label>
               <div class="col-sm-5">
-                <input type="hidden" value="{$fields.discount_special}" name="field[1][tbl_discount][{$cnt}][discount_special]" class="value">
+                <input type="hidden" value="{if $fields.discount_special eq 1}1{else}0{/if}" name="field[1][tbl_discount][{$cnt}][discount_special]" class="value">
                 <input class="chckbx" type="checkbox" {if $fields.discount_special eq 1}checked="checked" {/if} 
                 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1'); DisplaySpecial(1); }else{ $(this).parent().children('.value').val('0'); DisplaySpecial(0); }" id="id_discount_special">
               </div>

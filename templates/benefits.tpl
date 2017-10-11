@@ -539,7 +539,7 @@
 			<div class="clearfix"></div>
 			<div class="col-sm-12 col-md-10 col-md-offset-1 text-center">
 				<br />
-				There is no substitute for a genuine MedicAlert medical ID.
+				There is no substitute for a genuine MedicAlert ID.
 			</div>
 		</div>
 

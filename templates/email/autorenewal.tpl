@@ -509,7 +509,7 @@ a {
                           Your annual membership fee will now be automatically debited from your nominated account on the due date each year. You will receive an email receipt acknowledging this payment once your transaction is processed.
                         </p>
                         <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">
-                          We will also send you an annual reminder to check your personal and medical details are up to date. This will help us to provide emergency services with the most accurate information about your conditions when seconds count.
+                          We will also send you an annual reminder to check your personal and health details are up to date. This will help us to provide emergency services with the most accurate information about your conditions when seconds count.
                         </p>
                         <p style="margin-bottom: 20px; font-size: 14px; line-height: 24px;">
                           If you'd like to update your details now, please visit the Members' Area.
