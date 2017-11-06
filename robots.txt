@@ -1,5 +1,21 @@
-User-agent: *
+User-agent: Googlebot
+User-agent: Yahoo Slurp
+User-agent: MSNBot-media 
+User-agent: Google Web Preview
+User-agent: Googlebot-Image 
+User-agent: Bing Preview bot
+User-agent: Bingbot
+User-agent: Alexa (IA Archiver)
+User-agent: Adsbot-Google
+User-agent: AdsBot-Google-Mobile
+User-agent: Mediapartners-Google
+
 Allow: /
 Disallow: /admin/
+Disallow: /includes/
+Disallow: /uploads/
 Disallow: /privacy-policy
 Disallow: /terms-and-conditions
+
+User-agent: *
+Disallow: /
