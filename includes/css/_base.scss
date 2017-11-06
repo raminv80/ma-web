@@ -22,8 +22,8 @@ select.form-control {
   height: 40px;
 }
 .form-control:focus {
-  border-color: initial;  
-} 
+  border-color: initial;
+}
 
 .btn{
 	font-size: 16px;
@@ -138,6 +138,7 @@ select.form-control {
 	#main-navbar{
 		li{
 			text-align: center;
+			background-color: $white;
 
 			a{
 				color: $black;
@@ -561,6 +562,10 @@ select.form-control {
 				color: $red;
 			}
 		}
+	}
+
+	&.safe-return{
+		padding-bottom: 20px;
 	}
 }
 
@@ -2635,7 +2640,7 @@ select.form-control {
 		p{
 			margin-bottom: 15px;
 		}
-		
+
 		label{
 		font-weight: normal;
 
@@ -2648,7 +2653,7 @@ select.form-control {
 		height: 40px;
 		border-radius: 0;
 	}
-	
+
 	.alert-danger{
 	    color: $red;
 		margin-bottom: 10px;
@@ -2664,10 +2669,10 @@ select.form-control {
 		button.close{
 			display: none;
 		}
-	}	
+	}
 
 }
-	
+
 #logincont{
 	padding: 50px 0;
 
@@ -3901,6 +3906,10 @@ select option:disabled {
 
 	.btn{
 		margin-top: 40px;
+	}
+
+	&.safe-return{
+		background-position: top right;
 	}
 }
 

@@ -983,7 +983,12 @@ tr.tabopts {
     background: url(../../images/mobbanner.jpg) no-repeat;
     background-size: cover;
     height: 200px;
+
+    &.safe-return{
+	    background-position: top right;
+    }
 }
+
 #offer {
     padding: 20px 0;
     font-size: 22px;
@@ -1003,6 +1008,10 @@ tr.tabopts {
     	.highlight{
 	    	color: $red;
     	}
+	}
+
+	.btn{
+		margin-top: 20px;
 	}
 }
 
@@ -1066,9 +1075,9 @@ tr.tabopts {
     margin: 10px 0px;
     width: auto;
   }
-  
+
   .btn{
     padding: 10px 20px;
   }
-  
+
 }
