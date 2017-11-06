@@ -47,14 +47,14 @@
     <value>$93.5</value>
   </global_variable>
   <database>
-    <!--<host>122.201.118.45</host>
+    <host>122.201.118.45</host>
     <user>medicalertorg_usr</user>
     <password>VLw!8L+fM6cAh</password>
-    <dbname>medicalertorg_web</dbname>-->
-  	<host>122.201.97.172</host>
+    <dbname>medicalertorg_web</dbname>
+  	<!--<host>122.201.97.172</host>
     <user>them_usr01</user>
     <password>OTwFwL?pSnR+</password>
-    <dbname>them_db01</dbname>
+    <dbname>them_db01</dbname>-->
   </database>
   <database_variable>
     <name>==membership_fee==</name>
