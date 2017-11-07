@@ -224,8 +224,8 @@
     {if $products}
     <div class="row">
       <div class="col-sm-12 text-center">
-        <h2>Select your medical ID</h2>
-        Choose from our range of genuine MedicAlert IDs
+        <h2>Select your MedicAlert ID</h2>
+        Choose from our range of genuine IDs
       </div>
       </div>
       <div class="row" id="products-wrapper">
