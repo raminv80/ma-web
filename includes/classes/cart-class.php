@@ -623,54 +623,76 @@ class cart{
     $hasBupaDiscount = false;
     $hasAutismDiscount = false;
     $hasSeniorsDiscount = false;
+    $hasBenevolentDiscount = false;
 
     if(!empty($cart['cart_discount_code'])){
       $discArr = $this->ApplyDiscountCode($cart['cart_discount_code'], $shippingFee);
       $discount = $discArr['discount'];
       $discount_error = $discArr['error'];
 
-      //ONLY FOR MAF - BUPA OFFER - BUPA17
-      if($cart['cart_discount_code'] == 'BUPA17'){
-        if(empty($this->cart_user_id)){
-          $discount = $this->GetBupaDiscount($shippingFee);
-          $hasBupaDiscount = true;
-          $discount_error = '';
-          if(empty($discount)){
-            $discount_error = 'Please add a valid product for this offer.';
-            $hasBupaDiscount = false;
+      switch($cart['cart_discount_code']){
+        case 'BUPA17':{
+          //ONLY FOR MAF - BUPA OFFER - BUPA17
+          if(empty($this->cart_user_id)){
+            $discount = $this->GetBupaDiscount($shippingFee);
+            $hasBupaDiscount = true;
+            $discount_error = '';
+            if(empty($discount)){
+              $discount_error = 'Please add a valid product for this offer.';
+              $hasBupaDiscount = false;
+            }
+          }else{
+            $discount_error = 'This offer is for new members only.';
           }
-        }else{
-          $discount_error = 'This offer is for new members only.';
+          break;  
         }
-      }
-
-      //ONLY FOR MAF - AUTISM16 OFFER - AUTISM16
-      if($cart['cart_discount_code'] == 'AUTISM16'){
-        if(empty($this->cart_user_id)){
-          $discount = $this->GetAutismDiscount($shippingFee);
-          $hasAutismDiscount = true;
-          $discount_error = '';
-          if(empty($discount)){
-            $discount_error = 'Please add a valid product for this offer.';
-            $hasAutismDiscount = false;
+        
+        case 'AUTISM16':{
+          //ONLY FOR MAF - AUTISM16 OFFER - AUTISM16
+          if(empty($this->cart_user_id)){
+            $discount = $this->GetAutismDiscount($shippingFee);
+            $hasAutismDiscount = true;
+            $discount_error = '';
+            if(empty($discount)){
+              $discount_error = 'Please add a valid product for this offer.';
+              $hasAutismDiscount = false;
+            }
+          }else{
+            $discount_error = 'This offer is for new members only.';
           }
-        }else{
-          $discount_error = 'This offer is for new members only.';
+          break;
         }
-      }
+        
+        case 'SENIORS':{
+          //ONLY FOR MAF - SENIORS OFFER - SENIORS
+          //2nd part - 20% off membership
+          $discount += $this->GetMSFDiscount(20);
+          $hasSeniorsDiscount = true;
+          if($discount > 0) $discount_error = '';
+          break;
+        }
 
-      //ONLY FOR MAF - SENIORS OFFER - SENIORS
-      //2nd part - 20% off membership
-      if($cart['cart_discount_code'] == 'SENIORS'){
-        $discount += $this->GetMSFDiscount(20);
-        $hasSeniorsDiscount = true;
-        if($discount > 0) $discount_error = '';
+        case 'BENEVOLENT-HAE':{
+          //ONLY FOR MAF - BENEVOLENT PROGRAM OFFER - BENEVOLENT-HAE
+          if(empty($this->cart_user_id)){
+            $discount = $this->GetBenevolentDiscount($shippingFee);
+            $hasBenevolentDiscount = true;
+            $discount_error = '';
+            if(empty($discount)){
+              $discount_error = 'Please add a valid product for this offer.';
+              $hasBenevolentDiscount = false;
+            }
+          }else{
+            $discount_error = 'This offer is for new members only.';
+          }
+          break;
+        }
       }
     }
 
     // For MAF only
     if(!$hasBupaDiscount){
-      if(!$hasSeniorsDiscount && !$hasAutismDiscount){
+      if(!$hasSeniorsDiscount && !$hasAutismDiscount && !$hasBenevolentDiscount){
         $discount += $this->GetStainlessSteelDiscount();
       }
 
@@ -2054,7 +2076,7 @@ class cart{
     }
     if(empty($this->cart_user_id)){
 
-      //Check for valid product - Bupa member collection - listing_id = 667
+      //Check for valid product - Bupa member collection - listing_object_id = 667
       $sql = "SELECT cartitem_product_id, cartitem_quantity, cartitem_subtotal, cartitem_product_price FROM tbl_cartitem
             WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' ORDER BY cartitem_product_price";
       if($cartItems = $DBobject->wrappedSql($sql, array(':id' => $this->cart_id))){
@@ -2113,7 +2135,7 @@ class cart{
     $prodAmount = 0;
     if(empty($this->cart_user_id)){
 
-      //Check for valid product - Exclusive Autism collection - listing_id = 820
+      //Check for valid product - Exclusive Autism collection - listing_object_id = 820
       $sql = "SELECT cartitem_product_id, cartitem_quantity, cartitem_subtotal, cartitem_product_price FROM tbl_cartitem
             WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' ORDER BY cartitem_product_price";
       if($cartItems = $DBobject->wrappedSql($sql, array(':id' => $this->cart_id))){
@@ -2138,6 +2160,53 @@ class cart{
         $prodAmount += floatval($msfArr['variant_price']);
 
         $discount = $prodAmount - 80;
+      }
+    }
+    $discount = ($discount > 0) ? $discount : 0;
+    return round($discount, 2);
+  }
+  
+  
+  /**
+   * ONLY FOR MAF
+   * Discount amount - BENEVOLENT 1 year membership + selected product + shipping FOR FREE
+   *
+   * @return float
+   */
+  function GetBenevolentDiscount($shippingFee = 0){
+    global $DBobject;
+  
+    $discount = 0;
+    $prodAmount = 0;
+    if(empty($this->cart_user_id)){
+  
+      //Check for valid product - Exclusive Benevolent collection - listing_object_id = 974 (LIVE) - 788 (DEV)
+      $validCatArr = array(788, 974);
+      
+      $sql = "SELECT cartitem_product_id, cartitem_quantity, cartitem_subtotal, cartitem_product_price FROM tbl_cartitem
+            WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' ORDER BY cartitem_product_price";
+      if($cartItems = $DBobject->wrappedSql($sql, array(':id' => $this->cart_id))){
+        foreach($cartItems as $item){
+          $collectionArr = $this->getProductCategoriesArr($item['cartitem_product_id']);
+          if(count(array_intersect ($validCatArr, $collectionArr)) > 0){
+            $prodAmount = floatval($item['cartitem_product_price']);
+            break;
+          }
+        }
+      }
+      if($prodAmount > 0){
+        //Shipping fee
+        //$prodAmount += $shippingFee; //Already set via CMS
+  
+        // Add MAF membership fee - current year
+        $msfArr = $this->GetCurrentMAF_MSF(225);
+        $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
+        if(empty($membershipFeeCartitemId)){
+          $this->AddToCart($msfArr['product_object_id'], array(), 0, 1, null, $msfArr['variant_id']);
+        }
+        $prodAmount += floatval($msfArr['variant_price']);
+  
+        $discount = $prodAmount;
       }
     }
     $discount = ($discount > 0) ? $discount : 0;

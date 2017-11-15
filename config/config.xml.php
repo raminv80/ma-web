@@ -75,7 +75,7 @@
   <payment_gateway>
     <payway>
       <!-- LIVE  -->
-      <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey>
+      <secretkey>Q14523_SEC_iz7ap9wzrwdjarwpwwncrhwm3mdm4pukcsefry7sr8h347fziy5uvhrefzts</secretkey>
       <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey>
       <merchantid>23886963</merchantid>
       <bankAccountid>035213308316A</bankAccountid>
@@ -412,7 +412,7 @@
   <static_page>
     <url>benevolant-program</url>
     <template>safe-return.tpl</template>
-    <pageID>786</pageID>
+    <pageID>976</pageID>
   </static_page>
 
   <!-- ECOMMERCE  -->
