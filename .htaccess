@@ -618,6 +618,7 @@ RewriteRule ^seniorsnsw$ /seniors-card\?utm_source=SENIORS-NSW-DIRECTORY&utm_med
 
 RewriteRule ^save$ /offers\?utm_source=REFERER-DIRECT-MAIL&utm_medium=FLYER&utm_campaign=REFER-COUNTER-STAND [R=301,L,NC]
 
+RewriteRule ^youtube$ https://www.youtube.com/user/MedicAlertFoundation? [R=301,L,NC]
 
 ################################################################################
 

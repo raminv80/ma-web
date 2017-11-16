@@ -410,9 +410,14 @@
     <pageID>784</pageID>
   </static_page>
   <static_page>
-    <url>benevolant-program</url>
+    <url>benevolant-program-hae</url>
     <template>safe-return.tpl</template>
     <pageID>976</pageID>
+  </static_page>
+  <static_page>
+    <url>benevolant-program-cpsc</url>
+    <template>safe-return.tpl</template>
+    <pageID>980</pageID>
   </static_page>
 
   <!-- ECOMMERCE  -->

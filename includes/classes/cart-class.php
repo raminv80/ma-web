@@ -672,8 +672,9 @@ class cart{
           break;
         }
 
+        case 'BENEVOLENT-CPSC':
         case 'BENEVOLENT-HAE':{
-          //ONLY FOR MAF - BENEVOLENT PROGRAM OFFER - BENEVOLENT-HAE
+          //ONLY FOR MAF - BENEVOLENT PROGRAM OFFER
           if(empty($this->cart_user_id)){
             $discount = $this->GetBenevolentDiscount($shippingFee);
             $hasBenevolentDiscount = true;
