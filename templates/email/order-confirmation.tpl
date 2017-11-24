@@ -886,7 +886,7 @@ body, td {
                       <tr>
                         <td class="w640" width="640" align="center">
                           <div style="width: 202px; margin-left: 15px;">
-                            <a href="https://www.facebook.com/AustraliaMedicAlertFoundation"><img src="{$DOMAIN}/images/email-fb.png" alt="" style="padding-right: 5px; float: left;" /></a> &nbsp; <a href="https://twitter.com/MedicAlert_Aust"><img src="{$DOMAIN}/images/email-twitter.png" alt="" style="padding-left: 5px; padding-right: 5px; float: left;" /></a> &nbsp; <a href="https://www.youtube.com/user/MedicAlertFoundation"><img src="{$DOMAIN}/images/email-yt.png" alt="" style="padding-left: 5px; padding-right: 5px; float: left;" /></a> &nbsp; <a href="https://www.instagram.com/medicalert_aust/"><img src="{$DOMAIN}/images/email-insta.png" alt="" style="padding-left: 5px; float: left;" /></a>
+                            <a href="https://www.facebook.com/AustraliaMedicAlertFoundation"><img src="{$DOMAIN}/images/email-fb.png" alt="" style="padding-right: 5px; float: left;" /></a> &nbsp; <a href="https://twitter.com/MedicAlert_Aust"><img src="{$DOMAIN}/images/email-twitter.png" alt="" style="padding-left: 5px; padding-right: 5px; float: left;" /></a> &nbsp; <a href="{$DOMAIN}/youtube"><img src="{$DOMAIN}/images/email-yt.png" alt="" style="padding-left: 5px; padding-right: 5px; float: left;" /></a> &nbsp; <a href="https://www.instagram.com/medicalert_aust/"><img src="{$DOMAIN}/images/email-insta.png" alt="" style="padding-left: 5px; float: left;" /></a>
                           </div>
                         </td>
                       </tr>
