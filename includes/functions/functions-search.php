@@ -4,6 +4,7 @@ function SearchListing($search,$type=1){
 	global  $CONFIG,$SMARTY,$DBobject;
 	$data = array();
 	
+	$search = trim($search);
 	$search = trim($search, '-');
 	$search = trim($search, '+');
 	$search = preg_replace("/[^\w+\-\s]/", " ", $search);
@@ -102,6 +103,7 @@ function SearchProduct($search){
   global  $CONFIG,$SMARTY,$DBobject;
   $data = array();
 
+  $search = trim($search);
   $search = trim($search, '-');
   $search = trim($search, '+');
   $search = preg_replace("/[^\w+\-\s]/", " ", $search);
