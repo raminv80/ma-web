@@ -17,7 +17,7 @@ function fatal_handler() {
     $body .= print_r($_POST,true);
     $body .= '<br />$_SERVER<br/>';
     $body .= print_r($_SERVER,true);
-    if($CONFIG->attributes()->staging == 'true' || $_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
+    if($CONFIG->attributes()->staging == 'true' || $_SERVER['REMOTE_ADDR'] == '45.124.202.249'){
     	die($body);
     }
     $subject = "Fatal error";
