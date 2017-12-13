@@ -21,10 +21,11 @@
             <select class="form-control" name="report" id="report-name">
               <option value="get-autorenewal-csv">Auto renewal</option>
               <option value="get-gift-certificates-csv">Gift certificates</option>
+              <option value="get-hae-csv">HAE members (Benevolent program)</option>
+              <option value="get-ndis-csv">NDIS Submissions</option>
               <option value="get-order-resources-csv">Order resources</option>
               <option value="get-partial-registrations-csv">Partial registrations</option>
               <option value="get-survey-csv">Surveys</option>
-              <option value="get-ndis-csv">NDIS Submissions</option>
             </select>
           </div>
         </div>

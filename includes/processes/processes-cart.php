@@ -402,7 +402,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_utm_source' => $_SESSION['utm_source'], 
             'payment_utm_medium' => $_SESSION['utm_medium'], 
             'payment_utm_campaign' => $_SESSION['utm_campaign'], 
-            'payment_source_referer' => $_SESSION['source_referer'] 
+            'payment_source_referer' => $_SESSION['source_referer'],
+            'payment_hae' => $_SESSION['hae_flag'] 
         );
         
         if(!empty($GA_ID)){

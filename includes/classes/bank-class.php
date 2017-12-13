@@ -139,7 +139,7 @@ class Bank{
 			VALUES(:payment_cart_id, :payment_user_id, :payment_billing_address_id, :payment_shipping_address_id, :payment_status, 
               :payment_subtotal, :payment_discount, :payment_shipping_fee, :payment_charged_amount, :payment_gst, :payment_shipping_method, 
               :payment_shipping_comments, :payment_method, :payment_payee_name, :payment_transaction_no, :payment_user_ip,
-              :payment_utm_source, :payment_utm_medium, :payment_utm_campaign, :payment_source_referer, now())";
+              :payment_utm_source, :payment_utm_medium, :payment_utm_campaign, :payment_source_referer, :payment_hae, now())";
     $params = array(
         "payment_cart_id" => $payment['payment_cart_id'], 
         "payment_user_id" => $payment['payment_user_id'], 
@@ -160,7 +160,8 @@ class Bank{
         "payment_utm_source" => $payment['payment_utm_source'], 
         "payment_utm_medium" => $payment['payment_utm_medium'],
         "payment_utm_campaign" => $payment['payment_utm_campaign'],
-        "payment_source_referer" => $payment['payment_source_referer']
+        "payment_source_referer" => $payment['payment_source_referer'],
+        "payment_hae" => $payment['payment_hae']
     );
     $sql_res = $this->DBobj->wrappedSql($sql, $params);
     $this->payment_id = $this->DBobj->wrappedSqlIdentity();
