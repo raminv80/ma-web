@@ -135,7 +135,7 @@ class Bank{
     $sql = "INSERT INTO tbl_payment (payment_cart_id, payment_user_id, payment_billing_address_id, payment_shipping_address_id, payment_status,
               payment_subtotal, payment_discount, payment_shipping_fee, payment_charged_amount, payment_gst, payment_shipping_method,
               payment_shipping_comments, payment_method, payment_payee_name, payment_transaction_no, payment_user_ip,
-              payment_utm_source, payment_utm_medium, payment_utm_campaign, payment_source_referer, payment_created)
+              payment_utm_source, payment_utm_medium, payment_utm_campaign, payment_source_referer, payment_hae, payment_created)
 			VALUES(:payment_cart_id, :payment_user_id, :payment_billing_address_id, :payment_shipping_address_id, :payment_status, 
               :payment_subtotal, :payment_discount, :payment_shipping_fee, :payment_charged_amount, :payment_gst, :payment_shipping_method, 
               :payment_shipping_comments, :payment_method, :payment_payee_name, :payment_transaction_no, :payment_user_ip,

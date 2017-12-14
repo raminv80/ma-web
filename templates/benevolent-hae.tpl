@@ -120,16 +120,16 @@ background-size: cover;
   <div class="row">
     <div class="col-sm-12">
       <form>
-        <div class="radio">
+        <div class="radio radio-bp">
           <label for="agreed-yes">
-            <input class="" type="radio" name="agreed" id="agreed-yes" value="yes">
-            I consent to MedicAlert providing my contact details (name, telephone numbers and postal and email addresses) to HAE Australasia so HAE Australasia can contact me or send me information
+            <input class="radio-full-width" type="radio" name="agreed" id="agreed-yes" value="yes">
+            I consent to MedicAlert providing my contact details (name, telephone numbers and postal and email addresses) to HAE Australasia so HAE Australasia can contact me or send me information.
           </label>
         </div>
-        <div class="radio">
+        <div class="radio radio-bp">
           <label for="agreed-no">
-            <input class="" type="radio" name="agreed" id="agreed-no" value="no">
-            I do not consent to Medic Alert providing my contact details to HAE Australasia
+            <input class="radio-full-width" type="radio" name="agreed" id="agreed-no" value="no">
+            I do not consent to Medic Alert providing my contact details to HAE Australasia.
           </label>
         </div>
       </form>
