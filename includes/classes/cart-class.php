@@ -697,10 +697,39 @@ class cart{
         $discount += $this->GetStainlessSteelDiscount();
       }
 
-      //remove MAF membership fee - next year
-      $msfArr = $this->GetCurrentMAF_MSF(225, date('Y', strtotime('+1 year')));
-      $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
-      $this->RemoveFromCart($membershipFeeCartitemId);
+      
+      $removeFutureYear = false;
+      // check if new member
+      if(empty($this->cart_user_id) ){
+        $removeFutureYear = true;
+      }
+      else{
+        // check if the serverdate year is less than renewal date year
+        // and the days diff between serverdate and renewal date is less than 45 days
+        // then skip the part of removing the next year membership fee from cart
+        try{
+          $serverDate = date_create(date('Y-m-d'));
+          $memberRenewalDate = date_create($_SESSION['user']['public']['maf']['main']['user_RenewalDate']);
+          $serverDateYear = date('Y');
+          $renewalDateYear = date('Y', strtotime($_SESSION['user']['public']['maf']['main']['user_RenewalDate']));
+          //difference between two dates
+          $diff = date_diff($serverDate,$memberRenewalDate);
+          //count days
+          $daysDiff = $diff->format("%a");
+          if($serverDateYear >= $renewalDateYear || $daysDiff > 45){
+          	$removeFutureYear = true;
+          }
+        }catch (Exception $e){
+          
+        }
+      	
+      }
+      if($removeFutureYear) {
+        //remove MAF membership fee - next year
+        $msfArr = $this->GetCurrentMAF_MSF(225, date('Y', strtotime('+1 year')));
+        $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
+        $this->RemoveFromCart($membershipFeeCartitemId);
+      }
     }
 
     $subtotal = $this->GetSubtotal();
@@ -2238,6 +2267,14 @@ class cart{
     //MAF membership fee - current year
     $msfArr = $this->GetCurrentMAF_MSF(225, date('Y'));
 
+    $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
+    if(!empty($membershipFeeCartitemId)){
+      $discount +=  floatval($msfArr['variant_price']) * $percentage / 100;
+    }
+    
+    //MAF membership fee - next year
+    $msfArr = $this->GetCurrentMAF_MSF(225, date('Y', strtotime('+1 year')));
+    
     $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
     if(!empty($membershipFeeCartitemId)){
       $discount +=  floatval($msfArr['variant_price']) * $percentage / 100;
