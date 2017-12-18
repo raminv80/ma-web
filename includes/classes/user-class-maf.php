@@ -387,15 +387,20 @@ class UserClass{
 
 		//Calculate date difference between renewal date and today
 		$renewalDate = date_create_from_format('Y-m-d', $user['user_RenewalDate']);
+		$renewalMonth = $renewalDate->format('m');
 		$today = new DateTime();
+		$todayDate = $today->format('Ymd');
+		$offerValidFromDate = date('Ymd', strtotime($today->format('Y').'-'.$renewalMonth.'-01'));
+		$offerValidTillDate = date('Ymd', strtotime('last day of +2 month', strtotime($offerValidFromDate)));
 		$interval = $renewalDate->diff($today);
 		$year_diff = ceil(floatval($interval->format('%R%y.%m%d')));
 		$day_diff = floatval($interval->format('%R%a'));
 		
 		//Verify if member requires reactivation
 		$user['reactivation'] = 'f';
-		if($year_diff > 1){
-		  //Add reactivation fee when year difference is greater than 2
+		if($year_diff > 1 && ((float)$todayDate < (float)$offerValidFromDate || (float)$todayDate > (float)$offerValidTillDate)){
+		  //Add reactivation fee when year difference is greater than 1
+		  //also check that it's not in speacial offer months. renewal month plus 2 months
 		  $user['reactivation'] = 't';
 		}
 		
@@ -1653,6 +1658,51 @@ class UserClass{
     );
     $sql = "UPDATE tbl_usertemp SET usertemp_payment_id = :payment_id WHERE usertemp_deleted IS NULL AND usertemp_session = :session";
     return  $this->DBobj->wrappedSql($sql, $params);
+  }
+  
+  /**
+   * Forgot password - MAF will send an email
+   *
+   * @param int $_membershipId
+   * @param string $_email
+   * @return boolean
+   */
+  function processPayment($_membershipDetails, $_paymentResponse){
+    
+    $this->errorMsg = null;
+    try{
+      $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+      $authenticationRecord = json_decode($authJSONResponse, true);
+      $token = $authenticationRecord['sessionToken'];
+    }
+    catch(Exception $e){
+      $this->errorMsg = "Invalid API membership number/password.";
+      return false;
+    }
+    echo '<pre>';
+    print_r($_membershipDetails);
+    print_r($_paymentResponse);
+    exit;
+    try{
+      if($results = $this->medicAlertApi->lostPassWord($token, $_membershipId, $_email)){
+        //Password successfully updated
+        $this->medicAlertApi->logout($token);
+        return true;
+      }
+      
+    }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
+      $this->errorMsg = "Your membership number and email address don't match.";
+    }
+    catch(exceptionMedicAlertApiNotAuthenticated $e){
+      $this->errorMsg = "API error: {$e}";
+    }
+    catch(exceptionMedicAlertApiSessionExpired $e){
+      $this->errorMsg = "API error: {$e}";
+    }
+    catch(exceptionMedicAlertApi $e){
+      $this->errorMsg = "API error: {$e}";
+    }
+    return false;
   }
 
 }

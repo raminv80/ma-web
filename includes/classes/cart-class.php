@@ -1116,15 +1116,14 @@ class cart{
     //MAF membership fee
     $year = '';
     if(!empty($_memberArr['maf']['main']['reactivation']) && !empty($_memberArr['maf']['main']['user_RenewalDate']) && $_memberArr['maf']['main']['reactivation'] == 'f'){
-      $year = date('Y', strtotime($_memberArr['maf']['main']['user_RenewalDate']));
-      //To fix renewal issue  - REMOVE THIS AFTER 2017
-      if($year != date('Y') && date('Y') == '2017'){
-        $msfArrOld = $this->GetCurrentMAF_MSF(225);
-        if($membershipFeeCartitemIdOld = $this->hasProductInCart($msfArrOld['product_object_id'], $msfArrOld['variant_id'])){
-          $this->RemoveFromCart($membershipFeeCartitemIdOld);
-        }
+      $renewalYear = date('Y', strtotime($_memberArr['maf']['main']['user_RenewalDate']));
+      $renewalDate = date_create_from_format('Y-m-d', $_memberArr['maf']['main']['user_RenewalDate']);
+      $today = new DateTime();
+      $interval = $renewalDate->diff($today);
+      $year_diff = floatval($interval->format('%R%y.%m%d'));
+      if(!empty($renewalYear) && (date('Y') == $renewalYear + 1 || date('Y') == $renewalYear - 1) && $year_diff < 1){
+        $year = $renewalYear;
       }
-      //----------
     }
     $msfArr = $this->GetCurrentMAF_MSF(225, $year);
     $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
@@ -1153,14 +1152,6 @@ class cart{
     } elseif(!$addMSF && !empty($membershipFeeCartitemId)){
       $this->RemoveFromCart($membershipFeeCartitemId);
     }
-    //To fix renewal issue - REMOVE THIS AFTER 2017
-    if((empty($year) || $year == '2017') && date('Y') == '2017'){
-      $msfArrOld = $this->GetCurrentMAF_MSF(225, '2016');
-      if($membershipFeeCartitemIdOld = $this->hasProductInCart($msfArrOld['product_object_id'], $msfArrOld['variant_id'])){
-        $this->RemoveFromCart($membershipFeeCartitemIdOld);
-      }
-    }
-    //----------
 
     //Add/remove MAF reactivation fee
     $reactivationCartitemId = $this->hasProductInCart(225, 16);
