@@ -1660,50 +1660,6 @@ class UserClass{
     return  $this->DBobj->wrappedSql($sql, $params);
   }
   
-  /**
-   * Forgot password - MAF will send an email
-   *
-   * @param int $_membershipId
-   * @param string $_email
-   * @return boolean
-   */
-  function processPayment($_membershipDetails, $_paymentResponse){
-    
-    $this->errorMsg = null;
-    try{
-      $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
-      $authenticationRecord = json_decode($authJSONResponse, true);
-      $token = $authenticationRecord['sessionToken'];
-    }
-    catch(Exception $e){
-      $this->errorMsg = "Invalid API membership number/password.";
-      return false;
-    }
-    echo '<pre>';
-    print_r($_membershipDetails);
-    print_r($_paymentResponse);
-    exit;
-    try{
-      if($results = $this->medicAlertApi->lostPassWord($token, $_membershipId, $_email)){
-        //Password successfully updated
-        $this->medicAlertApi->logout($token);
-        return true;
-      }
-      
-    }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
-      $this->errorMsg = "Your membership number and email address don't match.";
-    }
-    catch(exceptionMedicAlertApiNotAuthenticated $e){
-      $this->errorMsg = "API error: {$e}";
-    }
-    catch(exceptionMedicAlertApiSessionExpired $e){
-      $this->errorMsg = "API error: {$e}";
-    }
-    catch(exceptionMedicAlertApi $e){
-      $this->errorMsg = "API error: {$e}";
-    }
-    return false;
-  }
 
 }
 
