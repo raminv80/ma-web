@@ -102,33 +102,34 @@ a MedicAlert membership could mean the difference between life and death.</p>
 		</div>
 	</div>
 </div>
-
 <div id="products">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12 text-center">
-				<h2>Select your medical ID</h2>
-				Choose from our range of genuine MedicAlert IDs
-			</div>
+  <div class="container">
+    {if $products}
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <h2>Select your MedicAlert ID</h2>
+        Choose from our range of genuine IDs
+      </div>
       </div>
       <div class="row" id="products-wrapper">
-          {if $products}
           {$nofollowprod = 1}
           {foreach $products as $item}
             {include file='ec_product_list_struct.tpl'}
           {/foreach}
-          {/if}
       </div>
       <div class="row">
-			<div class="col-sm-12 text-center small">
-				*Selected products only. Price includes standard postage and handling and a 12-month standard Australia MedicAlert Foundation product warranty.
-			</div>
-			<div class="col-sm-12 text-center" id="moreprods">
-				<p>Can't find a product you like? See the <a href="/products?setdc=BUPA17" rel="nofollow" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
-			</div>
-		</div>
-	</div>
+      <div class="col-sm-12 text-center small">
+        {$listing_content4}
+      </div>
+      <div class="col-sm-12 text-center" id="moreprods">
+        <p>Can't find a product you like? See the <a href="/products?setdc={$discount_code}" rel="nofollow" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
+      </div>
+    </div>
+    {/if}
+  </div>
 </div>
+
+
 
 {/block}
 

@@ -631,8 +631,9 @@ class cart{
       $discount_error = $discArr['error'];
 
       switch($cart['cart_discount_code']){
-        case 'BUPA17':{
-          //ONLY FOR MAF - BUPA OFFER - BUPA17
+        case 'BUPA17':
+        case 'BUPA18':{
+          //ONLY FOR MAF - BUPA OFFER
           if(empty($this->cart_user_id)){
             $discount = $this->GetBupaDiscount($shippingFee);
             $hasBupaDiscount = true;
@@ -647,8 +648,9 @@ class cart{
           break;  
         }
         
-        case 'AUTISM16':{
-          //ONLY FOR MAF - AUTISM16 OFFER - AUTISM16
+        case 'AUTISM16':
+        case 'AUTISM18':{
+          //ONLY FOR MAF - AUTISM16 OFFER
           if(empty($this->cart_user_id)){
             $discount = $this->GetAutismDiscount($shippingFee);
             $hasAutismDiscount = true;
