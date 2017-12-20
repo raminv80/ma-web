@@ -351,15 +351,29 @@ class Bank{
         }
       
     }else{
-      //Check declined payments for the last 5 mins (payment_user_ip and cart_session)
+      //Check any payments <= $10 for the last 24h (payment_user_ip or cart_session)
       //If more than 3, then add a paymentblocked record
       $sql = "SELECT COUNT(payment_id) AS CNT FROM tbl_payment LEFT JOIN tbl_cart ON cart_id = payment_cart_id WHERE payment_deleted IS NULL
-        AND payment_status = 'F' AND (payment_user_ip = :ip OR cart_session = :session)
-        AND payment_created > DATE_SUB(NOW(), INTERVAL 30 MINUTE) ";
+        AND payment_charged_amount <= 10 AND (payment_user_ip = :ip OR cart_session = :session)
+        AND payment_created > DATE_SUB(NOW(), INTERVAL 1 DAY)";
       if($res = $this->DBobj->wrappedSql($sql, $params)){
-        if($res[0]['CNT'] > 2){
-          $minutes = 10;
+        if($res[0]['CNT'] > 3){
+          $minutes = pow(5, intval($res[0]['CNT']));
           $this->SetPaymentBlocked($minutes);
+        }
+      }
+      
+      if(empty($minutes)){
+        //Check declined payments for the last 30 mins (payment_user_ip or cart_session)
+        //If more than 2, then add a paymentblocked record
+        $sql = "SELECT COUNT(payment_id) AS CNT FROM tbl_payment LEFT JOIN tbl_cart ON cart_id = payment_cart_id WHERE payment_deleted IS NULL
+          AND payment_status = 'F' AND (payment_user_ip = :ip OR cart_session = :session)
+          AND payment_created > DATE_SUB(NOW(), INTERVAL 30 MINUTE) ";
+        if($res = $this->DBobj->wrappedSql($sql, $params)){
+          if($res[0]['CNT'] > 2){
+            $minutes = 10;
+            $this->SetPaymentBlocked($minutes);
+          }
         }
       }
     }
@@ -367,7 +381,7 @@ class Bank{
     //Set error message and stop other payment attempts 
     if($minutes > 0){
       if($minutes > 59){
-        $timeStr = ceil($minutes/60) . ' hours';
+        $timeStr = ceil($minutes/60);
         $timeStr = ($timeStr > 1) ? $timeStr . ' hours' : $timeStr . ' hour';
       }else{
         $timeStr = "{$minutes} minutes";
