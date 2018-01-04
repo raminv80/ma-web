@@ -106,6 +106,9 @@ if($itemNumber > 0 && empty($cart['cart_discount_code']) && empty($_SESSION['reA
     if($totals['discount'] > 0 && $_SESSION['user']['public']['maf']['main']['renew_option'] === 'f'){
       header('Location: /shopping-cart#1');
       die();
+    }elseif($totals['discount'] > 0 && $_SESSION['user']['public']['maf']['main']['renew_option'] === 't'){
+      header('Location: /quick-renew');
+      die();
     }
   }
 }
