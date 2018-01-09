@@ -14,7 +14,7 @@ $googleProductCategory = "Health & Beauty > Health Care > Medical Identification
                     `product_name` AS title, 
                     CONCAT('{$baseURL}','',`product_url`) AS link, 
         `product_meta_description` AS description, 
-        `variant_price` AS price, 
+        CONCAT(`variant_price`,' AUD') AS price, 
         IF(variant_instock='1','in stock','preorder') AS availability, 
         IF(product_id,'new','') AS `condition`, 
         IF(product_id,'{$brandName}','') AS `brand`, 
@@ -106,12 +106,12 @@ $googleProductCategory = "Health & Beauty > Health Care > Medical Identification
 	
 	
 
-	$csv = AssociativeArrayToCSV($res);
+	$csv = AssociativeArrayToTXT($res);
 				
-	$filename='product_feed_'.date('Y-m-d') .'.csv';
+	$filename='product_feed_'.date('Y-m-d') .'.txt';
 	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 	header("Content-Length: " . strlen($csv));
-	header("Content-type: text/x-csv");
+	header("Content-type: text/plain");
 	header("Content-Disposition: attachment; filename=".$filename);
     echo $csv;
 
