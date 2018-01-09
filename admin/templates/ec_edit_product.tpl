@@ -616,8 +616,9 @@
     if(ConfirmDelete()){
       var count = $('#' + ID).attr('rel');
       if($('#variant_id_'+count).val()){
+        var deleteName = $('#variant_id_' + count).attr('name'); 
         var today = mysql_now();
-        html = '<input type="hidden" value="'+today+'" name="field[2][tbl_variant]['+count+'][variant_deleted]"/>';
+        html = '<input type="hidden" value="'+today+'" name="' + deleteName.replace('variant_id', 'variant_deleted') +'"/>';
         $('#' + ID).append(html);
         $('#' + ID).css('display', 'none');
         $('#' + ID).removeClass('variants');
