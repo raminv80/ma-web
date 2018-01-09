@@ -804,40 +804,6 @@ function AssociativeArrayToCSV($array){
 	return $head."\r\n".$buf;
 }
 
-
-/**
- * Convert an associative array into a | delimited txt
- *
- * @param  $array
- * @return string
- */
-function AssociativeArrayToTXT($array){
-  $head = "";
-  $buf = "";
-  foreach($array as $key => $val){
-    if(is_array($val)){
-      $chkIfFirstCol = 0;
-      foreach($val as $key => $field){
-        if( $val === reset($array)){
-          if($chkIfFirstCol == 0){
-            $head .= "$key";
-          }else{
-            $head .= "|$key";
-          }
-        }
-        if($chkIfFirstCol== 0){
-          $buf.= $field;
-        }else{
-          $buf.= '|"'. $field.'"';
-        }
-        $chkIfFirstCol++;
-      }
-    }
-    $buf.= "\r\n";
-  }
-  return $head."\r\n".$buf;
-}
-
 /**
  * Convert an array into csv string (No header)
  *
