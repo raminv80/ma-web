@@ -13,7 +13,7 @@ User-agent: Mediapartners-Google
 Allow: /
 Disallow: /admin/
 Disallow: /includes/
-Disallow: /uploads/
+Disallow: /uploads/documents/
 Disallow: /privacy-policy
 Disallow: /terms-and-conditions
 
