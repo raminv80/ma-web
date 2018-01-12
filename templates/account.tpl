@@ -49,13 +49,13 @@
                     {if $renewalDateDiff lt -90}
 			         <img src="/images/active-icon.png" alt="active" /> <span class="warning">You are protected</span>
                     <div><br>You have <strong>{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'} days</strong> until your renewal is due.</div>
-                    {else if $renewalDateDiff gte -90 && $renewalDateDiff lt -10}
+                    {else if $renewalDateDiff gte -90 && $renewalDateDiff lt 0}
                     <img src="/images/warning-orange-icon.png" alt="active" /> <span class="warning">You are protected</span>
-                    <div><br>You have <strong>{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'} days</strong> until your renewal is due.</div>
+                    <div><br>You have <strong>{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'} day{if $renewalDateDiff lt -1}s{/if}</strong> until your renewal is due.</div>
                     {else}
                     <img src="/images/dashboard-warning.png" alt="Warning" /> <span class="warning">Your membership has expired</span>
-					<div class="days">{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'}</div>
-					<div>days overdue</div>
+          					<div class="days">{date_diff date_end=$smarty.now|date_format:"%Y-%m-%d" date_start=$renewalDate date_format='%a'}</div>
+          					<div>day{if $renewalDateDiff gt 1 || $renewalDateDiff eq 0}s{/if} overdue</div>
                     {/if}
                     {if $user.maf.main.renew eq 't' || $user.maf.main.renew_option eq 't'}
                     <br>

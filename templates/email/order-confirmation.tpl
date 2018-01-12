@@ -661,7 +661,7 @@ body, td {
                                         <tr class="w640" width="640" bgcolor="{$backg}">
                                           <td class="w30" width="30"></td>
                                           <td style="font-size: 16px;padding: 10px 0;" width="300" class="w300">
-                                            <div style="font-weight: bold;">{$item.cartitem_product_name}{if $item.product_type_id eq 3} - {$item.variant_name}{/if}{if $item.cartitem_product_gst eq '1'} {assign var=free value=1} *{/if}</div> {if $item.product_type_id eq 1}
+                                            <div style="font-weight: bold;">{$item.cartitem_product_name}{if $item.product_type_id eq 3} - {$item.variant_name}{/if}{if $item.cartitem_product_gst eq '1'} {assign var=free value=1} *{/if}</div> {if $item.product_type_id eq 1 || $item.product_type_id eq 4}
                                             <div class="attributes" style="font-size: 14px;">Product code: {$item.cartitem_product_uid}</div> {if $item.attributes} {foreach from=$item.attributes item=attr}
                                             <div class="attributes" style="font-size: 14px;">
                                               {$attr.cartitem_attr_attribute_name}: {$attr.cartitem_attr_attr_value_name}

@@ -98,7 +98,7 @@
 				<tr>
 					<td>
                     <div>{$item.cartitem_product_name}{if $item.cartitem_type_id eq 3} - {$item.cartitem_variant_name}{/if}{if $item.cartitem_product_gst eq '1'} {assign var=free value=1} *{/if}</div> 
-                    {if $item.cartitem_type_id eq 1}
+                    {if $item.cartitem_type_id eq 1 || $item.cartitem_type_id eq 4}
                       <div><small>Product code: {$item.cartitem_product_uid}</small></div> 
                       {if $item.attributes} {foreach from=$item.attributes item=attr}
                       <div><small>
