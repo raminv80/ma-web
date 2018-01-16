@@ -101,7 +101,7 @@
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>Internationally recognised medical ID and the first medical identification and alerting company</td>
+						<td>Internationally recognised ID and the first identification and alerting company</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
@@ -128,6 +128,12 @@
 						<td colspan="4" class="section">Services</td>
 					</tr>
 					<tr>
+						<td>Health information is clinically validated, reviewed and date stamped each time you update your electronic heath record.</td>
+						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+						<td class="border"><img src="/images/cross.png" alt="none" /></td>
+					</tr>
+					<tr>
 						<td>Secure electronic health record created and managed by MedicAlert.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
@@ -140,7 +146,7 @@
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
-						<td>Emergency hotline relays key personal and medical information to emergency services or healthcare professionals within an average of 10 seconds of a call in Australia, and is accessible worldwide.</td>
+						<td>24/7 emergency response service relays key personal and health information to emergency services or healthcare professionals within an average of 10 seconds of a call in Australia, and is accessible worldwide.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
@@ -204,15 +210,15 @@
 						<td colspan="4" class="section">Medical IDs</td>
 					</tr>
 					<tr>
-						<td>Supplier of medical ID devices.</td>
+						<td>Supplier of ID devices.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
 					</tr>
 					<tr>
-						<td>Custom engraved IDs with globally accepted medical terminology critically relied upon by emergency responders.</td>
+						<td>Custom engraved IDs with globally accepted medical terminology critically relied upon by emergency responders and health professionals.</td>
 						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
-						<td class="border"><img src="/images/checkmark.png" alt="checkmark" /></td>
+						<td class="border"><img src="/images/cross.png" alt="checkmark" /></td>
 						<td class="border"><img src="/images/cross.png" alt="none" /></td>
 					</tr>
 					<tr>
