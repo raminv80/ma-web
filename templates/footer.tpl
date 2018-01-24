@@ -84,7 +84,7 @@
         </div>
       </div>
       <div class="row" id="socfooter">
-        <div class="col-sm-6" id="socfooter1">
+        <div class="col-sm-4" id="socfooter1">
 	      <div>Join the community:</div>
           <div class="socout">
             <a target="_blank" href="https://www.facebook.com/AustraliaMedicAlertFoundation"><img src="/images/footer-fb.png" alt="Facebook icon" title="Visit our Facebook page" /></a>
@@ -99,9 +99,12 @@
             <a target="_blank" href="https://www.instagram.com/medicalert_aust/"><img src="/images/footer-insta.png" alt="Instagram icon" title="Find us on Instagram" /></a>
           </div>
         </div>
-        <div class="col-sm-3 col-md-2 col-sm-offset-3 col-md-offset-4" id="socfooter2">
+        <div class="col-sm-4 col-md-4 text-center">
 	        <div>Site secured by:</div>
-	        <img src="/images/geotrust.jpg" alt="Site secured by Geotrust" />
+	        <img id="geotrust" src="/images/geotrust.jpg" alt="Site secured by Geotrust" />
+        </div>
+        <div class="col-sm-4" id="socfooter2">
+	        <img src="/images/acnc.png" alt="ACNC" class="pull-right" />
         </div>
 
         <div class="col-xs-12 visible-xs text-center">

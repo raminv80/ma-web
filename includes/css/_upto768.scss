@@ -119,6 +119,10 @@
 		display: inline-block;
 	}
 
+	#geotrust{
+  	margin-bottom: 28px;
+	}
+
 	#socfooter{
 		text-align: center;
 
@@ -128,6 +132,10 @@
 
 		#socfooter2{
 			margin-bottom: 15px;
+
+			.pull-right{
+  			float: none !important;
+			}
 		}
 	}
 }
