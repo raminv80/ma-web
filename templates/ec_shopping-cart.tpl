@@ -77,7 +77,7 @@
         <form class="form-horizontal" id="shopping-cart-form" accept-charset="UTF-8" action="" method="post">
           <div class="row tallbox">
             {foreach from=$productsOnCart item=item}
-            <div id="{$item.cartitem_id}" class="prod-item cartitem">
+            <div id="{$item.cartitem_id}" data-product-variant-id="{$item.cartitem_variant_id}" class="prod-item cartitem">
               <div class="col-xs-3 col-sm-2 col-md-2 text-center">
                 <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?width=120&height=76&crop=1{else}/images/no-image-available.jpg?width=120&height=76&crop=1{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
               </div>

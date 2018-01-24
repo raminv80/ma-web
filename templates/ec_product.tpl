@@ -349,11 +349,6 @@
 <script src="/includes/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
 <script>
-var google_tag_params = {
-    ecomm_prodid: '{$product_object_id}',
-    ecomm_pagetype: 'product',
-    ecomm_totalvalue: '{$general_details.price.min}',
-};
 
 jQuery.fn.outerHTML = function(s) {
     return s
