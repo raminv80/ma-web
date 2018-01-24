@@ -6,8 +6,31 @@ if($_SERVER['REMOTE_ADDR'] == '45.124.202.249'){
   	
   $number = '0123456789';
   $res = '(' . substr($number, 0, 2) . ') ' . substr($number, 2, 4) . ' ' . substr($number, 6, 4);
-  die(var_dump($res));
   
+  $renewDate = '2015-06-30';
+  $serverDate = '2018-08-22';
+  //Calculate date difference between renewal date and today
+  $renewalDate = date_create_from_format('Y-m-d', $renewDate);
+  $renewalMonth = $renewalDate->format('m');
+  //strtotime('last day of +2 month', strtotime(date('Y').'-'.$offerValidTill.'-01')
+  $today = date_create_from_format('Y-m-d', $serverDate);
+  $todayDate = $today->format('Ymd');
+  $offerValidFromDate = date('Ymd', strtotime($today->format('Y').'-'.$renewalMonth.'-01'));
+  $offerValidTillDate = date('Ymd', strtotime('last day of +2 month', strtotime($offerValidFromDate)));
+  $interval = $renewalDate->diff($today);
+  $year_diff = ceil(floatval($interval->format('%R%y.%m%d')));
+  $day_diff = floatval($interval->format('%R%a'));
+  echo $offerValidFromDate.'----'.$offerValidTillDate.'----'.$todayDate;
+  //Verify if member requires reactivation
+  $user['reactivation'] = 'f';
+  if($year_diff > 1 && ((float)$todayDate < (float)$offerValidFromDate || (float)$todayDate > $offerValidTillDate)){
+        //Add reactivation fee when year difference is greater than 1
+        //also check that it's not in speacial offer months. renewal month plus 2 months
+        $user['reactivation'] = 't';
+  }
+  echo $user['reactivation'];
+  //die(var_dump($res));
+  exit;
   try{
     $startDate = '2016-10-30';
     $endDate = date('Y-m-d', strtotime($startDate . ' + 1 year'));

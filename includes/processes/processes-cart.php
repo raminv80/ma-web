@@ -403,16 +403,27 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_utm_medium' => $_SESSION['utm_medium'], 
             'payment_utm_campaign' => $_SESSION['utm_campaign'], 
             'payment_source_referer' => $_SESSION['source_referer'],
-            'payment_hae' => $_SESSION['hae_flag'] 
+            'payment_hae' => $_SESSION['hae_flag'],
+            'payment_is_renewal' => '0'
         );
         
         if(!empty($GA_ID)){
           sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
         }
         
-        //require_once 'includes/classes/PayWay.php';
-        //$pay_obj = new PayWay();
-        //$paymentId = $pay_obj->StorePaymentRecord($params);
+        //check if cart has only one item and the item is a membership fee
+        //set flag to process payment and get the year of membership fee
+        $pushPaymentToMembershipSystem = false;
+        $membershipYear = date('Y');
+        if($cart_obj->NumberOfProductsOnCart($cart_obj->cart_id) == 1 && $cartItemId = $cart_obj->HasMSFProduct($cart_obj->cart_id))
+        {
+          $item = $cart_obj->getCartItemVariantName($cartItemId[0]['cartitem_id']);
+          if(is_numeric($item)) {
+            $membershipYear = $item;
+            $pushPaymentToMembershipSystem = true;
+            $params['payment_is_renewal'] = '1';
+          }
+        }
         
         $bankSettingsArr = array(
             'initPayment' => $params,
@@ -742,6 +753,24 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           // OPEN NEW CART
           $cart_obj->CreateCart();
           
+          //if push payment to membership system is set to true
+          if($pushPaymentToMembershipSystem){
+            // process payment against upaid invoice in membership system
+            $paymentRecord = $pay_obj->GetPaymentRecord($paymentId);
+            $userPaymentRecord = array();
+            $userPaymentRecord['membershipYear'] = $membershipYear;
+            $userPaymentRecord['memberPaymentAmount'] = $paymentRecord['payment_charged_amount'];
+            $userPaymentRecord['membershipNumber'] = $_SESSION['user']['public']['id'];
+            $userPaymentRecord['memberPaymentReference'] = $paymentRecord['payment_transaction_no'];
+            $admin_user_obj = new UserClass();
+            if($resp = $admin_user_obj->processPayment($userPaymentRecord)){
+              $resp = json_decode($resp);
+              saveInLog('member-process-payment', 'external', $paymentId, $resp->message);
+            }else{
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
+            }
+          }
+          
           // REDIRECT TO THANK YOU PAGE
           header('Location: /thank-you-for-purchasing');
           die();
@@ -854,13 +883,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           'payment_utm_source' => $_SESSION['utm_source'], 
           'payment_utm_medium' => $_SESSION['utm_medium'], 
           'payment_utm_campaign' => $_SESSION['utm_campaign'], 
-          'payment_source_referer' => $_SESSION['source_referer'] 
-      );
-      
-      $bankSettingsArr = array(
-          'initPayment' => $params,
-          'settings' => $CONFIG->payment_gateway->payway,
-          'address' => $billingArr
+          'payment_source_referer' => $_SESSION['source_referer'],
+          'payment_is_renewal' => '0'
       );
       
       if(!empty($GA_ID)){
@@ -868,6 +892,12 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         //sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
         //sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
       }
+      
+      $bankSettingsArr = array(
+          'initPayment' => $params,
+          'settings' => $CONFIG->payment_gateway->payway,
+          'address' => $billingArr
+      );
       
       require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
       $pay_obj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
@@ -1146,7 +1176,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             'payment_utm_source' => $_SESSION['utm_source'], 
             'payment_utm_medium' => $_SESSION['utm_medium'], 
             'payment_utm_campaign' => $_SESSION['utm_campaign'], 
-            'payment_source_referer' => $_SESSION['source_referer'] 
+            'payment_source_referer' => $_SESSION['source_referer'],
+            'payment_is_renewal' => '0'
         );
     
         $billingArr = array(
@@ -1161,18 +1192,32 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             "address_postcode" => $_SESSION['user']['public']['maf']['main']['user_postcode']
         );
         
+        if(!empty($GA_ID)){
+          $productsGA = $cart_obj->getCartitemsByCartId_GA();
+          //sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
+          //sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
+        }
+        
+        //check if cart has only one item and the item is a membership fee
+        //set flag to process payment and get the year of membership fee
+        $pushPaymentToMembershipSystem = false;
+        $membershipYear = date('Y');
+        if($cart_obj->NumberOfProductsOnCart($cart_obj->cart_id) == 1 && $cartItemId = $cart_obj->HasMSFProduct($cart_obj->cart_id))
+        {
+          $item = $cart_obj->getCartItemVariantName($cartItemId[0]['cartitem_id']);
+          if(is_numeric($item)) {
+            $membershipYear = $item;
+            $pushPaymentToMembershipSystem = true;
+            $params['payment_is_renewal'] = '1';
+          }
+        }
+       
         $bankSettingsArr = array(
             'initPayment' => $params,
             'settings' => $CONFIG->payment_gateway->payway,
             'address' => $billingArr
         );
         
-        if(!empty($GA_ID)){
-          $productsGA = $cart_obj->getCartitemsByCartId_GA();
-          //sendGAEnEcCheckoutStep($GA_ID, '4', 'Payment', $productsGA);
-          //sendGAEnEcCheckoutOptions($GA_ID, '4', $paymentMethod);
-        }
-    
         require_once 'includes/classes/Qvalent_Rest_PayWayAPI.php';
         $pay_obj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
         $response = false;
@@ -1389,6 +1434,24 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           // OPEN NEW CART
           $cart_obj->CreateCart();
     
+          //if push payment to membership system is set to true
+          if($pushPaymentToMembershipSystem){
+            // process payment against upaid invoice in membership system
+            $paymentRecord = $pay_obj->GetPaymentRecord($paymentId);
+            $userPaymentRecord = array();
+            $userPaymentRecord['membershipYear'] = $membershipYear;
+            $userPaymentRecord['memberPaymentAmount'] = $paymentRecord['payment_charged_amount'];
+            $userPaymentRecord['membershipNumber'] = $_SESSION['user']['public']['id'];
+            $userPaymentRecord['memberPaymentReference'] = $paymentRecord['payment_transaction_no'];
+            
+            if($resp = $user_obj->processPayment($userPaymentRecord)){
+              $resp = json_decode($resp);
+              saveInLog('member-process-payment', 'external', $paymentId, $resp->message);
+            }else{
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment', "Member id:  {$_SESSION['user']['public']['id']} <br>". $user_obj->getErrorMsg());
+            }
+          }
+          
           // REDIRECT TO THANK YOU PAGE
           header('Location: /thank-you-for-renewing');
           die();

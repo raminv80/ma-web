@@ -166,7 +166,7 @@ class cart{
 
     try{
       foreach($originArr as $origin){
-        $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted is null AND cartitem_cart_id = :id";
+        $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted is null AND cartitem_cart_id = :id AND cartitem_product_id != 225";
         $orig_items = $DBobject->wrappedSql($sql, array(
             ":id" => $origin
         ));
@@ -1162,6 +1162,14 @@ class cart{
       $this->RemoveFromCart($membershipFeeCartitemId);
     }
     
+    //To remove MSF of previous year
+    if(empty($year)){
+      $msfArrOld = $this->GetCurrentMAF_MSF(225, date('Y') - 1);
+      if($membershipFeeCartitemIdOld = $this->hasProductInCart($msfArrOld['product_object_id'], $msfArrOld['variant_id'])){
+        $this->RemoveFromCart($membershipFeeCartitemIdOld);
+      }
+    }
+    
     //Make sure last year MAF membership fee is not added
     if($isNextYearRenewal){
       $msfArr = $this->GetCurrentMAF_MSF(225);
@@ -1991,6 +1999,27 @@ class cart{
     return false;
   }
 
+  /**
+   * check if cart only has the membership fee in the cart
+   * 
+   * @return array of cart item ids or FALSE if no result
+   */
+  function HasMSFProduct($cartId = null){
+    global $DBobject;
+    
+    if(empty($cartId)){
+      $cartId = $this->cart_id;
+    }
+    $params = array(
+        ":id" => $cartId
+    );
+    
+    $sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> 0 AND cartitem_product_id = 225 AND cartitem_cart_id = :id";
+    if($res = $DBobject->wrappedSql($sql, $params)){
+      return $res;
+    }
+    return false;
+  }
 
   /**
    * ONLY FOR MAF
@@ -2317,6 +2346,29 @@ class cart{
       }
     }
     return false;
+  }
+  
+  /**
+   * return the variant name of the cart item in the cart
+   * 
+   * @param integer $cartItemId
+   * @return string variant name
+   */
+  function getCartItemVariantName($cartItemId = null){
+      global $DBobject;
+      
+      if(empty($cartItemId)){
+        return false;
+      }
+      
+      $params = array(
+          ':cid' => $cartItemId
+      );
+      $sql = "SELECT cartitem_variant_name FROM tbl_cartitem WHERE cartitem_id = :cid AND cartitem_deleted IS NULL";
+      if($res = $DBobject->wrappedSql($sql, $params)){
+        return $res[0]['cartitem_variant_name'];
+      }
+      return false;
   }
 
 }

@@ -322,6 +322,28 @@ class medicAlertApi {
 
 		return $response;
 	}
+	
+	public function memberProcessPayment($sessionToken, $memberPaymentRecord)
+	{
+	  //create params array to pass to API
+	  $params = array(
+	      'sessionToken' => $this->_saltToken($sessionToken, MD5($this->_getRequestIp())),
+	      'membershipNumber' => $this->_escapeNewLines($memberPaymentRecord['membershipNumber']),
+	      'membershipYear' => $this->_escapeNewLines($memberPaymentRecord['membershipYear']),
+	      'memberPaymentAmount' => $this->_escapeNewLines($memberPaymentRecord['memberPaymentAmount']),
+	      'memberPaymentReference' => $this->_escapeNewLines($memberPaymentRecord['memberPaymentReference'])
+	  );
+	  
+	  try{
+	    $response = $this->_processRequest($this->SERVER . '/process_renewal_payment.php', $params);
+	  }catch(Exception $e){
+	    $sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (memberProcessPayment)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
+	    $this->DBobj->wrappedSql($sql);
+	    throw $e;
+	  }
+	  
+	  return $response;
+	}
 
 	/**
 	 * Preforms a search against the database looking for matches using the specified fields. At least 2 must be specified
