@@ -1118,6 +1118,7 @@ class cart{
     //MAF membership fee
     $year = '';
     $isNextYearRenewal= false;
+    $isLastYearRenewal= false;
     
     if(!empty($_memberArr['maf']['main']['reactivation']) && !empty($_memberArr['maf']['main']['user_RenewalDate']) && $_memberArr['maf']['main']['reactivation'] == 'f'){
       $renewalYear = date('Y', strtotime($_memberArr['maf']['main']['user_RenewalDate']));
@@ -1127,6 +1128,7 @@ class cart{
       $year_diff = floatval($interval->format('%R%y.%m%d'));
       if(!empty($renewalYear) && $year_diff < 1){
         if(date('Y') == $renewalYear + 1){
+          $isLastYearRenewal= true;
           $year = $renewalYear;
         }elseif(date('Y') == $renewalYear - 1){
           $isNextYearRenewal= true;
@@ -1171,7 +1173,7 @@ class cart{
     }
     
     //Make sure last year MAF membership fee is not added
-    if($isNextYearRenewal){
+    if($isNextYearRenewal || $isLastYearRenewal){
       $msfArr = $this->GetCurrentMAF_MSF(225);
       $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
       if(!empty($membershipFeeCartitemId)){
