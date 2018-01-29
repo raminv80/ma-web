@@ -1,4 +1,4 @@
-{block name=body} {* Define the function *} 
+{block name=body}
 {function name=options_list level=0}
   {foreach $opts as $opt}
     {if ($ignore && $ignore eq $opt.id) || ($ignoregroupid && $ignoregroupvalue eq $opt.extra.$ignoregroupid)}{continue}{/if}
@@ -56,11 +56,24 @@
         <div class="tab-pane active" id="details">
           <div class="form" data-error="Error found on <b>Details tab</b>. View <b>Details tab</b> to see specific error notices.">
             <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_parent_flag">Is Parent?</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.listing_parent_flag eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.listing_parent_flag eq 1} checked="checked" {/if} 
+                  onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_parent_flag">
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_display_menu">Display in Menu</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.listing_display_menu eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.listing_display_menu eq 1} checked="checked" {/if}
+                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_display_menu">
+              </div>
+            </div>
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_membersonly">Members only</label>
               <div class="col-sm-5">
-                <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_parent_flag]" class="value">
-                <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" class="value">
-                <input type="hidden" value="0" name="field[1][tbl_listing][{$cnt}][listing_display_menu]" class="value">
                 <input type="hidden" value="{if $fields.listing_membersonly eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_membersonly]" class="value">
                 <input class="chckbx" type="checkbox" {if $fields.listing_membersonly eq 1} checked="checked" {/if}
                    onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_membersonly">
@@ -81,18 +94,29 @@
                 <span class="help-block"></span>
               </div>
             </div>
-            <!-- 			<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_listing_title">Title *</label>
-							<div class="col-sm-5">
-								<input class="form-control" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" onchange="seturl(this.value);" required>
-								<span class="help-block"></span>
-							</div>
-						</div> -->
+            <!--      <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_title">Title *</label>
+              <div class="col-sm-5">
+                <input class="form-control" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title" onchange="seturl(this.value);" required>
+                <span class="help-block"></span>
+              </div>
+            </div> -->
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_url">URL *</label>
               <div class="col-sm-5">
                 <input class="form-control" type="hidden" value="{$fields.listing_url}" name="field[1][tbl_listing][{$cnt}][listing_url]" id="id_listing_url" onchange="seturl(this.value, true);">
                 <span id="id_listing_url_text" class="form-control url-text edit-url">{$fields.listing_url}&nbsp;</span> <a href="javascript:void(0);" class="btn btn-info btn-sm marg-5r edit-url" onclick="$('.edit-url').removeClass('url-text').hide();$('#id_listing_url').get(0).type='text';">Edit URL</a> <span class="help-block"></span>
+              </div>
+            </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_parent">Parent</label>
+              <div class="col-sm-5">
+                <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_parent_id]" id="id_listing_parent">
+                  <option value="0">Select one</option>
+                  {foreach $fields.options.listing_parent_id as $opt}{if $fields.listing_object_id neq $opt.id}
+                  <option value="{$opt.id}" {if $fields.listing_parent_id eq $opt.id}selected="selected"{/if}>{$opt.value}</option>
+                  {/if} {/foreach}
+                </select>
               </div>
             </div>
             <div class="row form-group">
@@ -121,14 +145,14 @@
                 <input class="form-control number" type="text" value="{if $fields.listing_order neq ''}{$fields.listing_order}{else}999{/if}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
               </div>
             </div>
-            <!-- 						<div class="row form-group">
-							<label class="col-sm-3 control-label" for="id_listing_published">Published</label>
-							<div class="col-sm-5">
-								<input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value">
-								<input class="chckbx" type="checkbox" {if $fields.listing_published eq 1} checked="checked" {/if}
-									 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
-							</div>
-						</div> -->
+            <!--            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_published">Published</label>
+              <div class="col-sm-5">
+                <input type="hidden" value="{if $fields.listing_published eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_published]" class="value">
+                <input class="chckbx" type="checkbox" {if $fields.listing_published eq 1} checked="checked" {/if}
+                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_published">
+              </div>
+            </div> -->
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="listing_image">
                 Header Image<br> <small>Size: 1960px Wide x 345px Tall <br>("None" for default image)
@@ -168,29 +192,6 @@
               <label class="col-sm-3 control-label" for="id_listing_content4">Content 4</label>
               <div class="col-sm-5">
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content4]" id="id_listing_content4" class="tinymce">{$fields.listing_content4}</textarea>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_flag1">Display popular products</label>
-              <div class="col-sm-5">
-                <input type="hidden" value="{if $fields.listing_flag1 eq 1}1{else}0{/if}" name="field[1][tbl_listing][{$cnt}][listing_flag1]" class="value">
-                <input class="chckbx" type="checkbox" {if $fields.listing_flag1 eq 1} checked="checked" {/if}
-                   onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="id_listing_flag1">
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_associate1">Collection</label>
-              <div class="col-sm-5">
-                <select class="form-control" name="field[1][tbl_listing][{$cnt}][listing_associate1]" id="id_listing_associate1">
-                  <option value="0">None</option>
-                  {call name=options_list opts=$fields.options.collections selected=$fields.listing_associate1}
-                </select>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content6">Discount code</label>
-              <div class="col-sm-5">
-                <input class="form-control" type="text" value="{$fields.listing_content6}" name="field[1][tbl_listing][{$cnt}][listing_content6]" id="id_listing_content6">
               </div>
             </div>
             <div class="row form-group">

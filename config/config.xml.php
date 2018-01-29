@@ -117,6 +117,9 @@
     <process>
       <file>includes/processes/process-load-landing-page.php</file>
     </process>
+    <process>
+      <file>includes/processes/process-load-latest-news-articles.php</file>
+    </process>
   </page_strut>
   <index_page>
     <template>home.tpl</template>

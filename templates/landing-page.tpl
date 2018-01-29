@@ -249,6 +249,31 @@
 </div>
 {/if}
 
+<div class="container">
+  <div class="row">
+  {foreach $latest_news_articles as $a}
+    <div class="col-sm-6 col-md-4">
+      <div class="newsres">
+        <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">
+          <img src="{if $a.listing_image}{$a.listing_image}{else}/images/news-default.jpg{/if}" alt="{$a.listing_name}" class="img-responsive fullwidth"> 
+        </a> 
+        <div class="newsrestext">
+          <div class="date">{$a.news_start_date|date_format:"%d %B %Y"}</div>
+          <h3>
+            <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">{$a.listing_name}</a>
+          </h3>
+          <div class="newstext">
+            <p>
+              {$a.listing_content1}
+            </p>
+          </div>
+          <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}" class="readart">Read article</a>
+        </div>
+      </div>
+    </div>
+  {/foreach}
+  </div>
+</div>
 {/block}
 
 {* Place additional javascript here so that it runs after General JS includes *}

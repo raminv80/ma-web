@@ -29,7 +29,7 @@
 							<div class="col-sm-6">
 								<div class="newsrestext">
 									<h3>{$da.listing_name}</h3>
-									<div class="newsdate">{$da.listing_schedule_start|date_format:"%d %B %Y"}</div>
+									<div class="newsdate">{$da.news_start_date|date_format:"%d %B %Y"}</div>
 									<div class="newstext">{$da.listing_content1}</div>
 									<a href="{$REQUEST_URI}/{$da.listing_url}" class="readart">Read more ></a>
 								</div>

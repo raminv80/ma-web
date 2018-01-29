@@ -122,6 +122,14 @@
           <extra>banner_flag1</extra> 
           <orderby>banner_name</orderby> 
         </field> 
+        <field>
+          <name>news_categories</name>
+          <table>tbl_news_category</table>
+          <id>news_category_id</id>
+          <reference>news_category_name</reference>
+          <where>news_category_deleted is NULL</where>
+          <orderby>news_category_name</orderby>
+        </field>
       </options>
       <log>
       	<table>tbl_listing</table>
@@ -149,6 +157,8 @@
       <custom_template field="listing_object_id" value="219">ec_edit_page_update-my-profile.tpl</custom_template>
       <custom_template field="listing_object_id" value="239">ec_edit_page_my-account.tpl</custom_template><!-- wish list -->
       <custom_template field="listing_object_id" value="109">edit_page_careers.tpl</custom_template><!-- Careers -->
+      <custom_template field="listing_object_id" value="106">edit_page_emergency_personal.tpl</custom_template><!-- Emergency personal -->
+      <custom_template field="listing_object_id" value="105">edit_page_refer_your_patient.tpl</custom_template><!-- Refer your patient -->
   	</section>
     
     <section level="1">
@@ -180,6 +190,14 @@
           <reference>listing_name</reference> 
           <where>listing_parent_flag = 1 AND listing_type_id = 10 AND listing_published = 1</where> 
           <orderby>listing_name</orderby>
+        </field>
+        <field>
+          <name>news_categories</name>
+          <table>tbl_news_category</table>
+          <id>news_category_id</id>
+          <reference>news_category_name</reference>
+          <where>news_category_deleted is NULL</where>
+          <orderby>news_category_name</orderby>
         </field>
       </options>
       <log>
@@ -278,6 +296,16 @@
         <linkfield>listing_id</linkfield>
         <field>news_listing_id</field>
       </extends>
+      <options>
+        <field>
+          <name>news_categories</name>
+          <table>tbl_news_category</table>
+          <id>news_category_id</id>
+          <reference>news_category_name</reference>
+          <where>news_category_deleted is NULL</where>
+          <orderby>news_category_name</orderby>
+        </field>
+      </options>
       <associated>
       	<name>tags</name>
       	<table>tbl_tag</table>
@@ -292,6 +320,12 @@
         <field>gallery_listing_id</field> 
         <orderby>gallery_order ASC</orderby>
       </associated>
+      <associated>
+        <name>linkedcats</name>
+        <table>tbl_newscatlink</table>
+        <linkfield>listing_id</linkfield>
+        <field>newscatlink_listing_id</field>
+      </associated>
       <log>
       	<table>tbl_listing</table>
       	<id>listing_id</id>
@@ -300,6 +334,27 @@
       <list_template>list.tpl</list_template>
       <edit_template>edit_news_article.tpl</edit_template>
   	</section>
+    
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>news-cats</url>
+      <title>News article category</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_news_category</name>
+        <id>news_category_id</id>
+        <field>news_category_name</field>
+        <deleted>news_category_deleted</deleted>
+        <orderby>news_category_name</orderby>
+        <log>
+          <table>tbl_news_category</table>
+          <id>news_category_id</id>
+          <field>news_category_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>ec_edit_newscat.tpl</edit_template>
+    </section>
     
     <section level="1">
       <showlist>FALSE</showlist>
