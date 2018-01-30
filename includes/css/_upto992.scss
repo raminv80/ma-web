@@ -381,4 +381,7 @@
 #product-list #categorycontainer .prodcatout:nth-child(1) .prodcat .imgcont, #product-list #categorycontainer .prodcatout:nth-child(2) .prodcat .imgcont{min-height: 155px;}
 #shop-cart-btn{display: none !important;}
 #foot1 ul#footmenu li.baselevel>div{height: 59px;}
+
+#landing-newsart .newsres{margin-bottom: 30px;}
+#landing-newsart .col-sm-6:nth-child(2n+1){clear: both; float: left;}
 }

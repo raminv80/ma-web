@@ -1395,6 +1395,26 @@ select.form-control {
 #faqs{
 	padding-bottom: 50px;
 
+	&.ndis{
+  	h3.ui-accordion-header .head-text{
+        text-align: left;
+        width: 90%;
+
+        .head-title{
+          font-size: 19px;
+        }
+    	}
+
+    .ui-accordion-content{
+      text-align: left;
+    }
+
+    p{
+      margin-bottom: 10px;
+    }
+	}
+
+
 	h3.ui-accordion-header{
 		border-color: $medium-grey;
 		float: left;
@@ -1525,6 +1545,10 @@ select.form-control {
 	#sharestory{
 		background: $light-grey;
 		padding: 50px;
+
+		&.white{
+  		background: $white;
+		}
 	}
 
 
@@ -1609,6 +1633,13 @@ select.form-control {
 		color: $red;
 	}
 
+	.bold{
+		font-weight: bold;
+		color: $red;
+		margin-bottom: 3px;
+		margin-top: 10px;
+	}
+
 	.videoWrapper{
 		iframe{
 			width: 100%;
@@ -1617,7 +1648,7 @@ select.form-control {
 	}
 }
 
-#emergency-white{
+#emergency-white,.emergency-whitebg{
 	padding: 50px 0;
 
 	h3{
@@ -4167,6 +4198,47 @@ select option:disabled {
     p{
 	    margin-bottom: 25px;
     }
+}
+#landing-newsart{
+  padding-top: 50px;
+  padding-bottom: 50px;
+
+  &.notopmargin{
+    padding-top: 0;
+  }
+  &.nobotmargin{
+    padding-bottom: 0;
+  }
+
+  .newsres{
+    img{
+      border: 1px solid $medium-grey;
+    }
+
+    .newsrestext{
+      background: $light-grey;
+      margin-top: 0px;
+      padding: 10px 10px;
+      min-height: 100px;
+      width: 100%;
+      border-left: 1px solid $medium-grey;
+      border-right: 1px solid $medium-grey;
+      border-bottom: 1px solid $medium-grey;
+
+      .date{
+        font-size: 15px;
+      }
+      h3{
+        margin: 0 0 10px;
+        min-height: 78px;
+      }
+      .newstext{
+        min-height: 140px;
+        height: 140px;
+        overflow: hidden;
+      }
+    }
+  }
 }
 
 .session-modal-txt{

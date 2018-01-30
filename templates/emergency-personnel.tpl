@@ -1,3 +1,10 @@
+{block name=head}
+<style type="text/css">
+{literal}
+#newsletter{display:none;}
+{/literal}
+</style>
+{/block}
 {block name=body}
 <div id="pagehead">
   <div class="bannerout">
@@ -14,6 +21,7 @@
     </div>
    </div>
 </div>
+
 <div class="emergency-grey">
   <div class="container">
      <div class="row">
@@ -23,7 +31,144 @@
      </div>
    </div>
 </div>
-<div id="emergency-white">
+<div class="container nobotmargin" id="landing-newsart">
+  <div class="row">
+  {foreach $latest_news_articles as $a}
+    <div class="col-sm-6 col-md-4">
+      <div class="newsres">
+        <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">
+          <img src="{if $a.listing_image}{$a.listing_image}{else}/images/news-default.jpg{/if}" alt="{$a.listing_name}" class="img-responsive fullwidth">
+        </a>
+        <div class="newsrestext">
+          <div class="date">{$a.news_start_date|date_format:"%d %B %Y"}</div>
+          <h3>
+            <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">{$a.listing_name}</a>
+          </h3>
+          <div class="newstext">
+            <p>
+              {$a.listing_content1}
+            </p>
+          </div>
+          <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}" class="readart">Read article</a>
+        </div>
+      </div>
+    </div>
+  {/foreach}
+  </div>
+</div>
+
+<div id="stay-loop" class="emergency-whitebg">
+  <div class="container">
+     <div class="row">
+        <div class="col-sm-12 text-center">
+	      <h3>Subscribe to receive MedicAlert and industry updates</h3>
+        </div>
+        <div class="col-md-offset-1 col-md-10 text-center" id="stayloop">
+    	 	<form id="contact_form1" accept-charset="UTF-8" method="post" action="/process/resource-contact" novalidate="novalidate">
+        	    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+        	  	<input type="hidden" value="Stay in the loop" name="form_name" id="form_name" />
+    			<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
+    	  		<div class="row">
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="loop-fname">First name<span>*</span>:</label>
+    					<input class="form-control" value="" type="text" name="loop-fname" id="loop-fname" required="">
+              <div class="error-msg help-block"></div>
+    				</div>
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="loop-lname">Surname<span>*</span>:</label>
+    					<input class="form-control" value="" type="text" name="loop-lname" id="loop-lname" required="">
+              <div class="error-msg help-block"></div>
+    				</div>
+    			  </div>
+
+            <div class="row">
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="loop-position">Position:</label>
+    				  <input class="form-control" value="" type="text" name="loop-position" id="loop-position" >
+              <div class="error-msg help-block"></div>
+    				</div>
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="loop-email">Email<span>*</span>:</label>
+    					<input class="form-control" value="" type="email" name="loop-email" id="loop-email" required="">
+						<div class="error-msg help-block"></div>
+						<!--<div>By providing your email address, you consent to receive promotional and health related material.</div>-->
+    				</div>
+    			  </div>
+    			<div class="row error-msg" id="form-error1" {if !$error}style="display:none"{/if}>{$error}</div>
+    			<div class="row">
+    				<div class="col-sm-12">
+    					<input type="button" value="Register now" onclick="$('#contact_form1').submit();" class="btn-red btn" id="fbsub1">
+    				</div>
+    			</div>
+
+
+    	 	</form>
+        </div>
+     </div>
+  </div>
+</div>
+
+<div class="emergency-grey">
+  <div class="container">
+    <div class="row">
+	    <div class="col-sm-12 text-center">
+          <h3>Know what to do in medical emergency</h3>
+          <p>In the first instance of a medical emergency, you should follow these four simple steps.</p>
+        </div>
+        <div class="col-sm-3 text-center step">
+	      <div class="col-xs-3 col-sm-12">
+          <img alt="Check" src="/images/emergency-check.png" class="img-responsive">
+	      </div>
+	      <div class="col-xs-9 col-sm-12">
+          <div class="bold">Check</div>
+          <div>around your patients' wrists or neck (pulse point) for the genuine MedicAlert ID. If patient is conscious, ask if they are a MedicAlert member.</div>
+	      </div>
+        </div>
+        <div class="col-sm-3 text-center step">
+	      <div class="col-xs-3 col-sm-12">
+          <img alt="Read" src="/images/emergency-read.png" class="img-responsive">
+	      </div>
+	      <div class="col-xs-9 col-sm-12">
+          <div class="bold">Read</div>
+          <div>the medical and personal information engraved on the reverse of the patient's MedicAlert ID.</div>
+	      </div>
+        </div>
+        <div class="col-sm-3 text-center step">
+	      <div class="col-xs-3 col-sm-12">
+          <img alt="Call" src="/images/emergency-call.png" class="img-responsive">
+	      </div>
+	      <div class="col-xs-9 col-sm-12">
+          <div class="bold">Call</div>
+          <div>the 24/7 Emergency Response Service number engraved on the ID (<a href="tel://08 8272 8822">08 8272 8822</a>) to receive more detailed information about a patient’s conditions, medications, allergies or personal contacts.</div>
+	      </div>
+        </div>
+        <div class="col-sm-3 text-center step">
+	      <div class="col-xs-3 col-sm-12">
+          <img alt="Advice" src="/images/emergency-advice.png" class="img-responsive">
+	      </div>
+	      <div class="col-xs-9 col-sm-12">
+          <div class="bold">Advise</div>
+          <div>on handover that your patient is wearing a MedicAlert ID.</div>
+	      </div>
+        </div>
+     </div>
+   </div>
+</div>
+<div class="emergency-whitebg">
+  <div class="container">
+   <div class="row">
+      <div class="col-sm-12 text-center" id="listtoptext">
+        <h3>Know what MedicAlert ID to look for</h3>
+      </div>
+      <div class="col-sm-8 col-sm-offset-2 text-center">
+        {$listing_content3}
+      </div>
+   </div>
+  </div>
+</div>
+
+
+<div id="emergency-white" class="emergency-grey">
    <div class="container">
      <div class="row">
         <div class="col-sm-12 text-center">
@@ -162,6 +307,14 @@
     				</div>
     			</div>
 
+          <div class="row">
+    				<div class="col-sm-12 form-group text-left">
+						<input type="checkbox" {if !$post || $post.sign_up}checked="checked"{/if} name="sign_up" id="signupmail" />
+						<label class="visible-ie-only" for="signupmail">Sign up to MedicAlert email newsletter</label>
+						<div class="error-msg help-block"></div>
+    				</div>
+          </div>
+
     			<div style="height:0;overflow:hidden;">
                    <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1">
                 </div>
@@ -175,87 +328,12 @@
     			<br />
     	  </form>
 		</div>
-
-	    <div class="col-sm-12 text-center">
-          <h3>Know what to do in medical emergency</h3>
-          <p>In the first instance of a medical emergency, you should follow these four simple steps.</p>
-        </div>
-        <div class="col-sm-3 text-center step">
-	      <div class="col-xs-3 col-sm-12">
-          <img alt="Check" src="/images/emergency-check.png" class="img-responsive">
-	      </div>
-	      <div class="col-xs-9 col-sm-12">
-          <div class="bold">Check</div>
-          <div>around your patients' wrists or neck (pulse point) for the genuine MedicAlert medical ID. If conscious, ask your patient if they are a MedicAlert member. </div>
-	      </div>
-        </div>
-        <div class="col-sm-3 text-center step">
-	      <div class="col-xs-3 col-sm-12">
-          <img alt="Read" src="/images/emergency-read.png" class="img-responsive">
-	      </div>
-	      <div class="col-xs-9 col-sm-12">
-          <div class="bold">Read</div>
-          <div>the medical and personal information engraved on the reverse of the patient's MedicAlert medical ID.</div>
-	      </div>
-        </div>
-        <div class="col-sm-3 text-center step">
-	      <div class="col-xs-3 col-sm-12">
-          <img alt="Call" src="/images/emergency-call.png" class="img-responsive">
-	      </div>
-	      <div class="col-xs-9 col-sm-12">
-          <div class="bold">Call</div>
-          <div>the 24/7 Emergency Response Service number engraved on the medical ID (<a href="tel://08 8272 8822">08 8272 8822</a>) to receive more detailed medical and personal information.</div>
-	      </div>
-        </div>
-        <div class="col-sm-3 text-center step">
-	      <div class="col-xs-3 col-sm-12">
-          <img alt="Advice" src="/images/emergency-advice.png" class="img-responsive">
-	      </div>
-	      <div class="col-xs-9 col-sm-12">
-          <div class="bold">Advice</div>
-          <div>on handover that your patient is wearing a MedicAlert medical ID.</div>
-	      </div>
-        </div>
      </div>
    </div>
 </div>
-<div class="emergency-grey">
-  <div class="container">
-   <div class="row">
-      <div class="col-sm-12 text-center" id="listtoptext">
-        <h3>Know what MedicAlert Jewellery to look for</h3>
-      </div>
-      <div class="col-sm-8 col-sm-offset-2 text-center">
-        {$listing_content3}
-      </div>
-   </div>
-  </div>
-</div>
-<div class="container">
-  <div class="row">
-  {foreach $latest_news_articles as $a}
-    <div class="col-sm-6 col-md-4">
-      <div class="newsres">
-        <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">
-          <img src="{if $a.listing_image}{$a.listing_image}{else}/images/news-default.jpg{/if}" alt="{$a.listing_name}" class="img-responsive fullwidth"> 
-        </a> 
-        <div class="newsrestext">
-          <div class="date">{$a.news_start_date|date_format:"%d %B %Y"}</div>
-          <h3>
-            <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">{$a.listing_name}</a>
-          </h3>
-          <div class="newstext">
-            <p>
-              {$a.listing_content1}
-            </p>
-          </div>
-          <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}" class="readart">Read article</a>
-        </div>
-      </div>
-    </div>
-  {/foreach}
-  </div>
-</div>
+
+
+
 
 <div id="orangebox" class="visible-xs">
 
@@ -279,7 +357,7 @@ $(document).ready(function(){
      		digits: true,
      		minlength: 8
      	});
-	 	
+
 		$("select").selectBoxIt();
 
 

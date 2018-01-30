@@ -1,3 +1,10 @@
+{block name=head}
+<style type="text/css">
+{literal}
+#newsletter{display:none;}
+{/literal}
+</style>
+{/block}
 {block name=body}
 
 <div id="pagehead">
@@ -13,6 +20,128 @@
     </div>
   </div>
 </div>
+
+<div class="emergency-grey">
+  <div class="container">
+     <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 text-center">
+          {$listing_content2}
+        </div>
+     </div>
+  </div>
+</div>
+
+<div class="container" id="landing-newsart">
+  <div class="row">
+  {foreach $latest_news_articles as $a}
+    <div class="col-sm-6 col-md-4">
+      <div class="newsres">
+        <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">
+          <img src="{if $a.listing_image}{$a.listing_image}{else}/images/news-default.jpg{/if}" alt="{$a.listing_name}" class="img-responsive fullwidth">
+        </a>
+        <div class="newsrestext">
+          <div class="date">{$a.news_start_date|date_format:"%d %B %Y"}</div>
+          <h3>
+            <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">{$a.listing_name}</a>
+          </h3>
+          <div class="newstext">
+            <p>
+              {$a.listing_content1}
+            </p>
+          </div>
+          <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}" class="readart">Read article</a>
+        </div>
+      </div>
+    </div>
+  {/foreach}
+  </div>
+</div>
+
+
+<div class="emergency-grey">
+  <div class="container">
+     <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 text-center">
+          Subscribe to receive industry relevant updates when changes and improvements are made to the MedicAlert product and service offering.
+          <div class="clearfix"></div>
+          <br>
+        </div>
+        <div class="col-md-offset-1 col-md-10 text-center" id="stayloop">
+    	 	<form id="contact_form1" accept-charset="UTF-8" method="post" action="/process/resource-contact" novalidate="novalidate">
+        	    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+        	  	<input type="hidden" value="Stay in the loop" name="form_name" id="form_name" />
+    			<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
+    	  		<div class="row">
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="loop-fname">First name<span>*</span>:</label>
+    					<input class="form-control" value="" type="text" name="loop-fname" id="loop-fname" required="">
+              <div class="error-msg help-block"></div>
+    				</div>
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="loop-lname">Surname<span>*</span>:</label>
+    					<input class="form-control" value="" type="text" name="loop-lname" id="loop-lname" required="">
+              <div class="error-msg help-block"></div>
+    				</div>
+    			  </div>
+
+            <div class="row">
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="loop-position">Position:</label>
+    				  <input class="form-control" value="" type="text" name="loop-position" id="loop-position" >
+              <div class="error-msg help-block"></div>
+    				</div>
+    				<div class="col-sm-6 form-group">
+    				  <label class="visible-ie-only" for="loop-email">Email<span>*</span>:</label>
+    					<input class="form-control" value="" type="email" name="loop-email" id="loop-email" required="">
+						<div class="error-msg help-block"></div>
+						<!--<div>By providing your email address, you consent to receive promotional and health related material.</div>-->
+    				</div>
+    			  </div>
+    			<div class="row error-msg" id="form-error1" {if !$error}style="display:none"{/if}>{$error}</div>
+    			<div class="row">
+    				<div class="col-sm-12">
+    					<input type="button" value="Sign up now" onclick="$('#contact_form1').submit();" class="btn-red btn" id="fbsub1">
+    				</div>
+    			</div>
+
+
+    	 	</form>
+        </div>
+
+     </div>
+   </div>
+</div>
+
+
+<div id="easyrefer">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-10 col-sm-offset-1 text-center">
+        <h3>It's easy to refer your patients</h3>
+
+        <div class="row" id="easyrefermethods">
+          <div class="col-sm-3">
+            <img src="/images/refer-method1.png" alt="Letter" class="img-responsive" />
+            <div>Complete a referral letter and either give it to your client or have your Practice Manager fax it to us on 1800 64 32 59. We'll handle the rest.</div>
+          </div>
+          <div class="col-sm-1 or">OR</div>
+          <div class="col-sm-4">
+            <img src="/images/refer-method2.png" alt="Online" class="img-responsive" />
+            <div>Complete an online referral form (available on most leading GP software systems).</div>
+          </div>
+          <div class="col-sm-1 or">OR</div>
+          <div class="col-sm-3">
+            <img src="/images/refer-method3.png" alt="Form" class="img-responsive" />
+            <div>Complete the MedicAlert application form (part of our membership catalogue).</div>
+          </div>
+        </div>
+
+        {$listing_content3}
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div id="free-resource">
   <div class="container">
@@ -37,7 +166,7 @@
 <div id="contact" class="referp">
   <div class="container">
     <div class="row">
-      <div class="col-md-offset-1 col-md-10 text-center" id="sharestory">
+      <div class="col-md-offset-1 col-md-10 text-center white" id="sharestory">
         <form id="contact_form" accept-charset="UTF-8" method="post" action="/process/resource-contact" novalidate="novalidate">
           <input type="hidden" name="formToken" id="formToken" value="{$token}" />
           <input type="hidden" value="Refer your patient" name="form_name" id="form_name" />
@@ -197,6 +326,13 @@
               <span class="text-center visible-xs"><a href="privacy-policy" target="_blank">Privacy Policy</a></span>
             </div>
           </div>
+          <div class="row">
+    				<div class="col-sm-12 form-group text-left">
+						<input type="checkbox" {if !$post || $post.sign_up}checked="checked"{/if} name="sign_up" id="signupmail" />
+						<label class="visible-ie-only" for="signupmail">Sign up to MedicAlert email newsletter</label>
+						<div class="error-msg help-block"></div>
+    				</div>
+          </div>
           <div style="height: 0; overflow: hidden;">
             <input value="" type="text" name="honeypot" id="honeypot" tabindex="-1">
           </div>
@@ -212,34 +348,6 @@
   </div>
 </div>
 
-<div id="easyrefer">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-10 col-sm-offset-1 text-center">
-        {$listing_content2}
-
-        <div class="row" id="easyrefermethods">
-          <div class="col-sm-3">
-            <img src="/images/refer-method1.png" alt="Letter" class="img-responsive" />
-            <div>Complete a referral letter and either give it to your client or have your Practice Manager fax it to us on 1800 64 32 59. We'll handle the rest.</div>
-          </div>
-          <div class="col-sm-1 or">OR</div>
-          <div class="col-sm-4">
-            <img src="/images/refer-method2.png" alt="Online" class="img-responsive" />
-            <div>Complete an online referral form (available on most leading GP software systems).</div>
-          </div>
-          <div class="col-sm-1 or">OR</div>
-          <div class="col-sm-3">
-            <img src="/images/refer-method3.png" alt="Form" class="img-responsive" />
-            <div>Complete the MedicAlert application form (part of our membership catalogue).</div>
-          </div>
-        </div>
-
-        {$listing_content3}
-      </div>
-    </div>
-  </div>
-</div>
 
 <div id="seconds-count">
   <div class="container">
@@ -255,55 +363,32 @@
   </div>
 </div>
 
-<div class="container">
-  <div class="row">
-  {foreach $latest_news_articles as $a}
-    <div class="col-sm-6 col-md-4">
-      <div class="newsres">
-        <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">
-          <img src="{if $a.listing_image}{$a.listing_image}{else}/images/news-default.jpg{/if}" alt="{$a.listing_name}" class="img-responsive fullwidth"> 
-        </a> 
-        <div class="newsrestext">
-          <div class="date">{$a.news_start_date|date_format:"%d %B %Y"}</div>
-          <h3>
-            <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">{$a.listing_name}</a>
-          </h3>
-          <div class="newstext">
-            <p>
-              {$a.listing_content1}
-            </p>
-          </div>
-          <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}" class="readart">Read article</a>
-        </div>
-      </div>
-    </div>
-  {/foreach}
-  </div>
-</div>
+
+
 {/block} {block name=tail}
 <script src="/includes/js/jquery-ui.js"></script>
 <script src="/includes/js/jquery.selectBoxIt.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    
+
     $('#contact_form').validate();
-    
+
     $('#postcode').rules("add", {
       digits: true,
       minlength: 4
     });
-    
+
     $('#phone').rules("add", {
       digits: true,
       minlength: 8
     });
-    
+
     $("select").selectBoxIt();
-    
+
     $('#email').rules("add", {
       email: true
     });
-    
+
   });
 </script>
 {/block}

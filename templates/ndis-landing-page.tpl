@@ -5,6 +5,17 @@
 {/block}
 
 {block name=body}
+{if $listing_content2}
+<div id="cost-grey" class="pinkh4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        {$listing_content2}
+      </div>
+    </div>
+  </div>
+</div>
+{/if}
 <div id="pagehead">
 {*	<div class="bannerout">
       <img src="{if $listing_image}{$listing_image}{else}/images/newsdet-banner.jpg{/if}" alt="{$listing_name} banner" />
@@ -19,17 +30,106 @@
 		</div>
 	</div>
 </div>
-{if $listing_content2}
-<div id="cost-grey" class="pinkh4">
+<div id="faqs" class="emergency-grey ndis">
   <div class="container">
-    <div class="row">
-      <div class="col-md-12 text-center">
-        {$listing_content2}
+		<div class="row">
+			<div class="{if $listing_object_id eq 10}col-md-12{else}col-md-8 col-md-offset-2{/if} text-center">
+	  <div id="accordion">
+			<h3>
+				<div class="head-text">
+					<div class="head-title">Who is eligible for the NDIS?</div>
+				</div>
+			</h3>
+			<div>
+        <p>The NDIS is progressively being rolled out throughout Austrliaa nd will provide complete national coverage by the end of 20189. Everything you need to know about the NDIS, including eligibility, how to apply and what supports are funded are available at <a href="http://www.ndis.gov.au" target="_blank">www.ndis.gov.au</a></p>
+			</div>
+			<h3>
+				<div class="head-text">
+					<div class="head-title">How is MedicAlert membership and ID funded under the NDIS?</div>
+				</div>
+			</h3>
+			<div>
+        <p>If you have communication issues due to your disability, such as autism, being non-verbal or many other conditions, your membership and ID should be supplied through your NDIS plan.</p>
+        <p>Please note – MedicAlert Foundation is currently registered in the Capital Support (AssistiveTechnology) stream for personal care &amp; safety and community &amp; information equipment.</p>
+			</div>
+			<h3>
+				<div class="head-text">
+					<div class="head-title">How does your MedicAlert membership and ID support you in achieving your NDIS goals?</div>
+				</div>
+			</h3>
+			<div>
+  			<ul>
+          <li>A personalised MedicAlert ID is a reasonable and necessary support that helps to protect you and communicate vital information on your behalf.</li>
+          <li>Membership provides out of home support by keeping you safe and enabling positive engagement and inclusion through support of your personal goals, aspirations and activities within the community.</li>
+          <li>Your ID will protect you during daily personal activities and provide peace of mind knowing that special needs can be identified and communicated quickly, assisting in greater social participation, independence, and health and well-being.</li>
+          <li>Access to our 24/7 emergency response service ensures the safe return of your loved ones if they abscond or wander. This includes a personal and secure electronic health record that contains information about any health, medical or personal conditions.</li>
+  			</ul>
+			</div>
+			<h3>
+				<div class="head-text">
+					<div class="head-title">Step by step guide to claiming your MedicAlert membership and ID through the NDIS</div>
+				</div>
+			</h3>
+			<div>
+  			<ol>
+    			<li>Contact MedicAlert for assistance – We’re here to help you understand how we can support you.</li>
+          <li>Your Planning meeting – Ensure that you reference to your planner how MedicAlert can support you in reaching your goals. Ensure you have appropriate funding in the Capital Support (Assistive Technology) stream</li>
+          <li>View our <a href="/products/all">range of products</a> and select your ID.</li>
+          <li>If you’re wanting to claim the service and product:<br>
+          Ensure that MedicAlert supports your NDIS goals. Depending on what type of plan you have there are a few different processes for claiming your service and product.<br>
+          Plan Managed – Get a quote from MedicAlert, check with your Plan Manager if you need a specialist (such as an Occupational Therapist) recommendation. Once this is complete, select your ID, provide us with your NDIS number and order online. We’ll then send you a tax invoice to have your funds reimbursed by your Plan Manager.<br>
+          Self-Managed – Once you’ve selected your ID, provide us with your NDIS number and order online. We’ll then send you a tax invoice to have your funds reimbursed by the NDIS.<br>
+          NDIS Managed – We’ll check you have enough funds in your Capital Support (Assistive Technology) stream and then process your order, on your behalf, via the NDIS portal.
+          </li>
+          <li>Your membership is activated immediately and your ID will be customised with your personal information. Your order will take approximately 5 days to be customised and will be sent to you via Australia Post.</li>
+          <li>Once you receive your ID, you’re now fully protected by MedicAlert. We can assist with increasing your independence, accessing the community and communicating your health conditions to your community.</li>
+  			</ol>
+			</div>
+	  </div>
+	  <div class="clearfix"></div>
+    <br>
+    <p>If you have any queries regarding MedicAlert and their NDIS provider status, please email us at <a href="mailto:ndis@medicalert.org.au">ndis@medicalert.org.au</a></p>
+    <p>Note: if you’re an existing MedicAlert member, please <a href="/contact-us">contact us</a> to update your profile and ensure you receive these benefits.</p>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container" id="landing-newsart">
+  <div class="row">
+  {foreach $latest_news_articles as $a}
+    <div class="col-sm-6 col-md-4">
+      <div class="newsres">
+        <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">
+          <img src="{if $a.listing_image}{$a.listing_image}{else}/images/news-default.jpg{/if}" alt="{$a.listing_name}" class="img-responsive fullwidth">
+        </a>
+        <div class="newsrestext">
+          <div class="date">{$da.news_start_date|date_format:"%d %B %Y"}</div>
+          <h3>
+            {$a.listing_name}
+          </h3>
+          <div class="newstext">
+            <p>
+              {$a.listing_content1}
+            </p>
+          </div>
+          <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}" class="readart">Read article</a>
+        </div>
       </div>
     </div>
+  {/foreach}
   </div>
 </div>
-{/if}
+<div class="emergency-grey" id="contact">
+<div class="container">
+	<div class="row">
+		<div class="col-md-12 text-center">
+      {include file='templates/_form-ndis.tpl'}
+    </div>
+	</div>
+</div>
+</div>
 {if $listing_content3 || $listing_content4}
 <div>
 <div id="landing-page-middle" class="container">
@@ -41,7 +141,9 @@
     </div>
 </div>
 </div>
+
 <br>
+<!--
 <div class="grey-bg-area video-wrapper">
 <div class="container">
     <div class="row">
@@ -52,15 +154,8 @@
   </div>
 </div>
 {/if}
+-->
 
-
-<div class="container" id="contact">
-	<div class="row">
-		<div class="col-md-12 text-center">
-      {include file='templates/_form-ndis.tpl'}      
-    </div>
-	</div>
-</div>
 
 {if $popular_products && $listing_flag1}
 <div id="popular">
@@ -120,7 +215,7 @@
 {else}
   {if $products}
     <div id="products">
-      <div class="container">      
+      <div class="container">
         <div class="row">
           <div class="col-sm-12 text-center">
             <h2>Select your medical ID</h2>
@@ -135,41 +230,17 @@
           </div>
           <div class="row">
           <div class="col-sm-12 text-center small">
-            *Selected products only. 
+            *Selected products only.
           </div>
           <div class="col-sm-12 text-center" id="moreprods">
             <p>Can't find a product you like? See the <a href="/products?setdc={$discount_code}" rel="nofollow" style="color:#e02445;" title="View our range">full product range here</a> or call <a href="tel:{$COMPANY.toll_free}" title="Give us a call" class="phone">{$COMPANY.toll_free}</a>.</p>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
   {/if}
 {/if}
-<div class="container">
-  <div class="row">
-  {foreach $latest_news_articles as $a}
-    <div class="col-sm-6 col-md-4">
-      <div class="newsres">
-        <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">
-          <img src="{if $a.listing_image}{$a.listing_image}{else}/images/news-default.jpg{/if}" alt="{$a.listing_name}" class="img-responsive fullwidth"> 
-        </a> 
-        <div class="newsrestext">
-          <div class="date">{$da.news_start_date|date_format:"%d %B %Y"}</div>
-          <h3>
-            {$a.listing_name}
-          </h3>
-          <div class="newstext">
-            <p>
-              {$a.listing_content1}
-            </p>
-          </div>
-          <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}" class="readart">Read article</a>
-        </div>
-      </div>
-    </div>
-  {/foreach}
-  </div>
-</div>
+
 {/block}
 
 {* Place additional javascript here so that it runs after General JS includes *}
@@ -181,11 +252,11 @@
 <script src="/includes/js/jquery.lazyload.min.js"></script>
 <script type="text/javascript">
 
-  
+
   $(document).ready(function() {
-    
+
    $('#contact_form').validate();
-  
+
    $('#phone').rules("add", {
        digits: true,
          minlength: 8
@@ -202,30 +273,30 @@
 
    $('#pmanager-email').rules("add", {
      email: true
-   });     
+   });
 
    $("select").selectBoxIt();
 
     $('input[type="radio"]').change(function(){
       UpdateMemberRadio($(this).val());
-    });               
+    });
 
     if($('#plan-manager-group').hasClass("hide")){
-      $('#plan-manager-group :input').prop('required', false);    
+      $('#plan-manager-group :input').prop('required', false);
     }
-     
+
   });
 
-  function UpdatePlanType(selectedValue){      
+  function UpdatePlanType(selectedValue){
       if(selectedValue == 'Plan Managed'){
         $('#plan-manager-group').slideDown().removeClass('hide');
         $('#plan-manager-group :input').prop('required', true);
-      } else {        
+      } else {
 
         $('#plan-manager-group').slideUp();
-        
+
         $('#plan-manager-group :input').val('');
-        $('#plan-manager-group :input').prop('required', false);        
+        $('#plan-manager-group :input').prop('required', false);
       }
   }
 
@@ -237,8 +308,27 @@
         $('#maf-no').val('');
       }
   }
-  
+
 </script>
+<script>
+  $( function() {
+    var icons = {
+      header: "glyphicon glyphicon-plus",
+      activeHeader: "glyphicon glyphicon-minus"
+    };
+    $( "#accordion" ).accordion({
+      icons: icons,
+	  heightStyle: "content",
+      collapsible: true,
+      activate: function( event, ui ) {
+        if(!$.isEmptyObject(ui.newHeader.offset()) && !isScrolledIntoView(ui.newHeader)) {
+            $('html:not(:animated), body:not(:animated)').animate({ scrollTop: ui.newHeader.offset().top }, 'slow');
+        }
+    }
+    });
+  } );
+</script>
+
 {/block}
 
 

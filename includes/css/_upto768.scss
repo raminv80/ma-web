@@ -1054,6 +1054,11 @@ tr.tabopts {
 	padding: 12px 10px;
 }
 
+#landing-newsart .newsres .newsrestext h3{min-height: 0;}
+#landing-newsart .newsres .newsrestext .newstext{min-height: 0; height: auto;}
+#landing-newsart .newsres{margin-bottom: 30px;}
+#landing-newsart .col-sm-6{clear: both; float: left; width: 100%;}
+#landing-newsart .newsres img{width: 100%;}
 }
 
 @media (max-width:480px){
