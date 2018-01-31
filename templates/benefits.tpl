@@ -65,11 +65,11 @@
 				<div class="row">
 					<div class="col-sm-4 text-center benout">
 						<img src="/images/benefit4.png" class="img-responsive" alt="" />
-						<div class="bene">Unlimited wallet and fridge cards listing your details</div>
+						<div class="bene">Membership cards listing your details</div>
 					</div>
 					<div class="col-sm-4 text-center benout">
 						<img src="/images/benefit5.png" class="img-responsive" alt="" />
-						<div class="bene">Secure online access to your health records</div>
+						<div class="bene">Secure online access to your electronic health record 24/7</div>
 					</div>
 					<div class="col-sm-4 text-center benout">
 						<img src="/images/benefit6.png" class="img-responsive" alt="" />

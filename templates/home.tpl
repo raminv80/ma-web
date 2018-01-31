@@ -2,31 +2,43 @@
 <div id="banner">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-12 text-center">
+			<div class="col-sm-12 text-left hidden-xs">
 				<h1>{$listing_title}</h1>
-				<a id="learnmorehome" href="/who-needs-membership" title="Who needs membership" class="btn btn-red">Learn More</a>
+				<a id="learnmorehome" href="/how-to-become-a-member" title="Join now" class="btn btn-red">Join now</a>
 			</div>
 		</div>
 	</div>
 </div>
-
+<div id="offer" class="home visible-xs">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 text-center">
+  			<h1>
+				{$listing_title}</h1>
+				<a id="learnmorehome" href="/how-to-become-a-member" title="Join now" class="btn btn-red">Join now</a>
+			</div>
+		</div>
+	</div>
+</div>
 <div id="redbar">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 col-md-6">
-				Our members wear the genuine MedicAlert medical ID
+				Range of offers and benefit programs available
 			</div>
 			<div class="col-sm-3 col-md-3 col-sm-offset-0 col-md-offset-0 hidden-xs hidden-sm">
-				<img src="/images/homeredbracelet.png" alt="Bracelet" class="img-responsive" />
+				<!--<img src="/images/homeredbracelet.png" alt="Bracelet" class="img-responsive" />-->
 			</div>
 			<div class="col-sm-12 col-md-2">
-				<a href="/products" id="shoptherange" class="btn btn-transp">Shop the range</a>
+				<a href="/offers" id="shoptherange" class="btn btn-transp" title="View our offers">View our offers</a>
 			</div>
 		</div>
 	</div>
+	<!--
 	<div class="visible-xs visible-sm text-center">
 		<img src="/images/mob-home-bracelet.png" alt="Bracelet" class="img-responsive" />
 	</div>
+	-->
 </div>
 
 <div id="whiteblock1">
@@ -65,11 +77,11 @@
 			</div>
 			<div class="col-sm-4 text-center benefits hidden-xs">
 				<img src="/images/benefit4.png" alt="Unlimited wallet and fridge cards listing your details" class="img-responsive" />
-				<p>Unlimited wallet and fridge cards listing your details</p>
+				<p>Membership cards listing your details</p>
 			</div>
 			<div class="col-sm-4 text-center benefits hidden-xs">
 				<img src="/images/benefit5.png" alt="Secure online access to your health records" class="img-responsive" />
-				<p>Secure online access to your health records</p>
+				<p>Secure online access to your electronic health record 24/7</p>
 			</div>
 			<div class="col-sm-4 text-center benefits hidden-xs">
 				<img src="/images/benefit6.png" alt="Support from our Membership Services team" class="img-responsive" />

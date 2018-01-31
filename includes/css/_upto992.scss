@@ -155,10 +155,16 @@
 #banner{
 	height: 350px;
 	padding: 90px 0;
+  background-position: -150px 0;
 
 	h1{
-		font-size: 35px;
-		line-height: 46px;
+    font-size: 30px;
+    line-height: 40px;
+
+    span{
+    font-size: 50px;
+    line-height: 60px;
+    }
 	}
 }
 

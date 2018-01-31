@@ -211,20 +211,25 @@ select.form-control {
 }
 
 #banner{
-	background:url('/images/homebanner.jpg') no-repeat;
+	background:url('/images/homebanner-2018.jpg') no-repeat;
 	height: 450px;
 	background-size: cover;
 	padding: 110px 0;
 
 	h1{
     font-family: $calibri;
-    font-size: 48px;
-    line-height: 76px;
-    font-weight: 300;
-    color: $white;
+    font-size: 37px;
+    line-height: 46px;
+    font-weight: 600;
+    margin-top: 0;
+
+    span{
+    color: $red;
+    font-size: 60px;
+    line-height: 70px;
+    font-weight: 700;
+    }
 	}
-
-
 
 	#learnmorehome, #newfhome{
 		margin: 0 10px;
