@@ -523,12 +523,10 @@
     <url>news-and-resources</url>
     <root_parent_id>0</root_parent_id>
     <type>2</type><!-- articles -->
-    <type>3</type><!-- newsletter -->
     <type>5</type><!-- videos -->
     <file>ListClass</file>
-    <orderby>listing_schedule_start DESC</orderby>
+    <orderby>news_start_date DESC</orderby>
     <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL)]]></where>
-    <limit level="1">20</limit>
     <table>
       <name>tbl_listing</name>
       <field>listing_url</field>
@@ -738,6 +736,11 @@
   <process>
     <url>process/resource-contact</url>
     <file>includes/processes/processes-resource-pack.php</file>
+    <return_url></return_url>
+  </process>
+  <process>
+    <url>process/subscribe</url>
+    <file>includes/processes/processes-subscribe.php</file>
     <return_url></return_url>
   </process>
   <process>

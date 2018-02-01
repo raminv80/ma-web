@@ -59,15 +59,15 @@
 
 <div id="stay-loop" class="emergency-whitebg">
   <div class="container">
-     <div class="row">
+     <div class="row subscribe_form_wrapper">
         <div class="col-sm-12 text-center">
 	      <h3>Subscribe to receive MedicAlert and industry updates</h3>
         </div>
         <div class="col-md-offset-1 col-md-10 text-center" id="stayloop">
-    	 	<form id="contact_form1" accept-charset="UTF-8" method="post" action="/process/resource-contact" novalidate="novalidate">
+    	 	<form id="contact_form1" accept-charset="UTF-8" method="post" action="" novalidate="novalidate">
         	    <input type="hidden" name="formToken" id="formToken" value="{$token}" />
-        	  	<input type="hidden" value="Stay in the loop" name="form_name" id="form_name" />
-    			<input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
+        	  	<input type="hidden" value="Newsletter subscription - emergency personal" name="form_name" id="form_name" />
+    			    <input type="hidden" name="timestamp" id="timestamp" value="{$timestamp}" />
     	  		<div class="row">
     				<div class="col-sm-6 form-group">
     				  <label class="visible-ie-only" for="loop-fname">First name<span>*</span>:</label>
@@ -94,7 +94,15 @@
 						<!--<div>By providing your email address, you consent to receive promotional and health related material.</div>-->
     				</div>
     			  </div>
-    			<div class="row error-msg" id="form-error1" {if !$error}style="display:none"{/if}>{$error}</div>
+    			<div class="row">
+            <div class="col-sm-12 error-alert" style="display: none;">
+              <div class="alert alert-danger fade in ">
+                <button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.error-alert').fadeOut('slow');">&times;</button>
+                <strong></strong>
+              </div>
+            </div>
+          </div>
+
     			<div class="row">
     				<div class="col-sm-12">
     					<input type="button" value="Register now" onclick="$('#contact_form1').submit();" class="btn-red btn" id="fbsub1">
@@ -105,6 +113,14 @@
     	 	</form>
         </div>
      </div>
+     <div class="row">
+        <div class="col-sm-12 success-alert" id="subscribe-success-message" style="display: none;">
+          <div class="alert alert-success fade in text-center">
+            <button class="close" aria-hidden="true" type="button" onclick="$(this).closest('.success-alert').fadeOut('slow');">&times;</button>
+            <strong></strong>
+          </div>
+        </div>
+      </div>
   </div>
 </div>
 
@@ -308,11 +324,13 @@
     			</div>
 
           <div class="row">
-    				<div class="col-sm-12 form-group text-left">
-						<input type="checkbox" {if !$post || $post.sign_up}checked="checked"{/if} name="sign_up" id="signupmail" />
-						<label class="visible-ie-only" for="signupmail">Sign up to MedicAlert email newsletter</label>
-						<div class="error-msg help-block"></div>
-    				</div>
+            <div class="col-sm-12 form-group text-left">
+              <label class="visible-ie-only" for="user_want_promo">
+              <input type="checkbox" {if !$post || $post.user_want_promo}checked="checked" {/if}name="user_want_promo" id="user_want_promo" />
+             Please keep me up to date with the latest information from MedicAlert.</label> <span class="hidden-xs"><a href="privacy-policy" target="_blank">Privacy Policy</a></span>
+              <div class="error-msg help-block"></div>
+              <span class="text-center visible-xs"><a href="privacy-policy" target="_blank">Privacy Policy</a></span>
+            </div>
           </div>
 
     			<div style="height:0;overflow:hidden;">
@@ -346,6 +364,12 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
+    $('#contact_form1').validate({
+      submitHandler: function(form) {
+        SubmitSubscriptionForm($(form).attr('id'));
+      }
+    });
+    
 	 	$('#contact_form').validate();
 
 	 	$('#postcode').rules("add", {
@@ -366,6 +390,40 @@ $(document).ready(function(){
 		});
 
 });
+
+function SubmitSubscriptionForm(FORM) {
+    $('body').css('cursor', 'wait');
+    $('#' + FORM).find('.error-alert').hide();
+    var datastring = $('#' + FORM).serialize();
+    $.ajax({
+      type: "POST",
+      url: "/process/subscribe",
+      cache: false,
+      data: datastring,
+      dataType: "json",
+      success: function(obj) {
+        try{
+          if(obj.success){
+            $('#subscribe-success-message').find('strong').html(obj.success);
+            $('#subscribe-success-message').fadeIn('slow');
+            $('.subscribe_form_wrapper').hide();
+          }else if(obj.error){
+            $('#' + FORM).find('.error-alert').find('strong').html(obj.error);
+            $('#' + FORM).find('.error-alert').fadeIn('slow');
+          }
+        }catch(err){
+          console.log('TRY-CATCH error');
+        }
+        $('body').css('cursor', 'default');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        $('#' + FORM).find('.error-alert').find('strong').html('Undefined error.<br>Please refresh the page and try again or <a href="/contact-us">contact us</a>.');
+        $('#' + FORM).find('.error-alert').fadeIn('slow');
+        $('body').css('cursor', 'default');
+        console.log('AJAX error:' + errorThrown);
+      }
+    });
+  }
 
 </script>
 {/block}

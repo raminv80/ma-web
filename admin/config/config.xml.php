@@ -358,34 +358,6 @@
     
     <section level="1">
       <showlist>FALSE</showlist>
-      <url>newsletter</url>
-      <title>Newsletter</title>
-      <type>LISTING</type>
-      <type_id>3</type_id>
-      <root_parent_id>17</root_parent_id>
-      <extends>
-        <table>tbl_news</table>
-        <linkfield>listing_id</linkfield>
-        <field>news_listing_id</field>
-      </extends>
-      <associated>
-        <name>tags</name>
-        <table>tbl_tag</table>
-        <linkfield>listing_id</linkfield>
-        <field>tag_object_id</field>
-        <where>tag_object_table = 'tbl_listing'</where> 
-      </associated>
-      <log>
-        <table>tbl_listing</table>
-        <id>listing_id</id>
-        <field>listing_object_id</field>
-      </log>
-      <list_template>list.tpl</list_template>
-      <edit_template>edit_newsletter.tpl</edit_template>
-    </section> 
-    
-    <section level="1">
-      <showlist>FALSE</showlist>
       <url>videos</url>
       <title>Videos</title>
       <type>LISTING</type>

@@ -41,7 +41,7 @@
 				</div>
 			</h3>
 			<div>
-        <p>The NDIS is progressively being rolled out throughout Austrliaa nd will provide complete national coverage by the end of 20189. Everything you need to know about the NDIS, including eligibility, how to apply and what supports are funded are available at <a href="http://www.ndis.gov.au" target="_blank">www.ndis.gov.au</a></p>
+        <p>The NDIS has been rolled out throughout Australia and will provide complete national coverage by the end of 2018. Everything you need to know about the NDIS, including eligibility, how to apply and what supports are funded are available at <a href="http://www.ndis.gov.au" target="_blank">www.ndis.gov.au</a></p>
 			</div>
 			<h3>
 				<div class="head-text">
@@ -49,8 +49,8 @@
 				</div>
 			</h3>
 			<div>
-        <p>If you have communication issues due to your disability, such as autism, being non-verbal or many other conditions, your membership and ID should be supplied through your NDIS plan.</p>
-        <p>Please note – MedicAlert Foundation is currently registered in the Capital Support (AssistiveTechnology) stream for personal care &amp; safety and community &amp; information equipment.</p>
+        <p>If you have communication issues due to your disability, such as autism, being non-verbal or other health conditions, your membership and ID should be supplied through your NDIS plan.</p>
+        <p>Please note - MedicAlert Foundation is currently registered in the Capital Support (Assistive Technology) stream for personal care, safety and community, and information equipment.</p>
 			</div>
 			<h3>
 				<div class="head-text">
@@ -74,7 +74,7 @@
   			<ol>
     			<li>Contact MedicAlert for assistance – We’re here to help you understand how we can support you.</li>
           <li>Your Planning meeting – Ensure that you reference to your planner how MedicAlert can support you in reaching your goals. Ensure you have appropriate funding in the Capital Support (Assistive Technology) stream</li>
-          <li>View our <a href="/products/all">range of products</a> and select your ID.</li>
+          <li>View our <a href="/products/all-products">range of products</a> and select your ID.</li>
           <li>If you’re wanting to claim the service and product:<br>
           Ensure that MedicAlert supports your NDIS goals. Depending on what type of plan you have there are a few different processes for claiming your service and product.<br>
           Plan Managed – Get a quote from MedicAlert, check with your Plan Manager if you need a specialist (such as an Occupational Therapist) recommendation. Once this is complete, select your ID, provide us with your NDIS number and order online. We’ll then send you a tax invoice to have your funds reimbursed by your Plan Manager.<br>

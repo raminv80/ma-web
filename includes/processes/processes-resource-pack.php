@@ -7,7 +7,11 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
     /**
      * ************ SET CAMPAIGN MONITOR LIST ID WHEN NEEDED ********
      */
-    $LIST_ID = '0119c2290ed3c55b2efebe830398a56a';
+    if($_POST['form_name'] == 'Order resource pack'){
+      $LIST_ID = '421adf5731c3286e3968c2dc28b39463';
+    } elseif($_POST['form_name'] == 'Refer your patient'){
+      $LIST_ID = 'b9d5f5c42a8ece869c63b64124680a53';
+    }
     /**
      * ************ **************************************** ********
      */
@@ -65,9 +69,29 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
       $data = array_merge($_POST, array(
           'user_id' => $_SESSION['user']['public']['id']
       ));
-      $promo = 0;
+      
       $data['user_want_promo'] = empty($_POST['user_want_promo'])? 0 : 1;
-      $result = SetMemberCampaignMonitor($LIST_ID, $data, $data['user_want_promo']);
+      
+      if($data['user_want_promo']){
+        //set data to be posted to campaign monitor
+        $campaignMonitorData = array(
+            'email' => $_POST['email'],
+            'fname' => $_POST['fname'],
+            'lname' => $_POST['lname']
+        );
+        
+        //set the custom fields to be posted to campaign monitor
+        $customFields = array(
+            'Position' => $_POST['jobtitle'],
+            'Firstname1' => $_POST['fname'],
+            'Lastname1' => $_POST['lname']
+        );
+        
+        $campaignMonitorData['customFields'] = $customFields;
+        
+        //call to function to add member to campaign monitor
+        $result = SetMemberCampaignMonitor($LIST_ID, $campaignMonitorData);
+      }
        
     // SAVE IN DATABASE
     if(empty($error)){
@@ -154,35 +178,32 @@ header("Location: {$_SERVER['HTTP_REFERER']}#form-error");
 die();
 
 
-function SetMemberCampaignMonitor($listId, $data, $flag){
+function SetMemberCampaignMonitor($listId, $data, $flag = 1){
   global $CONFIG;
-
+  
   if(empty($data) || empty($listId)){
     return false;
   }
-
+  
   $customFields = array();
-  $skipArr = array(
-      'email',
-      'gname',
-      'surname'
-  );
-  foreach($data as $k => $v){
-    if(!in_array($k, $skipArr)){
-      $customFields[] = array(
-          'Key' => $k,
-          'Value' => $v
-      );
+  if(key_exists('customFields', $data)){
+    foreach($data['customFields'] as $k => $v){
+      if(!in_array($k, $skipArr)){
+        $customFields[] = array(
+            'Key' => $k,
+            'Value' => $v
+        );
+      }
     }
+    unset($data['customFields']);
   }
-
+  
   try{
     require_once 'includes/createsend/csrest_subscribers.php';
     $wrap = new CS_REST_Subscribers($listId, '060d24d9003a77b06b95e7c47691975b');
-    //die(var_dump($data));
     if(empty($flag)){
       $cs_result = $wrap->unsubscribe($data['email']);
-    } else{      
+    } else{
       $cs_result = $wrap->add(array(
           'EmailAddress' => $data['email'],
           'Name' => $data['fname'] . ' ' . $data['lname'],
@@ -190,7 +211,7 @@ function SetMemberCampaignMonitor($listId, $data, $flag){
           "Resubscribe" => "true"
       ));
     }
-//    die(var_dump($cs_result));
+    //die(var_dump($cs_result));
     if($cs_result->was_successful()){
       return true;
     }
@@ -198,7 +219,7 @@ function SetMemberCampaignMonitor($listId, $data, $flag){
   catch(Exception $e){
     $COMP = json_encode($CONFIG->company);
     $body = "Error: {$e}<br> Session: " . print_r($_SESSION, true);
-    $to = 'shaun@them.com.au';
+    $to = 'bikram@them.com.au';
     $from = (string)$CONFIG->company->name;
     $fromEmail = (string)$CONFIG->company->email_from;
     $subject = "{$from} | Campaign monitor error";
@@ -206,3 +227,6 @@ function SetMemberCampaignMonitor($listId, $data, $flag){
   }
   return false;
 }
+
+
+

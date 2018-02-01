@@ -122,15 +122,15 @@
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content1">Video link</label>
+              <label class="col-sm-3 control-label" for="id_listing_content2">Video link</label>
               <div class="col-sm-5">
-                <input class="form-control" type="text" value="{$fields.listing_content1}" name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1">
+                <input class="form-control" type="text" value="{$fields.listing_content2}" name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2">
               </div>
             </div>
             <div class="row form-group">
-              <label class="col-sm-3 control-label" for="id_listing_content2">Long description</label>
-              <div class="col-sm-6">
-                <textarea name="field[1][tbl_listing][{$cnt}][listing_content2]" id="id_listing_content2" class="tinymce">{$fields.listing_content2}</textarea>
+              <label class="col-sm-3 control-label" for="id_listing_content1">Short description</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="form-control">{$fields.listing_content1}</textarea>
               </div>
             </div>
           </div>
