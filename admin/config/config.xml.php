@@ -368,12 +368,28 @@
         <linkfield>listing_id</linkfield>
         <field>news_listing_id</field>
       </extends>
+      <options>
+        <field>
+          <name>news_categories</name>
+          <table>tbl_news_category</table>
+          <id>news_category_id</id>
+          <reference>news_category_name</reference>
+          <where>news_category_deleted is NULL</where>
+          <orderby>news_category_name</orderby>
+        </field>
+      </options>
       <associated>
         <name>tags</name>
         <table>tbl_tag</table>
         <linkfield>listing_id</linkfield>
         <field>tag_object_id</field>
         <where>tag_object_table = 'tbl_listing'</where> 
+      </associated>
+      <associated>
+        <name>linkedcats</name>
+        <table>tbl_newscatlink</table>
+        <linkfield>listing_id</linkfield>
+        <field>newscatlink_listing_id</field>
       </associated>
       <log>
         <table>tbl_listing</table>

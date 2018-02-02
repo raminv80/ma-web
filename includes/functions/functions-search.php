@@ -143,14 +143,12 @@ function SearchProduct($search){
 
   $sql= "SELECT tbl_product.*, product_url AS 'cache_url',
 		MATCH(product_name,
-		product_description,
 		product_seo_title,
 		product_meta_description,
 		product_meta_words) AGAINST (:search) AS Relevance
 		FROM tbl_product
 		WHERE product_deleted IS NULL AND product_published = 1 AND product_type_id != 2 AND product_type_id != 3 AND
 		MATCH(product_name,
-		product_description,
 		product_seo_title,
 		product_meta_description,
 		product_meta_words) AGAINST(:search IN
@@ -177,8 +175,7 @@ function SearchProduct($search){
 		FROM tbl_product 
 		WHERE product_deleted IS NULL AND product_published = 1 AND product_type_id != 2 AND product_type_id != 3 AND
 		(product_name LIKE :search OR
-	  product_description LIKE :search OR
-    product_seo_title LIKE :search OR
+	product_seo_title LIKE :search OR
     product_meta_description LIKE :search OR
     product_meta_words LIKE :search )
 	    ORDER BY product_order";

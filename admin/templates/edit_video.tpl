@@ -47,6 +47,7 @@
       </div>
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
+        <li><a href="#categories" data-toggle="tab">Categories</a></li>
         <!-- <li><a href="#images" data-toggle="tab">Images</a></li> -->
         <li><a href="#share" data-toggle="tab">Social Sharing</a></li>
         <!-- <li><a href="#tags" data-toggle="tab">Tags</a></li> -->
@@ -133,6 +134,50 @@
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content1]" id="id_listing_content1" class="form-control">{$fields.listing_content1}</textarea>
               </div>
             </div>
+          </div>
+        </div>
+        <!--===+++===+++===+++===+++===+++ CATEGORIES TAB +++===+++===+++===+++===+++====-->
+        <div class="tab-pane" id="categories">
+          <div class="form" id="categories-wrapper">
+            <input type="hidden" value="listing_id" name="default[newscatlink_object_id]" />
+            {assign var='newscatlinkno' value=0}
+            {foreach $fields.options.news_categories as $opt}{assign var='newscatlinkno' value=$newscatlinkno+1}
+              {assign var='exists' value=0}
+              {foreach $fields.linkedcats as $l}
+                {if $l.newscatlink_cat_id eq $opt.id}
+                  {if $exists eq 1}{assign var='newscatlinkno' value=$newscatlinkno+1}<input type="hidden" value="newscatlink_id" name="field[10][tbl_newscatlink][{$newscatlinkno}][id]" id="id_{$newscatlinkno}"/><input type="hidden" value="{$l.newscatlink_id}" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_id]" class="key" ><input type="hidden" value="{$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"}" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_deleted]" />{continue}{/if}
+                  {assign var='exists' value=1}
+                  <div class="form-group selected">
+                    <label class="col-sm-5 control-label" for="news_category_{$cnt}">{$opt.value}</label>
+                    <div class="col-sm-5">
+                      <input id="news_category_id_{$cnt}" class="chckbx active" type="checkbox" checked="checked" onclick="$(this).closest('.form-group').toggleClass('selected');$(this).toggleClass('active');if($(this).is(':checked')){ $(this).parent().find('input.delete').prop('disabled','disabled');$(this).parent().find('input.publish').prop('disabled',false); }else{ $(this).parent().find('input.publish').prop('disabled','disabled'); $(this).parent().find('input.delete').prop('disabled',false);  }" />
+                      <input type="hidden" value="newscatlink_id" name="field[10][tbl_newscatlink][{$newscatlinkno}][id]" id="id_{$newscatlinkno}" class="publish delete"/>
+                      <input type="hidden" value="{$l.newscatlink_id}" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_id]" class="key publish delete">
+                      <input type="hidden" value="{$opt.id}" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_cat_id]" class="publish"/>
+                      <input type="hidden" value="{$fields.listing_id}" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_listing_id]" class="publish"/>
+                      <!-- Delete object fields -->
+                      <input type="hidden" value="{$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"}" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_deleted]" disabled="disabled" class="delete"/>
+                      <input type="hidden" value="" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_deleted]" disabled="disabled" class="publish"/>
+                    </div>
+                  </div>
+                {/if}
+              {/foreach}
+              {if $exists eq 0}
+                <div class="form-group">
+                    <label class="col-sm-5 control-label" for="news_category_{$cnt}">{$opt.value}</label>
+                    <div class="col-sm-5">
+                      <input id="news_category_id_{$cnt}" class="chckbx" type="checkbox" onclick="$(this).closest('.form-group').toggleClass('selected');$(this).toggleClass('active');if($(this).is(':checked')){ $(this).parent().find('input.delete').prop('disabled','disabled');$(this).parent().find('input.publish').prop('disabled',false); }else{ $(this).parent().find('input.publish').prop('disabled','disabled'); if($(this).parent().find('input.key').val() !== ''){ $(this).parent().find('input.delete').prop('disabled',false); }}" />
+                      <input type="hidden" value="newscatlink_id" name="field[10][tbl_newscatlink][{$newscatlinkno}][id]" id="id_{$newscatlinkno}" disabled="disabled"class="publish delete"/>
+                      <input type="hidden" value="" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_id]" disabled="disabled" class="key publish delete"/>
+                      <input type="hidden" value="{$opt.id}" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_cat_id]"  disabled="disabled" class="publish"/>
+                      <input type="hidden" value="{$fields.listing_id}" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_listing_id]" disabled="disabled" class="publish"/>
+                      <!-- Delete object fields -->
+                      <input type="hidden" value="{$smarty.now|date_format:"%Y-%m-%d %H:%M:%S"}" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_deleted]" disabled="disabled" class="delete"/>
+                      <input type="hidden" value="" name="field[10][tbl_newscatlink][{$newscatlinkno}][newscatlink_deleted]" disabled="disabled" class="publish"/>
+                    </div>
+                  </div>
+              {/if}
+            {/foreach}
           </div>
         </div>
         <!--===+++===+++===+++===+++===+++ IMAGES TAB +++===+++===+++===+++===+++====-->
