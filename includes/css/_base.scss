@@ -578,20 +578,28 @@ select.form-control {
 	}
 }
 
+#newscont1{
+#filter{
+  label{
+    display:block;
+  }
+
+  button{
+    margin-top: 32px;
+    padding: 10px 40px;
+  }
+}
 #newscont{
 	padding-bottom: 50px;
 
-	#newscontleft{
-		color: $dark-grey;
-
 		.newsout{
-			margin-bottom: 30px;
-
+  		.newsres{
+       margin-bottom: 30px;
 			.newsrestext{
 				font-size: 18px;
 
 				h3{
-					font-size: 24px;
+					font-size: 22px;
 					font-weight: bold;
 					color: $headline-grey;
 					margin-top: 0;
@@ -606,9 +614,8 @@ select.form-control {
 					color: $red;
 				}
 			}
-
+      }
 		}
-	}
 
 	h3{
 		font-size: 24px;
@@ -617,6 +624,7 @@ select.form-control {
 		color: $headline-grey;
 		margin: 0 0 20px 0;
 	}
+}
 }
 
 #news{
@@ -4215,9 +4223,16 @@ select option:disabled {
     padding-bottom: 0;
   }
 
+  .newsout{
+    &:nth-child(3n+1){
+      clear: both;
+      float: left;
+    }
+  }
+
   .newsres{
     img{
-      border: 1px solid $medium-grey;
+      border: 2px solid $medium-grey;
     }
 
     .newsrestext{
@@ -4226,9 +4241,9 @@ select option:disabled {
       padding: 10px 10px;
       min-height: 100px;
       width: 100%;
-      border-left: 1px solid $medium-grey;
-      border-right: 1px solid $medium-grey;
-      border-bottom: 1px solid $medium-grey;
+      border-left: 2px solid $medium-grey;
+      border-right: 2px solid $medium-grey;
+      border-bottom: 2px solid $medium-grey;
 
       .date{
         font-size: 15px;

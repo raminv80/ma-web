@@ -530,6 +530,16 @@
     <table>
       <name>tbl_listing</name>
       <field>listing_url</field>
+      <options>
+        <field>
+          <name>news_categories</name>
+          <table>tbl_news_category</table>
+          <id>news_category_id</id>
+          <reference>news_category_name</reference>
+          <where>news_category_deleted is NULL</where>
+          <orderby>news_category_name</orderby>
+        </field>
+      </options>
       <extends>
         <table>tbl_news</table>
         <linkfield>listing_id</linkfield>
@@ -546,6 +556,12 @@
         <table>tbl_tag</table>
         <linkfield>listing_id</linkfield>
         <field>tag_object_id</field>
+      </associated>
+      <associated listing="true">
+        <name>linkedcats</name>
+        <table>tbl_newscatlink</table>
+        <linkfield>listing_id</linkfield>
+        <field>newscatlink_listing_id</field>
       </associated>
       <template typeid="2">news-article.tpl</template>
       <template typeid="3">newsletter.tpl</template>
@@ -703,7 +719,7 @@
     </process>
   </product_page>
 
-  
+
   <global_process_pre>
     <file>includes/processes/global-dynamic-variables.php</file>
   </global_process_pre>
