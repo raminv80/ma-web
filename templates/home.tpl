@@ -77,7 +77,7 @@
 			</div>
 			<div class="col-sm-4 text-center benefits hidden-xs">
 				<img src="/images/benefit4.png" alt="Unlimited wallet and fridge cards listing your details" class="img-responsive" />
-				<p>Membership cards listing your details</p>
+				<p>Unlimited membership cards listing your details</p>
 			</div>
 			<div class="col-sm-4 text-center benefits hidden-xs">
 				<img src="/images/benefit5.png" alt="Secure online access to your health records" class="img-responsive" />

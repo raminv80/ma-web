@@ -503,6 +503,9 @@
 	display: none;
 }
 
+#pagehead #refer-list{list-style-position: inside !important;}
+#pagehead #refer-list li{width: 100%;text-align: center; float: none;}
+
 #benefits #benefit4 table tr.tabopts td img {
     display: inline-block;
     margin: 5px 0;

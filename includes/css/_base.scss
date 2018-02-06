@@ -211,7 +211,7 @@ select.form-control {
 }
 
 #banner{
-	background:url('/images/homebanner-2018.jpg') no-repeat;
+	background:url('/images/homebanner-feb2018.jpg') no-repeat;
 	height: 450px;
 	background-size: cover;
 	padding: 110px 0;
@@ -535,6 +535,16 @@ select.form-control {
 
 	hr{
 		margin: 30px 0;
+	}
+
+	#refer-list{
+  	list-style-position: outside !important;
+  	li{
+    width: 50%;
+    text-align: left;
+    float: left;
+    padding-left: 0px;
+  	}
 	}
 
 	#backt{
@@ -3419,6 +3429,14 @@ select.form-control {
 #seconds-count{
 	background: $light-grey;
 	padding: 50px 0;
+
+	&.emergency-whitebg{
+  	background: $white;
+
+  	img{
+    	margin-top: 0;
+  	}
+	}
 
 	h3{
 		font-size: 24px;
