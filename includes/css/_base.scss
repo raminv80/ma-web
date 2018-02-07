@@ -637,6 +637,47 @@ select.form-control {
 }
 }
 
+#newscont{
+	padding-bottom: 50px;
+
+	#newscontleft{
+		color: $dark-grey;
+
+		.newsout{
+			margin-bottom: 30px;
+
+			.newsrestext{
+				font-size: 18px;
+
+				h3{
+					font-size: 24px;
+					font-weight: bold;
+					color: $headline-grey;
+					margin-top: 0;
+					margin-bottom: 5px;
+				}
+
+				.newsdate{
+					margin-bottom: 5px;
+				}
+
+				a{
+					color: $red;
+				}
+			}
+
+		}
+	}
+
+	h3{
+		font-size: 24px;
+		line-height: 28px;
+		font-weight: bold;
+		color: $headline-grey;
+		margin: 0 0 20px 0;
+	}
+}
+
 #news{
 	padding-bottom: 50px;
 
