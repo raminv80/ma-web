@@ -331,7 +331,8 @@ class medicAlertApi {
 	      'membershipNumber' => $this->_escapeNewLines($memberPaymentRecord['membershipNumber']),
 	      'membershipYear' => $this->_escapeNewLines($memberPaymentRecord['membershipYear']),
 	      'memberPaymentAmount' => $this->_escapeNewLines($memberPaymentRecord['memberPaymentAmount']),
-	      'memberPaymentReference' => $this->_escapeNewLines($memberPaymentRecord['memberPaymentReference'])
+	      'memberPaymentReference' => $this->_escapeNewLines($memberPaymentRecord['memberPaymentReference']),
+	      'memberPaymentCardType' => $this->_escapeNewLines($memberPaymentRecord['memberPaymentCardType'])
 	  );
 	  
 	  try{

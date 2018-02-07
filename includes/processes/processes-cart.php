@@ -762,6 +762,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $userPaymentRecord['memberPaymentAmount'] = $paymentRecord['payment_charged_amount'];
             $userPaymentRecord['membershipNumber'] = $_SESSION['user']['public']['id'];
             $userPaymentRecord['memberPaymentReference'] = $paymentRecord['payment_transaction_no'];
+            $userPaymentRecord['memberPaymentCardType'] = $paymentRecord['payment_response_cardscheme'];
+            
             $admin_user_obj = new UserClass();
             if($resp = $admin_user_obj->processPayment($userPaymentRecord)){
               $resp = json_decode($resp);
@@ -1443,6 +1445,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $userPaymentRecord['memberPaymentAmount'] = $paymentRecord['payment_charged_amount'];
             $userPaymentRecord['membershipNumber'] = $_SESSION['user']['public']['id'];
             $userPaymentRecord['memberPaymentReference'] = $paymentRecord['payment_transaction_no'];
+            $userPaymentRecord['memberPaymentCardType'] = $paymentRecord['payment_response_cardscheme'];
             
             if($resp = $user_obj->processPayment($userPaymentRecord)){
               $resp = json_decode($resp);
