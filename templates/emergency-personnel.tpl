@@ -128,8 +128,8 @@
   <div class="container">
     <div class="row">
 	    <div class="col-sm-12 text-center">
-          <h3>Know what to do in medical emergency</h3>
-          <p>In the first instance of a medical emergency, you should follow these four simple steps.</p>
+          <h3>Know what to do in an emergency</h3>
+          <p>In the first instance of an emergency, you should follow these four simple steps.</p>
         </div>
         <div class="col-sm-3 text-center step">
 	      <div class="col-xs-3 col-sm-12">
@@ -350,7 +350,19 @@
    </div>
 </div>
 
-
+<div id="seconds-count" class="emergency-whitebg">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-10 col-sm-offset-1 text-center"><h3>View our extensive range of MedicAlert IDs</h3></div>
+      <div class="col-sm-10 col-sm-offset-1 text-center">
+        <img src="/images/dashboard-prods.png" alt="Products" class="img-responsive" />
+      </div>
+      <div class="col-sm-10 col-sm-offset-1 text-center">
+        <a href="/products" title="Click to view our product range" class="btn btn-red">View more</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div id="orangebox" class="visible-xs">
@@ -369,7 +381,7 @@ $(document).ready(function(){
         SubmitSubscriptionForm($(form).attr('id'));
       }
     });
-    
+
 	 	$('#contact_form').validate();
 
 	 	$('#postcode').rules("add", {

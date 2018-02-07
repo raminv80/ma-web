@@ -65,7 +65,7 @@
 				<div class="row">
 					<div class="col-sm-4 text-center benout">
 						<img src="/images/benefit4.png" class="img-responsive" alt="" />
-						<div class="bene">Membership cards listing your details</div>
+						<div class="bene">Unlimited membership cards listing your details</div>
 					</div>
 					<div class="col-sm-4 text-center benout">
 						<img src="/images/benefit5.png" class="img-responsive" alt="" />
