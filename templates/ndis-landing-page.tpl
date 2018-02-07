@@ -98,16 +98,17 @@
 
 <div class="container" id="landing-newsart">
   <div class="row">
+  {if $latest_news_articles}
   {foreach $latest_news_articles as $a}
     <div class="col-sm-6 col-md-4">
       <div class="newsres">
         <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">
-          <img src="{if $a.listing_image}{$a.listing_image}{else}/images/news-default.jpg{/if}" alt="{$a.listing_name}" class="img-responsive fullwidth">
+          <img src="{if $a.listing_image}{$a.listing_image}{else}/images/medic-alert-logo.jpg{/if}" alt="{$a.listing_name}" class="img-responsive fullwidth">
         </a>
         <div class="newsrestext">
-          <div class="date">{$da.news_start_date|date_format:"%d %B %Y"}</div>
+          <div class="date">{$a.news_start_date|date_format:"%d %B %Y"}</div>
           <h3>
-            {$a.listing_name}
+            <a href="{if $a.parent_listing_url}/{$a.parent_listing_url}{/if}/{$a.listing_url}">{$a.listing_name}</a>
           </h3>
           <div class="newstext">
             <p>
@@ -119,6 +120,7 @@
       </div>
     </div>
   {/foreach}
+  {/if}
   </div>
 </div>
 <div class="emergency-grey" id="contact">
