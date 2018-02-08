@@ -41,7 +41,7 @@
 				</div>
 			</h3>
 			<div>
-        <p>The NDIS has been rolled out throughout Australia and will provide complete national coverage by the end of 2018. Everything you need to know about the NDIS, including eligibility, how to apply and what supports are funded are available at <a href="http://www.ndis.gov.au" target="_blank">www.ndis.gov.au</a></p>
+        <p>The NDIS is progressively being rolled out throughout Australia and will provide complete national coverage by the end of 2018. Everything you need to know about the NDIS, including eligibility, how to apply and what supports are funded are available at <a href="http://www.ndis.gov.au" target="_blank">www.ndis.gov.au</a>.</p>
 			</div>
 			<h3>
 				<div class="head-text">
@@ -49,8 +49,8 @@
 				</div>
 			</h3>
 			<div>
-        <p>If you have communication issues due to your disability, such as autism, being non-verbal or other health conditions, your membership and ID should be supplied through your NDIS plan.</p>
-        <p>Please note - MedicAlert Foundation is currently registered in the Capital Support (Assistive Technology) stream for personal care, safety and community, and information equipment.</p>
+        <p>If you have communication issues due to your disability, such as autism, being non-verbal or other health conditions, your membership and ID may be supplied through your NDIS plan.</p>
+        <p>Please note - MedicAlert Foundation is currently registered in the Capital Support (Assistive Technology) stream for personal care and safety, and communication and information equipment.</p>
 			</div>
 			<h3>
 				<div class="head-text">
@@ -60,9 +60,9 @@
 			<div>
   			<ul>
           <li>A personalised MedicAlert ID is a reasonable and necessary support that helps to protect you and communicate vital information on your behalf.</li>
-          <li>Membership provides out of home support by keeping you safe and enabling positive engagement and inclusion through support of your personal goals, aspirations and activities within the community.</li>
+          <li>Membership provides out of home support by keeping you safe and enabling positive engagement and inclusion through support of your personal goals, aspirations and activities within the community. Such as the confidence and independence to attend a therapy activity.</li>
           <li>Your ID will protect you during daily personal activities and provide peace of mind knowing that special needs can be identified and communicated quickly, assisting in greater social participation, independence, and health and well-being.</li>
-          <li>Access to our 24/7 emergency response service ensures the safe return of your loved ones if they abscond or wander. This includes a personal and secure electronic health record that contains information about any health, medical or personal conditions.</li>
+          <li>Access to our 24/7 Emergency Response Service ensures the safe return of your loved ones if they abscond or wander. This includes a personal and secure electronic health record that contains information about any health, medical or personal conditions. Providing your loved ones or carer with greater peace of mind to allow you more independence, such as attending a friend's birthday party.</li>
   			</ul>
 			</div>
 			<h3>
@@ -73,13 +73,13 @@
 			<div>
   			<ol>
     			<li>Contact MedicAlert for assistance – We’re here to help you understand how we can support you.</li>
-          <li>Your Planning meeting – Ensure that you reference to your planner how MedicAlert can support you in reaching your goals. Ensure you have appropriate funding in the Capital Support (Assistive Technology) stream</li>
+          <li>Your Planning meeting – Ensure that you reference to your planner how MedicAlert can support you in reaching your goals.  It’s important to ensure you have appropriate funding in the Capital Support (Assistive Technology).</li>
           <li>View our <a href="/products/all-products">range of products</a> and select your ID.</li>
           <li>If you’re wanting to claim the service and product:<br>
           Ensure that MedicAlert supports your NDIS goals. Depending on what type of plan you have there are a few different processes for claiming your service and product.<br>
-          Plan Managed – Get a quote from MedicAlert, check with your Plan Manager if you need a specialist (such as an Occupational Therapist) recommendation. Once this is complete, select your ID, provide us with your NDIS number and order online. We’ll then send you a tax invoice to have your funds reimbursed by your Plan Manager.<br>
-          Self-Managed – Once you’ve selected your ID, provide us with your NDIS number and order online. We’ll then send you a tax invoice to have your funds reimbursed by the NDIS.<br>
-          NDIS Managed – We’ll check you have enough funds in your Capital Support (Assistive Technology) stream and then process your order, on your behalf, via the NDIS portal.
+          <i>Plan Managed</i> – Get a quote from MedicAlert, check with your Plan Manager if you need a specialist (such as an Occupational Therapist) recommendation. Once this is complete, select your ID, provide us with your NDIS number and order online. We’ll then send you a tax invoice to have your funds reimbursed by your Plan Manager.<br>
+          <i>Self-Managed</i> – Once you’ve selected your ID, provide us with your NDIS number and order online. We’ll then send you a tax invoice to have your funds reimbursed by the NDIS.<br>
+          <i>NDIS Managed</i> – We’ll check you have enough funds in your Capital Support (Assistive Technology) stream and then process your order, on your behalf, via the NDIS portal.
           </li>
           <li>Your membership is activated immediately and your ID will be customised with your personal information. Your order will take approximately 5 days to be customised and will be sent to you via Australia Post.</li>
           <li>Once you receive your ID, you’re now fully protected by MedicAlert. We can assist with increasing your independence, accessing the community and communicating your health conditions to your community.</li>
