@@ -85,7 +85,7 @@
 
             <div class="row">
     				<div class="col-sm-6 form-group">
-    				  <label class="visible-ie-only" for="loop-position">Position:</label>
+    				  <label class="visible-ie-only" for="loop-position">Job title:</label>
     				  <input class="form-control" value="" type="text" name="loop-position" id="loop-position" >
               <div class="error-msg help-block"></div>
     				</div>

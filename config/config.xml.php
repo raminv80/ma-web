@@ -331,6 +331,9 @@
     <template>quick-renew.tpl</template>
     <pageID>222</pageID>
     <process>
+      <file>includes/processes/process-check-campaign.php</file>
+    </process>
+    <process>
       <file>includes/processes/process-check-MAF-login.php</file>
     </process>
     <process>

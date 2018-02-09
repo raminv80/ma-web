@@ -15,6 +15,11 @@
         {if $user.maf.main.renew eq 't' || $user.maf.main.renew_option eq 't'}{$listing_content1}{else}{$listing_content2}{/if}
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center">
+        {if $quick_renew_hidden_message eq 'true'}{$listing_content3}{/if}
+      </div>
+    </div>
   </div>
 </div>
 

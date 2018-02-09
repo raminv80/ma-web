@@ -250,10 +250,8 @@ class Record{
       $extends .= " LEFT JOIN {$a->table} ON {$a->field} = {$a->linkfield} ";
     }
     $limit = '';
-    foreach($this->CONFIG->limit as $l){
-      if($l->attributes()->level = $level){
-        $limit .= " LIMIT {$l}";
-      }
+    if(!empty($this->CONFIG->table->limit)){
+      $limit .= " LIMIT {$this->CONFIG->table->limit}";
     }
     $parentField = "";
     $recursive = "";
