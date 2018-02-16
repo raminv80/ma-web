@@ -980,6 +980,7 @@
       	<field>contact_email</field>
       	<deleted>contact_deleted</deleted>
       	<orderby>contact_created DESC</orderby>
+        <limit>300</limit>
       </table>
       <list_template>list_contact.tpl</list_template>
       <edit_template>edit_contact.tpl</edit_template>

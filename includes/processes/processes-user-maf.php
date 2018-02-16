@@ -105,7 +105,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
               //Send notification
               $subject = 'Notice - Member registration match';
               $fromEmail = (string) $CONFIG->company->email_from;
-              $to = (string) $CONFIG->company->email_orders;
+              $to = (string) $CONFIG->company->email_notice;
               $from = (string) $CONFIG->company->name;
               $body = "A member match was found when <b>{$_POST['gname']} {$_POST['surname']}</b> attempted to register on the website.<br/>";
               $body .= "Member record <b>{$memberId}</b> was found as the matching result. <br/>";

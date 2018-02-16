@@ -24,6 +24,7 @@
     <email_from>noreply@medicalert.org.au</email_from>
     <email_contact>enquiry@medicalert.org.au</email_contact>
     <email_orders>idewey@medicalert.org.au</email_orders>
+    <email_notice>gryan@medicalert.org.au</email_notice>
     <logo>logo.png</logo>
   </company>
   <global_variable>
