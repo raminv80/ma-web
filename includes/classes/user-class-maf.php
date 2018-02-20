@@ -1154,7 +1154,7 @@ class UserClass{
 	  foreach($_newArr as $value){
 	    if(empty($value)){ continue; }
 	
-	    $t_ar = preg_split("/\\r\\n|\\r|\\n|;|,/",$value);
+	    $t_ar = preg_split("/;/",$value);
 	    foreach($t_ar as $t_v){
 	      $t_value = unclean($t_v);
 	      if(empty($t_value)){ continue; }

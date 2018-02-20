@@ -445,7 +445,7 @@
                   </div>
                   {foreach $member_record.conditions as $k => $v}
                   <div class="col-sm-12 form-group">
-                    <input type="checkbox" name="conditions[]" id="medicalcond{$k}" class="form-control" value="{$v.value}" {if $v.status eq '1'}checked="checked" {/if}/>
+                    <input type="checkbox" name="conditions[]" id="medicalcond{$k}" class="form-control" value="{$v.value}" {if $v.status eq '1' || $v.status eq '2'}checked="checked" {/if}/>
                     <label for="medicalcond{$k}" class="radiolab">{$v.value}</label>
                   </div>
                   {/foreach}
@@ -481,7 +481,7 @@
                   </div>
                   {foreach $member_record.allergies as $k => $v}
                   <div class="col-sm-12 form-group">
-                    <input type="checkbox" name="allergies[]" id="allergies{$k}" class="form-control" value="{$v.value}" {if $v.status eq '1'}checked="checked" {/if}/>
+                    <input type="checkbox" name="allergies[]" id="allergies{$k}" class="form-control" value="{$v.value}" {if $v.status eq '1' || $v.status eq '2'}checked="checked" {/if}/>
                     <label for="allergies{$k}" class="radiolab">{$v.value}</label>
                   </div>
                   {/foreach}
@@ -511,7 +511,7 @@
                   </div>
                   {foreach $member_record.medications as $k => $v}
                   <div class="col-sm-12 form-group">
-                    <input type="checkbox" name="medications[]" id="medications{$k}" class="form-control" value="{$v.value}" {if $v.status eq '1'}checked="checked" {/if}/>
+                    <input type="checkbox" name="medications[]" id="medications{$k}" class="form-control" value="{$v.value}" {if $v.status eq '1' || $v.status eq '2'}checked="checked" {/if}/>
                     <label for="medications{$k}" class="radiolab">{$v.value}</label>
                   </div>
                   {/foreach}
@@ -896,7 +896,12 @@ The IHI is part of the government e-health initiative developed to enhance the w
             $('#' + FORM).find('.error-alert').find('strong').html(obj.error);
             $('#' + FORM).find('.error-alert').fadeIn('slow');
           }else if(obj.success){
-            window.location.href = '/update-my-profile?submit=true#profile-locked';
+            var chk_url = window.location.href;
+            if(chk_url.indexOf('submit=true#profile-locked') != '-1'){
+              window.location.reload();
+            } else{
+              window.location.href = '/update-my-profile?submit=true#profile-locked';
+            }
           }
         }catch(err){
           console.log('TRY-CATCH error');
