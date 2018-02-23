@@ -164,7 +164,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-6 col-sm-offset-0 col-md-4 col-md-offset-2">
-        <img src="/images/refer-info.png" alt="Refer your patients" class="img-responsive" />
+        <img src="/images/resource-pack.png" alt="Refer your patients" class="img-responsive" />
       </div>
       <div class="col-sm-6 col-md-6">
         <h3>Order your free resource pack</h3>
@@ -172,7 +172,7 @@
         <ul>
           <li>An <span class="bold">A3 poster</span></li>
           <li><span class="bold">Membership flyer</span></li>
-          <li><span class="bold">Membership flyer stand and sample bracelet</span></li>
+          <li><span class="bold">Membership flyer stand</span></li>
           <li>A sample <span class="bold">membership card</span></li>
         </ul>
       </div>
@@ -386,7 +386,7 @@
         SubmitSubscriptionForm($(form).attr('id'));
       }
     });
-    
+
     $('#contact_form').validate();
 
     $('#postcode').rules("add", {
@@ -406,7 +406,7 @@
     });
 
   });
-  
+
   function SubmitSubscriptionForm(FORM) {
     $('body').css('cursor', 'wait');
     $('#' + FORM).find('.error-alert').hide();
