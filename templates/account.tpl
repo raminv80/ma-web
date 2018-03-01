@@ -102,6 +102,11 @@
 						</div>
 					</div>
           {/if}
+          <div class="accrow">
+            <div class="col-sm-12">
+              <img src="/images/dashboard-name.png" alt="Account" /> <a href="/my-purchases">My purchases</a>
+            </div>
+          </div>
 					<div class="accrow">
 						<div class="col-sm-12">
 							<img src="/images/dashboard-password.png" alt="Account" /> <a href="javascript:void(0)" onclick="$('#password-form').fadeIn('slow');">Update my password</a>

@@ -63,7 +63,7 @@
           <h1>Feedback - completed user profile</h1>
         </div>
         <div class="col-md-8 col-md-offset-2 text-center">
-          <p class="bold">Thinking about the process of creating your Medicalert profile and finalising your membership. How satisfied were you with the:</p>
+          <p class="bold">Thinking about the process of creating your MedicAlert profile and finalising your membership. How satisfied were you with the:</p>
         </div>
         {foreach from=$questions[2] key=k item=qset1}
         <div data-triggers="{$qset1['question_triggers']}" class="col-md-8 col-md-offset-2 form-group questions {if $qset1['option_group_id'] eq '3' || $qset1['option_group_id'] eq '2' || $qset1['option_group_id'] eq '4'}text-center questiondiv{/if} {if $qset1['option_group_id'] eq '3'}childdiv{/if}">

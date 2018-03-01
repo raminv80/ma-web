@@ -423,6 +423,13 @@
     <template>safe-return.tpl</template>
     <pageID>789</pageID>
   </static_page>
+  <static_page>
+    <url>my-purchases</url>
+    <template>ec_my_purchases.tpl</template>
+    <process>
+      <file>includes/processes/process-get-ordered-items.php</file>
+    </process>
+  </static_page>
 
   <!-- ECOMMERCE  -->
   <static_page>
@@ -720,6 +727,9 @@
     <template>ec_product.tpl</template>
     <process>
       <file>includes/processes/process-load-product.php</file>
+    </process>
+    <process>
+      <file>includes/processes/process-load-ordered-product.php</file>
     </process>
   </product_page>
 
