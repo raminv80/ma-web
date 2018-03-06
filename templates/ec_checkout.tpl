@@ -264,7 +264,7 @@
                   </div>
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="phone">Phone*:</label>
-                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{if $user.maf.main.user_mobile}{$user.maf.main.user_mobile}{else}{$new_user.mobile}{/if}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required" maxlength="10" pattern="[0-9]*"/>
+                      <input id="phone" value="{if $address}{$address.B.address_telephone}{else}{if $user.maf.main.user_mobile}{$user.maf.main.user_mobile}{else}{if $new_user.mobile neq ''}{$new_user.mobile}{else}{if $new_user.home_phone neq ''}{$new_user.home_phone}{else}{if $new_user.work_phone neq ''}{$new_user.work_phone}{/if}{/if}{/if}{/if}{/if}" name="address[B][address_telephone]" type="text" class="phone billing-req form-control" required="required" maxlength="10" pattern="[0-9]*"/>
 						<div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -388,7 +388,7 @@
 				  	</div>
 				  	<div class="row notice">
 					  	<div class="col-sm-12 dark">
-					  	All transactions are secure and encrypted, and we never store your credit card information. To learn more, please view our <a href="/privacy-policy" target="_blank">privacy policy</a>.
+					  	  Australia Medic Alert Foundation is secured by GeoTrust&reg; to protect your information. To learn more, please view our <a href="/privacy-policy" target="_blank">privacy policy</a>.
 					  	</div>
 				  	</div>
 

@@ -324,7 +324,7 @@
           </div>
           <div class="row">
             <div class="col-sm-6 form-group">
-              <label class="visible-ie-only" for="stands">Membership Flyer Stand &amp; sample bracelet:</label>
+              <label class="visible-ie-only" for="stands">Membership Flyer Stand:</label>
               <select class="form-control" name="stands" id="stands">
                 <option value="0">Please select</option>
                 <option {if $post.stands eq '1'}selected="selected" {/if} value="1">1</option>

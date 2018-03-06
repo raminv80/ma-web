@@ -11,11 +11,9 @@ try{
             FROM tbl_cartitem LEFT JOIN `tbl_payment` ON cartitem_cart_id = payment_cart_id
             LEFT JOIN tbl_product ON cartitem_product_id = product_object_id 
             LEFT JOIN tbl_variant ON cartitem_variant_id = variant_id 
-            WHERE payment_user_id = :user_id AND payment_response_code = 'approved' AND (cartitem_type_id = 1 OR cartitem_type_id = 4) GROUP BY cartitem_variant_id ORDER BY cartitem_modified DESC";
+            WHERE payment_user_id = :user_id AND payment_response_code = 'approved' AND (cartitem_type_id = 1 OR cartitem_type_id = 4) AND product_published = 1 AND product_deleted IS NULL AND variant_deleted IS NULL GROUP BY cartitem_variant_id ORDER BY cartitem_modified DESC";
     if($products = $DBobject->wrappedSql($sql, array(":user_id" => $_SESSION['user']['public']['id']))){
-//       foreach($products as &$p){
-//         $p['general_details'] = $prodObj->GetProductGeneralDetails($p['cartitem_product_id']);
-//       }
+
       foreach($products as $p){
         
         $cart_arr[$p['cartitem_id']] = $p;

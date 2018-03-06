@@ -85,8 +85,6 @@
         <a href="/products" title="Click to view our full product range" class="btn-red btn">Shop now</a>
         <br>
         <br>
-        <b id="response-msg"></b>
-        <a href="javascript:void(0)" onclick="SendWishList()" title="Send email" id="sendwishlist-btn" class="">Email me my wish list ></a>
       </div>
     </div>
   </div>

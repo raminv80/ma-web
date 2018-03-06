@@ -75,6 +75,12 @@
                   </div>
                 </div>
   
+                <div class="row notice">
+                  <div class="col-sm-12 dark">
+                    Australia Medic Alert Foundation is secured by GeoTrust&reg; to protect your information. To learn more, please view our <a href="/privacy-policy" target="_blank">privacy policy</a>.
+                  </div>
+                </div>
+                
                 <div class="row">
                   <div class="col-sm-6 form-group">
                     <label class="visible-ie-only" for="ccno">
@@ -307,9 +313,14 @@
   </div>
 </div>
 {/if}
-
-
-
+<div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 text-center" style="padding-top: 20px;">
+        {$listing_content4}
+        <br/>
+      </div>
+    </div>
+  </div>
 {/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
 <script src="/includes/js/jquery-ui.js"></script>
 <script src="/includes/js/jquery.selectBoxIt.min.js"></script>

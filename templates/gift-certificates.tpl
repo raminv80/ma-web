@@ -1,6 +1,11 @@
 {block name="head"}
 {printfile file='/includes/css/jquery-ui.css' type='style'}
 {/block} {block name=body}
+<style>
+.row.notice {
+    padding: 20px 0;
+}
+</style>
 <div id="pagehead">
   <div class="bannerout">
     <img src="{if $listing_image}{$listing_image}{else}/images/newsdet-banner.jpg{/if}" alt="{$listing_name} banner" />
@@ -143,7 +148,7 @@
               </div>
               <div class="row notice">
                 <div class="col-sm-12 dark">
-                  All transactions are secure and encrypted, and we never store your credit card information. To learn more, please view our <a href="/privacy-policy" target="_blank">privacy policy</a>.
+                  Australia Medic Alert Foundation is secured by GeoTrust&reg; to protect your information. To learn more, please view our <a href="/privacy-policy" target="_blank">privacy policy</a>.
                   <br>
                   <br>
                 </div>

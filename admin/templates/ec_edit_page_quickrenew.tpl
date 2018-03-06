@@ -147,6 +147,12 @@
                 <textarea name="field[1][tbl_listing][{$cnt}][listing_content3]" id="id_listing_content3" class="tinymce">{$fields.listing_content3}</textarea>
               </div>
             </div>
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_listing_content4">Bottom content</label>
+              <div class="col-sm-5">
+                <textarea name="field[1][tbl_listing][{$cnt}][listing_content4]" id="id_listing_content4" class="tinymce">{$fields.listing_content4}</textarea>
+              </div>
+            </div>
           </div>
         </div>
         <!--===+++===+++===+++===+++===+++ IMAGES TAB +++===+++===+++===+++===+++====-->
