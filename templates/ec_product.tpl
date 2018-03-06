@@ -445,7 +445,6 @@ jQuery.fn.outerHTML = function(s) {
 		$(".label-imgs").click(function(){   
 		  var oldSelection = $('.image-selector:checked').val();
 		  var newSelection = $(this).find('.image-selector').attr('value');
-		  console.log(oldSelection+'-'+newSelection);
 		  if(newSelection != oldSelection){
 		    $('.image-selector:checked').attr('checked', false);
 		  }
@@ -487,7 +486,8 @@ $(window).load(function() {
     controlNav: false,
     animationLoop: false,
     slideshow: false,
-    sync: "#carousel.flexslider"
+    sync: "#carousel.flexslider",
+    start: function(){ load_ordered_product(); }
   });
   
 });
@@ -529,9 +529,9 @@ $(window).load(function() {
         itemMargin: 20,
         minItems: getGridSize(), // use function to pull in initial value
         maxItems: getGridSize(),
-		start: function(slider){
-			flexslider = slider;
-		}
+    		start: function(slider){
+    			flexslider = slider;
+    		}
       // use function to pull in initial value
       });
     });
@@ -780,6 +780,40 @@ $(window).load(function() {
 	}
 
 
+</script>
+
+<script>
+function load_ordered_product(){
+  {if $ordered_item}
+    var item_clr = ''; var item_length = ''; var item_size = ''; var item_engraving = "";
+    {foreach $ordered_item.attributes as $att => $attr}
+      {if $attr.cartitem_attr_attribute_id eq '2'}
+        item_clr = "{$attr.cartitem_attr_attr_value_id}";
+      {/if}
+      {if $attr.cartitem_attr_attribute_id eq '1'}
+        item_length = "{$attr.cartitem_attr_attr_value_id}";
+      {/if}
+      {if $attr.cartitem_attr_attribute_id eq '4'}
+        item_size = "{$attr.cartitem_attr_attr_value_id}";
+        item_engraving = '{$attr.cartitem_attr_attr_value_additional}'; 
+      {/if}
+    {/foreach}
+    $('.image-selector[value="'+item_clr+'"]').trigger('click');
+    if(item_length != ''){
+      $('#length').val(item_length);
+    }
+    if(item_size != ''){
+      $('#medical_id_size').val(item_size);
+    }
+    if(item_engraving != ''){
+      var engravings = JSON.parse(item_engraving);
+      $.each(engravings, function(i, item) {
+        $('input[type="text"][name="attr[4][additional]['+i+']"]').val(item);
+      });
+    }
+    $('#medical_id_size').trigger('change');
+  {/if}
+}
 </script>
 
 {/block}
