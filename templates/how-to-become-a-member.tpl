@@ -70,9 +70,8 @@
 				<div class="grey-text">
 					<span class="bold">Post</span><span>*</span><br />
 					Australia MedicAlert Foundation,<br />
-					GPO Box 9963 in your<br />
-					capital city<br />
-					(e.g. ADELAIDE SA 5001)
+					GPO Box 9963,<br />
+					Adelaide SA 5001
 				</div>
 			</div>
 			<div class="col-sm-3 text-center ways">
