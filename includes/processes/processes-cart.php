@@ -810,6 +810,13 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           die();
         }
         
+        // check if amount is less than $5
+        if((int)$_POST['price'] < 5){
+          $_SESSION['error'] = "Error: Amount should be greater than or equal to $5.";
+          header('Location: ' . $_SERVER['HTTP_REFERER'] . '#form-error');
+          die();
+        }
+        
         if(!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['rname']) && !empty($_POST['remail'])){
           $missingFields = false;
           $isGiftCertificate = true;
