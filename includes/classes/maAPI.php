@@ -590,13 +590,13 @@ class medicAlertApi {
 		} else if( 601 == $httpCode ) {
 			throw new exceptionMedicAlertPasswordMismatch('1 Attempt remaining');
 		} else {
-			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (processRequest)','".clean("".curl_error($ch))."','{$_SERVER['REMOTE_ADDR']}')";
-			$this->DBobj->wrappedSql($sql);
+			//$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (processRequest)','".clean("".curl_error($ch))."','{$_SERVER['REMOTE_ADDR']}')";
+			//$this->DBobj->wrappedSql($sql);
 			//mail("cmsemails@them.com.au", "MedicAlert Members system Error", "Server unknown error - {$httpCode}");
 			//$_SESSION['SERVER_ERROR'] = '<img src="/images/exclamation.jpg" />&nbsp;&nbsp;<span class="invalid-login">The Member server returned an unexpected error. Please try again later.</span>';
-			header('Location:/404');
-			die();
-			//throw new exceptionMedicAlertApi();
+			//header('Location:/404');
+			//die();
+			throw new exceptionMedicAlertApi("Server unknown error - {$httpCode}");
 		}
 	}
 
