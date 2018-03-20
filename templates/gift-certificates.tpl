@@ -63,7 +63,7 @@
               <div class="row">
                 <div class="col-sm-12 form-group" id="otheram" {if $post.price neq ''}style="display:block"{/if}>
                   <label class="visible-ie-only" for="price">
-                    Please specify a whole dollar amount over $5<span>*</span>:
+                    Please specify a whole dollar amount over $35<span>*</span>:
                   </label>
                   <input class="form-control" value="{$post.price}" type="text" pattern="[0-9]*" name="price" id="price" required="">
                   <div class="error-msg help-block"></div>
@@ -272,10 +272,10 @@
     $('#price').rules("add", {
       required: true,
       digits: true,
-      min: 5,
+      min: 35,
       max: 1000,
       messages: {
-        min: "Please enter a value greater than or equal to $5.",
+        min: "Please enter a value greater than or equal to $35.",
         max: "Please enter a value less than or equal to $1000."
       }
     });
