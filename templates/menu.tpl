@@ -53,7 +53,7 @@
 						Call Membership Services
 						<div class="phno AVANSERnumber">{$COMPANY.toll_free}</div>
 					</div>
-					<img src="/images/header-phone.png" alt="Phone" />
+					<!-- <img src="/images/header-phone.png" alt="Phone" />-->
 				</a>
 			</div>
 			<div class="col-xs-2 col-sm-2 visible-xs visible-sm" id="mobcart">
