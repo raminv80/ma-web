@@ -31,7 +31,7 @@ class ProductClass extends ListClass {
     foreach($LOCALCONF->extends as $a){
       $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}";
     }
-    $sql = "SELECT * FROM {$this->DBPRODTABLE} {$extends} WHERE {$this->DBPRODTABLE_URL} = :url AND {$pre}_deleted IS NULL ORDER BY {$pre}_published = :published DESC LIMIT 1";
+    $sql = "SELECT * FROM {$this->DBPRODTABLE} {$extends} WHERE {$this->DBPRODTABLE_URL} = :url AND {$pre}_deleted IS NULL AND {$pre}_published = :published LIMIT 1";
     $params = array(
         ":url" => $_url,
         ":published" => $_PUBLISHED

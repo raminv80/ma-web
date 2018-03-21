@@ -61,7 +61,7 @@ class ListClass{
       $where .= " AND {$pre}_deleted IS NULL";
     }
     
-    $sql = "SELECT * FROM {$this->TBL} {$extends} WHERE {$this->TBL}.listing_object_id = :id AND {$this->TBL}.listing_deleted IS NULL {$where} ORDER BY {$this->TBL}.listing_published = :published DESC ";
+    $sql = "SELECT * FROM {$this->TBL} {$extends} WHERE {$this->TBL}.listing_object_id = :id AND {$this->TBL}.listing_deleted IS NULL {$where} AND {$this->TBL}.listing_published = :published ";
     $params = array(
         ":id" => $this->ID, 
         ":published" => $_PUBLISHED 
