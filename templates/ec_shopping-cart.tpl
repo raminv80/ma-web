@@ -270,7 +270,7 @@
             <button class="btn btn-red process-cnt" type="button" onclick="$('#checkout1-form').submit();">Continue</button>
           </div>
           <div class="col-sm-6 col-md-3 col-sm-offset-6 col-md-offset-9 text-center" id="belowbtn">
-            * Please note that the MedicAlert membership fee of {$CONFIG_VARS.membership_fee} will be added to your cart if you are joining or you renewal is due.<br />See the <a href="/benefits-of-membership">benefits of membership</a>.
+            * Please note that the MedicAlert membership fee of {$CONFIG_VARS.membership_fee} will be added to your cart if you are joining or your renewal is due.<br />See the <a href="/benefits-of-membership">benefits of membership</a>.
           </div>
         </div>
         <br />
