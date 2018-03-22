@@ -22,7 +22,7 @@
 <div>
   <div class="container">
     <div class="row" id="products-wrapper">
-         <div class="col-sm-12 text-center" id="noproducts" {if $products}style="display:none;"{/if}>You still haven't selected any products.</div>
+         <div class="col-sm-12 text-center" id="noproducts" {if $products}style="display:none;"{/if}>You haven't ordered any products.</div>
           {if $products}
           {foreach $products as $item}
             <div class="col-sm-6 col-md-4 col-lg-4 prodout show-all type-{$item.product_associate1} range-{$item.price_range} {if $item.general_details.sale.flag eq 1}range-sale{/if} {foreach $item.general_details.materials as $matk => $matv}material-{$matk} {/foreach} {foreach $item.general_details.has_attributes as $attr}{foreach $attr as $valid => $valval} attrval-{$valid}{/foreach}{/foreach} split {foreach $item.general_details.has_parent_attributes as $valid} attrval-{$valid}{/foreach}" data-order="{$k}">

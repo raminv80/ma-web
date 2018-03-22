@@ -430,6 +430,10 @@
       <file>includes/processes/process-get-ordered-items.php</file>
     </process>
   </static_page>
+  <static_page>
+    <url>request-membership-cancellation</url>
+    <template>membership-cancellation.tpl</template>
+  </static_page>
 
   <!-- ECOMMERCE  -->
   <static_page>
@@ -761,6 +765,11 @@
   <process>
     <url>process/contact-us</url>
     <file>includes/processes/processes-contactus.php</file>
+    <return_url></return_url>
+  </process>
+  <process>
+    <url>process/membership-cancellation</url>
+    <file>includes/processes/processes-membership-cancellation.php</file>
     <return_url></return_url>
   </process>
   <process>

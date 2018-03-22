@@ -147,8 +147,8 @@ class UserClass{
 		$this->memberRecord['details']['nickName']					= '';
 		$this->memberRecord['details']['dateOfBirth']				= $_data['db_dob'];
 		$this->memberRecord['details']['gender']					= ucwords(strtolower($_data['gender']));
-		$this->memberRecord['details']['phoneHome']					= '';
-		$this->memberRecord['details']['phoneWork']					= '';
+		$this->memberRecord['details']['phoneHome']					= substr($_data['home_phone'], 0, 4) . ' ' . substr($_data['home_phone'], 4, 3) . ' ' . substr($_data['home_phone'], 7, 3);
+		$this->memberRecord['details']['phoneWork']					= substr($_data['work_phone'], 0, 4) . ' ' . substr($_data['work_phone'], 4, 3) . ' ' . substr($_data['work_phone'], 7, 3);
 		$this->memberRecord['details']['phoneMobile']				= substr($_data['mobile'], 0, 4) . ' ' . substr($_data['mobile'], 4, 3) . ' ' . substr($_data['mobile'], 7, 3);
 		$this->memberRecord['details']['emailAddress']				= $_data['email'];
 		$this->memberRecord['details']['emergencyInformation']		= '';
@@ -1623,6 +1623,8 @@ class UserClass{
         ":surname" => $user['surname'],
         ":email" => $user['email'],
         ":mobile" => $user['mobile'],
+        ":home_phone" => $user['home_phone'],
+        ":work_phone" => $user['work_phone'],
         ":dob" => $user['db_dob'],
         ":gender" => $user['gender'],
         ":address" => $user['address'],
@@ -1635,8 +1637,8 @@ class UserClass{
         ":browser" => $_SERVER['HTTP_USER_AGENT']
     );
   
-    $sql = "INSERT INTO tbl_usertemp ( usertemp_cart_id, usertemp_gname, usertemp_surname, usertemp_email, usertemp_mobile, usertemp_dob, usertemp_gender, usertemp_address, usertemp_suburb, usertemp_state, usertemp_postcode, usertemp_heardabout, usertemp_session, usertemp_ip, usertemp_browser, usertemp_created)
-					 values ( :cartid, :gname, :surname, :email, :mobile, :dob, :gender, :address, :suburb, :state, :postcode, :heardabout, :session, :ip, :browser, now() )";
+    $sql = "INSERT INTO tbl_usertemp ( usertemp_cart_id, usertemp_gname, usertemp_surname, usertemp_email, usertemp_mobile, usertemp_home_phone, usertemp_work_phone, usertemp_dob, usertemp_gender, usertemp_address, usertemp_suburb, usertemp_state, usertemp_postcode, usertemp_heardabout, usertemp_session, usertemp_ip, usertemp_browser, usertemp_created)
+					 values ( :cartid, :gname, :surname, :email, :mobile, :home_phone, :work_phone, :dob, :gender, :address, :suburb, :state, :postcode, :heardabout, :session, :ip, :browser, now() )";
     if($this->DBobj->wrappedSql($sql, $params)){
       return $this->DBobj->wrappedSqlIdentity();
     } 

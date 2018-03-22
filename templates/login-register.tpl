@@ -242,7 +242,27 @@
                     <label for="mobile" class="visible-ie-only">
                       Mobile<span>*</span>:
                     </label>
-                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control" id="mobile" name="mobile" pattern="[0-9]" required>
+                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control" id="mobile" name="mobile" pattern="[0-9]">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-sm-12 form-group">
+                    <label for="home_phone" class="visible-ie-only">
+                      Home phone<span>*</span>:
+                    </label>
+                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control" id="home_phone" name="home_phone" pattern="[0-9]">
+                    <div class="error-msg help-block"></div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-sm-12 form-group">
+                    <label for="work_phone" class="visible-ie-only">
+                      Work phone<span>*</span>:
+                    </label>
+                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control" id="work_phone" name="work_phone" pattern="[0-9]">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -480,7 +500,7 @@
     });
 
     $('#register-form').validate({
-      submitHandler: function(form) {
+     submitHandler: function(form) {
         SubmitLoginRegisterForm($(form).attr('id'));
       }
     });
@@ -548,12 +568,54 @@
     });
 
     $('#mobile').rules("add", {
-      required: true,
+      required: {
+        depends: function(element){
+          if($('#home_phone').val() == '' && $('#work_phone').val() == ''){
+            return true;
+          }
+          return false;
+        }
+      },
       minlength: 10,
       maxlength: 10,
       digits: true,
       messages: {
+        required: "At least 1 of the phone numbers is required",
         equalTo: "Please verify your mobile number"
+      }
+    });
+    
+    $('#home_phone').rules("add", {
+      required: {
+        depends: function(element){
+          if($('#mobile').val() == '' && $('#work_phone').val() == ''){
+            return true;
+          }
+          return false;
+        }
+      },
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        required: "At least 1 of the phone numbers is required"
+      }
+    });
+    
+    $('#work_phone').rules("add", {
+      required: {
+        depends: function(element){
+          if($('#home_phone').val() == '' && $('#mobile').val() == ''){
+            return true;
+          }
+          return false;
+        }
+      },
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        required: "At least 1 of the phone numbers is required"
       }
     });
 

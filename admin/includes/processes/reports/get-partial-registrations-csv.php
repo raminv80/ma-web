@@ -36,7 +36,7 @@ $params['enddate'] = $endDate;
 $result = array();
 
 $sql = "SELECT usertemp_gname AS 'First name', usertemp_surname AS 'Surname',  usertemp_email AS 'Email', 
-   usertemp_mobile AS 'Mobile', usertemp_gender AS 'Gender',  usertemp_address AS 'Address',
+   usertemp_mobile AS 'Mobile', usertemp_home_phone as 'Home phone', usertemp_work_phone as 'Work phone', usertemp_gender AS 'Gender',  usertemp_address AS 'Address',
    usertemp_suburb AS 'Suburb', usertemp_state AS 'State',  usertemp_postcode AS 'Postcode',
    usertemp_heardabout AS 'How did you hear about us?', usertemp_created AS 'Created'
   FROM tbl_usertemp 

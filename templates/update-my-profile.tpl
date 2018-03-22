@@ -174,7 +174,7 @@
                   </div>
 
                   <div class="col-sm-6 form-group">
-                    <label for="homephone" class="visible-ie-only"> Home phone: </label>
+                    <label for="homephone" class="visible-ie-only"> Home phone<span>*</span>: </label>
                     <input type="text" maxlength="10" value="{$member_record.user_phone_home}" class="form-control" id="homephone" name="user_phone_home" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
@@ -182,7 +182,7 @@
 
                 <div class="row">
                   <div class="col-sm-6 form-group">
-                    <label for="workphone" class="visible-ie-only"> Work phone: </label>
+                    <label for="workphone" class="visible-ie-only"> Work phone<span>*</span>: </label>
                     <input type="text" maxlength="10" value="{$member_record.user_phone_work}" class="form-control" id="workphone" name="user_phone_work" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
@@ -678,7 +678,7 @@ The IHI is part of the government e-health initiative developed to enhance the w
                       {/if}
                     <br>
                     <p>
-                      <span class="bold">PLEASE NOTE:</span> To add or remove files, please contact Membership Services on <a href="tel:{$COMPANY.toll_free}" title="Click to call">{$COMPANY.toll_free}</a> (Mon-Fri, 8.3am-5.30pm CST) or email {obfuscate email=$COMPANY.email attr='title="Click to email us"'}
+                      <span class="bold">PLEASE NOTE:</span> To add or remove files, please contact Membership Services on <a href="tel:{$COMPANY.toll_free}" title="Click to call">{$COMPANY.toll_free}</a> (Mon-Fri, 8.30am-5.30pm CST) or email {obfuscate email=$COMPANY.email attr='title="Click to email us"'}
                     </p>
 
                     <p>
@@ -798,11 +798,55 @@ The IHI is part of the government e-health initiative developed to enhance the w
     });
 
     $('#mobile').rules("add", {
-      required: true,
+      required: {
+        depends: function(element){
+          if($('#homephone').val() == '' && $('#workphone').val() == ''){
+            return true;
+          }
+          return false;
+        }
+      },
       minlength: 10,
       maxlength: 10,
       digits: true,
       messages: {
+        required: "At least 1 of the phone numbers is required",
+        equalTo: "Please verify your mobile number"
+      }
+    });
+    
+    $('#homephone').rules("add", {
+      required: {
+        depends: function(element){
+          if($('#mobile').val() == '' && $('#workphone').val() == ''){
+            return true;
+          }
+          return false;
+        }
+      },
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        required: "At least 1 of the phone numbers is required",
+        equalTo: "Please verify your mobile number"
+      }
+    });
+    
+    $('#workphone').rules("add", {
+      required: {
+        depends: function(element){
+          if($('#homephone').val() == '' && $('#mobile').val() == ''){
+            return true;
+          }
+          return false;
+        }
+      },
+      minlength: 10,
+      maxlength: 10,
+      digits: true,
+      messages: {
+        required: "At least 1 of the phone numbers is required",
         equalTo: "Please verify your mobile number"
       }
     });
