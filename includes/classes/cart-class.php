@@ -2111,21 +2111,32 @@ class cart{
         ':id' => $this->cart_id
     );
 
-    // Validate that there are more than one standard product (type = 1)
-    if($this->GetProductTypeCountInCart(1) > 1){
-
+    
       // Stainless steel - tbl_pmaterial - pmateriallink_record_id = pmaterial_id = 1
-      $sql = "SELECT MIN(cartitem_product_price) AS 'AMOUNT' FROM tbl_cartitem
-      LEFT JOIN tbl_product ON cartitem_product_id = product_object_id
-      LEFT JOIN tbl_pmateriallink ON pmateriallink_product_id = product_id
-      WHERE product_deleted IS NULL AND product_published = 1 AND cartitem_product_price >= 35 AND pmateriallink_deleted IS NULL AND pmateriallink_record_id = 1
-      AND cartitem_deleted IS NULL AND cartitem_cart_id = :id";
-
-      if($res = $DBobject->wrappedSql($sql, $params)){
-        $amount = round(floatval($res[0]['AMOUNT']) - 35, 2);
-        $amount = ($amount > 0) ? $amount : 0;
+      // updated on 10/04/2018
+      // check if there are two items for value more than 35
+      $sql = "SELECT SUM(cartitem_quantity) AS 'QTY' FROM tbl_cartitem
+        LEFT JOIN tbl_product ON cartitem_product_id = product_object_id
+        WHERE product_deleted IS NULL AND product_published = 1 AND product_type_id = :pid
+        AND cartitem_deleted IS NULL AND cartitem_cart_id = :id AND cartitem_product_price >= 35";
+      $chk_params = array(
+          ':id' => $this->cart_id,
+          ':pid' => '1'
+      );
+      $chk_qty = $DBobject->wrappedSql($sql, $chk_params);
+      
+      if((int)$chk_qty[0]['QTY'] > 1){
+        $sql = "SELECT MIN(cartitem_product_price) AS 'AMOUNT' FROM tbl_cartitem
+        LEFT JOIN tbl_product ON cartitem_product_id = product_object_id
+        LEFT JOIN tbl_pmateriallink ON pmateriallink_product_id = product_id
+        WHERE product_deleted IS NULL AND cartitem_product_price >= 35 AND product_published = 1 AND pmateriallink_deleted IS NULL AND pmateriallink_record_id = 1
+        AND cartitem_deleted IS NULL AND cartitem_cart_id = :id";
+  
+        if($res = $DBobject->wrappedSql($sql, $params)){
+          $amount = round(floatval($res[0]['AMOUNT']) - 35, 2);
+          $amount = ($amount > 0) ? $amount : 0;
+        }
       }
-    }
     return $amount;
   }
 
