@@ -27,6 +27,7 @@
               <option value="get-partial-registrations-csv">Partial registrations</option>
               <option value="get-renewal-payments-csv">Renewal Payments Synchronisation</option>
               <option value="get-survey-csv">Surveys</option>
+              <option value="get-membership-cancellation-requests">Membership cancellation requests</option>
             </select>
           </div>
         </div>

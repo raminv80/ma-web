@@ -62,7 +62,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
               $body = '<h2>Website - Survey</h2><br><b>' . $res[0]['surveytoken_user_id'] . '</b> has requested to be contacted about her/his feedback.';
               $subject = 'Someone has requested to be contacted about her/his feedback';
               $fromEmail = (string)$CONFIG->company->email_from;
-              $to = 'kreek@medicalert.org.au, bevans@medicalert.org.au';
+              $to = 'kreek@medicalert.org.au, surveys@medicalert.org.au';
               $COMP = json_encode($CONFIG->company);
               $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
               $from = (string)$CONFIG->company->name;
