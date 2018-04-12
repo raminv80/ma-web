@@ -56,7 +56,7 @@
               <label class="visible-ie-only" for="cancellation_reason">Reason for cancellation<span>*</span>:</label>
               <select class="form-control selectlist-medium" id="cancellation_reason" name="cancellation_reason" required>
                 <option value="">Please select</option>
-                <option value="Membership Cost to high">Membership Cost to high</option>
+                <option value="Membership Cost to high">Membership Cost too high</option>
                 <option value="Doesn't want to be part of membership / pay annual fee">Doesn't want to be part of membership / pay annual fee</option>
                 <option value="No longer has medical need for membership / ID">No longer has medical need for membership / ID</option>
                 <option value="ID is enough, no need for membership">ID is enough, no need for membership</option>
