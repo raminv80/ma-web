@@ -489,6 +489,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $hasMAFProd = false;
               sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Create member', "Member email:  {$_SESSION['user']['new_user']['email']} <br>". $user_obj->getErrorMsg());
             }else{
+              if(!empty($GA_ID)){
+                sendGAEvent($GA_ID, 'member', 'create', $MAFMemberId);
+              }
               saveInLog('member-create', 'external', $MAFMemberId, $_SESSION['user']['new_user']['state']);
               //Login MAF member
               if($user_obj->authenticate($MAFMemberId, $_SESSION['user']['new_user']['password'])){
