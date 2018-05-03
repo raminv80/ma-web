@@ -490,7 +490,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Create member', "Member email:  {$_SESSION['user']['new_user']['email']} <br>". $user_obj->getErrorMsg());
             }else{
               if(!empty($GA_ID)){
-                sendGAEvent($GA_ID, 'member', 'create', $MAFMemberId);
+                sendGAEvent($GA_ID, 'user', 'register', $MAFMemberId);
               }
               saveInLog('member-create', 'external', $MAFMemberId, $_SESSION['user']['new_user']['state']);
               //Login MAF member
