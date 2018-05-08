@@ -82,8 +82,17 @@
                 <img class="img-responsive" src="{if $item.gallery.0.gallery_link neq ''}{$item.gallery.0.gallery_link}?width=120&height=76&crop=1{else}/images/no-image-available.jpg?width=120&height=76&crop=1{/if}" alt="{$item.gallery.0.gallery_alt_tag}" title="{$item.gallery.0.gallery_title}" />
               </div>
               <div class="col-xs-9 col-sm-3 col-md-4 bluetext valgn">
-                <a href="{if $item.cartitem_type_id eq 1}/{$item.product_url}{else}javascript:void(0){/if}">{$item.cartitem_product_name}{if $item.cartitem_type_id eq 3} - {$item.variant_name}{/if}</a>{if $item.cartitem_product_gst eq '1'} *{/if}
+                {if $item.cartitem_type_id eq 3}
+                  <b style="color: #212221;">{$item.cartitem_product_name}{if $item.cartitem_type_id eq 3} - {$item.variant_name}{/if}</b>
+                {else}
+                  <a href="{if $item.cartitem_type_id eq 1}/{$item.product_url}{else}javascript:void(0){/if}">{$item.cartitem_product_name}{if $item.cartitem_type_id eq 3} - {$item.variant_name}{/if}</a>{if $item.cartitem_product_gst eq '1'} *{/if}
+                {/if}
                 {if $item.cartitem_type_id eq 1}<br><small>{$item.cartitem_product_uid}</small>{/if}
+                {if $item.cartitem_type_id eq 3}
+                  <div class="attributes">
+                    {$item.product_description}
+                  </div>
+                {/if}
                 {if $item.attributes &&  $item.cartitem_type_id neq 2} 
                 {foreach from=$item.attributes item=attr}
                 <div class="attributes">
