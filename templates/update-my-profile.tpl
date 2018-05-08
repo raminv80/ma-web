@@ -291,7 +291,7 @@
                     <div class="error-msg help-block"></div>
                   </div>
                   <div class="col-sm-6 form-group">
-                    <label for="emerworkphone" class="visible-ie-only"> Work phone: </label>
+                    <label for="emerworkphone" class="visible-ie-only"> Work phone <span>*</span>: </label>
                     <input type="text" maxlength="10" value="{$member_record.contact_phone_work}" class="form-control" id="emerworkphone" name="contact_phone_work" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
@@ -299,7 +299,7 @@
 
                 <div class="row">
                   <div class="col-sm-6 form-group">
-                    <label for="emermobile" class="visible-ie-only"> Mobile: </label>
+                    <label for="emermobile" class="visible-ie-only"> Mobile <span>*</span>: </label>
                     <input type="text" value="{$member_record.contact_mobile}" maxlength="10" class="form-control" id="emermobile" name="contact_mobile" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
@@ -852,30 +852,55 @@ The IHI is part of the government e-health initiative developed to enhance the w
     });
 
     $('#emerhomephone').rules("add", {
-      required: true,
+      required: {
+        depends: function(element){
+          if($('#emerworkphone').val() == '' && $('#emermobile').val() == ''){
+            return true;
+          }
+          return false;
+        }
+      },
       minlength: 10,
       maxlength: 10,
       digits: true,
       messages: {
+        required: "At least 1 of the phone numbers is required",
         equalTo: "Please verify phone number"
       }
     });
     
     $('#emerworkphone').rules("add", {
+      required: {
+        depends: function(element){
+          if($('#emerhomephone').val() == '' && $('#emermobile').val() == ''){
+            return true;
+          }
+          return false;
+        }
+      },
       minlength: 10,
       maxlength: 10,
       digits: true,
       messages: {
+        required: "At least 1 of the phone numbers is required",
         equalTo: "Please verify phone number"
       }
     });
     
     $('#emermobile').rules("add", {
-      required: false,
+      required: {
+        depends: function(element){
+          if($('#emerhomephone').val() == '' && $('#emerworkphone').val() == ''){
+            return true;
+          }
+          return false;
+        }
+      },
       minlength: 10,
       maxlength: 10,
       digits: true,
       messages: {
+        required: "At least 1 of the phone numbers is required",
         equalTo: "Please verify your mobile number"
       }
     });
