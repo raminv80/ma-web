@@ -424,6 +424,10 @@
     <pageID>789</pageID>
   </static_page>
   <static_page>
+    <url>stjohns</url>
+    <template>st-johns.tpl</template>
+  </static_page>
+  <static_page>
     <url>my-purchases</url>
     <template>ec_my_purchases.tpl</template>
     <process>

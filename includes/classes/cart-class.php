@@ -19,6 +19,7 @@ class cart{
    * @param int $userId
    */
   function __construct($userId = null){
+    $userId = !is_numeric($userId)? 0 : $userId;
     $this->cart_user_id = empty($userId)? 0 : $userId;
     if($this->VerifySessionCart(session_id())){
       if($this->cart_user_id != $this->cart_db_user_id && !empty($this->cart_db_user_id)){
@@ -675,7 +676,8 @@ class cart{
         }
 
         case 'BENEVOLENT-CPSC':
-        case 'BENEVOLENT-HAE':{
+        case 'BENEVOLENT-HAE':
+        case 'STJOHNS':{
           //ONLY FOR MAF - BENEVOLENT PROGRAM OFFER
           if(empty($this->cart_user_id)){
             $discount = $this->GetBenevolentDiscount($shippingFee);
