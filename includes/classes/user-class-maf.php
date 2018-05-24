@@ -391,7 +391,7 @@ class UserClass{
 		$today = new DateTime();
 		$todayDate = $today->format('Ymd');
 		$offerValidFromDate = date('Ymd', strtotime($today->format('Y').'-'.$renewalMonth.'-01'));
-		$offerValidTillDate = date('Ymd', strtotime('last day of +2 month', strtotime($offerValidFromDate)));
+		$offerValidTillDate = date('Ymd', strtotime('last day of +3 month', strtotime($offerValidFromDate)));
 		$interval = $renewalDate->diff($today);
 		$year_diff = ceil(floatval($interval->format('%R%y.%m%d')));
 		$day_diff = floatval($interval->format('%R%a'));
