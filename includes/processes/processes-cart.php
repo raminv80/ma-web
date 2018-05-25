@@ -1059,7 +1059,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             }
             if($validCode){
               $startDate = empty($sendDate) ? date('Y-m-d') : $sendDate;
-              $endDate = date('Y-m-d', strtotime($startDate . ' + 1 year'));
+              $endDate = date('Y-m-d', strtotime($startDate . ' + 3 year'));
               $newVoucherArr = array(
                   "payment_id" => $paymentId,
                   "code" => $codeStr,
