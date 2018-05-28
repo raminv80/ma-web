@@ -157,18 +157,18 @@ a{color:#ed174f;text-decoration: none;}
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 	            <td class="w580" width="580" style="table-layout: fixed;">
 					<p style="text-align: center;font-size: 28px; line-height: 40px; color: #ed3361; font-weight: bold;">Happy Birthday {$name}!</p>
-					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">We didn't want to miss the chance to help you celebrate your special day. So, we thought we'd give you a present!</p>
-          <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Here's a ${$amount} voucher for you to use towards your next MedicAlert ID*!</p>
+					<p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">As a valued MedicAlert member, we didn't want to miss the chance to help you celebrate your special day. So, we thought we'd give you a present!</p>
+          <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">Here's a ${$amount} voucher for you to use towards your next MedicAlert ID or accessory*!</p>
                     
-                    <p style="font-weight: bold;font-size: 14px; line-height: 26px;">Your birthday voucher code is: <span style="font-size: 18px;">{$code}</span></p>
+                    <p style="font-weight: bold;font-size: 14px; line-height: 26px;">Your birthday discount code is: <span style="font-size: 18px;">{$code}</span></p>
 			       <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">To receive your birthday gift from us, simply follow the steps below:</p> 
                     <ol>
                       <li>Login <a title="Click to login" href="{$DOMAIN}/login">{$DOMAIN}/login</a></li>
                       <li>Browse our wide range of products and make your selection.</li>
-                      <li>Enter your voucher code (shown above) in the discount code and select 'apply' on the checkout page.</li>
+                      <li>Enter your discount (shown above) in the discount code and select 'apply' on the checkout page.</li>
                       <li>Continue to process your payment.</li>
                     </ol>
-                    <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">*Your birthday voucher can be redeemed online only. The voucher is non-transferable and will expire in 30 days from the date of issue. You can only use it to purchase a MedicAlert ID from our extensive range. Please note annual membership fees, service fees and accessories are excluded from this offer.</p>
+                    <p style="margin-bottom: 20px;font-size: 14px; line-height: 24px;">*Your birthday voucher can be redeemed online only. Cannot be used in conjunction with any other offer or discount code. The voucher is non-transferable and will expire in 30 days from the date of issue. You can use it to purchase a MedicAlert ID or accessory from our extensive range. Please note annual membership and service fees are excluded from this offer.</p>
 	            </td>
 	            <td class="w30" width="30" style="table-layout: fixed;"></td>
 		        </tbody>
