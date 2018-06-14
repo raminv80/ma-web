@@ -1257,7 +1257,7 @@ class cart{
     global $DBobject;
 
     $result = array();
-    $code = strtoupper($code);
+    $code = strtoupper(trim($code));
     $denyHigherSubtotal = true; // CHANGE THIS ACCORDINGLY
 
     $subtotal = floatval($this->GetSubtotal());
