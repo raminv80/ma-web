@@ -1207,6 +1207,13 @@ class cart{
         }
       }
     }
+    
+    //check if cart has membership card, if yes then fix the quantity to one only
+    $lifeCartCardId = $this->hasProductInCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], $GLOBALS['CONFIG_VARS']['membership_card_variant_id']);
+    if(!empty($lifeCartCardId)){
+      $this->UpdateQtyCart(array($lifeCartCardId => '1'));
+    }
+    
     //END OF VALIDATE MAF MEMBERS
 
     $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id = :id";

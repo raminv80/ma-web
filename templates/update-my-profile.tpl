@@ -715,6 +715,13 @@ The IHI is part of the government e-health initiative developed to enhance the w
                 </div>
               </div>
             </div>
+            {if $user.maf.main.lifetime eq 1}
+            <div class="row">
+              <div class="col-sm-12">
+                <input type="checkbox" name="order_card" value="yes" /> <b>Tick this box if you'd like to order a membership card containing your updated information for $8.</b><br><br>
+              </div>
+            </div>
+            {/if}
             <div class="row">
               <div class="col-sm-5 col-sm-offset-1">
                 <a href="/my-account" title="Back to dashboard" class="btn btn-red">< NO CHANGES, GO BACK TO DASHBOARD</a>

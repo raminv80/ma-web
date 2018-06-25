@@ -151,13 +151,26 @@
 						</div>
 						</form>
 					</div>
+          {if $user.maf.main.lifetime eq 1}
+          <div class="accrow">
+            <form class="form-horizontal" id="product-form1" role="form" accept-charset="UTF-8" action="" method="post">
+                <input type="hidden" value="ADDTOCART" name="action" id="action" />
+                <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+                <input type="hidden" value="{$CONFIG_VARS.membership_card_product_id}" name="product_id" id="product_id" />
+                <input type="hidden" value="{$CONFIG_VARS.membership_card_variant_id}" data-value="{$CONFIG_VARS.membership_card_cost}" name="variant_id" id="variant-{$CONFIG_VARS.membership_card_variant_id}">
+                <div class="col-sm-12">
+                  <img src="/images/dashboard-name.png" alt="Account" /> <a href="javascript:void(0);" class="order_card">Order membership card</a>
+                </div>
+            </form>
+          </div>
+          {/if}
 				</div>
 			</div>
 			<div class="clearfix"></div>
 
 			<div class="col-sm-12 text-center" id="renewal" data-autobilling="{$user.maf.main.autoBilling}" data-lifetime="{$user.maf.main.lifetime}">
 				<h3>{$user.maf.main.user_firstname}, is your membership up to date?</h3>
-				<p>It’s important to keep your MedicAlert membership up to date so we can continue to help protect you in an emergency. Don’t wait until it’s too late.  </p>
+				<p>It's important to keep your MedicAlert membership up to date so we can continue to help protect you in an emergency. Don't wait until it's too late.  </p>
 
 				<div class="row">
 					<div class="col-sm-{if $user.maf.main.autoBilling neq 't' && $user.maf.main.lifetime neq 1}6{else}12{/if} text-center" id="viewup">
@@ -173,15 +186,15 @@
 						</div>
 						<a href="/register-for-auto-renewal" title="Click to register for auto-renewal" class="btn btn-red">Register for auto-renewals</a>
 
-						<p>Take the hassle out of remembering to pay your annual MedicAlert membership with auto-renewals. By setting up Direct Debit payments from your nominated bank account, you can rest assured knowing you’ll always be protected.</p>
+						<p>Take the hassle out of remembering to pay your annual MedicAlert membership with auto-renewals. By setting up Direct Debit payments from your nominated bank account, you can rest assured knowing you'll always be protected.</p>
 					</div>
           {/if}
 				</div>
 			</div>
 {if $displayReminder1 ||  ($smarty.now|date_format:'%Y%m%d' - $user.maf.main.user_RenewalDate|date_format:'%Y%m%d') gt 800}
 			<div class="col-sm-12 text-center {$user.maf.main.user_RenewalDate|date_format:'%Y%m%d' - $smarty.now|date_format:'%Y%m%d'}" id="reminder1">
-				<h3>It looks like you haven’t purchased a new product in a while. </h3>
-				<p>Now is a good time to check that your engraving is legible and the attachments (e.g. jump rings and clasps) are in good condition. If the engraving is difficult to read, or you’d simply like a new piece of jewelry, order a new one below. Replacement attachments can be purchased by calling Membership Services on <a href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a>.</p>
+				<h3>It looks like you haven't purchased a new product in a while. </h3>
+				<p>Now is a good time to check that your engraving is legible and the attachments (e.g. jump rings and clasps) are in good condition. If the engraving is difficult to read, or you'd simply like a new piece of jewelry, order a new one below. Replacement attachments can be purchased by calling Membership Services on <a href="tel:{$COMPANY.toll_free}">{$COMPANY.toll_free}</a>.</p>
 
 				<div class="row">
 					<div class="col-sm-6 text-center" id="viewup1">
@@ -318,7 +331,7 @@
  	 <div class="row">
 	 	<div class="col-md-offset-1 col-md-10 text-center">
 		 	<h4>Share your story</h4>
-		 	<p>We’d love to hear about what your MedicAlert membership means to you. No matter how big or small your story may be, we welcome you to share it with us. Your very own story could inspire others, and help demonstrate the importance of membership when it matters most.</p>
+		 	<p>We'd love to hear about what your MedicAlert membership means to you. No matter how big or small your story may be, we welcome you to share it with us. Your very own story could inspire others, and help demonstrate the importance of membership when it matters most.</p>
 	 	</div>
 		<div class="col-md-offset-2 col-md-8 text-center">
     	 	<form id="contact_form" accept-charset="UTF-8" method="post" action="/process/contact-us" novalidate="novalidate">
@@ -394,7 +407,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 text-center">
-				<h3>If someone you know could benefit from a MedicAlert membership, don’t wait until it’s too late to tell them about it.</h3>
+				<h3>If someone you know could benefit from a MedicAlert membership, don't wait until it's too late to tell them about it.</h3>
 				<a href="/refer-a-friend" class="btn btn-red">Refer a friend</a>
 			</div>
 		</div>
@@ -411,7 +424,7 @@
                 <input type="hidden" value="{$products.product_object_id}" name="product_id" id="product_id" />
                 
                 <h3>Help us to help others</h3>
-				<p>While you’re here, why not make a small donation to our not-for-profit organisation? Just a few dollars can help provide our life-saving service, and allow us to educate Australians about the importance of MedicAlert Foundation. Donations over $2 are tax deductible. </p>
+				<p>While you're here, why not make a small donation to our not-for-profit organisation? Just a few dollars can help provide our life-saving service, and allow us to educate Australians about the importance of MedicAlert Foundation. Donations over $2 are tax deductible. </p>
 
 				<h4>Select a donation amount:</h4>
 				{foreach $products.variants as $v}
@@ -508,6 +521,16 @@ $(document).ready(function(){
 
 	//DONATIONS FORM
    $('#product-form').validate({
+     submitHandler: function(form) {
+       addCart($(form).attr('id'), true);
+     }
+   });
+	
+	$(document).on('click', '.order_card', function(){
+	  $('#product-form1').submit();
+	});
+	//Order card form
+	$('#product-form1').validate({
      submitHandler: function(form) {
        addCart($(form).attr('id'), true);
      }

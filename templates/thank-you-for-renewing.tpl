@@ -12,12 +12,24 @@
           <br> {$listing_content1}
         </div>
         <br>
-
+        {if $user.maf.main.lifetime eq 1}
+          <div class="accrow">
+            <form class="form-horizontal" id="product-form" role="form" accept-charset="UTF-8" action="" method="post">
+                <input type="hidden" value="ADDTOCART" name="action" id="action" />
+                <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+                <input type="hidden" value="{$CONFIG_VARS.membership_card_product_id}" name="product_id" id="product_id" />
+                <input type="hidden" value="{$CONFIG_VARS.membership_card_variant_id}" data-value="{$CONFIG_VARS.membership_card_cost}" name="variant_id" id="variant-{$CONFIG_VARS.membership_card_variant_id}">
+                <div class="col-sm-12">
+                  If you'd like to order an additional membership card please <a href="javascript:void(0);" class="order_card">click here</a>.<br><br>
+                </div>
+            </form>
+          </div>
+          {/if}
       </div>
       <br>
       <div class="row">
         <div class="col-sm-12 text-center">
-          <a class="btn-red btn" title="UPDATE MEMBERSHIP PROFILE" href="/products">START SHOPPING</a>
+          <a class="btn-red btn" title="UPDATE MEMBERSHIP PROFILE" href="/products">START SHOPPING</a><br><br>
         </div>
       </div>
       <br><br>
@@ -40,4 +52,16 @@
       </div>
     </div>
   </div>{/if}{/block}{* Place additional javascript here so that it runs after General JS includes *}{block name=tail}
-  <script type="text/javascript"></script>{/block}
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $(document).on('click', '.order_card', function(){
+      $('#product-form').submit();
+    });
+    //Order card form
+    $('#product-form').validate({
+       submitHandler: function(form) {
+         addCart($(form).attr('id'), true);
+       }
+     });
+  });
+  </script>{/block}

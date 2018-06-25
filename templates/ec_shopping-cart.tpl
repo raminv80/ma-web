@@ -90,7 +90,7 @@
                 {if $item.cartitem_type_id eq 1}<br><small>{$item.cartitem_product_uid}</small>{/if}
                 {if $item.cartitem_type_id eq 3}
                   <div class="attributes">
-                    {$item.product_description}
+                    {$item.variant_description}
                   </div>
                 {/if}
                 {if $item.attributes &&  $item.cartitem_type_id neq 2} 
@@ -127,6 +127,10 @@
               <div class="col-xs-6 col-xs-offset-3 col-sm-2 col-sm-offset-0 text-center valgn mobl" id="subtotal-{$item.cartitem_id}">${$item.cartitem_subtotal|number_format:2:".":","}</div>
               <div class="col-xs-3 col-sm-1 text-center valgn">
                 {if $item.product_unremovable neq 1}
+                <a class="hidden-xs hidden-sm remove" href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');">Remove</a>
+                <a class="remove visible-xs visible-sm" href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');"><img src="/images/cart-bin.png" alt="Remove" title="Remove" /></a>
+                {/if}
+                {if $item.cartitem_variant_id eq $CONFIG_VARS.membership_card_variant_id}
                 <a class="hidden-xs hidden-sm remove" href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');">Remove</a>
                 <a class="remove visible-xs visible-sm" href="javascript:void(0)" onclick="deleteItem('{$item.cartitem_id}');"><img src="/images/cart-bin.png" alt="Remove" title="Remove" /></a>
                 {/if}

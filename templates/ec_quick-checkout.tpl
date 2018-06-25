@@ -13,6 +13,9 @@
       <div class="col-md-8 col-md-offset-2 text-center">
         <h1>{$listing_name}</h1>
         {if $productsOnCart}{$listing_content1}{else}{$listing_content2}{/if}
+        {if $ifCardInCart eq 'yes'}
+          <p>A membership card has been added to your cart as you ticked that you'd like an updated card. To remove this product, please view your cart and click remove.</p>
+        {/if}
       </div>
     </div>
   </div>

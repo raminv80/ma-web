@@ -198,6 +198,20 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
                 && $user_obj->isAnnualMember($_SESSION['user']['public']['maf']['main']['user_membershipType']) 
                 && ($user_obj->isUnfinancialMember($_SESSION['user']['public']['maf']['main']['user_status_db']) 
                     || $user_obj->isPastRenewalMonth($_SESSION['user']['public']['maf']['main']['user_RenewalDate']) >= 1)) ){
+          
+          if(isset($_POST['order_card']) && $_POST['order_card'] == 'yes'){
+            $cart_obj = new cart($_SESSION['user']['public']['id']);
+            $cart_obj->AddToCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], array(), 0, 1, null, $GLOBALS['CONFIG_VARS']['membership_card_variant_id']);
+            //unset($_POST['order_card']);
+          } else {
+            $cart_obj = new cart($_SESSION['user']['public']['id']);
+            //check if card is already there in cart
+            $lifetimeCardId = $cart_obj->hasProductInCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], $GLOBALS['CONFIG_VARS']['membership_card_variant_id']);
+            if(!empty($lifetimeCardId)){
+              $cart_obj->RemoveFromCart($lifetimeCardId);
+            }
+          }
+          
           $_SESSION['user']['public']['pending_update'] = $_POST;
           $url = '/quick-checkout';
           
