@@ -330,6 +330,11 @@
     <pageID>105</pageID>
   </static_page>
   <static_page>
+    <url>employee-wellbeing</url>
+    <template>employee-wellbeing.tpl</template>
+    <pageID>1100</pageID>
+  </static_page>
+  <static_page>
     <url>bupa</url>
     <template>bupa.tpl</template>
     <pageID>670</pageID>
@@ -835,6 +840,11 @@
   <process>
     <url>process/hae</url>
     <file>includes/processes/processes-hae-selection.php</file>
+    <return_url></return_url>
+  </process>
+  <process>
+    <url>process/employee-wellbeing</url>
+    <file>includes/processes/process-employee-wellbeing.php</file>
     <return_url></return_url>
   </process>
 
