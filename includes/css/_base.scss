@@ -211,7 +211,7 @@ select.form-control {
 }
 
 #banner{
-	background:url('/images/homebanner-feb2018.jpg') no-repeat;
+	background:url('/images/flash-18-header-image.jpg') no-repeat;
 	height: 450px;
 	background-size: cover;
 	padding: 110px 0;
@@ -3790,6 +3790,12 @@ select option:disabled {
 	padding-bottom: 50px;
 	margin-top: -40px;
 
+	.selectboxit-container{
+		select{
+  		width: 100% !important;
+    }
+	}	
+
   input[type="checkbox"] {
     display: inline-block;
     height: auto;
@@ -3897,6 +3903,7 @@ select option:disabled {
 		.bold{
 			font-weight: bold;
 		}
+
 	}
 }
 #donate #help .helpl #othervalout {
