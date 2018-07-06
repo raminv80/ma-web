@@ -21,7 +21,7 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
      $mail->Port = 587;    */                                 // TCP port to connect to
 
     /** ============= UNCOMMENT THE COMMENTED LINES AND VICE VERSA WHEN LIVE =============== **/
-    $mail->addAddress('apolo@them.com.au');
+    $mail->addAddress('bikram@them.com.au');
     //$mail->addAddress('oliver@them.com.au');
     if($_SERVER['REMOTE_ADDR'] == '45.124.202.249'){
       //$mail->addAddress('apolo@them.com.au');

@@ -38,7 +38,7 @@
   <div class="container">
     <div class="row">
     {if $banner}
-      <div class="col-sm-12 col-md-10 col-md-offset-1">
+      <div class="col-sm-12">
         <a href="{$banner.0.banner_link}" {if $banner.0.banner_link|strstr:"http"} target="_blank"{/if} title="{$banner.0.banner_name}">
           <img src="{$banner.0.banner_image1}" alt="{$banner.0.banner_name}" class="img-responsive hidden-xs" />
           <img src="{$banner.0.banner_image2}" alt="{$banner.0.banner_name}" class="img-responsive visible-xs" />

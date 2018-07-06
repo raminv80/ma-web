@@ -616,6 +616,13 @@ RewriteRule ^seniors$ /seniors-card\?utm_source=SENIORS-DM&utm_medium=FLYER&utm_
 RewriteRule ^seniorsflyer$ /seniors-card\?utm_source=SENIORS-WELCOMEPACK-INSERT&utm_medium=FLYER&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^seniorsfestival$ /seniors-card\?utm_source=SENIORS-FESTIVAL&utm_medium=PROGRAM-GUIDE-AD&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^seniorsnsw$ /seniors-card\?utm_source=SENIORS-NSW-DIRECTORY&utm_medium=SENIORS-NSW-AD&utm_campaign=SENIORS [R=301,L,NC]
+RewriteRule ^onecota$ /seniors-card\?utm_source=ONE-COTA-MAGAZINE&utm_medium=PRESS-AD&utm_campaign=SENIORS [R=301,L,NC]
+RewriteRule ^seniorscardsa$ /seniors-card\?utm_source=SENIORS-SA-DIRECTORY&utm_medium=SENIORS-SA-AD&utm_campaign=SENIORS [R=301,L,NC]
+
+RewriteRule ^medicalobserver$ /refer-your-patients\?utm_source=MEDICAL-OBSERVER-PUBLICATION&utm_medium=PRESS-AD&utm_campaign=REFERRERS [R=301,L,NC]
+RewriteRule ^medicaljournalaus$ /refer-your-patients\?utm_source=MEDICAL-JOURNAL-OF-AUSTRALIA-PUBLICATION&utm_medium=PRESS-AD&utm_campaign=REFERRERS [R=301,L,NC]
+RewriteRule ^journalofpharmacy$ /refer-your-patients\?utm_source=JOURNAL-OF-PHARMACY&utm_medium=PRESS-AD&utm_campaign=REFERRERS [R=301,L,NC]
+RewriteRule ^thinkgp$ /refer-your-patients\?utm_source=THINK-GP&utm_medium=EDM&utm_campaign=REFERRERS [R=301,L,NC]
 
 RewriteRule ^save$ /offers\?utm_source=REFERER-DIRECT-MAIL&utm_medium=FLYER&utm_campaign=REFER-COUNTER-STAND [R=301,L,NC]
 

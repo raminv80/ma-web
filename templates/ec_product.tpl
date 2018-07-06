@@ -293,8 +293,11 @@
     <div class="row">
       <div class="col-sm-12 text-center">
       {foreach $productassoc as $item}
-          {if $item.gallery && $item.gallery.0.gallery_link}
-        <h2>Members also purchased</h2>
+        {if $item.gallery && $item.gallery.0.gallery_link}
+          {if $item.product_published eq 1}
+          <h2>Members also purchased</h2>
+          {break}
+          {/if}
         {/if}
         {break}
       {/foreach}
@@ -305,7 +308,7 @@
       <div id="relatedslide" class="flexslider">
         <ul class="slides">
           {foreach $productassoc as $item}
-          {if $item.gallery && $item.gallery.0.gallery_link}
+          {if $item.gallery && $item.gallery.0.gallery_link && $item.product_published eq 1}
             <li>
             <div class="prod">
               <a href="/{$item.product_url}"> <img src="{$item.gallery.0.gallery_link}?width=568&height=363&crop=1" alt="{$item.product_name}" title="{$item.product_name}" class="img-responsive" />

@@ -106,8 +106,8 @@ function SearchProduct($search){
   $search = trim($search);
   $search = trim($search, '-');
   $search = trim($search, '+');
+  $search = trim($search, ',');
   $search = preg_replace("/[^\w+\-\s]/", " ", $search);
-  
   //Check if it is variant UID
   
   $sql= "SELECT tbl_variant.*, product_url AS 'cache_url', product_name
@@ -154,7 +154,11 @@ function SearchProduct($search){
 		product_meta_words) AGAINST(:search IN
 		BOOLEAN MODE) HAVING Relevance > 0.2 
         ORDER BY Relevance DESC";
-  $params = array(":search"=>$search);
+  $against_search = preg_replace("/[\,\@]/", "", $search);
+  $against_search= trim($against_search);
+  $against_search= trim($against_search, '-');
+  $against_search= trim($against_search, '+');
+  $params = array(":search"=>$against_search);
   if ($res = $DBobject->wrappedSql($sql,$params) ) {
     foreach ($res as $r){
       $data ["{$r['cache_url']}"] = $r;
