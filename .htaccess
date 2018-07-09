@@ -618,6 +618,7 @@ RewriteRule ^seniorsfestival$ /seniors-card\?utm_source=SENIORS-FESTIVAL&utm_med
 RewriteRule ^seniorsnsw$ /seniors-card\?utm_source=SENIORS-NSW-DIRECTORY&utm_medium=SENIORS-NSW-AD&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^onecota$ /seniors-card\?utm_source=ONE-COTA-MAGAZINE&utm_medium=PRESS-AD&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^seniorscardsa$ /seniors-card\?utm_source=SENIORS-SA-DIRECTORY&utm_medium=SENIORS-SA-AD&utm_campaign=SENIORS [R=301,L,NC]
+RewriteRule ^seniorswa$ /seniors-card\?utm_source=DPS-GUIDE-TO-AGED-CARE-WA&utm_medium=STRIP-AD&utm_campaign=SENIORS [R=301,L,NC]
 
 RewriteRule ^medicalobserver$ /refer-your-patients\?utm_source=MEDICAL-OBSERVER-PUBLICATION&utm_medium=PRESS-AD&utm_campaign=REFERRERS [R=301,L,NC]
 RewriteRule ^medicaljournalaus$ /refer-your-patients\?utm_source=MEDICAL-JOURNAL-OF-AUSTRALIA-PUBLICATION&utm_medium=PRESS-AD&utm_campaign=REFERRERS [R=301,L,NC]
