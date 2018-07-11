@@ -231,6 +231,15 @@ class ProductClass extends ListClass {
           }
         }
         
+        //Create usages array
+        $sql = "SELECT pusage_name, pusage_id FROM tbl_pusagelink LEFT JOIN tbl_pusage ON pusage_id = pusagelink_record_id
+            WHERE pusagelink_deleted IS NULL AND pusage_deleted IS NULL AND pusagelink_product_id = :id GROUP BY pusage_id";
+        if($attr = $DBobject->wrappedSql($sql, array(":id" => $r['product_id']))){
+          foreach($attr as $a){
+            $result['usages'][$a['pusage_id']] = $a['pusage_name'];
+          }
+        }
+        
         //Create attributes array
         $sql = "SELECT tbl_productattr.*, attribute_name, attribute_type, attr_value_name, attr_value_image, attr_value_associates FROM tbl_productattr
             LEFT JOIN tbl_attribute ON attribute_id = productattr_attribute_id

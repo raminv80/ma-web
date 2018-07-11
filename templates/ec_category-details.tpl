@@ -97,6 +97,28 @@
 					</div>
 				</div>
             </div>
+            <!---Usage-->
+            <div class="prod-filters">
+              <div class="panel-heading subhead" role="tab" id="accordion7">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion2" href="#usage" aria-expanded="true" aria-controls="narrow">
+                    <i class="more-less glyphicon glyphicon-plus"></i>
+                    <div class="head-text">
+                      <div class="head-title">Usage</div>
+                    </div>
+                  </a>
+                </h4>
+              </div>
+              <div id="usage" class="panel-collapse collapse subhead" role="tabpanel" aria-labelledby="usage">
+                <div class="panel-body">
+                      {foreach $pusages as $k => $v}
+                        <div class="">
+                          <input type="checkbox" id="pusage{$k}" name="pusage[]" class="iso-filter" value="usage-{$k}"> <label for="pusage{$k}">{$v.name}</label> (<span class="cnt-value">{$v.cnt} item{if $v.cnt gt 1}s{/if}</span>)
+                        </div>
+                      {/foreach}
+                </div>
+              </div>
+            </div>
             <!---Material-->
             <div class="prod-filters">
               <div class="panel-heading subhead" role="tab" id="accordion4">

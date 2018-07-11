@@ -609,6 +609,27 @@
       <edit_template>ec_edit_pcare.tpl</edit_template>
     </section>
     
+    <section level="1">
+      <showlist>FALSE</showlist>
+      <url>product-usage</url>
+      <title>Product usages</title>
+      <type>TABLE</type>
+      <table>
+        <name>tbl_pusage</name>
+        <id>pusage_id</id>
+        <field>pusage_name</field>
+        <deleted>pusage_deleted</deleted>
+        <orderby>pusage_order, pusage_name</orderby>
+        <log>
+          <table>tbl_pusage</table>
+          <id>pusage_id</id>
+          <field>pusage_id</field>
+        </log>
+      </table>
+      <list_template>list_noviewbtn.tpl</list_template>
+      <edit_template>ec_edit_pusage.tpl</edit_template>
+    </section>
+    
     
   </group>
   
@@ -701,6 +722,12 @@
           <field>pmateriallink_product_id</field>
         </associated>
         <associated>
+          <name>pusagelinks</name>
+          <table>tbl_pusagelink</table>
+          <linkfield>product_id</linkfield>
+          <field>pusagelink_product_id</field>
+        </associated>
+        <associated>
           <name>pcarelinks</name>
           <table>tbl_pcarelink</table>
           <linkfield>product_id</linkfield>
@@ -730,6 +757,13 @@
             <reference>product_name</reference> 
             <where>product_published = '1'</where> 
             <orderby>product_name</orderby> 
+          </field>
+          <field> 
+            <name>pusages</name>
+            <table>tbl_pusage</table>
+            <id>pusage_id</id>
+            <reference>pusage_name</reference> 
+            <orderby>pusage_name</orderby> 
           </field>
           <field> 
             <name>ptypes</name>

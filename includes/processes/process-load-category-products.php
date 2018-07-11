@@ -14,6 +14,16 @@ try{
   }
   $SMARTY->assign('ptypes', $ptypes);
   
+  //LOAD PRODUCT USAGES
+  $pusages = array();
+  $sql = "SELECT pusage_id, pusage_name FROM tbl_pusage WHERE pusage_deleted IS NULL ORDER BY pusage_order, pusage_name";
+  if($res = $DBobject->wrappedSql($sql, $paramsType)){
+    foreach($res as $r){
+      $pusages[$r['pusage_id']]['name'] = $r['pusage_name'];
+      $pusages[$r['pusage_id']]['cnt'] = 0;
+    }
+  }
+  $SMARTY->assign('pusages', $pusages);
   
   //LOAD PRODUCT MATERIALS
   $pmaterials = array();

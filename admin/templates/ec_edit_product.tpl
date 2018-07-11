@@ -45,7 +45,7 @@
       </div>
       <ul class="nav nav-tabs" id="myTab">
         <li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-        <li><a href="#materials" data-toggle="tab">Materials & cares</a></li>
+        <li><a href="#materials" data-toggle="tab">Materials, cares & usages</a></li>
         <li><a href="#variants" data-toggle="tab">Variants</a></li>
         <li><a href="#images" data-toggle="tab">Images</a></li>
         <li><a href="#categories" data-toggle="tab">Collections</a></li>
@@ -248,6 +248,24 @@
             {assign var='linking_table_associated_field' value='pcarelink_record_id'} 
             {assign var='linking_table_deleted_field' value='pcarelink_deleted'} 
             {assign var='selected_array' value=$fields.pcarelinks} 
+            {assign var='ignore_value' value='0'} 
+            {include file='form_linking_input.tpl'}
+          </div>
+          <div class="form">
+            <div>
+              <h3>Usage</h3>
+            </div>
+            <input type="hidden" value="product_id" name="default[pusagelink_product_id]" />
+            {assign var='data' value=$fields.options.pusages} 
+            {assign var='proccess_order' value='5'} 
+            {assign var='table_primary_key_field' value='product_id'} 
+            {assign var='table_primary_key_value' value=$fields.product_id} 
+            {assign var='linking_table' value='tbl_pusagelink'} 
+            {assign var='linking_table_primary_key_field' value='pusagelink_id'} 
+            {assign var='linking_table_link_field' value='pusagelink_product_id'} 
+            {assign var='linking_table_associated_field' value='pusagelink_record_id'} 
+            {assign var='linking_table_deleted_field' value='pusagelink_deleted'} 
+            {assign var='selected_array' value=$fields.pusagelinks} 
             {assign var='ignore_value' value='0'} 
             {include file='form_linking_input.tpl'}
           </div>
