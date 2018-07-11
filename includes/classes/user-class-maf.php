@@ -1703,6 +1703,46 @@ class UserClass{
     }
     return false;
   }
+  
+  /**
+   * Process website order in membership syste
+   *
+   * @param array $_memberOrderRecord
+   * @return boolean
+   */
+  function processWebsiteOrder($_memberOrderRecord){
+    
+    $this->errorMsg = null;
+    try{
+      $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+      $authenticationRecord = json_decode($authJSONResponse, true);
+      $token = $authenticationRecord['sessionToken'];
+    }
+    catch(Exception $e){
+      $this->errorMsg = "Invalid API membership number/password.";
+      return false;
+    }
+    try{
+      if($results = $this->medicAlertApi->memberProcessWebsiteOrder($token, $_memberOrderRecord)){
+        //payment processed
+        $this->medicAlertApi->logout($token);
+        return $results;
+      }
+      
+    }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
+      $this->errorMsg = "Your membership number don't match.";
+    }
+    catch(exceptionMedicAlertApiNotAuthenticated $e){
+      $this->errorMsg = "API error: {$e}";
+    }
+    catch(exceptionMedicAlertApiSessionExpired $e){
+      $this->errorMsg = "API error: {$e}";
+    }
+    catch(exceptionMedicAlertApi $e){
+      $this->errorMsg = "API error: {$e}";
+    }
+    return false;
+  }
 
 }
 

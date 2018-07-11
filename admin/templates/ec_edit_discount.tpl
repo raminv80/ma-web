@@ -52,6 +52,14 @@
                 <textarea name="field[1][tbl_discount][{$cnt}][discount_description]" id="id_discount_description" class="tinymce">{$fields.discount_description}</textarea>
               </div>
             </div>
+
+            <div class="row form-group">
+              <label class="col-sm-3 control-label" for="id_discount_code">Membership System Equivalent Code</label>
+              <div class="col-sm-5">
+                <input class="form-control" type="text" onblur="this.value = this.value.toUpperCase();" value="{$fields.discount_membership_system_mapped_code}" name="field[1][tbl_discount][{$cnt}][discount_membership_system_mapped_code]" id="discount_membership_system_mapped_code" >
+                <span class="help-block"></span>
+              </div>
+            </div>
             
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_discount_invoice_message">Invoice message</label>

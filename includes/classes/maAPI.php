@@ -323,6 +323,13 @@ class medicAlertApi {
 		return $response;
 	}
 	
+	/**
+	 * Process payment record
+	 *
+	 * @param string $sessionToken
+	 * @param string $memberPaymentRecord
+	 * @return string
+	 */
 	public function memberProcessPayment($sessionToken, $memberPaymentRecord)
 	{
 	  //create params array to pass to API
@@ -339,6 +346,42 @@ class medicAlertApi {
 	    $response = $this->_processRequest($this->SERVER . '/process_renewal_payment.php', $params);
 	  }catch(Exception $e){
 	    $sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (memberProcessPayment)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
+	    $this->DBobj->wrappedSql($sql);
+	    throw $e;
+	  }
+	  
+	  return $response;
+	}
+	
+	/**
+	 * Process website order in membership system
+	 *
+	 * @param string $sessionToken
+	 * @param string $memberOrderRecord
+	 * @return string
+	 */
+	public function memberProcessWebsiteOrder($sessionToken, $memberOrderRecord)
+	{
+	  //create params array to pass to API
+	  //$this->_saltToken($sessionToken, MD5($this->_getRequestIp()))
+	  $params = array(
+		  'sessionToken' => $this->_escapeNewLines($this->_saltToken($sessionToken, MD5($this->_getRequestIp()))),
+		  'membershipNumber' => $this->_escapeNewLines($memberOrderRecord['membershipNumber']),
+	      'websiteOrderId' => $this->_escapeNewLines($memberOrderRecord['websiteOrderId']),
+	      'orderItems' => $this->_escapeNewLines($memberOrderRecord['orderItems']),
+	      'ccDetails' => $this->_escapeNewLines($memberOrderRecord['ccDetails']),
+	      'discountCode' => $this->_escapeNewLines($memberOrderRecord['discountCode']),
+	      'otype' => $this->_escapeNewLines($memberOrderRecord['orderType']),
+	      'postage_amount' => $this->_escapeNewLines($memberOrderRecord['postageAmount']),
+	      'donation_amount' => $this->_escapeNewLines($memberOrderRecord['donationAmount'])
+	  );
+	//   echo '<pre>';
+	//   print_r($params);
+	//   exit;
+	  try{
+	    $response = $this->_processRequest($this->SERVER . '/process_website_order.php', $params);
+	  }catch(Exception $e){
+	    $sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (memberProcessOrder)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 	    $this->DBobj->wrappedSql($sql);
 	    throw $e;
 	  }
@@ -545,7 +588,8 @@ class medicAlertApi {
 
 		// get the response code
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
+// 		print_r($params);
+// echo $httpCode;exit;
 		
 // 		try {
 // 			if($url == "https://api.medicalert.org.au/member_update.php"){

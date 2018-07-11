@@ -71,7 +71,8 @@ try {
             "usergroup_id" => 1,
             "user_id" => $d['user_id'],
             "isPercentage" => -1,
-            "listing_id" => 777 //All products collection
+            "listing_id" => 777, //All products collection
+            "membership_system_mapped_code" => 'BIRTHDAY'
         );
         if($discountId = $cart_obj->CreateDiscountCode($newDiscountArr)){
       

@@ -467,6 +467,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $pay_obj->SetOrderStatus($paymentId);
           $_SESSION['orderNumber'] = $orderNumber;
           
+          // set default value of order type to be processed on membership system
+          $orderType = $GLOBALS['CONFIG_VARS']['order_type_existing_member'];
+          
           //Init email details
           $SMARTY->unloadFilter('output', 'trimwhitespace');
           $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
@@ -482,6 +485,9 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $hasMAFProd = $cart_obj->HasMAFProducts();
           //MAF - Create new member
           if(empty($userArr) && $hasMAFProd){
+            // set the order type to new member order
+            $orderType = $GLOBALS['CONFIG_VARS']['order_type_new_member'];
+            
             $MAFMemberId = $user_obj->CreateMember($_SESSION['user']['new_user']);
             $user_obj->SetPaymentIdUserTemp($paymentId);
             if(empty($MAFMemberId)){
@@ -771,6 +777,86 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             if($resp = $admin_user_obj->processPayment($userPaymentRecord)){
               $resp = json_decode($resp);
               saveInLog('member-process-payment', 'external', $paymentId, $resp->message);
+            }else{
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
+            }
+          } else {
+            // prepare data for api to process order in membership system
+            $cartItems = array();
+            $discountCode = '';
+            if($order['cart_discount_code'] != ''){
+              $discountCode = ($discountData['discount_membership_system_mapped_code'] != '') ? $discountData['discount_membership_system_mapped_code'] : $order['cart_discount_code'];
+            }
+            $donationAmount = 0;
+            $cart_items = $cart_obj->GetDataProductsOnCart($order_cartId);
+            if(!empty($cart_items)){
+              $i = 0;
+              $j = 0;
+              foreach($cart_items as $item){
+                if($item['cartitem_product_id'] == '217'){
+                  $donationAmount = $donationAmount + $item['cartitem_product_price'];
+                } else if($item['cartitem_product_id'] == '225'){
+                  if($orderType == $GLOBALS['CONFIG_VARS']['order_type_new_member']){
+                    if($i > 0){
+                      $membershipFeeProduct = 'Annual Fee Advance';
+                    } else{
+                      $membershipFeeProduct = '1. Annual Fee - Initial';
+                    }
+                    $cartItems[$j] = array(
+                        'item_code' => $membershipFeeProduct,
+                        'item_qty' => '1'
+                    );
+                    $i++;
+                  } else{
+                    if($item['cartitem_variant_id'] == $GLOBALS['CONFIG_VARS']['membership_card_variant_id']){
+                      $cartItems[$j] = array(
+                        'item_code' => 'MA28',
+                        'item_qty' => '1'
+                      );
+                      $i++;
+                    }
+                    if($item['cartitem_variant_uid'] == 'MSF-LIFEUP'){
+                      $cartItems[$j] = array(
+                        'item_code' => 'Update Fee',
+                        'item_qty' => '1'
+                      );
+                      $i++;
+                    }
+                    if($item['cartitem_variant_uid'] == 'MSF-REAC'){
+                      $cartItems[$j] = array(
+                        'item_code' => '1. Reactivation Fee',
+                        'item_qty' => '1'
+                      );
+                      $i++;
+                    }
+                  }
+                } else{
+                  $cartItems[$j] = array(
+                    'item_code' => $item['cartitem_product_uid'],
+                    'item_qty' => $item['cartitem_quantity']
+                  );
+                }
+                $j++;
+              }
+            }
+            $orderInfo['websiteOrderId'] = $orderNumber;
+            $orderInfo['membershipNumber'] = $_SESSION['user']['public']['id'];
+            $orderInfo['orderType'] = $orderType;
+            $orderInfo['orderItems'] = json_encode($cartItems);
+            // process payment against upaid invoice in membership system
+            $paymentRecord = $pay_obj->GetPaymentRecord($paymentId);
+            $CCdata['card_type'] = $paymentRecord['payment_response_cardscheme'];
+            $orderInfo['ccDetails'] = json_encode($CCdata);
+            $orderInfo['discountCode'] = $discountCode;
+            $orderInfo['postageAmount'] = $shippingFee;
+            $orderInfo['donationAmount'] = $donationAmount;
+            
+            //echo '<pre>';print_r($orderInfo);exit;
+            // user object to call api to process order in membership system
+            $admin_user_obj = new UserClass();
+            if($resp = $admin_user_obj->processWebsiteOrder($orderInfo)){
+              $resp = json_decode($resp);
+              saveInLog('member-process-website-order', 'external', $paymentId, $resp->message);
             }else{
               sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
             }
@@ -1462,6 +1548,86 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               saveInLog('member-process-payment', 'external', $paymentId, $resp->message);
             }else{
               sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment', "Member id:  {$_SESSION['user']['public']['id']} <br>". $user_obj->getErrorMsg());
+            }
+          } else {
+            // prepare data for api to process order in membership system
+            $orderType = $GLOBALS['CONFIG_VARS']['order_type_existing_member'];
+            $cartItems = array();
+            $discountCode = '';
+            if($order['cart_discount_code'] != ''){
+              $discountCode = ($discountData['discount_membership_system_mapped_code'] != '') ? $discountData['discount_membership_system_mapped_code'] : $order['cart_discount_code'];
+            }
+            $donationAmount = 0;
+            $cart_items = $cart_obj->GetDataProductsOnCart($order_cartId);
+            if(!empty($cart_items)){
+              $i = 0;
+              $j = 0;
+              foreach($cart_items as $item){
+                if($item['cartitem_product_id'] == '217'){
+                  $donationAmount = $donationAmount + $item['cartitem_product_price'];
+                } else if($item['cartitem_product_id'] == '225'){
+                  if($orderType == $GLOBALS['CONFIG_VARS']['order_type_new_member']){
+                    if($i > 0){
+                      $membershipFeeProduct = 'Annual Fee Advance';
+                    } else{
+                      $membershipFeeProduct = '1. Annual Fee - Initial';
+                    }
+                    $cartItems[$j] = array(
+                        'item_code' => $membershipFeeProduct,
+                        'item_qty' => '1'
+                    );
+                    $i++;
+                  } else{
+                    if($item['cartitem_variant_id'] == $GLOBALS['CONFIG_VARS']['membership_card_variant_id']){
+                      $cartItems[$j] = array(
+                        'item_code' => 'MA28',
+                        'item_qty' => '1'
+                      );
+                      $i++;
+                    }
+                    if($item['cartitem_product_uid'] == $GLOBALS['CONFIG_VARS']['membership_update_fee']){
+                      $cartItems[$j] = array(
+                        'item_code' => 'Update Fee',
+                        'item_qty' => '1'
+                      );
+                      $i++;
+                    }
+                    if($item['cartitem_product_uid'] == $GLOBALS['CONFIG_VARS']['membership_reactivation_fee']){
+                      $cartItems[$j] = array(
+                        'item_code' => '1. Reactivation Fee',
+                        'item_qty' => '1'
+                      );
+                      $i++;
+                    }
+                  }
+                } else{
+                  $cartItems[$j] = array(
+                    'item_code' => $item['cartitem_product_uid'],
+                    'item_qty' => $item['cartitem_quantity']
+                  );
+                }
+                $j++;
+              }
+            }
+            $orderInfo['websiteOrderId'] = $orderNumber;
+            $orderInfo['membershipNumber'] = $_SESSION['user']['public']['id'];
+            $orderInfo['orderType'] = $orderType;
+            $orderInfo['orderItems'] = json_encode($cartItems);
+            // process payment against upaid invoice in membership system
+            $paymentRecord = $pay_obj->GetPaymentRecord($paymentId);
+            $CCdata['card_type'] = $paymentRecord['payment_response_cardscheme'];
+            $orderInfo['ccDetails'] = json_encode($CCdata);
+            $orderInfo['discountCode'] = $discountCode;
+            $orderInfo['postageAmount'] = $shippingFee;
+            $orderInfo['donationAmount'] = $donationAmount;
+            
+            // user object to call api to process order in membership system
+            $admin_user_obj = new UserClass();
+            if($resp = $admin_user_obj->processWebsiteOrder($orderInfo)){
+              $resp = json_decode($resp);
+              saveInLog('member-process-website-order', 'external', $paymentId, $resp->message);
+            }else{
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
             }
           }
           

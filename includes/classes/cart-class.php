@@ -700,9 +700,17 @@ class cart{
       if(!$hasSeniorsDiscount && !$hasAutismDiscount && !$hasBenevolentDiscount){
         if($discount == 0){
           $discount += $this->GetStainlessSteelDiscount();
+          if($discount > 0 && $cart['cart_discount_code'] == ''){
+            $params = array(
+              ":id" => $this->cart_id,
+              ":discount_code" => 'STAINLESS-STEEL',
+              ":description" => ''
+            );
+            $sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount_description = :description WHERE cart_id = :id";
+            $res = $DBobject->wrappedSql($sql, $params);
+          }
         }
       }
-
       
       $removeFutureYear = false;
       // check if new member
@@ -1544,13 +1552,14 @@ class cart{
         ":discount_end_date" => (empty($_data['end_date'])? null : $_data['end_date']),
         ":discount_unlimited_use" => (empty($_data['isUnlimited'])? 0 : 1),
         ":discount_fixed_time" => (empty($_data['isUnlimited'] && !empty($_data['fixed_time']))? $_data['fixed_time'] : 0),
-        ":discount_published" => (empty($_data['isPublished'])? 0 : 1)
+        ":discount_published" => (empty($_data['isPublished'])? 0 : 1),
+        ":discount_membership_system_mapped_code" => (empty($_data['membership_system_mapped_code'])? '' : $_data['membership_system_mapped_code'])
     );
-
+    
     $sql = "INSERT INTO tbl_discount (discount_code, discount_name, discount_description, discount_amount, discount_amount_percentage, discount_listing_id,
-	      discount_product_id, discount_usergroup_id, discount_user_id, discount_shipping, discount_start_date, discount_end_date, discount_unlimited_use, discount_fixed_time, discount_published, discount_created)
+	      discount_product_id, discount_usergroup_id, discount_user_id, discount_shipping, discount_start_date, discount_end_date, discount_unlimited_use, discount_fixed_time, discount_published, discount_created, discount_membership_system_mapped_code)
 			values (:discount_code, :discount_name, :discount_description, :discount_amount, :discount_amount_percentage, :discount_listing_id,
-	      :discount_product_id, :discount_usergroup_id, :discount_user_id, :discount_shipping, :discount_start_date, :discount_end_date, :discount_unlimited_use, :discount_fixed_time, :discount_published, NOW())";
+	      :discount_product_id, :discount_usergroup_id, :discount_user_id, :discount_shipping, :discount_start_date, :discount_end_date, :discount_unlimited_use, :discount_fixed_time, :discount_published, :discount_membership_system_mapped_code, NOW())";
     if($DBobject->wrappedSql($sql, $params)){
       return $DBobject->wrappedSqlIdentity();
     }

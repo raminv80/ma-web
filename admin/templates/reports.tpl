@@ -27,7 +27,8 @@
               <option value="get-ndis-csv">NDIS submissions</option>
               <option value="get-order-resources-csv">Order resources</option>
               <option value="get-partial-registrations-csv">Partial registrations</option>
-              <option value="get-renewal-payments-csv">Renewal payments synchronisation</option>
+              <!--<option value="get-renewal-payments-csv">Renewal payments synchronisation</option>-->
+              <option value="get-renewal-payments-csv">Orders synchronisation</option>
               <option value="get-survey-csv">Surveys</option>
             </select>
           </div>
