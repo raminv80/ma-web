@@ -268,6 +268,7 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['details']['ndisManagerCompany']			= $_data['ndis_manager_company'];
 		$this->memberRecord['webSiteRecord']['details']['ndisManagerEmail']			    = $_data['ndis_manager_email'];
 		$this->memberRecord['webSiteRecord']['details']['ndisManagerPhone']			    = empty($_data['ndis_manager_phone']) ? '' : '(' . substr($_data['ndis_manager_phone'], 0, 2) . ') ' . substr($_data['ndis_manager_phone'], 2, 4) . ' ' . substr($_data['ndis_manager_phone'], 6, 4);
+		$this->memberRecord['webSiteRecord']['details']['lastValidatedDate']			= date("Y-m-d");
 		
 		$this->memberRecord['webSiteRecord']['address']['address']						= ucwords(strtolower($_data['user_address']));
 		$this->memberRecord['webSiteRecord']['address']['suburb']						= ucwords(strtolower($_data['user_suburb']));
@@ -384,12 +385,16 @@ class UserClass{
 		$user['autoBillingAcceptDate']      = $userData['dataBaseRecord']['details']['autoBillingAcceptDate'];
 		$user['autoBillingIp']              = $userData['dataBaseRecord']['details']['autoBillingIp'];
 		$user['autoBillingBankCustomerNo']  = $userData['dataBaseRecord']['details']['autoBillingBankCustomerNo'];
+		
+		$user['last_validated_date']        = $userData['dataBaseRecord']['details']['lastValidatedDate'];
 
-		//Calculate date difference between renewal date and today
-		$renewalDate = date_create_from_format('Y-m-d', $user['user_RenewalDate']);
-		$renewalMonth = $renewalDate->format('m');
 		$today = new DateTime();
 		$todayDate = $today->format('Ymd');
+		
+		$renewalDate = date_create_from_format('Y-m-d', $user['user_RenewalDate']);
+		$renewalMonth = $renewalDate->format('m');
+		
+		//Calculate date difference between renewal date and today
 		$offerValidFromDate = date('Ymd', strtotime($today->format('Y').'-'.$renewalMonth.'-01'));
 		$offerValidTillDate = date('Ymd', strtotime('last day of +3 month', strtotime($offerValidFromDate)));
 		$interval = $renewalDate->diff($today);
@@ -414,6 +419,18 @@ class UserClass{
 		}else if($day_diff >= -$days_before_opt && $user['autoBilling'] != 't'){
 		  //Allow renew before n days of renewal date
 		  $user['renew_option'] = 't';
+		}
+		
+		//Reset display 'confirm details' notice
+		$user['display_confirm_details_notice'] = 'f';
+		
+		if(!empty($user['last_validated_date'])){
+		  //Calculate time difference to display 'confirm details' notice after a year
+		  $validatedDate = date_create_from_format('Y-m-d', $user['last_validated_date']);
+		  $year_diff = ceil(floatval($validatedDate->diff($today)->format('%R%y.%m%d')));
+		  if($year_diff > 1){
+		    $user['display_confirm_details_notice'] = 't';
+		  }
 		}
 		
 		$user = stripslashes_deep($user);
@@ -1084,6 +1101,8 @@ class UserClass{
 	  $resArr['ndis_manager_email'] = $_data['details']['ndisManagerEmail'];
 	  $resArr['ndis_manager_phone'] = preg_replace("/[^0-9]/", "", $_data['details']['ndisManagerPhone']);
 	  
+	  $resArr['last_validated_date'] = $_data['details']['lastValidatedDate'];
+	  
 	  $resArr['user_donor'] = $_data['details']['isOrganDonor'];
 	  $resArr['user_donorFreeText'] = "";
 	  if($_data['details']['donorEye'] == 't'){
@@ -1191,6 +1210,14 @@ class UserClass{
 	    $medications[] = $rec['value'];
 	  }
 	  
+	  $lastValidatedDateHTML = '';
+	  if(!empty($_mainData['last_validated_date'])){
+	    $lastValidatedDateHTML = '<tr valign="top">
+                    	<td class="title last">Information Validated Date</td>
+                    	<td class="data last">'.unclean(date('d M Y', strtotime($_mainData['last_validated_date']))).'</td>
+                    </tr>';
+	  }
+	  
 	  $buf = '<!DOCTYPE html>
         		<html>
         		<head>
@@ -1219,9 +1246,10 @@ class UserClass{
                     	<td class="data">'.unclean($_mainData['user_membershipTypeText']).'</td>
                     </tr>
                 	<tr valign="top">
-                    	<td class="title last">Renewal Date</td>
-                    	<td class="data last">'.unclean(date('d M Y', strtotime($_mainData['user_RenewalDate']))).'</td>
+                    	<td class="title'. (empty($lastValidatedDateHTML) ? ' last' : '') .'">Renewal Date</td>
+                    	<td class="data'. (empty($lastValidatedDateHTML) ? ' last' : '') .'">'.unclean(date('d M Y', strtotime($_mainData['user_RenewalDate']))).'</td>
                     </tr>
+                    '. $lastValidatedDateHTML .'
                 </table>
             </div>
             <div class="clear"></div>
