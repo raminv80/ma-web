@@ -26,6 +26,7 @@ try{
       header('Location: /shopping-cart#2');
       die();
     }
+    $_SESSION['autoApplydiscount'] = 'no';
     $totals = $cart_obj->CalculateTotal();
     $SMARTY->assign('totals',$totals);
   }

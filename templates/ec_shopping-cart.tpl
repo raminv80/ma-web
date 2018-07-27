@@ -146,7 +146,7 @@
 				<img src="/images/cart-ad2.jpg" class="img-responsive" alt="Special" />
 	        </div>
 	        <div class="col-sm-9 col-md-7">
-		        <h3>Receive an additional sports band or stainless steel product of your choice for only $35*</h3>
+		        <h3>Use code 'STAINLESS-STEEL' to receive an additional sports band or stainless steel product of your choice for only $35*</h3>
 				<div class="condn">*Offer only applies to one additional medical ID, must be equal or lesser value.</div>
 	        </div>
 	        <div class="col-sm-3 col-md-2" id="select">
@@ -198,17 +198,20 @@
 				<div class="row">
 	              <form class="form-horizontal" id="discount-form" accept-charset="UTF-8" action="/process/cart" method="post">
 	                <input type="hidden" value="applyDiscount" name="action" id="action" />
-	                <div class="col-xs-12 col-sm-12 text-left"><h4>Discount code</h4></div>
+	                <div class="col-xs-12 col-sm-12 text-left"><h4>Discount code*</h4></div>
 	                <div class="col-xs-12 form-group">
 	                  <input class="form-control" type="text" placeholder="ENTER CODE" id="promo" value="{if $post}{$post.discount_code}{else}{$cart.cart_discount_code}{/if}" name="discount_code" required/>
 	                  <div class="error-msg help-block"></div>
                       <div>
-	                    {if $notice || $totals.discount_error}<span class="invalid error-textbox">{if $totals.discount_error}{$totals.discount_error}{else}{$notice}{/if}</span>{else}<small><b>{if $discount.discount_name}'{$discount.discount_name}' has been successfully applied.{/if}{if $discount.discount_special_message}<br>{$discount.discount_special_message}{/if}</b></small>{/if}
+	                    {if $notice || $totals.discount_error}<span class="invalid error-textbox">{if $totals.discount_error}{$totals.discount_error}{else}{$notice}{/if}</span>{elseif $totals.discount_code_msg}<small><b class="promo_applied">{$totals.discount_code_msg}</b></small>{else}<small><b class="promo_applied">{if $discount.discount_name}'{$discount.discount_name}' has been successfully applied.{/if}{if $discount.discount_special_message}<br>{$discount.discount_special_message}{/if}</b></small>{/if}
 	                  </div>
 	                </div>
-	                <div class="col-xs-12">
+	                <div class="col-xs-12 form-group">
 	                  <a href="javascript:void(0);" class="btn-red btn" onclick="$('#discount-form').submit();">Apply</a>
 	                </div>
+                  <div class="col-xs-12">
+                    <i>* Note: Only one discount can be applied per transaction, promotional codes cannot be used in conjunction with any other offer.</i>
+                  </div>
 	                <div class="col-xs-6 col-sm-offset-4 col-md-offset-0 col-sm-5 col-md-4 shopping-label"></div>
 	              </form>
 				</div>

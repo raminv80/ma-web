@@ -219,6 +219,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
     case 'applyDiscount':
       $cart_obj = new cart($_SESSION['user']['public']['id']);
       $res = $cart_obj->ApplyDiscountCode($_POST['discount_code']);
+      $_SESSION['autoApplydiscount'] = 'no';
       if($res['error']){
         $_SESSION['reApplydiscount'] = ($res['reApplyAfterLogin'])? $_POST['discount_code'] : '';
         $totals =  $cart_obj->CalculateTotal();
@@ -468,7 +469,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           $_SESSION['orderNumber'] = $orderNumber;
           
           // set default value of order type to be processed on membership system
-          $orderType = $GLOBALS['CONFIG_VARS']['order_type_existing_member'];
+          $orderType = 'existing';
           
           //Init email details
           $SMARTY->unloadFilter('output', 'trimwhitespace');
@@ -486,7 +487,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           //MAF - Create new member
           if(empty($userArr) && $hasMAFProd){
             // set the order type to new member order
-            $orderType = $GLOBALS['CONFIG_VARS']['order_type_new_member'];
+            $orderType = 'new';
             
             $MAFMemberId = $user_obj->CreateMember($_SESSION['user']['new_user']);
             $user_obj->SetPaymentIdUserTemp($paymentId);
@@ -783,20 +784,30 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
           } else {
             // prepare data for api to process order in membership system
             $cartItems = array();
+            $appliedDiscountCode = $order['cart_discount_code'];
             $discountCode = '';
-            if($order['cart_discount_code'] != ''){
+            $hardCodedDiscounts = array('BUPA17', 'BUPA18', 'AUTISM16', 'AUTISM18', 'BENEVOLENT-CPSC', 'BENEVOLENT-HAE', 'STJOHNS', 'STAINLESS-STEEL');
+            if(in_array($order['cart_discount_code'], $hardCodedDiscounts)){
+              $cart_obj->clearDiscountCode($order_cartId);
+              $appliedDiscountCode = '';
+            }
+            if($appliedDiscountCode != ''){
               $discountCode = ($discountData['discount_membership_system_mapped_code'] != '') ? $discountData['discount_membership_system_mapped_code'] : $order['cart_discount_code'];
             }
             $donationAmount = 0;
             $cart_items = $cart_obj->GetDataProductsOnCart($order_cartId);
+            
             if(!empty($cart_items)){
               $i = 0;
               $j = 0;
+              // echo '<pre>';
+              // print_r($cart_items);
               foreach($cart_items as $item){
+                //echo $item['cartitem_variant_uid'].'helo'.'<br/>';
                 if($item['cartitem_product_id'] == '217'){
                   $donationAmount = $donationAmount + $item['cartitem_product_price'];
                 } else if($item['cartitem_product_id'] == '225'){
-                  if($orderType == $GLOBALS['CONFIG_VARS']['order_type_new_member']){
+                  if($orderType == 'new'){
                     if($i > 0){
                       $membershipFeeProduct = 'Annual Fee Advance';
                     } else{
@@ -1551,10 +1562,16 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             }
           } else {
             // prepare data for api to process order in membership system
-            $orderType = $GLOBALS['CONFIG_VARS']['order_type_existing_member'];
+            $orderType = 'existing';
             $cartItems = array();
+            $appliedDiscountCode = $order['cart_discount_code'];
             $discountCode = '';
-            if($order['cart_discount_code'] != ''){
+            $hardCodedDiscounts = array('BUPA17', 'BUPA18', 'AUTISM16', 'AUTISM18', 'BENEVOLENT-CPSC', 'BENEVOLENT-HAE', 'STJOHNS', 'STAINLESS-STEEL');
+            if(in_array($order['cart_discount_code'], $hardCodedDiscounts)){
+              $cart_obj->clearDiscountCode($order_cartId);
+              $appliedDiscountCode = '';
+            }
+            if($appliedDiscountCode != ''){
               $discountCode = ($discountData['discount_membership_system_mapped_code'] != '') ? $discountData['discount_membership_system_mapped_code'] : $order['cart_discount_code'];
             }
             $donationAmount = 0;
@@ -1566,7 +1583,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                 if($item['cartitem_product_id'] == '217'){
                   $donationAmount = $donationAmount + $item['cartitem_product_price'];
                 } else if($item['cartitem_product_id'] == '225'){
-                  if($orderType == $GLOBALS['CONFIG_VARS']['order_type_new_member']){
+                  if($orderType == 'new'){
                     if($i > 0){
                       $membershipFeeProduct = 'Annual Fee Advance';
                     } else{

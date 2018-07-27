@@ -101,12 +101,15 @@ if($itemNumber > 0 && empty($cart['cart_discount_code']) && empty($_SESSION['reA
   }
   
   if($age >= 60 && !empty($seniorsCard)){
-    $cart_obj->ApplyDiscountCode('SENIORS');
-    $totals = $cart_obj->CalculateTotal();
-    if($totals['discount'] > 0 && $_SESSION['user']['public']['maf']['main']['renew_option'] === 'f'){
-      header('Location: /shopping-cart#1');
-      die();
-    }elseif($totals['discount'] > 0 && $_SESSION['user']['public']['maf']['main']['renew_option'] === 't'){
+    
+    // if($totals['discount'] > 0 && $_SESSION['user']['public']['maf']['main']['renew_option'] === 'f'){
+    //   //$_SESSION['autoApplydiscount'] = 'no';
+    //   //header('Location: /shopping-cart#1');
+    //   //die();
+    // }else
+    if($totals['discount'] > 0 && $_SESSION['user']['public']['maf']['main']['renew_option'] === 't'){
+      $cart_obj->ApplyDiscountCode('SENIORS');
+      $totals = $cart_obj->CalculateTotal();
       header('Location: /quick-renew');
       die();
     }

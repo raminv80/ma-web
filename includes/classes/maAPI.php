@@ -70,6 +70,10 @@ class medicAlertApi {
 	const JOIN_CATEGORY_ELITE_18CT_SOLID_GOLD = 5;
 	const JOIN_CATEGORY_OTHER = 6;
 
+	// Define order types
+	const ORDER_TYPE_EXISTING_MEMBER = 20;
+	const ORDER_TYPE_NEW_MEMBER = 10;
+
 	private $SERVER; // Server URL
 	
 	protected $DBobj;
@@ -364,6 +368,10 @@ class medicAlertApi {
 	{
 	  //create params array to pass to API
 	  //$this->_saltToken($sessionToken, MD5($this->_getRequestIp()))
+	  $orderType = self::ORDER_TYPE_EXISTING_MEMBER;
+	  if($memberOrderRecord['orderType'] == 'new'){
+		  $orderType = self::ORDER_TYPE_NEW_MEMBER;
+	  }
 	  $params = array(
 		  'sessionToken' => $this->_escapeNewLines($this->_saltToken($sessionToken, MD5($this->_getRequestIp()))),
 		  'membershipNumber' => $this->_escapeNewLines($memberOrderRecord['membershipNumber']),
@@ -371,7 +379,7 @@ class medicAlertApi {
 	      'orderItems' => $this->_escapeNewLines($memberOrderRecord['orderItems']),
 	      'ccDetails' => $this->_escapeNewLines($memberOrderRecord['ccDetails']),
 	      'discountCode' => $this->_escapeNewLines($memberOrderRecord['discountCode']),
-	      'otype' => $this->_escapeNewLines($memberOrderRecord['orderType']),
+	      'otype' => $this->_escapeNewLines($orderType),
 	      'postage_amount' => $this->_escapeNewLines($memberOrderRecord['postageAmount']),
 	      'donation_amount' => $this->_escapeNewLines($memberOrderRecord['donationAmount'])
 	  );

@@ -607,6 +607,16 @@ class cart{
   function CalculateTotal(){
     global $DBobject, $CONFIG_VARS;
 
+    $auto_discount_msg = '';
+    // check if valid for SENIOR or STAINLESS-STEEL offer and auto apply the best offer
+    if(empty($_SESSION['autoApplydiscount'])){
+      $autoDiscount = $this->getApplyBestDiscount();
+      if($autoDiscount){
+        $auto_discount_msg = 'Best offer was automatically applied to cart.';
+      } else{
+        $this->ApplyDiscountCode('');
+      }
+    }
     $shippingFee = 0;
     $tax = 0;
     if(!empty($CONFIG_VARS['postage'])){
@@ -627,6 +637,7 @@ class cart{
     $hasBenevolentDiscount = false;
 
     if(!empty($cart['cart_discount_code'])){
+      $discountData = $this->GetDiscountData($cart['cart_discount_code']);
       $discArr = $this->ApplyDiscountCode($cart['cart_discount_code'], $shippingFee);
       $discount = $discArr['discount'];
       $discount_error = $discArr['error'];
@@ -642,9 +653,11 @@ class cart{
             if(empty($discount)){
               $discount_error = 'Please add a valid product for this offer.';
               $hasBupaDiscount = false;
+              $this->ApplyDiscountCode('');
             }
           }else{
             $discount_error = 'This offer is for new members only.';
+            $this->ApplyDiscountCode('');
           }
           break;  
         }
@@ -692,25 +705,16 @@ class cart{
           }
           break;
         }
+
+        case 'STAINLESS-STEEL':{
+          $discount = $this->GetStainlessSteelDiscount();
+          break;
+        }
       }
     }
 
     // For MAF only
     if(!$hasBupaDiscount){
-      if(!$hasSeniorsDiscount && !$hasAutismDiscount && !$hasBenevolentDiscount){
-        if($discount == 0){
-          $discount += $this->GetStainlessSteelDiscount();
-          if($discount > 0 && $cart['cart_discount_code'] == ''){
-            $params = array(
-              ":id" => $this->cart_id,
-              ":discount_code" => 'STAINLESS-STEEL',
-              ":description" => ''
-            );
-            $sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount_description = :description WHERE cart_id = :id";
-            $res = $DBobject->wrappedSql($sql, $params);
-          }
-        }
-      }
       
       $removeFutureYear = false;
       // check if new member
@@ -749,10 +753,16 @@ class cart{
     $subtotal = $this->GetSubtotal();
     $gst_taxable = $this->GetGSTSubtotal();
     $gst = round($gst_taxable * (1 - 100 / (100 + $tax)) , 2);
+    $discount_code_msg = '';
+    if($auto_discount_msg != ''){
+      $discount_code_msg = "'".$discountData['discount_name']."' has been successfully applied.<br/>".$auto_discount_msg;
+    }
 
     return array(
         'subtotal' => $subtotal,
         'discount' => $discount,
+        'discount_code' => $cart['cart_discount_code'],
+        'discount_code_msg' => $discount_code_msg,
         'discount_error' => $discount_error,
         'GST_Taxable' => $gst_taxable,
         'GST' => $gst,
@@ -1268,7 +1278,7 @@ class cart{
    * @param string $cartId
    * @return array
    */
-  function ApplyDiscountCode($code, $shippingFee = 0){
+  function ApplyDiscountCode($code, $shippingFee = 0, $calculateOnly = false){
     global $DBobject;
 
     $result = array();
@@ -1420,19 +1430,45 @@ class cart{
 
     $result['discount'] = round($discount, 2);
 
-    $params = array(
-        ":id" => $this->cart_id,
-        ":discount_code" => $code,
-        ":description" => (empty($code))? '' : $res['discount_description']
-    );
-    $sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount_description = :description WHERE cart_id = :id";
-    if($res = $DBobject->wrappedSql($sql, $params)){
+    if($calculateOnly){
       return $result;
+    } else{
+      $params = array(
+          ":id" => $this->cart_id,
+          ":discount_code" => $code,
+          ":description" => (empty($code))? '' : $res['discount_description']
+      );
+      $sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount_description = :description WHERE cart_id = :id";
+      if($res = $DBobject->wrappedSql($sql, $params)){
+        return $result;
+      }
     }
 
     return array(
         'error' => 'Undefined error'
     );
+  }
+
+
+  /**
+   * function to clear applied discount code if the discount is not there
+   */
+  function clearDiscountCode($cartId = ''){
+    global $DBobject;
+
+    if($cartId == '')
+    {
+      $cartId = $this->cart_id;
+    }
+    $params = array(
+        ":id" => $cartId,
+        ":discount_code" => null,
+        ":description" => null
+    );
+    $sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount_description = :description WHERE cart_id = :id";
+    if($res = $DBobject->wrappedSql($sql, $params)){
+      return $result;
+    }
   }
 
 
@@ -2402,6 +2438,71 @@ class cart{
         return $res[0]['cartitem_variant_name'];
       }
       return false;
+  }
+
+  function getApplyBestDiscount() {
+    $validForSeniors = '';
+    $validForStainless = '';
+
+    // check if cart is valid for seniors discount
+    $dob = '';
+    $seniorsCard = '';
+    $age = 0;
+    
+    //New member
+    if(!empty($_SESSION['user']['new_user']) && empty($_SESSION['user']['public']['id'])){
+      $dob = $_SESSION['user']['new_user']['db_dob'];
+      $seniorsCard = $_SESSION['user']['new_user']['seniorscard'];
+    }
+    
+    //Existing member - approved details
+    if(!empty($_SESSION['user']['public']['maf']['update'])){
+      $dob = $_SESSION['user']['public']['maf']['update']['user_dob'];
+      $seniorsCard = $_SESSION['user']['public']['maf']['update']['attributes'][18];
+    }
+    
+    //Existing member - pending details
+    if(!empty($_SESSION['user']['public']['maf']['pending'])){
+      $dob = $_SESSION['user']['public']['maf']['pending']['user_dob'];
+      $seniorsCard = $_SESSION['user']['public']['maf']['pending']['attributes'][18];
+    }
+    
+    if(!empty($dob)){
+      //Calculate date difference between renewal date and today
+      $dob = date_create_from_format('Y-m-d', $dob);
+      $today = new DateTime();
+      $interval = $dob->diff($today);
+      $age = floatval($interval->y);
+    }
+
+    if($age >= 60 && !empty($seniorsCard)){
+      $validForSeniors = true;
+      $chkSeniorsDiscount = $this->ApplyDiscountCode('SENIORS', 0, true);
+    }
+
+    $chkStainlessDiscount = $this->GetStainlessSteelDiscount();
+    if((float)$chkStainlessDiscount > 0){
+      $validForStainless = true;
+    }
+
+    if($validForSeniors && $validForStainless){
+      //echo $chkSeniorsDiscount['discount'].'----'.$chkStainlessDiscount;
+      if((float)$chkSeniorsDiscount['discount'] > (float)$chkStainlessDiscount){
+        $this->ApplyDiscountCode('SENIORS');
+        return true;
+      } else{
+        $this->ApplyDiscountCode('STAINLESS-STEEL');
+        return true;
+      }
+    } elseif($validForSeniors){
+      $this->ApplyDiscountCode('SENIORS');
+      return true;
+    } elseif($validForStainless){
+      $this->ApplyDiscountCode('STAINLESS-STEEL');
+      return true;
+    }
+    return false;
+    
   }
 
 }

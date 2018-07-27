@@ -155,6 +155,18 @@ function updateCart() {
                 $('#' + id).closest('.row').show(); 
               }
             }
+            if(id == 'discount_code'){
+              $('#promo').val(value);
+              $('#promo').attr('value', value);
+              if(value == null){
+                $('.promo_applied').html('');
+              }
+            }
+            if(id == 'discount_code_msg'){
+              if(value != ''){
+                $('.promo_applied').html(value);
+              }
+            }
           });
           // renderShippingMethods(obj.shippingMethods);
           updateShipping();
@@ -213,6 +225,18 @@ function deleteItem(ID) {
                 amount += parseFloat($('#shippingMethod').attr('data-value'));
               }
               $('#' + id).html('$' + amount.formatMoney(2, '.', ','));
+              if(id == 'discount_code'){
+                $('#promo').val(value);
+                $('#promo').attr('value', value);
+                if(value == null){
+                  $('.promo_applied').html('');
+                }
+              }
+              if(id == 'discount_code_msg'){
+                if(value != ''){
+                  $('.promo_applied').html(value);
+                }
+              }
             });
             
           }else{
