@@ -783,16 +783,17 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             }
           } else {
             // prepare data for api to process order in membership system
+            $paymentRecord = $pay_obj->GetPaymentRecord($paymentId);
             $cartItems = array();
             $appliedDiscountCode = $order['cart_discount_code'];
             $discountCode = '';
             $hardCodedDiscounts = array('BUPA17', 'BUPA18', 'AUTISM16', 'AUTISM18', 'BENEVOLENT-CPSC', 'BENEVOLENT-HAE', 'STJOHNS', 'STAINLESS-STEEL');
-            if(in_array($order['cart_discount_code'], $hardCodedDiscounts)){
+            if(in_array($order['cart_discount_code'], $hardCodedDiscounts) && (float)$paymentRecord['payment_discount'] <= 0){
               $cart_obj->clearDiscountCode($order_cartId);
               $appliedDiscountCode = '';
             }
             if($appliedDiscountCode != ''){
-              $discountCode = ($discountData['discount_membership_system_mapped_code'] != '') ? $discountData['discount_membership_system_mapped_code'] : $order['cart_discount_code'];
+              $discountCode = ($discountData['discount_membership_system_mapped_code'] != '') ? $discountData['discount_membership_system_mapped_code'] : $appliedDiscountCode;
             }
             $donationAmount = 0;
             $cart_items = $cart_obj->GetDataProductsOnCart($order_cartId);
@@ -826,14 +827,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                       );
                       $i++;
                     }
-                    if($item['cartitem_variant_uid'] == 'MSF-LIFEUP'){
+                    if($item['cartitem_product_uid'] == 'MSF-LIFEUP'){
                       $cartItems[$j] = array(
                         'item_code' => 'Update Fee',
                         'item_qty' => '1'
                       );
                       $i++;
                     }
-                    if($item['cartitem_variant_uid'] == 'MSF-REAC'){
+                    if($item['cartitem_product_uid'] == 'MSF-REAC'){
                       $cartItems[$j] = array(
                         'item_code' => '1. Reactivation Fee',
                         'item_qty' => '1'
@@ -1562,17 +1563,18 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             }
           } else {
             // prepare data for api to process order in membership system
+            $paymentRecord = $pay_obj->GetPaymentRecord($paymentId);
             $orderType = 'existing';
             $cartItems = array();
             $appliedDiscountCode = $order['cart_discount_code'];
             $discountCode = '';
             $hardCodedDiscounts = array('BUPA17', 'BUPA18', 'AUTISM16', 'AUTISM18', 'BENEVOLENT-CPSC', 'BENEVOLENT-HAE', 'STJOHNS', 'STAINLESS-STEEL');
-            if(in_array($order['cart_discount_code'], $hardCodedDiscounts)){
+            if(in_array($order['cart_discount_code'], $hardCodedDiscounts) && (float)$paymentRecord['payment_discount'] <= 0){
               $cart_obj->clearDiscountCode($order_cartId);
               $appliedDiscountCode = '';
             }
             if($appliedDiscountCode != ''){
-              $discountCode = ($discountData['discount_membership_system_mapped_code'] != '') ? $discountData['discount_membership_system_mapped_code'] : $order['cart_discount_code'];
+              $discountCode = ($discountData['discount_membership_system_mapped_code'] != '') ? $discountData['discount_membership_system_mapped_code'] : $appliedDiscountCode;
             }
             $donationAmount = 0;
             $cart_items = $cart_obj->GetDataProductsOnCart($order_cartId);
@@ -1602,14 +1604,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                       );
                       $i++;
                     }
-                    if($item['cartitem_product_uid'] == $GLOBALS['CONFIG_VARS']['membership_update_fee']){
+                    if($item['cartitem_product_uid'] == 'MSF-LIFEUP'){
                       $cartItems[$j] = array(
                         'item_code' => 'Update Fee',
                         'item_qty' => '1'
                       );
                       $i++;
                     }
-                    if($item['cartitem_product_uid'] == $GLOBALS['CONFIG_VARS']['membership_reactivation_fee']){
+                    if($item['cartitem_product_uid'] == 'MSF-REAC'){
                       $cartItems[$j] = array(
                         'item_code' => '1. Reactivation Fee',
                         'item_qty' => '1'
@@ -1644,7 +1646,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $resp = json_decode($resp);
               saveInLog('member-process-website-order', 'external', $paymentId, $resp->message);
             }else{
-              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1.1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
             }
           }
           
