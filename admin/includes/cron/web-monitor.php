@@ -23,6 +23,9 @@ make_path($logFolderPath . 'something');
 $status = verify_url($websiteURL) ? 'UP' : 'DOWN';
 
 try{
+  // set default time zone to Adelaide time
+  date_default_timezone_set('Australia/Adelaide');
+  
   // Construct a new file/log every month 
   $filename = $logFolderPath . 'ping_log_'. date("Y-m");
   // Log record
