@@ -22,8 +22,8 @@ if(checkToken('admin', $_POST["formToken"])){
   	}else{
   	  $error = "Wrong email or password";
   	}
-  	$sql = "INSERT INTO login_log (username,ip,success) VALUES (:uname,:ip,:success)";
-  	$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR'],"uname"=>$_POST['email'],"success"=>$result));
+  	$sql = "INSERT INTO login_log (username,token,admin_id,ip,success,user_agent,modified) VALUES (:uname,:token,:admin_id,:ip,:success,:user_agent,now())";
+		$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR'],"uname"=>$_POST['email'],"token"=>$_SESSION['user']['admin']["token"],"admin_id"=>$_SESSION['user']['admin']["id"],"success"=>$result,"user_agent"=>$_SERVER['HTTP_USER_AGENT']));
   	
   	$sql = "SELECT COUNT(id) AS cnt FROM login_log WHERE created > DATE_SUB(NOW(), INTERVAL 30 MINUTE) AND ip = :ip AND success = 0";
   	$res = $DBobject->executeSQL($sql,array("ip"=>$_SERVER['REMOTE_ADDR']));

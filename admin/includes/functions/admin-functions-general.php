@@ -15,11 +15,13 @@ function AdminLogIn($email,$password){
   );
   if( $res = $DBobject->wrappedSql($sql , $params) ){
     $_SESSION['user']['admin']["id"]=$res[0]["admin_id"];
-		$_SESSION['user']['admin']["name"]=$res[0]["admin_name"];
-		$_SESSION['user']['admin']["surname"]=$res[0]["admin_surname"];
-		$_SESSION['user']['admin']["email"]=$res[0]["admin_email"];
-		$_SESSION['user']['admin']["level"]=$res[0]["admin_level"];
-		saveInLog('Login', 'tbl_admin', $res[0]["admin_id"]);
+	$_SESSION['user']['admin']["name"]=$res[0]["admin_name"];
+	$_SESSION['user']['admin']["surname"]=$res[0]["admin_surname"];
+	$_SESSION['user']['admin']["email"]=$res[0]["admin_email"];
+	$_SESSION['user']['admin']["level"]=$res[0]["admin_level"];
+	$_SESSION['user']['admin']["token"]=generatetoken();
+	
+	saveInLog('Login', 'tbl_admin', $res[0]["admin_id"]);
     $_SESSION['user']['admin']["strong_password"]=$isValidPassword;
     
     /* $sql = "SELECT access_store_id FROM tbl_access WHERE access_admin_id = :id AND access_deleted IS NULL";
@@ -164,4 +166,29 @@ function get_type_from_extension($ext) {
 		    return 'csv';
 	}
 }
+
+function checkAdminLogin($admin_session, $updateAfter = 1, $logOutAfter = 6){
+	global $DBobject;
+	if( isset($admin_session) && !empty($admin_session) && !empty($admin_session["id"]) && !empty($admin_session["token"]) ){
+	  $log_sql = "SELECT id, (case when ( ( TIME_TO_SEC(TIMEDIFF(now(), modified)) / 3600.0) > $updateAfter ) THEN 1 ELSE 0 END) as update_record from login_log WHERE admin_id = :admin_id AND token = :token AND modified BETWEEN DATE_SUB(NOW(), INTERVAL $logOutAfter HOUR) AND NOW()";
+	  $log_params = array(
+		  ":admin_id" => $admin_session["id"],
+		  ":token" => $admin_session["token"]
+	  );
+	  if( $log_res = $DBobject->wrappedSql($log_sql , $log_params) ){
+		if($log_res[0]['update_record'] == 1){
+		  $sql = "UPDATE `login_log` SET `modified`=now() WHERE id = :id";
+		  $res = $DBobject->wrappedSql( $sql,array("id"=>$log_res[0]['id']) );
+		}
+	  }else{
+		logoutAdmin();
+	  }
+	}
+}
+  
+function logoutAdmin(){
+	$_SESSION = null;
+	session_destroy();
+	session_start();
+ }
 

@@ -30,12 +30,10 @@ $SMARTY->assign('token', $token);
 
 // HANDLE USER PERMISSSIONS TO VIEW SITE. REDIRECT ALL NON-LOGGED IN USERS TO LOGIN
 if($_request['arg1'] == 'logout'){
-  $_SESSION = null;
-  session_destroy();
-  ini_set('session.gc_maxlifetime', 7200);
-  session_set_cookie_params(7200);
-  session_start();
+  logoutAdmin();
 }
+   
+checkAdminLogin($_SESSION['user']['admin'], 1, 6);
 
 if((!isset($_SESSION['user']['admin']) || empty($_SESSION['user']['admin'])) && $_request['arg1'] != 'register' && $_request['arg1'] != 'login' && $_request['arg1'] != 'recover-password'){
   $ignoreArr = array(
