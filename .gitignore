@@ -4,3 +4,5 @@
 /uploads
 /templates_c
 /cache
+/web-monitor
+*.DS_Store

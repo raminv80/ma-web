@@ -38,7 +38,7 @@
 <div id="account">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-6 col-md-7 col-lg-8">
+			<div class="col-sm-6 col-md-7 col-lg-7">
 				<div id="daysrenew" class=" text-center" data-advanced-renewal="{$tempvars.advanced_renewal_mn}">
                 {if $user.maf.main.lifetime eq 1}
                     <img src="/images/active-icon.png" alt="active" /> <span class="warning">You are always protected</span>
@@ -66,7 +66,7 @@
                  {/if}
 				</div>
 			</div>
-			<div class="col-sm-6 col-md-5 col-lg-4">
+			<div class="col-sm-6 col-md-5 col-lg-5">
 				<div id="accinfo">
 					<div class="accrow">
 						<div class="col-xs-8 col-sm-8">
@@ -102,9 +102,19 @@
 						</div>
 					</div>
           {/if}
+          {if $user.maf.main.last_validated_date}
+          <div class="accrow">
+            <div class="col-xs-8 col-sm-8">
+              <img src="/images/{if $user.maf.main.display_confirm_details_notice neq 't'}dashboard-membersince.png{else}warning-orange-icon.png{/if}" alt="Validated" {if $user.maf.main.display_confirm_details_notice eq 't'}title="Please verify your profile"{/if}/>{if $user.maf.main.display_confirm_details_notice eq 't'}<b>{/if} Info. validated date{if $user.maf.main.display_confirm_details_notice eq 't'}</b>{/if}
+            </div>
+            <div class="col-xs-4 col-sm-4">
+              {if $user.maf.main.display_confirm_details_notice eq 't'}<b>{/if}{$user.maf.main.last_validated_date|date_format:"%d/%m/%Y"}{if $user.maf.main.display_confirm_details_notice eq 't'}</b>{/if}
+            </div>
+          </div>
+          {/if}
           <div class="accrow">
             <div class="col-sm-12">
-              <img src="/images/dashboard-name.png" alt="Account" /> <a href="/my-purchases">My purchases</a>
+              <img src="/images/dashboard-memberno.png" alt="Account" /> <a href="/my-purchases">My purchases</a>
             </div>
           </div>
 					<div class="accrow">

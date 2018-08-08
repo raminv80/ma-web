@@ -47,15 +47,17 @@
 
 <div id="updateprof">
   <div class="container">
-    <div id="update-profile-wrapper">
+    <div id="update-profile-wrapper" data-last-validated="{$user.maf.main.last_validated_date}" data-display-confirmation="{$user.maf.main.display_confirm_details_notice}">
       <div class="row">
         <div class="col-sm-12 col-md-10 col-md-offset-1 text-center">
           <a href="/process/print-profile" target="_blank" title="Click to print profile" class="btn btn-grey"><img src="/images/print.png" alt="Print" /> Print my {if $user.maf.main.locked}current {/if}profile</a>
+          {* if $user.maf.main.last_validated_date}<div>Last validated date: {$user.maf.main.last_validated_date|date_format:'%d/%m/%Y'}<br><br></div>{/if *}
         </div>
         <div class="col-sm-12 col-md-10 col-md-offset-1 text-center" {if $user.maf.main.membership_system_locked}style="display:none;"{/if}>    
-          <form id="update-profile-form" role="form" accept-charset="UTF-8" action="" method="post">
+          <form id="update-profile-form" role="form" accept-charset="UTF-8" action="" method="post" data-changed="0">
             <input type="hidden" value="update-profile" name="action" id="action" />
             <input type="hidden" name="formToken" id="formToken" value="{$token}" />
+            <input type="hidden" class="exclude" name="hschngd" id="hschngd" value="0" />
             <div class="row">
               <div class="col-sm-12 text-center">
                 <div class="error-textbox" style="display:none"></div>
@@ -698,6 +700,20 @@ The IHI is part of the government e-health initiative developed to enhance the w
               </div>
             </div>
             <br />
+            {if $user.maf.main.lifetime eq 1}
+            <div class="row">
+              <div class="col-sm-10 col-sm-offset-1 text-left">
+                <input type="checkbox" class="exclude" id="order-card" name="order_card" value="yes" /> <label class="checkbox-label" for="order-card">Tick this box if you'd like to order a membership card containing your updated information for $8.</label>
+                <br><br>
+              </div>
+            </div>
+            {/if}
+            <div class="row">
+              <div class="col-sm-10 col-sm-offset-1 text-left form-group">
+                <input type="checkbox" class="form-control exclude" id="profile-confirmation" name="profile-confirmation" value="yes" required="required"/> <label class="checkbox-label" for="profile-confirmation">By ticking this box I am confirming that I have reviewed all the information stored in my profile and am verifying that all information is up-to-date.</label>
+                <div class="error-msg help-block"></div>
+              </div>
+            </div>
             <div class="row">
               <div class="col-sm-12">
               <div class="row error-msg" id="form-error" style="display:none"></div>
@@ -715,19 +731,10 @@ The IHI is part of the government e-health initiative developed to enhance the w
                 </div>
               </div>
             </div>
-            {if $user.maf.main.lifetime eq 1}
             <div class="row">
-              <div class="col-sm-12">
-                <input type="checkbox" name="order_card" value="yes" /> <b>Tick this box if you'd like to order a membership card containing your updated information for $8.</b><br><br>
-              </div>
-            </div>
-            {/if}
-            <div class="row">
-              <div class="col-sm-5 col-sm-offset-1">
-                <a href="/my-account" title="Back to dashboard" class="btn btn-red">< NO CHANGES, GO BACK TO DASHBOARD</a>
-              </div>
-              <div class="col-sm-5">
-                <a href="javascript:void(0)" class="btn btn-red process-cnt" id="submit-btn" title="Click to save changes" onclick="$('#update-profile-form').submit();">Save my changes</a>
+              <div class="col-sm-6 col-sm-offset-3">
+                <br>
+                <a href="javascript:void(0)" class="btn btn-red process-cnt" id="submit-btn" title="Click to save changes" onclick="$('#update-profile-form').submit();">Save my changes and verify</a>
               </div>
             </div>
             {/if}
@@ -948,6 +955,12 @@ The IHI is part of the government e-health initiative developed to enhance the w
       }
     });
     
+    
+    var $form = $('#update-profile-form :input').not('.exclude'),
+    origForm = $form.serialize();
+    $('#update-profile-form :input').not('.exclude').on('change input', function() {
+        $('#hschngd').val($form.serialize() !== origForm ? 1 : 0);
+    });
     
   });
 

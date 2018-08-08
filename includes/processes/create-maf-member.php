@@ -1,11 +1,14 @@
 <?php
+echo 'helo';
+echo $_SERVER['REMOTE_ADDR'];
+exit;
 if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
   
   set_include_path($_SERVER['DOCUMENT_ROOT']);
   include_once 'includes/functions/functions.php';
   global $SMARTY, $DBobject, $CONFIG, $GA_ID;
   
-  $email = 'bekmoorenco@outlook.com';
+  $email = 'garman@internode.on.net ';
   
   $sql = "SELECT * FROM tbl_usertemp WHERE usertemp_email LIKE :email";
   $params = array(

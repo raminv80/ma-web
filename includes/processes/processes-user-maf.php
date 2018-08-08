@@ -167,6 +167,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
             $url = empty($_POST['redirect']) ? $_SERVER['HTTP_REFERER'] : $_POST['redirect'];
             saveInLog('member-login', 'external', $_SESSION['user']['public']['id']);
             $_SESSION['user']['new_user'] = null;
+
             if(!empty($GA_ID)){
               sendGAEvent($GA_ID, 'user', 'login', $_SESSION['user']['public']['id']);
               $cart_obj = new cart($_SESSION['user']['public']['id']);
@@ -193,7 +194,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       $user_obj = new UserClass();
       if($loginCheck = $user_obj->setSessionVars($_SESSION['user']['public']['maf']['token'])){
         
-        if($user_obj->isLifetimeMember($_SESSION['user']['public']['maf']['main']['user_membershipType']) || 
+        if(($user_obj->isLifetimeMember($_SESSION['user']['public']['maf']['main']['user_membershipType']) && !empty($_POST['hschngd'])) || 
             (!$user_obj->isPendingMember($_SESSION['user']['public']['maf']['main']['user_status_db']) 
                 && $user_obj->isAnnualMember($_SESSION['user']['public']['maf']['main']['user_membershipType']) 
                 && ($user_obj->isUnfinancialMember($_SESSION['user']['public']['maf']['main']['user_status_db']) 
@@ -373,6 +374,7 @@ if($_GET["logout"]){
   $_SESSION['user']['public'] = null;
   $_SESSION['user']['new_user'] = null;
   $_SESSION['address'] = null;
+  $_SESSION['autoApplydiscount'] = null;
   session_regenerate_id();
   if(empty($redirect) || preg_match('/process/', $_SERVER['HTTP_REFERER'])) $redirect = '/';
   header('Location: ' . $redirect);
@@ -453,4 +455,19 @@ function SetMemberCampaignMonitor($listId, $data, $flag){
     sendMail($to, $from, $fromEmail, $subject, $body);
   }
   return false;
+}
+
+function check_diff_multi($array1, $array2){
+  $result = array();
+  foreach($array1 as $key => $val) {
+    if(isset($array2[$key])){
+      if(is_array($val) && $array2[$key]){
+        $result[$key] = check_diff_multi($val, $array2[$key]);
+      }
+    } else {
+      $result[$key] = $val;
+    }
+  }
+  
+  return $result;
 }
