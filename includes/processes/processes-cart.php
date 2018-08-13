@@ -863,14 +863,14 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $orderInfo['postageAmount'] = $shippingFee;
             $orderInfo['donationAmount'] = $donationAmount;
             
-            //echo '<pre>';print_r($orderInfo);exit;
+            // echo '<pre>';print_r($orderInfo);exit;
             // user object to call api to process order in membership system
             $admin_user_obj = new UserClass();
             if($resp = $admin_user_obj->processWebsiteOrder($orderInfo)){
               $resp = json_decode($resp);
               saveInLog('member-process-website-order', 'external', $paymentId, $resp->message);
             }else{
-              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1.1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
             }
           }
           
@@ -1646,7 +1646,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               $resp = json_decode($resp);
               saveInLog('member-process-website-order', 'external', $paymentId, $resp->message);
             }else{
-              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1.1)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
+              sendErrorMail('weberrors@them.com.au', $from, $fromEmail, 'Process payment after successfull payment (1.2)', "Member id:  {$_SESSION['user']['public']['id']} <br>". $admin_user_obj->getErrorMsg());
             }
           }
           

@@ -1758,7 +1758,7 @@ class UserClass{
       }
       
     }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
-      $this->errorMsg = "Your membership number don't match.";
+			$this->errorMsg = "Required info missing.";
     }
     catch(exceptionMedicAlertApiNotAuthenticated $e){
       $this->errorMsg = "API error: {$e}";
