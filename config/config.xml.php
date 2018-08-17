@@ -589,8 +589,8 @@
     <type>2</type><!-- articles -->
     <type>5</type><!-- videos -->
     <file>ListClass</file>
-    <orderby>news_start_date DESC</orderby>
-    <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL)]]></where>
+    <orderby>news_start_date DESC, news_id DESC</orderby>
+    <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL) AND (listing_schedule_end > NOW() OR listing_schedule_end IS NULL)]]></where>
     <table>
       <name>tbl_listing</name>
       <field>listing_url</field>

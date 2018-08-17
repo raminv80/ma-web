@@ -10,7 +10,7 @@ if(!empty($SMARTY->getTemplateVars('listing_associate4'))){
                         LEFT JOIN tbl_listing tbl ON tbl_listing.listing_parent_id = tbl.listing_id 
                         WHERE newscatlink_cat_id = :news_cat_id AND newscatlink_deleted IS NULL AND 
                         tbl_listing.listing_published = 1 AND tbl_listing.listing_deleted IS NULL AND  
-                        (tbl_listing.listing_schedule_start < NOW() OR tbl_listing.listing_schedule_start IS NULL) AND
+                        (tbl_listing.listing_schedule_start < NOW() OR tbl_listing.listing_schedule_start IS NULL)  AND
                         (tbl_listing.listing_schedule_end > NOW() OR tbl_listing.listing_schedule_end IS NULL)  
                         ORDER BY news_start_date DESC, news_id DESC LIMIT 3";
     $params = array('news_cat_id' => $newsCatId);
