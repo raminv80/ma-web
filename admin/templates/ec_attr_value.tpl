@@ -137,6 +137,12 @@
         <input class="form-control number" type="text" maxlength="3" value="{if $attr_value.attr_value_var7}{$attr_value.attr_value_var7}{else}0{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_var7]" id="attr_value_var7_{$attrvalueno}">
       </div>
     </div>
+    <div class="row form-group">
+      <label class="col-sm-3 control-label" for="attr_value_var8_{$attrvalueno}">Engraving line 8</label>
+      <div class="col-sm-4">
+        <input class="form-control number" type="text" maxlength="3" value="{if $attr_value.attr_value_var8}{$attr_value.attr_value_var8}{else}0{/if}" name="field[10][tbl_attr_value][{$attrvalueno}][attr_value_var8]" id="attr_value_var8_{$attrvalueno}">
+      </div>
+    </div>
     {/if}
     <div class="row form-group">
       <label class="col-sm-3 control-label" for="attr_value_order_{$attrvalueno}">Order</label>

@@ -223,7 +223,7 @@
                     <div class="charrow-wrapper" style="background: url('{$value.attr_value_image}') no-repeat;">
 
 	                <div class="charrowin">
-                    {for $var=1 to 7}
+                    {for $var=1 to 8}
                       {$varName = 'attr_value_var'|cat:$var}
                       {if $value[$varName] gt 0}
                       <div class="row charrow">
@@ -294,12 +294,11 @@
       <div class="col-sm-12 text-center">
       {foreach $productassoc as $item}
         {if $item.gallery && $item.gallery.0.gallery_link}
-          {if $item.product_published eq 1}
-          <h2>Members also purchased</h2>
-          {break}
-          {/if}
+		{if $item.product_published eq 1}
+        <h2>Members also purchased</h2>
+		{break}
+		{/if}
         {/if}
-        {break}
       {/foreach}
       </div>
     </div>
