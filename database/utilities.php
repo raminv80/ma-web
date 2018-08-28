@@ -1159,7 +1159,23 @@ function sendGAEnEcImpressionAction($_tid, $_action, $_proditemArr, $_impression
   $tid = $_tid; // Put your own Analytics ID in here
   $cid = !empty($_cid)?$_cid:gaParseCookie();
   $dh = !empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:$_SERVER['HTTP_HOST'];
+  $dl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+  $dp = $_SERVER['REQUEST_URI'];
 
+  if(strpos($cid, '.') === false) {
+    // Send page view
+    $data = array(
+        'v' => $v,
+        'tid' => $tid,
+        'cid' => $cid,
+        't' => 'pageview',
+        'dl' => $dl,
+        'dh' => $dh,
+        'dp' => $dp
+    );
+    gaFireHit($data);
+  }
+  
   // Send Transaction hit
   $data = array(
       'v' => $v,

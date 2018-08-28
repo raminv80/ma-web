@@ -1279,7 +1279,7 @@ class cart{
    * @return array
    */
   function ApplyDiscountCode($code, $shippingFee = 0, $calculateOnly = false){
-    global $DBobject;
+    global $DBobject, $GA_ID;
 
     $result = array();
     $code = strtoupper(trim($code));
@@ -1440,6 +1440,9 @@ class cart{
       );
       $sql = "UPDATE tbl_cart SET cart_discount_code = :discount_code, cart_discount_description = :description WHERE cart_id = :id";
       if($res = $DBobject->wrappedSql($sql, $params)){
+        if(!empty($GA_ID)){
+          sendGAEvent($GA_ID, 'discount-code', 'apply', $code);
+        }
         return $result;
       }
     }
