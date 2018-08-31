@@ -609,13 +609,8 @@ class cart{
 
     $auto_discount_msg = '';
     // check if valid for SENIOR or STAINLESS-STEEL offer and auto apply the best offer
-    if(empty($_SESSION['autoApplydiscount'])){
-      $autoDiscount = $this->getApplyBestDiscount();
-      if($autoDiscount){
-        $auto_discount_msg = 'Best offer was automatically applied to cart.';
-      } else{
-        $this->ApplyDiscountCode('');
-      }
+    if(empty($_SESSION['autoApplydiscount']) && $this->getApplyBestDiscount()){
+        $auto_discount_msg = 'Best offer was automatically applied to cart.'; 
     }
     $shippingFee = 0;
     $tax = 0;
@@ -2503,6 +2498,10 @@ class cart{
     } elseif($validForStainless){
       $this->ApplyDiscountCode('STAINLESS-STEEL');
       return true;
+    } 
+    $cart = $this->GetDataCart($this->cart_id);
+    if(!empty($cart['cart_discount_code'])){
+      $this->ApplyDiscountCode('');
     }
     return false;
     
