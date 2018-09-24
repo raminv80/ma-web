@@ -275,7 +275,7 @@ body, td {
                       <tr>
                         <td class="w640" width="640" style="font-family: Arial, sans-serif; font-size: 14px; line-height: 24px; text-align: left;">
                           {if $hasMAFProd}
-                            <p>Your MedicAlert product order has been placed and will be processed by our Membership Services team. Please allow 10 working days to receive your order (if no adjustments required).Below is a summary of your order. Please retain this as proof of purchase.</p>
+                            <p>Your MedicAlert product order has been placed and will be processed by our Membership Services team. Please allow up to 10 business days to process and dispatch your order (if no adjustments are required). Below is a summary of your order. Please retain this as proof of purchase.</p>
                               {$additional_message}
                           {/if}
                           {if $hasDonation}

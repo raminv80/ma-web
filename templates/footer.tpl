@@ -109,7 +109,7 @@
 
         <div class="col-xs-12 visible-xs text-center">
 			<a href="/privacy-policy">Privacy policy</a> | <a href="/terms-and-conditions">Terms &amp; conditions</a><br />
-			&copy; Copyright {$COMPANY.name} {"Y"|date}. <br />
+			&copy; Copyright Australia Medic Alert Foundation {"Y"|date}. <br />
 			Made by <a href="http://www.them.com.au" target="_blank" title="Them Advertising">Them</a>
         </div>
       </div>
@@ -120,7 +120,7 @@
     <div id="mobbot">
       <div class="container">
         <div class="row">
-          <div class="col-sm-9">&copy; Copyright {$COMPANY.name} {"Y"|date}. | <a href="/privacy-policy" title="View our privacy policy">Privacy policy</a> | <a href="/terms-and-conditions" title="View our terms and conditions">Terms &amp; conditions</a>
+          <div class="col-sm-9">&copy; Copyright Australia Medic Alert Foundation {"Y"|date}. | <a href="/privacy-policy" title="View our privacy policy">Privacy policy</a> | <a href="/terms-and-conditions" title="View our terms and conditions">Terms &amp; conditions</a>
           </div>
           <div class="col-sm-3 text-right">
             <div class="text-center-xs">

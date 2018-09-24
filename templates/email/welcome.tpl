@@ -545,7 +545,7 @@ a {
                         <td class="w580" width="580">
                           <p style="font-size: 16px; line-height: 20px; color: #ed174f; font-weight: bold; font-family: Calibri, Arial, sans-serif;">What happens next?</p>
                           <p style="font-size: 14px; line-height: 20px; font-weight: 300; font-family: Calibri, Arial, sans-serif;">Our Membership Services team will review your details and may recommend adding further medical information to your new MedicAlert ID before it's processed.</p>
-                          <p style="font-size: 14px; line-height: 20px; font-weight: 300; font-family: Calibri, Arial, sans-serif;">Once your order is processed, a membership pack including your MedicAlert ID and membership cards will be posted to you. Please allow 10 working days to receive your order.</p>
+                          <p style="font-size: 14px; line-height: 20px; font-weight: 300; font-family: Calibri, Arial, sans-serif;">Once your order is processed, a membership pack including your MedicAlert ID and membership cards will be posted to you. Please allow up to 10 business days to process and dispatch your order.</p>
                         </td>
                         <td class="w30" width="30"></td>
                       </tr>
