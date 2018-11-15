@@ -138,12 +138,12 @@ if($res = $DBobject->wrappedSql($sql)){
       
       $params['product_published'] = 1;
       
-      $INSsql = "INSERT INTO tbl_product ( product_migration_id, product_old_id, product_object_id, product_type_id, product_name, product_url, product_description,
-    	             product_associate1, product_associate2, product_associate3, product_seo_title, product_meta_description, product_featured, 
-    	             product_flag1, product_order, product_published, product_created, product_modified )
-    				  
-    	      VALUES( :product_migration_id, :product_old_id, :product_object_id, :product_type_id, :product_name, :product_url, :product_description,
-    	             :product_associate1, :product_associate2, :product_associate3, :product_seo_title, :product_meta_description, :product_featured, 
+      $INSsql = "INSERT INTO tbl_product ( product_migration_id, product_old_id, product_object_id, product_type_id, product_name, product_url, product_description,
+    	             product_associate1, product_associate2, product_associate3, product_seo_title, product_meta_description, product_featured, 
+    	             product_flag1, product_order, product_published, product_created, product_modified )
+    				  
+    	      VALUES( :product_migration_id, :product_old_id, :product_object_id, :product_type_id, :product_name, :product_url, :product_description,
+    	             :product_associate1, :product_associate2, :product_associate3, :product_seo_title, :product_meta_description, :product_featured, 
     	             :product_flag1, :product_order, :product_published, NOW(), NOW() )";
       
       $DBobject->wrappedSql($INSsql, $params);
@@ -164,7 +164,7 @@ if($res = $DBobject->wrappedSql($sql)){
           
           $collectListingObjID = $Cres[0]['listing_object_id'];
           
-          $collsql = "INSERT INTO tbl_productcat ( productcat_listing_id, productcat_product_id, productcat_created, productcat_modified )
+          $collsql = "INSERT INTO tbl_productcat ( productcat_listing_id, productcat_product_id, productcat_created, productcat_modified )
     				  VALUES( :productcat_listing_id, :productcat_product_id, NOW(), NOW() )";
           
           $DBobject->wrappedSql($collsql, array(
@@ -188,7 +188,7 @@ if($res = $DBobject->wrappedSql($sql)){
           
           $pmaterial_id = $Mres[0]['pmaterial_id'];
           
-          $matsql = "INSERT INTO tbl_pmateriallink ( pmateriallink_record_id, pmateriallink_product_id, pmateriallink_created, pmateriallink_modified )
+          $matsql = "INSERT INTO tbl_pmateriallink ( pmateriallink_record_id, pmateriallink_product_id, pmateriallink_created, pmateriallink_modified )
     				  VALUES( :pmateriallink_record_id, :pmateriallink_product_id, NOW(), NOW() )";
           
           $DBobject->wrappedSql($matsql, array(
@@ -204,7 +204,7 @@ if($res = $DBobject->wrappedSql($sql)){
       
       foreach($cares as $care){
         
-        $caresql = "INSERT INTO tbl_pcarelink ( pcarelink_record_id, pcarelink_product_id, pcarelink_created, pcarelink_modified )
+        $caresql = "INSERT INTO tbl_pcarelink ( pcarelink_record_id, pcarelink_product_id, pcarelink_created, pcarelink_modified )
     				  VALUES( :pcarelink_record_id, :pcarelink_product_id, NOW(), NOW() )";
         
         $DBobject->wrappedSql($caresql, array(
@@ -290,10 +290,10 @@ function set_variants($product_id, $linking_id, $product_type){
         
         $params['variant_order'] = 999;
         
-        $INSsql = "INSERT INTO tbl_variant ( variant_migration_id, variant_product_id, variant_uid, variant_price, variant_limitedstock, variant_new, 
-                 variant_published, variant_order, variant_created, variant_modified )
-    
-  	      VALUES( :variant_migration_id, :variant_product_id, :variant_uid, :variant_price, :variant_limitedstock, :variant_new, :variant_published,
+        $INSsql = "INSERT INTO tbl_variant ( variant_migration_id, variant_product_id, variant_uid, variant_price, variant_limitedstock, variant_new, 
+                 variant_published, variant_order, variant_created, variant_modified )
+    
+  	      VALUES( :variant_migration_id, :variant_product_id, :variant_uid, :variant_price, :variant_limitedstock, :variant_new, :variant_published,
   	             :variant_order, NOW(), NOW() )";
         
         $DBobject->wrappedSql($INSsql, $params);
@@ -302,20 +302,20 @@ function set_variants($product_id, $linking_id, $product_type){
         
         // Colour
         
-        $Csql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
-                FROM  `tbl_attr_value`
-                LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-                WHERE  `attr_value_deleted` IS NULL
-                AND attribute_deleted IS NULL
-                AND attribute_name LIKE  'Colour'
+        $Csql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
+                FROM  `tbl_attr_value`
+                LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
+                WHERE  `attr_value_deleted` IS NULL
+                AND attribute_deleted IS NULL
+                AND attribute_name LIKE  'Colour'
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
         
         if($Cres = $DBobject->wrappedSql($Csql, array(
             'attr_value_name' => trim($r['Colour']) 
         ))){
           
-          $collsql = "INSERT INTO tbl_productattr ( productattr_variant_id, productattr_attribute_id, productattr_attr_value_id,
-                        productattr_created, productattr_modified )
+          $collsql = "INSERT INTO tbl_productattr ( productattr_variant_id, productattr_attribute_id, productattr_attr_value_id,
+                        productattr_created, productattr_modified )
       			  VALUES( :productattr_variant_id, :productattr_attribute_id, :productattr_attr_value_id, NOW(), NOW() )";
           
           $DBobject->wrappedSql($collsql, array(
@@ -329,12 +329,12 @@ function set_variants($product_id, $linking_id, $product_type){
         
         // Medical ID size
         
-        $Msql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
-                FROM  `tbl_attr_value`
-                LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-                WHERE  `attr_value_deleted` IS NULL
-                AND attribute_deleted IS NULL
-                AND attribute_name LIKE  'Medical ID size'
+        $Msql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
+                FROM  `tbl_attr_value`
+                LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
+                WHERE  `attr_value_deleted` IS NULL
+                AND attribute_deleted IS NULL
+                AND attribute_name LIKE  'Medical ID size'
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
         
         $size = (($product_type == "Dog tags")? trim($r['Medical ID size']) : trim($r['Medical ID size']) . " (" . ucfirst(substr($product_type, 0, 1)) . ")");
@@ -343,8 +343,8 @@ function set_variants($product_id, $linking_id, $product_type){
             'attr_value_name' => $size 
         ))){
           
-          $collsql = "INSERT INTO tbl_productattr ( productattr_variant_id, productattr_attribute_id, productattr_attr_value_id,
-                        productattr_created, productattr_modified )
+          $collsql = "INSERT INTO tbl_productattr ( productattr_variant_id, productattr_attribute_id, productattr_attr_value_id,
+                        productattr_created, productattr_modified )
       			  VALUES( :productattr_variant_id, :productattr_attribute_id, :productattr_attr_value_id, NOW(), NOW() )";
           
           $DBobject->wrappedSql($collsql, array(
@@ -358,20 +358,20 @@ function set_variants($product_id, $linking_id, $product_type){
         
         // Length
         
-        $Lsql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
-                FROM  `tbl_attr_value`
-                LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-                WHERE  `attr_value_deleted` IS NULL
-                AND attribute_deleted IS NULL
-                AND attribute_name LIKE  'Length'
+        $Lsql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
+                FROM  `tbl_attr_value`
+                LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
+                WHERE  `attr_value_deleted` IS NULL
+                AND attribute_deleted IS NULL
+                AND attribute_name LIKE  'Length'
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
         
         if($Lres = $DBobject->wrappedSql($Lsql, array(
             'attr_value_name' => trim($r['Length']) 
         ))){
           
-          $collsql = "INSERT INTO tbl_productattr ( productattr_variant_id, productattr_attribute_id, productattr_attr_value_id,
-                        productattr_created, productattr_modified )
+          $collsql = "INSERT INTO tbl_productattr ( productattr_variant_id, productattr_attribute_id, productattr_attr_value_id,
+                        productattr_created, productattr_modified )
       			  VALUES( :productattr_variant_id, :productattr_attribute_id, :productattr_attr_value_id, NOW(), NOW() )";
           
           $DBobject->wrappedSql($collsql, array(
@@ -385,4 +385,4 @@ function set_variants($product_id, $linking_id, $product_type){
       }
     }
   }
-}
+}
