@@ -1,14 +1,12 @@
 <?php
-echo 'helo';
-echo $_SERVER['REMOTE_ADDR'];
-exit;
-if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
+//TODO: limitation to Them ip should be more flexible. At least make it enviromental config
+if($_SERVER['REMOTE_ADDR'] == '45.124.202.249'){
   
   set_include_path($_SERVER['DOCUMENT_ROOT']);
   include_once 'includes/functions/functions.php';
   global $SMARTY, $DBobject, $CONFIG, $GA_ID;
   
-  $email = 'garman@internode.on.net ';
+  $email = 'medicalert@beeface.com.au';
   
   $sql = "SELECT * FROM tbl_usertemp WHERE usertemp_email LIKE :email";
   $params = array(
@@ -52,12 +50,13 @@ if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
       );
       try{
         // Send welcome email
-        $SMARTY->assign('user', $userArr);
+      /*  $SMARTY->assign('user', $userArr);
         $to = $userArr['email'];
         $subject = 'MedicAlert Foundation Registration';
         $body = $SMARTY->fetch('email/welcome.tpl');
         sendMail($to, $from, $fromEmail, $subject, $body);
-        echo $body;
+        echo $body;*/
+		print_r($userArr);
       }
       catch(Exception $e){}
     
@@ -65,5 +64,8 @@ if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
   }
   
   
+}else{
+echo "remote ".$_SERVER['REMOTE_ADDR']." failed\r\n";
 }
+echo "exit!\r\n";
 die();

@@ -1,4 +1,5 @@
 <?php
+die('disabled');
 global $SMARTY, $DBobject, $CONFIG;
 $referer = parse_url($_SERVER['HTTP_REFERER']);
 if(true){

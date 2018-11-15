@@ -1,5 +1,6 @@
 <?php
 if($_SERVER['REMOTE_ADDR'] == '45.124.202.249'){
+die('disabled');
   set_include_path ( $_SERVER ['DOCUMENT_ROOT'] );
   include_once 'includes/functions/functions.php';
   global $DBobject, $CONFIG;

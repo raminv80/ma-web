@@ -630,7 +630,6 @@
       <edit_template>ec_edit_pusage.tpl</edit_template>
     </section>
     
-    
   </group>
   
   <group name="E-commerce">

@@ -4,6 +4,8 @@
  * Input - valid string format: [HEX-timestamp]m[HEX-membership_number]r[HEX-renewal_date(yyyymmdd)]
  */
 
+die('disabled');
+
 $redirect = 'my-account';
 
 try{

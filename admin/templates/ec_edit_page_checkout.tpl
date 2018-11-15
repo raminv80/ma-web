@@ -106,12 +106,12 @@
                 <input class="form-control number" type="text" value="{if $fields.listing_order neq ''}{$fields.listing_order}{else}999{/if}" name="field[1][tbl_listing][{$cnt}][listing_order]" id="id_listing_order">
               </div>
             </div>
-            <!-- <div class="row form-group">
+            <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_title">Title</label>
               <div class="col-sm-5">
                 <input class="form-control" maxlength="500" type="text" value="{$fields.listing_title}" name="field[1][tbl_listing][{$cnt}][listing_title]" id="id_listing_title">
               </div>
-            </div> -->
+            </div>
             <div class="row form-group">
               <label class="col-sm-3 control-label" for="id_listing_content1">New members - content</label>
               <div class="col-sm-5">

@@ -622,6 +622,9 @@ RewriteRule ^seniorswa$ /seniors-card\?utm_source=DPS-GUIDE-TO-AGED-CARE-WA&utm_
 RewriteRule ^seniorstas$ /seniors-card\?utm_source=SENIORS-CARD-TASMANIA&utm_medium=PRESS-AD&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^seniors-expo$ /seniors-card\?utm_source=DISABILITY-AGEING-AND-LIFESTYLE-EXPO&utm_medium=PROGRAM-GUIDE-EDITORIAL&utm_campaign=SENIORS [R=301,L,NC]
 RewriteRule ^dal-expo$ /?utm_source=DISABILITY-AGEING-AND-LIFESTYLE-EXPO&utm_medium=PROGRAM-GUIDE-EDITORIAL&utm_campaign=DISABILITY-AND-AGEING [R=301,L,NC]
+RewriteRule ^seniorssa$ /seniors-card\?utm_source=DPS-GUIDE-TO-AGED-CARE-SA&utm_medium=STRIP-AD&utm_campaign=SENIORS [R=301,L,NC]
+RewriteRule ^seniors-dps-nsw$ /seniors-card\?utm_source=DPS-GUIDE-TO-AGED-CARE-NSW&utm_medium=STRIP-AD&utm_campaign=SENIORS [R=301,L,NC]
+RewriteRule ^seniors-dps-act$ /seniors-card\?utm_source=DPS-GUIDE-TO-AGED-CARE-ACT&utm_medium=STRIP-AD&utm_campaign=SENIORS [R=301,L,NC]
 
 RewriteRule ^medicalobserver$ /refer-your-patients\?utm_source=MEDICAL-OBSERVER-PUBLICATION&utm_medium=PRESS-AD&utm_campaign=REFERRERS [R=301,L,NC]
 RewriteRule ^medicaljournalaus$ /refer-your-patients\?utm_source=MEDICAL-JOURNAL-OF-AUSTRALIA-PUBLICATION&utm_medium=PRESS-AD&utm_campaign=REFERRERS [R=301,L,NC]

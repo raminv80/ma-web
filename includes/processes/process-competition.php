@@ -1,4 +1,5 @@
 <?php
+die('disabled');
 $error = 'Missing required info. Please try again.';
 if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 3){
   if(!empty($_POST['email']) && !empty($_POST['phone']) && !empty($_POST['name']) && !empty($_POST['entry']) && !empty($_POST['postcode']) && is_numeric($_POST['postcode'])){

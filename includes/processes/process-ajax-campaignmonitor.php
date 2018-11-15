@@ -1,5 +1,5 @@
 <?php
-
+die('disabled');
 require_once 'includes/createsend/csrest_subscribers.php';
 if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot']) && (time() - $_POST['timestamp']) > 10 ){
   $token = getToken('frontend');

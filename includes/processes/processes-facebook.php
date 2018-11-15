@@ -1,4 +1,5 @@
 <?php
+die('disabled');
 set_include_path($_SERVER['DOCUMENT_ROOT']);
 include "includes/functions/functions.php";
 include_once 'includes/social/facebook/facebook.php';

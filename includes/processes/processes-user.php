@@ -1,4 +1,5 @@
 <?php
+die('disabled');
 if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], false)){
   
   /**

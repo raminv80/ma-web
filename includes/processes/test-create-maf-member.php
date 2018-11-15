@@ -1,4 +1,5 @@
 <?php
+die('disabled');
 if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
 
   set_include_path($_SERVER['DOCUMENT_ROOT']);

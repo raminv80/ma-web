@@ -1,6 +1,6 @@
 #AuthType Basic
 #AuthName "Login required"
-#AuthUserFile /home/them/public_html/.htpasswd
+#AuthUserFile /home/medicalertorg/.htpasswd
 #require valid-user
 #Order Deny,Allow
 #Deny from all
@@ -10,8 +10,8 @@
 ErrorDocument 404 /404.php
 RewriteEngine  on
 
-RewriteCond %{REQUEST_URI} "/admin/includes/"
-RewriteRule (.*) $1 [L]
+#RewriteCond %{REQUEST_URI} "/admin/includes/"
+#RewriteRule (.*) $1 [L]
 
 RewriteCond %{HTTP_HOST} !^www\.
 RewriteRule ^(.*)$ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L] 

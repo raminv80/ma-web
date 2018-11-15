@@ -1,6 +1,12 @@
 <!-- <?php die(); ?> -->
 <!-- THEM CMS configuration file -->
+
+<!-- env based -->
 <config debug="false" staging="true">
+<!--prod:
+<config debug="false" staging="false">
+-->
+
   <domain>medicalert.org.au</domain>
   <google_analytics>
     <id>UA-86286777-1</id>
@@ -22,9 +28,16 @@
     <fax>1800 64 32 59</fax>
     <email>enquiry@medicalert.org.au</email>
     <email_from>noreply@medicalert.org.au</email_from>
+
+<!-- env based -->
     <email_contact>enquiry@medicalert.org.au</email_contact>
     <email_orders>idewey@medicalert.org.au</email_orders>
-    <email_notice>gryan@medicalert.org.au</email_notice>
+<!--prod:
+    <email_contact>enquiry@medicalert.org.au,kpearson@medicalert.org.au</email_contact>
+    <email_orders>gryan@medicalert.org.au,kpearson@medicalert.org.au</email_orders>
+-->
+
+<email_notice>gryan@medicalert.org.au</email_notice>
     <logo>logo.png</logo>
   </company>
   <global_variable>
@@ -53,12 +66,20 @@
   </global_variable>
   <global_variable>
     <name>membership_card_variant_id</name>
+
+<!--env based -->
     <value>1368</value>
+<!--prod:
+    <value>2010</value>
+-->
+
   </global_variable>
   <global_variable>
     <name>membership_card_cost</name>
     <value>8</value>
   </global_variable>
+
+<!--env based -->
   <global_variable>
     <name>order_type_new_member</name>
     <value>10</value>
@@ -67,6 +88,8 @@
     <name>order_type_existing_member</name>
     <value>20</value>
   </global_variable>
+<!-- prod (not applicable)-->
+
   <global_variable>
     <name>membership_update_fee</name>
     <value>MSF-LIFEUP</value>
@@ -75,6 +98,8 @@
     <name>membership_reactivation_fee</name>
     <value>MSF-REAC</value>
   </global_variable>
+
+<!-- env based -->
   <database>
     <!--<host>122.201.118.45</host>
     <user>medicalertorg_usr</user>
@@ -85,6 +110,19 @@
     <password>OTwFwL?pSnR+</password>
     <dbname>them_db01</dbname>
   </database>
+<!--prod:
+  <database> 
+    <host>122.201.118.45</host> 
+    <user>medicalertorg_usr</user> 
+    <password>VLw!8L+fM6cAh</password> 
+    <dbname>medicalertorg_web</dbname> 
+  	<!-- <host>122.201.97.172</host> 
+    <user>them_usr01</user> 
+    <password>OTwFwL?pSnR+</password> 
+    <dbname>them_db01</dbname>  -->
+  </database>
+-->
+
   <database_variable>
     <name>==membership_fee==</name>
     <value global="membership_fee"></value>
@@ -103,19 +141,23 @@
   </database_variable>
   <payment_gateway>
     <payway>
-      <!-- LIVE  -->
-<!--       <secretkey>Q14523_SEC_g63updtxqcu9n9nswitrkhmm9hh2599qi5gsuha44ae5ejp8h6miwhrg3s2k</secretkey>
-      <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey>
-      <merchantid>23886963</merchantid>
-      <bankAccountid>035213308316A</bankAccountid> -->
-      <!-- DEV -->
+
+<!-- env based -->
       <secretkey>T10023_SEC_v4s297uzwepgzuwnu7issuyjt3bagfsyp7c5ua3x68wx6muay4tuh9jtd5cn</secretkey>
       <publishableakey>T10023_PUB_aumgejfq7yd27cbkbypftzg87eht5vf84q3thibxy9wpa7ru44cnfddqrx4f</publishableakey>
       <merchantid>TEST</merchantid>
       <bankAccountid>0000000A</bankAccountid>
+<!--prod
+      <!-- LIVE  -->
+      <secretkey>Q14523_SEC_iz7ap9wzrwdjarwpwwncrhwm3mdm4pukcsefry7sr8h347fziy5uvhrefzts</secretkey>
+      <publishableakey>Q14523_PUB_aijq54z29ct46qqr74mfhsen5pxhmui6g2tydctk6b6b5e4qrbm6qtv5ixjs</publishableakey>
+      <merchantid>23886963</merchantid>
+      <bankAccountid>035213308316A</bankAccountid>
+-->
+
     </payway>
   </payment_gateway>
-
+  
   <page_strut>
     <type>1</type>
     <depth>2</depth>
@@ -348,7 +390,7 @@
   <static_page>
     <url>employee-wellbeing</url>
     <template>employee-wellbeing.tpl</template>
-    <pageID>841</pageID>
+    <pageID>1100</pageID>
   </static_page>
   <static_page>
     <url>bupa</url>
@@ -447,14 +489,14 @@
     <pageID>784</pageID>
   </static_page>
   <static_page>
-    <url>benevolent-program-hae</url>
+    <url>benevolant-program-hae</url>
     <template>benevolent-hae.tpl</template>
-    <pageID>786</pageID>
+    <pageID>976</pageID>
   </static_page>
   <static_page>
-    <url>cpsc-benevolent-program</url>
+    <url>cpsc</url>
     <template>safe-return.tpl</template>
-    <pageID>789</pageID>
+    <pageID>980</pageID>
   </static_page>
   <static_page>
     <url>stjohns</url>
@@ -471,7 +513,6 @@
     <url>request-membership-cancellation</url>
     <template>membership-cancellation.tpl</template>
   </static_page>
-
   <!-- ECOMMERCE  -->
   <static_page>
     <url>login</url>
@@ -591,7 +632,8 @@
     <file>ListClass</file>
     <orderby>news_start_date DESC, news_id DESC</orderby>
     <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL) AND (listing_schedule_end > NOW() OR listing_schedule_end IS NULL)]]></where>
-    <table>
+    <limit level="1">20</limit>
+    <table> 
       <name>tbl_listing</name>
       <field>listing_url</field>
       <options>

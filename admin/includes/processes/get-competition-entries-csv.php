@@ -1,4 +1,5 @@
 <?php
+die('competition enteries report is disabled');
 $referer = parse_url($_SERVER['HTTP_REFERER']);
 if($referer['host'] != $_SERVER['HTTP_HOST']){
   header('HTTP/1.0 403 Forbidden');

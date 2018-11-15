@@ -35,7 +35,7 @@
 			</div>
 		</div>
 		<div class="row form-group">
-			<label class="col-sm-3 control-label" for="files_description_{$filesno}">Description</label>
+			<label class="col-sm-3 control-label" for="files_filename_{$filesno}">Description</label>
 			<div class="col-sm-5">
 				<textarea class="tinymce" name="field[10][tbl_files][{$filesno}][files_description]" id="files_description_{$filesno}" >{$files.files_description}</textarea>
 			</div>
@@ -76,8 +76,8 @@
 		<div class="row form-group">
 			<label class="col-sm-3 control-label" for="files_flag_{$filesno}">Flag</label>
 			<div class="col-sm-5">
-				<input type="hidden" value="{if $files.files_flag eq 1}1{else}0{/if}" name="field[10][tbl_files][{$filesno}][files_flag]" class="value">
-				<input class="chckbx" type="checkbox" {if $files.files_flag eq 1} checked="checked" {/if}
+				<input type="hidden" value="{if $fields.files_flag eq 1}1{else}0{/if}" name="field[10][tbl_files][{$filesno}][files_flag]" class="value">
+				<input class="chckbx" type="checkbox" {if $fields.files_flag eq 1} checked="checked" {/if}
 						 onclick="if($(this).is(':checked')){ $(this).parent().children('.value').val('1') }else{ $(this).parent().children('.value').val('0') }" id="files_flag_{$filesno}">
 			</div>
 		</div>

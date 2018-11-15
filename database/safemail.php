@@ -19,23 +19,15 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
      $mail->Password = 'ABC123';                           // SMTP password
      $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
      $mail->Port = 587;    */                                 // TCP port to connect to
-
-    /** ============= UNCOMMENT THE COMMENTED LINES AND VICE VERSA WHEN LIVE =============== **/
-    $mail->addAddress('bikram@them.com.au');
-    //$mail->addAddress('oliver@them.com.au');
-    if($_SERVER['REMOTE_ADDR'] == '45.124.202.249'){
-      //$mail->addAddress('apolo@them.com.au');
-    }else{
-      //$mail->addAddress('rstevens@medicalert.org.au');
-      //$mail->addBCC('apolo@them.com.au');
+    
+    //TODO: make this env based.
+    //If state/dev send email only to dev
+    //And prepend subkect with system-environment info
+    $toArr = explode(',',$to);
+    foreach($toArr as $m){
+      $mail->addAddress($m);
     }
-    $mail->Subject = "[TEST - {$to}] " . $subject;
-//     $toArr = explode(',',$to);
-//     foreach($toArr as $m){
-//       $mail->addAddress($m);
-//     }
-//     $mail->Subject = $subject;
-    /** ============= ------------------------------------------------------ =============== **/
+    $mail->Subject = $subject;
 
     $header_arr = explode("\r\n", $headers);
     foreach ($header_arr as $val){
@@ -54,11 +46,10 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
             $mail->FromName = $nameArr[0];
             break;
           case 'Bcc':
+            //TODO: env based. skip adding bcc if not live
             $bccArr = explode(',', trim($content[1]));
             foreach($bccArr as $bcc){
-              /** ============= UNCOMMENT THE COMMENTED LINES AND VICE VERSA WHEN LIVE =============== **/
-              //$mail->addBCC($bcc);
-              /** ============= ------------------------------------------------------ =============== **/
+              $mail->addBCC($bcc);
             }
             break;
         }

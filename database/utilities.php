@@ -1071,22 +1071,21 @@ function sendGAEvent($_tid,$_category,$_action,$_label="",$_value=0,$_cid=null){
   $ea = $info['action']; // event action
   $el = $info['label']; // event label
   $ev = $info['value']; // event value
-  $dp = !empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:"/API/";
-  $p = !empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:"/API/";
+  $dp = !empty($_SERVER['HTTP_REFERER'])? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH) : "/API/";
 
   // Send Transaction hit
   $data = array(
       'v' => $v,
       'tid' => $tid,
       'cid' => $cid,
+      'uip' => $_SERVER['REMOTE_ADDR'],
       't' => 'event',
       'ec' => $ec,
       'ea' => $ea,
       'el' => $el,
       'ev' => $ev,
       'dh' => $dh,
-      'dp' => $dp,
-      'p' => $p
+      'dp' => $dp
   );
   return gaFireHit($data);
 }
@@ -1181,6 +1180,7 @@ function sendGAEnEcImpressionAction($_tid, $_action, $_proditemArr, $_impression
       'v' => $v,
       'tid' => $tid,
       'cid' => $cid,
+      'uip' => $_SERVER['REMOTE_ADDR'],
       't' => 'event',
       'ec' => 'UX',
       'ea' => 'click',
@@ -1249,7 +1249,7 @@ function sendGAEnEcAction($_tid, $_action, $_cartitemArr, $_impressionList = nul
 			'ea' => 'click',
 			'el' => $_action,
 			'pa' => $_action,
-			'pa1' => $_SERVER['HTTP_REFERER'],
+	    'pal' => parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH),
 			'pr1id' => $_cartitemArr['id'],
 			'pr1nm' => $_cartitemArr['name'],
 			'pr1ca' => $_cartitemArr['category'],
