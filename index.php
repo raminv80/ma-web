@@ -14,7 +14,7 @@ global $CONFIG,$SMARTY,$DBobject,$REQUEST_URI;
 $SMARTY->loadFilter('output', 'trimwhitespace');
 
 // ASSIGN ALL STORED SMARTY VALUES
-foreach($_SESSION['smarty'] as $key=>$val){
+foreach((ARRAY)$_SESSION['smarty'] as $key=>$val){
   $SMARTY->assign($key,$val);
 }
 $SMARTY->assign('DOMAIN', "http://" . $GLOBALS['HTTP_HOST']);
@@ -213,8 +213,8 @@ function loadPage($_conf){
   }else{
     if(!empty($CONFIG->page_strut)){
       $struct = $CONFIG->page_strut;
-      $confArr = (array)$_conf; 
-      foreach($confArr['associated'] as $a){
+      $confArr = (array)$_conf;
+      if(isset($confArr['associated'])) foreach($confArr['associated'] as $a){
         $domdict = dom_import_simplexml($struct->table);
         $domcat  = dom_import_simplexml($a);
         $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
@@ -235,7 +235,7 @@ function loadPage($_conf){
       		$domdict->appendChild($domcat);// Append the <cat> to <c> in the dictionary
       	}
       }
-      foreach($confArr['extends'] as $e){
+      if(isset($confArr['extends'])) foreach($confArr['extends'] as $e){
         $domdict = dom_import_simplexml($struct->table);
         $domcat  = dom_import_simplexml($e);
         $domcat  = $domdict->ownerDocument->importNode($domcat, TRUE);// Import the <cat> into the dictionary document
@@ -262,10 +262,13 @@ function loadPage($_conf){
     }
   }
   loadPageAdditional($_conf);
-  $fieldname = (string) $_conf->url->attributes()->requiredvar; 
-  if(!empty($fieldname) && empty($_REQUEST[$fieldname])) { 
-  	$_request["arg1"] = '404';
-  	return "";
+  if(isset($_conf->url)) {
+      $fieldname = (string) $_conf->url->attributes()->requiredvar;
+      if ( ! empty( $fieldname ) && empty( $_REQUEST[ $fieldname ] ) ) {
+          $_request["arg1"] = '404';
+
+          return "";
+      }
   }
   return $template;
 }

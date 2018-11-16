@@ -19,19 +19,20 @@ Class DBmanager{
 		}
 	}
 
-	/**
-	 * Enter description here ...
-	 * @param unknown_type $MySQL
-	 * @return void|resource
-	 */
-	function executeSQL($MySQL , $params = array()){
+    /**
+     * @param $MySQL
+     * @param array $params
+     *
+     * @return array|bool
+     */
+	function executeSQL($MySQL , $params = []){
 		if(empty($MySQL)){
 			return false;
 		}
 		$this->queryresult = true;
 		$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if($STH = $this->PDO->prepare($MySQL)){
-			foreach ($params as $key => &$val) {
+			foreach ((Array)$params as $key => &$val) {
 	   			$STH->bindParam(":{$key}", $val);
 			}
 			//echo $MySQL;

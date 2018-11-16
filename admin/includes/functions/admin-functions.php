@@ -10,6 +10,8 @@ if ( APP_ENV === 'stage' || APP_ENV === 'production' ) {
     ini_set( 'display_errors', 0 );
     ini_set( 'error_reporting', 0 );
     error_reporting( 0 );
+}else{
+    error_reporting( E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT );
 }
 
 if ( $GLOBALS['CONFIG'] = simplexml_load_file( $_SERVER['DOCUMENT_ROOT'] . "/admin/config/config.xml.php" ) ) {
@@ -44,6 +46,7 @@ $_GET     = clean( $_GET );
 $DBobject = new DBmanager( DB_HOST, DB_NAME, DB_USER, DB_PASSWORD );
 
 $SMARTY               = new Smarty;
+$SMARTY->error_reporting = E_ALL & ~E_NOTICE;
 $SMARTY->template_dir = rtrim( $_SERVER['DOCUMENT_ROOT'], '/' ) . "/admin" . $CONFIG->smartytemplate_config->templates;                    // name of directory for templates
 $SMARTY->compile_dir  = rtrim( $_SERVER['DOCUMENT_ROOT'], '/' ) . "/admin" . $CONFIG->smartytemplate_config->templates_c;     // name of directory for compiled templates
 $SMARTY->plugins_dir  = array(

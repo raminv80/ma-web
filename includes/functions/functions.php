@@ -10,6 +10,8 @@ if(APP_ENV === 'stage' || APP_ENV === 'production'){
     ini_set('display_errors',0);
     ini_set('error_reporting',0 );
     error_reporting(0);
+} else {
+    error_reporting(E_ALL & ~E_NOTICE);
 }
 
 $_CONF_FILE = "/config/config.xml.php";
@@ -162,6 +164,7 @@ function INITSMARTY($CONFIG){
   // Create Smarty object and set
   // paths within object
   $SMARTY = new Smarty();
+  $SMARTY->error_reporting = E_ALL & ~E_NOTICE;
   $SMARTY->template_dir = $_SERVER['DOCUMENT_ROOT'] . "/" . $CONFIG->smartytemplate_config->templates; // name of directory for templates
   $SMARTY->compile_dir = $_SERVER['DOCUMENT_ROOT'] . "/" . $CONFIG->smartytemplate_config->templates_c; // name of directory for compiled templates
   $SMARTY->plugins_dir = array(

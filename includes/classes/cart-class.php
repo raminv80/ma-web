@@ -429,7 +429,7 @@ class cart{
     $res = $DBobject->wrappedSql($sql, array(
         ":id" => $cartId
     ));
-    foreach($res as $p){
+    if($res) foreach($res as $p){
 
       $cart_arr[$p['cartitem_id']] = $p;
 
