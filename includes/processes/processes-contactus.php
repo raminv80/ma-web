@@ -17,44 +17,6 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
       $contact_email = $res[0]['reason_email'];
     }
     
-    // SAVE FILE FUNCTIONS (Accepts Image types)
-    /* try{
-      if(!empty($_FILES["file"]["name"])){
-        if($_FILES["file"]["error"] == 0){
-          $acceptedFileFormat = array(
-              'pdf', 
-              'jpeg', 
-              'jpg', 
-              'gif', 
-              'png' 
-          );
-          if(in_array(strtolower(substr($_FILES["file"]["name"], -3)), $acceptedFileFormat)){
-            $path = $_SERVER['DOCUMENT_ROOT'];
-            $file_short = time() . '_' . str_replace(" ", '', $_FILES["file"]["name"]);
-            // Set directory
-            $filedir = $path . '/uploads_contact/';
-            if(!file_exists($filedir)){
-              mkdir($filedir, 0755);
-            }
-            // Store file
-            $_POST['filename'] = $file_short;
-            $file_name = $filedir . $file_short;
-            if(!move_uploaded_file($_FILES["file"]["tmp_name"], $file_name)){
-              $error = 'Invalid file name. Please rename your file.';
-            }
-          } else{
-            $error = 'Please check your file extension (use PDF, JPG , GIF or  PNG).';
-          }
-        } else{
-          $error = 'Please check your file and  try again later.';
-        }
-      }
-    } 
-    catch(Exception $e){
-      $error = 'Please check your file and  try again later.';
-    }
-    */
-    
     // SEND EMAIL TO ADMIN
     if(empty($error)){
       try{
@@ -89,6 +51,9 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
         }else{
           $to = (string)$CONFIG->company->email_contact;
         }
+
+        if(APP_ENV==='development') $to=getenv('EMAIL_APP_SUPPORT');
+
         $COMP = json_encode($CONFIG->company);
         $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
         $from = (string)$CONFIG->company->name;
@@ -144,21 +109,6 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
     }
     
     if(empty($error)){
-      /*
-       * try{
-       * $SMARTY->assign('DOMAIN', "http://" . $_SERVER['HTTP_HOST']);
-       * $body = $SMARTY->fetch("email-thank-you.tpl");
-       * $subject = 'Thank you for your enquiry';
-       * $fromEmail = (string) $CONFIG->company->email_from;
-       * $to = $_POST['email'];
-       * $COMP = json_encode($CONFIG->company);
-       * $SMARTY->assign('COMPANY', json_decode($COMP,TRUE));
-       * $from = (string) $CONFIG->company->name;
-       * $sent = sendMail($to, $from, $fromEmail, $subject, $body);
-       * }catch (Exception $e){
-       * $error = 'There was an error sending the contact email.';
-       * }
-       */
       
       if(!empty($GA_ID)){
         sendGAEvent($GA_ID, 'Enquiry', 'Submitted', $_POST['form_name']);

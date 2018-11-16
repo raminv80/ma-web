@@ -11,7 +11,7 @@ if(checkToken('admin', $_POST["formToken"]) && !empty($_POST['email_id'])){
 		$fromEmail = (string) $CONFIG->company->email_from;
 		$subject = $res[0]['email_subject'];
 		$body = $res[0]['email_content'];
-		$bcc = (string) $CONFIG->company->email_orders;
+		$bcc = getenv('EMAIL_ORDERS');
 		$response = sendMail($to, $from, $fromEmail, $subject, $body, $bcc);
 		echo json_encode(array(
 				"response" => $response

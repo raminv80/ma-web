@@ -17,10 +17,8 @@
     <phone>(+61)8 8273 8400</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
-    <email>enquiry@medicalert.org.au</email>
     <email_from>noreply@medicalert.org.au</email_from>
-    <email_contact>enquiry@medicalert.org.au</email_contact>
-    <email_orders>idewey@medicalert.org.au</email_orders>
+    <email_orders env="EMAIL_ORDERS"></email_orders>
     <logo>logo.png</logo>
   </company> 
   <global_variable>

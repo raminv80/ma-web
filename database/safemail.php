@@ -4,25 +4,26 @@
   return $mailSent;
 } */
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = array()){
   $mailSent = 0;
   try {
     set_include_path ( $_SERVER ['DOCUMENT_ROOT'] );
-    require_once 'database/PHPMailer/PHPMailerAutoload.php';
-    $mail = new PHPMailer;
+    $mail = new PHPMailer(true);
     $mail->isHTML(true);
-    /*  		$mail->isSMTP();                            // Set mailer to use SMTP
-     //  	$mail->SMTPDebug = 2;        				//ENABLE DEBUG  2=client & server messages, 1=client messages
-     $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
-     $mail->SMTPAuth = true;                               // Enable SMTP authentication
-     $mail->Username = 'user@themdigital.com.au';                 // SMTP username
-     $mail->Password = 'ABC123';                           // SMTP password
-     $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-     $mail->Port = 587;    */                                 // TCP port to connect to
-    
-    //TODO: make this env based.
-    //If state/dev send email only to dev
-    //And prepend subkect with system-environment info
+    if(getenv('SMTP_ENABLE')==='true'){
+        $mail->isSMTP();
+        $mail->SMTPDebug = 2;
+        $mail->SMTPAuth = true;
+        $mail->Host = getenv('SMTP_HOST');
+        $mail->Username = getenv('SMTP_USER');
+        $mail->Password = getenv('SMTP_PASSWORD');
+        $mail->SMTPSecure = getenv('SMTP_SECURE')==='true';
+        $mail->Port = getenv('SMTP_PORT');
+    }
+
     $toArr = explode(',',$to);
     foreach($toArr as $m){
       $mail->addAddress($m);
@@ -46,7 +47,6 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
             $mail->FromName = $nameArr[0];
             break;
           case 'Bcc':
-            //TODO: env based. skip adding bcc if not live
             $bccArr = explode(',', trim($content[1]));
             foreach($bccArr as $bcc){
               $mail->addBCC($bcc);
