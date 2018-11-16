@@ -30,17 +30,7 @@
   <global_variable>
     <name>membership_fee</name>
     <value>$32</value>
-  </global_variable> 
-  <database> 
-<!--     <host>122.201.118.45</host>  -->
-<!--     <user>medicalertorg_usr</user>  -->
-<!--     <password>VLw!8L+fM6cAh</password>  -->
-<!--     <dbname>medicalertorg_web</dbname>  -->
-  <host>122.201.97.172</host> 
-    <user>them_usr01</user> 
-    <password>OTwFwL?pSnR+</password> 
-    <dbname>them_db01</dbname>
-  </database> 
+  </global_variable>
   <resource> 
   	<url>file-manager</url> 
   	<template>filemanager.tpl</template> 
