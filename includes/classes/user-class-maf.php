@@ -568,7 +568,7 @@ class UserClass{
 
 	  $this->errorMsg = null;
 	  try{
-	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authJSONResponse = $this->medicAlertApi->authenticate(MEMBERSHIP_API_USER, MEMBERSHIP_API_PASSWORD);
 	    $authenticationRecord = json_decode($authJSONResponse, true);
 	    $token = $authenticationRecord['sessionToken'];
 	  }
@@ -621,7 +621,7 @@ class UserClass{
 	  $res = array();
 	  $this->errorMsg = null;
 	  try{
-	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authJSONResponse = $this->medicAlertApi->authenticate(MEMBERSHIP_API_USER, MEMBERSHIP_API_PASSWORD);
 	    $authenticationRecord = json_decode($authJSONResponse, true);
 	    $token = $authenticationRecord['sessionToken'];
 	  }
@@ -672,7 +672,7 @@ class UserClass{
 	  $res = array();
 	  $this->errorMsg = null;
 	  try{
-	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authJSONResponse = $this->medicAlertApi->authenticate(MEMBERSHIP_API_USER, MEMBERSHIP_API_PASSWORD);
 	    $authenticationRecord = json_decode($authJSONResponse, true);
 	    $token = $authenticationRecord['sessionToken'];
 	  }
@@ -715,7 +715,7 @@ class UserClass{
 
 	  $this->errorMsg = null;
 	  try{
-	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authJSONResponse = $this->medicAlertApi->authenticate(MEMBERSHIP_API_USER, MEMBERSHIP_API_PASSWORD);
 	    $authenticationRecord = json_decode($authJSONResponse, true);
 	    $token = $authenticationRecord['sessionToken'];
 	  }
@@ -1539,7 +1539,7 @@ class UserClass{
 	function CreateMember($_data){
 	  $this->errorMsg = null;
 	  try{
-	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+	    $authJSONResponse = $this->medicAlertApi->authenticate(MEMBERSHIP_API_USER, MEMBERSHIP_API_PASSWORD);
 	    $authenticationRecord = json_decode($authJSONResponse, true);
 	    $this->token = $authenticationRecord['sessionToken'];
 	  }
@@ -1702,7 +1702,7 @@ class UserClass{
 
     $this->errorMsg = null;
     try{
-      $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+      $authJSONResponse = $this->medicAlertApi->authenticate(MEMBERSHIP_API_USER, MEMBERSHIP_API_PASSWORD);
       $authenticationRecord = json_decode($authJSONResponse, true);
       $token = $authenticationRecord['sessionToken'];
     }
@@ -1742,7 +1742,7 @@ class UserClass{
 
     $this->errorMsg = null;
     try{
-      $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
+      $authJSONResponse = $this->medicAlertApi->authenticate(MEMBERSHIP_API_USER, MEMBERSHIP_API_PASSWORD);
       $authenticationRecord = json_decode($authJSONResponse, true);
       $token = $authenticationRecord['sessionToken'];
     }

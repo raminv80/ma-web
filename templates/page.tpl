@@ -40,7 +40,6 @@
 
 {printfile file='/includes/css/styles.css' type='style'}
 
-
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
       <script type="text/javascript" src="/includes/js/html5shiv.js"></script>
@@ -82,6 +81,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','{$gtm_id}');</script>
 {/if}
 
+{if $sentry_dsn}
+<script src="https://browser.sentry-cdn.com/4.3.0/bundle.min.js" crossorigin="anonymous"></script>
+<script>Sentry.init({ dsn: '{$sentry_dsn}' });</script>
+{/if}
 </head>
 <body>
 {if $gtm_id}

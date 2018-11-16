@@ -28,17 +28,6 @@ class exceptionMedicAlertPasswordMismatch extends exceptionMedicAlertApi{}
 // DEFINITION
 //
 class medicAlertApi {
-
-	//
-	// --------------------------------------------------------------
-	// CONSTANTS
-	//
-	//const SERVER = 'https://api.medicalert.org.au';
- 	//const SERVER = 'https://apistaging.medicalert.org.au';
- 	
-	const API_USER = 'MA-WEBSITE';
-	const API_USER_PASSWORD = 'htAHHGWug!kc';
-
 	// Define the member status types
 	const STATUS_ACTIVE = 1;
 	const STATUS_UNFINANCIAL = 2;
@@ -81,7 +70,7 @@ class medicAlertApi {
 	function __construct($_db = '') {
 	  global $DBobject;
 	
-	  $this->SERVER = ($_SERVER['SERVER_NAME'] == 'medicalert.org.au' || $_SERVER['SERVER_NAME'] == 'www.medicalert.org.au') ? 'https://api.medicalert.org.au' : 'https://apistaging.medicalert.org.au';
+	  $this->SERVER = getenv('MEMBERSHIP_API_ENDPOINT');
 	  
 	  $this->DBobj = empty($_db)?$DBobject:$_db;
 	}
@@ -252,7 +241,8 @@ class medicAlertApi {
 		  $body.= "URL: ".$this->SERVER . '/member_create.php'."<br/>";
 		  $body.= "PARAMS: ".print_r($params, true)."<br/>";
 		  $body.= "RESPONSE: ".print_r($response,true)."<br/>";
-		  sendMail('apolo@them.com.au', 'MedicAlert Members system', 'noreply@medicalert.org.au', 'MedicAlert Members system no Member No', $body);
+		  sendMail(getenv('EMAIL_APP_SUPPORT'), 'MedicAlert Members system', 'noreply@medicalert.org.au',
+              'MedicAlert Members system no Member No', $body);
 		}
 
 		return $response;

@@ -32,7 +32,7 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
       $body = $buf;
       $subject = 'Website ' . $_POST['form_name'];
       $fromEmail = (string)$CONFIG->company->email_from;
-      $to = 'kreek@medicalert.org.au';//(string)$CONFIG->company->email_contact;
+      $to = getenv('EMAIL_EMPLOYEE_WELLBEING');
       $COMP = json_encode($CONFIG->company);
       $SMARTY->assign('COMPANY', json_decode($COMP, TRUE));
       $from = (string)$CONFIG->company->name;
@@ -150,7 +150,7 @@ function SetMemberCampaignMonitor($listId, $data, $flag = 1){
   catch(Exception $e){
     $COMP = json_encode($CONFIG->company);
     $body = "Error: {$e}<br> Session: " . print_r($_SESSION, true);
-    $to = 'bikram@them.com.au';
+    $to = getenv('EMAIL_APP_SUPPORT');
     $from = (string)$CONFIG->company->name;
     $fromEmail = (string)$CONFIG->company->email_from;
     $subject = "{$from} | Campaign monitor error";

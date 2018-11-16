@@ -10,7 +10,7 @@ die('disabled');
         "id" => 123456,
         "gname" => 'Jane',
         "surname" => 'Doe',
-        "email" => 'test@them.com.au'
+        "email" => getenv('EMAIL_APP_SUPPORT')
     );
     $SMARTY->assign('user', $userArr);
     
@@ -40,7 +40,7 @@ die('disabled');
     $body = $SMARTY->fetch('email/order-confirmation.tpl');
     
     if(!empty($_REQUEST['email'])){
-      $to = 'apolo@them.com.au';
+      $to = getenv('EMAIL_APP_SUPPORT');
       $from = (string)$CONFIG->company->name;
       $fromEmail = 'noreply@' . str_replace("www.", "", $GLOBALS['HTTP_HOST']);
       $subject = 'Test - email template';

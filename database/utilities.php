@@ -189,8 +189,8 @@ function logError($trace, $err, $sql = false) {
 	if(!empty($sql)) {
 		$msg .= "<br/>$sql<br/>";
 	}
-	$debug = (string)$CONFIG->attributes()->debug;
-	if($debug == 'true'){
+
+	if(defined('APP_DEBUG') && APP_DEBUG){
 		die("$msg<br/>$trace");
 	}else{
 		sendMail("weberrors@them.com.au", $CONFIG->attributes->company_name.'-Website', 'noreply@website.com.au', 'Error', "$msg<br/>$trace");
@@ -294,7 +294,7 @@ function createBulkMail($to_Array,$from,$fromEmail,$subject,$body, $adminId = 0,
   $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
   $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
   $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-  $headers .= "Bcc: medicalert.org.au@gmail.com\r\n";
+  if(getenv('APP_ENV')==='production' || getenv('APP_ENV')==='staging') $headers .= "Bcc: medicalert.org.au@gmail.com\r\n";
 
   try{
     foreach ($to_Array as $k => $to){
@@ -392,7 +392,7 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
     	   $headers .= "Reply-To: ". $from . " <".$fromEmail.">\r\n";
     	   $headers .= "Return-Path: ". $from . " <".$fromEmail.">\r\n";
     	   $headers .= "From: ". $from . " <".$fromEmail.">\r\n";
-    	   $headers .= "Bcc: medicalert.org.au@gmail.com\r\n";
+    	   if(getenv('APP_ENV')==='production' || getenv('APP_ENV')==='staging') $headers .= "Bcc: medicalert.org.au@gmail.com\r\n";
 
     	   $verify = false;
     	   $sql = "SELECT count(email_id) as cnt FROM tbl_email_queue WHERE email_sent = 1 AND email_modified BETWEEN DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND NOW() ";
@@ -1521,7 +1521,7 @@ function sendSMS($recipients = array(), $message, $adminId = 0){
 		$error[] = $e;
 	}
 	if(!empty($error)){
-		$to = "apolo@them.com.au,online@them.com.au";
+		$to = getenv('EMAIL_APP_SUPPORT');
 		sendMail($to, (string) $CONFIG->company->name, 'noreply@' . str_replace ( "www.", "", $GLOBALS['HTTP_HOST'] ), 'SMS function error', "Error: ".print_r($error,TRUE)." </br> Session: ".print_r($_SESSION,TRUE));
 	}
 	return array('response'=>$response, 'sent'=>$cnt, 'error'=>$error);

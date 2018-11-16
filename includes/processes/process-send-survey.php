@@ -20,11 +20,11 @@ try{
   
   if($res=$DBobject->wrappedSql($inssql, array(":surveytoken_user_id"=>($_SESSION['user']['public']['id'])?$_SESSION['user']['public']['id']:2222, 
       ":surveytoken_token"=>$surveytoken, 
-      ":surveytoken_useremail"=>($_SESSION['user']['public']['email'])?$_SESSION['user']['public']['email']:"nijesh@gmail.com",
+      ":surveytoken_useremail"=>($_SESSION['user']['public']['email'])?$_SESSION['user']['public']['email']:getenv('EMAIL_SURVEY'),
       ":surveytoken_question_type_id" => $question_type_id
   ))){
     //$to = $user.email;
-    $to = "nijesh@them.com.au";
+    $to = getenv('EMAIL_SURVEY');
     $subject = 'Survey - MedicAlert';
     $fromEmail = (string)$CONFIG->company->email_from;
     $from = (string)$CONFIG->company->name;

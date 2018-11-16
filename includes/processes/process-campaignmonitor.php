@@ -10,7 +10,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
 	
 	try{
 		//store on API
-		$wrap = new CS_REST_Subscribers('', '7d6ddc2467944f2a174afd5eb05040b4');
+		$wrap = new CS_REST_Subscribers('', getenv('CREATSEND_API_KEY'));
 		$customFields = array();
 		//Retrieve Current Subscriptions
 		$check_result = $wrap->get($_POST['submail']);
@@ -50,7 +50,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
 			$_SESSION['values'][$name]=$var;
 		}
 
-		$to = "nick@them.com.au";
+		$to = getenv('EMAIL_ISSUES_SUBSCRIPTION');
 		$from = 'PyneOnline';
 		$fromEmail = "noreply@".str_replace("www.","",$GLOBALS['HTTP_HOST']);
 		$subject = 'Issues Subscription';
@@ -75,7 +75,7 @@ if(checkToken('frontend',$_POST["formToken"], true) && empty($_POST['honeypot'])
 			$response = print_r($cs_result, true);
 			$buf.="<br><br>CreateSend Response<br>{$response}";
 				
-			$to = "nick@them.com.au,apolo@them.com.au";
+			$to = getenv('EMAIL_APP_SUPPORT');
 			$subject = $GLOBALS['HTTP_HOST'].' - Exceptions';
 			$from = " Card";
 			$fromEmail = "noreply@".str_replace("www.","",$GLOBALS['HTTP_HOST']);
