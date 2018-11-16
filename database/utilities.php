@@ -447,7 +447,6 @@ function sendAttachMail($to,$from,$fromEmail,$subject,$body,$bcc=null,$attachmen
 }
 
 function sendErrorMail($to,$from,$fromEmail,$subject,$body,$bcc=null){
-  global $DBobject;
   try{
     if(is_readable($_SERVER['DOCUMENT_ROOT'].'/database/safemail.php')){	require_once 'database/safemail.php';}
   }catch (Exception $e){}
@@ -685,83 +684,6 @@ function calc_dist($latitude1, $longitude1, $latitude2, $longitude2) {
 	$dist = $dist * $kmperlat;
 	return (round($dist));
 }
-
-/*
- * Gets distance over a postcode and a place
- */
-function postcode_dist($place1, $postcode2, $db) {
-    //$sqlquery = "SELECT postcode_lat, postcode_lon FROM tbl_postcode WHERE postcode_lat <> 0 and postcode_lon <> 0 and postcode_postcode = '".$postcode1."'";
-    //$place1 = $db->wrappedSqlGet($sqlquery);
-
-	$sqlquery = "SELECT postcode_lat, postcode_lon FROM tbl_postcode WHERE postcode_lat <> 0 and postcode_lon <> 0 and postcode_postcode = '".$postcode2."'";
-    $place2 = $db->wrappedSqlGet($sqlquery);
-
-    if($place1 && $place2 && count($place1)>0 && count($place2)>0){
-        foreach($place1 as $p1){
-            foreach($place2 as $p2){
-                $lat1 = $p1['postcode_lat'];
-                $lon1 = $p1['postcode_lon'];
-
-                $lat2 = $p2['postcode_lat'];
-                $lon2 = $p2['postcode_lon'];
-
-                $td = calc_dist($lat1, $lon1, $lat2, $lon2);
-                if($dist && $td < $dist){
-                    $dist = $td;
-                }else{
-                    $dist = $td;
-                }
-            }
-        }
-    }
-
-	if (is_numeric($dist)) {
-		return $dist;
-	}
-	else
-	{
-		return "99999999999";
-	}
-}
-
-/*
- * Gets distance over a postcode and a place
- */
-function nz_postcode_dist($postcode1, $postcode2, $db) {
-    $sqlquery = "SELECT nzpostcode_lat, nzpostcode_lon FROM tbl_nzpostcode WHERE nzpostcode_lat <> 0 and nzpostcode_lon <> 0 and nzpostcode_postcode = '".$postcode1."'";
-    $place1 = $db->wrappedSqlGet($sqlquery);
-
-	$sqlquery = "SELECT nzpostcode_lat, nzpostcode_lon FROM tbl_nzpostcode WHERE nzpostcode_lat <> 0 and nzpostcode_lon <> 0 and nzpostcode_postcode = '".$postcode2."'";
-    $place2 = $db->wrappedSqlGet($sqlquery);
-
-    if($place1 && $place2 && count($place1)>0 && count($place2)>0){
-        foreach($place1 as $p1){
-            foreach($place2 as $p2){
-                $lat1 = $p1['nzpostcode_lat'];
-                $lon1 = $p1['nzpostcode_lon'];
-
-                $lat2 = $p2['nzpostcode_lat'];
-                $lon2 = $p2['nzpostcode_lon'];
-
-                $td = calc_dist($lat1, $lon1, $lat2, $lon2);
-                if($dist && $td < $dist){
-                    $dist = $td;
-                }else{
-                    $dist = $td;
-                }
-            }
-        }
-    }
-
-	if (is_numeric($dist)) {
-		return $dist;
-	}
-	else
-	{
-		return "99999999999";
-	}
-}
-
 
 /**
  * Checks if a value exists in an multidimensional array.
@@ -1312,7 +1234,6 @@ function sendGAEnEcCheckoutStep($_tid, $_stepNumber = 1, $_stepName = 'N/A', $_c
 	}
 
 	$response = gaFireHit($data);
-	//sendMail('apolo@them.com.au', 'Themserver', 'noreply@them.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
 	return $response;
 }
 
@@ -1394,7 +1315,6 @@ function sendGAEnEcPurchase($_tid,$_totalArr,$_cartitemArr,$_cid=null){
 	}
 
 	$response = gaFireHit($data);
-	//sendMail('apolo@them.com.au', 'Themserver', 'noreply@them.com.au', 'ERROR: GA enhanced ecommerce', $response.json_encode($data));
 	return $response;
 }
 

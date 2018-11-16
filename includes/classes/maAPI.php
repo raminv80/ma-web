@@ -88,11 +88,6 @@ class medicAlertApi {
 	 */
 	public function authenticate($membershipNumber, $passWord)
 	{
-		/*assert(is_string($membershipNumber));
-		assert(strlen($membershipNumber) > 0);
-		assert(is_string($passWord));
-		assert(strlen($passWord) > 0);*/
-
 		$params = array(
 			'membershipNumber' => $membershipNumber,
 			'passWord' => md5($passWord)
@@ -117,9 +112,6 @@ class medicAlertApi {
 	 */
 	public function logOut($sessionToken)
 	{
-		/*assert(is_string($sessionToken));
-		assert(strlen($sessionToken) > 0);*/
-
 		$params = array(
 			'sessionToken' => $this->_saltToken($sessionToken, MD5($this->_getRequestIp()))
 		);
@@ -129,7 +121,6 @@ class medicAlertApi {
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (logOut)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
-			//mail("cmsemails@them.com.au", "MedicAlert Members system Error", "An error occured");
 			throw $e;
 		}
 		return $response;
@@ -145,13 +136,6 @@ class medicAlertApi {
 	 */
 	public function lostPassWord($sessionToken, $membershipNumber, $emailAddress)
 	{
-		/*assert(is_string($sessionToken));
-		assert(strlen($sessionToken) > 0);
-		assert(is_string($membershipNumber));
-		assert(strlen($membershipNumber) > 0);
-		assert(is_string($emailAddress));
-		assert(strlen($emailAddress) > 0);*/
-
 		$params = array(
 			'sessionToken' => $this->_saltToken($sessionToken, MD5($this->_getRequestIp())),
 			'membershipNumber' => $membershipNumber,
@@ -161,9 +145,6 @@ class medicAlertApi {
 		try{
 			$response = $this->_processRequest($this->SERVER . '/lost_password.php', $params);
 		}catch(Exception $e){
-			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (lostPassWord)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
-			//$this->DBobj->wrappedSql($sql);
-			//mail("cmsemails@them.com.au", "MedicAlert Members system Error", "An error occured");
 			throw $e;
 		}
 
@@ -180,13 +161,6 @@ class medicAlertApi {
 	 */
 	public function updatePassWord($sessionToken, $existingPassWord, $newPassWord)
 	{
-		/*assert(is_string($sessionToken));
-		assert(strlen($sessionToken) > 0);
-		assert(is_string($existingPassWord));
-		assert(strlen($existingPassWord) > 0);
-		assert(is_string($newPassWord));
-		assert(strlen($newPassWord) > 0);*/
-
 		$params = array(
 			'sessionToken' => $this->_saltToken($sessionToken, MD5($this->_getRequestIp())),
 			'existingPassWord' => md5($existingPassWord),
@@ -196,9 +170,6 @@ class medicAlertApi {
 		try{
 			$response = $this->_processRequest($this->SERVER . '/update_password.php', $params);
 		}catch(Exception $e){
-			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (updatePassWord)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
-			//$this->DBobj->wrappedSql($sql);
-			//mail("cmsemails@them.com.au", "MedicAlert Members system Error", "An error occured");
 			throw $e;
 		}
 
@@ -214,14 +185,6 @@ class medicAlertApi {
 	 */
 	public function memberCreate($sessionToken, $memberCreateRecord)
 	{
-		/*assert(is_string($sessionToken));
-		assert(strlen($sessionToken) > 0);
-		assert(is_string($memberCreateRecord));
-		assert(strlen($memberCreateRecord) > 0);*/
-
-		// ensure all the fields are set
-		$memberCreateRecordArray = json_decode($memberCreateRecord, TRUE);
-
 		$params = array(
 			'sessionToken' => $this->_saltToken($sessionToken, MD5($this->_getRequestIp())),
 			'memberCreateRecord' => $memberCreateRecord
@@ -272,7 +235,6 @@ class medicAlertApi {
 		}catch(Exception $e){
 			$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (retrieveMember)','".clean("".$e)."','{$_SERVER['REMOTE_ADDR']}')";
 			$this->DBobj->wrappedSql($sql);
-			//mail("cmsemails@them.com.au", "MedicAlert Members system Error", "An error occured");
 			throw $e;
 		}
 		
@@ -288,11 +250,6 @@ class medicAlertApi {
 	 */
 	public function memberUpdate($sessionToken, $memberRecord)
 	{
-		/*assert(is_string($sessionToken));
-		assert(strlen($sessionToken) > 0);
-		assert(is_string($memberRecord));
-		assert(strlen($memberRecord) > 0);*/
-
 		// if the full member record is passed in, then only return the website record
 		$memberRecordArray = json_decode($memberRecord, TRUE);
 		if( isset($memberRecordArray['webSiteRecord']) )
@@ -373,9 +330,7 @@ class medicAlertApi {
 	      'postage_amount' => $this->_escapeNewLines($memberOrderRecord['postageAmount']),
 	      'donation_amount' => $this->_escapeNewLines($memberOrderRecord['donationAmount'])
 	  );
-	//   echo '<pre>';
-	//   print_r($params);
-	//   exit;
+
 	  try{
 	    $response = $this->_processRequest($this->SERVER . '/process_website_order.php', $params);
 	  }catch(Exception $e){
@@ -400,14 +355,6 @@ class medicAlertApi {
 	 */
 	public function memberProfileMatch($sessionToken, $firstName='', $surName='', $dateOfBirth='', $postCode='', $emailAddress='')
 	{
-		/*assert(is_string($sessionToken));
-		assert(strlen($sessionToken) > 0);
-		assert(is_string($firstName));
-		assert(is_string($surName));
-		assert(is_string($dateOfBirth));
-		assert(is_string($postCode));
-		assert(is_string($emailAddress));*/
-
 		// at least 2 fields need to be set
 		$count = 0;
 		if( strlen($firstName) > 0 ) $count++;
@@ -449,11 +396,6 @@ class medicAlertApi {
 	 */
 	public function fileRetrieve($sessionToken, $fileId)
 	{
-		/*assert(is_string($sessionToken));
-		assert(strlen($sessionToken) > 0);
-		assert(is_int($fileId));
-		assert((int)$fileId > 0);*/
-
 		$params = array(
 			'sessionToken' => $this->_saltToken($sessionToken, MD5($this->_getRequestIp())),
 			'fileId' => $fileId
@@ -548,8 +490,6 @@ class medicAlertApi {
 	 */
 	private function _processRequest($url, $params)
 	{
-	  //$_SESSION['curl']['url']=$url;
-	  //$_SESSION['curl']['params']=$params;
 		// create the curl resource
 		$ch = curl_init();
 
@@ -570,44 +510,9 @@ class medicAlertApi {
 		
 		// $output contains the output string
 		$response = curl_exec($ch);
-		//$_SESSION['curl']['response']=$response;
-// 		if($response === false)
-// 		{
-// 		  $body = "DATETIME: ".date("dd/mm/yy HH:i:s")."<br/>";
-// 		  $body.= "TIME: ".time()."<br/>";
-// 		  $body.= "CURL ERROR: ".curl_error($ch)."<br/>";
-// 		  $body.= "URL: {$url}<br/>";
-// 		  $body.= "PARAMS: ".print_r($params, true)."<br/>";
-// 		  $body.= "RESPONSE: ".print_r($response,true)."<br/>";
-// 		  sendMail('apolo@them.com.au', 'MedicAlert Members system - CURL ERROR', 'noreply@medicalert.org.au', 'MedicAlert Members system - CURL ERROR', $body);
-// 		}
- 		
-		//print_r($response) . "\n";
 
 		// get the response code
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// 		print_r($params);
-// echo $httpCode;exit;
-		
-// 		try {
-// 			if($url == "https://api.medicalert.org.au/member_update.php"){
-// 				$sql = "INSERT INTO tbl_error (error_user_id,error_description, error_trace, error_ip) 
-// 								VALUES (".$_SESSION['user']['error_user_id'].",'".print_r($params, true)."','".print_r($response,true) ."- HTTP-CODE:".$httpCode."','{$_SERVER['REMOTE_ADDR']}')";
-// 				$this->DBobj->wrappedSql($sql);
-// 			}
-// 		} catch (Exception $e) {
-// 		}
-		
-// 		if($_SERVER['REMOTE_ADDR'] == '150.101.230.130'){
-// 			$body = "DATETIME: ".date("dd/mm/yy HH:i:s")."<br/>";
-// 			$body.= "TIME: ".time()."<br/>";
-// 			$body.= "CURL ERROR: ".curl_error($ch)."<br/>";
-// 			$body.= "URL: {$url}<br/>";
-// 			$body.= "PARAMS: ".print_r($params, true)."<br/>";
-// 			$body.= "RESPONSE: ".print_r($response,true)."<br/>";
-// 			$body.= "HTTP-CODE: ".print_r($httpCode,true)."<br/>";
-// 			sendMail('apolo@them.com.au', 'MedicAlert Members system', 'noreply@medicalert.org.au', 'MedicAlert Members system', $body);
-// 		}
 		// close the connection
 		curl_close($ch);
 
@@ -632,12 +537,6 @@ class medicAlertApi {
 		} else if( 601 == $httpCode ) {
 			throw new exceptionMedicAlertPasswordMismatch('1 Attempt remaining');
 		} else {
-			//$sql = "INSERT INTO tbl_error (error_description, error_trace, error_ip) VALUES ('MedicAlert Members system Error (processRequest)','".clean("".curl_error($ch))."','{$_SERVER['REMOTE_ADDR']}')";
-			//$this->DBobj->wrappedSql($sql);
-			//mail("cmsemails@them.com.au", "MedicAlert Members system Error", "Server unknown error - {$httpCode}");
-			//$_SESSION['SERVER_ERROR'] = '<img src="/images/exclamation.jpg" />&nbsp;&nbsp;<span class="invalid-login">The Member server returned an unexpected error. Please try again later.</span>';
-			//header('Location:/404');
-			//die();
 			throw new exceptionMedicAlertApi("Server unknown error - {$httpCode}");
 		}
 	}
@@ -661,11 +560,6 @@ class medicAlertApi {
 	*/
 	private function _saltToken($unsalted_token, $salt)
 	{
-		/*assert('is_string($unsalted_token)');
-		assert('strlen($unsalted_token)>0');
-		assert('is_string($salt)');
-		assert('strlen($salt)>0');*/
-
 		// convert the MD5 strings into binary data
 		$unsalted_token_bin = pack("H*", $unsalted_token);
 		$salt_bin 			= pack("H*", $salt);
@@ -687,5 +581,3 @@ class medicAlertApi {
 		return $data;
 	}
 }
-
-?>
