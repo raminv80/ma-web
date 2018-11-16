@@ -9,29 +9,14 @@ Class DBmanager{
 	/**
 	 * Enter description here ...
 	 */
-	function __construct(){
-		global  $CONFIG;
-		$server_db = $CONFIG->database->host;
-		$username_db = $CONFIG->database->user;
-		$password_db = $CONFIG->database->password;
-		$name_db = $CONFIG->database->dbname;
+	function __construct($server_db, $name_db, $username_db, $password_db){
 		$dbConnString =  "mysql:host=" . $server_db . "; dbname=" .$name_db ;
 		$this->PDO = new PDO($dbConnString, $username_db , $password_db);
 		$error = $this->PDO->errorInfo();
 		if(!empty($error[0])) {
-			die(var_dump($error));
+            var_dump($error);
+			die();
 		}
-		
-		/*old connection  
-		$link = @mysql_connect($server_db, $username_db, $password_db);
-		if(!$link) {
-			echo mysql_error();
-			die('Could not connect to server');
-		}
-		if(!@mysql_select_db($name_db))	{
-			die("Could not select database");
-		}
-		*/
 	}
 
 	/**
@@ -55,9 +40,8 @@ Class DBmanager{
 				$err = print_r($this->PDO->errorInfo(),1);
 				$trace = debug_backtrace();
 				$backtrace = parse_backtrace($trace);
-				$errMsg = logError($backtrace, $err, $MySQL);
+				logError($backtrace, $err, $MySQL);
 				$this->queryresult = false;
-				//die($MySQL);
 				header('Location: /404');
 				die();
 			} 
@@ -88,13 +72,6 @@ Class DBmanager{
 	 */
 	function wrappedSqlInsert( $sql , $params = array() ) {
 		$result = $this->executeSQL($sql, $params );
-		if(mysql_error()) {
-			$err = mysql_error();
-			$trace = debug_backtrace();
-			$backtrace = parse_backtrace($trace);
-			$errMsg = logError($backtrace, $err, $sql);
-			header('Location: /404');
-		}
 		return $result;
 	}
 
@@ -105,14 +82,6 @@ Class DBmanager{
 	 */
 	function wrappedSqlGetSingle( $sql , $params = array() ) {
 		$result = $this->executeSQL($sql , $params );
-		if(mysql_error()) {
-			$err = mysql_error();
-			$trace = debug_backtrace();
-			$backtrace = parse_backtrace($trace);
-			$errMsg = logError($backtrace, $err, $sql);
-			header('Location: /404');
-			die();
-		}
 		if($result){
 			return $result[0];
 		}
@@ -127,14 +96,6 @@ Class DBmanager{
 	 */
 	function wrappedSqlGet( $sql , $params = array() ){
 		$result = $this->executeSQL( $sql ,  $params);
-		if(mysql_error()) {
-			$err = mysql_error();
-			$trace = debug_backtrace();
-			$backtrace = parse_backtrace($trace);
-			$errMsg = logError($backtrace, $err, $sql);
-			header('Location: /404');
-		}
-		$sql_arr = array();
 		if(!empty($result)) {
 			return $result;
 		}else{
@@ -150,13 +111,6 @@ Class DBmanager{
 	 */
 	function wrappedSql( $sql, $params = array()  ){
 		$result = $this->executeSQL($sql,$params);
-		if(mysql_error()) {
-			$err = mysql_error();
-			$trace = debug_backtrace();
-			$backtrace = parse_backtrace($trace);
-			$errMsg = logError($backtrace, $err, $sql);
-			header('Location: /404');
-		}
 		if(!empty($result)) {
 			return $result;
 		}else{
@@ -174,13 +128,13 @@ Class DBmanager{
 		$sql =  "SHOW COLUMNS FROM ".$table;
 		if($sql_res = $this->executeSQL($sql)){
 			if(!empty($sql_res)) {
-
-				return $result;
+				return $sql_res;
 			}else {
 				return false;
 			}
 		}
 	}
+
 	function ShowTables(){
 		$sql = "SHOW TABLES";
 		$arr = $this->wrappedSqlGet($sql);
@@ -214,7 +168,4 @@ Class DBmanager{
 		$newdate .=" ".$date[1];
 		return $newdate;
 	}
-
-	
-
 }
