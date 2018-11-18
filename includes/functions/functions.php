@@ -24,7 +24,6 @@ $GLOBALS['REQUEST_URI'] = rtrim($_URI[0],'/');
 
 include_once 'database/pdo-db-manager.php';
 include_once 'database/utilities.php';
-require_once 'smarty/Smarty.class.php';
 
 session_start();
 $_REQUEST = htmlclean($_REQUEST);
@@ -167,8 +166,10 @@ function INITSMARTY($CONFIG){
   $SMARTY->error_reporting = E_ALL & ~E_NOTICE;
   $SMARTY->template_dir = $_SERVER['DOCUMENT_ROOT'] . "/" . $CONFIG->smartytemplate_config->templates; // name of directory for templates
   $SMARTY->compile_dir = $_SERVER['DOCUMENT_ROOT'] . "/" . $CONFIG->smartytemplate_config->templates_c; // name of directory for compiled templates
+  //Workaround for composer.Let's pray Smarty will load plugins from it's composer package soon.
   $SMARTY->plugins_dir = array(
       $_SERVER['DOCUMENT_ROOT'] . "/" . $CONFIG->smartytemplate_config->plugins,
+      $_SERVER['DOCUMENT_ROOT'].'/vendor/smarty/smarty/libs/plugins',
       $_SERVER['DOCUMENT_ROOT'] . "/smarty/plugins"
   ); // plugin directories
   $SMARTY->cache_dir = $_SERVER['DOCUMENT_ROOT'] . "/" . $CONFIG->smartytemplate_config->cache; // name of directory for cache
