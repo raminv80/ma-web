@@ -16,7 +16,5 @@ optimised
 .env.*
 !env.example
 .ckfinder
-Tests
-admin/includes/ckfinder
 admin/includes/filemanager/js/vendor
 

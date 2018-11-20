@@ -1,32 +1,32 @@
 /**file types ***/
-var elf='';
-function getFileType(ID,parent,listing_id){
-	if (elf != '') {
-		$('#elfinder').elfinder('close').elfinder('destroy');
-	}
-	elf = $('#elfinder').elfinder({
-			url : '/admin/includes/fileManager/php/connector.php',
-			getFileCallback : function(file) {
-		   	    
-				$('#'+ID).val(file.name);
-				$('#'+ID+'_link').val(''+file.url);
-				$('#'+ID+'_file').html(file.name);
-		        $('#'+ID+'_path').html('<a href="'+file.url+'" target="_blank" >View</a>');
-		        $('#'+ID+'_preview').html('<img src="'+file.url+'" alt="preview-image" height="50px" width="50px">');
-				
-				elf = '';
-				$('#elfinder').elfinder('close').elfinder('destroy');
-				$('#modal-elfinder').modal('hide');
-	        },
-	        dialog : { title : 'files', modal : true, height: 900 },
-	        resizable: true
-	}).elfinder('instance');
-	$('#elfinder').elfinder('open');
-	$('#modal-elfinder').modal('show');
+function getFileType(ID){
+  CKFinder.popup( {
+    chooseFiles: true,
+    width: 800,
+    height: 600,
+    onInit: function( finder ) {
+      finder.on( 'files:choose', function( evt ) {
+        var file = evt.data.files.first();
+        var fileUrl = file.getUrl();
 
-	/*$('html, body').animate({
-        scrollTop: $('#elfinder').offset().top
-    }, 2000);*/
+        $('#'+ID).val(file.attributes.name);
+        $('#'+ID+'_link').val(''+fileUrl);
+        $('#'+ID+'_file').html(file.name);
+        $('#'+ID+'_path').html('<a href="'+fileUrl+'" target="_blank" >View</a>');
+        $('#'+ID+'_preview').html('<img src="'+fileUrl+'" alt="preview-image" height="50px" width="50px">');
+			});
+      finder.on( 'file:choose:resizedImage', function( evt ) {
+        var file = evt.data.files.first();
+        var fileUrl = evt.data.resizedUrl;
+
+        $('#'+ID).val(file.attributes.name);
+        $('#'+ID+'_link').val(''+fileUrl);
+        $('#'+ID+'_file').html(file.name);
+        $('#'+ID+'_path').html('<a href="'+fileUrl+'" target="_blank" >View</a>');
+        $('#'+ID+'_preview').html('<img src="'+fileUrl+'" alt="preview-image" height="50px" width="50px">');
+			});
+		}
+	});
 }
 
 
@@ -124,3 +124,29 @@ function SelectToJSONsync(ELEMENT){
  });
   $(ELEMENT).closest('.form-group').find('.json-multiselect').fadeIn();
 };
+
+
+function addEditor(CLASSID){
+  var ed=0;
+  $( 'textarea.'+CLASSID ).each(function(){
+    var id = $(this).attr('id');
+    if(id===undefined) {
+      id = 'ckeditor-'+ed;
+      ed++;
+    }
+    $(this).attr('id', id);
+    CKEDITOR.replace(id, {
+      filebrowserBrowseUrl: "/admin/includes/ckfinder/ckfinder.html",
+      filebrowserUploadUrl: "/admin/includes/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files"
+    });
+  });
+}
+
+function tinyMCEinit(CLASSID){
+  //for compatibility only: migrated to ckEditor
+  addEditor(CLASSID);
+}
+
+$(document).ready(function(){
+  addEditor('tinymce');
+});
