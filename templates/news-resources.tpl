@@ -1,5 +1,5 @@
 {block name=head}
-{printfile file='/includes/css/ekko-lightbox.css' type='style'}
+{printfile file='/node_modules/ekko-lightbox/dist/ekko-lightbox.css' type='style'}
 {/block}
 {block name=body}
 <div id="pagehead">
@@ -93,10 +93,10 @@ function(o1,o2) {
 </div>
 {/block}
 {block name=tail}
-{printfile file='/includes/js/jquery.lazyload.min.js' type='script'}
-{printfile file='/includes/js/jquery-ui.min.js' type='script'}
-{printfile file='/includes/js/jquery.selectBoxIt.min.js' type='script'}
-{printfile file='/includes/js/ekko-lightbox.min.js' type='script'}
+{printfile file='/node_modules/jquery-lazyload/jquery.lazyload.js' type='script'}
+{printfile file='/node_modules/jquery-ui-dist/jquery-ui.min.js' type='script'}
+{printfile file='/node_modules/selectboxit/src/javascripts/jquery.selectBoxIt.min.js' type='script'}
+{printfile file='/node_modules/ekko-lightbox/dist/ekko-lightbox.min.js' type='script'}
 
 <script type="text/javascript">
 $(document).ready(function(){

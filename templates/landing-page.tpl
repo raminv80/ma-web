@@ -280,9 +280,9 @@
 
 {* Place additional javascript here so that it runs after General JS includes *}
 {block name=tail}
-{printfile file='/includes/js/jquery.flexslider-min.js' type='script'}
-{printfile file='/includes/js/isotope.pkgd.min.js' type='script'}
-{printfile file='/includes/js/jquery.lazyload.min.js' type='script'}
+{printfile file='/node_modules/flexslider/jquery.flexslider-min.js' type='script'}
+{printfile file='/node_modules/isotope-layout/dist/isotope.pkgd.min.js' type='script'}
+{printfile file='/node_modules/jquery-lazyload/jquery.lazyload.js' type='script'}
 <script type="text/javascript">
 
   (function() {

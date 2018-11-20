@@ -1,5 +1,4 @@
 {block name="head"}
-<!--<link href="/includes/css/jquery-ui.css" rel="stylesheet" media="screen">-->
 {/block} {block name=body}
 <div id="headgrey">
   <div class="container">
@@ -747,8 +746,8 @@ The IHI is part of the government e-health initiative developed to enhance the w
 
 
 {/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
-<script type="text/javascript" src="/includes/js/jquery-ui.js"></script>
-<script src="/includes/js/jquery.selectBoxIt.min.js"></script>
+<script type="text/javascript" src="/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
+<script src="/node_modules/selectboxit/src/javascripts/jquery.selectBoxIt.min.js"></script>
 <script>
   $(function() {
     var icons = {

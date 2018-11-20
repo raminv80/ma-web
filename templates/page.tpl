@@ -42,9 +42,9 @@
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
-      <script type="text/javascript" src="/includes/js/html5shiv.js"></script>
-      <script type="text/javascript" src="/includes/js/respond.min.js"></script>
-      <script type="text/javascript" src="/includes/js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+      <script type="text/javascript" src="/node_modules/html5shiv/dist/html5shiv.min.js"></script>
+      <script type="text/javascript" src="/node_modules/respond.js/dest/respond.min.js"></script>
+      <script type="text/javascript" src="/node_modules/modernizr-prebuilt/dist/modernizr-build.min.js"></script>
  <![endif]-->
 {block name=head}{/block}
 
@@ -115,9 +115,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   {$conversionTracking}
     
-	{printfile file='/includes/js/jquery-2.1.4.min.js' type='script'}
-	{printfile file='/includes/js/bootstrap.min.js' type='script'}
-    {printfile file='/includes/js/jquery.validate.min.js' type='script'}
+	{printfile file='/node_modules/jquery/dist/jquery.min.js' type='script'}
+	{printfile file='/node_modules/bootstrap/dist/js/bootstrap.min.js' type='script'}
+  {printfile file='/node_modules/jquery-validation/dist/jquery.validate.min.js' type='script'}
 	{printfile file='/includes/js/shopping-cart.min.js' type='script'}
 	{printfile file='/includes/js/custom.min.js' type='script'}
   
@@ -138,18 +138,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	        $('html,body').animate({
            scrollTop : $(element).closest('form').offset().top
           });
-	        
-	        
-	        //OPEN TAB AND FOCUS ON ELEMENET
-	        // var setopt = $('div.acc-body').index( $(element).closest('div.acc-body') );
-	        // $('#accordion.validateaccordion').accordion( "option", "active", setopt );
-	        //  $('html,body').animate({
-	 	      //  		scrollTop : $(element).offset().top
-	 	      //  	});
 	      }
 	    },
 	    unhighlight: function (element, errorClass, validClass) {
-	      //$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
 	      $(element).closest('.form-group').removeClass('has-error');
           $(element).closest('.form-group').find('.help-block').text('');
    	      if(!$(element).closest('form').find('.form-group.has-error').length){

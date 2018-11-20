@@ -12,14 +12,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="/images/template/favicon.ico" type="image/x-icon" rel="shortcut icon">
 
-  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <link rel="stylesheet" type="text/css" href="/admin/includes/css/jquery-ui.css"/>
-  <link rel="stylesheet" type="text/css" href="/admin/includes/css/styles.css"/>
-  <link rel="stylesheet" type="text/css" href="/admin/includes/js/timepicker/jquery.ui.timepicker.css"/>
-  <link rel="stylesheet" type="text/css" href="/admin/includes/css/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/node_modules/jquery-ui-dist/jquery-ui.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/node_modules/jquery-timepicker/jquery.timepicker.css"/>
+  <link rel="stylesheet" type="text/css" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
   <link href='//fonts.googleapis.com/css?family=Raleway:400,500,600' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="/admin/includes/css/styles.css"/>
 
-  <script src="/admin/includes/js/jquery-2.1.4.min.js"></script>
+  <script src="/node_modules/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript">
     $(function () {
       $("input[type=submit]").button();
@@ -35,8 +34,8 @@
   </script>
 
   <!--[if lte IE 8]>
-  <script src="/admin/includes/js/respond.min.js"></script>
-  <script src="/admin/includes/js/html5shiv.js"></script>
+  <script src="/node_modules/respond.js/dest/respond.min.js"></script>
+  <script src="/node_modules/html5shiv/dist/html5shiv.min.js"></script>
   <![endif]-->
 
 </head>
@@ -108,11 +107,11 @@
   </script>
 {/if}
 
+<script src="/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
+<script src="/node_modules/jquery-timepicker/jquery.timepicker.js"></script>
+<script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/admin/includes/ckeditor/ckeditor.js"></script>
 <script src="/admin/includes/ckfinder/ckfinder.js"></script>
-<script src="/admin/includes/js/timepicker/jquery.ui.timepicker.js"></script>
-<script src="/admin/includes/js/jquery-ui.min.js"></script>
-<script src="/admin/includes/js/bootstrap.min.js"></script>
 <script src="/admin/includes/js/admin-general.js"></script>
 {block name=tail}{/block}
 </body>

@@ -1,5 +1,5 @@
 {block name="head"}
-{printfile file='/includes/css/jquery-ui.css' type='style'}
+{printfile file='/node_modules/jquery-ui-dist/jquery-ui.min.css' type='style'}
 {/block} {block name=body}
 <div id="maincart">
   <div class="container">

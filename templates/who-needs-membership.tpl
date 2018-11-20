@@ -81,7 +81,7 @@
 {/block}
 
 {block name=tail}
-<script type="text/javascript" src="/includes/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
 <script>
   $( function() {
     var icons = {

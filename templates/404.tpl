@@ -20,11 +20,11 @@
 	 <![endif]-->
 
 	<!-- Bootstrap -->
-	<link rel="stylesheet" href="/includes/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.csss">
 	<link rel="stylesheet" href="/includes/css/custom.css">
 	<link rel="stylesheet" href="/includes/css/404.css">
-	<script src="/includes/js/bootstrap.min.js"></script>
-	<script src="/includes/js/jquery-1.9.1.min.js"></script>
+	<script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="/node_modules/jquery/dist/jquery.min.js"></script>
 </head>
 <body class="mindtrick">
 	<div class="col-xs-12 error404">Error 404 - Sorry, we were unable to locate that resource.</div>

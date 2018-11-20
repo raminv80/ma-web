@@ -131,7 +131,7 @@
 </div>
 
 {/block} {block name=tail}
-{printfile file='/includes/js/jquery.flexslider-min.js' type='script'}
+{printfile file='/node_modules/flexslider/jquery.flexslider-min.js' type='script'}
 <script type="text/javascript">
   $(document).ready(function() {
     $("#showall").click(function() {

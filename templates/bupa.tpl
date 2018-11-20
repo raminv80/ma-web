@@ -135,8 +135,8 @@ a MedicAlert membership could mean the difference between life and death.</p>
 
 {* Place additional javascript here so that it runs after General JS includes *}
 {block name=tail}
-<script src="/includes/js/isotope.pkgd.min.js"></script>
-<script src="/includes/js/jquery.lazyload.min.js"></script>
+<script src="/node_modules/isotope-layout/dist/isotope.pkgd.min.js"></script>
+<script src="/node_modules/jquery-lazyload/jquery.lazyload.js"></script>
 <script type="text/javascript">
 
   $(document).ready(function() {

@@ -1,5 +1,5 @@
 {block name="head"}
-{printfile file='/includes/css/jquery-ui.css' type='style'}
+  {printfile file='/node_modules/jquery-ui-dist/jquery-ui.min.css' type='style'}
 {/block} {block name=body}
 <div id="maincart">
   <div class="container">
@@ -483,8 +483,8 @@
 </div>
 
 {/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail} 
-{printfile file='/includes/js/jquery-ui.js' type='script'}
-{printfile file='/includes/js/jquery.selectBoxIt.min.js' type='script'}
+{printfile file='/node_modules/jquery-ui-dist/jquery-ui.min.js' type='script'}
+{printfile file='/node_modules/selectboxit/src/javascripts/jquery.selectBoxIt.min.js' type='script'}
 {literal}
 <script type="text/javascript">
  jQuery.validator.addMethod("validDate", function(value, element) {

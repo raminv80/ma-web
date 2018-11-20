@@ -347,9 +347,12 @@
   {/if}
   }
 }
-</script>   
+</script>
 {printfile file='/includes/js/jquery-ui.js' type='script'}
 {printfile file='/includes/js/jquery.flexslider-min.js' type='script'}
+
+  {*{printfile file='/node_modules/jquery-ui-dist/jquery-ui.min.js' type='script'}*}
+  {*{printfile file='/node_modules/flexslider/jquery.flexslider-min.js' type='script'}*}
 <script>
 
 jQuery.fn.outerHTML = function(s) {
@@ -444,7 +447,7 @@ jQuery.fn.outerHTML = function(s) {
 		DisplayAdditionalWhenValid();
 		DisplayPrice();
 
-		$(".label-imgs").click(function(){   
+		$(".label-imgs").click(function(){
 		  var oldSelection = $('.image-selector:checked').val();
 		  var newSelection = $(this).find('.image-selector').attr('value');
 		  if(newSelection != oldSelection){
@@ -453,7 +456,7 @@ jQuery.fn.outerHTML = function(s) {
 	    $(this).find('.image-selector').prop('checked', true);
 		  SelectImage($(this).find('.image-selector'));
 		});
-		
+
 		if($('.image-selector:checked')){
 		  $('.image-selector:checked').trigger('click');
 		}
@@ -491,7 +494,7 @@ $(window).load(function() {
     sync: "#carousel.flexslider",
     start: function(){ load_ordered_product(); }
   });
-  
+
 });
 
   (function() {
@@ -551,11 +554,11 @@ $(window).load(function() {
   function SelectImage(ELEMENT){
     ELEMENT.closest('.form-group').find('.attrtype1_name').html($(ELEMENT).attr('data-name'));
     $('.attr-hidden').show();
-    
+
     BlockAttrOptions(ELEMENT);
     DisplayAdditionalWhenValid();
     DisplayPrice();
-    
+
       $('#carousel.flexslider').flexslider(0);
       $('#prodslider .flexslider').flexslider(0);
     while ($('#prodslider .flexslider').data('flexslider').count > 0){
@@ -592,7 +595,7 @@ $(window).load(function() {
           $('#prodslider .flexslider').data('flexslider').addSlide($(saved1));
         }
       });
-    
+
     $("#imgholder img.img-variant-0").each(function(index, element){
         html=$(element)[0].outerHTML;
         saved1 = $('<li>'+html+'</li>');
@@ -655,7 +658,7 @@ $(window).load(function() {
 	  if($(ELEMENT).hasClass('mainAttr')){
 	    $('.notMainAttr').each(function(){
 	      if($(this).find('option').length > 2){
-	        $(this).val('');  
+	        $(this).val('');
 	      }
 	    });
 	    SetAdditionals();
@@ -797,7 +800,7 @@ function load_ordered_product(){
       {/if}
       {if $attr.cartitem_attr_attribute_id eq '4'}
         item_size = "{$attr.cartitem_attr_attr_value_id}";
-        item_engraving = '{$attr.cartitem_attr_attr_value_additional}'; 
+        item_engraving = '{$attr.cartitem_attr_attr_value_additional}';
       {/if}
     {/foreach}
     $('.image-selector[value="'+item_clr+'"]').trigger('click');

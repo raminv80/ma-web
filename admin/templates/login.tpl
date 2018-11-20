@@ -40,7 +40,7 @@
 	<div id="log"></div>
 </form>
 
-<script src="/admin/includes/js/jquery.validate.min.js"></script>
+<script src="/node_modules/jquery-validation/dist/jquery.validate.min.js"></script>
 <script type="text/javascript">
 if (jQuery.validator) {
 	  jQuery.validator.setDefaults({

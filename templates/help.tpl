@@ -165,8 +165,8 @@
 {/block}
 
 {block name=tail}
-{printfile file='/includes/js/jquery-ui.js' type='script'}
-{printfile file='/includes/js/jquery.selectBoxIt.min.js' type='script'}
+{printfile file='/node_modules/jquery-ui-dist/jquery-ui.min.js' type='script'}
+{printfile file='/node_modules/selectboxit/src/javascripts/jquery.selectBoxIt.min.js' type='script'}
 <script type="text/javascript">
 $(document).ready(function(){
 

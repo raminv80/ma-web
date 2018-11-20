@@ -235,8 +235,8 @@
 </div>
 
 {/block} {* Place additional javascript here so that it runs after General JS includes *} {block name=tail}
-{printfile file='/includes/js/jquery-ui.js' type='script'}
-{printfile file='/includes/js/jquery.selectBoxIt.min.js' type='script'}
+{printfile file='/node_modules/jquery-ui-dist/jquery-ui.min.js' type='script'}
+{printfile file='/node_modules/selectboxit/src/javascripts/jquery.selectBoxIt.min.js' type='script'}
 <script type="text/javascript">
   $(document).ready(function() {
 
@@ -263,23 +263,6 @@
       digits: true,
       minlength: 3
     });
-
-
-  /*   $("input[name=variant_id]").change(function(){
-      //Set attribute
-      $('.variant-attributes').attr('disabled', 'disabled');
-      $('#attribute_id-' + $(this).val()).removeAttr('disabled');
-
-      if($("input[name=variant_id]:checked").hasClass('show-otherval')){
-        $("#otheram").show();
-        $("#price").val('');
-      }else{
-        $("#price").val( $("input[name=variant_id]:checked").attr('data-value') );
-        $("#otheram").hide();
-      }
-      $('#fields-wrapper').fadeIn();
-    }); */
-
 
     $('input[name="variant_id"]').change(function(){
       $('.donate-btn').removeClass('active');
