@@ -290,7 +290,7 @@
       return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 2 : 4;
     }
 
-    $window.load(function() {
+    $window.on('load', function() {
       $('.flexslider').flexslider({
         animation: "slide",
         controlNav: false,

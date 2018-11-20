@@ -184,7 +184,7 @@
 {block name=tail}
 {printfile file='/node_modules/flexslider/jquery.flexslider-min.js' type='script'}
 <script type="text/javascript">
-$(window).load(function() {
+$(window).on('load', function() {
   $('#testim2').flexslider({
     animation: "slide",
     controlNav: false,

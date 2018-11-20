@@ -475,7 +475,7 @@ jQuery.fn.outerHTML = function(s) {
 
 	});
 
-$(window).load(function() {
+$(window).on('load', function() {
   $('#carousel.flexslider').flexslider({
     animation: "slide",
     controlNav: false,
@@ -517,7 +517,7 @@ $(window).load(function() {
       //return (window.innerWidth < 768) ? 1 : (window.innerWidth < 992) ? 4 : 6;
     }
 
-    $window.load(function() {
+    $window.on('load', function() {
       var maxItem = $('#relatedslide .prod').length;
       if(maxItem && maxItem < 6){
         var value = 16.66 * maxItem;
