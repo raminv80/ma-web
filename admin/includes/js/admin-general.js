@@ -48,7 +48,7 @@ function buildUrl(table_name,parent_fieldname,object_id,preview){
 			try {
 				var obj = $.parseJSON(data);
 				if(preview && obj.url){
-					window.open('http://'+(document.domain)+obj.url,'_blank');
+					window.open('https://'+(document.domain)+obj.url,'_blank');
 				}
 			} catch (err) {}
 		}
