@@ -11,12 +11,18 @@ Class DBmanager{
 	 */
 	function __construct($server_db, $name_db, $username_db, $password_db){
 		$dbConnString =  "mysql:host=" . $server_db . "; dbname=" .$name_db ;
-		$this->PDO = new PDO($dbConnString, $username_db , $password_db);
+		$this->PDO = new PDO(
+		    $dbConnString,
+            $username_db ,
+            $password_db
+        );
 		$error = $this->PDO->errorInfo();
 		if(!empty($error[0])) {
             var_dump($error);
 			die();
 		}
+        $this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->PDO->query('SET SESSION sql_mode = ""');
 	}
 
     /**
