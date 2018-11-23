@@ -20,7 +20,7 @@
     <phone>(+61)8 8273 8400</phone>
     <toll_free>1800 88 22 22</toll_free>
     <fax>1800 64 32 59</fax>
-    <email env="EMAIL_ENQUIRY"></email>
+    <email env="EMAIL_ENQUIRY">enquiry@medicalert.org.au</email>
     <email_from env="EMAIL_FROM">noreply@medicalert.org.au</email_from>
     <email_contact env="EMAIL_CONTACT"></email_contact>
     <email_orders env="EMAIL_ORDERS"></email_orders>
