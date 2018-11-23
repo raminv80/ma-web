@@ -21,4 +21,6 @@ CKEDITOR.editorConfig = function( config ) {
   ];
 
   config.removeButtons = 'Save,NewPage,Preview,Print,SelectAll,Subscript,Superscript,CopyFormatting,RemoveFormat,SpecialChar,PageBreak,Iframe,Styles,Font';
+
+  config.allowedContent = true;
 };
