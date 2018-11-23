@@ -14,7 +14,7 @@ if (file_exists($root_dir . '/.env')) {
  * Set up our global environment constant and load its config first
  */
 define('APP_ENV', getenv('APP_ENV') ?: 'production');
-define('APP_DEBUG', (getenv('APP_DEBUG') ?: '')===true);
+define('APP_DEBUG', (getenv('APP_DEBUG') ?: '')==="true");
 define('APP_DOMAIN', getenv('APP_DOMAIN') ?: '');
 
 define('DB_HOST', getenv('DB_HOST') ?: 'undefined');
