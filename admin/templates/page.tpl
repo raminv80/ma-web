@@ -111,6 +111,7 @@
 <script src="/node_modules/jquery-timepicker/jquery.timepicker.js"></script>
 <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="/admin/includes/ckeditor/ckeditor.js"></script>
+<script src="/admin/includes/ckeditor/adapters/jquery.js"></script>
 <script src="/admin/includes/ckfinder/ckfinder.js"></script>
 <script src="/admin/includes/js/admin-general.js"></script>
 {block name=tail}{/block}

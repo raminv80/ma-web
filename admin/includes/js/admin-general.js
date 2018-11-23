@@ -127,19 +127,11 @@ function SelectToJSONsync(ELEMENT){
 
 
 function addEditor(CLASSID){
-  var ed=0;
-  $( 'textarea.'+CLASSID ).each(function(){
-    var id = $(this).attr('id');
-    if(id===undefined) {
-      id = 'ckeditor-'+ed;
-      ed++;
-    }
-    $(this).attr('id', id);
-    CKEDITOR.replace(id, {
-      filebrowserBrowseUrl: "/admin/includes/ckfinder/ckfinder.html",
-      filebrowserUploadUrl: "/admin/includes/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files"
-    });
+  $( 'textarea.'+CLASSID ).ckeditor({
+        filebrowserBrowseUrl: "/admin/includes/ckfinder/ckfinder.html",
+        filebrowserUploadUrl: "/admin/includes/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files"
   });
+
 }
 
 function tinyMCEinit(CLASSID){
