@@ -428,7 +428,7 @@
     <pageID>784</pageID>
   </static_page>
   <static_page>
-    <url>benevolant-program-hae</url>
+    <url>benevolent-program-hae</url>
     <template>benevolent-hae.tpl</template>
     <pageID>976</pageID>
   </static_page>
