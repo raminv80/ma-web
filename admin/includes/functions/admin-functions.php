@@ -15,7 +15,7 @@ if ( APP_ENV === 'stage' || APP_ENV === 'production' ) {
 }
 
 if ( $GLOBALS['CONFIG'] = simplexml_load_file( $_SERVER['DOCUMENT_ROOT'] . "/admin/config/config.xml.php" ) ) {
-    if ( APP_DEBUG ) {
+    if ( APP_DEBUG && APP_ENV==="development" ) {
         ini_set( 'display_errors', 1 );
         ini_set( 'error_reporting', E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT );
     }
