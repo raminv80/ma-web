@@ -460,7 +460,7 @@ jQuery.fn.outerHTML = function(s) {
 		if($('.image-selector:checked')){
       setTimeout(function(){
         $('.image-selector:checked').trigger('click');
-      }, 300);
+      }, 1000);
 		}
 
 	});
