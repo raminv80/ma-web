@@ -571,7 +571,7 @@ class ListClass{
         $params[":cid"] = $_cid;
       }
       $sql = "SELECT * FROM {$this->TBL} {$extends} 
-      WHERE ({$this->TBL}.listing_deleted IS NULL OR {$this->TBL}_deleted = '0000-00-00') {$catsql}{$typeIdSQL} AND {$this->TBL}.listing_published = :published" . $where . $filter . $order . $limit;
+      WHERE ({$this->TBL}.listing_deleted IS NULL OR {$this->TBL}.listing_deleted = '0000-00-00') {$catsql}{$typeIdSQL} AND {$this->TBL}.listing_published = :published" . $where . $filter . $order . $limit;
       
       $params = array_merge($params, $filter_params);
       if(!empty($typeIdSQL)){
