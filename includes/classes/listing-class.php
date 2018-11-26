@@ -58,10 +58,12 @@ class ListClass{
     foreach($this->CONFIG_OBJ->table->extends as $a){
       $pre = str_replace("tbl_", "", $a->table);
       $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}";
-      $where .= " AND {$pre}_deleted IS NULL";
+      $where .= " AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00')";
     }
     
-    $sql = "SELECT * FROM {$this->TBL} {$extends} WHERE {$this->TBL}.listing_object_id = :id AND {$this->TBL}.listing_deleted IS NULL {$where} AND {$this->TBL}.listing_published = :published ";
+    $sql = "SELECT * FROM {$this->TBL} {$extends} WHERE {$this->TBL}.listing_object_id = :id 
+    AND ({$this->TBL}.listing_deleted IS NULL OR {$this->TBL}.listing_deleted = '0000-00-00')
+     {$where} AND {$this->TBL}.listing_published = :published ";
     $params = array(
         ":id" => $this->ID, 
         ":published" => $_PUBLISHED 
@@ -99,7 +101,10 @@ class ListClass{
           $extraArr[] = (string)$xt;
         }
         $extraStr = !empty($extraArr)? "," . implode(',', $extraArr) : "";
-        $sql = "SELECT {$f->id},{$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''? "AND {$f->where} " : "") . ($f->groupby != ''? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
+        $sql = "SELECT {$f->id},{$f->reference} {$extraStr} 
+        FROM {$f->table} 
+        WHERE ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') " . ($f->where != ''? "AND {$f->where} " :
+                "") . ($f->groupby != ''? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
         if($res2 = $DBobject->wrappedSqlGet($sql)){
           $options = array();
           foreach($res2 as $row){
@@ -216,7 +221,11 @@ class ListClass{
   function LoadParents($_ID, $_PUBLISHED = 1){
     global $SMARTY, $DBobject;
     $data = array();
-    $sql = "SELECT {$this->TBL}.* FROM {$this->TBL} WHERE {$this->TBL}.listing_object_id = :id AND {$this->TBL}.listing_deleted IS NULL ORDER BY {$this->TBL}.listing_published = :published DESC ";
+    $sql = "SELECT {$this->TBL}.* 
+    FROM {$this->TBL} 
+    WHERE {$this->TBL}.listing_object_id = :id 
+    AND ({$this->TBL}.listing_deleted IS NULL OR {$this->TBL}.listing_deleted = '0000-00-00') 
+    ORDER BY {$this->TBL}.listing_published = :published DESC ";
     $params = array(
         ":id" => $_ID, 
         ":published" => $_PUBLISHED 
@@ -249,7 +258,13 @@ class ListClass{
     global $SMARTY, $DBobject;
     $args = explode('/', $_url);
     $a = end($args);
-    $sql = "SELECT cache_record_id, cache_type FROM cache_{$this->TBL} WHERE cache_url = :url AND EXISTS (SELECT listing_id FROM {$this->TBL} WHERE listing_object_id = cache_record_id AND listing_published = :published AND listing_deleted IS NULL)";
+    $sql = "SELECT cache_record_id, cache_type FROM cache_{$this->TBL} 
+    WHERE cache_url = :url 
+    AND EXISTS 
+      (SELECT listing_id FROM {$this->TBL} 
+       WHERE listing_object_id = cache_record_id 
+       AND listing_published = :published 
+       AND (listing_deleted IS NULL OR listing_deleted = '0000-00-00') )";
     $params = array(
         ":url" => $_url, 
         ":published" => $_PUBLISHED 
@@ -292,7 +307,11 @@ class ListClass{
   // TODO: THIS NEEDS TO BE REVISED TO SUPPORT HAVING 2 URLS FOR THE SAME LISTING_OBJECT_ID IN THE EVENT THAT THE URL VALUE IS CHANGING.
   function BuildUrl($_id, &$url, $_PUBLISHED = 1){
     global $DBobject;
-    $sql = "SELECT * FROM {$this->TBL} WHERE listing_object_id = :id AND listing_published = :published AND listing_deleted IS NULL ORDER BY listing_modified DESC";
+    $sql = "SELECT * FROM {$this->TBL} 
+    WHERE listing_object_id = :id 
+    AND listing_published = :published 
+    AND (listing_deleted IS NULL OR listing_deleted = '0000-00-00') 
+    ORDER BY listing_modified DESC";
     $params = array(
         ":id" => $_id, 
         ":published" => $_PUBLISHED 
@@ -329,14 +348,19 @@ class ListClass{
     $DBobject->wrappedSql($sql[0]);
     
     $sql[3] = "TRUNCATE cache_{$this->TBL};";
-    $sql[1] = "SELECT DISTINCT(listing_parent_id) FROM {$this->TBL} WHERE listing_deleted IS NULL AND listing_parent_id IS NOT NULL";
+    $sql[1] = "SELECT DISTINCT(listing_parent_id) FROM {$this->TBL} 
+    WHERE (listing_deleted IS NULL OR listing_deleted = '0000-00-00') 
+    AND listing_parent_id IS NOT NULL";
     $res = $DBobject->wrappedSql($sql[1]);
     
     $ids = array();
     foreach($res as $row){
       $ids[] = "listing_object_id = {$row['listing_parent_id']}";
     }
-    $sql_r = "SELECT listing_object_id AS id, listing_parent_id,listing_url, listing_published FROM {$this->TBL} WHERE (" . implode(" OR ", $ids) . ") AND listing_deleted IS NULL GROUP BY CONCAT(listing_object_id,':',listing_url) ORDER BY listing_published = 1"; // GET DISTINCT object_id + url
+    $sql_r = "SELECT listing_object_id AS id, listing_parent_id,listing_url, listing_published 
+    FROM {$this->TBL} WHERE (" . implode(" OR ", $ids) . ") 
+    AND (listing_deleted IS NULL OR listing_deleted = '0000-00-00') 
+    GROUP BY CONCAT(listing_object_id,':',listing_url) ORDER BY listing_published = 1"; // GET DISTINCT object_id + url
     $res = $DBobject->wrappedSql($sql_r);
     foreach($res as $row){
       $id = $row['id'];
@@ -345,9 +369,15 @@ class ListClass{
       if(!self::BuildUrl($row['id'], $url, $published)){
         continue;
       }
-      $sql_c[] = "INSERT INTO cache_{$this->TBL} (cache_record_id,cache_published,cache_url,cache_type,cache_modified) SELECT listing_object_id,listing_published, CONCAT('{$url}','/',listing_url), listing_type_id, now() FROM {$this->TBL} WHERE listing_parent_id = {$id} AND listing_deleted IS NULL";
+      $sql_c[] = "INSERT INTO cache_{$this->TBL} (cache_record_id,cache_published,cache_url,cache_type,cache_modified) 
+      SELECT listing_object_id,listing_published, CONCAT('{$url}','/',listing_url), listing_type_id, now() 
+      FROM {$this->TBL} WHERE listing_parent_id = {$id} 
+      AND (listing_deleted IS NULL OR listing_deleted = '0000-00-00')";
     }
-    $sql_c[] = "INSERT INTO cache_{$this->TBL} (cache_record_id,cache_published,cache_url,cache_type,cache_modified) SELECT listing_object_id,listing_published, listing_url, listing_type_id, now() FROM {$this->TBL} WHERE (listing_parent_id = 0 OR listing_parent_id IS NULL) AND listing_deleted IS NULL";
+    $sql_c[] = "INSERT INTO cache_{$this->TBL} (cache_record_id,cache_published,cache_url,cache_type,cache_modified) 
+    SELECT listing_object_id,listing_published, listing_url, listing_type_id, now() 
+    FROM {$this->TBL} WHERE (listing_parent_id = 0 OR listing_parent_id IS NULL) 
+    AND (listing_deleted IS NULL OR listing_deleted = '0000-00-00')";
     
     $DBobject->wrappedSql($sql[3]);
     foreach($sql_c as $s){
@@ -371,7 +401,9 @@ class ListClass{
       $data[$res[0]['listing_id']]["url"] = $res[0]['listing_url'];
       $data[$res[0]['listing_id']]["subs"] = $_subs;
       if(!empty($res[0]['listing_parent_id']) && $res[0]['listing_parent_id'] != 0){
-        $sql2 = "SELECT * FROM {$this->TBL} WHERE {$this->TBL}.listing_object_id = :cid AND {$this->TBL}.listing_deleted IS NULL ORDER BY {$this->TBL}.listing_published = :published DESC";
+        $sql2 = "SELECT * FROM {$this->TBL} WHERE {$this->TBL}.listing_object_id = :cid 
+        AND ({$this->TBL}.listing_deleted IS NULL OR {$this->TBL}.listing_deleted = '0000-00-00') 
+        ORDER BY {$this->TBL}.listing_published = :published DESC";
         $params2 = array(
             ":cid" => $res[0]['listing_parent_id'], 
             ":published" => $_PUBLISHED 
@@ -390,8 +422,8 @@ class ListClass{
     
     $data = array();
     //GET MENU LOCATIONS
-    $sql = "SELECT menu_location FROM tbl_menu WHERE menu_deleted IS NULL GROUP BY menu_location";
-    if($locations = $DBobject->executeSQL($sql, $params)){
+    $sql = "SELECT menu_location FROM tbl_menu WHERE (menu_deleted IS NULL OR menu_deleted = '0000-00-00') GROUP BY menu_location";
+    if($locations = $DBobject->executeSQL($sql, [])){
       foreach($locations as $loc){
         $data["{$loc['menu_location']}"] = $this->LoadMenuList($_curPageId, $loc['menu_location']);
       }
@@ -406,7 +438,9 @@ class ListClass{
     $data = array();
     $selected = 0;
     //GET LIST
-    $sql = "SELECT menu_id, menu_name, menu_parent_id, menu_listing_id, menu_external, menu_icon, menu_type, menu_order FROM tbl_menu WHERE menu_deleted IS NULL AND menu_parent_id = :pid AND menu_location = :loc ORDER BY menu_order, menu_name";
+    $sql = "SELECT menu_id, menu_name, menu_parent_id, menu_listing_id, menu_external, menu_icon, menu_type, menu_order FROM tbl_menu 
+    WHERE (menu_deleted IS NULL OR menu_deleted = '0000-00-00') AND menu_parent_id = :pid AND menu_location = :loc 
+    ORDER BY menu_order, menu_name";
     $params = array(
         ":pid" => $_pid, 
         ":loc" => $_loc 
@@ -527,7 +561,7 @@ class ListClass{
       foreach($this->CONFIG_OBJ->table->extends as $a){
         $pre = str_replace("tbl_", "", $a->table);
         $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}"; // AND article_deleted IS NULL";
-        $where .= " AND {$pre}_deleted IS NULL";
+        $where .= " AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') ";
       }
       $params = array(
           ":published" => $_PUBLISHED 
@@ -536,7 +570,8 @@ class ListClass{
         $catsql = " AND {$this->TBL}.listing_parent_id = :cid ";
         $params[":cid"] = $_cid;
       }
-      $sql = "SELECT * FROM {$this->TBL} {$extends} WHERE {$this->TBL}.listing_deleted IS NULL {$catsql}{$typeIdSQL} AND {$this->TBL}.listing_published = :published" . $where . $filter . $order . $limit;
+      $sql = "SELECT * FROM {$this->TBL} {$extends} 
+      WHERE ({$this->TBL}.listing_deleted IS NULL OR {$this->TBL}_deleted = '0000-00-00') {$catsql}{$typeIdSQL} AND {$this->TBL}.listing_published = :published" . $where . $filter . $order . $limit;
       
       $params = array_merge($params, $filter_params);
       if(!empty($typeIdSQL)){
@@ -571,7 +606,10 @@ class ListClass{
       $extraArr[] = (string)$xt;
     }
     $extraStr = !empty($extraArr)? "," . implode(',', $extraArr) : "";
-    $sql = "SELECT {$f->id}, {$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''? "AND {$f->where} " : "") . ($f->groupby != ''? " GROUP BY {$f->groupby} " : ""). ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
+    $sql = "SELECT {$f->id}, {$f->reference} {$extraStr} FROM {$f->table} 
+    WHERE ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') 
+    AND {$pre}_parent_id = {$pid} " . ($f->where != ''? "AND {$f->where} " : "") .
+           ($f->groupby != ''? " GROUP BY {$f->groupby} " : ""). ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
         $results[$row["{$f->id}"]]['id'] = $row["{$f->id}"];
@@ -609,11 +647,12 @@ class ListClass{
     foreach($a->extends as $e){
       $pre = str_replace("tbl_", "", $e->table);
       $extends .= " LEFT JOIN {$e->table} ON {$e->linkfield} = {$e->field}";
-      $where .= " AND {$pre}_deleted IS NULL";
+      $where .= " AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00')";
     }
     $t_data = array();
     $pre = str_replace("tbl_", "", $a->table);
-    $sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = :id AND {$pre}_deleted IS NULL " . $where . " " . $group . " " . $order . " " . $limit;
+    $sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = :id 
+    AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') " . $where . " " . $group . " " . $order . " " . $limit;
     $params = array(
         ':id' => $id 
     );
@@ -655,7 +694,9 @@ class ListClass{
     
     foreach($cfg->table->tags as $a){
       $preObjTbl = str_replace("tbl_", "", $a->object_table);
-      $sql = "SELECT {$a->object_value} AS VALUE FROM {$a->object_table} WHERE {$preObjTbl}_id = :id AND {$preObjTbl}_deleted IS NULL AND {$preObjTbl}_published = 1 ";
+      $sql = "SELECT {$a->object_value} AS VALUE 
+      FROM {$a->object_table} WHERE {$preObjTbl}_id = :id 
+      AND ({$preObjTbl}_deleted IS NULL OR {$preObjTbl}_deleted = '0000-00-00') AND {$preObjTbl}_published = 1 ";
       $params = array(
           ":id" => $this->ID 
       );
@@ -679,9 +720,13 @@ class ListClass{
         }
         
         $pre = str_replace("tbl_", "", $a->table);
-        $sql = "SELECT {$a->object_table}.* FROM {$a->table} LEFT JOIN {$a->object_table} ON  {$preObjTbl}_id = {$pre}_object_id 
-						WHERE {$pre}_object_table = :objTable AND {$pre}_value = :objValue  AND {$pre}_deleted IS NULL 
-								AND {$preObjTbl}_deleted IS NULL AND {$preObjTbl}_published = 1 " . $where . " " . $group . " " . $order . " " . $limit;
+        $sql = "SELECT {$a->object_table}.* 
+        FROM {$a->table} LEFT JOIN {$a->object_table} ON  {$preObjTbl}_id = {$pre}_object_id 
+		WHERE {$pre}_object_table = :objTable AND {$pre}_value = :objValue  AND 
+		({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') 
+		AND ({$preObjTbl}_deleted IS NULL OR {$preObjTbl}_deleted = '0000-00-00') 
+		AND {$preObjTbl}_published = 1 " . $where . " " .
+        $group . " " . $order . " " . $limit;
         $params = array(
             ':objTable' => $a->object_table, 
             ':objValue' => $res[0]["VALUE"] 
@@ -711,7 +756,7 @@ class ListClass{
   
     $url = '';
     if(!empty($_oid) || $_level > 8){
-      $sql = "SELECT listing_parent_id, listing_url FROM tbl_listing WHERE listing_deleted IS NULL AND listing_published = 1 AND listing_object_id = :oid LIMIT 1";
+      $sql = "SELECT listing_parent_id, listing_url FROM tbl_listing WHERE (listing_deleted IS NULL OR listing_deleted = '0000-00-00') AND listing_published = 1 AND listing_object_id = :oid LIMIT 1";
       if($res = $DBobject->wrappedSql($sql, array(":oid" => $_oid))){
         $url = "/{$res[0]['listing_url']}";
         if(!empty($res[0]['listing_parent_id'])){

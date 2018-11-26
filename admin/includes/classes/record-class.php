@@ -47,7 +47,10 @@ class Record{
     if($this->CONFIG->table->where->attributes()->notedit){
       $this->WHERE = null;
     }
-    $sql = "SELECT * FROM {$this->TABLE} WHERE {$this->ID} = '{$id}' AND {$this->DELETED} IS NULL" . ($this->WHERE != ""? " AND {$this->WHERE}" : ""); // AND article_deleted IS NULL";
+    $sql = "SELECT * FROM {$this->TABLE} WHERE {$this->ID} = '{$id}' 
+    AND ({$this->DELETED} IS NULL OR {$this->DELETED} = '0000-00-00')" . ($this->WHERE != ""? " 
+    AND {$this->WHERE}" : ""); // AND article_deleted IS
+      // NULL";
                                                                                                                                                 // echo $sql.'<br/>';
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res[0] as $key => $field){
@@ -63,7 +66,7 @@ class Record{
       }
       foreach($this->CONFIG->table->extends as $a){
         $pre = str_replace("tbl_", "", $a->table);
-        $sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '" . $res[0]["{$a->linkfield}"] . "' AND {$pre}_deleted IS NULL ";
+        $sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '" . $res[0]["{$a->linkfield}"] . "' AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00')) ";
         if($res2 = $DBobject->wrappedSqlGet($sql)){
           foreach($res2[0] as $key => $field){
             if(empty($listing_f["{$key}"])){
@@ -107,7 +110,9 @@ class Record{
         foreach($f->extra as $r){
           $ext[] = $r;
         }
-        $sql = "SELECT {$f->id}," . implode(',', $ref) . (empty($ext)? '' : ',' . implode(',', $ext)) . " FROM {$f->table} {$extends} WHERE {$pre}_deleted IS NULL " . ($f->where != ''? "AND {$f->where} " : "") . ($f->groupby != ''? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
+        $sql = "SELECT {$f->id}," . implode(',', $ref) . (empty($ext)? '' : ',' . implode(',', $ext)) . " FROM {$f->table} {$extends} 
+        WHERE ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') "
+               . ($f->where != ''? "AND {$f->where} " : "") . ($f->groupby != ''? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
         if($res = $DBobject->wrappedSqlGet($sql)){
           foreach($res as $row){
             $value = array();
@@ -156,7 +161,9 @@ class Record{
     foreach($f->extra as $r){
       $ext[] = $r;
     }
-    $sql = "SELECT {$f->id}," . implode(',', $ref) . (empty($ext)? '' : ',' . implode(',', $ext)) . " FROM {$f->table} {$extends} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''? "AND {$f->where} " : "") . ($f->groupby != ''? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
+    $sql = "SELECT {$f->id}," . implode(',', $ref) . (empty($ext)? '' : ',' . implode(',', $ext)) . " FROM {$f->table} {$extends} 
+    WHERE ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') 
+    AND {$pre}_parent_id = {$pid} " . ($f->where != ''? "AND {$f->where} " : "") . ($f->groupby != ''? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''? " ORDER BY {$f->orderby} " : "");
     
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
@@ -195,7 +202,8 @@ class Record{
     }
     
     $pre = str_replace("tbl_", "", $a->table);
-    $sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . ($a->where != ''? "AND {$a->where} " : "") . $order;
+    $sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = '{$id}' AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') " . ($a->where != ''? "AND {$a->where} " : "") .
+           $order;
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
         $r_array = array();
@@ -373,13 +381,20 @@ class Record{
           ':id' => $id 
       ));
       
-      $sql = "SELECT tbl_log.*, {$a->id}, admin_name FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id LEFT JOIN {$a->table} ON {$a->id} = log_record_id WHERE log_record_table = :table AND log_deleted IS NULL AND {$a->field} = :fid ORDER BY log_created DESC";
+      $sql = "SELECT tbl_log.*, {$a->id}, admin_name 
+      FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id 
+      LEFT JOIN {$a->table} ON {$a->id} = log_record_id 
+      WHERE log_record_table = :table AND (log_deleted IS NULL OR log_deleted = '0000-00-00') 
+      AND {$a->field} = :fid ORDER BY log_created DESC";
       $results = $DBobject->wrappedSqlGet($sql, array(
           ':table' => $a->table, 
           ':fid' => $parent[0]["{$a->field}"] 
       ));
     } else{
-      $sql = "SELECT tbl_log.*, tbl_admin.admin_name FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id WHERE log_record_table = :table AND log_record_id = :id AND log_deleted IS NULL ORDER BY log_created DESC";
+      $sql = "SELECT tbl_log.*, tbl_admin.admin_name 
+      FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id 
+      WHERE log_record_table = :table AND log_record_id = :id 
+      AND (log_deleted IS NULL OR log_deleted = '0000-00-00') ORDER BY log_created DESC";
       $results = $DBobject->wrappedSqlGet($sql, array(
           ':table' => $a->table, 
           ':id' => $id 

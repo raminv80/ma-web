@@ -23,14 +23,19 @@ try{
     
     $sql = "SELECT * FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id
           LEFT JOIN tbl_variant ON variant_id = cartitem_variant_id
-        WHERE cartitem_deleted IS NULL AND cartitem_id <> '0' AND cartitem_id = :id AND product_published = 1 AND product_deleted IS NULL AND variant_deleted IS NULL";
+        WHERE (cartitem_deleted IS NULL OR cartitem_deleted = '0000-00-00') 
+        AND cartitem_id <> '0' AND cartitem_id = :id AND product_published = 1 
+        AND (product_deleted IS NULL OR product_deleted = '0000-00-00') 
+        AND (variant_deleted IS NULL OR variant_deleted = '0000-00-00')";
     $res = $DBobject->wrappedSql($sql, array(
         ":id" => $cartItemId
     ));
     foreach($res as $p){
       $ordered_item = $p;
       // ---------------- ATTRIBUTES SAVED IN tbl_cartitem_attr ----------------
-      $sql = "SELECT * FROM tbl_cartitem_attr WHERE cartitem_attr_cartitem_id = :id AND cartitem_attr_deleted IS NULL AND cartitem_attr_cartitem_id <> '0' ORDER BY cartitem_attr_order";
+      $sql = "SELECT * FROM tbl_cartitem_attr WHERE cartitem_attr_cartitem_id = :id 
+      AND (cartitem_attr_deleted IS NULL OR cartitem_attr_deleted = '0000-00-00') 
+      AND cartitem_attr_cartitem_id <> '0' ORDER BY cartitem_attr_order";
       $params = array(":id" => $p['cartitem_id']);
       $ordered_item['attributes'] = $DBobject->wrappedSql($sql, $params);
     }

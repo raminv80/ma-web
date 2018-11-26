@@ -14,7 +14,8 @@ global $CONFIG, $SMARTY, $DBobject;
 
 if($_SERVER['REMOTE_ADDR'] != '150.101.230.130') die('Restricted area');
 
-$sql = "SELECT * FROM tbl_product LEFT JOIN `AA_products` ON `New ID`= product_migration_id WHERE product_deleted IS NULL";
+$sql = "SELECT * FROM tbl_product LEFT JOIN `AA_products` ON `New ID`= product_migration_id 
+WHERE (product_deleted IS NULL OR product_deleted = '0000-00-00')";
 
 if($res = $DBobject->wrappedSql($sql)){
   
@@ -26,14 +27,16 @@ if($res = $DBobject->wrappedSql($sql)){
     
     foreach($collections as $collect){
     
-      $Csql = "SELECT `listing_object_id` FROM `tbl_listing` WHERE `listing_type_id` =10 AND 	listing_name LIKE :listing_name AND listing_deleted is NULL LIMIT 1";
+      $Csql = "SELECT `listing_object_id` FROM `tbl_listing` WHERE `listing_type_id` =10 
+      AND listing_name LIKE :listing_name AND (listing_deleted is NULL OR listing_deleted = '0000-00-00') LIMIT 1";
     
       if($Cres = $DBobject->wrappedSql($Csql, array('listing_name' => trim($collect)))){
     
         $collectListingObjID = $Cres[0]['listing_object_id'];
         
         $cGetSQL = "SELECT productcat_id FROM tbl_productcat WHERE productcat_listing_id = :productcat_listing_id 
-            AND productcat_product_id = :productcat_product_id AND productcat_deleted IS NULL";
+            AND productcat_product_id = :productcat_product_id 
+            AND (productcat_deleted IS NULL OR productcat_deleted = '0000-00-00')";
         
         if($cGetSQLres = $DBobject->wrappedSql($cGetSQL, array("productcat_listing_id" => $collectListingObjID, "productcat_product_id" => $r['product_id']))){
             print_r($cGetSQLres);
@@ -41,7 +44,6 @@ if($res = $DBobject->wrappedSql($sql)){
           echo "product id: ".$r['product_id']."/n";
           echo "listing id: ".$collectListingObjID."/n";
           $collsql = "INSERT INTO tbl_productcat ( productcat_listing_id, productcat_product_id, productcat_created, productcat_modified )
-      
       				  VALUES( :productcat_listing_id, :productcat_product_id, NOW(), NOW() )";
       
           $DBobject->wrappedSql($collsql, array(
@@ -63,7 +65,8 @@ if($res = $DBobject->wrappedSql($sql)){
 function update_variants($product_id, $linking_id, $product_type){
   global $CONFIG, $SMARTY, $DBobject;
   
-  $sql = "SELECT * FROM AA_variants LEFT JOIN tbl_variant ON variant_migration_id = id WHERE `New ID`= :linking_id AND variant_deleted IS NULL";
+  $sql = "SELECT * FROM AA_variants LEFT JOIN tbl_variant ON variant_migration_id = id WHERE `New ID`= :linking_id 
+  AND (variant_deleted IS NULL OR variant_deleted = '0000-00-00')";
   
   if($res = $DBobject->wrappedSql($sql, array(
       "linking_id" => $linking_id 
@@ -76,32 +79,23 @@ function update_variants($product_id, $linking_id, $product_type){
         
         // Colour
         $Csql = "SELECT  productattr_id
-
-                FROM  tbl_productattr WHERE productattr_deleted IS NULL AND productattr_attribute_id = 2
-
+                FROM  tbl_productattr WHERE (productattr_deleted IS NULL OR productattr_deleted = '0000-00-00') AND productattr_attribute_id = 2
                 AND  `productattr_variant_id` =  :productattr_variant_id";
         
         if($Cres = $DBobject->wrappedSql($Csql, array('productattr_variant_id' => $variantID ))){
           
             $Cgetsql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
-          
                 FROM  `tbl_attr_value`
-          
                 LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-          
-                WHERE  `attr_value_deleted` IS NULL
-          
-                AND attribute_deleted IS NULL
-          
+                WHERE  (`attr_value_deleted` IS NULL OR attr_value_deleted = '0000-00-00')
+                AND (attribute_deleted IS NULL OR attribute_deleted = '0000-00-00')
                 AND attribute_name LIKE  'Colour'
-          
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
           
             if($Cgetres = $DBobject->wrappedSql($Cgetsql, array('attr_value_name' => trim($r['Colour'])))){
 
                 $collsql = "UPDATE tbl_productattr SET productattr_attr_value_id = :productattr_attr_value_id, productattr_modified = NOW()
-          
-                        WHERE productattr_id = :productattr_id AND productattr_deleted IS NULL";
+                        WHERE productattr_id = :productattr_id AND (productattr_deleted IS NULL OR productattr_deleted = '0000-00-00')";
                 
                 $DBobject->wrappedSql($collsql, array(
                     "productattr_id" => $Cres['productattr_id'],
@@ -111,17 +105,11 @@ function update_variants($product_id, $linking_id, $product_type){
         }else{
           
           $Cgetsql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
-          
                 FROM  `tbl_attr_value`
-          
                 LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-          
-                WHERE  `attr_value_deleted` IS NULL
-          
-                AND attribute_deleted IS NULL
-          
+                WHERE  (`attr_value_deleted` IS NULL OR attr_value_deleted = '0000-00-00')
+                AND (attribute_deleted IS NULL OR attribute_deleted = '0000-00-00')
                 AND attribute_name LIKE  'Colour'
-          
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
           
           if($Cgetres = $DBobject->wrappedSql($Cgetsql, array('attr_value_name' => trim($r['Colour'])))){
@@ -165,9 +153,8 @@ function update_variants($product_id, $linking_id, $product_type){
         
         
         echo $Msql = "SELECT  productattr_id
-
-                FROM  tbl_productattr WHERE productattr_deleted IS NULL AND productattr_attribute_id = 4
-
+                FROM  tbl_productattr WHERE (productattr_deleted IS NULL OR productattr_deleted = '0000-00-00') 
+                AND productattr_attribute_id = 4
                 AND  `productattr_variant_id` =  :productattr_variant_id";
         echo $variantID;
         echo "<br>";
@@ -175,24 +162,18 @@ function update_variants($product_id, $linking_id, $product_type){
         if($Mres = $DBobject->wrappedSql($Msql, array('productattr_variant_id' => $variantID ))){
           
             $Mgetsql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
-          
                 FROM  `tbl_attr_value`
-          
                 LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-          
-                WHERE  `attr_value_deleted` IS NULL
-          
-                AND attribute_deleted IS NULL
-          
+                WHERE  (`attr_value_deleted` IS NULL OR `attr_value_deleted` = '0000-00-00')
+                AND (attribute_deleted IS NULL OR attribute_deleted = '0000-00-00')
                 AND attribute_name LIKE  'Medical ID size'
-          
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
           
             if($Mgetres = $DBobject->wrappedSql($Mgetsql, array('attr_value_name' => $medicalIDSize))){
 
                 echo $collsql = "UPDATE tbl_productattr SET productattr_attr_value_id = :productattr_attr_value_id, productattr_modified = NOW()
-          
-                        WHERE productattr_id = :productattr_id AND productattr_deleted IS NULL";
+                        WHERE productattr_id = :productattr_id 
+                        AND (productattr_deleted IS NULL OR productattr_deleted = '0000-00-00')";
                 echo "<br>";
                 $DBobject->wrappedSql($collsql, array(
                     "productattr_id" => $Mres['productattr_id'],
@@ -202,17 +183,11 @@ function update_variants($product_id, $linking_id, $product_type){
         }else{
           
           $Mgetsql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
-          
                 FROM  `tbl_attr_value`
-          
                 LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-          
-                WHERE  `attr_value_deleted` IS NULL
-          
-                AND attribute_deleted IS NULL
-          
+                WHERE  (`attr_value_deleted` IS NULL OR attr_value_deleted = '0000-00-00')
+                AND (attribute_deleted IS NULL OR attribute_deleted = '0000-00-00')
                 AND attribute_name LIKE  'Medical ID size'
-          
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
           
           echo $medicalIDSize;echo "<br>";
@@ -220,9 +195,7 @@ function update_variants($product_id, $linking_id, $product_type){
           if($Mgetres = $DBobject->wrappedSql($Mgetsql, array('attr_value_name' => $medicalIDSize))){
           
               echo $collsql = "INSERT INTO tbl_productattr ( productattr_variant_id, productattr_attribute_id, productattr_attr_value_id,
-    
                             productattr_created, productattr_modified )
-    
           			  VALUES( :productattr_variant_id, :productattr_attribute_id, :productattr_attr_value_id, NOW(), NOW() )";
               
               $DBobject->wrappedSql($collsql, array(

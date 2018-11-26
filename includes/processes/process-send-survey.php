@@ -8,7 +8,8 @@ try{
   
   $surveytoken = genRandomString(10).time();
   
-  $sql = "SELECT surveytoken_id FROM tbl_surveytoken WHERE surveytoken_token = :surveytoken_token AND surveytoken_deleted IS NULL";
+  $sql = "SELECT surveytoken_id FROM tbl_surveytoken 
+  WHERE surveytoken_token = :surveytoken_token AND (surveytoken_deleted IS NULL OR surveytoken_deleted = '0000-00-00')";
   $res = $DBobject->wrappedSql($sql, array(":surveytoken_token"=>$surveytoken));
   
   }while(!empty($res));

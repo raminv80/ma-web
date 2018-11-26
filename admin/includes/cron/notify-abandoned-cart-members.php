@@ -30,9 +30,9 @@ try {
     INNER JOIN tbl_cart ON cart_id = usertemp_cart_id
     LEFT JOIN tbl_cartitem ON cart_id = cartitem_cart_id
     LEFT JOIN tbl_product ON cartitem_product_id = product_object_id  
-    WHERE usertemp_deleted IS NULL AND usertemp_payment_id = 0
-    AND cartitem_deleted IS NULL AND cart_closed_date IS NULL
-    AND cart_deleted IS NULL AND product_deleted IS NULL
+    WHERE (usertemp_deleted IS NULL OR usertemp_deleted='0000-00-00') AND usertemp_payment_id = 0
+    AND (cartitem_deleted IS NULL OR cartitem_deleted='0000-00-00') AND cart_closed_date IS NULL
+    AND (cart_deleted IS NULL OR cart_deleted='0000-00-00') AND product_deleted IS NULL
     AND product_published = 1 AND product_object_id NOT IN (217,213,225)
     AND DATE(usertemp_created) = :day 
     GROUP BY cart_id
@@ -55,8 +55,8 @@ try {
   $sql = "SELECT cart_id, cart_user_id FROM tbl_cartitem
   LEFT JOIN tbl_cart ON cart_id = cartitem_cart_id
   LEFT JOIN tbl_product ON cartitem_product_id = product_object_id
-  WHERE cartitem_deleted IS NULL AND cart_closed_date IS NULL
-  AND cart_deleted IS NULL AND product_deleted IS NULL
+  WHERE (cartitem_deleted IS NULL OR cartitem_deleted = '0000-00-00') AND (cart_closed_date IS NULL OR cart_closed_date = '0000-00-00')
+  AND (cart_deleted IS NULL OR cart_deleted = '0000-00-00') AND (product_deleted IS NULL OR product_deleted = '0000-00-00')
   AND product_published = 1 AND product_object_id NOT IN (217,213,225)
   AND DATE(cartitem_modified) = :day
   GROUP BY cart_id
@@ -122,7 +122,9 @@ function IsUnsubscribed($email){
   $params = array(
       ":unsubscribe_email" => $email
   );
-  $sql = "SELECT unsubscribe_id FROM tbl_unsubscribe WHERE unsubscribe_deleted IS NULL AND unsubscribe_email = :unsubscribe_email";
+  $sql = "SELECT unsubscribe_id FROM tbl_unsubscribe WHERE (unsubscribe_deleted IS NULL OR unsubscribe_deleted = '0000-00-00') AND 
+unsubscribe_email = 
+:unsubscribe_email";
   if($DBobject->wrappedSql($sql, $params)){
     return true;
   }
@@ -147,11 +149,11 @@ function GetDataProductsOnCart($cartId = null){
 
   $sql = "SELECT * FROM tbl_cartitem LEFT JOIN tbl_product ON product_object_id = cartitem_product_id
         LEFT JOIN tbl_variant ON variant_id = cartitem_variant_id
-      WHERE cartitem_deleted IS NULL AND cartitem_cart_id > 0
+      WHERE (cartitem_deleted IS NULL OR cartitem_deleted = '0000-00-00') AND cartitem_cart_id > 0
       AND cartitem_cart_id = :id
       AND product_published = 1
-      AND product_deleted IS NULL
-      AND variant_deleted IS NULL
+      AND (product_deleted IS NULL OR product_deleted = '0000-00-00')
+      AND (variant_deleted IS NULL OR variant_deleted = '0000-00-00')
       AND product_object_id NOT IN (217,213,225)";
 
   $res = $DBobject->wrappedSql($sql, array(
@@ -161,13 +163,18 @@ function GetDataProductsOnCart($cartId = null){
     $cart_arr[$p['cartitem_id']] = $p;
 
     // ---------------- ATTRIBUTES SAVED IN tbl_cartitem_attr ----------------
-    $sql = "SELECT * FROM tbl_cartitem_attr WHERE cartitem_attr_cartitem_id = :id AND cartitem_attr_deleted IS NULL AND cartitem_attr_cartitem_id <> '0' ORDER BY cartitem_attr_order";
+    $sql = "SELECT * FROM tbl_cartitem_attr WHERE cartitem_attr_cartitem_id = :id 
+    AND (cartitem_attr_deleted IS NULL OR cartitem_attr_deleted = '0000-00-00') 
+    AND cartitem_attr_cartitem_id <> '0' ORDER BY cartitem_attr_order";
     $params = array(":id" => $p['cartitem_id']);
     $cart_arr[$p['cartitem_id']]['attributes'] = $DBobject->wrappedSql($sql, $params);
     // ---------------- PRODUCT CATEGORY ----------------
     //$cart_arr[$p['cartitem_id']]['category'] = $this->getFullCategoryName($p['cartitem_product_id']);
     // ---------------- PRODUCTS GALLERY ----------------
-    $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_variant_id = :id AND gallery_deleted IS NULL ORDER BY gallery_order LIMIT 1";
+    $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag 
+    FROM tbl_gallery WHERE gallery_variant_id = :id 
+    AND (gallery_deleted IS NULL OR gallery_deleted = '0000-00-00') 
+    ORDER BY gallery_order LIMIT 1";
     $params = array(":id" => $p['cartitem_variant_id']);
     $galArr = $DBobject->wrappedSql($sql, $params);
     if(empty($galArr) && !empty($cart_arr[$p['cartitem_id']]['attributes'])){
@@ -185,9 +192,13 @@ function GetDataProductsOnCart($cartId = null){
       }
       $reversedArr = array_reverse($paramsArr);
       foreach($reversedArr as $v){
-        $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_variant LEFT JOIN tbl_gallery ON gallery_variant_id = variant_id
-        LEFT JOIN tbl_productattr ON productattr_variant_id = variant_id
-        WHERE gallery_deleted IS NULL AND productattr_deleted IS NULL AND gallery_link IS NOT NULL AND variant_deleted IS NULL AND variant_product_id = :id {$v['where']} ORDER BY gallery_order LIMIT 1";
+        $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag 
+        FROM tbl_variant LEFT JOIN tbl_gallery ON gallery_variant_id = variant_id
+        LEFT JOIN tbl_productattr ON productattr_variant_id = variant_id 
+        WHERE (gallery_deleted IS NULL OR gallery_deleted = '0000-00-00') 
+        AND (productattr_deleted IS NULL OR productattr_deleted = '0000-00-00') AND gallery_link IS NOT NULL 
+        AND (variant_deleted IS NULL OR variant_deleted = '0000-00-00') 
+        AND variant_product_id = :id {$v['where']} ORDER BY gallery_order LIMIT 1";
         if($galArr = $DBobject->wrappedSql($sql, $v['params'])){
           break;
         }
@@ -196,13 +207,21 @@ function GetDataProductsOnCart($cartId = null){
 
     if(empty($galArr)){
       //Get base product image
-      $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag FROM tbl_gallery WHERE gallery_product_id = :id AND gallery_deleted IS NULL ORDER BY gallery_order LIMIT 1";
+      $sql = "SELECT gallery_title, gallery_link, gallery_alt_tag 
+      FROM tbl_gallery 
+      WHERE gallery_product_id = :id 
+      AND (gallery_deleted IS NULL OR gallery_deleted = '0000-00-00') 
+      ORDER BY gallery_order LIMIT 1";
       $params = array(":id" => $p['product_id']);
       $galArr = $DBobject->wrappedSql($sql, $params);
     }
     $cart_arr[$p['cartitem_id']]['gallery'] = $galArr;
     // ---------------- PRODUCT PRICE MODIFIER ----------------
-    $sql = "SELECT * FROM tbl_productqty WHERE productqty_variant_id = :pid AND productqty_qty <= :qty AND productqty_deleted IS NULL ORDER BY productqty_qty DESC ";
+    $sql = "SELECT * FROM tbl_productqty 
+    WHERE productqty_variant_id = :pid 
+    AND productqty_qty <= :qty 
+    AND (productqty_deleted IS NULL OR productqty_deleted = '0000-00-00') 
+    ORDER BY productqty_qty DESC ";
     $params = array(
         ":qty" => $p['cartitem_quantity'],
         ":pid" => $p['variant_id']

@@ -111,7 +111,9 @@ function IsUnsubscribed($email){
   $params = array(
       ":unsubscribe_email" => $email
   );
-  $sql = "SELECT unsubscribe_id FROM tbl_unsubscribe WHERE unsubscribe_deleted IS NULL AND unsubscribe_email = :unsubscribe_email";
+  $sql = "SELECT unsubscribe_id FROM tbl_unsubscribe 
+  WHERE (unsubscribe_deleted IS NULL OR unsubscribe_deleted = '0000-00-00') 
+  AND unsubscribe_email = :unsubscribe_email";
   if($DBobject->wrappedSql($sql, $params)){
     return true;
   }

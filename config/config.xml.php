@@ -570,7 +570,7 @@
     <type>5</type><!-- videos -->
     <file>ListClass</file>
     <orderby>news_start_date DESC, news_id DESC</orderby>
-    <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL) AND (listing_schedule_end > NOW() OR listing_schedule_end IS NULL)]]></where>
+    <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL OR listing_schedule_start = '0000-00-00') AND (listing_schedule_end > NOW() OR listing_schedule_end IS NULL OR listing_schedule_end='0000-00-00')]]></where>
     <limit level="1">20</limit>
     <table> 
       <name>tbl_listing</name>
@@ -581,7 +581,7 @@
           <table>tbl_news_category</table>
           <id>news_category_id</id>
           <reference>news_category_name</reference>
-          <where>news_category_deleted is NULL</where>
+          <where>news_category_deleted is NULL OR news_category_deleted = '0000-00-00'</where>
           <orderby>news_category_name</orderby>
         </field>
       </options>

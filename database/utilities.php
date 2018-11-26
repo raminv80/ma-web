@@ -832,7 +832,7 @@ function dateDifference($_date1 , $_date2 , $differenceFormat = '%R%a' )
 function getAdminParents($parentId, $root = 0, $list = array()) {
 	global $DBobject;
 
-	$sql = "SELECT admin_parent_id, admin_level FROM tbl_admin WHERE admin_deleted IS NULL AND admin_id = :id";
+	$sql = "SELECT admin_parent_id, admin_level FROM tbl_admin WHERE (admin_deleted IS NULL OR admin_deleted = '0000-00-00') AND admin_id = :id";
 	if($res = $DBobject->wrappedSql($sql,array(
 			":id"=>$parentId
 	))){
@@ -859,7 +859,7 @@ function getAdminChildren($parentId, $root = 0, $list = array()) {
 	if(!in_array($parentId,$list)){
 		$list[] = $parentId;
 	}
-	$sql = "SELECT admin_id FROM tbl_admin WHERE admin_deleted IS NULL AND admin_parent_id = :id";
+	$sql = "SELECT admin_id FROM tbl_admin WHERE (admin_deleted IS NULL OR admin_deleted = '0000-00-00') AND admin_parent_id = :id";
 	if($res = $DBobject->wrappedSql($sql,array(
 			":id"=>$parentId
 	))){
@@ -887,7 +887,7 @@ function SetUserAuthCookie($name ='usrauth', $userId = 0) {
 	// Get user unique-hash (user_password)
 	$userStr = '';
 	if(!empty($userId)){
-		$sql = "SELECT user_password FROM tbl_user WHERE user_deleted IS NULL AND user_id = :id";
+		$sql = "SELECT user_password FROM tbl_user WHERE (user_deleted IS NULL OR user_deleted = '0000-00-00') AND user_id = :id";
 		if($res = $DBobject->wrappedSql($sql,array(":id"=>$userId))){
 			$userStr = $res[0]['user_password']; // string (40 char)
 		}
@@ -951,7 +951,7 @@ function checkUserAuthCookie($name ='usrauth') {
 			// validate browser
 			if($browser == md5($_SERVER['HTTP_USER_AGENT'])){
 				// Validate user hash (user_password)
-				$sql = "SELECT * FROM tbl_user WHERE user_deleted IS NULL AND user_password = :user_password";
+				$sql = "SELECT * FROM tbl_user WHERE (user_deleted IS NULL OR user_deleted='0000-00-00') AND user_password = :user_password";
 				if($res = $DBobject->wrappedSql($sql,array(":user_password"=>$userStr))){
 					return array(
 							"id"=>$res[0]["user_id"],

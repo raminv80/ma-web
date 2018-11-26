@@ -15,7 +15,9 @@ $sql = "SELECT tbl_variant.variant_id, tbl_variant.variant_product_id, tbl_produ
         LEFT JOIN AA_variants ON variant_migration_id = id 
         LEFT JOIN tbl_product ON tbl_product.product_id = tbl_variant.variant_product_id
         LEFT JOIN tbl_product_live ON tbl_product_live.product_id = AA_variants.`Old ID`
-        WHERE tbl_product_live.product_deleted IS NULL AND tbl_product.product_deleted IS NULL AND tbl_variant.variant_deleted IS NULL";
+        WHERE (tbl_product_live.product_deleted IS NULL OR tbl_product_live.product_deleted='0000-00-00') 
+        AND (tbl_product.product_deleted IS NULL OR tbl_product.product_deleted = '0000-00-00') 
+        AND (tbl_variant.variant_deleted IS NULL OR tbl_variant.variant_deleted = '0000-00-00')";
 
 $ins = 0;
 $updates = 0;

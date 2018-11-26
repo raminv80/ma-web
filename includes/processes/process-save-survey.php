@@ -32,7 +32,8 @@ if(checkToken('frontend', $_POST["formToken"]) && empty($_POST['honeypot']) && (
           $answer = "";
           
           if(!empty($_POST['answerid'][$key]) && $_POST['answerid'][$key] != 0){
-            $checksql = "SELECT qoption_option FROM tbl_qoption WHERE qoption_id = :qoption_id AND qoption_deleted IS NULL";
+            $checksql = "SELECT qoption_option FROM tbl_qoption 
+            WHERE qoption_id = :qoption_id AND (qoption_deleted IS NULL OR qoption_deleted = '0000-00-00')";
             if($checkres = $DBobject->wrappedSql($checksql, array(
                 ":qoption_id" => $_POST['answerid'][$key] 
             ))){

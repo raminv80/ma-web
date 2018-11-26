@@ -57,7 +57,9 @@ class Listing {
       }
       foreach($this->CONFIG_OBJ->extends as $a){
         $pre = str_replace("tbl_","",$a->table);
-        $sql = "SELECT * FROM {$a->table} WHERE {$a->field} = '".$res[0]["{$a->linkfield}"]."' AND {$pre}_deleted IS NULL ";
+        $sql = "SELECT * FROM {$a->table} 
+        WHERE {$a->field} = '".$res[0]["{$a->linkfield}"]."' 
+        AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') ";
         if($res2 = $DBobject->wrappedSqlGet($sql)){
           foreach($res2[0] as $key=>$field){
             if(empty($listing_f["{$key}"])){
@@ -91,7 +93,9 @@ class Listing {
           $ext[] = $r;
         }
         $pre = str_replace("tbl_","",$f->table);
-        $sql = "SELECT {$f->id},{$f->reference}" . (empty($ext)? '' : ',' . implode(',', $ext)) . " FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+        $sql = "SELECT {$f->id},{$f->reference}" . (empty($ext)? '' : ',' . implode(',', $ext)) . " 
+        FROM {$f->table} WHERE ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') " .
+               ($f->where != ''?"AND {$f->where} ":"") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
         if($res = $DBobject->wrappedSqlGet($sql)){
           foreach($res as $key=>$row){
             $extra = array();
@@ -115,7 +119,9 @@ class Listing {
     $results = array();
     
     $pre = str_replace("tbl_","",$f->table);
-    $sql = "SELECT {$f->id}, {$f->reference} FROM {$f->table} WHERE {$pre}_deleted IS NULL AND {$pre}_parent_id = {$pid} " . ($f->where != ''?"AND {$f->where} ":"") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+    $sql = "SELECT {$f->id}, {$f->reference} 
+    FROM {$f->table} WHERE ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') AND {$pre}_parent_id = {$pid} 
+    " . ($f->where != ''?"AND {$f->where} ":"") . ($f->groupby != '' ? " GROUP BY {$f->groupby} " : "") . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
     
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
@@ -144,7 +150,8 @@ class Listing {
     }
     
     $pre = str_replace("tbl_","",$a->table);
-    $sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = '{$id}' AND {$pre}_deleted IS NULL " . $order;
+    $sql = "SELECT * FROM {$a->table} {$extends} WHERE {$a->field} = '{$id}' 
+    AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') " . $order;
     if($res = $DBobject->wrappedSqlGet($sql)){
       foreach($res as $row){
         $r_array = array();
@@ -182,7 +189,8 @@ class Listing {
     
     $sql = "SELECT * FROM {$this->DBTABLE} {$extends}
 		WHERE listing_parent_id = :pid AND 
-		tbl_listing.listing_deleted IS NULL AND tbl_listing.listing_id IS NOT NULL " . ($this->WHERE != ''?"AND {$this->WHERE} ":" ") . $typeSQL . $order;
+		(tbl_listing.listing_deleted IS NULL OR tbl_listing.listing_deleted = '0000-00-00') 
+		AND tbl_listing.listing_id IS NOT NULL " . ($this->WHERE != ''?"AND {$this->WHERE} ":" ") . $typeSQL . $order;
     
     $params = array(
         ":pid"=>$parent_id
@@ -243,7 +251,8 @@ class Listing {
     global $DBobject;
     
     $data = '/'.$url;
-    $sql = "SELECT listing_url, listing_parent_id FROM tbl_listing WHERE listing_object_id = :id AND listing_deleted IS NULL ORDER BY listing_published = :published";
+    $sql = "SELECT listing_url, listing_parent_id FROM tbl_listing WHERE listing_object_id = :id 
+    AND (listing_deleted IS NULL OR listing_deleted = '0000-00-00') ORDER BY listing_published = :published";
     if($res = $DBobject->executeSQL($sql,array(
         ':id'=>$id,
         ':published'=>$published
@@ -265,11 +274,17 @@ class Listing {
   		$sql = "SELECT {$a->field} FROM {$a->table} WHERE {$a->id} = :id" ;
   		$parent = $DBobject->wrappedSqlGet($sql, array(':id'=> $id));
   		 
-  		$sql = "SELECT tbl_log.*, {$a->id}, admin_name FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id LEFT JOIN {$a->table} ON {$a->id} = log_record_id WHERE log_record_table = :table AND log_deleted IS NULL AND {$a->field} = :fid ORDER BY log_created DESC";
+  		$sql = "SELECT tbl_log.*, {$a->id}, admin_name 
+  		FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id LEFT JOIN {$a->table} ON {$a->id} = log_record_id 
+  		WHERE log_record_table = :table AND (log_deleted IS NULL OR log_deleted = '0000-00-00') 
+  		AND {$a->field} = :fid ORDER BY log_created DESC";
   		$results = $DBobject->wrappedSqlGet($sql, array(':table'=> $a->table, ':fid'=> $parent[0]["{$a->field}"]));
   	
   	}else{
-  		$sql = "SELECT tbl_log.*, tbl_admin.admin_name FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id WHERE log_record_table = :table AND log_record_id = :id AND log_deleted IS NULL ORDER BY log_created DESC";
+  		$sql = "SELECT tbl_log.*, tbl_admin.admin_name 
+  		FROM tbl_log LEFT JOIN tbl_admin ON admin_id = log_admin_id 
+  		WHERE log_record_table = :table AND log_record_id = :id 
+  		AND (log_deleted IS NULL OR log_deleted = '0000-00-00') ORDER BY log_created DESC";
 	  	$results = $DBobject->wrappedSqlGet($sql, array(':table'=> $a->table, ':id'=> $id) );
   	}
   	return $results;

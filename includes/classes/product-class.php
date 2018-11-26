@@ -31,7 +31,9 @@ class ProductClass extends ListClass {
     foreach($LOCALCONF->extends as $a){
       $extends .= " LEFT JOIN {$a->table} ON {$a->linkfield} = {$a->field}";
     }
-    $sql = "SELECT * FROM {$this->DBPRODTABLE} {$extends} WHERE {$this->DBPRODTABLE_URL} = :url AND {$pre}_deleted IS NULL AND {$pre}_published = :published LIMIT 1";
+    $sql = "SELECT * FROM {$this->DBPRODTABLE} {$extends} 
+    WHERE {$this->DBPRODTABLE_URL} = :url 
+    AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') AND {$pre}_published = :published LIMIT 1";
     $params = array(
         ":url" => $_url,
         ":published" => $_PUBLISHED
@@ -71,7 +73,9 @@ class ProductClass extends ListClass {
         	$extraArr[] = (string) $xt;
         }
         $extraStr = !empty($extraArr)?",".implode(',', $extraArr):"";
-        $sql = "SELECT {$f->id},{$f->reference} {$extraStr} FROM {$f->table} WHERE {$pre}_deleted IS NULL " . ($f->where != ''?"AND {$f->where} ":"") . " " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
+        $sql = "SELECT {$f->id},{$f->reference} {$extraStr} FROM {$f->table} 
+        WHERE ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00') " . ($f->where != ''?"AND {$f->where} ":"") . " 
+        " . ($f->orderby != ''?" ORDER BY {$f->orderby} ":"");
         if($res = $DBobject->wrappedSqlGet($sql)){
           $options = array();
           foreach($res as $row){
@@ -99,7 +103,8 @@ class ProductClass extends ListClass {
     }else{
       foreach($cfg->producttable->tags as $a){
         $preObjTbl = str_replace("tbl_","",$a->object_table);
-        $sql = "SELECT  {$a->object_value} AS VALUE  FROM {$a->object_table} WHERE {$preObjTbl}_id = :id AND {$preObjTbl}_deleted IS NULL AND {$preObjTbl}_published = 1 ";
+        $sql = "SELECT  {$a->object_value} AS VALUE  FROM {$a->object_table} WHERE {$preObjTbl}_id = :id 
+        AND ({$preObjTbl}_deleted IS NULL OR {$preObjTbl}_deleted = '0000-00-00') AND {$preObjTbl}_published = 1 ";
         $params = array(
             ":id"=>$this->ID
         );
@@ -124,8 +129,10 @@ class ProductClass extends ListClass {
           
           $pre = str_replace("tbl_","",$a->table);
           $sql = "SELECT {$a->object_table}.* FROM {$a->table} LEFT JOIN {$a->object_table} ON  {$preObjTbl}_id = {$pre}_object_id
-					WHERE {$pre}_object_table = :objTable AND {$pre}_value = :objValue  AND {$pre}_deleted IS NULL
-					AND {$preObjTbl}_deleted IS NULL AND {$preObjTbl}_published = 1 " . $where . " " . $group . " " . $order . " " . $limit;
+					WHERE {$pre}_object_table = :objTable AND {$pre}_value = :objValue  
+					AND ({$pre}_deleted IS NULL OR {$pre}_deleted = '0000-00-00')
+					AND ({$preObjTbl}_deleted IS NULL OR {$preObjTbl}_deleted = '0000-00-00') 
+					AND {$preObjTbl}_published = 1 " . $where . " " . $group . " " . $order . " " . $limit;
           $params = array(
               ':objTable'=>$a->object_table,
               ':objValue'=>$res[0]["VALUE"]
@@ -181,8 +188,13 @@ class ProductClass extends ListClass {
     
     //Get hero image
     // Removed - AND (gallery_variant_id IS NULL OR gallery_variant_id = 0) to display image
-    $sql = "SELECT gallery_link, gallery_variant_id FROM tbl_gallery LEFT JOIN tbl_product ON product_id = gallery_product_id
-          WHERE gallery_deleted IS NULL AND gallery_link IS NOT NULL AND gallery_link != '' AND product_deleted IS NULL AND product_published = 1 AND product_object_id = :id ORDER BY gallery_variant_id, gallery_order";
+    $sql = "SELECT gallery_link, gallery_variant_id 
+    FROM tbl_gallery LEFT JOIN tbl_product ON product_id = gallery_product_id
+    WHERE (gallery_deleted IS NULL OR gallery_deleted = '0000-00-00') 
+    AND gallery_link IS NOT NULL AND gallery_link != '' 
+    AND (product_deleted IS NULL OR product_deleted = '0000-00-00') 
+    AND product_published = 1 AND product_object_id = :id 
+    ORDER BY gallery_variant_id, gallery_order";
     if($res2 = $DBobject->wrappedSql($sql, $params)){
       $result['image'] = $res2[0]['gallery_link'];
       foreach($res2 as $r){
@@ -194,7 +206,9 @@ class ProductClass extends ListClass {
   
     //Check all variants
     $sql = "SELECT tbl_variant.*, product_id FROM tbl_product LEFT JOIN tbl_variant ON variant_product_id = product_id
-        WHERE product_deleted IS NULL AND product_published = 1 AND product_object_id = :id AND variant_deleted IS NULL AND variant_published = 1";
+        WHERE (product_deleted IS NULL OR product_deleted = '0000-00-00') 
+        AND product_published = 1 AND product_object_id = :id 
+        AND (variant_deleted IS NULL OR variant_deleted = '0000-00-00') AND variant_published = 1";
     if($res = $DBobject->wrappedSql($sql, $params)){
       foreach($res as $r){
         $price = $r['variant_price'];
@@ -224,7 +238,9 @@ class ProductClass extends ListClass {
   
         //Create materials array
         $sql = "SELECT pmaterial_name, pmaterial_id FROM tbl_pmateriallink LEFT JOIN tbl_pmaterial ON pmaterial_id = pmateriallink_record_id 
-            WHERE pmateriallink_deleted IS NULL AND pmaterial_deleted IS NULL AND pmateriallink_product_id = :id GROUP BY pmaterial_id";
+            WHERE (pmateriallink_deleted IS NULL OR pmateriallink_deleted = '0000-00-00') 
+            AND (pmaterial_deleted IS NULL OR pmaterial_deleted = '0000-00-00') 
+            AND pmateriallink_product_id = :id GROUP BY pmaterial_id";
         if($attr = $DBobject->wrappedSql($sql, array(":id" => $r['product_id']))){
           foreach($attr as $a){
             $result['materials'][$a['pmaterial_id']] = $a['pmaterial_name'];
@@ -233,7 +249,9 @@ class ProductClass extends ListClass {
         
         //Create usages array
         $sql = "SELECT pusage_name, pusage_id FROM tbl_pusagelink LEFT JOIN tbl_pusage ON pusage_id = pusagelink_record_id
-            WHERE pusagelink_deleted IS NULL AND pusage_deleted IS NULL AND pusagelink_product_id = :id GROUP BY pusage_id";
+            WHERE (pusagelink_deleted IS NULL OR pusagelink_deleted = '0000-00-00') 
+            AND (pusage_deleted IS NULL OR pusage_deleted = '0000-00-00') 
+            AND pusagelink_product_id = :id GROUP BY pusage_id";
         if($attr = $DBobject->wrappedSql($sql, array(":id" => $r['product_id']))){
           foreach($attr as $a){
             $result['usages'][$a['pusage_id']] = $a['pusage_name'];
@@ -244,7 +262,8 @@ class ProductClass extends ListClass {
         $sql = "SELECT tbl_productattr.*, attribute_name, attribute_type, attr_value_name, attr_value_image, attr_value_associates FROM tbl_productattr
             LEFT JOIN tbl_attribute ON attribute_id = productattr_attribute_id
             LEFT JOIN tbl_attr_value ON attr_value_id = productattr_attr_value_id
-            WHERE productattr_deleted IS NULL AND attr_value_id IS NOT NULL AND productattr_variant_id = :id GROUP BY attr_value_id";
+            WHERE (productattr_deleted IS NULL OR productattr_deleted = '0000-00-00') 
+            AND attr_value_id IS NOT NULL AND productattr_variant_id = :id GROUP BY attr_value_id";
         if($attr = $DBobject->wrappedSql($sql, array(":id" => $r['variant_id']))){
           foreach($attr as $a){
             $attrArr = array(
@@ -343,8 +362,10 @@ class ProductClass extends ListClass {
       foreach($tempvaluesArr as $v){
         $nval = hexdec($v);
         if(is_numeric($nval)){
-          $sql = "SELECT product_object_id, product_name, product_url, product_brand, product_meta_description, product_associate1 FROM tbl_product
-            WHERE product_deleted IS NULL AND product_published = 1 AND product_object_id = :id";
+          $sql = "SELECT product_object_id, product_name, product_url, product_brand, product_meta_description, product_associate1 
+            FROM tbl_product
+            WHERE (product_deleted IS NULL OR product_deleted = '0000-00-00') 
+            AND product_published = 1 AND product_object_id = :id";
           if($products = $DBobject->wrappedSql($sql, array(':id' => $nval))){
             foreach($products as &$p){
               $p['general_details'] = $this->GetProductGeneralDetails($p['product_object_id']);

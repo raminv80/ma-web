@@ -115,7 +115,7 @@
           <table>tbl_news_category</table>
           <id>news_category_id</id>
           <reference>news_category_name</reference>
-          <where>news_category_deleted is NULL</where>
+          <where>news_category_deleted is NULL OR news_category_deleted = '0000-00-00'</where>
           <orderby>news_category_name</orderby>
         </field>
       </options>
@@ -184,7 +184,7 @@
           <table>tbl_news_category</table>
           <id>news_category_id</id>
           <reference>news_category_name</reference>
-          <where>news_category_deleted is NULL</where>
+          <where>news_category_deleted is NULL OR news_category_deleted = '0000-00-00'</where>
           <orderby>news_category_name</orderby>
         </field>
       </options>
@@ -290,7 +290,7 @@
           <table>tbl_news_category</table>
           <id>news_category_id</id>
           <reference>news_category_name</reference>
-          <where>news_category_deleted is NULL</where>
+          <where>news_category_deleted is NULL OR news_category_deleted = '0000-00-00'</where>
           <orderby>news_category_name</orderby>
         </field>
       </options>
@@ -362,7 +362,7 @@
           <table>tbl_news_category</table>
           <id>news_category_id</id>
           <reference>news_category_name</reference>
-          <where>news_category_deleted is NULL</where>
+          <where>news_category_deleted is NULL OR news_category_deleted = '0000-00-00'</where>
           <orderby>news_category_name</orderby>
         </field>
       </options>

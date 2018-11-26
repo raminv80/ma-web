@@ -10,7 +10,10 @@ $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVE
 $domain = $protocol.$_SERVER['HTTP_HOST'];
 
 try{
-  $sql = "SELECT CONCAT('{$domain}/',cache_url) AS cache_url, cache_modified FROM cache_tbl_listing LEFT JOIN tbl_listing ON listing_object_id = cache_record_id WHERE cache_deleted IS NULL AND cache_published = 1 AND listing_deleted IS NULL AND listing_published = 1 AND (listing_noindex IS NULL OR listing_noindex != 1) ORDER BY cache_url";
+  $sql = "SELECT CONCAT('{$domain}/',cache_url) AS cache_url, cache_modified 
+  FROM cache_tbl_listing LEFT JOIN tbl_listing ON listing_object_id = cache_record_id 
+  WHERE (cache_deleted IS NULL) 
+  AND cache_published = 1 AND listing_deleted IS NULL AND listing_published = 1 AND (listing_noindex IS NULL OR listing_noindex != 1) ORDER BY cache_url";
   $res = $DBobject->wrappedSql($sql);
   $result = array();
   foreach ($res as $r){
@@ -19,7 +22,9 @@ try{
 }catch(Exception $e){die(var_dump($e));}
 
 try{
-  $sql = "SELECT CONCAT('{$domain}/',product_url) AS cache_url, product_modified AS cache_modified FROM tbl_product WHERE product_deleted IS NULL AND product_published = 1 ORDER BY product_url ";
+  $sql = "SELECT CONCAT('{$domain}/',product_url) AS cache_url, product_modified AS cache_modified FROM tbl_product 
+  WHERE (product_deleted IS NULL OR product_deleted = '0000-00-00') 
+  AND product_published = 1 ORDER BY product_url ";
   $res = $DBobject->wrappedSql($sql);
   foreach ($res as $r){
   	if(!array_key_exists($r['cache_url'], $result)) $result["{$r['cache_url']}"] = $r;

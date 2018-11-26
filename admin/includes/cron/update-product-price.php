@@ -9,9 +9,13 @@ try{
   //UPDATE PRICES - NON-STAINLESS STEEL
   $sql = "UPDATE tbl_variant LEFT JOIN tbl_product ON product_id = variant_product_id
     SET variant_price = ROUND((variant_price * 1.15) / 5) * 5
-    WHERE product_deleted IS NULL AND product_published = 1 AND variant_deleted IS NULL AND product_type_id = 1 AND variant_modified < '{$limitDate}'
+    WHERE (product_deleted IS NULL OR product_deleted = '0000-00-00') 
+    AND product_published = 1 
+    AND (variant_deleted IS NULL OR variant_deleted = '0000-00-00') 
+    AND product_type_id = 1 AND variant_modified < '{$limitDate}'
     AND NOT EXISTS (
-      SELECT pmateriallink_product_id FROM tbl_pmateriallink WHERE pmateriallink_deleted IS NULL AND pmateriallink_record_id = 1 AND pmateriallink_product_id = product_id
+      SELECT pmateriallink_product_id FROM tbl_pmateriallink WHERE (pmateriallink_deleted IS NULL OR pmateriallink_deleted = '0000-00-00') 
+      AND pmateriallink_record_id = 1 AND pmateriallink_product_id = product_id
     )";
   if($DBobject->executeSQL($sql)){
     echo "Success<br>";

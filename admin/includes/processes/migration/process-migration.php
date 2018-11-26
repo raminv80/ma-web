@@ -84,7 +84,8 @@ if($res = $DBobject->wrappedSql($sql)){
       
       // Get TYPE ID - product_associate1
       
-      $Tsql = "SELECT `ptype_id` FROM `tbl_ptype` WHERE `ptype_name` LIKE :ptype_name AND ptype_deleted IS NULL LIMIT 1";
+      $Tsql = "SELECT `ptype_id` FROM `tbl_ptype` WHERE `ptype_name` LIKE :ptype_name 
+      AND (ptype_deleted IS NULL OR ptype_deleted = '0000-00-00') LIMIT 1";
       
       if($Tres = $DBobject->wrappedSql($Tsql, array(
           'ptype_name' => $r['Types'] 
@@ -157,7 +158,8 @@ if($res = $DBobject->wrappedSql($sql)){
       
       foreach($collections as $collect){
         
-        $Csql = "SELECT `listing_object_id` FROM `tbl_listing` WHERE `listing_type_id` =10 AND 	listing_name LIKE :listing_name AND listing_deleted is NULL LIMIT 1";
+        $Csql = "SELECT `listing_object_id` FROM `tbl_listing` WHERE `listing_type_id` =10 AND 	listing_name LIKE :listing_name 
+        AND (listing_deleted is NULL OR listing_deleted = '0000-00-00') LIMIT 1";
         
         if($Cres = $DBobject->wrappedSql($Csql, array(
             'listing_name' => trim($collect) 
@@ -181,7 +183,8 @@ if($res = $DBobject->wrappedSql($sql)){
       
       foreach($materials as $material){
         
-        $Msql = "SELECT `pmaterial_id` FROM `tbl_pmaterial` WHERE pmaterial_name LIKE :pmaterial_name AND pmaterial_deleted IS NULL LIMIT 1";
+        $Msql = "SELECT `pmaterial_id` FROM `tbl_pmaterial` WHERE pmaterial_name LIKE :pmaterial_name 
+        AND (pmaterial_deleted IS NULL OR pmaterial_deleted = '0000-00-00') LIMIT 1";
         
         if($Mres = $DBobject->wrappedSql($Msql, array(
             'pmaterial_name' => trim($material) 
@@ -306,8 +309,8 @@ function set_variants($product_id, $linking_id, $product_type){
         $Csql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
                 FROM  `tbl_attr_value`
                 LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-                WHERE  `attr_value_deleted` IS NULL
-                AND attribute_deleted IS NULL
+                WHERE  (`attr_value_deleted` IS NULL OR attr_value_deleted = '0000-00-00')
+                AND (attribute_deleted IS NULL OR attribute_deleted = '0000-00-00')
                 AND attribute_name LIKE  'Colour'
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
         
@@ -333,8 +336,8 @@ function set_variants($product_id, $linking_id, $product_type){
         $Msql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
                 FROM  `tbl_attr_value`
                 LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-                WHERE  `attr_value_deleted` IS NULL
-                AND attribute_deleted IS NULL
+                WHERE  (`attr_value_deleted` IS NULL OR attr_value_deleted = '0000-00-00')
+                AND (attribute_deleted IS NULL OR attribute_deleted = '0000-00-00')
                 AND attribute_name LIKE  'Medical ID size'
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
         
@@ -362,8 +365,8 @@ function set_variants($product_id, $linking_id, $product_type){
         $Lsql = "SELECT  `attr_value_id` ,  `attr_value_attribute_id`
                 FROM  `tbl_attr_value`
                 LEFT JOIN tbl_attribute ON  `attr_value_attribute_id` = attribute_id
-                WHERE  `attr_value_deleted` IS NULL
-                AND attribute_deleted IS NULL
+                WHERE  (`attr_value_deleted` IS NULL OR attr_value_deleted = '0000-00-00')
+                AND (attribute_deleted IS NULL OR attribute_deleted = '0000-00-00')
                 AND attribute_name LIKE  'Length'
                 AND  `attr_value_name` LIKE  :attr_value_name LIMIT 1";
         
