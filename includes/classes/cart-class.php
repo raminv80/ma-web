@@ -560,12 +560,6 @@ class cart{
 
             // ---------------- BUILD URL ----------------
             $p['url'] = '';
-            $sql = "SELECT cache_url FROM cache_tbl_product WHERE cache_published = '1' AND cache_record_id = :id ";
-            if($res2 = $DBobject->wrappedSql($sql, array(
-                ":id" => $p['cartitem_product_id']
-            ))){
-              $p['url'] = '/' . $res2[0]['cache_url'];
-            }
             if(!empty($p['attributes']) && !empty($p['url'])){
               foreach($p['attributes'] as $k => $a){
                 if($k == 0){
