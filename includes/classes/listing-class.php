@@ -91,7 +91,7 @@ class ListClass{
     }
     
     // ------------- LOAD OPTIONS FOR SELECT INPUTS --------------
-    foreach($this->CONFIG_OBJ->table->options->field as $f){
+    if(isset($this->CONFIG_OBJ->table->options->field)) foreach($this->CONFIG_OBJ->table->options->field as $f){
       if($f->attributes()->recursive){
         $options = $this->getOptionsCatTree($f, $f->attributes()->parent_root);
       } else{
