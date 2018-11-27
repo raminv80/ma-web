@@ -3,7 +3,7 @@ global $SMARTY, $DBobject, $CONFIG, $GA_ID;
 
 try{
   $cart_obj = new cart($_SESSION['user']['public']['id']);
-  $orders = $cart_obj->GetOrderHistoryByUser();
+  $orders = $cart_obj->GetOrderHistoryByUser($_SESSION['user']['public']['id']);
   $SMARTY->assign('orders', $orders);
   
   $user_obj = new UserClass();

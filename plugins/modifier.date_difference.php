@@ -11,7 +11,7 @@
  * @param string $format  option to return right part of the separator
  * @return string 
  */
-function smarty_modifier_date_difference($start_date, $end_date, $format)
+function smarty_modifier_date_difference($start_date, $end_date, $format='')
 {
   if(empty($start_date) || empty($end_date)){
 		return $start_date.'>'.$end_date.'>'.$format;

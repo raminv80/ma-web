@@ -941,8 +941,8 @@ class UserClass{
 	 * Determines if the member status is active or not
 	 * @return boolean
 	 */
-	function isInactiveMember($_statusTypeId){
-
+	function isInactiveMember($_statusTypeId = false){
+        $_statusTypeId = $_statusTypeId ?? $this->sessionVars["main"]["user_status"];
 		if($_statusTypeId == medicAlertApi::STATUS_UNCLAIMED
 		|| $_statusTypeId == medicAlertApi::STATUS_NO_LONGER_REQUIRED
 		|| $_statusTypeId == medicAlertApi::STATUS_DECEASED){
