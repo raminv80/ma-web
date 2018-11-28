@@ -93,12 +93,21 @@ if (jQuery.validator) {
   			var response = false;
   			var idVal = params.id;  	
   	  	if(params.IdFormField) idVal = $(params.IdFormField).val();
+
   			$.ajax({
   				type: "POST",
   			    url: "/admin/includes/processes/urlencode.php",
   				cache: false,
   				async: false,
-  				data: "value="+encodeURIComponent(value)+"&id="+idVal+"&idfield="+params.idfield+"&table="+params.table+"&field="+params.field+"&field2="+params.field2+"&value2="+$('#'+params.value2).val(),
+          data: {
+            value: encodeURIComponent(value),
+            id: idVal,
+            idfield: params.idfield,
+            table: params.table,
+            field: params.field,
+            field2: params.field2,
+            value2: params.value2>'' ? $('#'+params.value2).val():''
+          },
   				dataType: "json",
   			    success: function(res, textStatus) {
   			    	try{
@@ -127,7 +136,15 @@ if (jQuery.validator) {
 	  			    url: "/admin/includes/processes/urlencode.php",
 	  				cache: false,
 	  				async: false,
-	  				data: "value="+encodeURIComponent(value)+"&id="+idVal+"&idfield="+params.idfield+"&table="+params.table+"&field="+params.field+"&field2="+params.field2+"&value2="+$('#'+params.value2).val(),
+            data: {
+              value: encodeURIComponent(value),
+              id: idVal,
+              idfield: params.idfield,
+              table: params.table,
+              field: params.field,
+              field2: params.field2,
+              value2: params.value2>'' ? $('#'+params.value2).val():''
+            },
 	  				dataType: "json",
 	  			    success: function(res, textStatus) {
 	  			    	try{
@@ -158,7 +175,11 @@ if (jQuery.validator) {
   			    url: "/admin/includes/processes/checkEmail.php",
   				cache: false,
   				async: false,
-  				data: "username="+value+"&id="+idVal+"&table="+params.table,
+          data: {
+            username: value,
+            id: idVal,
+            table: params.table
+          },
   				dataType: "json",
   			    success: function(res, textStatus) {
   			    	try{
