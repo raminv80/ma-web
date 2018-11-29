@@ -17,3 +17,4 @@ optimised/*
 !optimised/.gitkeep
 .ckfinder
 node_modules
+!tests/_data/*.sql
