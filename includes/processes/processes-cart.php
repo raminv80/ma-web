@@ -428,7 +428,12 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
         
         $bankSettingsArr = array(
             'initPayment' => $params,
-            'settings' => $CONFIG->payment_gateway->payway,
+            'settings' => [
+                'secretkey' => getenv('PAYWAY_SECRET_KEY'),
+                'publishableakey' => getenv('PAYWAY_PUBLISHABLE_KEY'),
+                'merchantid' => getenv('PAYWAY_MERCHANT_ID'),
+                'bankAccountid' => getenv('PAYWAY_BANK_ACCOUNT_ID')
+            ],
             'address' => $_SESSION['address']['B']
         );
         
@@ -659,7 +664,12 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
               sendGAEvent($GA_ID, 'autorenewal-checkout', 'attempt', $_SESSION['user']['public']['id']);
             }
             $bankSettingsArr = array(
-                'settings' => $CONFIG->payment_gateway->payway,
+                'settings' => [
+                    'secretkey' => getenv('PAYWAY_SECRET_KEY'),
+                    'publishableakey' => getenv('PAYWAY_PUBLISHABLE_KEY'),
+                    'merchantid' => getenv('PAYWAY_MERCHANT_ID'),
+                    'bankAccountid' => getenv('PAYWAY_BANK_ACCOUNT_ID')
+                ],
                 'address' => $billing
             );
             $autorenewObj = new Qvalent_REST_PayWayAPI($bankSettingsArr);
@@ -1005,7 +1015,12 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       
       $bankSettingsArr = array(
           'initPayment' => $params,
-          'settings' => $CONFIG->payment_gateway->payway,
+          'settings' => [
+              'secretkey' => getenv('PAYWAY_SECRET_KEY'),
+              'publishableakey' => getenv('PAYWAY_PUBLISHABLE_KEY'),
+              'merchantid' => getenv('PAYWAY_MERCHANT_ID'),
+              'bankAccountid' => getenv('PAYWAY_BANK_ACCOUNT_ID')
+          ],
           'address' => $billingArr
       );
       
@@ -1324,7 +1339,12 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
        
         $bankSettingsArr = array(
             'initPayment' => $params,
-            'settings' => $CONFIG->payment_gateway->payway,
+            'settings' => [
+                'secretkey' => getenv('PAYWAY_SECRET_KEY'),
+                'publishableakey' => getenv('PAYWAY_PUBLISHABLE_KEY'),
+                'merchantid' => getenv('PAYWAY_MERCHANT_ID'),
+                'bankAccountid' => getenv('PAYWAY_BANK_ACCOUNT_ID')
+            ],
             'address' => $billingArr
         );
         
@@ -1705,7 +1725,12 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
       $userArr = $_SESSION['user']['public'];
       
       $bankSettingsArr = array(
-          'settings' => $CONFIG->payment_gateway->payway,
+          'settings' => [
+              'secretkey' => getenv('PAYWAY_SECRET_KEY'),
+              'publishableakey' => getenv('PAYWAY_PUBLISHABLE_KEY'),
+              'merchantid' => getenv('PAYWAY_MERCHANT_ID'),
+              'bankAccountid' => getenv('PAYWAY_BANK_ACCOUNT_ID')
+          ],
           'address' => $billingArr
       );
       
