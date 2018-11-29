@@ -118,6 +118,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	{printfile file='/node_modules/jquery/dist/jquery.min.js' type='script'}
 	{printfile file='/node_modules/bootstrap/dist/js/bootstrap.min.js' type='script'}
   {printfile file='/node_modules/jquery-validation/dist/jquery.validate.min.js' type='script'}
+  {printfile file='/node_modules/jquery-validation/dist/additional-methods.min.js' type='script'}
 	{printfile file='/includes/js/shopping-cart.min.js' type='script'}
 	{printfile file='/includes/js/custom.min.js' type='script'}
   
