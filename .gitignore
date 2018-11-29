@@ -9,12 +9,11 @@ templates_c/*
 /web-monitor
 *.DS_Store
 .env
-.env.*
-!env.example
+.env.stage
+.env.production
+.env.codeception
 vendor
-dist
-optimised
+optimised/*
 !optimised/.gitkeep
 .ckfinder
-admin/includes/filemanager/js/vendor
 node_modules

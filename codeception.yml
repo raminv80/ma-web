@@ -1,0 +1,39 @@
+# suite config
+suites:
+    acceptance:
+        actor: AcceptanceTester
+        path: .
+        modules:
+            enabled:
+                - WebDriver:
+                    url: https://www.medicalalert.org.test
+                    browser: chrome
+                    wait: 2
+                - \Helper\Acceptance
+                - Filesystem
+                - Db:
+                    dsn: "mysql:host=%DB_HOST%;dbname=%DB_NAME%"
+                    user: "%DB_USER%"
+                    password: "%DB_PASSWORD%"
+                    dump: 'tests/_data/dump.sql'
+                    populate: true
+                    cleanup: true
+params:
+    - .env.codeception
+
+extensions:
+    enabled: [Codeception\Extension\RunFailed]
+
+gherkin: []    
+
+# additional paths
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+
+settings:
+    shuffle: false
+    lint: true
