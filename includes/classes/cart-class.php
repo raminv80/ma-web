@@ -934,7 +934,7 @@ class cart{
       $totalAttr = count($attributesArray);
       $attrCnt = 0;
       // expected array to get "array(array('attribute_id' => 'attr_value_id'))"
-      foreach($attributesArray as $attrId => $valId){
+      if($totalAttr && $totalAttr>0) foreach($attributesArray as $attrId => $valId){
         $params2 = array(
             ':variant_id' => $variant_id,
             ':attr' => $attrId,

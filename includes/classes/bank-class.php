@@ -122,7 +122,7 @@ class Bank{
    * @param unknown $payment          
    * @return string
    */
-  function StorePaymentRecord($payment){
+  function StorePaymentRecord($payment = ''){
     if(empty($payment)){
       $payment = $this->order_info;
     }
