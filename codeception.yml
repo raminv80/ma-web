@@ -24,15 +24,16 @@ params:
 extensions:
     enabled: [Codeception\Extension\RunFailed]
 
-gherkin: []    
+gherkin: []
 
 # additional paths
 paths:
-    tests: tests
-    output: tests/_output
-    data: tests/_data
-    support: tests/_support
-    envs: tests/_envs
+    tests: Tests
+    output: Tests/_output
+    data: Tests/_data
+    support: Tests/_support
+    envs: Tests/_envs
+    log: Tests/_log
 
 settings:
     shuffle: false

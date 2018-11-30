@@ -66,10 +66,12 @@ class productsPageCest
         $I->see('Women');
         $I->see('special occasion');
         $I->see('Kids');
+        $I->amGoingTo('switch to women categories');
         $I->click('Women');
         $I->seeCurrentUrlEquals('/products/women');
         $I->see('shop WOMEN');
         $I->see('53 products');
+        $I->amGoingTo('use product filters');
         $I->wait(1);
         $I->click('#type > div > div:nth-child(1) > label');
         $I->wait(1);
