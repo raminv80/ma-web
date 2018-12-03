@@ -8,7 +8,7 @@ suites:
                 - WebDriver:
                     url: https://www.medicalalert.org.test
                     browser: chrome
-                    wait: 2
+                    wait: 3
                 - \Helper\Acceptance
                 - Filesystem
                 - Db:
