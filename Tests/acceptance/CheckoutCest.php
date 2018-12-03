@@ -14,11 +14,15 @@ class CheckoutCest
         #Add a product to cart
         $I->amOnPage( '/products/all-products' );
         $I->wantTo( 'purchase products as guest' );
+        $I->expectTo('see cart is empty');
         $I->see( 0, '#cart-hover > span' );
         $I->wait( 2 );
+
+        $I->amGoingTo('view Stainless Steel Pendant & Curb Chain product');
         $I->click( '#products-wrapper a[title="Stainless Steel Pendant & Curb Chain"] img' );
         $I->seeCurrentURLEquals( '/stainless-steel-pendant-and-curb-chain' );
-        $I->amGoingTo( 'add a product to cart' );
+
+        $I->amGoingTo( 'add this product to cart' );
         $I->click( 'Add to Cart' );
         $I->see( 'This field is required.' );
         $I->click( 'label[for="colour_stainless_steel_cherry"]' );
@@ -26,6 +30,8 @@ class CheckoutCest
         $I->selectOption( '#medical_id_size', '87' );
         $I->click( 'Add to Cart' );
         $I->wait( 1 );
+
+        $I->expectTo('see cart status is updated to show there is 1 product in cart');
         $I->see( 1, '#cart-hover > span' );
 
         #Membership automatically is added to cart
@@ -82,12 +88,12 @@ class CheckoutCest
         $I->seeCurrentUrlEquals('/login-register');
         $I->submitSignupForm();
         $I->expectTo('goto delivery step of checkout');
-        $I->wait(1);
+        $I->wait(2);
         $I->see('Delivery', 'h1.checkout2');
         $I->see('Billing details');
         $I->submitCheckoutBillingForm();
         $I->expectTo('go to payment step of checkout');
-        $I->wait(1);
+        $I->wait(2);
         $I->see('Payment', 'h1.checkout3');
         $I->submitCheckoutPaymentForm();
         $I->expectTo('go to thank you page');
