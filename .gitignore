@@ -20,3 +20,4 @@ node_modules
 !tests/_data/*.sql
 Tests/_log
 !Tests/_log/.gitkeep
+debug_log
