@@ -83,7 +83,8 @@
                 <div class="row">
                   <div class="col-sm-12 form-group">
                     <label for="reset-username" class="control-label">Membership Number</label>
-                    <input type="text" value="" class="form-control" id="reset-username" name="username" pattern="[0-9]*" required>
+                    <input type="text" value="" class="form-control" id="reset-username" name="username"
+                           pattern="[0-9]+" required>
                     <span class="help-block"></span>
                   </div>
                 </div>
@@ -232,7 +233,8 @@
                     <label for="postcode" class="visible-ie-only">
                       Postcode<span>*</span>:
                     </label>
-                    <input type="text" maxlength="4" value="{if $new_user}{$new_user.postcode}{/if}" class="form-control" id="postcode" name="postcode" pattern="[0-9]" required>
+                    <input type="text" maxlength="4" value="{if $new_user}{$new_user.postcode}{/if}" class="form-control" id="postcode"
+                           name="postcode" pattern="[0-9]+" required>
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -242,7 +244,8 @@
                     <label for="mobile" class="visible-ie-only">
                       Mobile<span>*</span>:
                     </label>
-                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control" id="mobile" name="mobile" pattern="[0-9]">
+                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control"
+                           id="mobile" name="mobile" pattern="[0-9]+">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -252,7 +255,8 @@
                     <label for="home_phone" class="visible-ie-only">
                       Home phone<span>*</span>:
                     </label>
-                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control" id="home_phone" name="home_phone" pattern="[0-9]">
+                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}"
+                           class="form-control" id="home_phone" name="home_phone" pattern="[0-9]*">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -262,7 +266,8 @@
                     <label for="work_phone" class="visible-ie-only">
                       Work phone<span>*</span>:
                     </label>
-                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}" class="form-control" id="work_phone" name="work_phone" pattern="[0-9]">
+                    <input type="text" maxlength="10" value="{if $new_user}{$new_user.mobile}{/if}"
+                           class="form-control" id="work_phone" name="work_phone" pattern="[0-9]+">
                     <div class="error-msg help-block"></div>
                   </div>
                 </div>
@@ -348,7 +353,7 @@
                 <div class="row">
                   <div class="col-sm-12 form-group">
                     <div class="col-sm-12">
-                      <button type="submit" class="btn btn-red">Sign Up</button>
+                      <button type="submit" class="btn btn-red" id="signup-submit">Sign Up</button>
                     </div>
                   </div>
                 </div>
@@ -397,13 +402,15 @@
         <div class="row">
           <div class="col-sm-6 form-group">
             <label class="visible-ie-only" for="phone">Phone<span>*</span>:</label>
-            <input class="form-control" value="{if $post.phone}{$post.phone}{else}{$user.maf.main.user_mobile}{/if}" type="text" name="phone" id="phone" required="" pattern="[0-9]*">
+            <input class="form-control" value="{if $post.phone}{$post.phone}{else}{$user.maf.main.user_mobile}{/if}"
+                   type="text" name="phone" id="phone" required="" pattern="[0-9]*">
           <div class="error-msg help-block"></div>
           </div>
 
                 <div class="col-sm-6 form-group">
             <label class="visible-ie-only" for="membership_no">Membership number<span>*</span>:</label>
-            <input class="form-control" value="{if $post.membership_no}{$post.membership_no}{else}{$user.id}{/if}" type="text" name="membership_no" id="membership_no" required="" pattern="[0-9]*">
+            <input class="form-control" value="{if $post.membership_no}{$post.membership_no}{else}{$user.id}{/if}"
+                   type="text" name="membership_no" id="membership_no" required="" pattern="[0-9]*">
           <div class="error-msg help-block"></div>
             </div>
             </div>

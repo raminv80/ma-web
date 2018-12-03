@@ -76,8 +76,8 @@ if($itemNumber > 0 && empty($cart['cart_discount_code']) && empty($_SESSION['reA
   
   //New member
   if(!empty($_SESSION['user']['new_user']) && empty($_SESSION['user']['public']['id'])){
-    $dob = $_SESSION['user']['new_user']['db_dob'];
-    $seniorsCard = $_SESSION['user']['new_user']['seniorscard'];
+    if(isset($_SESSION['user']['new_user']['db_dob'])) $dob = $_SESSION['user']['new_user']['db_dob'];
+      if(isset($_SESSION['user']['new_user']['seniorscard'])) $seniorsCard = $_SESSION['user']['new_user']['seniorscard'];
   }
   
   //Existing member - approved details
