@@ -39,6 +39,7 @@
 <meta itemprop="image" content="{$DOMAIN}/images/logo.png">
 
 {printfile file='/includes/css/styles.css' type='style'}
+<!-- compiled css <link href="/dist/main.css" rel="stylesheet" /> -->
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>

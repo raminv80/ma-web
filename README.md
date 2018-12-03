@@ -9,6 +9,9 @@ composer install
 yarn install
 ```
 
+## Assets
+
+Compile styles using `yarn start`
 
 ## Tests
 

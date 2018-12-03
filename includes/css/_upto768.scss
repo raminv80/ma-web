@@ -19,7 +19,7 @@
 .navbar-toggle .icon-bar{background: $white;}
 
 #banner{
-	background: url(../../images/flash-18-header-image-mobile.jpg) no-repeat;
+	background: url('/images/flash-18-header-image-mobile.jpg') no-repeat;
     height: 350px;
     padding: 20px;
     background-size: cover;
@@ -210,7 +210,7 @@
 					display: inline-block;
 					height: 45px;
 					width: 40px;
-					background: url(../../images/menu-down.png) no-repeat;
+					background: url('/images/menu-down.png') no-repeat;
 					background-position: center center;
 					float: right
 				}
@@ -714,7 +714,7 @@ tr.tabopts {
 }
 
 #cartmain #help {
-    background: #dddddd url(/images/cart-helpbg.jpg) repeat-x;
+    background: #dddddd url('/images/cart-helpbg.jpg') repeat-x;
     text-align: center;
 }
 
@@ -991,7 +991,7 @@ tr.tabopts {
 }
 
 #heroimg {
-    background: url(../../images/mobbanner.jpg) no-repeat;
+    background: url('/images/mobbanner.jpg') no-repeat;
     background-size: cover;
     height: 200px;
 
