@@ -35,6 +35,7 @@ class giftCertificateCest
         $I->fillField('#cccsv', '847');
         $I->click('#fields-wrapper > div > div.row.text-left > div > div:nth-child(1) > label');
         $I->amGoingTo('submit the form');
+        $I->wait(3);
         $I->click('#fbsub');
         $I->seeCurrentUrlEquals('/thank-you-for-purchasing-a-gift-certificate');
         $I->see('Thank you for purchasing a gift certificate');

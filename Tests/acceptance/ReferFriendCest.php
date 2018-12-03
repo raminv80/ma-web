@@ -16,6 +16,7 @@ class ReferFriendCest
         $I->fillField('#memberno', '12345');
         $I->fillField('#frname', 'codecption');
         $I->fillField('#fremail', 'acceptance.tester@them.com.au');
+        $I->wait(3);//pass spam prevention
         $I->click('#fbsub');
         $I->see('Thank you for referring a friend.');
     }

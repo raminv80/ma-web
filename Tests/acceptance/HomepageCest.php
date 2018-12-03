@@ -16,6 +16,7 @@ class HomepageCest
 
     public function offersSectionWorks(AcceptanceTester $I)
     {
+        $I->scrollTo('#shoptherange');
         $I->click('#shoptherange');
         $I->seeCurrentUrlEquals('/offers');
     }
