@@ -1216,7 +1216,7 @@ class cart{
     }
     
     //check if cart has membership card, if yes then fix the quantity to one only
-    $lifeCartCardId = $this->hasProductInCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], $GLOBALS['CONFIG_VARS']['membership_card_variant_id']);
+    $lifeCartCardId = $this->hasProductInCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], getenv('membership_card_variant_id'));
     if(!empty($lifeCartCardId)){
       $this->UpdateQtyCart(array($lifeCartCardId => '1'));
     }

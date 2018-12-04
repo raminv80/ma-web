@@ -212,7 +212,7 @@
               <div class="row">
                 <div class="col-sm-6 form-group">
                   <label class="visible-ie-only" for="name1">First Name<span>*</span>:</label>
-                  <input class="form-control" value="{if $address & $address.B.address_name}{$address.B.address_name}{else}{if $user.gname}{$user.gname}{else}{$new_user.gname}{/if}{/if}" type="text" name="address[B][address_name]" id="name1" required="">
+                  <input class="form-control" value="{if $address && $address.B.address_name}{$address.B.address_name}{else}{if $user.gname}{$user.gname}{else}{$new_user.gname}{/if}{/if}" type="text" name="address[B][address_name]" id="name1" required="">
                   <div class="error-msg help-block"></div>
                 </div>
                 <div class="col-sm-6 form-group">

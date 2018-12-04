@@ -11,7 +11,7 @@ try{
   $SMARTY->assign('totals',$totals);
   $ifCardInCart = '';
   //check if card is already there in cart
-  $lifetimeCardId = $cart_obj->hasProductInCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], $GLOBALS['CONFIG_VARS']['membership_card_variant_id']);
+  $lifetimeCardId = $cart_obj->hasProductInCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], getenv('membership_card_variant_id'));
   if(!empty($lifetimeCardId)){
     $ifCardInCart = 'yes';
   }

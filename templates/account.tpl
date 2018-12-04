@@ -168,7 +168,8 @@
                 <input type="hidden" value="ADDTOCART" name="action" id="action" />
                 <input type="hidden" name="formToken" id="formToken" value="{$token}" />
                 <input type="hidden" value="{$CONFIG_VARS.membership_card_product_id}" name="product_id" id="product_id" />
-                <input type="hidden" value="{$CONFIG_VARS.membership_card_variant_id}" data-value="{$CONFIG_VARS.membership_card_cost}" name="variant_id" id="variant-{$CONFIG_VARS.membership_card_variant_id}">
+                <input type="hidden" value="{getenv('membership_card_variant_id')}" data-value="{$CONFIG_VARS.membership_card_cost}"
+											 name="variant_id" id="variant-{$CONFIG_VARS.membership_card_variant_id}">
                 <div class="col-sm-12">
                   <img src="/images/dashboard-name.png" alt="Account" /> <a href="javascript:void(0);" class="order_card">Order membership card</a>
                 </div>

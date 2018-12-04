@@ -90,7 +90,7 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
       $error = "Error: Missing parameters.";
       $success = null;
       $url = null;
-      $_SESSION['user']['new_user'] = '';
+      $_SESSION['user']['new_user'] = [];
       if(!empty($_POST['gname']) && !empty($_POST['surname']) && !empty($_POST['dob']) && !empty($_POST['gender']) 
           && !empty($_POST['address']) && !empty($_POST['suburb']) && !empty($_POST['state']) && !empty($_POST['postcode']) && !empty($_POST['email']) && !empty($_POST['password'])){
         
@@ -202,12 +202,12 @@ if(!empty($_POST["formToken"]) && checkToken('frontend', $_POST["formToken"], fa
           
           if(isset($_POST['order_card']) && $_POST['order_card'] == 'yes'){
             $cart_obj = new cart($_SESSION['user']['public']['id']);
-            $cart_obj->AddToCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], array(), 0, 1, null, $GLOBALS['CONFIG_VARS']['membership_card_variant_id']);
+            $cart_obj->AddToCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], array(), 0, 1, null, getenv('membership_card_variant_id'));
             //unset($_POST['order_card']);
           } else {
             $cart_obj = new cart($_SESSION['user']['public']['id']);
             //check if card is already there in cart
-            $lifetimeCardId = $cart_obj->hasProductInCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], $GLOBALS['CONFIG_VARS']['membership_card_variant_id']);
+            $lifetimeCardId = $cart_obj->hasProductInCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], getenv('membership_card_variant_id'));
             if(!empty($lifetimeCardId)){
               $cart_obj->RemoveFromCart($lifetimeCardId);
             }

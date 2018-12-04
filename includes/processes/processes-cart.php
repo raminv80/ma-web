@@ -830,7 +830,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                     );
                     $i++;
                   } else{
-                    if($item['cartitem_variant_id'] == $GLOBALS['CONFIG_VARS']['membership_card_variant_id']){
+                    if($item['cartitem_variant_id'] == getenv('membership_card_variant_id')){
                       $cartItems[$j] = array(
                         'item_code' => 'MA28',
                         'item_qty' => '1'
@@ -1617,7 +1617,7 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
                     );
                     $i++;
                   } else{
-                    if($item['cartitem_variant_id'] == $GLOBALS['CONFIG_VARS']['membership_card_variant_id']){
+                    if($item['cartitem_variant_id'] == getenv('membership_card_variant_id')){
                       $cartItems[$j] = array(
                         'item_code' => 'MA28',
                         'item_qty' => '1'
