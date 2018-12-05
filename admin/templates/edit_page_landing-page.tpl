@@ -1,4 +1,4 @@
-{block name=body-hidden}
+{block name="body"}
 <div class="row">
   <div class="col-sm-12">
     <form class="well form-horizontal" id="Edit_Record" accept-charset="UTF-8" method="post">

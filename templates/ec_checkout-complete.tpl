@@ -14,7 +14,8 @@
       <div class="col-md-12 text-center">
         <h1>{if $listing_title}{$listing_title}{else}{$listing_name}{/if}</h1>
         <div class="col-sm-12 text-center">
-        {if $orderNumber}<p style="color:#e9003b">Your order ID is: {$orderNumber}</p>{/if}
+          {if $orderNumber}<p style="color:#e9003b">Your order ID is: <span
+                id="order-number">{$orderNumber}</span></p>{/if}
         <br>
         {$listing_content1}
         <br>

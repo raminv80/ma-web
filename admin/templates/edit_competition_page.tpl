@@ -1,4 +1,4 @@
-{block name=body-hidden} {* Define the function *}
+{block name=body} {* Define the function *}
 {function name=options_list level=0}
   {foreach $opts as $opt}
     {if ($ignore && $ignore eq $opt.id) || ($ignoregroupid && $ignoregroupvalue eq $opt.extra.$ignoregroupid)}{continue}{/if}
