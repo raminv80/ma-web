@@ -29,9 +29,10 @@ class CheckoutCest
         $I->selectOption( '#length', '74' );
         $I->selectOption( '#medical_id_size', '87' );
         $I->click( 'Add to Cart' );
-        $I->wait( 1 );
+        $I->wait( 3 );
 
         $I->expectTo('see cart status is updated to show there is 1 product in cart');
+        $I->scrollTo('#cart-hover');
         $I->see( 1, '#cart-hover > span' );
 
         #Membership automatically is added to cart
@@ -48,8 +49,7 @@ class CheckoutCest
 
         $I->amGoingTo( 'change quantity amount' );
         $I->expectTo( 'see total price updates' );
-        $I->click( '#quantitySelectBoxItContainer' );
-        $I->click( '#quantitySelectBoxItOptions > li:nth-child(2) > a' );
+        $I->selectOptionInSelectBoxItDropDown('quantity', 2);
         $I->scrollTo( '#subtotal' );
         $I->wait( 1 );
         $I->see( '$153.00', '#subtotal' );
@@ -88,7 +88,8 @@ class CheckoutCest
         $I->seeCurrentUrlEquals('/login-register');
         $I->submitSignupForm();
         $I->expectTo('goto delivery step of checkout');
-        $I->wait(2);
+        $I->wait(4);
+        $I->waitForText('Delivery');
         $I->see('Delivery', 'h1.checkout2');
         $I->see('Billing details');
         $I->submitCheckoutBillingForm();

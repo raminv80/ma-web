@@ -38,8 +38,8 @@ class AcceptanceTester extends \Codeception\Actor
         $I=$this;
         //$I->amOnPage('/login-register');
         $I->amGoingto('enter my personal details to create an account');
-        $I->fillField('gname', 'Acceptancce');
-        $I->fillField('surname', 'Tester');
+        $I->fillField('gname', 'Acceptancce-'.$time);
+        $I->fillField('surname', 'Tester-'.$time);
         $I->fillField('#dob', '10/01/2000');
         $I->pressKey('#dob', WebDriverKeys::ENTER);
         $I->selectOptionInSelectBoxItDropDown('gender', 2);
@@ -77,10 +77,14 @@ class AcceptanceTester extends \Codeception\Actor
 
     public function submitCheckoutPaymentForm(){
         $I=$this;
+        $expiry_month = date('m', strtotime('+2 months'));
+        $expiry_year = date('Y', strtotime('+2 months'));
+        $I->waitForElement('#checkout3-form', 10);
+        $I->scrollTo('#checkout3-form');
         $I->fillField('Card number', '4564710000000004');
         $I->fillField("Cardholder's name", 'Acceptance Tester');
-        $I->selectOption('#ccmonth', '02');
-        $I->selectOption('#ccyear', '2019');
+        $I->selectOption('#ccmonth', $expiry_month);
+        $I->selectOption('#ccyear', $expiry_year);
         $I->fillField('Security code', 847);
         $I->uncheckOption('#autorenewal');
         $I->click('#payment-btn');
