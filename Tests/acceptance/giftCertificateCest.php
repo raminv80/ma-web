@@ -13,7 +13,8 @@ class giftCertificateCest
         $I->wantTo('Purchase a gift certificate');
         $I->dontSeeElement('#remail');
         $I->click('#gift_form > div:nth-child(4) > div:nth-child(1) > div > label > div > div.giftoptext');
-        $I->seeElement('#remail');
+        $I->waitForElement('#remail');
+        $I->scrollTo('#remail');
         $I->amGoingTo('fill up gift form');
         $I->fillField('#rname', 'AcceptanceTester');
         $I->fillField('#remail', 'AcceptanceTester@them.com.au');

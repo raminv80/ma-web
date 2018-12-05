@@ -871,10 +871,11 @@ class AdministratorsCest
     }
 
     public function manageEnqueries(\Step\Acceptance\Admin $I){
+        $time = time();
         $I->amOnPage('/contact-us');
         $I->scrollTo('#contact_form');
         $I->fillField('name', ' Acceptance Tester');
-        $I->fillField('email', 'acceptancetesterEnq@them.com.au');
+        $I->fillField('email', "acceptancetester$time@them.com.au");
         $I->fillField('phone', '04511111111');
         $I->fillField('postcode', '5000');
         $I->fillField('membership_no', '1234');
@@ -889,7 +890,7 @@ class AdministratorsCest
         $I->expectTo('see the enquiry in dashboard');
         $I->loginAsAdmin();
         $I->amOnPage('/admin/list/enquiries');
-        $row = Locator::contains('tr', 'acceptancetesterEnq@them.com.au');
+        $row = Locator::contains('tr', "acceptancetester$time@them.com.au");
         $I->scrollTo($row);
         $I->click('View', $row);
         $I->see('THIS IS A TEST');
