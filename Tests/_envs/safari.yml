@@ -1,0 +1,11 @@
+# `safari` environment config goes here
+modules:
+  config:
+    WebDriver:
+      browser: 'safari'
+      window_size: '1440x900'
+      wait: 5
+      restart: true
+      port: 80
+      host: "%SL_USER%:%SL_ACCESSKEY%@ondemand.saucelabs.com"
+

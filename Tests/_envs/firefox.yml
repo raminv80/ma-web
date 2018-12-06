@@ -1,0 +1,10 @@
+# `firefox` environment config goes here
+modules:
+  config:
+    WebDriver:
+      browser: 'firefox'
+      wait: 5
+      restart: true
+      window_size: '1440x900'
+      port: 80
+      host: "%SL_USER%:%SL_ACCESSKEY%@ondemand.saucelabs.com"

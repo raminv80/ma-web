@@ -7,7 +7,8 @@ suites:
             enabled:
                 - WebDriver:
                     url: https://www.medicalalert.org.test
-                    browser: chrome
+                    # url: https://www.medicalert.bythem.com.au
+                    browser: 'chrome'
                     wait: 5
                     restart: true
                 - \Helper\Acceptance
@@ -19,6 +20,7 @@ suites:
                     dump: 'tests/_data/dump.sql'
                     populate: true
                     cleanup: true
+
 params:
     - .env.codeception
 

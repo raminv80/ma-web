@@ -1,0 +1,12 @@
+# `windowsEdge` environment config goes here
+modules:
+  config:
+    WebDriver:
+      browser: 'Edge'
+      wait: 5
+      restart: true
+      port: 80
+      window_size: '1440x900'
+      host: "%SL_USER%:%SL_ACCESSKEY%@ondemand.saucelabs.com"
+      capabilities:
+        platform: 'Windows 10'

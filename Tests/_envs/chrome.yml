@@ -1,0 +1,10 @@
+# `chrome` environment config goes here
+modules:
+  config:
+    WebDriver:
+      browser: 'chrome'
+      wait: 5
+      restart: true
+      window_size: '1440x900'
+      port: 80
+      host: 'ramin-them:2d499a28-ebf2-436f-af09-1f3aa0d7dd20@ondemand.saucelabs.com'
