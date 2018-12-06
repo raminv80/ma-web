@@ -13,6 +13,11 @@ yarn install
 
 Compile styles using `yarn start`
 
+## Cron jobs
+Ad cron jobs to cron.php file. To run cron jobs add following entry to server's crontab:
+
+`* * * * * path/to/phpbin path/to/cron.php 1>> /dev/null 2>&1`
+
 ## Tests
 
 To run acceptance tests install following dependencies first:
