@@ -15,7 +15,7 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
     $mail->isHTML(true);
     if(getenv('SMTP_ENABLE')==='true'){
         $mail->isSMTP();
-        $mail->SMTPDebug = 2;
+        $mail->SMTPDebug = 0;
         $mail->SMTPAuth = true;
         $mail->Host = getenv('SMTP_HOST');
         $mail->Username = getenv('SMTP_USER');
