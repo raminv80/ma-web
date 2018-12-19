@@ -633,7 +633,8 @@ class cart{
 
       switch($cart['cart_discount_code']){
         case 'BUPA17':
-        case 'BUPA18':{
+        case 'BUPA18':
+        case 'BUPA'.date('y'):{
           //ONLY FOR MAF - BUPA OFFER
           if(empty($this->cart_user_id)){
             $discount = $this->GetBupaDiscount($shippingFee);
@@ -652,7 +653,8 @@ class cart{
         }
         
         case 'AUTISM16':
-        case 'AUTISM18':{
+        case 'AUTISM18':
+        case 'AUTISM'.date('y'):{
           //ONLY FOR MAF - AUTISM16 OFFER
           if(empty($this->cart_user_id)){
             $discount = $this->GetAutismDiscount($shippingFee);

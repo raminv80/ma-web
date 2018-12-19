@@ -797,7 +797,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $cartItems = array();
             $appliedDiscountCode = $order['cart_discount_code'];
             $discountCode = '';
-            $hardCodedDiscounts = array('BUPA17', 'BUPA18', 'AUTISM16', 'AUTISM18', 'BENEVOLENT-CPSC', 'BENEVOLENT-HAE', 'STJOHNS', 'STAINLESS-STEEL');
+            $hardCodedDiscounts = array('BUPA17', 'BUPA18', 'BUPA'.date('y'), 'AUTISM16', 'AUTISM18', 'AUTISM'.date('y'),
+                    'BENEVOLENT-CPSC', 'BENEVOLENT-HAE', 'STJOHNS', 'STAINLESS-STEEL');
             if(in_array($order['cart_discount_code'], $hardCodedDiscounts) && (float)$paymentRecord['payment_discount'] <= 0){
               $cart_obj->clearDiscountCode($order_cartId);
               $appliedDiscountCode = '';
@@ -1588,7 +1589,8 @@ if($referer['host'] == $GLOBALS['HTTP_HOST']){
             $cartItems = array();
             $appliedDiscountCode = $order['cart_discount_code'];
             $discountCode = '';
-            $hardCodedDiscounts = array('BUPA17', 'BUPA18', 'AUTISM16', 'AUTISM18', 'BENEVOLENT-CPSC', 'BENEVOLENT-HAE', 'STJOHNS', 'STAINLESS-STEEL');
+            $hardCodedDiscounts = array('BUPA17', 'BUPA18', 'BUPA'.date('y'), 'AUTISM16', 'AUTISM18', 'AUTISM'.date('y'),
+                    'BENEVOLENT-CPSC', 'BENEVOLENT-HAE', 'STJOHNS', 'STAINLESS-STEEL');
             if(in_array($order['cart_discount_code'], $hardCodedDiscounts) && (float)$paymentRecord['payment_discount'] <= 0){
               $cart_obj->clearDiscountCode($order_cartId);
               $appliedDiscountCode = '';
