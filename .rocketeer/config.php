@@ -30,24 +30,24 @@ return [
     ////////////////////////////////////////////////////////////////////
 
     // The default remote connection(s) to execute tasks on
-    'default'          => ['staging'],
+    'default'          => ['testing'],
 
     // The various connections you defined
     // You can leave all of this empty or remove it entirely if you don't want
     // to track files with credentials : Rocketeer will prompt you for your credentials
     // and store them locally
     'connections'      => [
-//        'production' => [
-//            'host'      => '13.238.234.253',
-//            'username'  => 'ubuntu',
-//            'password'  => '',
-//            'key'       => '/Users/admin/.ssh/id_rsa',
-//            'keyphrase' => '',
-//            'agent'     => '',
-//            'db_role'   => true,
-//        ],
-        'staging' => [
+        'testing' => [
             'host'      => '13.238.234.253',
+            'username'  => 'ubuntu',
+            'password'  => '',
+            'key'       => '',
+            'keyphrase' => '',
+            'agent'     => '',
+            'db_role'   => true,
+        ],
+        'staging' => [
+            'host'      => '52.62.47.61',
             'username'  => 'ubuntu',
             'password'  => '',
             'key'       => '',
