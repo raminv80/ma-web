@@ -392,18 +392,25 @@ class UserClass{
 		$todayDate = $today->format('Ymd');
 		
 		$renewalDate = date_create_from_format('Y-m-d', $user['user_RenewalDate']);
-		$renewalMonth = $renewalDate->format('m');
-		
-		//Calculate date difference between renewal date and today
-		$offerValidFromDate = date('Ymd', strtotime($today->format('Y').'-'.$renewalMonth.'-01'));
-		$offerValidTillDate = date('Ymd', strtotime('last day of +3 month', strtotime($offerValidFromDate)));
+
 		$interval = $renewalDate->diff($today);
-		$year_diff = ceil(floatval($interval->format('%R%y.%m%d')));
 		$day_diff = floatval($interval->format('%R%a'));
 		
 		//Verify if member requires reactivation
+		//waive reactivation if they renew within 3 month of their renewal date
+		//waive activation fee if they renew in first quarter of year (a campaign runs at start of each year to
+		// invite people renew using reactivation fee as incentive)
+		$offerValidFromDate = date('Y-m-d', strtotime($renewalDate->format('Y-m-d')));
+		$offerValidTillDate = date('Y-m-d', strtotime('last day of +3 month', strtotime($offerValidFromDate)));
+		$exemptionDateStart = date('Y').'-01-01';
+		$exemptionDateEnd = date('Y').'-03-31';
+
+		$offerExpired = $todayDate > $offerValidTillDate;
+    $exempt = $todayDate >= $exemptionDateStart && $todayDate <= $exemptionDateEnd;
+		
+		//Verify if member requires reactivation
 		$user['reactivation'] = 'f';
-		if($year_diff > 1 && ((float)$todayDate < (float)$offerValidFromDate || (float)$todayDate > (float)$offerValidTillDate)){
+		if($offerExpired && !$exempt){
 		  //Add reactivation fee when year difference is greater than 1
 		  //also check that it's not in speacial offer months. renewal month plus 2 months
 		  $user['reactivation'] = 't';
