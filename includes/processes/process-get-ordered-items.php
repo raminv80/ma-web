@@ -8,7 +8,7 @@ try{
     $prodObj = new ProductClass('', $CONFIG->product_page);
     $sql = "SELECT cartitem_id, cartitem_cart_id, cartitem_product_id, cartitem_variant_id, cartitem_product_uid, cartitem_product_name,
             cartitem_type_id, tbl_variant.*, tbl_product.*, payment_cart_id, payment_user_id 
-            FROM tbl_cartitem LEFT JOIN `tbl_payment` ON cartitem_cart_id = payment_cart_id
+            FROM tbl_cartitem LEFT JOIN `tbl_payment` ON cartitem_cart_id = payment_cart_id and cartitem_deleted IS NULL
             LEFT JOIN tbl_product ON cartitem_product_id = product_object_id 
             LEFT JOIN tbl_variant ON cartitem_variant_id = variant_id 
             WHERE payment_user_id = :user_id AND payment_response_code = 'approved' AND (cartitem_type_id = 1 OR cartitem_type_id = 4) AND product_published = 1 AND product_deleted IS NULL AND variant_deleted IS NULL GROUP BY cartitem_variant_id ORDER BY cartitem_modified DESC";

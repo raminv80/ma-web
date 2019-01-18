@@ -21,12 +21,13 @@ try{
   //RE-APPLY DISCOUNT CODE - (BUPA/AUTISM with products) 
   if(!empty($_SESSION['reApplydiscount']) && $shippable){
     $res = $cart_obj->ApplyDiscountCode($_SESSION['reApplydiscount']);
+    $_SESSION['autoApplydiscount'] = 'no';
     if(empty($res['error'])){
       $_SESSION['reApplydiscount'] = '';
       header('Location: /shopping-cart#2');
       die();
     }
-    $_SESSION['autoApplydiscount'] = 'no';
+
     $totals = $cart_obj->CalculateTotal();
     $SMARTY->assign('totals',$totals);
   }
