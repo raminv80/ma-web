@@ -1365,7 +1365,15 @@ class cart{
               if($res['discount_listing_id']){
                 // Special code for category only
                 $listingArr = $this->getProductCategoriesArr($item['cartitem_product_id']);
-                if(in_array_r($res['discount_listing_id'], $listingArr)){
+
+                $voucher_category_matches = in_array_r($res['discount_listing_id'], $listingArr);
+                #include products from accessory category if this is a birthday gift voucher
+                if(trim($res['discount_name'])=='Birthday voucher'){
+                  $accessory_cat = '251';
+                  $voucher_category_matches = $voucher_category_matches || in_array_r($accessory_cat, $listingArr);
+                }
+
+                if($voucher_category_matches){
                   $matchCategory = true;
                   if($res['discount_amount_percentage'] == '1'){
                     $discount += floatval($item['cartitem_subtotal']) * floatval($res['discount_amount']) / 100;
