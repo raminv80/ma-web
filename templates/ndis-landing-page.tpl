@@ -247,11 +247,11 @@
 
 {* Place additional javascript here so that it runs after General JS includes *}
 {block name=tail}
-<script src="/includes/js/jquery-ui.js"></script>
-<script src="/includes/js/jquery.selectBoxIt.min.js"></script>
-<script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
-<script src="/includes/js/isotope.pkgd.min.js"></script>
-<script src="/includes/js/jquery.lazyload.min.js"></script>
+{printfile file='/includes/js/jquery-ui.js' type='script'}
+{printfile file='/includes/js/jquery.selectBoxIt.min.js' type='script'}
+{printfile file='/includes/js/jquery.flexslider-min.js' type='script'}
+{printfile file='/includes/js/isotope.pkgd.min.js' type='script'}
+{printfile file='/includes/js/jquery.lazyload.min.js' type='script'}
 <script type="text/javascript">
 
 

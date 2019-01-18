@@ -4,7 +4,8 @@
 		<div class="row">
 			<div class="col-sm-12 text-left hidden-xs">
 				<h1>{$listing_title}</h1>
-				<a id="learnmorehome" href="/how-to-become-a-member" title="Join now" class="btn btn-red">Join now</a>
+				<!--<a id="learnmorehome" href="/how-to-become-a-member" title="Join now" class="btn btn-red">Join now</a>-->
+        <a id="learnmorehome" href="/products/end-of-year-stocktake-sale" title="Join now" class="btn btn-red">Shop now</a>
 			</div>
 		</div>
 	</div>
@@ -15,7 +16,7 @@
 			<div class="col-xs-12 text-center">
   			<h1>
 				{$listing_title}</h1>
-				<a id="learnmorehome" href="/how-to-become-a-member" title="Join now" class="btn btn-red">Join now</a>
+				<a id="learnmorehome" href="/products/end-of-year-stocktake-sale" title="Join now" class="btn btn-red">Shop now</a>
 			</div>
 		</div>
 	</div>
@@ -181,7 +182,7 @@
 {/block}
 
 {block name=tail}
-<script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
+{printfile file='/includes/js/jquery.flexslider-min.js' type='script'}
 <script type="text/javascript">
 $(window).load(function() {
   $('#testim2').flexslider({

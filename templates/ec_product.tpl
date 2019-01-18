@@ -348,8 +348,8 @@
   }
 }
 </script>   
-<script src="/includes/js/jquery-ui.js"></script>
-<script type="text/javascript" src="/includes/js/jquery.flexslider-min.js"></script>
+{printfile file='/includes/js/jquery-ui.js' type='script'}
+{printfile file='/includes/js/jquery.flexslider-min.js' type='script'}
 <script>
 
 jQuery.fn.outerHTML = function(s) {

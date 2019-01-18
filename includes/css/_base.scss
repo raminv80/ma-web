@@ -211,10 +211,11 @@ select.form-control {
 }
 
 #banner{
-	background:url('/images/flash-18-header-image.jpg') no-repeat;
+	background:url('/images/EOY-sale-header-image_products.jpg') no-repeat;
 	height: 450px;
 	background-size: cover;
 	padding: 110px 0;
+	background-position: bottom;
 
 	h1{
     font-family: $calibri;

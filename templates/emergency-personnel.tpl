@@ -373,8 +373,8 @@
 {/block}
 
 {block name=tail}
-<script src="/includes/js/jquery-ui.js"></script>
-<script src="/includes/js/jquery.selectBoxIt.min.js"></script>
+{printfile file='/includes/js/jquery-ui.js' type='script'}
+{printfile file='/includes/js/jquery.selectBoxIt.min.js' type='script'}
 <script type="text/javascript">
 $(document).ready(function(){
 
