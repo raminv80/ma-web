@@ -389,7 +389,7 @@ class UserClass{
 		$user['last_validated_date']        = $userData['dataBaseRecord']['details']['lastValidatedDate'];
 
 		$today = new DateTime();
-		$todayDate = $today->format('Ymd');
+		$todayDate = $today->format('Y-m-d');
 		
 		$renewalDate = date_create_from_format('Y-m-d', $user['user_RenewalDate']);
 
@@ -405,12 +405,13 @@ class UserClass{
 		$exemptionDateStart = date('Y').'-01-01';
 		$exemptionDateEnd = date('Y').'-03-31';
 
+		$expired = $todayDate > $renewalDate->format('Y-m-d');
 		$offerExpired = $todayDate > $offerValidTillDate;
-    $exempt = $todayDate >= $exemptionDateStart && $todayDate <= $exemptionDateEnd;
+        $exempt = $todayDate >= $exemptionDateStart && $todayDate <= $exemptionDateEnd;
 		
 		//Verify if member requires reactivation
 		$user['reactivation'] = 'f';
-		if($offerExpired && !$exempt){
+		if($expired && $offerExpired && !$exempt){
 		  //Add reactivation fee when year difference is greater than 1
 		  //also check that it's not in speacial offer months. renewal month plus 2 months
 		  $user['reactivation'] = 't';
