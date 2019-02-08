@@ -8,7 +8,7 @@ class UserClass{
   public $sessionVars = array(); // All the variables to be stored in session
   private $token = null;
   private $errorMsg = null;
-  protected $DBobj = null; // Database object/connector - WEBSITE ONLY 
+  protected $DBobj = null; // Database object/connector - WEBSITE ONLY
 
 
   function __construct(){
@@ -21,8 +21,8 @@ class UserClass{
   /**
    * Authenticate with the MedicAlert Database
    *
-   * @param string $_membershipId          
-   * @param string $_password          
+   * @param string $_membershipId
+   * @param string $_password
    * @return boolean
    */
   function authenticate($_membershipId, $_password){
@@ -47,7 +47,7 @@ class UserClass{
     catch(exceptionMedicAlertLocked $e){
       $this->errorMsg = "Sorry, you have been locked out of your account.<br>You will have to call us on 1800 88 22 22 (Mon-Fri, 9am-5pm CST) to unlock your account.";
     }
-    
+
     if(empty($this->errorMsg) && $this->setSessionVars($this->token)){
       if($this->isInactiveMember()){
         // log out of the API
@@ -63,8 +63,8 @@ class UserClass{
 
   /**
    * Log out from MAF API
-   * 
-   * @param string $_token          
+   *
+   * @param string $_token
    * @return boolean
    */
   function logOut($_token = null){
@@ -91,7 +91,7 @@ class UserClass{
 
   /**
    * Initialise the member details array in the session based on the retrieved member record.
-   * ALSO IT'S USED FOR CHECKING THE MEMBER LOGIN STATUS 
+   * ALSO IT'S USED FOR CHECKING THE MEMBER LOGIN STATUS
    * This session array is used to prefill the update personal/medical details form.
    */
   function setSessionVars($_token){
@@ -110,10 +110,10 @@ class UserClass{
     catch(exceptionMedicAlertApi $e){
       $this->errorMsg = "API error: {$e}";
     }
-    
+
     if(empty($this->errorMsg) && !empty($this->memberRecord)){
       $this->sessionVars['pending_update'] = false;
-      
+
       $this->sessionVars['token'] = $_token;
       $this->sessionVars['main'] = $this->getUserArray($this->memberRecord);
       $this->sessionVars['pending'] = $this->buildMemberProfileArray($this->memberRecord['webSiteRecord']);
@@ -123,14 +123,14 @@ class UserClass{
     }
     return false;
   }
-	
-	
-	
+
+
+
 	/**
 	 * Build new member array based on details entered
 	 */
 	private function buildNewMemberMedicAlertArray($_data){
-	
+
 		// Website record
 		$this->memberRecord['initialPassword']						= $_data['password'];
 		$this->memberRecord['joinCategory']							= medicAlertApi::JOIN_CATEGORY_OTHER;
@@ -139,7 +139,7 @@ class UserClass{
 		//$this->memberRecord['status']['statusTypeId']				= '6';
 		$this->memberRecord['membership']['membershipTypeId']		= '3';
 		//$this->memberRecord['membership']['RenewalDate']			= '';
-	
+
 		$this->memberRecord['details']['title']						= '.';
 		$this->memberRecord['details']['firstName']					= ucwords(strtolower($_data['gname']));
 		$this->memberRecord['details']['middleName']				= '';
@@ -160,15 +160,15 @@ class UserClass{
 		$this->memberRecord['details']['correspondenceType']		= '';
 		$this->memberRecord['details']['organDonor']				= '';
 		$this->memberRecord['details']['howDidYouHear']				= $_data['heardabout'];
-	
+
 		$this->memberRecord['address']['address']					= ucwords(strtolower($_data['address']));
 		$this->memberRecord['address']['suburb']					= ucwords(strtolower($_data['suburb']));
 		$this->memberRecord['address']['postCode']					= $_data['postcode'];
 		$this->memberRecord['address']['state']						= $_data['state'];
 		$this->memberRecord['address']['country']					= 'Australia';
-	
+
 		$this->memberRecord['blood']['bloodGroup']					= '';
-	
+
 		$this->memberRecord['emergencyContact']['relationship']		= '';
 		$this->memberRecord['emergencyContact']['name']				= '';
 		$this->memberRecord['emergencyContact']['address']			= '';
@@ -179,7 +179,7 @@ class UserClass{
 		$this->memberRecord['emergencyContact']['phoneHome']		= '';
 		$this->memberRecord['emergencyContact']['phoneWork']		= '';
 		$this->memberRecord['emergencyContact']['phoneMobile']		= '';
-	
+
 		$this->memberRecord['doctor']['doctorName']					= '';
 		$this->memberRecord['doctor']['medicalCentreName']			= '';
 		$this->memberRecord['doctor']['fileNumber']					= '';
@@ -189,11 +189,11 @@ class UserClass{
 		$this->memberRecord['doctor']['state']						= '';
 		$this->memberRecord['doctor']['country']					= '';
 		$this->memberRecord['doctor']['phoneNumber']				= '';
-		
+
 		$this->memberRecord['conditions']							= '';
 		$this->memberRecord['allergies']							= '';
 		$this->memberRecord['medications']							= '';
-	
+
 		$this->memberRecord['attributes'][0]['id']					= '7';
 		$this->memberRecord['attributes'][0]['text']				= 'Allergies Authenticated';
 		$this->memberRecord['attributes'][0]['value']				= '';
@@ -225,15 +225,15 @@ class UserClass{
 		$this->memberRecord['attributes'][9]['id']					= '18';
 		$this->memberRecord['attributes'][9]['text']				= 'Seniors Card';
 		$this->memberRecord['attributes'][9]['value']				= $_data['seniorscard'];
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Build update member array based on details entered
 	 */
 	function buildUpdateMemberMedicAlertArray($_data){
-	
+
 		$check = false;
 		// Website record
 		//$this->memberRecord['webSiteRecord']['memberJoinDate']							= date('d M Y');
@@ -241,10 +241,10 @@ class UserClass{
 		//$this->memberRecord['webSiteRecord']['status']['statusTypeId'] 					= medicAlertApi::STATUS_ACTIVE_PENDING;
 		//$this->memberRecord['webSiteRecord']['membership']['membershipTypeId']		= '6';
 		//$this->memberRecord['webSiteRecord']['membership']['RenewalDate']				= '';
-		
+
 		$this->memberRecord['webSiteRecord']['pendingUpdate']							= '1';
 		$this->memberRecord['webSiteRecord']['pendingUpdateDate']						= date('d/m/Y',time());
-	
+
 		$this->memberRecord['webSiteRecord']['details']['title']						= ucwords(strtolower($_data['user_title']));
 		$this->memberRecord['webSiteRecord']['details']['firstName']					= ucwords(strtolower($_data['user_firstname']));
 		$this->memberRecord['webSiteRecord']['details']['middleName']					= ucwords(strtolower($_data['user_middlename']));
@@ -269,17 +269,17 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['details']['ndisManagerEmail']			    = $_data['ndis_manager_email'];
 		$this->memberRecord['webSiteRecord']['details']['ndisManagerPhone']			    = empty($_data['ndis_manager_phone']) ? '' : '(' . substr($_data['ndis_manager_phone'], 0, 2) . ') ' . substr($_data['ndis_manager_phone'], 2, 4) . ' ' . substr($_data['ndis_manager_phone'], 6, 4);
 		$this->memberRecord['webSiteRecord']['details']['lastValidatedDate']			= date("Y-m-d");
-		
+
 		$this->memberRecord['webSiteRecord']['address']['address']						= ucwords(strtolower($_data['user_address']));
 		$this->memberRecord['webSiteRecord']['address']['suburb']						= ucwords(strtolower($_data['user_suburb']));
 		$this->memberRecord['webSiteRecord']['address']['postCode']						= $_data['user_postcode'];
 		$this->memberRecord['webSiteRecord']['address']['state']						= $_data['user_state_id'];
 		$this->memberRecord['webSiteRecord']['address']['country']						= 'Australia';
-		
+
 		$this->memberRecord['webSiteRecord']['blood']['bloodGroup']						= $_data['blood_group'];
 		$this->memberRecord['webSiteRecord']['blood']['bloodType']						= $_data['blood_group'];
 		$this->memberRecord['webSiteRecord']['blood']['otherInfo']						= $_data['blood_group'];
-	
+
 		$this->memberRecord['webSiteRecord']['emergencyContact']['relationship']		= ucwords(strtolower($_data['contact_relationship']));
 		$this->memberRecord['webSiteRecord']['emergencyContact']['name']				= ucwords(strtolower($_data['contact_name']));
 		$this->memberRecord['webSiteRecord']['emergencyContact']['address']				= ucwords(strtolower($_data['contact_address']));
@@ -290,7 +290,7 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneHome']			= empty($_data['contact_phone_home']) ? '' : '(' . substr($_data['contact_phone_home'], 0, 2) . ') ' . substr($_data['contact_phone_home'], 2, 4) . ' ' . substr($_data['contact_phone_home'], 6, 4);
 		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneWork']			= empty($_data['contact_phone_work']) ? '' :'(' . substr($_data['contact_phone_work'], 0, 2) . ') ' . substr($_data['contact_phone_work'], 2, 4) . ' ' . substr($_data['contact_phone_work'], 6, 4);
 		$this->memberRecord['webSiteRecord']['emergencyContact']['phoneMobile']			= empty($_data['contact_mobile']) ? '' : substr($_data['contact_mobile'], 0, 4) . ' ' . substr($_data['contact_mobile'], 4, 3) . ' ' . substr($_data['contact_mobile'], 7, 3);
-	
+
 		$this->memberRecord['webSiteRecord']['doctor']['doctorName']					= ucwords(strtolower($_data['doc_name']));
 		$this->memberRecord['webSiteRecord']['doctor']['medicalCentreName']				= ucwords(strtolower($_data['doc_medical_centre']));
 		$this->memberRecord['webSiteRecord']['doctor']['address']						= ucwords(strtolower($_data['doc_address']));
@@ -304,7 +304,7 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['conditions']								= $_data['conditions'];
 		$this->memberRecord['webSiteRecord']['allergies']								= $_data['allergies'];
 		$this->memberRecord['webSiteRecord']['medications']								= $_data['medications'];
-	
+
 		/* $this->memberRecord['webSiteRecord']['attributes'][0]['id']					= '7';
 		$this->memberRecord['webSiteRecord']['attributes'][0]['text']					= 'Allergies Authenticated';
 		$this->memberRecord['webSiteRecord']['attributes'][0]['value']					= ''; */
@@ -317,7 +317,7 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['attributes'][3]['id']					= '6';
 		$this->memberRecord['webSiteRecord']['attributes'][3]['text']					= 'Authenticated (MIR / FIR / AF) Date (year only)';
 		$this->memberRecord['webSiteRecord']['attributes'][3]['value']					= ''; */
-		
+
 		//NEW FIELDS 08/05/2014
 		$this->memberRecord['webSiteRecord']['attributes'] = array();
 		$this->memberRecord['webSiteRecord']['attributes'][0]['id']					= '10';
@@ -336,21 +336,21 @@ class UserClass{
 		$this->memberRecord['webSiteRecord']['attributes'][4]['text']				= 'Seniors Cards';
 		$this->memberRecord['webSiteRecord']['attributes'][4]['value']				= $_data['seniorscard'];
 	}
-	
-	
+
+
 	/**
 	 * Build and return the user array after login
 	 * @param array $userData
-	 * @return array 
+	 * @return array
 	 */
 	function getUserArray($userData){
-	  
+
 	  //Days before memebership expiry that force membership renewal.
 	  $days_before_force = 30;
-	  
+
 	  //Days before memebership expiry make membership renewal optional.
 	  $days_before_opt = 45;
-	  
+
 		$user = array();
 		$user['membership_system_locked']   = (!empty($userData['dataBaseRecord']['memberLocked']) && !empty($userData['webSiteRecord']['pendingUpdate'])) ? 1 : 0;
 		$user['locked']                     = $userData['webSiteRecord']['pendingUpdate'];
@@ -366,7 +366,7 @@ class UserClass{
 		$user['user_postcode']				= $userData['dataBaseRecord']['address']['postCode'];
 		$user['user_phone_home']			= $userData['dataBaseRecord']['details']['phoneHome'];
 		$user['user_mobile']				= str_replace(' ', '', $userData['dataBaseRecord']['details']['phoneMobile']);
-		
+
 		$user['user_status_db']             = $userData['dataBaseRecord']['status']['statusTypeId'];
 		//$user['user_status']				= $userData['dataBaseRecord']['status']['statusTypeId']; // Had to change this because we need to track pending status of renewal paid members
 		$user['user_status']				= $userData['webSiteRecord']['status']['statusTypeId'];
@@ -377,38 +377,39 @@ class UserClass{
 		$user['user_RenewalDate']			= date('Y-m-d', strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
 		$user['user_RenewalMonth']			= date("F", strtotime($userData['dataBaseRecord']['membership']['RenewalDate']));
 		$user['preferedPaymentMethod']	    = $userData['dataBaseRecord']['details']['preferedPaymentMethod'];
-		
+
 		$user['WestpacCustomerNo']          = $userData['dataBaseRecord']['WestpacCustomerNo'];
-		
+
 		$user['autoBilling']                = $userData['dataBaseRecord']['details']['autoBilling'];
 		$user['autoBillingMethod']          = $userData['dataBaseRecord']['details']['autoBillingMethod'];
 		$user['autoBillingAcceptDate']      = $userData['dataBaseRecord']['details']['autoBillingAcceptDate'];
 		$user['autoBillingIp']              = $userData['dataBaseRecord']['details']['autoBillingIp'];
 		$user['autoBillingBankCustomerNo']  = $userData['dataBaseRecord']['details']['autoBillingBankCustomerNo'];
-		
+
 		$user['last_validated_date']        = $userData['dataBaseRecord']['details']['lastValidatedDate'];
 
 		$today = new DateTime();
 		$todayDate = $today->format('Y-m-d');
-		
+
 		$renewalDate = date_create_from_format('Y-m-d', $user['user_RenewalDate']);
 
 		$interval = $renewalDate->diff($today);
 		$day_diff = floatval($interval->format('%R%a'));
-		
+
 		//Verify if member requires reactivation
 		//waive reactivation if they renew within 3 month of their renewal date
-		//waive activation fee if they renew in first quarter of year (a campaign runs at start of each year to
-		// invite people renew using reactivation fee as incentive)
+		// if campaign is active then waive activation fee if they renew in first quarter of year (a campaign runs at
+		// start of each year to invite people renew using reactivation fee as incentive)
 		$offerValidFromDate = date('Y-m-d', strtotime($renewalDate->format('Y-m-d')));
 		$offerValidTillDate = date('Y-m-d', strtotime('last day of +3 month', strtotime($offerValidFromDate)));
+		$campaignIsActive = false;
 		$exemptionDateStart = date('Y').'-01-01';
 		$exemptionDateEnd = date('Y').'-03-31';
 
 		$expired = $todayDate > $renewalDate->format('Y-m-d');
 		$offerExpired = $todayDate > $offerValidTillDate;
-        $exempt = $todayDate >= $exemptionDateStart && $todayDate <= $exemptionDateEnd;
-		
+        $exempt = $campaignIsActive && $todayDate >= $exemptionDateStart && $todayDate <= $exemptionDateEnd;
+
 		//Verify if member requires reactivation
 		$user['reactivation'] = 'f';
 		if($expired && $offerExpired && !$exempt){
@@ -416,11 +417,11 @@ class UserClass{
 		  //also check that it's not in speacial offer months. renewal month plus 2 months
 		  $user['reactivation'] = 't';
 		}
-		
+
 		//Verify if member can renew the membership
 		$user['renew'] = 'f';
 		$user['renew_option'] = 'f';
-		
+
 		if($day_diff >= -$days_before_force && $user['autoBilling'] != 't'){
 		  //Force renew before n days of renewal date
 		  $user['renew'] = 't';
@@ -428,10 +429,10 @@ class UserClass{
 		  //Allow renew before n days of renewal date
 		  $user['renew_option'] = 't';
 		}
-		
+
 		//Reset display 'confirm details' notice
 		$user['display_confirm_details_notice'] = 'f';
-		
+
 		if(!empty($user['last_validated_date'])){
 		  //Calculate time difference to display 'confirm details' notice after a year
 		  $validatedDate = date_create_from_format('Y-m-d', $user['last_validated_date']);
@@ -440,17 +441,17 @@ class UserClass{
 		    $user['display_confirm_details_notice'] = 't';
 		  }
 		}
-		
+
 		$user = stripslashes_deep($user);
 		return $user;
 	}
-	
-	
+
+
 	/**
 	 * Returns the membership type text based on the membership type id and the constants set in the API
 	 */
 	function getMembershipTypeText($mtid){
-		
+
 		switch($mtid){
 			case '1': return 'Lifetime member';//'Grandfather member';
 			case '2': return 'Annual member';//'Click over member';
@@ -461,10 +462,10 @@ class UserClass{
 			case '7': return 'Annual member';//'Benevolent annual member';
 			default:  return '';
 		}
-		
+
 	}
-	
-	
+
+
 	function setPendingStatus($_token, $_memberId){
 		if($this->setSessionVars($_token)){
 		  $this->memberRecord['webSiteRecord']['status']['statusTypeId'] = medicAlertApi::STATUS_ACTIVE_PENDING;
@@ -485,8 +486,8 @@ class UserClass{
 		}
 		return false;
 	}
-	
-	
+
+
 	function setAutoRenewal($_token, $_data){
 	  if($this->setSessionVars($_token)){
 	    $this->memberRecord['webSiteRecord']['status']['statusTypeId'] = medicAlertApi::STATUS_ACTIVE_PENDING;
@@ -512,8 +513,8 @@ class UserClass{
 	  }
 	  return false;
 	}
-	
-	
+
+
 	function processUpdate($_token, $_data){
 		try{
           $this->buildUpdateMemberMedicAlertArray($_data);
@@ -522,7 +523,7 @@ class UserClass{
             return true;
           }
           $this->errorMsg = "Unknown error. Please contact us.";
-		  
+
 		}catch(exceptionMedicAlertApiNotAuthenticated $e){
           $this->errorMsg = "API error: {$e}";
 		}catch(exceptionMedicAlertApiSessionExpired $e){
@@ -532,11 +533,11 @@ class UserClass{
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Update password
-	 * 
+	 *
 	 * @param string $_token
 	 * @param string $_currentpwd
 	 * @param string $_newpwd
@@ -548,7 +549,7 @@ class UserClass{
 			  //Password successfully updated
 			  return true;
 			}
-			
+
 		}catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
 		  $this->errorMsg = "Incorrect password, password could not be updated because current password does not match.";
 		}
@@ -564,16 +565,16 @@ class UserClass{
 		return false;
 	}
 
-	
+
 	/**
 	 * Forgot password - MAF will send an email
-	 * 
+	 *
 	 * @param int $_membershipId
 	 * @param string $_email
 	 * @return boolean
 	 */
 	function ForgotPassword($_membershipId, $_email){
-	  
+
 	  $this->errorMsg = null;
 	  try{
 	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
@@ -584,14 +585,14 @@ class UserClass{
 	    $this->errorMsg = "Invalid API membership number/password.";
 	    return false;
 	  }
-	 
+
 	  try{
 	    if($results = $this->medicAlertApi->lostPassWord($token, $_membershipId, $_email)){
 	      //Password successfully updated
 	      $this->medicAlertApi->logout($token);
 	      return true;
 	    }
-	    
+
 	  }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
 	    $this->errorMsg = "Your membership number and email address don't match.";
 	  }
@@ -606,7 +607,7 @@ class UserClass{
 	  }
 	  return false;
 	}
-	
+
 
 	/**
 	 * Get Members basic details
@@ -625,7 +626,7 @@ class UserClass{
 	 * @return array
 	 */
 	function GetMemberBasicDetails($_membershipId){
-	  
+
 	  $res = array();
 	  $this->errorMsg = null;
 	  try{
@@ -637,13 +638,13 @@ class UserClass{
 	    $this->errorMsg = "Invalid API membership number/password.";
 	    return $res;
 	  }
-	
+
 	  try{
 	    if($results = $this->medicAlertApi->getMemberBasicDetails($token, $_membershipId)){
 	      $this->medicAlertApi->logout($token);
 	      return json_decode($results, true);
 	    }
-	     
+
 	  }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
 	    $this->errorMsg = "Your membership number and email address don't match.";
 	  }
@@ -671,12 +672,12 @@ class UserClass{
 	 *   dateOfBirth
 	 *   emailAddress
 	 * )
-	 * @param int $_day 
+	 * @param int $_day
 	 * @param int $_month
 	 * @return array
 	 */
 	function GetMembersByBirthday($_day, $_month){
-	   
+
 	  $res = array();
 	  $this->errorMsg = null;
 	  try{
@@ -688,13 +689,13 @@ class UserClass{
 	    $this->errorMsg = "Invalid API membership number/password.";
 	    return $res;
 	  }
-	
+
 	  try{
 	    if($results = $this->medicAlertApi->getMembersByBirthday($token, $_day, $_month)){
 	      $this->medicAlertApi->logout($token);
 	      return json_decode($results, true);
 	    }
-	
+
 	  }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
 	    $this->errorMsg = "Your membership number and email address don't match.";
 	  }
@@ -709,8 +710,8 @@ class UserClass{
 	  }
 	  return $res;
 	}
-	
-	
+
+
 	/**
 	 * Verify whether or not a profile already exists given the firstname, lastname and dob
 	 *
@@ -720,7 +721,7 @@ class UserClass{
 	 * @return int
 	 */
 	function profileMatch($_firstname, $_lastname, $_dob){
-	   
+
 	  $this->errorMsg = null;
 	  try{
 	    $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
@@ -731,7 +732,7 @@ class UserClass{
 	    $this->errorMsg = "Invalid API membership number/password.";
 	    return 0;
 	  }
-	
+
 	  try{
 	    $response = $this->medicAlertApi->memberProfileMatch($token, $_firstname, $_lastname, $_dob);
 	    $response = json_decode($response);
@@ -752,80 +753,80 @@ class UserClass{
 	  }
 	  return 0;
 	}
-	
-	
+
+
 	/**
 	 * Formats the date of birth from YYYY-MM-DD to DD-MM-YYYY
 	 * @param string $date
 	 * @return string
 	 */
 	function formatDateToForward($date){
-		
+
 		$formattedDate = substr($date, 8, 2).'-';
 		$formattedDate.= substr($date, 5, 2).'-';
 		$formattedDate.= substr($date, 0, 4);
 		return $formattedDate;
-		
+
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Determines which conditions/allergies are set in the member record for the array that's sent over, and returns them as a list
 	 * @param array $array_field
 	 * @return string
 	 */
 	function getArrayField($array_field){
-	
+
 		$arr_size = count($array_field);
 		$output = '';
-	
+
 		for($i = 0; $i < $arr_size; $i++){
 			if($array_field[$i]['status'] != "4"){
 				$output.= $array_field[$i]['value'].'<br />';
 			}
 		}
-	
+
 		return $output;
-	
-	}	
-	
-	
+
+	}
+
+
 	function getMobileArrayField($array_field, $name){
-	
+
 		$arr_size = count($array_field);
 		$output = '';
-	
+
 		$n = 0;
 		foreach($array_field as $value){
 			$n++;
 			$output.= '<label for="'.$name.$n.'">'.$value['value'].'</label><input id="'.$name.$n.'" class="spc-checkbox" name="'.$name.'[]" type="checkbox" value="'.$value['value'].'" checked="checked" readonly="readonly" disabled="disabled" />';
 		}
-	
+
 		return $output;
-	
-	}	
-	
-	
+
+	}
+
+
 	/**
 	 * Determines which conditions/allergies are set in the member record for the array that's sent over, and returns them as options for a select list
 	 * @param array $array_field
 	 * @return string
 	 */
 	function getArrayFieldOptions($array_field){
-		
+
 		$arr_size = count($array_field);
 		$output = '';
-		
+
 		for($i = 0; $i < $arr_size; $i++){
 			$output.= '<option value="'.$array_field[$i]['value'].'"'.(($array_field[$i]['status'] == "1") ? ' selected' : '').'>'.$array_field[$i]['value'].'</option>';
 		}
 
 		return $output;
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Outputs a list of checkboxes based on an array and matches them to the full array of options and sets the matched checkboxes to checked.
 	 * @param array $array_field
@@ -834,49 +835,49 @@ class UserClass{
 	 * @return string
 	 */
 	function getArrayFieldTickBoxes($array_field, $name, $array_match){
-	
+
 		$array_match_size = count($array_match);
 		$arr_size = count($array_field);
 		$output = '';
-		
+
 		$other = "";
 		foreach($array_field as $value){
 				$output.= '<input class="spc-checkbox" name="'.$name.'[]" type="checkbox" value="'.$value['value'].'" checked />'.$value['value'].'<br />';
 		}
-		
+
 		$output .= '<textarea class="update-textarea" name="'.$name.'[]" id="'.$name.'">'.$other.'</textarea>';
-		
+
 		return $output;
-	
+
 	}
-	
-	
+
+
 	function getMobileArrayFieldTickBoxes($array_field, $name, $array_match){
-	
+
 		$array_match_size = count($array_match);
 		$arr_size = count($array_field);
 		$output = '';
-		
+
 		$other = "";
 		$n = 0;
 		foreach($array_field as $value){
 			$n++;
 			$output.= '<label for="'.$name.$n.'">'.$value['value'].'</label><input id="'.$name.$n.'" class="spc-checkbox" name="'.$name.'[]" type="checkbox" value="'.$value['value'].'" checked />';
 		}
-		
+
 		$output .= '<textarea class="update-textarea" name="'.$name.'[]" id="'.$name.'">'.$other.'</textarea>';
-		
+
 		return $output;
-	
+
 	}
-	
-	
+
+
 	function getArrayFieldTickBoxes2($array_field, $name, $array_match){
-	
+
 		$array_match_size = count($array_match);
 		$arr_size = count($array_field);
 		$output = '';
-	
+
 		for($i = 0; $i < $array_match_size; $i++){
 			if($arr_size > 0){
 				for($j = 0; $j < $arr_size; $j++){
@@ -889,13 +890,13 @@ class UserClass{
 			}
 		}
 		return $output;
-	
+
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * Determines if the member is a lifetime (pay as you go) member or not
 	 * @return boolean
@@ -910,16 +911,16 @@ class UserClass{
 		}else{
 			return false;
 		}
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Determines if the member is an annual (annual renewal) member or not
 	 * @return boolean
 	 */
 	function isAnnualMember($_user_membershipType){
-		
+
 		if(	$_user_membershipType == medicAlertApi::MEMBERSHIP_CLICKOVER ||
 			$_user_membershipType == medicAlertApi::MEMBERSHIP_ANNUAL ||
 			$_user_membershipType == medicAlertApi::MEMBERSHIP_BENOVOLENT_ANNUAL ){
@@ -929,28 +930,28 @@ class UserClass{
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * Determines if the member status is active or not
 	 * @return boolean
 	 */
 	function isActiveMember($_statusTypeId){
-	
+
 		if($_statusTypeId == medicAlertApi::STATUS_ACTIVE){
 			return true;
 		}else{
 			return false;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Determines if the member status is active or not
 	 * @return boolean
 	 */
 	function isInactiveMember($_statusTypeId){
-	
+
 		if($_statusTypeId == medicAlertApi::STATUS_UNCLAIMED
 		|| $_statusTypeId == medicAlertApi::STATUS_NO_LONGER_REQUIRED
 		|| $_statusTypeId == medicAlertApi::STATUS_DECEASED){
@@ -959,8 +960,8 @@ class UserClass{
 			return false;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Determines if the member status is unfinancial or not
 	 * @return boolean
@@ -973,8 +974,8 @@ class UserClass{
 			return false;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Determines if the member status is unfinancial or not
 	 * @return boolean
@@ -988,8 +989,8 @@ class UserClass{
 			return false;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Determines if the member status is unfinancial or not
 	 * @return boolean
@@ -1008,23 +1009,23 @@ class UserClass{
 			return 0;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Determines if the member status is pending or not
 	 * @return boolean
 	 */
 	function isPendingMember($_statusTypeId){
-		if($_statusTypeId == medicAlertApi::STATUS_ACTIVE_PENDING){ 
+		if($_statusTypeId == medicAlertApi::STATUS_ACTIVE_PENDING){
 			return true;
 		}else{
 			return false;
 		}
-	
+
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Print New Member registration email
 	 */
@@ -1035,17 +1036,17 @@ class UserClass{
 	  $buf = ob_get_clean();
 		return $buf;
 	}
-	
-	
+
+
 	/**
-	 * The error message 
+	 * The error message
 	 * @return string
 	 */
 	function getErrorMsg(){
 	  return $this->errorMsg;
 	}
-	
-	
+
+
 	/**
 	 * The variables and values to save in session
 	 * @return array
@@ -1054,7 +1055,7 @@ class UserClass{
 	  return $this->sessionVars;
 	}
 
-	
+
 	/**
 	 * retrieve file for member
 	 * @return array
@@ -1077,8 +1078,8 @@ class UserClass{
       }
       return $fileArr;
 	}
-	
-	
+
+
 	private function buildMemberProfileArray($_data){
 	  $resArr = array();
 	  $resArr['user_title'] = $_data['details']['title'];
@@ -1101,16 +1102,16 @@ class UserClass{
 	  $resArr['correspondenceType'] = $_data['details']['correspondenceType'];
 	  $resArr['preferedPaymentMethod'] = $_data['details']['preferedPaymentMethod'];
 	  $resArr['user_heardabout'] = $_data['attributes'][4]['value'];
-	  
+
 	  $resArr['ndis_plan_number'] = $_data['details']['ndisPlanNumber'];
 	  $resArr['ndis_plan_type'] = $_data['details']['ndisPlanType'];
 	  $resArr['ndis_manager_name'] = $_data['details']['ndisManagerName'];
 	  $resArr['ndis_manager_company'] = $_data['details']['ndisManagerCompany'];
 	  $resArr['ndis_manager_email'] = $_data['details']['ndisManagerEmail'];
 	  $resArr['ndis_manager_phone'] = preg_replace("/[^0-9]/", "", $_data['details']['ndisManagerPhone']);
-	  
+
 	  $resArr['last_validated_date'] = $_data['details']['lastValidatedDate'];
-	  
+
 	  $resArr['user_donor'] = $_data['details']['isOrganDonor'];
 	  $resArr['user_donorFreeText'] = "";
 	  if($_data['details']['donorEye'] == 't'){
@@ -1127,7 +1128,7 @@ class UserClass{
 	  }
 	  $resArr['user_donorFreeText'] .= unclean($_data['details']['donorFreeText']);
 	  $resArr['check_newsletter'] = $_data['details']['receiveMarketingMaterial'];
-	  
+
 	  $resArr['emergencyInfo'] = unclean($_data['details']['emergencyInformation']);
 	  $resArr['contact_name'] = $_data['emergencyContact']['name'];
 	  $resArr['contact_relationship'] = $_data['emergencyContact']['relationship'];
@@ -1139,7 +1140,7 @@ class UserClass{
 	  $resArr['contact_phone_home'] = preg_replace("/[^0-9]/", "", $_data['emergencyContact']['phoneHome']);
 	  $resArr['contact_phone_work'] = preg_replace("/[^0-9]/", "", $_data['emergencyContact']['phoneWork']);
 	  $resArr['contact_mobile'] = str_replace(' ', '', $_data['emergencyContact']['phoneMobile']);
-	  
+
 	  $resArr['doc_name'] = unclean($_data['doctor']['doctorName']);
 	  $resArr['doc_medical_centre'] = unclean($_data['doctor']['medicalCentreName']);
 	  $resArr['doc_address'] = unclean($_data['doctor']['address']);
@@ -1149,38 +1150,38 @@ class UserClass{
 	  $resArr['doc_country'] = unclean($_data['doctor']['country']);
 	  $resArr['doc_phone'] = preg_replace("/[^0-9]/", "", $_data['doctor']['phoneNumber']);
 	  $resArr['doc_file_no'] = $_data['doctor']['fileNumber'];
-	  
+
 	  $resArr['conditions'] = $_data['conditions'];
 	  $resArr['allergies'] = $_data['allergies'];
 	  $resArr['medications'] = $_data['medications'];
 	  $resArr['other'] = '';
 	  $resArr['records'] = '';
-	  
+
 	  $resArr['blood_group'] = $_data['blood']['bloodGroup'];
-	  
+
 	  // $resArr['profileImage'] = $_data['profileImage'];
 	  $resArr['medicalRecordFiles'] = $_data['attachments']['medicalRecordFiles'];
 	  $resArr['otherFiles'] = $_data['attachments']['otherFiles'];
-	  
+
 	  foreach($_data['attributes'] as $at){
 	    $resArr['attributes']["{$at['id']}"] = $at['value'];
 	  }
 	  return $resArr;
 	}
-	
-	
+
+
 	function formatProfileArrayField($_newArr, $_existingArr = array()){
 	  $resArr = array();
 	  $temp = array();
 	  $existingArr = array();
-	  
+
 	  foreach($_existingArr as $value){
 	    $existingArr[] = $value['value'];
 	  }
-	  
+
 	  foreach($_newArr as $value){
 	    if(empty($value)){ continue; }
-	
+
 	    $t_ar = preg_split("/;/",$value);
 	    foreach($t_ar as $t_v){
 	      $t_value = unclean($t_v);
@@ -1202,8 +1203,8 @@ class UserClass{
 	  }
 	  return $resArr;
 	}
-	
-	
+
+
 	function printProfile($_resourcesPath, $_mainData, $_data){
 	  $conditions = array();
 	  foreach($_data['conditions'] as $rec){
@@ -1217,7 +1218,7 @@ class UserClass{
 	  foreach($_data['medications'] as $rec){
 	    $medications[] = $rec['value'];
 	  }
-	  
+
 	  $lastValidatedDateHTML = '';
 	  if(!empty($_mainData['last_validated_date'])){
 	    $lastValidatedDateHTML = '<tr valign="top">
@@ -1225,7 +1226,7 @@ class UserClass{
                     	<td class="data last">'.unclean(date('d M Y', strtotime($_mainData['last_validated_date']))).'</td>
                     </tr>';
 	  }
-	  
+
 	  $buf = '<!DOCTYPE html>
         		<html>
         		<head>
@@ -1487,7 +1488,7 @@ class UserClass{
         </html>';
 	  return $buf;
 	}
-	
+
 	/**
 	 * FOR WEBSITE ONLY
 	 * Insert new address in tbl_address and returns address_id
@@ -1498,18 +1499,18 @@ class UserClass{
 	 */
 	function InsertNewAddress($addressArr){
       $params = array(
-          ":address_user_id" => $addressArr['address_user_id'], 
-          ":address_name" => (empty($addressArr['address_name'])? '' : $addressArr['address_name']), 
-          ":address_surname" => (empty($addressArr['address_surname'])? '' : $addressArr['address_surname']), 
-          ":address_email" => (empty($addressArr['address_email'])? '' : $addressArr['address_email']), 
-          ":address_telephone" => (empty($addressArr['address_telephone'])? '' : $addressArr['address_telephone']), 
-          ":address_mobile" => (empty($addressArr['address_mobile'])? '' : $addressArr['address_mobile']), 
-          ":address_line1" => (empty($addressArr['address_line1'])? '' : $addressArr['address_line1']), 
-          ":address_line2" => (empty($addressArr['address_line2'])? '' : $addressArr['address_line2']), 
-          ":address_suburb" => (empty($addressArr['address_suburb'])? '' : $addressArr['address_suburb']), 
-          ":address_state" => (empty($addressArr['address_state'])? '' : $addressArr['address_state']), 
-          ":address_country" => (empty($addressArr['address_country'])? '' : $addressArr['address_country']), 
-          ":address_postcode" => (empty($addressArr['address_postcode'])? '' : $addressArr['address_postcode']) 
+          ":address_user_id" => $addressArr['address_user_id'],
+          ":address_name" => (empty($addressArr['address_name'])? '' : $addressArr['address_name']),
+          ":address_surname" => (empty($addressArr['address_surname'])? '' : $addressArr['address_surname']),
+          ":address_email" => (empty($addressArr['address_email'])? '' : $addressArr['address_email']),
+          ":address_telephone" => (empty($addressArr['address_telephone'])? '' : $addressArr['address_telephone']),
+          ":address_mobile" => (empty($addressArr['address_mobile'])? '' : $addressArr['address_mobile']),
+          ":address_line1" => (empty($addressArr['address_line1'])? '' : $addressArr['address_line1']),
+          ":address_line2" => (empty($addressArr['address_line2'])? '' : $addressArr['address_line2']),
+          ":address_suburb" => (empty($addressArr['address_suburb'])? '' : $addressArr['address_suburb']),
+          ":address_state" => (empty($addressArr['address_state'])? '' : $addressArr['address_state']),
+          ":address_country" => (empty($addressArr['address_country'])? '' : $addressArr['address_country']),
+          ":address_postcode" => (empty($addressArr['address_postcode'])? '' : $addressArr['address_postcode'])
       );
       $sql = "SELECT address_id FROM tbl_address WHERE
           address_user_id = :address_user_id AND address_name = :address_name AND address_surname = :address_surname AND
@@ -1517,7 +1518,7 @@ class UserClass{
           address_line1 = :address_line1 AND address_line2 = :address_line2 AND address_suburb = :address_suburb AND
           address_state = :address_state AND address_country = :address_country AND address_postcode = :address_postcode AND
           address_deleted IS NULL";
-      
+
       if($res = $this->DBobj->wrappedSql($sql, $params)){
         $sql = "UPDATE tbl_address SET address_modified = now()  WHERE address_id = :id ";
         $this->DBobj->wrappedSql($sql, array(':id' => $res[0]['address_id']));
@@ -1530,18 +1531,18 @@ class UserClass{
             :address_user_id, :address_name, :address_surname, :address_email, :address_telephone, :address_mobile, :address_line1,
             :address_line2, :address_suburb, :address_state, :address_country, :address_postcode,	now()
           )";
-        
+
         if($this->DBobj->wrappedSql($sql, $params)){
           return $this->DBobj->wrappedSqlIdentity();
         }
       }
       return 0;
 	}
-	
-	
-	
+
+
+
 	/**
-	 * Create new MAF member, returns new member's id 
+	 * Create new MAF member, returns new member's id
 	 * @return int
 	 */
 	function CreateMember($_data){
@@ -1554,14 +1555,14 @@ class UserClass{
 	  catch(Exception $e){
 	    $this->errorMsg = "Invalid API membership number/password.";
 	  }
-	
+
 	  // set up the create member record
 	  $this->buildNewMemberMedicAlertArray($_data);
-	
+
 	  // json encode it
 	  $t_arr = unclean($this->memberRecord);
 	  $memberCreateRecord = json_encode($t_arr);
-	
+
 	  try{
         // create a new member in the database (this returns the membership number)
         $memberCreateResult = json_decode($this->medicAlertApi->memberCreate($this->token, $memberCreateRecord), true);
@@ -1569,14 +1570,14 @@ class UserClass{
 	  catch(Exception $e){
 	    $this->errorMsg = "Error while creating new member. {$e}";
 	  }
-	  
+
 	  // log out of the API (as we are logged in as the MA-WEBSITE user
 	  $this->medicAlertApi->logout($this->token);
-		
+
 	  return (empty($memberCreateResult['memberShipNumber']) ? 0 : $memberCreateResult['memberShipNumber']);
 	}
-	
-	
+
+
 	/**
 	 * FOR WEBSITE ONLY
 	 * Return array recordset given the address_id
@@ -1585,7 +1586,7 @@ class UserClass{
 	 * @return array
 	 */
 	function GetAddress($addressId) {
-	
+
 	  $sql = "SELECT * FROM tbl_address WHERE address_deleted IS NULL AND address_id = :id ";
 	  $res = $this->DBobj->wrappedSql($sql, array(':id' => $addressId) );
 	  return $res[0];
@@ -1597,50 +1598,50 @@ class UserClass{
    * On error return associative array: ('error')
    * Require associative array: ('gname', 'surname', 'password', 'email')
    *
-   * @param array $user          
+   * @param array $user
    * @return array
    */
   function CreateGuest($user){
     $temp_str = getPass(time() . '@@' . $user['email'], genRandomString(10));
     $params = array(
-        ":username" => time() . '@@' . $user['email'], 
-        ":gname" => $user['gname'], 
-        ":surname" => (empty($user['surname'])? '' : $user['surname']), 
-        ":email" => $user['email'], 
-        ":password" => $temp_str, 
+        ":username" => time() . '@@' . $user['email'],
+        ":gname" => $user['gname'],
+        ":surname" => (empty($user['surname'])? '' : $user['surname']),
+        ":email" => $user['email'],
+        ":password" => $temp_str,
         ":mobile" => $user['mobile'],
         ":dob" => $user['db_dob'],
         ":gender" => $user['gender'],
         ":heardabout" => $user['heardabout'],
-        ":user_site" => $this->site, 
-        ":email_promo" => (empty($user['want_email_promo'])? 0 : 1), 
-        ":sms_promo" => (empty($user['want_sms_promo'])? 0 : 1), 
-        ":ip" => $_SERVER['REMOTE_ADDR'], 
-        ":browser" => $_SERVER['HTTP_USER_AGENT'] 
+        ":user_site" => $this->site,
+        ":email_promo" => (empty($user['want_email_promo'])? 0 : 1),
+        ":sms_promo" => (empty($user['want_sms_promo'])? 0 : 1),
+        ":ip" => $_SERVER['REMOTE_ADDR'],
+        ":browser" => $_SERVER['HTTP_USER_AGENT']
     );
-    
+
     $sql = "INSERT INTO tbl_user (user_username, user_gname, user_surname, user_email, user_password, user_mobile, user_dob, user_gender, user_heardabout, user_site, user_email_promo, user_sms_promo, user_ip, user_browser, user_created)
 					 values ( :username, :gname, :surname, :email, :password, :mobile, :dob, :gender, :heardabout, :user_site, :email_promo, :sms_promo, :ip, :browser, now() )";
     if($this->DBobj->wrappedSql($sql, $params)){
       $userId = $this->DBobj->wrappedSqlIdentity();
       $this->user_id = $userId;
       $result = array(
-          "id" => $userId, 
-          "gname" => $user['gname'], 
-          "surname" => $user['surname'], 
-          "email" => $user['email'] 
+          "id" => $userId,
+          "gname" => $user['gname'],
+          "surname" => $user['surname'],
+          "email" => $user['email']
       );
     } else{
       $this->user_id = 0;
       $result = array(
-          'error' => 'There was a connection problem. Please, try again!' 
+          'error' => 'There was a connection problem. Please, try again!'
       );
     }
     return $result;
   }
-	
+
   /**
-   * ONLY FOR MAF - Temporary user 
+   * ONLY FOR MAF - Temporary user
    * Require associative array
    *
    * @param array $user
@@ -1652,7 +1653,7 @@ class UserClass{
     if($res = $this->DBobj->wrappedSql($sql, array(':id' => session_id()))){
       return $res[0]['usertemp_id'];
     }
-    
+
     $params = array(
         ":cartid" => $cartId,
         ":gname" => $user['gname'],
@@ -1672,24 +1673,24 @@ class UserClass{
         ":ip" => $_SERVER['REMOTE_ADDR'],
         ":browser" => $_SERVER['HTTP_USER_AGENT']
     );
-  
+
     $sql = "INSERT INTO tbl_usertemp ( usertemp_cart_id, usertemp_gname, usertemp_surname, usertemp_email, usertemp_mobile, usertemp_home_phone, usertemp_work_phone, usertemp_dob, usertemp_gender, usertemp_address, usertemp_suburb, usertemp_state, usertemp_postcode, usertemp_heardabout, usertemp_session, usertemp_ip, usertemp_browser, usertemp_created)
 					 values ( :cartid, :gname, :surname, :email, :mobile, :home_phone, :work_phone, :dob, :gender, :address, :suburb, :state, :postcode, :heardabout, :session, :ip, :browser, now() )";
     if($this->DBobj->wrappedSql($sql, $params)){
       return $this->DBobj->wrappedSqlIdentity();
-    } 
+    }
     return 0;
   }
-  
-  
+
+
   /**
    * ONLY FOR MAF - set payment_id for temporary user
-   * 
+   *
    * @param int $_paymentId
    * @return boolean
    */
   function SetPaymentIdUserTemp($_paymentId){
-    
+
     $params = array(
         ":session" => session_id(),
         ":payment_id" => $_paymentId
@@ -1697,8 +1698,8 @@ class UserClass{
     $sql = "UPDATE tbl_usertemp SET usertemp_payment_id = :payment_id WHERE usertemp_deleted IS NULL AND usertemp_session = :session";
     return  $this->DBobj->wrappedSql($sql, $params);
   }
-  
-  
+
+
   /**
   * Process pending renewal payment for member
   *
@@ -1707,7 +1708,7 @@ class UserClass{
   * @return boolean
   */
   function processPayment($_memberPaymentRecord){
-    
+
     $this->errorMsg = null;
     try{
       $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
@@ -1724,7 +1725,7 @@ class UserClass{
         $this->medicAlertApi->logout($token);
         return $results;
       }
-      
+
     }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
       $this->errorMsg = "Your membership number don't match.";
     }
@@ -1739,7 +1740,7 @@ class UserClass{
     }
     return false;
   }
-  
+
   /**
    * Process website order in membership syste
    *
@@ -1747,7 +1748,7 @@ class UserClass{
    * @return boolean
    */
   function processWebsiteOrder($_memberOrderRecord){
-    
+
     $this->errorMsg = null;
     try{
       $authJSONResponse = $this->medicAlertApi->authenticate(medicAlertApi::API_USER, medicAlertApi::API_USER_PASSWORD);
@@ -1764,7 +1765,7 @@ class UserClass{
         $this->medicAlertApi->logout($token);
         return $results;
       }
-      
+
     }catch(exceptionMedicAlertNotFound $e){ // may be a different exception to catch, but this is what the example used.
 			$this->errorMsg = "Required info missing.";
     }
