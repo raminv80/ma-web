@@ -396,25 +396,19 @@ class UserClass{
 		$interval = $renewalDate->diff($today);
 		$day_diff = floatval($interval->format('%R%a'));
 
-		//Verify if member requires reactivation
-		//waive reactivation if they renew within 3 month of their renewal date
-		// if campaign is active then waive activation fee if they renew in first quarter of year (a campaign runs at
-		// start of each year to invite people renew using reactivation fee as incentive)
-		$offerValidFromDate = date('Y-m-d', strtotime($renewalDate->format('Y-m-d')));
-		$offerValidTillDate = date('Y-m-d', strtotime('last day of +3 month', strtotime($offerValidFromDate)));
-		$campaignIsActive = false;
-		$exemptionDateStart = date('Y').'-01-01';
-		$exemptionDateEnd = date('Y').'-03-31';
-
-		$expired = $todayDate > $renewalDate->format('Y-m-d');
-		$offerExpired = $todayDate > $offerValidTillDate;
-        $exempt = $campaignIsActive && $todayDate >= $exemptionDateStart && $todayDate <= $exemptionDateEnd;
-
+		// # Verify if member requires reactivation
+		//
+        // After 6 month of membership expiry we consider member un-financial
+        $isConsideredUnfinancial = date('Y-m-d', strtotime('+6 month', strtotime($renewalDate)));
+        // After 9 month from being considered un-financial, as an incentive reactivation fee is waived until last day
+		// of +3 month.
+		// Note: un-financial members will be manually removed from system after 12 month
+        $reactivationFeeExemptStartDate = date('Y-m-d', strtotime('+9 month', strtotime($isConsideredUnfinancial)));
+        $reactivationFeeExemptEndDate = date('Y-m-d', strtotime('last day of +3 month', strtotime($isConsideredUnfinancial)));
+        $reactivationFeeExempt = $isConsideredUnfinancial && $todayDate >= $reactivationFeeExemptStartDate && $todayDate <= $reactivationFeeExemptEndDate;
 		//Verify if member requires reactivation
 		$user['reactivation'] = 'f';
-		if($expired && $offerExpired && !$exempt){
-		  //Add reactivation fee when year difference is greater than 1
-		  //also check that it's not in speacial offer months. renewal month plus 2 months
+		if($isConsideredUnfinancial && !$reactivationFeeExempt){
 		  $user['reactivation'] = 't';
 		}
 
