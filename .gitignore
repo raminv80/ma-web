@@ -6,3 +6,17 @@
 /cache
 /web-monitor
 *.DS_Store
+node_modules
+vendor
+dist
+optimised
+
+# keep upgrade branch ignored files off of master
+.env
+.env.*
+!env.example
+.ckfinder
+Tests
+admin/includes/ckfinder
+admin/includes/filemanager/js/vendor
+
