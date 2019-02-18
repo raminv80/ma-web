@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class giftCertificateCest
 {
@@ -29,11 +29,11 @@ class giftCertificateCest
         $I->dontSeeElement('#sendday');
         #successful payment
         $I->amGoingTo('use valid payment');
-        $I->fillField('#ccno', '4564710000000004');
+        $I->fillField('#ccno', '5163200000000008');
         $I->fillField('#ccname', 'AcceptanceTester');
-        $I->selectOption('#ccmonth', '2 - Feb');
-        $I->selectOption('#ccyear', '2019');
-        $I->fillField('#cccsv', '847');
+        $I->selectOption('#ccmonth', '8 - Aug');
+        $I->selectOption('#ccyear', '2020');
+        $I->fillField('#cccsv', '070');
         $I->click('#fields-wrapper > div > div.row.text-left > div > div:nth-child(1) > label');
         $I->amGoingTo('submit the form');
         $I->wait(3);

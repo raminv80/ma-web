@@ -77,15 +77,16 @@ class AcceptanceTester extends \Codeception\Actor
 
     public function submitCheckoutPaymentForm(){
         $I=$this;
-        $expiry_month = date('m', strtotime('+2 months'));
-        $expiry_year = date('Y', strtotime('+2 months'));
+        //temporary hard codeing the month for Feb
+        $expiry_month = '08';
+        $expiry_year = '2020';
         $I->waitForElement('#checkout3-form', 10);
         $I->scrollTo('#checkout3-form');
-        $I->fillField('Card number', '4564710000000004');
+        $I->fillField('Card number', '5163200000000008');
         $I->fillField("Cardholder's name", 'Acceptance Tester');
         $I->selectOption('#ccmonth', $expiry_month);
         $I->selectOption('#ccyear', $expiry_year);
-        $I->fillField('Security code', 847);
+        $I->fillField('Security code', '070');
         $I->uncheckOption('#autorenewal');
         $I->click('#payment-btn');
     }

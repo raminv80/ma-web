@@ -1,17 +1,10 @@
-<?php 
+<?php
 
 class HomepageCest
 {
     public function _before(AcceptanceTester $I)
     {
         $I->amOnPage('/');
-    }
-
-    // tests
-    public function heroSectionWorks(AcceptanceTester $I)
-    {
-        $I->click('#learnmorehome');
-        $I->seeCurrentUrlEquals('/how-to-become-a-member');
     }
 
     public function offersSectionWorks(AcceptanceTester $I)

@@ -28,6 +28,7 @@ class CheckoutCest
         $I->click( 'label[for="colour_stainless_steel_cherry"]' );
         $I->selectOption( '#length', '74' );
         $I->selectOption( '#medical_id_size', '87' );
+        $I->scrollTo('.prodaddcart');
         $I->click( 'Add to Cart' );
         $I->wait( 3 );
 
@@ -41,7 +42,7 @@ class CheckoutCest
         $I->seeCurrentUrlEquals( '/shopping-cart' );
         $I->see( 2, '#cart-hover > span' );
         $I->see( 'Stainless Steel Pendant & Curb Chain' );
-        $I->see( 'Member Service Fee - 2018' );
+        $I->see( 'Member Service Fee - '.date('Y') );
         $I->wait( 1 );
         $I->see( '$101.00', '#subtotal' );
         $I->see( '$4.45', '#GST' );
@@ -71,7 +72,10 @@ class CheckoutCest
         $I->click('label[for="colour_stainless_steel_rose"]');
         $I->selectOption('#length', '47');
         $I->selectOption('#medical_id_size', '11');
+        $I->wait(2);
+        $I->scrollTo('.prodaddcart');
         $I->click('Add to Cart');
+
         $I->expectTo('receive discount');
         $I->click('#cart-hover');
         $I->seeCurrentUrlEquals('/shopping-cart');

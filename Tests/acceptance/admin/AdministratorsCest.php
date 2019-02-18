@@ -816,6 +816,7 @@ class AdministratorsCest
         $I->click( 'label[for="colour_stainless_steel_cherry"]' );
         $I->selectOption( '#length', '74' );
         $I->selectOption( '#medical_id_size', '87' );
+        $I->scrollTo('.prodaddcart');
         $I->click( 'Add to Cart' );
         $I->amOnPage('/shopping-cart');
         $I->see( '$110.50', '#total' );
