@@ -396,21 +396,8 @@ class UserClass{
 		$interval = $renewalDate->diff($today);
 		$day_diff = floatval($interval->format('%R%a'));
 
-		// # Verify if member requires reactivation
-		//
-        // After 6 month of membership expiry we consider member un-financial
-        $isConsideredUnfinancial = date('Y-m-d', strtotime('+6 month', strtotime($renewalDate)));
-        // After 9 month from being considered un-financial, as an incentive reactivation fee is waived until last day
-		// of +3 month.
-		// Note: un-financial members will be manually removed from system after 12 month
-        $reactivationFeeExemptStartDate = date('Y-m-d', strtotime('+9 month', strtotime($isConsideredUnfinancial)));
-        $reactivationFeeExemptEndDate = date('Y-m-d', strtotime('last day of +3 month', strtotime($isConsideredUnfinancial)));
-        $reactivationFeeExempt = $isConsideredUnfinancial && $todayDate >= $reactivationFeeExemptStartDate && $todayDate <= $reactivationFeeExemptEndDate;
 		//Verify if member requires reactivation
-		$user['reactivation'] = 'f';
-		if($isConsideredUnfinancial && !$reactivationFeeExempt){
-		  $user['reactivation'] = 't';
-		}
+        $user['reactivation'] = $this->shouldApplyReactivationFee($renewalDate->format('Y-m-d'), $todayDate) ? 't':'f';
 
 		//Verify if member can renew the membership
 		$user['renew'] = 'f';
@@ -439,6 +426,16 @@ class UserClass{
 		$user = stripslashes_deep($user);
 		return $user;
 	}
+
+    function shouldApplyReactivationFee($renewalDate, $todayDate) {
+		// usecase: https://themadvertising.teamwork.com/#/notebooks/189642
+        $consideredUnfinancialDate = date('Y-m-d', strtotime('+5 month', strtotime($renewalDate)));
+        $isConsideredUnfinancial = $todayDate >= $consideredUnfinancialDate;
+        $reactivationFeeExemptStartDate = date('Y-m-d', strtotime('first day of +6 month', strtotime($consideredUnfinancialDate)));
+        $reactivationFeeExemptEndDate = date('Y-m-d', strtotime('+4 month', strtotime($reactivationFeeExemptStartDate)));
+        $reactivationFeeExempt = $isConsideredUnfinancial && $todayDate >= $reactivationFeeExemptStartDate && $todayDate < $reactivationFeeExemptEndDate;
+        return $isConsideredUnfinancial && !$reactivationFeeExempt;
+    }
 
 
 	/**
