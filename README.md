@@ -40,3 +40,16 @@ Then run selenium standalone server
 and in a different shell run tests using:
 
 ```./vendor/bin/codecept run --steps --html```
+
+
+## Stage
+
+Stage is located at https://www.stage.medicalert.org.au/
+
+Outgoing php emails are captured using Mailhog. To view captured emails visit http://www.stage.medicalert.org.au:8025/ 
+
+To deploy the code to stage run
+
+```bedrock deploy --on=staging```
+
+This command will checkout branch staging to the staging server.
