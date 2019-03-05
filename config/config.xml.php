@@ -22,8 +22,8 @@
     <fax>1800 64 32 59</fax>
     <email env="EMAIL_ENQUIRY">enquiry@medicalert.org.au</email>
     <email_from env="EMAIL_FROM">noreply@medicalert.org.au</email_from>
-    <email_contact env="EMAIL_CONTACT"></email_contact>
-    <email_orders env="EMAIL_ORDERS"></email_orders>
+    <email_contact env="EMAIL_CONTACT">enquiry@medicalert.org.au</email_contact>
+    <email_orders env="EMAIL_ORDERS">idewey@medicalert.org.au</email_orders>
     <email_notice>gryan@medicalert.org.au</email_notice>
     <logo>logo.png</logo>
   </company>
@@ -572,7 +572,7 @@
     <orderby>news_start_date DESC, news_id DESC</orderby>
     <where><![CDATA[(listing_schedule_start < NOW() OR listing_schedule_start IS NULL OR listing_schedule_start = '0000-00-00') AND (listing_schedule_end > NOW() OR listing_schedule_end IS NULL OR listing_schedule_end='0000-00-00')]]></where>
     <limit level="1">20</limit>
-    <table> 
+    <table>
       <name>tbl_listing</name>
       <field>listing_url</field>
       <options>
