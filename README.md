@@ -18,6 +18,22 @@ Ad cron jobs to cron.php file. To run cron jobs add following entry to server's 
 
 `* * * * * path/to/phpbin path/to/cron.php 1>> /dev/null 2>&1`
 
+## Catch emails
+Install mailhog to your local. on mac it can be done using command:
+```brew update && brew install mailhog```
+
+Then run a `mailhog` session from command line.
+
+Update SMTP config of your .env file to below:
+```
+SMTP_ENABLE=true
+SMTP_AUTH=false
+SMTP_HOST=localhost
+SMTP_PORT=1025
+```
+
+All outgoing emails will be catched and logged in http://127.0.0.1:8025/
+
 ## Tests
 
 To run acceptance tests install following dependencies first:
