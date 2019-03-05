@@ -16,12 +16,14 @@ function SafeMail($to,$subject,$body,$headers,$additional='', $attachments = arr
     if(getenv('SMTP_ENABLE')==='true'){
         $mail->isSMTP();
         $mail->SMTPDebug = 0;
-        $mail->SMTPAuth = true;
         $mail->Host = getenv('SMTP_HOST');
-        $mail->Username = getenv('SMTP_USER');
-        $mail->Password = getenv('SMTP_PASSWORD');
-        $mail->SMTPSecure = getenv('SMTP_SECURE')==='true';
         $mail->Port = getenv('SMTP_PORT');
+        $mail->SMTPAuth = getenv('SMTP_AUTH')==='true'? true:false;
+        if($mail->SMTPAuth){
+            $mail->Username = getenv('SMTP_USER');
+            $mail->Password = getenv('SMTP_PASSWORD');
+        }
+        $mail->SMTPSecure = getenv('SMTP_SECURE')==='true';
     }
 
     $toArr = explode(',',$to);
