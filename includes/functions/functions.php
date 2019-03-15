@@ -3,8 +3,8 @@ set_include_path($_SERVER['DOCUMENT_ROOT']);  //SET THE INCLUDE PATH TO DOCUMENT
 ini_set('session.gc_maxlifetime', 7200);
 
 require_once 'vendor/autoload.php';
-include_once 'database/fatal_handler.php';
 include_once 'environment.php';
+include_once 'database/fatal_handler.php';
 
 if(APP_ENV === 'stage' || APP_ENV === 'production'){
     ini_set('display_errors',0);
