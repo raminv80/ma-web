@@ -6,7 +6,7 @@ if (preg_match('/[A-Z]/', $request[0])){
   header("HTTP/1.1 301 Moved Permanently");
   header("Location: $lowercase_file_url");
   exit();
-} 
+}
 
 include "includes/functions/functions.php";
 global $CONFIG,$SMARTY,$DBobject,$REQUEST_URI;
@@ -27,7 +27,7 @@ unset($_SESSION['notice']); // ASSIGN NOTICE MESSAGES FOR TEMPLATES
 $SMARTY->assign('post', $_SESSION['post']);
 unset($_SESSION['post']); // ASSIGN POST FOR FORM VARIABLES
 $SMARTY->assign('user', $_SESSION['user']['public']); // ASSIGN USER FOR TEMPLATES
-$SMARTY->assign('new_user', $_SESSION['user']['new_user']); // 
+$SMARTY->assign('new_user', $_SESSION['user']['new_user']); //
 $SMARTY->assign('HTTP_REFERER', rtrim($_SERVER['HTTP_REFERER'],'/'));
 $SMARTY->assign('REQUEST_URI', $REQUEST_URI);
 $_request = htmlclean($_REQUEST);
@@ -40,37 +40,37 @@ $SMARTY->assign('timestamp', time());
 
 
 while(true){
-  
+
   /******* Processes *******/
   $needle = str_replace("/","\/","process/");
   $haystack = $_request["arg1"];
   if(preg_match("/^{$needle}/", $haystack)){
     foreach($CONFIG->process as $sp){
-      if($sp->url == $_request['arg1']){ 
-        $file = (string)$sp->file; include ($file); 
+      if($sp->url == $_request['arg1']){
+        $file = (string)$sp->file; include ($file);
       }
     }
     die();
   }
-  
+
   /******* Goes to 404 *******/
   if($_request['arg1'] == '404'){ $template = loadPage($CONFIG->error404); break 1; }
   /******* Goes to 403 *******/
   if($_request['arg1'] == '403'){ $template = loadPage($CONFIG->error403); break 1; }
-  
+
 
   /******* Global process - pre data load *******/
   foreach($CONFIG->global_process_pre as $sp){
   	$file = (string)$sp->file;
   	if(file_exists($file)){ include ($file); }
   }
-  
+
   /******* Goes to home *******/
   if($_request['arg1'] == ''){
-    $template = loadPage($CONFIG->index_page); 
-    break 1; 
+    $template = loadPage($CONFIG->index_page);
+    break 1;
   }
-    
+
   /**
    * **** Goes to individual script pages ******
    */
@@ -108,7 +108,7 @@ while(true){
       break 2;
     }
   }
-  
+
   /**
    * ***** Dynamic Page Check Here ******
    */
@@ -128,12 +128,12 @@ while(true){
           break 2;
         }
       }
-      
+
       /******* Goes to 404 *******/
       if($CONFIG->error404->pageID == $id){ $template = loadPage($CONFIG->error404); break 1; }
       /******* Goes to 403 *******/
       if($CONFIG->error403->pageID == $id){ $template = loadPage($CONFIG->error403); break 1; }
-      
+
       /**
        * **** load dynamic page *****
        */
@@ -147,7 +147,7 @@ while(true){
       break 1;
     }
   }
-  
+
   /**
    * ***** Product pages here ******
    */
@@ -166,15 +166,17 @@ while(true){
         $file = (string)$sp->file;
         if(file_exists($file))	{ include ($file);}
       }
-      $fieldname = (string) $lp->url->attributes()->requiredvar;
-      if(!empty($fieldname) && empty($_REQUEST[$fieldname])) {
-        $_request["arg1"] = '404';
-        $template = "";
+      if($lp->url){
+          $fieldname = (string) $lp->url->attributes()->requiredvar;
+          if(!empty($fieldname) && empty($_REQUEST[$fieldname])) {
+              $_request["arg1"] = '404';
+              $template = "";
+          }
       }
       break 2;
     }
   }
-  
+
   $template = loadPage($CONFIG->error404);
   break 1;
 }
