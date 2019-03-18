@@ -646,7 +646,15 @@ function getToken($name){
  * @return string
  */
 function generatetoken(){
-	$token = sha1($_SERVER['REMOTE_ADDR'].md5(date("D M j G:i:s T Y")). md5(uniqid(mt_rand(rand(50,rand()),rand(500,23493244)), true)));
+    $lRange = rand(50,rand());
+    $rRange = rand(500,23493244);
+    if($lRange>$rRange){
+        $t=$lRange;
+        $lRange=$rRange;
+        $rRange=$t;
+    }
+
+	$token = sha1($_SERVER['REMOTE_ADDR'].md5(date("D M j G:i:s T Y")). md5(uniqid(mt_rand($lRange, $rRange),true)));
 	return $token;
 }
 
@@ -1096,7 +1104,7 @@ function sendGAEnEcImpressionAction($_tid, $_action, $_proditemArr, $_impression
     );
     gaFireHit($data);
   }
-  
+
   // Send Transaction hit
   $data = array(
       'v' => $v,
