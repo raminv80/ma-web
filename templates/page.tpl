@@ -96,7 +96,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </header>
 	{block name=body}{/block}
 	{include file='footer.tpl'}
-  
+
   <div id="myModalSession" class="modal fade session-modal" tabindex="-1" role="dialog" aria-labelledby="myModalSession" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -115,14 +115,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div>
 
   {$conversionTracking}
-    
+
 	{printfile file='/node_modules/jquery/dist/jquery.min.js' type='script'}
 	{printfile file='/node_modules/bootstrap/dist/js/bootstrap.min.js' type='script'}
   {printfile file='/node_modules/jquery-validation/dist/jquery.validate.min.js' type='script'}
   {printfile file='/node_modules/jquery-validation/dist/additional-methods.min.js' type='script'}
 	{printfile file='/includes/js/shopping-cart.min.js' type='script'}
-	{printfile file='/includes/js/custom.min.js' type='script'}
-  
+	{printfile file='/includes/js/custom.js' type='script'}
+
 	<script type="text/javascript">
 	if (jQuery.validator) {
 	  jQuery.validator.setDefaults({
@@ -153,7 +153,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
    	          ValidateFormWithAccordion($(element).closest('form'));
    	        }
    	      }
-   	      
+
 	    },
 	    errorPlacement: function (error, element) {
 			$(element).closest('.form-group').find('.help-block').text(error.text());
@@ -166,53 +166,53 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	    		  formCheck = $(form).attr('id');
 	    	  }
 	          switch ( formCheck ) {
-	        	case 'form-': 
+	        	case 'form-':
 	          		break;
-	          		
+
 	          	default:
 	          		form.submit();
 	          }
 		    }
 	  });
-	  
+
 	  jQuery.validator.addMethod(
-	 	  		"hasLowercase", 
+	 	  		"hasLowercase",
 	 	  		function(value, element) {
 	 	  		  var validStr = /[a-z]/;
 	 	  		  return value == '' || validStr.test(value)
-	 			}, 
+	 			},
 	 			"Must include at least one lower case character"
 	 	);
-	 	
+
 	 	jQuery.validator.addMethod(
-	 	  		"hasUppercase", 
+	 	  		"hasUppercase",
 	 	  		function(value, element) {
 	 	  		  var validStr = /[A-Z]/;
 	 	  		  return value == '' || validStr.test(value)
-	 			}, 
+	 			},
 	 			"Must include at least one upper case character"
 	 	);
 
 	 	jQuery.validator.addMethod(
-	 	  		"hasDigit", 
+	 	  		"hasDigit",
 	 	  		function(value, element) {
 	 	  		  var validStr = /\d/;
 	 	  		  return value == '' || validStr.test(value)
-	 			}, 
+	 			},
 	 			"Must include at least one number/digit"
 	 	);
 
 	 	jQuery.validator.addMethod(
-	 	  		"hasSpecialChar", 
+	 	  		"hasSpecialChar",
 	 	  		function(value, element) {
 	 	  		  var validStr = /[!@#\$%\^&*)(\-._=+]/;
 	 	  		  return value == '' || validStr.test(value)
-	 			}, 
+	 			},
 	 			"Must include at least one special character: !@#$%^&*)(-._=+"
-	 	);	
-	  
+	 	);
+
 	}
-	
+
 	function ValidateFormWithAccordion(ELEMENT){
 	  ELEMENT.find('div.acc-body').each(function(){
      var errorCnt = $(this).find('.form-group.has-error').length;
@@ -223,30 +223,30 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        if(curTab.find('.acc-tab-error').length){
          curTab.find('.acc-tab-error').html(errorTabMsg);
        }else{
-         curTab.append(errorTabMsg);  
+         curTab.append(errorTabMsg);
        }
      }else{
        curTab.find('.acc-tab-error').remove();
      }
    });
 	}
-	
+
 	//EXPIRY SESSION TIMER
 	var sessionWarningTime = 1440000; //24min
 	var sessionTimer;
 	var startTimer = 301; //5mins + 1sec
 	var timer = startTimer;
 	var sessionRedirectURL = '/process/user?logout=true';
-	
+
 	function InitSessionTimer(){
 	  sessionTimer = setTimeout(function() {
      $('#myModalSession').modal('show');
      timer = startTimer;
      CountDown($('#timer-counter'));
      console.log('session-timer init');
-   }, sessionWarningTime); 
+   }, sessionWarningTime);
 	}
-	
+
 	function ExtendSession(){
 	  $('#myModalSession .btn').attr('disabled', 'disabled');
 	  $.ajax({
@@ -266,10 +266,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      }
    });
 	}
-	
+
 	function CountDown(ELEMENT) {
 	  if (timer > 0) {
-	    --timer; 
+	    --timer;
        ELEMENT.html( timer + ' secs.');
        setTimeout(function(){
          CountDown(ELEMENT);
@@ -278,9 +278,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      window.location = sessionRedirectURL;
    }
   }
-	
+
 	$(document).ready(function(){
-	  
+
 	  	$('#newsl_form').validate();
 
 		$('#searchbox').bind('keyup', function(event) {
@@ -291,9 +291,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		$('.sb-icon-search').click(function() {
 		 	setTimeout(function() {
 		    $('#search').focus();
-      		}, 1000);	
+      		}, 1000);
 		  });
-		
+
 		$('#search').blur(function(){
 		  if(!$('#autocomplete-search-results').is(":focus") && $(window).width() > 992){
 		  setTimeout(function() {
@@ -307,7 +307,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		}, function() {
 		  $(this).find('.dropdown-menu:visible').fadeOut(200)
 		});
-		
+
 		{if $user.id || $new_user}
 		InitSessionTimer();
 		{/if}
@@ -316,6 +316,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 	</script>
 	{block name=tail}{/block}
-    
+
 </body>
 </html>

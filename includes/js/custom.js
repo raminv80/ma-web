@@ -75,7 +75,7 @@ jQuery(document).ready(function($){
 			$(this).parent().find("li.dropdown").removeClass('open');
 			$('#mobile-navbar li.dropdown ul.dropdown-menu').css('height','0');
 			$(this).addClass('open');
-			var num=$(this).find('ul.dropdown-menu li').size();
+			var num=$(this).find('ul.dropdown-menu li').length;
 			var hei=num*45;
 			$(this).find('ul.dropdown-menu').css('height',hei+'px');
 		}
