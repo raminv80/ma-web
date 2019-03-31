@@ -95,7 +95,7 @@ function initialize() {
     var bounds = new google.maps.LatLngBounds();
     var mapOptions = {
         mapTypeId: 'roadmap',
-		icon: 'http://themdigital.com.au/Austin/pin.png',
+		icon: '/images/pin.png',
         styles: [
   {
     "elementType": "geometry",
@@ -348,7 +348,7 @@ function initialize() {
         marker = new google.maps.Marker({
             position: position,
             map: map,
-            icon: 'http://themdigital.com.au/Austin/pin.png',
+            icon: '/images/pin.png',
             title: markers[i][0]
         });
 
