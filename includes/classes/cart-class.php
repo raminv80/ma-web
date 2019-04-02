@@ -604,7 +604,7 @@ class cart{
     $auto_discount_msg = '';
     // check if valid for SENIOR or STAINLESS-STEEL offer and auto apply the best offer
     if(empty($_SESSION['autoApplydiscount']) && $this->getApplyBestDiscount()){
-        $auto_discount_msg = 'Best offer was automatically applied to cart.'; 
+        $auto_discount_msg = 'Best discount code is automatically applied to cart';
     }
     $shippingFee = 0;
     $tax = 0;
@@ -649,9 +649,9 @@ class cart{
             $discount_error = 'This offer is for new members only.';
             $this->ApplyDiscountCode('');
           }
-          break;  
+          break;
         }
-        
+
         case 'AUTISM16':
         case 'AUTISM18':
         case 'AUTISM'.date('y'):{
@@ -669,7 +669,7 @@ class cart{
           }
           break;
         }
-        
+
         case 'SENIORS':{
           //ONLY FOR MAF - SENIORS OFFER - SENIORS
           //2nd part - 20% off membership
@@ -706,7 +706,7 @@ class cart{
 
     // For MAF only
     if(!$hasBupaDiscount){
-      
+
       $removeFutureYear = false;
       // check if new member
       if(empty($this->cart_user_id) ){
@@ -729,9 +729,9 @@ class cart{
           	$removeFutureYear = true;
           }
         }catch (Exception $e){
-          
+
         }
-      	
+
       }
       if($removeFutureYear) {
         //remove MAF membership fee - next year
@@ -1132,7 +1132,7 @@ class cart{
     $year = '';
     $isNextYearRenewal= false;
     $isLastYearRenewal= false;
-    
+
     if(!empty($_memberArr['maf']['main']['reactivation']) && !empty($_memberArr['maf']['main']['user_RenewalDate']) && $_memberArr['maf']['main']['reactivation'] == 'f'){
       $renewalYear = date('Y', strtotime($_memberArr['maf']['main']['user_RenewalDate']));
       $renewalDate = date_create_from_format('Y-m-d', $_memberArr['maf']['main']['user_RenewalDate']);
@@ -1176,7 +1176,7 @@ class cart{
     } elseif(!$addMSF && !empty($membershipFeeCartitemId)){
       $this->RemoveFromCart($membershipFeeCartitemId);
     }
-    
+
     //To remove MSF of previous year
     if(empty($year)){
       $msfArrOld = $this->GetCurrentMAF_MSF(225, date('Y') - 1);
@@ -1184,7 +1184,7 @@ class cart{
         $this->RemoveFromCart($membershipFeeCartitemIdOld);
       }
     }
-    
+
     //Make sure last year MAF membership fee is not added
     if($isNextYearRenewal || $isLastYearRenewal){
       $msfArr = $this->GetCurrentMAF_MSF(225);
@@ -1216,13 +1216,13 @@ class cart{
         }
       }
     }
-    
+
     //check if cart has membership card, if yes then fix the quantity to one only
     $lifeCartCardId = $this->hasProductInCart($GLOBALS['CONFIG_VARS']['membership_card_product_id'], getenv('membership_card_variant_id'));
     if(!empty($lifeCartCardId)){
       $this->UpdateQtyCart(array($lifeCartCardId => '1'));
     }
-    
+
     //END OF VALIDATE MAF MEMBERS
 
     $sql = "SELECT * FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id = :id";
@@ -1593,7 +1593,7 @@ class cart{
         ":discount_published" => (empty($_data['isPublished'])? 0 : 1),
         ":discount_membership_system_mapped_code" => (empty($_data['membership_system_mapped_code'])? '' : $_data['membership_system_mapped_code'])
     );
-    
+
     $sql = "INSERT INTO tbl_discount (discount_code, discount_name, discount_description, discount_amount, discount_amount_percentage, discount_listing_id,
 	      discount_product_id, discount_usergroup_id, discount_user_id, discount_shipping, discount_start_date, discount_end_date, discount_unlimited_use, discount_fixed_time, discount_published, discount_created, discount_membership_system_mapped_code)
 			values (:discount_code, :discount_name, :discount_description, :discount_amount, :discount_amount_percentage, :discount_listing_id,
@@ -2061,19 +2061,19 @@ class cart{
 
   /**
    * check if cart only has the membership fee in the cart
-   * 
+   *
    * @return array of cart item ids or FALSE if no result
    */
   function HasMSFProduct($cartId = null){
     global $DBobject;
-    
+
     if(empty($cartId)){
       $cartId = $this->cart_id;
     }
     $params = array(
         ":id" => $cartId
     );
-    
+
     $sql = "SELECT cartitem_id FROM tbl_cartitem WHERE cartitem_deleted IS NULL AND cartitem_cart_id <> 0 AND cartitem_product_id = 225 AND cartitem_cart_id = :id";
     if($res = $DBobject->wrappedSql($sql, $params)){
       return $res;
@@ -2167,7 +2167,7 @@ class cart{
         ':id' => $this->cart_id
     );
 
-    
+
       // Stainless steel - tbl_pmaterial - pmateriallink_record_id = pmaterial_id = 1
       // updated on 10/04/2018
       // check if there are two items for value more than 35
@@ -2180,14 +2180,14 @@ class cart{
           ':pid' => '1'
       );
       $chk_qty = $DBobject->wrappedSql($sql, $chk_params);
-      
+
       if((int)$chk_qty[0]['QTY'] > 1){
         $sql = "SELECT MIN(cartitem_product_price) AS 'AMOUNT' FROM tbl_cartitem
         LEFT JOIN tbl_product ON cartitem_product_id = product_object_id
         LEFT JOIN tbl_pmateriallink ON pmateriallink_product_id = product_id
         WHERE product_deleted IS NULL AND cartitem_product_price >= 35 AND product_published = 1 AND pmateriallink_deleted IS NULL AND pmateriallink_record_id = 1
         AND cartitem_deleted IS NULL AND cartitem_cart_id = :id";
-  
+
         if($res = $DBobject->wrappedSql($sql, $params)){
           $amount = round(floatval($res[0]['AMOUNT']) - 35, 2);
           $amount = ($amount > 0) ? $amount : 0;
@@ -2304,8 +2304,8 @@ class cart{
     $discount = ($discount > 0) ? $discount : 0;
     return round($discount, 2);
   }
-  
-  
+
+
   /**
    * ONLY FOR MAF
    * Discount amount - BENEVOLENT 1 year membership + selected product + shipping FOR FREE
@@ -2314,14 +2314,14 @@ class cart{
    */
   function GetBenevolentDiscount($shippingFee = 0){
     global $DBobject;
-  
+
     $discount = 0;
     $prodAmount = 0;
     if(empty($this->cart_user_id)){
-  
+
       //Check for valid product - Exclusive Benevolent collection - listing_object_id = 974 (LIVE) - 788 (DEV)
       $validCatArr = array(788, 974);
-      
+
       $sql = "SELECT cartitem_product_id, cartitem_quantity, cartitem_subtotal, cartitem_product_price FROM tbl_cartitem
             WHERE cartitem_cart_id = :id AND cartitem_deleted IS NULL AND cartitem_cart_id <> '0' ORDER BY cartitem_product_price";
       if($cartItems = $DBobject->wrappedSql($sql, array(':id' => $this->cart_id))){
@@ -2336,7 +2336,7 @@ class cart{
       if($prodAmount > 0){
         //Shipping fee
         //$prodAmount += $shippingFee; //Already set via CMS
-  
+
         // Add MAF membership fee - current year
         $msfArr = $this->GetCurrentMAF_MSF(225);
         $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
@@ -2344,7 +2344,7 @@ class cart{
           $this->AddToCart($msfArr['product_object_id'], array(), 0, 1, null, $msfArr['variant_id']);
         }
         $prodAmount += floatval($msfArr['variant_price']);
-  
+
         $discount = $prodAmount;
       }
     }
@@ -2380,10 +2380,10 @@ class cart{
     if(!empty($membershipFeeCartitemId)){
       $discount +=  floatval($msfArr['variant_price']) * $percentage / 100;
     }
-    
+
     //MAF membership fee - next year
     $msfArr = $this->GetCurrentMAF_MSF(225, date('Y', strtotime('+1 year')));
-    
+
     $membershipFeeCartitemId = $this->hasProductInCart($msfArr['product_object_id'], $msfArr['variant_id']);
     if(!empty($membershipFeeCartitemId)){
       $discount +=  floatval($msfArr['variant_price']) * $percentage / 100;
@@ -2418,20 +2418,20 @@ class cart{
     }
     return false;
   }
-  
+
   /**
    * return the variant name of the cart item in the cart
-   * 
+   *
    * @param integer $cartItemId
    * @return string variant name
    */
   function getCartItemVariantName($cartItemId = null){
       global $DBobject;
-      
+
       if(empty($cartItemId)){
         return false;
       }
-      
+
       $params = array(
           ':cid' => $cartItemId
       );
@@ -2450,25 +2450,25 @@ class cart{
     $dob = '';
     $seniorsCard = '';
     $age = 0;
-    
+
     //New member
     if(!empty($_SESSION['user']['new_user']) && empty($_SESSION['user']['public']['id'])){
       $dob = $_SESSION['user']['new_user']['db_dob'];
       $seniorsCard = $_SESSION['user']['new_user']['seniorscard'];
     }
-    
+
     //Existing member - approved details
     if(!empty($_SESSION['user']['public']['maf']['update'])){
       $dob = $_SESSION['user']['public']['maf']['update']['user_dob'];
       $seniorsCard = $_SESSION['user']['public']['maf']['update']['attributes'][18];
     }
-    
+
     //Existing member - pending details
     if(!empty($_SESSION['user']['public']['maf']['pending'])){
       $dob = $_SESSION['user']['public']['maf']['pending']['user_dob'];
       $seniorsCard = $_SESSION['user']['public']['maf']['pending']['attributes'][18];
     }
-    
+
     if(!empty($dob)){
       //Calculate date difference between renewal date and today
       $dob = date_create_from_format('Y-m-d', $dob);
@@ -2502,13 +2502,13 @@ class cart{
     } elseif($validForStainless){
       $this->ApplyDiscountCode('STAINLESS-STEEL');
       return true;
-    } 
+    }
     $cart = $this->GetDataCart($this->cart_id);
     if(!empty($cart['cart_discount_code'])){
       $this->ApplyDiscountCode('');
     }
     return false;
-    
+
   }
 
 }
