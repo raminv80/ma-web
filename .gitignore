@@ -8,7 +8,8 @@ templates_c/*
 /cache
 /web-monitor
 *.DS_Store
-.env
+
+
 .env.stage
 .env.production
 .env.codeception
